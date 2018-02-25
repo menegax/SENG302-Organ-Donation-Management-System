@@ -8,7 +8,7 @@ public class GlobalEnums {
         OTHER,
     }
 
-    public enum Reigon {
+    public enum Region {
         NORTHLAND,
         AUCKLAND,
         WAIKATO,
