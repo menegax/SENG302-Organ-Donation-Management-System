@@ -1,4 +1,8 @@
 package controller;
+import model.Donor;
+import org.joda.time.DateTime;
+
+import java.util.Date;
 import java.util.Scanner;
 
 public class App
@@ -14,12 +18,9 @@ public class App
         inputScanner = new Scanner( System.in );
     }
 
-    private boolean checkUserStrings(String input){
-        for (int i = 0; i<input.length(); i++){
-            //if (input.substring(i, i+1)){
-
-            //}
-        }
+    private boolean validateUserInputString(String input){
+        //TODO: check if correct input (contains only chars)
+        setUserInput(input);
         return true; //TODO: just to compile
     }
 
@@ -30,10 +31,30 @@ public class App
                 "3. View attributes of a particular donor \n");
     }
 
-    private void addDonorUI(){
+
+    private boolean validateUserDate(String input){
+        setUserInput(input);
+        return true; //TODO: implement
+    }
+
+    private void addDonorUI() {
+        //TODO: leave this to Hayden, i will finish this tonight.
         System.out.println("You decided to add a donor!");
         System.out.print("Please enter the new donors first name: ");
-        checkUserStrings(getInputScanner().next());
+        validateUserInputString(getInputScanner().next());
+        String firstName = getUserInput();
+        System.out.print("Please enter middle name(s) (if applicable): ");
+        validateUserInputString(getInputScanner().next()); //TODO:
+        String middleName = getUserInput();
+        System.out.print("Please enter the last name(s): ");
+        validateUserInputString(getInputScanner().next());
+        String lastName = getUserInput();
+        System.out.print("Please enter the date of birth (dd/mm/yyyy): "); //TODO:
+        validateUserDate(getInputScanner().next());
+        DateTime date = DateTime.parse(getUserInput());
+//        Donor newDonor = new Donor(firstName,middleName, lastName, date); //TODO: Donor constructor needs to take all 3 names
+//        Database.AddDonor(newDonor);
+
     }
 
     private void setAttributesUI(){
@@ -59,6 +80,9 @@ public class App
                     break;
                 case "3":
                     viewAttributes();
+                    break;
+                default:
+
             }
         }
     }
