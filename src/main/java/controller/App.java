@@ -1,4 +1,4 @@
-package seng302;
+package controller;
 
 public class App 
 {

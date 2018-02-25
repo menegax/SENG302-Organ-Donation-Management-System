@@ -1,4 +1,4 @@
-package seng302;
+package controller;
 
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
