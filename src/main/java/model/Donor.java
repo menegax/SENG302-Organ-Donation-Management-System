@@ -1,22 +1,28 @@
 package model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import utility.GlobalEnums;
 
 public class Donor {
 
-    private final UUID UUID; //todo make final
+    private final UUID UUID;
 
-    private final DateTime CREATED; //todo make final
+    private final DateTime CREATED;
 
-    private String name;
+    private String firstName;
 
-    private DateTime birth;
+    private List<String> middleNames;
 
-    private DateTime death;
+    private String lastName;
+
+    private LocalDate birth;
+
+    private LocalDate death;
 
     private GlobalEnums.Gender gender;
 
@@ -41,15 +47,17 @@ public class Donor {
     private DateTime modified;
 
 
-    public Donor(String newName, DateTime newDateOfBirth) {
-        UUID = java.util.UUID.randomUUID(); //todo make UUID
+    public Donor(String newFirstName, List<String> newMiddleNames, String newLastName, LocalDate newDateOfBirth) {
+        UUID = java.util.UUID.randomUUID(); //todo make sure UUID is unique, not just random
         CREATED = DateTime.now();
         modified = CREATED;
-        name = newName;
+        firstName = newFirstName;
+        middleNames = newMiddleNames;
+        lastName = newLastName;
         birth = newDateOfBirth;
     }
 
-    public UUID getUuid() {
+    public UUID getUUID() {
         return UUID;
     }
 
@@ -57,27 +65,27 @@ public class Donor {
         return CREATED;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String name) {
+        this.firstName = name;
     }
 
-    public DateTime getBirth() {
+    public LocalDate getBirth() {
         return birth;
     }
 
-    public void setBirth(DateTime birth) {
+    public void setBirth(LocalDate birth) {
         this.birth = birth;
     }
 
-    public DateTime getDeath() {
+    public LocalDate getDeath() {
         return death;
     }
 
-    public void setDeath(DateTime death) {
+    public void setDeath(LocalDate death) {
         this.death = death;
     }
 
@@ -169,9 +177,25 @@ public class Donor {
         this.modified = modified;
     }
 
+    public List<String> getMiddleNames() {
+        return middleNames;
+    }
+
+    public void setMiddleNames(List<String> middleNames) {
+        this.middleNames = middleNames;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public String toString() {
         return "Donor:" +
                 " UUID: " + UUID +
-                " Name: " + name;
+                " Name: " + firstName;
     }
 }
