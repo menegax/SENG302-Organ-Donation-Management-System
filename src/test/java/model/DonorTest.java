@@ -14,7 +14,7 @@ public class DonorTest {
         Donor donor = givenDonor();
 
         thenDonorHasAttributes(donor);
-        }
+    }
 
     private void thenDonorHasAttributes(Donor donor) {
         assertTrue(donor.getUUID() != null);
