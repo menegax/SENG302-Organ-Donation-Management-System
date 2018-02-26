@@ -1,39 +1,42 @@
 package controller;
+
 import model.Donor;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import service.Database;
-import service.DonorNotFoundException;
 
 import java.util.Date;
 import java.util.Scanner;
 
-public class App
-{
+public class App {
     //TODO: This will need to be reworked... NB: just skeleton
+
     private String userInput;
+
     private Scanner inputScanner;
+
     private DateTimeFormatter dateFormatter;
 
-    public App(){
+
+    public App() {
         userInput = "No Input";
-        inputScanner = new Scanner( System.in );
+        inputScanner = new Scanner(System.in);
         dateFormatter = DateTimeFormat.forPattern("dd/MM/yyyy");
     }
 
     private void displayAllOptions() {
-        System.out.println("Here are the available options!\n");
-        System.out.println("\n1. Add a new Donor " +
+        System.out.print("\nChoose from the following:\n");
+        System.out.println("\n1. Add a donor " +
                 "\n2. View all donors " +
-                "\n3. Set attributes of a particular donor " +
-                "\n4. View attributes of a particular donor ");
+                "\n3. Update a donor " +
+                "\n4. View a donor ");
     }
 
 
-    private boolean validateUserDate(String input){
-        try{
+    private boolean validateUserDate(String input) {
+        try {
             dateFormatter.parseDateTime(input).toDate();
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             setUserInput(null);
             return false;
         }
@@ -43,9 +46,9 @@ public class App
 
 
     //Checks that string does not contain any digits
-    private boolean validateUserInputString(String input){
-        for (char c : input.toCharArray()){
-            if (Character.isDigit(c)){
+    private boolean validateUserInputString(String input) {
+        for (char c : input.toCharArray()) {
+            if (Character.isDigit(c)) {
                 setUserInput(null);
                 return false;
             }
@@ -54,13 +57,17 @@ public class App
         return true;
     }
 
-    //Should be after each action. A way for user to see results of action, and continue when ready
-    private void displayConintueUI(){
+    /**
+     * Should be after each action. A way for user to see results of action, and continue when ready
+     */
+    private void displayContinueUI() {
         System.out.print("Press enter to continue...\n");
         inputScanner.nextLine();
     }
 
-    //Continues to ask user for input if invalid, add more cases to this as program grows
+    /**
+     * Continues to ask user for input if invalid, add more cases to this as program grows
+     */
     private void validateUserInput(String type, String userPrompt) {
         boolean passResult = false;
         String validateString = inputScanner.nextLine();
@@ -76,16 +83,15 @@ public class App
                     else System.out.println("Sorry, invalid input. Please try again.");
                     break;
                 case "nullablestring": // if we allow users to just hit enter, use this one
-                    if (validateString.length() == 0 ) {
+                    if (validateString.length() == 0) {
                         setUserInput(null); //set to null if no input
                         passResult = true;
-                    }
-                    else if (validateUserInputString(validateString)) //need else if so that method isnt called and middle is set to first name
+                    } else if (validateUserInputString(validateString)) //need else if so that method isnt called and middle is set to first name
                         passResult = true;
                     else
                         System.out.println("Sorry, invalid input. Please try again.");
             }
-            if (!passResult){
+            if (!passResult) {
                 System.out.print(userPrompt);
                 validateString = inputScanner.nextLine();
             }
@@ -94,23 +100,24 @@ public class App
 
     private void addDonorUI() {
         //first name
-        System.out.print("Please enter the new donors first name:");
-        validateUserInput("String", "Please enter the new donors first name:");
+        System.out.print("First name: ");
+        validateUserInput("String", "First name:");
         String firstName = getUserInput();
 
         //middle name
-        System.out.print("Please enter middle name(s) (if applicable):");
-        validateUserInput("nullablestring","Please enter middle name(s) (if applicable):");
+        System.out.print("Middle name(s) (if applicable):");
+        validateUserInput("nullablestring", "Please enter middle name(s) (if applicable):");
         String middleName = getUserInput();
 
         //last name
-        System.out.print("Please enter the last name(s): ");
-        validateUserInput("String","Please enter the last name(s):");
+        validateUserInput("String", "Please enter the last name:");
         String lastName = getUserInput();
 
         //date of birth
         System.out.print("Please enter the date of birth (dd/mm/yyyy):");
-        validateUserInput("date","Please enter the date of birth (dd/mm/yyyy):");
+        validateUserInput("date", "Please enter the date of birth (dd/mm/yyyy):");
+
+
         Date dateOfBirth = dateFormatter.parseDateTime(getUserInput()).toDate();
 
         //add the donor
@@ -120,22 +127,22 @@ public class App
                 firstName + " ",
                 middleName == null ? "" : middleName + " ",
                 lastName));
-        displayConintueUI();
+        displayContinueUI();
     }
 
-    private void selectDonorForAttributesUI(){
-        System.out.print("Select a Donor (by ID) to add attributes to:");
-        viewAllDonorsUI();
-        int selectedDonorId = inputScanner.nextInt();
-        inputScanner.nextLine(); //to get rid of newlines/carriage returns
-        try {
-            setAttributesUI(Database.getDonorById(selectedDonorId));
-        } catch (DonorNotFoundException e){
-            System.out.println(e.toString());
-        }
-    }
+//    private void selectDonorForAttributesUI() {
+//        System.out.print("Select a Donor (by ID) to add attributes to:");
+//        viewAllDonorsUI();
+//        int selectedDonorId = inputScanner.nextInt();
+//        inputScanner.nextLine(); //to get rid of newlines/carriage returns
+//        try {
+//            setAttributesUI(Database.getDonorById(selectedDonorId));
+//        } catch (DonorNotFoundException e) {
+//            System.out.println(e.toString());
+//        }
+//    }
 
-    private void setAttributesUI(Donor d){
+    private void setAttributesUI(Donor d) {
         System.out.println("Please select an attribute (by ID) to update for donor " + d.getNameConcatenated());
         System.out.print("1. Gender\n " +
                 "2. Height\n" +
@@ -143,37 +150,35 @@ public class App
                 "4. Blood Group\n" +
                 "5. Current Address\n" +
                 "6. Organs to donate\n");
-        displayConintueUI(); //TODO: implement after here! will need to get attribute and set
+        displayContinueUI(); //TODO: implement after here! will need to get attribute and set
+    }
 
+    private void viewAttributes() {
 
     }
 
-    private void viewAttributes(){
-
-    }
-
-    private void viewAllDonorsUI(){
-        for(Donor donor : Database.getDonors()){
-            System.out.println(String.format("\nID: %s, Name: %s", donor.getDonorId(), donor.getNameConcatenated()));
+    private void viewAllDonorsUI() {
+        for (Donor donor : Database.getDonors()) {
+            System.out.println(String.format("\nID: %s, Name: %s", donor.getNameConcatenated()));
         }
-
     }
 
     public void start() {
-        System.out.println("Welcome to ODMS!");
-        while (!getUserInput().equals("q")){
+        System.out.println("Welcome to the Organ Donor Management System!");
+        System.out.println("==========================================================");
+        while (!getUserInput().equals("q")) {
             displayAllOptions();
-            System.out.print("Please enter an option (as a number): ");
+            System.out.print("Please enter a number option (q to quit): ");
             setUserInput(getInputScanner().nextLine());
-            switch (getUserInput()){
+            switch (getUserInput()) {
                 case "1":
-                    addDonorUI(); //TODO: seperate into classes
+                    addDonorUI(); //TODO: separate into classes
                     break;
                 case "2":
                     viewAllDonorsUI();
                     break;
                 case "3":
-                    selectDonorForAttributesUI();//TODO: seperate into classes
+//                    selectDonorForAttributesUI();//TODO: separate into classes
                     break;
                 case "4":
                     viewAttributes();

@@ -10,9 +10,7 @@ import utility.GlobalEnums;
 
 public class Donor {
 
-    private final int donorId; //todo make final
-
-    private final DateTime CREATED; //todo make final
+    private final DateTime CREATED;
 
     private String firstName;
 
@@ -47,7 +45,6 @@ public class Donor {
     private DateTime modified;
 
     public Donor(String firstName, String middleName, String lastName, Date date){
-        donorId = Database.getMaxDonorId() + 1; //get max ID + 1 from services package.
         CREATED = DateTime.now();
         modified = CREATED;
         this.firstName = firstName;
@@ -192,16 +189,11 @@ public class Donor {
         this.modified = modified;
     }
 
-    public int getDonorId() {
-        return donorId;
-    }
-
     public String toString() {
         String donor = String.format("Donor: %s%s%s \nID: %s",
                 firstName + " ",
                 middleName == null ? "" : middleName + " ",
-                lastName,
-                donorId);
+                lastName);
         return donor;
     }
 }
