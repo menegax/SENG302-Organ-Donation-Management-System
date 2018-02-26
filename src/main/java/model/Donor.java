@@ -1,28 +1,27 @@
 package model;
 
+import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import utility.GlobalEnums;
 
 public class Donor {
 
-    private final UUID UUID;
+    private final UUID UUID; //todo make final
 
-    private final DateTime CREATED;
+    private final DateTime CREATED; //todo make final
 
     private String firstName;
 
-    private List<String> middleNames;
+    private String middleName;
 
     private String lastName;
 
-    private LocalDate birth;
+    private Date birth;
 
-    private LocalDate death;
+    private Date death;
 
     private GlobalEnums.Gender gender;
 
@@ -46,33 +45,22 @@ public class Donor {
 
     private DateTime modified;
 
-//    TODO: need constructor something like this...
-//    public Donor(String firstName, String middleName, String lastName, DateTime date){
-//        UUID = java.util.UUID.randomUUID(); //todo make UUID
-//        CREATED = DateTime.now();
-//        modified = CREATED;
-//
-//        this.firstName = firstName;
-//        if (!middleName.equals(null)){
-//            this.middleName = middleName;
-//        }
-//        if (!lastName.equals(null)){
-//            this.lastName = lastName;
-//        }
-//        birth = date.toDate(); //TODO: needs just date
-//    }
-
-    public Donor(String newFirstName, List<String> newMiddleNames, String newLastName, LocalDate newDateOfBirth) {
-        UUID = java.util.UUID.randomUUID(); //todo make sure UUID is unique, not just random
+    public Donor(String firstName, String middleName, String lastName, Date date){
+        UUID = java.util.UUID.randomUUID(); //todo make UUID
         CREATED = DateTime.now();
         modified = CREATED;
-        firstName = newFirstName;
-        middleNames = newMiddleNames;
-        lastName = newLastName;
-        birth = newDateOfBirth;
+
+        this.firstName = firstName;
+        if (!middleName.equals(null)){
+            this.middleName = middleName;
+        }
+        if (!lastName.equals(null)){
+            this.lastName = lastName;
+        }
+        birth = date; //TODO: needs just date
     }
 
-    public UUID getUUID() {
+    public java.util.UUID getUUID() {
         return UUID;
     }
 
@@ -84,23 +72,39 @@ public class Donor {
         return firstName;
     }
 
-    public void setFirstName(String name) {
-        this.firstName = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public LocalDate getBirth() {
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Date getBirth() {
         return birth;
     }
 
-    public void setBirth(LocalDate birth) {
+    public void setBirth(Date birth) {
         this.birth = birth;
     }
 
-    public LocalDate getDeath() {
+    public Date getDeath() {
         return death;
     }
 
-    public void setDeath(LocalDate death) {
+    public void setDeath(Date death) {
         this.death = death;
     }
 
@@ -192,25 +196,12 @@ public class Donor {
         this.modified = modified;
     }
 
-    public List<String> getMiddleNames() {
-        return middleNames;
-    }
-
-    public void setMiddleNames(List<String> middleNames) {
-        this.middleNames = middleNames;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String toString() {
-        return "Donor:" +
-                " UUID: " + UUID +
-                " Name: " + firstName;
+        String donor = String.format("Donor: %s%s%s \nUUID: %s",
+                firstName + " ",
+                middleName == null ? "" : middleName + " ",
+                lastName,
+                UUID);
+        return donor;
     }
 }

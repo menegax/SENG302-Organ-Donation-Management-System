@@ -4,6 +4,7 @@ import org.joda.time.LocalDate;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import static org.junit.Assert.*;
 
@@ -23,7 +24,7 @@ public class DonorTest {
     }
 
     private Donor givenDonor() {
-        return new Donor("Bob", new ArrayList<>(), "Wallace", new LocalDate(2014, 9, 6));
+        return new Donor("Bob", "Jade", "Wallace", new Date(2014, 9, 6));
     }
 
 }
