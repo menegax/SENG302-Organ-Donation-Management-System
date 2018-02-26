@@ -46,6 +46,21 @@ public class Donor {
 
     private DateTime modified;
 
+//    TODO: need constructor something like this...
+//    public Donor(String firstName, String middleName, String lastName, DateTime date){
+//        UUID = java.util.UUID.randomUUID(); //todo make UUID
+//        CREATED = DateTime.now();
+//        modified = CREATED;
+//
+//        this.firstName = firstName;
+//        if (!middleName.equals(null)){
+//            this.middleName = middleName;
+//        }
+//        if (!lastName.equals(null)){
+//            this.lastName = lastName;
+//        }
+//        birth = date.toDate(); //TODO: needs just date
+//    }
 
     public Donor(String newFirstName, List<String> newMiddleNames, String newLastName, LocalDate newDateOfBirth) {
         UUID = java.util.UUID.randomUUID(); //todo make sure UUID is unique, not just random
