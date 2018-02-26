@@ -5,11 +5,12 @@ import java.util.HashSet;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import service.Database;
 import utility.GlobalEnums;
 
 public class Donor {
 
-    private final UUID UUID; //todo make final
+    private final int donorId; //todo make final
 
     private final DateTime CREATED; //todo make final
 
@@ -46,22 +47,17 @@ public class Donor {
     private DateTime modified;
 
     public Donor(String firstName, String middleName, String lastName, Date date){
-        UUID = java.util.UUID.randomUUID(); //todo make UUID
+        donorId = Database.getMaxDonorId() + 1; //get max ID + 1 from services package.
         CREATED = DateTime.now();
         modified = CREATED;
-
         this.firstName = firstName;
-        if (!middleName.equals(null)){
-            this.middleName = middleName;
-        }
-        if (!lastName.equals(null)){
-            this.lastName = lastName;
-        }
+        this.middleName = middleName;
+        this.lastName = lastName;
         birth = date; //TODO: needs just date
     }
 
-    public java.util.UUID getUUID() {
-        return UUID;
+    public String getNameConcatenated(){
+        return  firstName + " " + (middleName == null? "" : middleName + " " ) + lastName;
     }
 
     public DateTime getCREATED() {
@@ -196,12 +192,16 @@ public class Donor {
         this.modified = modified;
     }
 
+    public int getDonorId() {
+        return donorId;
+    }
+
     public String toString() {
-        String donor = String.format("Donor: %s%s%s \nUUID: %s",
+        String donor = String.format("Donor: %s%s%s \nID: %s",
                 firstName + " ",
                 middleName == null ? "" : middleName + " ",
                 lastName,
-                UUID);
+                donorId);
         return donor;
     }
 }

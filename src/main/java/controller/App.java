@@ -3,6 +3,7 @@ import model.Donor;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import service.Database;
+import service.DonorNotFoundException;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -13,13 +14,11 @@ public class App
     private String userInput;
     private Scanner inputScanner;
     private DateTimeFormatter dateFormatter;
-    private Database databaseInstance;
 
     public App(){
         userInput = "No Input";
         inputScanner = new Scanner( System.in );
         dateFormatter = DateTimeFormat.forPattern("dd/MM/yyyy");
-        databaseInstance = new Database();
     }
 
     private void displayAllOptions() {
@@ -34,7 +33,7 @@ public class App
     private boolean validateUserDate(String input){
         try{
             dateFormatter.parseDateTime(input).toDate();
-        }catch (IllegalArgumentException e){ //TODO: get correct exception
+        }catch (IllegalArgumentException e){
             setUserInput(null);
             return false;
         }
@@ -77,7 +76,11 @@ public class App
                     else System.out.println("Sorry, invalid input. Please try again.");
                     break;
                 case "nullablestring": // if we allow users to just hit enter, use this one
-                    if (validateString.length() == 0 || validateUserInputString(validateString))
+                    if (validateString.length() == 0 ) {
+                        setUserInput(null); //set to null if no input
+                        passResult = true;
+                    }
+                    else if (validateUserInputString(validateString)) //need else if so that method isnt called and middle is set to first name
                         passResult = true;
                     else
                         System.out.println("Sorry, invalid input. Please try again.");
@@ -111,16 +114,37 @@ public class App
         Date dateOfBirth = dateFormatter.parseDateTime(getUserInput()).toDate();
 
         //add the donor
-        Donor newDonor = new Donor(firstName,middleName, lastName, dateOfBirth);
-        databaseInstance.addDonor(newDonor);
+        Donor newDonor = new Donor(firstName, middleName, lastName, dateOfBirth);
+        Database.addDonor(newDonor);
         System.out.println(String.format("Successfully added:\n  Donor: %s%s%s",
-                firstName,
+                firstName + " ",
                 middleName == null ? "" : middleName + " ",
                 lastName));
         displayConintueUI();
     }
 
-    private void setAttributesUI(){
+    private void selectDonorForAttributesUI(){
+        System.out.print("Select a Donor (by ID) to add attributes to:");
+        viewAllDonorsUI();
+        int selectedDonorId = inputScanner.nextInt();
+        inputScanner.nextLine(); //to get rid of newlines/carriage returns
+        try {
+            setAttributesUI(Database.getDonorById(selectedDonorId));
+        } catch (DonorNotFoundException e){
+            System.out.println(e.toString());
+        }
+    }
+
+    private void setAttributesUI(Donor d){
+        System.out.println("Please select an attribute (by ID) to update for donor " + d.getNameConcatenated());
+        System.out.print("1. Gender\n " +
+                "2. Height\n" +
+                "3. Weight\n" +
+                "4. Blood Group\n" +
+                "5. Current Address\n" +
+                "6. Organs to donate\n");
+        displayConintueUI(); //TODO: implement after here! will need to get attribute and set
+
 
     }
 
@@ -129,10 +153,10 @@ public class App
     }
 
     private void viewAllDonorsUI(){
-        for(Donor donor : databaseInstance.getDonors()){
-            System.out.println("\n" + donor);
+        for(Donor donor : Database.getDonors()){
+            System.out.println(String.format("\nID: %s, Name: %s", donor.getDonorId(), donor.getNameConcatenated()));
         }
-        displayConintueUI();
+
     }
 
     public void start() {
@@ -149,7 +173,7 @@ public class App
                     viewAllDonorsUI();
                     break;
                 case "3":
-                    setAttributesUI();//TODO: seperate into classes
+                    selectDonorForAttributesUI();//TODO: seperate into classes
                     break;
                 case "4":
                     viewAttributes();
