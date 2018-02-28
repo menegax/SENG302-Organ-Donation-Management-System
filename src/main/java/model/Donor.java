@@ -44,7 +44,7 @@ public class Donor {
 
     private DateTime modified;
 
-    public Donor(String firstName, String middleName, String lastName, Date date){
+    public Donor(String firstName, String middleName, String lastName, Date date) {
         CREATED = DateTime.now();
         modified = CREATED;
         this.firstName = firstName;
@@ -53,8 +53,8 @@ public class Donor {
         birth = date; //TODO: needs just date
     }
 
-    public String getNameConcatenated(){
-        return  firstName + " " + (middleName == null? "" : middleName + " " ) + lastName;
+    public String getNameConcatenated() {
+        return firstName + " " + (middleName == null ? "" : middleName + " ") + lastName;
     }
 
     public DateTime getCREATED() {
