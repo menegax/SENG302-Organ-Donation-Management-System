@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class App {
-    //TODO: This will need to be reworked... NB: just skeleton
 
     private String userInput;
 
