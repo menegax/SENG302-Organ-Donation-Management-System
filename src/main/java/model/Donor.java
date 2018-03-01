@@ -1,11 +1,12 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.UUID;
+import java.util.List;
 
 import org.joda.time.DateTime;
-import service.Database;
+import org.joda.time.LocalDate;
 import utility.GlobalEnums;
 
 public class Donor {
@@ -14,13 +15,13 @@ public class Donor {
 
     private String firstName;
 
-    private String middleName;
+    private ArrayList<String> middleNames;
 
     private String lastName;
 
-    private Date birth;
+    private LocalDate birth;
 
-    private Date death;
+    private LocalDate death;
 
     private GlobalEnums.Gender gender;
 
@@ -44,17 +45,17 @@ public class Donor {
 
     private DateTime modified;
 
-    public Donor(String firstName, String middleName, String lastName, Date date) {
-        CREATED = DateTime.now();
-        modified = CREATED;
+    public Donor(String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
+        this.CREATED = DateTime.now();
+        this.modified = CREATED;
         this.firstName = firstName;
-        this.middleName = middleName;
+        this.middleNames = middleNames;
         this.lastName = lastName;
-        birth = date; //TODO: needs just date
+        this.birth = date;
     }
 
     public String getNameConcatenated() {
-        return firstName + " " + (middleName == null ? "" : middleName + " ") + lastName;
+        return firstName + " " + (middleNames == null ? "" : middleNames + " ") + lastName;
     }
 
     public DateTime getCREATED() {
@@ -69,12 +70,12 @@ public class Donor {
         this.firstName = firstName;
     }
 
-    public String getMiddleName() {
-        return middleName;
+    public ArrayList<String> getMiddleNames() {
+        return middleNames;
     }
 
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
+    public void setMiddleNames(ArrayList<String> middleName) {
+        this.middleNames = middleName;
     }
 
     public String getLastName() {
@@ -85,19 +86,19 @@ public class Donor {
         this.lastName = lastName;
     }
 
-    public Date getBirth() {
+    public LocalDate getBirth() {
         return birth;
     }
 
-    public void setBirth(Date birth) {
+    public void setBirth(LocalDate birth) {
         this.birth = birth;
     }
 
-    public Date getDeath() {
+    public LocalDate getDeath() {
         return death;
     }
 
-    public void setDeath(Date death) {
+    public void setDeath(LocalDate death) {
         this.death = death;
     }
 
@@ -190,10 +191,11 @@ public class Donor {
     }
 
     public String toString() {
-        String donor = String.format("Donor: %s%s%s \nID: %s",
-                firstName + " ",
-                middleName == null ? "" : middleName + " ",
-                lastName);
-        return donor;
+        return "Donor: " +
+                "created: " + CREATED + " " +
+                "firstName: " + firstName + " " +
+                "middleNames: " + middleNames.toString() + " " +
+                "lastName: " + lastName + " " +
+                "dateOfBirth: " + birth.toString();
     }
 }

@@ -1,11 +1,14 @@
 package controller;
 
 import model.Donor;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import service.Database;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
@@ -35,7 +38,7 @@ public class App {
 
     private boolean validateUserDate(String input) {
         try {
-            dateFormatter.parseDateTime(input).toDate();
+            LocalDate.parse(input);
         } catch (IllegalArgumentException e) {
             setUserInput(null);
             return false;
@@ -45,7 +48,9 @@ public class App {
     }
 
 
-    //Checks that string does not contain any digits
+    /**
+     * Checks that string does not contain any digits
+     */
     private boolean validateUserInputString(String input) {
         for (char c : input.toCharArray()) {
             if (Character.isDigit(c)) {
@@ -70,6 +75,7 @@ public class App {
      */
     private void validateUserInput(String type, String userPrompt) {
         boolean passResult = false;
+        System.out.println(userPrompt);
         String validateString = inputScanner.nextLine();
         while (!passResult) {
             switch (type.toLowerCase()) {
@@ -100,35 +106,32 @@ public class App {
 
     private void addDonorUI() {
         //first name
-        System.out.print("First name: ");
-        validateUserInput("String", "First name:");
+        validateUserInput("String", "First name: ");
         String firstName = getUserInput();
 
         //middle name
-        System.out.print("Middle name(s) (if applicable):");
-        validateUserInput("nullablestring", "Please enter middle name(s) (if applicable):");
-        String middleName = getUserInput();
+        ArrayList<String> middleNames = new ArrayList<>();
+        String middleName = "";
+        while (middleName != null) {
+            validateUserInput("nullablestring", "Enter a single middle name (if applicable): ");
+            middleName = getUserInput();
+            middleNames.add(middleName);
+        }
 
         //last name
-        validateUserInput("String", "Please enter the last name:");
+        validateUserInput("String", "Last name: ");
         String lastName = getUserInput();
 
         //date of birth
-        System.out.print("Please enter the date of birth (dd/mm/yyyy):");
-        validateUserInput("date", "Please enter the date of birth (dd/mm/yyyy):");
-
-
-        Date dateOfBirth = dateFormatter.parseDateTime(getUserInput()).toDate();
+        validateUserInput("date", "Date of birth (yyyy-mm-dd): ");
+        LocalDate dateOfBirth = new LocalDate(LocalDate.parse(userInput));
 
         //add the donor
-        Donor newDonor = new Donor(firstName, middleName, lastName, dateOfBirth);
+        Donor newDonor = new Donor(firstName, middleNames, lastName, dateOfBirth);
         Database.addDonor(newDonor);
-        System.out.println(String.format("Successfully added:\n  Donor: %s%s%s",
-                firstName + " ",
-                middleName == null ? "" : middleName + " ",
-                lastName));
+        System.out.println(newDonor);
         displayContinueUI();
-    }
+        }
 
 //    private void selectDonorForAttributesUI() {
 //        System.out.print("Select a Donor (by ID) to add attributes to:");
@@ -142,66 +145,66 @@ public class App {
 //        }
 //    }
 
-    private void setAttributesUI(Donor d) {
-        System.out.println("Please select an attribute (by ID) to update for donor " + d.getNameConcatenated());
-        System.out.print("1. Gender\n " +
-                "2. Height\n" +
-                "3. Weight\n" +
-                "4. Blood Group\n" +
-                "5. Current Address\n" +
-                "6. Organs to donate\n");
-        displayContinueUI(); //TODO: implement after here! will need to get attribute and set
-    }
-
-    private void viewAttributes() {
-
-    }
-
-    private void viewAllDonorsUI() {
-        for (Donor donor : Database.getDonors()) {
-            System.out.println(String.format("\nID: %s, Name: %s", donor.getNameConcatenated()));
+        private void setAttributesUI (Donor d){
+            System.out.println("Please select an attribute (by ID) to update for donor " + d.getNameConcatenated());
+            System.out.print("1. Gender\n " +
+                    "2. Height\n" +
+                    "3. Weight\n" +
+                    "4. Blood Group\n" +
+                    "5. Current Address\n" +
+                    "6. Organs to donate\n");
+            displayContinueUI(); //TODO: implement after here! will need to get attribute and set
         }
-    }
 
-    public void start() {
-        System.out.println("Welcome to the Organ Donor Management System!");
-        System.out.println("==========================================================");
-        while (!getUserInput().equals("q")) {
-            displayAllOptions();
-            System.out.print("Please enter a number option (q to quit): ");
-            setUserInput(getInputScanner().nextLine());
-            switch (getUserInput()) {
-                case "1":
-                    addDonorUI(); //TODO: separate into classes
-                    break;
-                case "2":
-                    viewAllDonorsUI();
-                    break;
-                case "3":
-//                    selectDonorForAttributesUI();//TODO: separate into classes
-                    break;
-                case "4":
-                    viewAttributes();
-                default:
+        private void viewAttributes () {
 
+        }
+
+        private void viewAllDonorsUI () {
+            for (Donor donor : Database.getDonors()) {
+                System.out.println(String.format("\nID: %s, Name: %s", donor.getNameConcatenated()));
             }
         }
-    }
 
-    public String getUserInput() {
-        return userInput;
-    }
+        public void start () {
+            System.out.println("Welcome to the Organ Donor Management System!");
+            System.out.println("==========================================================");
+            while (!getUserInput().equals("q")) {
+                displayAllOptions();
+                System.out.print("Please enter a number option (q to quit): ");
+                setUserInput(getInputScanner().nextLine());
+                switch (getUserInput()) {
+                    case "1":
+                        addDonorUI(); //TODO: separate into classes
+                        break;
+                    case "2":
+                        viewAllDonorsUI();
+                        break;
+                    case "3":
+//                    selectDonorForAttributesUI();//TODO: separate into classes
+                        break;
+                    case "4":
+                        viewAttributes();
+                    default:
 
-    public void setUserInput(String userInput) {
-        this.userInput = userInput;
-    }
+                }
+            }
+        }
 
-    public Scanner getInputScanner() {
-        return inputScanner;
-    }
+        public String getUserInput () {
+            return userInput;
+        }
 
-    public void setInputScanner(Scanner inputScanner) {
-        this.inputScanner = inputScanner;
-    }
+        public void setUserInput (String userInput){
+            this.userInput = userInput;
+        }
 
-}
+        public Scanner getInputScanner () {
+            return inputScanner;
+        }
+
+        public void setInputScanner (Scanner inputScanner){
+            this.inputScanner = inputScanner;
+        }
+
+    }

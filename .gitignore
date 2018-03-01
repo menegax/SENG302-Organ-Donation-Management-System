@@ -5,6 +5,7 @@
 
 #Intellij specific
 .idea/
+*.idea
 
 *.iml
 

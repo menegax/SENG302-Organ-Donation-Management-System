@@ -3,7 +3,6 @@ package model;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.Assert.*;
@@ -18,13 +17,13 @@ public class DonorTest {
     }
 
     private void thenDonorHasAttributes(Donor donor) {
-        assertTrue(donor.getDonorId() == 1);
         assertTrue(donor.getCREATED() != null);
         assertEquals(donor.getFirstName(), "Bob");
+        //TODO add other attributes
     }
 
     private Donor givenDonor() {
-        return new Donor("Bob", "Jade", "Wallace", new Date(2014, 9, 6));
+        return new Donor("Bob", null, "Wallace", new LocalDate(1995, 12, 31));
     }
 
 }
