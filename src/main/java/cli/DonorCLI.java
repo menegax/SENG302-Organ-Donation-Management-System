@@ -1,10 +1,9 @@
 package cli;
-
-import model.Donor;
-import cli.DonorAdd;
 import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Command;
+
+import java.util.Scanner;
 
 
 @Command(name = "donor", subcommands = DonorAdd.class)
@@ -14,10 +13,6 @@ public class DonorCLI implements Runnable {
 
     public void run() {
 
-    }
-
-    public static void main(String[] args) {
-        CommandLine.run(new DonorCLI(), System.out, args);
     }
 
 }
