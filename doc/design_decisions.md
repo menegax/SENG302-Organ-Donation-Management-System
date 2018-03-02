@@ -23,8 +23,8 @@ The decision was made to maintain one large global enumerations class in a separ
 JodaTime will be used for dates and times (i.e. DateTime and LocalDate), not the native Java Date class from utils.
 
 #### Donor Unique ID
-In order to satisfy story number ?, the user must be able to search for a particular donor and receive one search result. 
+In order to satisfy story number 43, the user must be able to search for a particular donor and receive one search result. 
 This requires a unique search term to be entered such that duplicates are not returned. 
 
-* unique id for donor? -- firstname, middle name, last name, dob, created datetime concatenated
-* 
+* we have decided to use a donors IRD number to distinguish one donor from another, whom have colliding names.
+* we will check for uniqueness within our application by checking if a donor with the IRD already exists. If it already exists an exception is thrown to tell the user this.

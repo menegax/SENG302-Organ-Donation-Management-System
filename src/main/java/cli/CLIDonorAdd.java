@@ -14,10 +14,13 @@ class CLIDonorAdd implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")
     private boolean helpRequested = false;
 
+    @Option (names = {"-ird", "--ird"}, required = true, description = "The IRD number of the donor.")
+    private int ird;
+
     @Option(names = {"-f", "--firstname"}, required = true, description = "The first name of the donor.")
     private String firstName;
 
-    @Option(names = {"-m", "--middlenames"}, split = ",", required = false, description = "Comma-separated list of middle names of the donor.")
+    @Option(names = {"-m", "--middlenames"}, split = ",", description = "Comma-separated list of middle names of the donor.")
     private ArrayList<String> middleNames;
 
     @Option(names = {"-l", "--lastname"}, required = true, description = "The last name of the donor.")
@@ -27,9 +30,11 @@ class CLIDonorAdd implements Runnable {
     private LocalDate birth;
 
     public void run() {
-
-        Database.addDonor(new Donor(firstName, middleNames, lastName, birth));
-
+        try{
+            Database.addDonor(new Donor(ird,firstName, middleNames, lastName, birth));
+        }catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
+        }
     }
 
 }

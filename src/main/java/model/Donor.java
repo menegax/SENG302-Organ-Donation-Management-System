@@ -4,7 +4,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Hashtable;
 
+import service.Database;
 import utility.GlobalEnums;
 
 public class Donor {
@@ -43,16 +45,27 @@ public class Donor {
 
     private Timestamp modified;
 
-    private final String donorID;
+    private int irdNumber;
 
-    public Donor(String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
+    public Donor(int irdNumber, String firstName,
+                 ArrayList<String> middleNames, String lastName, LocalDate date) throws IllegalArgumentException{
+
         this.CREATED = new Timestamp(System.currentTimeMillis());
+        ensureUniqueIrd(irdNumber);
         this.modified = CREATED;
         this.firstName = firstName;
         this.middleNames = middleNames;
         this.lastName = lastName;
         this.birth = date;
-        this.donorID = firstName + middleNames + lastName + date;
+        this.irdNumber = irdNumber;
+    }
+
+    public static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException{
+        for (Donor d: Database.getDonors()){
+            if (d.irdNumber == irdNumber){
+                throw new IllegalArgumentException("IRD number is not unique");
+            }
+        }
     }
 
     public String getNameConcatenated() {
@@ -65,10 +78,6 @@ public class Donor {
 
     public void setOrgansToDonate(ArrayList<GlobalEnums.Organ> organsToDonate) {
         this.organsToDonate = organsToDonate;
-    }
-
-    public String getDonorID() {
-        return donorID;
     }
 
     public Timestamp getCREATED() {
@@ -199,9 +208,19 @@ public class Donor {
         organsToDonate.add(organ);
     }
 
+    public int getIrdNumber() {
+        return irdNumber;
+    }
+
+    public void setIrdNumber(int irdNumber) {
+        this.irdNumber = irdNumber;
+    }
+
+
     public String toString() {
         return "Donor: " +
                 "created: " + CREATED + " " +
+                "ird: " + irdNumber + " " +
                 "firstName: " + firstName + " " +
                 "middleNames: " + middleNames + " " +
                 "lastName: " + lastName + " " +

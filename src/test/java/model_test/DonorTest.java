@@ -23,7 +23,7 @@ public class DonorTest {
     }
 
     private Donor givenDonor() {
-        return new Donor("Bob", null, "Wallace", LocalDate.of(1995, 12, 31));
+        return new Donor(12,"Bob", null, "Wallace", LocalDate.of(1995, 12, 31));
     }
 
 }
