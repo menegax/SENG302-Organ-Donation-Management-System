@@ -36,7 +36,7 @@ public class CLIDonorUpdate implements Runnable{
     @Option(names = {"-g", "--gender"}, description = "The gender of the donor.")
     private String gender;
 
-    @Option(names = {"-h", "--height"}, description = "The height of the donor (cm).")
+    @Option(names = {"-ht", "--height"}, description = "The height of the donor (cm).")
     private double height;
 
     @Option(names = {"-w", "--weight"}, description = "The weight of the donor (kg).")
