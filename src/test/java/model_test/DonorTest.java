@@ -2,6 +2,7 @@ package model_test;
 
 import java.time.LocalDate;
 
+import model.Donor;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

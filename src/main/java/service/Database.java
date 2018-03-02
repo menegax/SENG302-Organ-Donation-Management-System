@@ -2,7 +2,7 @@ package service;
 
 import java.util.HashSet;
 
-import model_test.Donor;
+import model.Donor;
 
 public class Database {
 

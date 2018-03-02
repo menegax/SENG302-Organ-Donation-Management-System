@@ -1,4 +1,4 @@
-package model_test;
+package model;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -39,9 +39,11 @@ public class Donor {
 
     private int zip;
 
-    private HashSet<GlobalEnums.Organ> organ;
+    private ArrayList<GlobalEnums.Organ> organsToDonate;
 
     private Timestamp modified;
+
+    private final String donorID;
 
     public Donor(String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
@@ -50,10 +52,23 @@ public class Donor {
         this.middleNames = middleNames;
         this.lastName = lastName;
         this.birth = date;
+        this.donorID = firstName + middleNames + lastName + date;
     }
 
     public String getNameConcatenated() {
         return firstName + " " + (middleNames == null ? "" : middleNames + " ") + lastName;
+    }
+
+    public ArrayList<GlobalEnums.Organ> getOrgansToDonate() {
+        return organsToDonate;
+    }
+
+    public void setOrgansToDonate(ArrayList<GlobalEnums.Organ> organsToDonate) {
+        this.organsToDonate = organsToDonate;
+    }
+
+    public String getDonorID() {
+        return donorID;
     }
 
     public Timestamp getCREATED() {
@@ -172,14 +187,6 @@ public class Donor {
         this.zip = zip;
     }
 
-    public HashSet<GlobalEnums.Organ> getOrgan() {
-        return organ;
-    }
-
-    public void setOrgan(HashSet<GlobalEnums.Organ> organ) {
-        this.organ = organ;
-    }
-
     public Timestamp getModified() {
         return modified;
     }
@@ -188,12 +195,17 @@ public class Donor {
         this.modified = modified;
     }
 
+    public void addOrganToDonate(GlobalEnums.Organ organ){
+        organsToDonate.add(organ);
+    }
+
     public String toString() {
         return "Donor: " +
                 "created: " + CREATED + " " +
                 "firstName: " + firstName + " " +
                 "middleNames: " + middleNames + " " +
                 "lastName: " + lastName + " " +
-                "dateOfBirth: " + birth.toString();
+                "dateOfBirth: " + birth.toString() + " " +
+                "Organs to Donate: " + organsToDonate;
     }
 }

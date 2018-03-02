@@ -1,6 +1,6 @@
 package cli;
 
-import model_test.Donor;
+import model.Donor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;

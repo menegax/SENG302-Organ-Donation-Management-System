@@ -4,7 +4,7 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Command;
 
 
-@Command(name = "donor", subcommands = {CLIDonorAdd.class})
+@Command(name = "donor", subcommands = {CLIDonorAdd.class, CLIDonorUpdate.class})
 public class CLIDonor implements Runnable {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")
