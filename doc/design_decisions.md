@@ -28,3 +28,4 @@ This requires a unique search term to be entered such that duplicates are not re
 
 * we have decided to use a donors IRD number to distinguish one donor from another, whom have colliding names.
 * we will check for uniqueness within our application by checking if a donor with the IRD already exists. If it already exists an exception is thrown to tell the user this.
+* if there an IRD is entered but there is a collision (i.e another donor has the incorrect IRD) then the incorrect IRD will need to updated before adding the new donor

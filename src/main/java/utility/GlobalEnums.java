@@ -5,7 +5,7 @@ public class GlobalEnums {
     public enum Gender {
         MALE,
         FEMALE,
-        OTHER,
+        OTHER
     }
 
     public enum Region {

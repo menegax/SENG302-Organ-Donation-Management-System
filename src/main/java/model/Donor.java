@@ -1,11 +1,7 @@
 package model;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Hashtable;
-
 import service.Database;
 import utility.GlobalEnums;
 
