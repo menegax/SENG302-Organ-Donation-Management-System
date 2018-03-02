@@ -1,0 +1,7 @@
++  xxxxx   xxxxxxx  xx       xx    xxxxxxxxxx\
+| x     x  x     xx xxx     xxx    x\
+| x     x  x      x x xx    x xx   xx\
+| x     x  x      x x   xx xx  x    xxxxxxxx\
+| x     x  x     xx x    xxx   xx          xx\
+|  xxxxx   xxxxxxx  x     xx    xx xxxxxxxxxx\
++----------------------------------------------+
