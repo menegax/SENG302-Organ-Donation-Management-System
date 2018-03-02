@@ -8,8 +8,12 @@ import service.Database;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-@Command(name = "add", description="used to add new donors")
+@Command(name = "add", description = "used to add new donors")
 class CLIDonorAdd implements Runnable {
+
+    @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")
+    private boolean helpRequested = false;
+
     @Option(names = {"-f", "--firstname"}, required = true, description = "The first name of the donor.")
     private String firstName;
 
@@ -23,18 +27,8 @@ class CLIDonorAdd implements Runnable {
     private LocalDate birth;
 
     public void run() {
-        // Donor newDonor = new Donor(firstName, middleNames, lastName, );
-        System.out.println("firstName: " + firstName + " " +
-                "middleNames: " + middleNames + " " +
-                "lastName: " + lastName + " " +
-                "birthDate: " + birth);
 
-        Donor newDonor = new Donor(firstName, middleNames, lastName, birth);
-        System.out.println(newDonor + "will be added to database");
-
-        Database.addDonor(newDonor);
-
-        System.out.println(Database.getDonors());
+        Database.addDonor(new Donor(firstName, middleNames, lastName, birth));
 
     }
 
