@@ -1,9 +1,7 @@
-package model;
+package model_test;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.junit.Test;
-
-import java.util.Date;
 
 import static org.junit.Assert.*;
 
@@ -23,7 +21,7 @@ public class DonorTest {
     }
 
     private Donor givenDonor() {
-        return new Donor("Bob", null, "Wallace", new LocalDate(1995, 12, 31));
+        return new Donor("Bob", null, "Wallace", LocalDate.of(1995, 12, 31));
     }
 
 }

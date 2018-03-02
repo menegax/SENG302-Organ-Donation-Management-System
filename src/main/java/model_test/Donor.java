@@ -1,17 +1,15 @@
-package model;
+package model_test;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import utility.GlobalEnums;
 
 public class Donor {
 
-    private final DateTime CREATED;
+    private final Timestamp CREATED;
 
     private String firstName;
 
@@ -43,10 +41,10 @@ public class Donor {
 
     private HashSet<GlobalEnums.Organ> organ;
 
-    private DateTime modified;
+    private Timestamp modified;
 
     public Donor(String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
-        this.CREATED = DateTime.now();
+        this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
         this.firstName = firstName;
         this.middleNames = middleNames;
@@ -58,7 +56,7 @@ public class Donor {
         return firstName + " " + (middleNames == null ? "" : middleNames + " ") + lastName;
     }
 
-    public DateTime getCREATED() {
+    public Timestamp getCREATED() {
         return CREATED;
     }
 
@@ -182,11 +180,11 @@ public class Donor {
         this.organ = organ;
     }
 
-    public DateTime getModified() {
+    public Timestamp getModified() {
         return modified;
     }
 
-    public void setModified(DateTime modified) {
+    public void setModified(Timestamp modified) {
         this.modified = modified;
     }
 
@@ -194,7 +192,7 @@ public class Donor {
         return "Donor: " +
                 "created: " + CREATED + " " +
                 "firstName: " + firstName + " " +
-                "middleNames: " + middleNames.toString() + " " +
+                "middleNames: " + middleNames + " " +
                 "lastName: " + lastName + " " +
                 "dateOfBirth: " + birth.toString();
     }
