@@ -37,38 +37,38 @@ public class CLIDonorUpdate implements Runnable {
     @Option(names = {"-d", "--dateofdeath"}, description = "The date of death of the donor (yyyy-mm-dd).")
     private LocalDate death;
 
-    @Option(names = {"-g", "--gender"}, description = "The gender of the donor.")
+    @Option(names = {"--gender"}, description = "The gender of the donor.")
     private String gender;
 
-    @Option(names = {"-ht", "--height"}, description = "The height of the donor (cm).")
+    @Option(names = {"--height"}, description = "The height of the donor (cm).")
     private double height;
 
-    @Option(names = {"-w", "--weight"}, description = "The weight of the donor (kg).")
+    @Option(names = {"--weight"}, description = "The weight of the donor (kg).")
     private int weight;
 
-    @Option(names = {"-street1", "--street1"}, description = "The street1 field for the address of the donor.")
+    @Option(names = {"--street1"}, description = "The street1 field for the address of the donor.")
     private String street1;
 
-    @Option(names = {"-street2", "--street2"}, description = "The street2 field for the address of the donor.")
+    @Option(names = {"--street2"}, description = "The street2 field for the address of the donor.")
     private String street2;
 
-    @Option(names = {"-suburb", "--suburb"}, description = "The suburb field for the address of the donor.")
+    @Option(names = {"--suburb"}, description = "The suburb field for the address of the donor.")
     private String suburb;
 
-    @Option(names = {"-region", "--region"}, description = "NORTHLAND, AUCKLAND, WAIKATO, BAYOFPLENTY,\n" +
+    @Option(names = {"--region"}, description = "NORTHLAND, AUCKLAND, WAIKATO, BAYOFPLENTY,\n" +
             "GISBORNE, HAWKESBAY, TARANAKI, MANAWATU,\n" +
             "WELLINGTON, TASMAN, NELSON, MARLBOROUGH,\n" +
             "WESTCOAST, CANTERBURY, OTAGO, SOUTHLAND")
     private String region;
 
 
-    @Option(names = {"-zip", "--zip"}, description = "The zip field for the address of the donor.")
+    @Option(names = {"--zip"}, description = "The zip field for the address of the donor.")
     private int zip;
 
-    @Option(names = {"-ird", "--ird"}, description = "The IRD number of the donor.")
+    @Option(names = {"--ird"}, description = "The IRD number of the donor.")
     private int ird;
 
-    @Option(names = {"-bg", "--bloodgroup"}, description = "The blood group of the donor. Valid groups are:\n" +
+    @Option(names = {"--bloodgroup"}, description = "The blood group of the donor. Valid groups are:\n" +
             "A_POSITIVE, A_NEGATIVE, B_POSITIVE, B_NEGATIVE,\n" +
             "AB_POSITIVE, AB_NEGATIVE, O_POSITIVE, O_NEGATIVE")
     private String bloodGroup;
