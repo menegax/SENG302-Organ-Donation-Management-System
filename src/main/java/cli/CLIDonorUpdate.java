@@ -1,16 +1,20 @@
 package cli;
+
 import model.Donor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
 import utility.GlobalEnums;
+
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 @Command(name = "update", description = "used to update donor attributes")
-public class CLIDonorUpdate implements Runnable{
+public class CLIDonorUpdate implements Runnable {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")
     private boolean helpRequested = false;
@@ -52,10 +56,11 @@ public class CLIDonorUpdate implements Runnable{
     private String suburb;
 
     @Option(names = {"-region", "--region"}, description = "NORTHLAND, AUCKLAND, WAIKATO, BAYOFPLENTY,\n" +
-                                                           "GISBORNE, HAWKESBAY, TARANAKI, MANAWATU,\n" +
-                                                           "WELLINGTON, TASMAN, NELSON, MARLBOROUGH,\n" +
-                                                           "WESTCOAST, CANTERBURY, OTAGO, SOUTHLAND")
+            "GISBORNE, HAWKESBAY, TARANAKI, MANAWATU,\n" +
+            "WELLINGTON, TASMAN, NELSON, MARLBOROUGH,\n" +
+            "WESTCOAST, CANTERBURY, OTAGO, SOUTHLAND")
     private String region;
+
 
     @Option(names = {"-zip", "--zip"}, description = "The zip field for the address of the donor.")
     private int zip;
@@ -63,12 +68,14 @@ public class CLIDonorUpdate implements Runnable{
     @Option(names = {"-ird", "--ird"}, description = "The IRD number of the donor.")
     private int ird;
 
-    @Option(names = {"-bg", "--bloodgroup"}, description = "The bloodgroup of the donor. Valid groups are:\n" +
+    @Option(names = {"-bg", "--bloodgroup"}, description = "The blood group of the donor. Valid groups are:\n" +
             "A_POSITIVE, A_NEGATIVE, B_POSITIVE, B_NEGATIVE,\n" +
             "AB_POSITIVE, AB_NEGATIVE, O_POSITIVE, O_NEGATIVE")
     private String bloodGroup;
 
-    private ArrayList<String> updateAttributes(Donor d){
+
+
+    private ArrayList<String> updateAttributes(Donor d) {
         Enum globalEnum;
         ArrayList<String> informationMessage = new ArrayList<>();
         if (firstName != null) d.setFirstName(firstName);
@@ -79,41 +86,46 @@ public class CLIDonorUpdate implements Runnable{
         if (street1 != null) d.setStreet1(street1);
         if (street2 != null) d.setStreet2(street2);
         if (suburb != null) d.setSuburb(suburb);
-        if (region != null){
+        if (region != null) {
             globalEnum = GlobalEnums.Region.getEnumFromString(region);
-            if (globalEnum != null){ d.setRegion((GlobalEnums.Region) globalEnum); }
-            else informationMessage.add("Invalid region, for help on what entries are valid, use donor update -h.");
+            if (globalEnum != null) {
+                d.setRegion((GlobalEnums.Region) globalEnum);
+            } else informationMessage.add("Invalid region, for help on what entries are valid, use donor update -h.");
         }
-        if (gender != null){
+        if (gender != null) {
             globalEnum = GlobalEnums.Gender.getEnumFromString(gender);
             if (globalEnum != null) d.setGender((GlobalEnums.Gender) globalEnum);
             else informationMessage.add("Invalid gender, for help on what entries are valid, use donor update -h.");
         }
-        if (bloodGroup != null){
+        if (bloodGroup != null) {
             globalEnum = GlobalEnums.BloodGroup.getEnumFromString(bloodGroup);
             if (globalEnum != null) d.setBloodGroup((GlobalEnums.BloodGroup) globalEnum);
-            else informationMessage.add("Invalid blood group, for help on what entries are valid, use donor update -h.");
+            else
+                informationMessage.add("Invalid blood group, for help on what entries are valid, use donor update -h.");
         }
-        if (height != 0) d.setHeight(height);
-        if (weight != 0) d.setWeight(weight);
-        if (ird != 0) d.setIrdNumber(ird);
+        if (height > 0) d.setHeight(height);
+        if (weight > 0) d.setWeight(weight);
+        if (ird > 0) d.setIrdNumber(ird);
         return informationMessage;
     }
-    private void displayUpdateMessages(ArrayList<String> messages){
+
+    private void displayUpdateMessages(ArrayList<String> messages) {
         System.out.println("*** Results of Update ***");
-        if (messages.size() == 0) System.out.println("Successfully updated all fields provided");
+        if (messages.size() == 0) {
+            System.out.println("Successfully updated all fields provided");
+        }
         else {
             for (String message : messages) System.out.println(message);
         }
     }
+
     public void run() {
-        try{
+        try {
             ArrayList<String> messages = updateAttributes(Database.getDonorByIrd(searchIrd));
             displayUpdateMessages(messages);
-        }catch (InvalidObjectException i){
+        } catch (InvalidObjectException i) {
             System.out.println(i.getMessage());
         }
     }
-
 
 }
