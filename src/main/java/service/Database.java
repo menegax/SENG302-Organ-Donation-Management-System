@@ -1,10 +1,7 @@
 package service;
-
 import java.io.InvalidObjectException;
 import java.util.HashSet;
-
 import model.Donor;
-import org.omg.CORBA.DynAnyPackage.Invalid;
 
 public class Database {
 
@@ -28,7 +25,7 @@ public class Database {
                 return d;
             }
         }
-        throw new InvalidObjectException("Donor with ird " + ird + " does not exist");
+        throw new InvalidObjectException("Donor with IRD number " + ird + " does not exist."); //TODO: feel free to create a proper exception for this
     }
 
 

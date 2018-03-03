@@ -1,13 +1,12 @@
 package cli;
-
 import model.Donor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+@SuppressWarnings("unused")
 @Command(name = "add", description = "used to add new donors")
 class CLIDonorAdd implements Runnable {
 
@@ -26,12 +25,13 @@ class CLIDonorAdd implements Runnable {
     @Option(names = {"-l", "--lastname"}, required = true, description = "The last name of the donor.")
     private String lastName;
 
-    @Option(names = {"-d", "--dateofbirth"}, required = true, description = "The date of birth of the donor (yyyy-mm-dd).")
+    @Option(names = {"-b", "--dateofbirth"}, required = true, description = "The date of birth of the donor (yyyy-mm-dd).")
     private LocalDate birth;
 
     public void run() {
         try{
             Database.addDonor(new Donor(ird,firstName, middleNames, lastName, birth));
+            System.out.println("*** Successfully added new donor ***");
         }catch (IllegalArgumentException e){
             System.out.println(e.getMessage());
         }

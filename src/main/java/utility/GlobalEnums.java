@@ -1,11 +1,17 @@
 package utility;
 
+@SuppressWarnings("unused") //is used through the static methods of each enum but, not explicitly
 public class GlobalEnums {
 
     public enum Gender {
         MALE,
         FEMALE,
-        OTHER
+        OTHER;
+
+        public static Enum getEnumFromString(String value) {
+            try{ return Gender.valueOf(value); }
+            catch (IllegalArgumentException e) {return null;}
+        }
     }
 
     public enum Region {
@@ -24,7 +30,12 @@ public class GlobalEnums {
         WESTCOAST,
         CANTERBURY,
         OTAGO,
-        SOUTHLAND
+        SOUTHLAND;
+
+        public static Enum getEnumFromString(String value) {
+            try{ return Region.valueOf(value); }
+            catch (IllegalArgumentException e) {return null;}
+        }
     }
 
     public enum Organ {
@@ -39,7 +50,12 @@ public class GlobalEnums {
         SKIN,
         BONE,
         BONEMARROW,
-        CONNECTIVETISSUE
+        CONNECTIVETISSUE;
+
+        public static Enum getEnumFromString(String value) {
+            try{ return Organ.valueOf(value); }
+            catch (IllegalArgumentException e) {return null;}
+        }
     }
 
     public enum BloodGroup {
@@ -50,7 +66,12 @@ public class GlobalEnums {
         AB_POSITIVE,
         AB_NEGATIVE,
         O_POSITVE,
-        O_NEGATIVE
+        O_NEGATIVE;
+
+        public static Enum getEnumFromString(String value) {
+            try{ return BloodGroup.valueOf(value); }
+            catch (IllegalArgumentException e) {return null;}
+        }
     }
 
 }

@@ -4,11 +4,11 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
 import utility.GlobalEnums;
-
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+@SuppressWarnings("unused")
 @Command(name = "update", description = "used to update donor attributes")
 public class CLIDonorUpdate implements Runnable{
 
@@ -51,71 +51,65 @@ public class CLIDonorUpdate implements Runnable{
     @Option(names = {"-suburb", "--suburb"}, description = "The suburb field for the address of the donor.")
     private String suburb;
 
+    @Option(names = {"-region", "--region"}, description = "NORTHLAND, AUCKLAND, WAIKATO, BAYOFPLENTY,\n" +
+                                                           "GISBORNE, HAWKESBAY, TARANAKI, MANAWATU,\n" +
+                                                           "WELLINGTON, TASMAN, NELSON, MARLBOROUGH,\n" +
+                                                           "WESTCOAST, CANTERBURY, OTAGO, SOUTHLAND")
+    private String region;
+
+    @Option(names = {"-zip", "--zip"}, description = "The zip field for the address of the donor.")
+    private int zip;
+
     @Option(names = {"-ird", "--ird"}, description = "The IRD number of the donor.")
     private int ird;
 
-    @Option(names = {"-bg", "--bloodgroup"}, description = "The bloodgroup of the donor." +
-            " Valid groups are {A+, A-, B+, B-, AB+, AB-}")
+    @Option(names = {"-bg", "--bloodgroup"}, description = "The bloodgroup of the donor. Valid groups are\n" +
+            "{A+, A-, B+, B-, AB+, AB-}")
     private String bloodGroup;
 
-
-
-    public ArrayList<String> updateAttributes(Donor d){
+    private ArrayList<String> updateAttributes(Donor d){
+        Enum globalEnum;
         ArrayList<String> informationMessage = new ArrayList<>();
-        if (!firstName.equals(null)) d.setFirstName(firstName);
-        if (!lastName.equals(null)) d.setLastName(lastName);
-        if (!middleNames.equals(null)) d.setMiddleNames(middleNames);
-        if (!birth.equals(null)) d.setBirth(birth);
-        if (!death.equals(null)) d.setDeath(death);
-        if (!gender.equals(null)){
-            switch (gender.toLowerCase()){
-                case "male":
-                    d.setGender(GlobalEnums.Gender.MALE);
-                    break;
-                case "female":
-                    d.setGender(GlobalEnums.Gender.FEMALE);
-                    break;
-                case "other":
-                    d.setGender(GlobalEnums.Gender.OTHER);
-                default:
-                    informationMessage.add("Gender could not be updated." +
-                            " Please enter either male, female or other.");
-            }
+        if (firstName != null) d.setFirstName(firstName);
+        if (lastName != null) d.setLastName(lastName);
+        if (middleNames != null) d.setMiddleNames(middleNames);
+        if (birth != null) d.setBirth(birth);
+        if (death != null) d.setDeath(death);
+        if (street1 != null) d.setStreet1(street1);
+        if (street2 != null) d.setStreet2(street2);
+        if (suburb != null) d.setSuburb(suburb);
+        if (region != null){
+            globalEnum = GlobalEnums.Region.getEnumFromString(region);
+            if (globalEnum != null){ d.setRegion((GlobalEnums.Region) globalEnum); }
+            else informationMessage.add("Invalid region, for help on what entries are valid, use donor update -h.");
+        }
+        if (gender != null){
+            globalEnum = GlobalEnums.Gender.getEnumFromString(gender);
+            if (globalEnum != null) d.setGender((GlobalEnums.Gender) globalEnum);
+            else informationMessage.add("Invalid gender, for help on what entries are valid, use donor update -h.");
+        }
+        if (bloodGroup != null){
+            globalEnum = GlobalEnums.BloodGroup.getEnumFromString(bloodGroup);
+            if (globalEnum != null) d.setBloodGroup((GlobalEnums.BloodGroup) globalEnum);
+            else informationMessage.add("Invalid blood group, for help on what entries are valid, use donor update -h.");
         }
         if (height != 0) d.setHeight(height);
         if (weight != 0) d.setWeight(weight);
         if (ird != 0) d.setIrdNumber(ird);
-        if (!bloodGroup.equals(null)) {
-            switch (bloodGroup.substring(0,0).toLowerCase() +
-                    bloodGroup.substring(1,1)){
-                case "a+":
-                    d.setBloodGroup(GlobalEnums.BloodGroup.A_POSTIVE);
-                    break;
-                case "a-":
-                    d.setBloodGroup(GlobalEnums.BloodGroup.A_NEGATIVE);
-                    break;
-                case "b+":
-                    d.setBloodGroup(GlobalEnums.BloodGroup.B_POSTIVE);
-                    break;
-                case "b-":
-                    d.setBloodGroup(GlobalEnums.BloodGroup.B_NEGATIVE);
-                    break;
-                case "ab+":
-                    d.setBloodGroup(GlobalEnums.BloodGroup.AB_POSITIVE);
-                    break;
-                case "ab-":
-                    d.setBloodGroup(GlobalEnums.BloodGroup.AB_NEGATIVE);
-                    break;
-                default:
-                    informationMessage.add("Invalid blood group");
-            }
-        }
         return informationMessage;
+    }
+    private void displayUpdateMessages(ArrayList<String> messages){
+        System.out.println("*** Result of Update ***");
+        if (messages.size() == 0) System.out.println("Successfully updated all fields provided");
+        else {
+            for (String message : messages) System.out.println(message);
+        }
     }
     public void run() {
         try{
             Donor d = Database.getDonorByIrd(searchIrd);
-            updateAttributes(d);
+            ArrayList<String> messages = updateAttributes(d);
+            displayUpdateMessages(messages);
         }catch (InvalidObjectException i){
             System.out.println(i.getMessage());
         }

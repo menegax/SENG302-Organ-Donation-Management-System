@@ -1,11 +1,12 @@
 package cli;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 
-import picocli.CommandLine;
-
-@CommandLine.Command(name = "odms", subcommands = {CLIDonor.class})
+@SuppressWarnings("unused")
+@Command(name = "odms", subcommands = {CLIDonor.class})
 public class CLIOdms implements Runnable {
 
-    @CommandLine.Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
+    @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
     @Override
