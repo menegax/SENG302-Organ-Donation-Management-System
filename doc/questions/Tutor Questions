@@ -3,4 +3,4 @@ Technical questions that we don't know how to fix!
 
 - Weird pause and blank response when only entering `donor` in CLI
 - GitLab Runner... working?
-- How do we automate CLI testing
+- What's up with storing Donors as a HashSet\<Donor>? Benefits?- How do we automate CLI testing
