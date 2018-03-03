@@ -23,7 +23,7 @@ public class Database {
                 return d;
             }
         }
-        throw new InvalidObjectException("Donor with IRD number " + ird + " does not exist."); //TODO: feel free to create a proper exception for this | Andrew: I think this is perfectly valid
+        throw new InvalidObjectException("Donor with IRD number " + ird + " does not exist."); //TODO: feel free to create a proper exception for this | Andrew: I think this is perfectly valid. Really like the custom message!
     }
 
 }

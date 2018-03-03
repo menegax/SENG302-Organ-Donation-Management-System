@@ -123,8 +123,8 @@ public class CLIDonorUpdate implements Runnable {
         try {
             ArrayList<String> messages = updateAttributes(Database.getDonorByIrd(searchIrd));
             displayUpdateMessages(messages);
-        } catch (InvalidObjectException i) {
-            System.out.println(i.getMessage());
+        } catch (InvalidObjectException e) {
+            System.out.println(e.getMessage());
         }
     }
 
