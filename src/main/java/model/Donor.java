@@ -23,7 +23,7 @@ public class Donor {
 
     private double height;
 
-    private int weight;
+    private double weight;
 
     private BloodGroup bloodGroup;
 
@@ -37,7 +37,7 @@ public class Donor {
 
     private int zip;
 
-    private ArrayList<Organ> organsToDonate;
+    private ArrayList<Organ> donations;
 
     private Timestamp modified;
 
@@ -68,12 +68,12 @@ public class Donor {
         return firstName + " " + (middleNames == null ? "" : middleNames + " ") + lastName;
     }
 
-    public ArrayList<Organ> getOrgansToDonate() {
-        return organsToDonate;
+    public ArrayList<Organ> getDonations() {
+        return donations;
     }
 
-    public void setOrgansToDonate(ArrayList<Organ> organsToDonate) {
-        this.organsToDonate = organsToDonate;
+    public void setDonations(ArrayList<Organ> donations) {
+        this.donations = donations;
     }
 
     public Timestamp getCREATED() {
@@ -136,11 +136,11 @@ public class Donor {
         this.height = height;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
@@ -201,7 +201,7 @@ public class Donor {
     }
 
     public void addOrganToDonate(Organ organ){
-        organsToDonate.add(organ);
+        donations.add(organ);
     }
 
     public int getIrdNumber() {
@@ -221,8 +221,8 @@ public class Donor {
                 "Middle names: " + middleNames + "\n" +
                 "Last name: " + lastName + "\n" +
                 "Gender: " + gender + "\n" +
-                "Date of birth: " + birth.toString() + "\n" +
-                "Organs to Donate: " + organsToDonate + "\n" +
+                "Date of birth: " + birth + "\n" +
+                "Organs to Donate: " + donations + "\n" +
                 "Address: " + street1 + " " + street2 + " " + suburb + " " + region + " " + zip + "\n" +
                 "Date of death: " + death + "\n" +
                 "Height: " + height + "\n" +

@@ -24,7 +24,7 @@ public class CLIDonorView implements Runnable {
 
 
     public void run() {
-        System.out.println("*** Results of Search ***"); // TODO fix `donor view` so that it fails, and prints help. no options are required right now.
+        System.out.println("*** Results of Search ***"); // TODO fix entering `donor view` so that it fails, and prints help. no options are required right now.
         if (searchIrd != 0) {
             try {
                 System.out.println(Database.getDonorByIrd(searchIrd));

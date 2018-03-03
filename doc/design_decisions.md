@@ -3,7 +3,7 @@
 This document contains a history of agreed-upon design decisions for future reference.
 
 ## Sprint 1
-23/02 - 09/03
+23rd of February to the 9th of March
 
 #### Conflict Resolution
 If a major conflict arises or a design deciion was made that neither person anticipated, we need to make a call that day to resolve. 
@@ -26,6 +26,9 @@ JodaTime will be used for dates and times (i.e. DateTime and LocalDate), not the
 In order to satisfy story number 43, the user must be able to search for a particular donor and receive one search result. 
 This requires a unique search term to be entered such that duplicates are not returned. 
 
-* we have decided to use a donors IRD number to distinguish one donor from another, whom have colliding names.
+* we have decided to use a donor's IRD number to distinguish one donor from another, whom have colliding names.
 * we will check for uniqueness within our application by checking if a donor with the IRD already exists. If it already exists an exception is thrown to tell the user this.
 * if there an IRD is entered but there is a collision (i.e another donor has the incorrect IRD) then the incorrect IRD will need to updated before adding the new donor
+
+#### CLI Subcommand Limit
+We have decided that the maximum level of subcommands is three i.e. `donor update donations --option`

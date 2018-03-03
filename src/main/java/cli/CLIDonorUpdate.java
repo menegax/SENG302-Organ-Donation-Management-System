@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
-@Command(name = "update", description = "used to update donor attributes")
+@Command(name = "update", description = "used to update donor attributes", subcommands = {CLIDonorUpdateDonations.class})
 public class CLIDonorUpdate implements Runnable {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")
@@ -44,7 +44,7 @@ public class CLIDonorUpdate implements Runnable {
     private double height;
 
     @Option(names = {"--weight"}, description = "The weight of the donor (kg).")
-    private int weight;
+    private double weight;
 
     @Option(names = {"--street1"}, description = "The street1 field for the address of the donor.")
     private String street1;
