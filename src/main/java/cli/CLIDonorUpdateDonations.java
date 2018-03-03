@@ -25,41 +25,42 @@ public class CLIDonorUpdateDonations implements Runnable {
     private ArrayList<String> rmDonations;
 
     private void displayInformationMessages(ArrayList<String> messages){
-        for (String message: messages) System.out.println(message);
+        if (messages.size() == 0){
+            System.out.println("*** Successfully updated donations ***");
+        } else
+            for (String message: messages) System.out.println(message);
+
     }
 
     //TODO: still working on it... very very sleepy :(
     private ArrayList<String> updateDonations(Donor d){
         ArrayList<String> informationMessages = new ArrayList<>();
-        Enum organEnum;
+        GlobalEnums.Organ organEnum;
         if (newDonations != null){
             ArrayList<GlobalEnums.Organ> updateDonations = (d.getDonations() == null? new ArrayList<>(): d.getDonations());
             for (String organ: newDonations) {
-                organEnum = GlobalEnums.Organ.getEnumFromString(organ); //null if invalid
-                if (updateDonations.size() == 0) { //no currently added donations
-                    if (organEnum == null)
-                        informationMessages.add("Error: Invalid organ " + organ + ".");
+                organEnum = (GlobalEnums.Organ) GlobalEnums.Organ.getEnumFromString(organ); //null if invalid
+                if (organEnum == null) informationMessages.add("Error: Invalid organ " + organ + ".");
+                else {
+                    if (updateDonations.size() == 0) updateDonations.add(organEnum);
                     else {
-                      if (updateDonations.contains(organEnum))
-                          informationMessages.add("Organ " + organ + " is already part of the donors donations, so was not added.");
-                      else
-                          updateDonations.add((GlobalEnums.Organ)organEnum);
+                        if (updateDonations.contains(organEnum)) {
+                            informationMessages.add("Organ " + organ + " is already part of the donors donations, so was not added.");
+                        } else updateDonations.add(organEnum);
                     }
-                } else{ //add straight away
-                    updateDonations.add((GlobalEnums.Organ)organEnum);
                 }
             }
             d.setDonations(updateDonations);
         }
-        if (rmDonations != null && d.getDonations() != null) { //if --add and --rm and used,then --rm will remove from NEW/OLD list depending on order
+        if (rmDonations != null) { //if --add and --rm and used,then --rm will remove from NEW/OLD list depending on order
             ArrayList<Organ> updateDonations = d.getDonations() == null ? new ArrayList<>(): d.getDonations();
             for (String organ: rmDonations) {
-                organEnum = GlobalEnums.Organ.getEnumFromString(organ);
-                if (!updateDonations.contains(organ)) {
-                    if (organEnum == null) informationMessages.add("Error: Invalid organ " + organ + ".");
+                organEnum = (GlobalEnums.Organ) GlobalEnums.Organ.getEnumFromString(organ);
+                if (organEnum == null)
+                    informationMessages.add("Error: Invalid organ " + organ + ".");
+                else {
+                    if (updateDonations.contains(organEnum)) updateDonations.remove(organEnum);
                     else informationMessages.add("Organ " + organ+ " is not part of the donors donations, so could not be removed.");
-                } else {
-                    updateDonations.remove(organ);
                 }
             }
             d.setDonations(updateDonations);
@@ -72,7 +73,7 @@ public class CLIDonorUpdateDonations implements Runnable {
         try {
             Donor donor = Database.getDonorByIrd(searchIrd);
             if (donationsRequested) System.out.println("Donations: " + donor.getDonations());
-            displayInformationMessages(updateDonations(donor));
+            else displayInformationMessages(updateDonations(donor));
         } catch (InvalidObjectException e){
             System.out.println(e.getMessage());
         }
