@@ -1,10 +1,7 @@
 package cli;
-
-import model.Donor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
-import utility.GlobalEnums;
 
 import java.io.InvalidObjectException;
 
@@ -12,16 +9,11 @@ import java.io.InvalidObjectException;
 @Command(name = "view", description = "used to view donor attributes")
 public class CLIDonorView implements Runnable {
 
-
-    @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")
-    private boolean helpRequested = false;
-
-    @Option(names = {"-i", "--ird"}, required = false, description = "Search donor by the IRD number of the donor.")
+    @Option(names = {"-i", "--ird"}, description = "Search donor by the IRD number of the donor.")
     private int searchIrd;
 
-    @Option(names = {"-a", "--all"}, required = false, description = "View all donors")
+    @Option(names = {"-a", "--all"}, description = "View all donors")
     private boolean searchAll;
-
 
     public void run() {
         System.out.println("*** Results of Search ***"); // TODO fix entering `donor view` so that it fails, and prints help. no options are required right now.

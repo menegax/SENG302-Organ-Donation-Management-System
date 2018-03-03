@@ -13,11 +13,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
-@Command(name = "update", description = "used to update donor attributes", subcommands = {CLIDonorUpdateDonations.class})
+@Command(name = "update", description = "used to update donor attributes")
 public class CLIDonorUpdate implements Runnable {
-
-    @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")
-    private boolean helpRequested = false;
 
     @Option(names = {"-s", "--search"}, required = true, description = "Search donor by the IRD number of the donor.")
     private int searchIrd;
