@@ -63,8 +63,9 @@ public class CLIDonorUpdate implements Runnable{
     @Option(names = {"-ird", "--ird"}, description = "The IRD number of the donor.")
     private int ird;
 
-    @Option(names = {"-bg", "--bloodgroup"}, description = "The bloodgroup of the donor. Valid groups are\n" +
-            "{A+, A-, B+, B-, AB+, AB-}")
+    @Option(names = {"-bg", "--bloodgroup"}, description = "The bloodgroup of the donor. Valid groups are:\n" +
+            "A_POSITIVE, A_NEGATIVE, B_POSITIVE, B_NEGATIVE,\n" +
+            "AB_POSITIVE, AB_NEGATIVE, O_POSITIVE, O_NEGATIVE")
     private String bloodGroup;
 
     private ArrayList<String> updateAttributes(Donor d){

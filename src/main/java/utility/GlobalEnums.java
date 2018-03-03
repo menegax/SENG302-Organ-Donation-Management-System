@@ -9,7 +9,7 @@ public class GlobalEnums {
         OTHER;
 
         public static Enum getEnumFromString(String value) {
-            try{ return Gender.valueOf(value); }
+            try{ return Gender.valueOf(value.toUpperCase()); }
             catch (IllegalArgumentException e) {return null;}
         }
     }
@@ -33,7 +33,7 @@ public class GlobalEnums {
         SOUTHLAND;
 
         public static Enum getEnumFromString(String value) {
-            try{ return Region.valueOf(value); }
+            try{ return Region.valueOf(value.toUpperCase()); }
             catch (IllegalArgumentException e) {return null;}
         }
     }
@@ -53,23 +53,23 @@ public class GlobalEnums {
         CONNECTIVETISSUE;
 
         public static Enum getEnumFromString(String value) {
-            try{ return Organ.valueOf(value); }
+            try{ return Organ.valueOf(value.toUpperCase()); }
             catch (IllegalArgumentException e) {return null;}
         }
     }
 
     public enum BloodGroup {
-        A_POSTIVE,
+        A_POSITIVE,
         A_NEGATIVE,
-        B_POSTIVE,
+        B_POSITIVE,
         B_NEGATIVE,
         AB_POSITIVE,
         AB_NEGATIVE,
-        O_POSITVE,
+        O_POSITIVE,
         O_NEGATIVE;
 
         public static Enum getEnumFromString(String value) {
-            try{ return BloodGroup.valueOf(value); }
+            try{ return BloodGroup.valueOf(value.toUpperCase()); }
             catch (IllegalArgumentException e) {return null;}
         }
     }
