@@ -3,7 +3,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import service.Database;
-import utility.GlobalEnums;
+import utility.GlobalEnums.*;
 
 public class Donor {
 
@@ -19,13 +19,13 @@ public class Donor {
 
     private LocalDate death;
 
-    private GlobalEnums.Gender gender;
+    private Gender gender;
 
     private double height;
 
     private int weight;
 
-    private GlobalEnums.BloodGroup bloodGroup;
+    private BloodGroup bloodGroup;
 
     private String street1;
 
@@ -33,11 +33,11 @@ public class Donor {
 
     private String suburb;
 
-    private GlobalEnums.Region region;
+    private Region region;
 
     private int zip;
 
-    private ArrayList<GlobalEnums.Organ> organsToDonate;
+    private ArrayList<Organ> organsToDonate;
 
     private Timestamp modified;
 
@@ -68,11 +68,11 @@ public class Donor {
         return firstName + " " + (middleNames == null ? "" : middleNames + " ") + lastName;
     }
 
-    public ArrayList<GlobalEnums.Organ> getOrgansToDonate() {
+    public ArrayList<Organ> getOrgansToDonate() {
         return organsToDonate;
     }
 
-    public void setOrgansToDonate(ArrayList<GlobalEnums.Organ> organsToDonate) {
+    public void setOrgansToDonate(ArrayList<Organ> organsToDonate) {
         this.organsToDonate = organsToDonate;
     }
 
@@ -120,11 +120,11 @@ public class Donor {
         this.death = death;
     }
 
-    public GlobalEnums.Gender getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(GlobalEnums.Gender gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
@@ -144,11 +144,11 @@ public class Donor {
         this.weight = weight;
     }
 
-    public GlobalEnums.BloodGroup getBloodGroup() {
+    public BloodGroup getBloodGroup() {
         return bloodGroup;
     }
 
-    public void setBloodGroup(GlobalEnums.BloodGroup bloodGroup) {
+    public void setBloodGroup(BloodGroup bloodGroup) {
         this.bloodGroup = bloodGroup;
     }
 
@@ -176,11 +176,11 @@ public class Donor {
         this.suburb = suburb;
     }
 
-    public GlobalEnums.Region getRegion() {
+    public Region getRegion() {
         return region;
     }
 
-    public void setRegion(GlobalEnums.Region region) {
+    public void setRegion(Region region) {
         this.region = region;
     }
 
@@ -200,7 +200,7 @@ public class Donor {
         this.modified = modified;
     }
 
-    public void addOrganToDonate(GlobalEnums.Organ organ){
+    public void addOrganToDonate(Organ organ){
         organsToDonate.add(organ);
     }
 
