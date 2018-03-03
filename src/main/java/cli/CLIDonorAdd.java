@@ -13,7 +13,7 @@ class CLIDonorAdd implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")
     private boolean helpRequested = false;
 
-    @Option (names = {"-ird", "--ird"}, required = true, description = "The IRD number of the donor.")
+    @Option(names = {"-ird", "--ird"}, required = true, description = "The IRD number of the donor.")
     private int ird;
 
     @Option(names = {"-f", "--firstname"}, required = true, description = "The first name of the donor.")
@@ -31,7 +31,8 @@ class CLIDonorAdd implements Runnable {
     public void run() {
         try{
             Database.addDonor(new Donor(ird,firstName, middleNames, lastName, birth));
-            System.out.println("*** Successfully added new donor ***");
+            System.out.println("Successfully added new donor " + firstName + " " +
+                    (middleNames == null ? "": middleNames.toString() + "") + lastName);
         }catch (IllegalArgumentException e){
             System.out.println(e.getMessage());
         }

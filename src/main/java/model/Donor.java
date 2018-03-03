@@ -214,13 +214,19 @@ public class Donor {
 
 
     public String toString() {
-        return "Donor: " +
-                "created: " + CREATED + " " +
-                "ird: " + irdNumber + " " +
-                "firstName: " + firstName + " " +
-                "middleNames: " + middleNames + " " +
-                "lastName: " + lastName + " " +
-                "dateOfBirth: " + birth.toString() + " " +
-                "Organs to Donate: " + organsToDonate;
+        return "Donor: \n" +
+                "IRD: " + irdNumber + "\n" +
+                "Created date: " + CREATED + "\n" +
+                "First name: " + firstName + "\n" +
+                "Middle names: " + middleNames + "\n" +
+                "Last name: " + lastName + "\n" +
+                "Gender: " + gender + "\n" +
+                "Date of birth: " + birth.toString() + "\n" +
+                "Organs to Donate: " + organsToDonate + "\n" +
+                "Address: " + street1 + " " + street2 + " " + suburb + " " + region + " " + zip + "\n" +
+                "Date of death: " + death + "\n" +
+                "Height: " + height + "\n" +
+                "Weight: " + weight + "\n" +
+                "Blood group: " + bloodGroup + "\n";
     }
 }

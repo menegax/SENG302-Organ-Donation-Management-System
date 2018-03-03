@@ -15,7 +15,7 @@ public class CLIDonorUpdate implements Runnable{
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")
     private boolean helpRequested = false;
 
-    @Option (names = {"-s", "--search"}, required = true, description = "Search donor by the IRD number of the donor.")
+    @Option(names = {"-s", "--search"}, required = true, description = "Search donor by the IRD number of the donor.")
     private int searchIrd;
 
     @Option(names = {"-f", "--firstname"}, description = "The first name of the donor.")
@@ -100,7 +100,7 @@ public class CLIDonorUpdate implements Runnable{
         return informationMessage;
     }
     private void displayUpdateMessages(ArrayList<String> messages){
-        System.out.println("*** Result of Update ***");
+        System.out.println("*** Results of Update ***");
         if (messages.size() == 0) System.out.println("Successfully updated all fields provided");
         else {
             for (String message : messages) System.out.println(message);
@@ -108,8 +108,7 @@ public class CLIDonorUpdate implements Runnable{
     }
     public void run() {
         try{
-            Donor d = Database.getDonorByIrd(searchIrd);
-            ArrayList<String> messages = updateAttributes(d);
+            ArrayList<String> messages = updateAttributes(Database.getDonorByIrd(searchIrd));
             displayUpdateMessages(messages);
         }catch (InvalidObjectException i){
             System.out.println(i.getMessage());
