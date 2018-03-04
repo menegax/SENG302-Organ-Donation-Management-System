@@ -1,9 +1,11 @@
 package cli;
+
 import model.Donor;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Command;
 import service.Database;
 import utility.GlobalEnums;
+
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 
@@ -23,35 +25,47 @@ public class CLIDonorDonations implements Runnable {
     @Option(names = {"-rm", "--remove"}, split = ",", description = "Takes a list of organs to remove from donations")
     private ArrayList<String> rmDonations;
 
-    private void displayInformationMessages(ArrayList<String> messages){
-        if (messages.size() == 0){
+    private void displayInformationMessages(ArrayList<String> messages) {
+        if (messages.size() == 0) {
             System.out.println("*** Successfully updated donations ***");
         } else
-            for (String message: messages) System.out.println(message);
+            for (String message : messages) System.out.println(message);
     }
 
-    private ArrayList<String> updateDonations(Donor d){
+    private void displayDonorDonations(Donor donor) {
+        ArrayList<GlobalEnums.Organ> donations = donor.getDonations();
+        if (donations == null)
+            System.out.println("No donations registered for donor: " + donor.getNameConcatenated());
+        else System.out.println(donations);
+    }
+
+    private ArrayList<String> updateDonations(Donor d) {
         ArrayList<String> informationMessages = new ArrayList<>();
         GlobalEnums.Organ organEnum;
-        ArrayList<GlobalEnums.Organ> updateDonations = (d.getDonations() == null? new ArrayList<>(): d.getDonations());
-        if (newDonations != null){
-            for (String organ: newDonations) {
+        ArrayList<GlobalEnums.Organ> updateDonations = d.getDonations();
+        if (newDonations != null) {
+            for (String organ : newDonations) {
                 organEnum = (GlobalEnums.Organ) GlobalEnums.Organ.getEnumFromString(organ); //null if invalid
-                if (organEnum == null) informationMessages.add("Error: Invalid organ " + organ + ", this has not been added.");
+                if (organEnum == null)
+                    informationMessages.add("Error: Invalid organ " + organ);
                 else {
                     if (updateDonations.contains(organEnum)) {
                         informationMessages.add("Organ " + organ + " is already part of the donors donations, so was not added.");
-                    } else updateDonations.add(organEnum);
+                    } else {
+                        updateDonations.add(organEnum);
+                    }
                 }
             }
         }
         if (rmDonations != null) {
-            for (String organ: rmDonations) {
+            for (String organ : rmDonations) {
                 organEnum = (GlobalEnums.Organ) GlobalEnums.Organ.getEnumFromString(organ);
                 if (organEnum == null) informationMessages.add("Error: Invalid organ " + organ + ".");
                 else {
-                    if (updateDonations.contains(organEnum)) updateDonations.remove(organEnum);
-                    else informationMessages.add("Organ " + organ+ " is not part of the donors donations, so could not be removed.");
+                    if (updateDonations.contains(organEnum))
+                        updateDonations.remove(organEnum);
+                    else
+                        informationMessages.add("Organ " + organ + " is not part of the donors donations, so could not be removed.");
                 }
             }
         }
@@ -62,9 +76,9 @@ public class CLIDonorDonations implements Runnable {
     public void run() {
         try {
             Donor donor = Database.getDonorByIrd(searchIrd);
-            if (donationsRequested) System.out.println("Donations: " + donor.getDonations());
+            if (donationsRequested) displayDonorDonations(donor);
             else displayInformationMessages(updateDonations(donor));
-        } catch (InvalidObjectException e){
+        } catch (InvalidObjectException e) {
             System.out.println(e.getMessage());
         }
     }

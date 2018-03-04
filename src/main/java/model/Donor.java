@@ -71,7 +71,7 @@ public class Donor {
     }
 
     public ArrayList<Organ> getDonations() {
-        return donations;
+        return donations == null ? new ArrayList<>() : donations;
     }
 
     public void setDonations(ArrayList<Organ> donations) {
