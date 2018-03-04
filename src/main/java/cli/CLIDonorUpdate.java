@@ -71,7 +71,7 @@ public class CLIDonorUpdate implements Runnable {
     private String bloodGroup;
 
 
-
+    //todo needs unit tests
     private ArrayList<String> updateAttributes(Donor d) {
         Enum globalEnum;
         ArrayList<String> informationMessage = new ArrayList<>();
@@ -106,6 +106,7 @@ public class CLIDonorUpdate implements Runnable {
         return informationMessage;
     }
 
+    //todo needs unit test
     private void displayUpdateMessages(ArrayList<String> messages) {
         System.out.println("*** Results of Update ***");
         if (messages.size() == 0) {

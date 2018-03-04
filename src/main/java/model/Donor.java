@@ -1,7 +1,9 @@
 package model;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.time.LocalDate;
+
 import service.Database;
 import utility.GlobalEnums.*;
 
@@ -44,7 +46,7 @@ public class Donor {
     private int irdNumber;
 
     public Donor(int irdNumber, String firstName,
-                 ArrayList<String> middleNames, String lastName, LocalDate date) throws IllegalArgumentException{
+                 ArrayList<String> middleNames, String lastName, LocalDate date) throws IllegalArgumentException {
 
         this.CREATED = new Timestamp(System.currentTimeMillis());
         ensureUniqueIrd(irdNumber);
@@ -56,9 +58,9 @@ public class Donor {
         this.irdNumber = irdNumber;
     }
 
-    public static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException{
-        for (Donor d: Database.getDonors()){
-            if (d.irdNumber == irdNumber){
+    public static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException {
+        for (Donor d : Database.getDonors()) {
+            if (d.irdNumber == irdNumber) {
                 throw new IllegalArgumentException("IRD number is not unique");
             }
         }
@@ -73,7 +75,10 @@ public class Donor {
     }
 
     public void setDonations(ArrayList<Organ> donations) {
-        this.donations = donations;
+        if (this.donations != donations) {
+            this.donations = donations;
+            donorModified();
+        }
     }
 
     public Timestamp getCREATED() {
@@ -85,7 +90,10 @@ public class Donor {
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        if (!this.firstName.equals(firstName)) {
+            this.firstName = firstName;
+            donorModified();
+        }
     }
 
     public ArrayList<String> getMiddleNames() {
@@ -93,7 +101,10 @@ public class Donor {
     }
 
     public void setMiddleNames(ArrayList<String> middleName) {
-        this.middleNames = middleName;
+        if (!this.middleNames.equals(middleName)) {
+            this.middleNames = middleName;
+            donorModified();
+        }
     }
 
     public String getLastName() {
@@ -101,7 +112,10 @@ public class Donor {
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        if (!this.lastName.equals(lastName)) {
+            this.lastName = lastName;
+            donorModified();
+        }
     }
 
     public LocalDate getBirth() {
@@ -109,7 +123,10 @@ public class Donor {
     }
 
     public void setBirth(LocalDate birth) {
-        this.birth = birth;
+        if (!this.birth.equals(birth)) {
+            this.birth = birth;
+            donorModified();
+        }
     }
 
     public LocalDate getDeath() {
@@ -117,7 +134,10 @@ public class Donor {
     }
 
     public void setDeath(LocalDate death) {
-        this.death = death;
+        if (!this.death.equals(death)) {
+            this.death = death;
+            donorModified();
+        }
     }
 
     public Gender getGender() {
@@ -125,7 +145,10 @@ public class Donor {
     }
 
     public void setGender(Gender gender) {
-        this.gender = gender;
+        if (!this.gender.equals(gender)) {
+            this.gender = gender;
+            donorModified();
+        }
     }
 
     public double getHeight() {
@@ -133,7 +156,10 @@ public class Donor {
     }
 
     public void setHeight(double height) {
-        this.height = height;
+        if (this.height != height) {
+            this.height = height;
+            donorModified();
+        }
     }
 
     public double getWeight() {
@@ -141,7 +167,10 @@ public class Donor {
     }
 
     public void setWeight(double weight) {
-        this.weight = weight;
+        if (this.weight != weight) {
+            this.weight = weight;
+            donorModified();
+        }
     }
 
     public BloodGroup getBloodGroup() {
@@ -149,7 +178,10 @@ public class Donor {
     }
 
     public void setBloodGroup(BloodGroup bloodGroup) {
-        this.bloodGroup = bloodGroup;
+        if (!this.bloodGroup.equals(bloodGroup)) {
+            this.bloodGroup = bloodGroup;
+            donorModified();
+        }
     }
 
     public String getStreet1() {
@@ -157,7 +189,10 @@ public class Donor {
     }
 
     public void setStreet1(String street1) {
-        this.street1 = street1;
+        if (!this.street1.equals(street1)) {
+            this.street1 = street1;
+            donorModified();
+        }
     }
 
     public String getStreet2() {
@@ -165,7 +200,10 @@ public class Donor {
     }
 
     public void setStreet2(String street2) {
-        this.street2 = street2;
+        if (!this.street2.equals(street2)) {
+            this.street2 = street2;
+            donorModified();
+        }
     }
 
     public String getSuburb() {
@@ -173,7 +211,10 @@ public class Donor {
     }
 
     public void setSuburb(String suburb) {
-        this.suburb = suburb;
+        if (!this.suburb.equals(suburb)) {
+            this.suburb = suburb;
+            donorModified();
+        }
     }
 
     public Region getRegion() {
@@ -181,7 +222,10 @@ public class Donor {
     }
 
     public void setRegion(Region region) {
-        this.region = region;
+        if (!this.region.equals(region)) {
+            this.region = region;
+            donorModified();
+        }
     }
 
     public int getZip() {
@@ -189,19 +233,23 @@ public class Donor {
     }
 
     public void setZip(int zip) {
-        this.zip = zip;
+        if (this.zip != zip) {
+            this.zip = zip;
+            donorModified();
+        }
+    }
+
+    public String getAddress() {
+        return street1 + " " + street2 + " " + suburb + " " + region + " " + zip;
     }
 
     public Timestamp getModified() {
         return modified;
     }
 
-    public void setModified(Timestamp modified) {
-        this.modified = modified;
-    }
-
-    public void addOrganToDonate(Organ organ){
+    public void addDonation(Organ organ) {
         donations.add(organ);
+        donorModified();
     }
 
     public int getIrdNumber() {
@@ -209,7 +257,14 @@ public class Donor {
     }
 
     public void setIrdNumber(int irdNumber) {
-        this.irdNumber = irdNumber;
+        if (this.irdNumber != irdNumber) {
+            this.irdNumber = irdNumber;
+            donorModified();
+        }
+    }
+
+    public void donorModified() {
+        this.modified = new Timestamp(System.currentTimeMillis());
     }
 
 
@@ -217,13 +272,18 @@ public class Donor {
         return "Donor: \n" +
                 "IRD: " + irdNumber + "\n" +
                 "Created date: " + CREATED + "\n" +
+                "Modified date: " + modified + "\n" +
                 "First name: " + firstName + "\n" +
                 "Middle names: " + middleNames + "\n" +
                 "Last name: " + lastName + "\n" +
                 "Gender: " + gender + "\n" +
                 "Date of birth: " + birth + "\n" +
                 "Organs to Donate: " + donations + "\n" +
-                "Address: " + street1 + " " + street2 + " " + suburb + " " + region + " " + zip + "\n" +
+                "Street1: " + street1 + "\n" +
+                "Street2: " + street2 + "\n" +
+                "Suburb:" + suburb + "\n" +
+                "Region: " + region + "\n" +
+                "Zip: " + zip + "\n" +
                 "Date of death: " + death + "\n" +
                 "Height: " + height + "\n" +
                 "Weight: " + weight + "\n" +

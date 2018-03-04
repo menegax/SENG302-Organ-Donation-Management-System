@@ -1,8 +1,10 @@
 package cli;
+
 import model.Donor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -29,11 +31,11 @@ class CLIDonorAdd implements Runnable {
     private LocalDate birth;
 
     public void run() {
-        try{
-            Database.addDonor(new Donor(ird,firstName, middleNames, lastName, birth));
+        try {
+            Database.addDonor(new Donor(ird, firstName, middleNames, lastName, birth));
             System.out.println("Successfully added new donor " + firstName + " " +
-                    (middleNames == null ? "": middleNames.toString() + "") + lastName);
-        }catch (IllegalArgumentException e){
+                    (middleNames == null ? "" : middleNames.toString() + "") + lastName);
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }

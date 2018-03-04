@@ -5,3 +5,4 @@ Technical questions that we don't know how to fix!
 - GitLab Runner... working?
 - What's up with storing Donors as a HashSet\<Donor>? Benefits?
 - How do we automate CLI testing?
+- How to link `/docs` folder to GitLab Wiki?

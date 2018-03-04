@@ -1,4 +1,4 @@
-# CLI Donor View Manual Test
+# CLI Donor Update Manual Test
 
 1. Add a donor using `donor add --ird=1234 -f=Andrew -l=S -b=9999-09-09`
 2. Attempt to update the donor using `donor update -s=1234 --bloodgroup=A_POSITIVE --gender=female --height=179.8 --ird=12345 --region=northland --street1="15Brunswick" --street2="emptinessiess" --suburb=huntsbury --weight=120.4 --zip=8080 --dateofbirth=1999-09-09 --dateofdeath=1999-09-10 --firstname=Hayden --lastname=poo --middlenames="hey,bro,sup"`

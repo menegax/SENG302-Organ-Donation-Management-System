@@ -16,6 +16,11 @@ public class DonorTest {
         thenDonorHasAttributes(donor);
     }
 
+    @Test
+    public void testDonorAddIrdCollision() {
+        // todo implement
+    }
+
     private void thenDonorHasAttributes(Donor donor) {
         assertTrue(donor.getCREATED() != null);
         assertEquals(donor.getFirstName(), "Bob");
