@@ -1,7 +1,9 @@
 package model;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.time.LocalDate;
+
 import service.Database;
 import utility.GlobalEnums.*;
 
@@ -44,7 +46,7 @@ public class Donor {
     private int irdNumber;
 
     public Donor(int irdNumber, String firstName,
-                 ArrayList<String> middleNames, String lastName, LocalDate date) throws IllegalArgumentException{
+                 ArrayList<String> middleNames, String lastName, LocalDate date) throws IllegalArgumentException {
 
         this.CREATED = new Timestamp(System.currentTimeMillis());
         ensureUniqueIrd(irdNumber);
@@ -56,9 +58,9 @@ public class Donor {
         this.irdNumber = irdNumber;
     }
 
-    public static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException{
-        for (Donor d: Database.getDonors()){
-            if (d.irdNumber == irdNumber){
+    public static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException {
+        for (Donor d : Database.getDonors()) {
+            if (d.irdNumber == irdNumber) {
                 throw new IllegalArgumentException("IRD number is not unique");
             }
         }
@@ -69,7 +71,7 @@ public class Donor {
     }
 
     public ArrayList<Organ> getDonations() {
-        return donations;
+        return donations == null ? new ArrayList<>() : donations;
     }
 
     public void setDonations(ArrayList<Organ> donations) {
@@ -200,7 +202,7 @@ public class Donor {
         this.modified = modified;
     }
 
-    public void addOrganToDonate(Organ organ){
+    public void addOrganToDonate(Organ organ) {
         donations.add(organ);
     }
 

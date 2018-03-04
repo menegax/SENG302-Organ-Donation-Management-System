@@ -30,9 +30,9 @@ class CLIDonorAdd implements Runnable {
 
     public void run() {
         try{
-            Database.addDonor(new Donor(ird,firstName, middleNames, lastName, birth));
-            System.out.println("Successfully added new donor " + firstName + " " +
-                    (middleNames == null ? "": middleNames.toString() + "") + lastName);
+            Donor donor = new Donor(ird,firstName, middleNames, lastName, birth);
+            Database.addDonor(donor);
+            System.out.println("Successfully added " + donor);
         }catch (IllegalArgumentException e){
             System.out.println(e.getMessage());
         }
