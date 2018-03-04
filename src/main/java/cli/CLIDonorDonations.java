@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"unused"})
 @Command(name = "donations", description = "used to update the donations on a particular donor")
-public class CLIDonorUpdateDonations implements Runnable {
+public class CLIDonorDonations implements Runnable {
 
     @Option(names = {"-i", "--ird"}, required = true, description = "Search donor by the IRD number of the donor.")
     private int searchIrd;
