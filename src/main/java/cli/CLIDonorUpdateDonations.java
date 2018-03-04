@@ -4,7 +4,6 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Command;
 import service.Database;
 import utility.GlobalEnums;
-import utility.GlobalEnums.Organ;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 
@@ -29,45 +28,36 @@ public class CLIDonorUpdateDonations implements Runnable {
             System.out.println("*** Successfully updated donations ***");
         } else
             for (String message: messages) System.out.println(message);
-
     }
 
-    //TODO: still working on it... very very sleepy :(
     private ArrayList<String> updateDonations(Donor d){
         ArrayList<String> informationMessages = new ArrayList<>();
         GlobalEnums.Organ organEnum;
+        ArrayList<GlobalEnums.Organ> updateDonations = (d.getDonations() == null? new ArrayList<>(): d.getDonations());
         if (newDonations != null){
-            ArrayList<GlobalEnums.Organ> updateDonations = (d.getDonations() == null? new ArrayList<>(): d.getDonations());
             for (String organ: newDonations) {
                 organEnum = (GlobalEnums.Organ) GlobalEnums.Organ.getEnumFromString(organ); //null if invalid
-                if (organEnum == null) informationMessages.add("Error: Invalid organ " + organ + ".");
+                if (organEnum == null) informationMessages.add("Error: Invalid organ " + organ + ", this has not been added.");
                 else {
-                    if (updateDonations.size() == 0) updateDonations.add(organEnum);
-                    else {
-                        if (updateDonations.contains(organEnum)) {
-                            informationMessages.add("Organ " + organ + " is already part of the donors donations, so was not added.");
-                        } else updateDonations.add(organEnum);
-                    }
+                    if (updateDonations.contains(organEnum)) {
+                        informationMessages.add("Organ " + organ + " is already part of the donors donations, so was not added.");
+                    } else updateDonations.add(organEnum);
                 }
             }
-            d.setDonations(updateDonations);
         }
-        if (rmDonations != null) { //if --add and --rm and used,then --rm will remove from NEW/OLD list depending on order
-            ArrayList<Organ> updateDonations = d.getDonations() == null ? new ArrayList<>(): d.getDonations();
+        if (rmDonations != null) {
             for (String organ: rmDonations) {
                 organEnum = (GlobalEnums.Organ) GlobalEnums.Organ.getEnumFromString(organ);
-                if (organEnum == null)
-                    informationMessages.add("Error: Invalid organ " + organ + ".");
+                if (organEnum == null) informationMessages.add("Error: Invalid organ " + organ + ".");
                 else {
                     if (updateDonations.contains(organEnum)) updateDonations.remove(organEnum);
                     else informationMessages.add("Organ " + organ+ " is not part of the donors donations, so could not be removed.");
                 }
             }
-            d.setDonations(updateDonations);
         }
+        d.setDonations(updateDonations); //update changes
         return informationMessages;
     }
-
 
     public void run() {
         try {
