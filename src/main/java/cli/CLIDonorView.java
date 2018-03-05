@@ -16,8 +16,8 @@ public class CLIDonorView implements Runnable {
     private boolean searchAll;
 
     public void run() {
-        System.out.println("*** Results of Search ***"); // TODO fix entering `donor view` so that it fails, and prints help. no options are required right now.
         if (searchIrd != 0) {
+            System.out.println("*** Results of Search ***"); // TODO fix entering `donor view` so that it fails, and prints help. no options are required right now.
             try {
                 System.out.println(Database.getDonorByIrd(searchIrd));
             } catch (InvalidObjectException e) {
@@ -25,6 +25,7 @@ public class CLIDonorView implements Runnable {
             }
         }
         if (searchAll) {
+            System.out.println("*** Results of Search ***"); // TODO fix entering `donor view` so that it fails, and prints help. no options are required right now.
             System.out.println(Database.getDonors());
         }
     }

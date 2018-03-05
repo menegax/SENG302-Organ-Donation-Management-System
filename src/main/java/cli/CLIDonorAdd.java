@@ -15,7 +15,7 @@ class CLIDonorAdd implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-ird", "--ird"}, required = true, description = "The IRD number of the donor.")
+    @Option(names = {"-i", "--ird"}, required = true, description = "The IRD number of the donor.")
     private int ird;
 
     @Option(names = {"-f", "--firstname"}, required = true, description = "The first name of the donor.")
