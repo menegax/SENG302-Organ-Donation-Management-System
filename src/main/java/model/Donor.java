@@ -56,6 +56,7 @@ public class Donor {
         this.lastName = lastName;
         this.birth = date;
         this.irdNumber = irdNumber;
+        this.donations = new ArrayList<>();
     }
 
     public static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException {
@@ -247,9 +248,24 @@ public class Donor {
         return modified;
     }
 
-    public void addDonation(Organ organ) {
-        donations.add(organ);
-        donorModified();
+    public String addDonation(Organ organ) {
+        if (donations.contains(organ)) {
+            return "Organ " + organ + " is already part of the donors donations, so was not added.";
+        } else {
+            donations.add(organ);
+            donorModified();
+        }
+        return "Successfully added " + organ + " to donations";
+    }
+
+    public String removeDonation(Organ organ){
+        if (donations.contains(organ)) {
+            donations.remove(organ);
+            donorModified();
+            return "Successfully removed " + organ + " from donations";
+        }
+        else
+           return "Organ " + organ + " is not part of the donors donations, so could not be removed.";
     }
 
     public int getIrdNumber() {
