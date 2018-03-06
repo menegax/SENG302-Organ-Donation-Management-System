@@ -108,7 +108,6 @@ public class CLIDonorUpdate implements Runnable {
 
     //todo needs unit test
     private void displayUpdateMessages(ArrayList<String> messages) {
-        System.out.println("*** Results of Update ***");
         if (messages.size() == 0) {
             System.out.println("Successfully updated all fields provided");
         }

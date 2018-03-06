@@ -1,12 +1,13 @@
 package service;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.Writer;
 import java.util.HashSet;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import model.Donor;
 
 public class Database {
@@ -30,6 +31,9 @@ public class Database {
         throw new InvalidObjectException("Donor with IRD number " + ird + " does not exist.");
     }
 
+    /**
+     * Calls all sub-methods to save data to disk
+     */
     public static void saveToDisk() {
         try {
             saveToDiskDonors();
@@ -38,15 +42,23 @@ public class Database {
         }
     }
 
+    /**
+     * Writes database donors to file on disk
+     *
+     * @throws IOException
+     */
     private static void saveToDiskDonors() throws IOException {
-        // todo add tests
-        // todo ensure human readability of .txt file
-        // todo change file location
+        Gson gson = new Gson();
+        String json = gson.toJson(donors);
 
-        String json = new Gson().toJson(donors);
+        Writer writer = new FileWriter("donor.json");
+        writer.write(json);
+        writer.close();
 
-        String text = "Text to save to file";
-        Files.write(Paths.get("./donor.txt"), text.getBytes());
+        // can use this block of code instead
+//        Writer writer = new FileWriter("donor.json");
+//        Gson gson = new GsonBuilder().create();
+//        gson.toJson(donors, writer);
+//        writer.close();
     }
-
 }

@@ -13,21 +13,33 @@ import java.util.ArrayList;
 @Command(name = "donations", description = "used to update the donations on a particular donor")
 public class CLIDonorDonations implements Runnable {
 
-    @Option(names = {"-i", "--ird"}, required = true, description = "Search donor by the IRD number of the donor.")
+    @Option(names = {"-i", "--ird"}, required = true, description = "Search donor by the IRD number.")
     private int searchIrd;
 
     @Option(names = {"-l", "--list"}, description = "Lists current organ donations.")
     private boolean donationsRequested;
 
-    @Option(names = "--add", split = ",", description = "Takes a list of organs to add to donations")
+    @Option(names = "--add", split = ",", description = "Takes a comma-separated list of organs to add to donations.\n" +
+            "LIVER\n" +
+            "KIDNEY\n" +
+            "PANCREAS\n" +
+            "HEART\n" +
+            "LUNG\n" +
+            "INTESTINE\n" +
+            "CORNEA\n" +
+            "MIDDLEEAR\n" +
+            "SKIN\n" +
+            "BONE\n" +
+            "BONE_MARROW\n" +
+            "CONNECTIVETISSUE")
     private ArrayList<String> newDonations;
 
-    @Option(names = {"-rm", "--remove"}, split = ",", description = "Takes a list of organs to remove from donations")
+    @Option(names = {"-rm", "--remove"}, split = ",", description = "Takes a comma-separated list of organs to remove from donations.")
     private ArrayList<String> rmDonations;
 
     private void displayInformationMessages(ArrayList<String> messages) {
         for (String message : messages)
-            System.out.println("- " + message);
+            System.out.println( message);
     }
 
     private void displayDonorDonations(Donor donor) {
@@ -41,20 +53,24 @@ public class CLIDonorDonations implements Runnable {
         ArrayList<String> informationMessages = new ArrayList<>();
         if (newDonations != null) {
             for (String organ : newDonations) {
-                Organ organEnum = (Organ)Organ.getEnumFromString(organ); //null if invalid
-                if (organEnum == null)
+                Organ organEnum = (Organ) Organ.getEnumFromString(organ); //null if invalid
+                if (organEnum == null) {
                     informationMessages.add("Error: Invalid organ " + organ + "given, hence was not added.");
-                else
+                }
+                else {
                     informationMessages.add(d.addDonation(organEnum));
+                }
             }
         }
         if (rmDonations != null) {
             for (String organ : rmDonations) {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ);
-                if (organEnum == null)
+                if (organEnum == null) {
                     informationMessages.add("Invalid organ " + organ + " given, hence was not added.");
-                else
+                }
+                else {
                     informationMessages.add(d.removeDonation(organEnum));
+                }
             }
         }
         return informationMessages;
@@ -63,8 +79,12 @@ public class CLIDonorDonations implements Runnable {
     public void run() {
         try {
             Donor donor = Database.getDonorByIrd(searchIrd);
-            if (donationsRequested) displayDonorDonations(donor);
-            else displayInformationMessages(updateDonations(donor));
+            if (donationsRequested) {
+                displayDonorDonations(donor);
+            }
+            else {
+                displayInformationMessages(updateDonations(donor));
+            }
         } catch (InvalidObjectException e) {
             System.out.println(e.getMessage());
         }

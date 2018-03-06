@@ -4,7 +4,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 @SuppressWarnings("unused")
-@Command(name = "odms", subcommands = {CLIDonor.class, CLISave.class},
+@Command(name = "odms", subcommands = {CLIDonor.class, CLISave.class, CLIImport.class}, //todo remove usage heading so only commands are listed i.e. no odms command is shown
         sortOptions = false,
         headerHeading = "Usage:%n%n",
         synopsisHeading = "%n",
@@ -20,6 +20,6 @@ public class CLIOdms implements Runnable {
 
     @Override
     public void run() {
-
+        System.out.print("odms parent command invoked. Use -h to view usage information for subcommands.");
     }
 }

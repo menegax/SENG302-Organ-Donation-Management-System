@@ -8,8 +8,9 @@ import service.Database;
 public class CLISave implements Runnable {
 
     public void run() {
+        System.out.print("Saving...");
         Database.saveToDisk();
+        System.out.println(" done.");
     }
 
 }
-

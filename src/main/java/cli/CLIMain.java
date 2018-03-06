@@ -22,7 +22,7 @@ public class CLIMain {
         String userCommand;
         new CommandLine(new CLIOdms()).parseWithHandler(new CommandLine.RunLast(), System.err, "-h");
         userCommand = inputScanner.nextLine();
-        while(!userCommand.trim().equals("quit")){
+        while (!userCommand.trim().equals("quit")) {
             args = userCommand.split(" ");
             new CommandLine(new CLIOdms()).parseWithHandler(new CommandLine.RunLast(), System.err, args);
             userCommand = inputScanner.nextLine();

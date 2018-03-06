@@ -32,3 +32,8 @@ This requires a unique search term to be entered such that duplicates are not re
 
 #### CLI Subcommand Limit
 We have decided that the maximum level of subcommands is three i.e. `donor update donations --option`
+
+#### CLI Testing
+After a discussion with Marina (senior tutor), we've decided that instead of testing the CLI by running its `main()` and 
+providing raw user input, we will instead assume the framework is fully functional, and instead test any methods called 
+by the `run()` method within a particular CLI command. This way we're only unit testing internal methods.

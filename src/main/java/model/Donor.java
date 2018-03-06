@@ -62,7 +62,7 @@ public class Donor {
     public static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException {
         for (Donor d : Database.getDonors()) {
             if (d.irdNumber == irdNumber) {
-                throw new IllegalArgumentException("IRD number is not unique");
+                throw new IllegalArgumentException("IRD number " + irdNumber + " is not unique");
             }
         }
     }
@@ -250,7 +250,7 @@ public class Donor {
 
     public String addDonation(Organ organ) {
         if (donations.contains(organ)) {
-            return "Organ " + organ + " is already part of the donors donations, so was not added.";
+            return "Organ " + organ + " is already part of the donor's donations, so was not added.";
         } else {
             donations.add(organ);
             donorModified();
