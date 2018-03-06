@@ -1,8 +1,12 @@
 package service;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 
+import com.google.gson.Gson;
 import model.Donor;
 
 public class Database {
@@ -23,7 +27,26 @@ public class Database {
                 return d;
             }
         }
-        throw new InvalidObjectException("Donor with IRD number " + ird + " does not exist."); //TODO: feel free to create a proper exception for this | Andrew: I think this is perfectly valid. Really like the custom message!
+        throw new InvalidObjectException("Donor with IRD number " + ird + " does not exist.");
+    }
+
+    public static void saveToDisk() {
+        try {
+            saveToDiskDonors();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void saveToDiskDonors() throws IOException {
+        // todo add tests
+        // todo ensure human readability of .txt file
+        // todo change file location
+
+        String json = new Gson().toJson(donors);
+
+        String text = "Text to save to file";
+        Files.write(Paths.get("./donor.txt"), text.getBytes());
     }
 
 }
