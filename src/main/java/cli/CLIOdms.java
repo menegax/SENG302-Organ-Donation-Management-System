@@ -4,7 +4,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 @SuppressWarnings("unused")
-@Command(name = "odms", subcommands = {CLIDonor.class},
+@Command(name = "odms", subcommands = {CLIDonor.class, CLISave.class},
         sortOptions = false,
         headerHeading = "Usage:%n%n",
         synopsisHeading = "%n",
