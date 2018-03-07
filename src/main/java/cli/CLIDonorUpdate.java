@@ -16,6 +16,9 @@ import java.util.stream.Stream;
 @Command(name = "update", description = "used to update donor attributes")
 public class CLIDonorUpdate implements Runnable {
 
+    @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
+    private boolean helpRequested = false;
+
     @Option(names = {"-s", "--search"}, required = true, description = "Search donor by the IRD number of the donor.")
     private int searchIrd;
 

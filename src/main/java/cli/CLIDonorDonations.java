@@ -13,6 +13,9 @@ import java.util.ArrayList;
 @Command(name = "donations", description = "used to update the donations on a particular donor")
 public class CLIDonorDonations implements Runnable {
 
+    @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
+    private boolean helpRequested = false;
+
     @Option(names = {"-i", "--ird"}, required = true, description = "Search donor by the IRD number.")
     private int searchIrd;
 

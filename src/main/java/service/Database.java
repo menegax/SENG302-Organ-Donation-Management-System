@@ -1,6 +1,8 @@
 package service;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.io.*;
 import java.util.HashSet;
 
 import com.google.gson.Gson;
@@ -8,6 +10,8 @@ import com.google.gson.GsonBuilder;
 import model.Donor;
 
 public class Database {
+
+    private static String donorPath = "./";
 
     private static HashSet<Donor> donors = new HashSet<>();
 
@@ -48,29 +52,25 @@ public class Database {
         Gson gson = new Gson();
         String json = gson.toJson(donors);
 
-        Writer writer = new FileWriter("donor.json");
+        Writer writer = new FileWriter(new File(donorPath, "donor.json")); //todo change path to /team-27/data/
         writer.write(json);
         writer.close();
-
-        // can use this block of code instead
-//        Writer writer = new FileWriter("donor.json");
-//        Gson gson = new GsonBuilder().create();
-//        gson.toJson(donors, writer);
-//        writer.close();
     }
 
     /**
      * Calls importFromDisk and handles any errors
      */
-    public static void importDonors (String fileName) {
+    public static void importFromDisk(String fileName) {
         try {
             importFromDiskDonors(fileName);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
+
     /**
      * Reads donor data from disk
+     *
      * @throws IOException
      */
     private static void importFromDiskDonors(String fileName) throws IOException {
@@ -79,7 +79,7 @@ public class Database {
             BufferedReader br = new BufferedReader(new FileReader(fileName));
             Donor[] donor = gson.fromJson(br, Donor[].class);
             for (Donor d : donor) Database.addDonor(d);
-        } catch (IOException exception){
+        } catch (IOException exception) {
             throw exception;
         }
 

@@ -8,11 +8,15 @@ import service.Database;
 @Command(name = "import")
 public class CLIImport implements Runnable {
 
-    @Option(names = {"-f", "--file"}, required = true, description = "the file name you wish to import") String fileName;
+    @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
+    private boolean helpRequested = false;
+
+    @Option(names = {"-f", "--file"}, required = true, description = "the file name you wish to import")
+    private String fileName;
 
     public void run() {
         System.out.print("Importing...");
-        Database.importDonors(fileName);
+        Database.importFromDisk(fileName);
         System.out.println("Done.");
     }
 

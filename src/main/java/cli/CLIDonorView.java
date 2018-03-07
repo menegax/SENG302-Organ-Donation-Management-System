@@ -9,6 +9,9 @@ import java.io.InvalidObjectException;
 @Command(name = "view", description = "used to view donor attributes")
 public class CLIDonorView implements Runnable {
 
+    @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
+    private boolean helpRequested = false;
+
     @Option(names = {"-i", "--ird"}, description = "Search donor by the IRD number of the donor.")
     private int searchIrd;
 
