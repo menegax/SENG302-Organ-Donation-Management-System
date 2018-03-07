@@ -1,5 +1,6 @@
 package cli;
 
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Command;
 import service.Database;
 
@@ -7,9 +8,12 @@ import service.Database;
 @Command(name = "import")
 public class CLIImport implements Runnable {
 
+    @Option(names = {"-f", "--file"}, required = true, description = "the file name you wish to import") String fileName;
+
     public void run() {
-        //todo
-        System.out.println("import command invoked");
+        System.out.print("Importing...");
+        Database.importDonors(fileName);
+        System.out.println("Done.");
     }
 
 }

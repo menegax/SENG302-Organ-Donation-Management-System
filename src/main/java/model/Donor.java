@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 
 import service.Database;
+import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 
 public class Donor {
@@ -59,6 +60,47 @@ public class Donor {
         this.donations = new ArrayList<>();
     }
 
+    //todo needs unit tests
+    public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames,
+                                 LocalDate birth, LocalDate death, String street1, String street2,
+                                 String suburb, String region, String gender, String bloodGroup,
+                                 double height, double weight, int ird) {
+        Enum globalEnum;
+        if (firstName != null) setFirstName(firstName);
+        if (lastName != null) setLastName(lastName);
+        if (middleNames != null) setMiddleNames(middleNames);
+        if (birth != null) setBirth(birth);
+        if (death != null) setDeath(death);
+        if (street1 != null) setStreet1(street1);
+        if (street2 != null) setStreet2(street2);
+        if (suburb != null) setSuburb(suburb);
+        if (region != null) {
+            globalEnum = GlobalEnums.Region.getEnumFromString(region);
+            if (globalEnum != null) {
+                setRegion((GlobalEnums.Region) globalEnum);
+            } else{
+               System.out.println("Invalid region, for help on what entries are valid, use donor update -h.");
+            }
+        }
+        if (gender != null) {
+            globalEnum = GlobalEnums.Gender.getEnumFromString(gender);
+            if (globalEnum != null) setGender((GlobalEnums.Gender) globalEnum);
+            else {
+                System.out.println("Invalid gender, for help on what entries are valid, use donor update -h.");
+            }
+        }
+        if (bloodGroup != null) {
+            globalEnum = GlobalEnums.BloodGroup.getEnumFromString(bloodGroup);
+            if (globalEnum != null) setBloodGroup((GlobalEnums.BloodGroup) globalEnum);
+            else{
+                System.out.println("Invalid blood group, for help on what entries are valid, use donor update -h.");
+            }
+
+        }
+        if (height > 0) setHeight(height);
+        if (weight > 0) setWeight(weight);
+        if (ird > 0) setIrdNumber(ird);
+    }
 
     public void updateDonations(Donor d, ArrayList<String> newDonations, ArrayList<String> rmDonations) {
         if (newDonations != null) {
@@ -204,7 +246,7 @@ public class Donor {
     }
 
     public void setBloodGroup(BloodGroup bloodGroup) {
-        if (!this.bloodGroup.equals(bloodGroup)) {
+       if (this.bloodGroup != bloodGroup){ //TODO:
             this.bloodGroup = bloodGroup;
             donorModified();
         }

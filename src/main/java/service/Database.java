@@ -1,9 +1,6 @@
 package service;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.io.Writer;
+import java.io.*;
 import java.util.HashSet;
 
 import com.google.gson.Gson;
@@ -60,5 +57,32 @@ public class Database {
 //        Gson gson = new GsonBuilder().create();
 //        gson.toJson(donors, writer);
 //        writer.close();
+    }
+
+    /**
+     * Calls importFromDisk and handles any errors
+     */
+    public static void importDonors (String fileName) {
+        try {
+            importFromDiskDonors(fileName);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    /**
+     * Reads donor data from disk
+     * @throws IOException
+     */
+    private static void importFromDiskDonors(String fileName) throws IOException {
+        Gson gson = new Gson();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(fileName));
+            Donor[] donor = gson.fromJson(br, Donor[].class);
+            for (Donor d : donor) Database.addDonor(d);
+        } catch (IOException exception){
+            throw exception;
+        }
+
+
     }
 }
