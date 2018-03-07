@@ -5,7 +5,7 @@ import picocli.CommandLine.Command;
 import service.Database;
 
 @SuppressWarnings("unused")
-@Command(name = "save")
+@Command(name = "save", description = "Saves data")
 public class CLISave implements Runnable {
 
     @CommandLine.Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")

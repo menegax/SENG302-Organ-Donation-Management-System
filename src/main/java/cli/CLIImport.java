@@ -5,7 +5,7 @@ import picocli.CommandLine.Command;
 import service.Database;
 
 @SuppressWarnings("unused")
-@Command(name = "import")
+@Command(name = "import", description = "Reads and loads data into the application")
 public class CLIImport implements Runnable {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
