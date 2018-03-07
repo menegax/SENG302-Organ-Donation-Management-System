@@ -1,12 +1,9 @@
 package service;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.io.*;
 import java.util.HashSet;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import model.Donor;
 
 public class Database {
