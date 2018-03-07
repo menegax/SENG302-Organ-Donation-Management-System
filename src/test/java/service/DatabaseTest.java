@@ -35,4 +35,18 @@ public class DatabaseTest {
         // todo add read JSON method to see what was written
     }
 
+    @Test
+    public void getDonorByIrd() {
+        //todo
+    }
+
+    @Test
+    public void testImportFromDisk() {
+        // todo
+    }
+
+    @Test
+    public void testImportFromDiskDonors() {
+        // todo
+    }
 }
