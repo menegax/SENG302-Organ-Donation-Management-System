@@ -1,23 +1,9 @@
 package cli;
 import picocli.CommandLine;
-
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CLIMain {
-//    private String[] getCommands(String input) {
-//        ArrayList<String> test = new ArrayList<>();
-//        char[] stuff = input.toCharArray();
-//        int i = 0;
-//        String currentCommand = "";
-//        while (stuff[i] != '-'){
-//            if (stuff[i] == ' '){
-//                test.add(currentCommand);
-//                currentCommand = "";
-//            }else currentCommand += stuff[i];
-//        }
-//
-//    }
+
     public static void main(String[] argv) {
         String[] args;
         System.out.println("+  xxxxx   xxxxxxx  xx       xx    xxxxxxxxxx" + "\n" +
