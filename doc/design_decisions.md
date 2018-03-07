@@ -37,3 +37,10 @@ We have decided that the maximum level of subcommands is three i.e. `donor updat
 After a discussion with Marina (senior tutor), we've decided that instead of testing the CLI by running its `main()` and 
 providing raw user input, we will instead assume the framework is fully functional, and instead test any methods called 
 by the `run()` method within a particular CLI command. This way we're only unit testing internal methods.
+
+#### Gson Library
+We've decided to use GSON library for parsing json files. This will be used for saving data to .json and importing data from .json.
+
+#### PICOCLI
+We have decided to use PicoCLI library to aid in the creation of our CLI. This was because unlike similar libraries, picocli is up to date and is continually worked on. It also the modern equivalent of other such libraries.
+Using this library makes our code easy to read and maintain.
