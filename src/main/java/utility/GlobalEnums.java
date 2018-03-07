@@ -1,6 +1,6 @@
 package utility;
 
-@SuppressWarnings("unused") //is used through the static methods of each enum but, not explicitly
+@SuppressWarnings("unused")
 public class GlobalEnums {
 
     public enum Gender {

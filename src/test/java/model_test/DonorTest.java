@@ -40,25 +40,6 @@ public class DonorTest {
     }
 
     /**
-     * Create donor object
-     */
-    private Donor givenDonor() {
-        return new Donor(12,"Bob", null, "Wallace",
-                LocalDate.of(1995, 12, 31));
-    }
-
-    /**
-     * Check the attributes have been set correctly upon donor obj creation
-     */
-    private void thenDonorHasAttributes(Donor donor) {
-        assertTrue(donor.getCREATED() != null);
-        assertEquals(donor.getFirstName(), "Bob");
-        assertEquals(donor.getMiddleNames(), null);
-        assertEquals(donor.getLastName(), "Wallace");
-        assertEquals(donor.getBirth(), LocalDate.of(1995,12,31));
-    }
-
-    /**
      * Try add a donor with the a conflicting IRD number,
      * expect IllegalArgument exception
      */
@@ -110,21 +91,6 @@ public class DonorTest {
     }
 
     /**
-     * Helper method for testUpdateDonationsRmValid to populate donations
-     */
-    private void addDonationsToDonor(){
-        testDonor.addDonation(Organ.LIVER);
-        testDonor.addDonation(Organ.LUNG);
-    }
-
-    /**
-     * Helper method for testUpdateDonationsRmValid reset donations list
-     */
-    private void resetDonationsDonor(){
-        testDonor.setDonations(new ArrayList<>()); //set to empty
-    }
-
-    /**
      * Add a list containing at least one invalid organ
      * expect only liver to be in donations
      */
@@ -161,21 +127,55 @@ public class DonorTest {
 
 
     /**
-     * Helper method for setting donor names with multiple middle names
-     */
-    private void setDonorNamesMultipleMiddle(){
-        testDonor.setFirstName("Joe");
-        testDonor.setMiddleNames(new ArrayList<String>() {{add("Jane");add("Jarred");}});
-        testDonor.setLastName("Bloggs");
-    }
-
-    /**
      * Check name concat method with no middle names
      */
     @Test
     public void testGetNameConcatenatedWithoutMiddles(){
         setDonorNamesNoMiddle();
         assertEquals("Joe, Bloggs", testDonor.getNameConcatenated());
+    }
+
+    /**
+     * Create donor object
+     */
+    private Donor givenDonor() {
+        return new Donor(12,"Bob", null, "Wallace",
+                LocalDate.of(1995, 12, 31));
+    }
+
+    /**
+     * Check the attributes have been set correctly upon donor obj creation
+     */
+    private void thenDonorHasAttributes(Donor donor) {
+        assertTrue(donor.getCREATED() != null);
+        assertEquals(donor.getFirstName(), "Bob");
+        assertEquals(donor.getMiddleNames(), null);
+        assertEquals(donor.getLastName(), "Wallace");
+        assertEquals(donor.getBirth(), LocalDate.of(1995,12,31));
+    }
+
+    /**
+     * Helper method for testUpdateDonationsRmValid to populate donations
+     */
+    private void addDonationsToDonor(){
+        testDonor.addDonation(Organ.LIVER);
+        testDonor.addDonation(Organ.LUNG);
+    }
+
+    /**
+     * Helper method for testUpdateDonationsRmValid reset donations list
+     */
+    private void resetDonationsDonor(){
+        testDonor.setDonations(new ArrayList<>()); //set to empty
+    }
+
+    /**
+     * Helper method for setting donor names with multiple middle names
+     */
+    private void setDonorNamesMultipleMiddle(){
+        testDonor.setFirstName("Joe");
+        testDonor.setMiddleNames(new ArrayList<String>() {{add("Jane");add("Jarred");}});
+        testDonor.setLastName("Bloggs");
     }
 
     /**

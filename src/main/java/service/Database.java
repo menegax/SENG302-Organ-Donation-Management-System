@@ -11,22 +11,39 @@ import model.Donor;
 
 public class Database {
 
-    private static String donorPath = "./";
-
     private static HashSet<Donor> donors = new HashSet<>();
+
 
     public static HashSet<Donor> getDonors() {
         return donors;
     }
 
+    /**
+     * Adds a donor to the database
+     *
+     * @param newDonor the new donor to add
+     */
     public static void addDonor(Donor newDonor) {
         donors.add(newDonor);
     }
 
+    /**
+     * Removes a donor from the database
+     *
+     * @param ird the ird to search donors by
+     * @throws InvalidObjectException when the object cannot be found
+     */
     public static void removeDonor(int ird) throws InvalidObjectException {
         donors.remove(Database.getDonorByIrd(ird));
     }
 
+    /**
+     * Searches donors by ird
+     *
+     * @param ird the ird to search donors by
+     * @return Donor object
+     * @throws InvalidObjectException when the object cannot be found
+     */
     public static Donor getDonorByIrd(int ird) throws InvalidObjectException {
         for (Donor d : getDonors()) {
             if (d.getIrdNumber() == ird) {
@@ -50,12 +67,13 @@ public class Database {
     /**
      * Writes database donors to file on disk
      *
-     * @throws IOException
+     * @throws IOException when the file cannot be found nor created
      */
     private static void saveToDiskDonors() throws IOException {
         Gson gson = new Gson();
         String json = gson.toJson(donors);
 
+        String donorPath = "./";
         Writer writer = new FileWriter(new File(donorPath, "donor.json")); //todo change path to /team-27/data/
         writer.write(json);
         writer.close();
@@ -75,18 +93,12 @@ public class Database {
     /**
      * Reads donor data from disk
      *
-     * @throws IOException
+     * @throws IOException when the file cannot be found
      */
     private static void importFromDiskDonors(String fileName) throws IOException {
         Gson gson = new Gson();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(fileName));
-            Donor[] donor = gson.fromJson(br, Donor[].class);
-            for (Donor d : donor) Database.addDonor(d);
-        } catch (IOException exception) {
-            throw exception;
-        }
-
-
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        Donor[] donor = gson.fromJson(br, Donor[].class);
+        for (Donor d : donor) Database.addDonor(d);
     }
 }

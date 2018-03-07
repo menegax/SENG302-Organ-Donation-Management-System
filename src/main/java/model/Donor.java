@@ -396,7 +396,7 @@ public class Donor {
         }
     }
 
-    public void donorModified() {
+    private void donorModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
 
