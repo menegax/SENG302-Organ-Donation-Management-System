@@ -37,11 +37,6 @@ public class CLIDonorDonations implements Runnable {
     @Option(names = {"-rm", "--remove"}, split = ",", description = "Takes a comma-separated list of organs to remove from donations.")
     private ArrayList<String> rmDonations;
 
-    private void displayInformationMessages(ArrayList<String> messages) {
-        for (String message : messages)
-            System.out.println( message);
-    }
-
     private void displayDonorDonations(Donor donor) {
         ArrayList<Organ> donations = donor.getDonations();
         if (donations == null)
