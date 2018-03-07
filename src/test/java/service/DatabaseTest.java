@@ -4,49 +4,77 @@ import model.Donor;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.xml.crypto.Data;
-
+import java.io.InvalidObjectException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
 public class DatabaseTest {
 
-//    @Before
-//    public void setup() {
-//        Database.addDonor(new Donor(1381421476, "Bob", null, "Wallace", LocalDate.of(1995, 12, 31)));
-//        Database.addDonor(new Donor(1298325983, "Sheldon", new ArrayList<>(Arrays.asList("The,Heroic".split(" , "))), "Carpenter", LocalDate.of(1900, 1, 1)));
-//        Database.addDonor(new Donor(0, "Bill", null, "Jobs", LocalDate.of(1995, 12, 31)));
-//    }
+    private static Donor bob;
 
-    @Test
-    public void testSaveToDisk() {
-        // todo
+
+    @Before
+    public void restoreDatabase(){
+        Database.resetDatabase();
+        setup();
+    }
+    /**
+     * Setup before all unit tests run
+     */
+    public static void setup() {
+        bob = new Donor(1381421476, "Bob", null,
+                "Wallace", LocalDate.of(1995, 12, 31));
+        Database.addDonor(bob);
+
     }
 
-    @Test
-    public void testSaveToDiskDonors() {
-        Database.addDonor(new Donor(1381421476, "Bob", null, "Wallace", LocalDate.of(1995, 12, 31)));
-        Database.addDonor(new Donor(1298325983, "Sheldon", new ArrayList<>(Arrays.asList("The,Heroic".split(" , "))), "Carpenter", LocalDate.of(1900, 1, 1)));
-        Database.addDonor(new Donor(0, "Bill", null, "Jobs", LocalDate.of(1995, 12, 31)));
-        Database.saveToDisk();
-        // todo add read JSON method to see what was written
+    /**
+     * Try find a donor who doesn't exist
+     * @throws InvalidObjectException
+     */
+    @Test(expected = InvalidObjectException.class)
+    public void getDonorByIncorrectIrd() throws  InvalidObjectException{
+        Database.getDonorByIrd(1);
     }
 
+    /**
+     * Try find a donor who does exist
+     */
     @Test
-    public void getDonorByIrd() {
-        //todo
+    public void getDonorByCorrectIrd(){
+        Donor testDonor = null;
+        try {
+            testDonor = Database.getDonorByIrd(1381421476);
+        } catch (InvalidObjectException e) {
+            e.printStackTrace();
+        }
+        assertEquals(testDonor,bob);
     }
 
+
+    /**
+     * Try adding donors to database
+     */
     @Test
-    public void testImportFromDisk() {
-        // todo
+    public void testAddDonor(){
+        Database.addDonor(bob);
+        assertEquals(new HashSet<Donor>() { {add(bob);add(bob);} }, Database.getDonors());
     }
 
+    /**
+     * Try removing donors from the database
+     */
     @Test
-    public void testImportFromDiskDonors() {
-        // todo
+    public void removeDonor(){
+        try {
+            Database.removeDonor(bob.getIrdNumber());
+        } catch (InvalidObjectException e) {
+            e.printStackTrace();
+        }
+        assertEquals(new HashSet<Donor>(), Database.getDonors());
     }
+
+
 }

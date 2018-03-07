@@ -4,13 +4,10 @@ import model.Donor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
-import utility.GlobalEnums;
 
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 @Command(name = "update", description = "used to update donor attributes")

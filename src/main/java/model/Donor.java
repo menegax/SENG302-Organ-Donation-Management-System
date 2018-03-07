@@ -422,4 +422,13 @@ public class Donor {
                 "Weight: " + weight + "\n" +
                 "Blood group: " + bloodGroup + "\n";
     }
+
+    public boolean equals(Object obj){
+        Donor donor = (Donor) obj;
+        if (this.irdNumber == donor.irdNumber){
+            return true;
+        }
+        return false;
+    }
+
 }

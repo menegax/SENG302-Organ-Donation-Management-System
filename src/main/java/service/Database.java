@@ -98,4 +98,12 @@ public class Database {
         Donor[] donor = gson.fromJson(br, Donor[].class);
         for (Donor d : donor) Database.addDonor(d);
     }
+
+    /**
+     *
+     */
+    public static void resetDatabase(){
+        donors = new HashSet<>();
+    }
+
 }
