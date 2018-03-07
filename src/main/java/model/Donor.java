@@ -158,7 +158,7 @@ public class Donor {
     }
 
     public void setFirstName(String firstName) {
-        if (!this.firstName.equals(firstName)) {
+        if (this.firstName == null || (this.firstName !=null && firstName.equals(this.firstName))) {
             this.firstName = firstName;
             donorModified();
         }
@@ -168,9 +168,9 @@ public class Donor {
         return middleNames;
     }
 
-    public void setMiddleNames(ArrayList<String> middleName) {
-        if (!this.middleNames.equals(middleName)) {
-            this.middleNames = middleName;
+    public void setMiddleNames(ArrayList<String> middleNames) {
+        if (this.middleNames == null || (this.middleNames !=null && middleNames.equals(this.middleNames))) {
+            this.middleNames = middleNames;
             donorModified();
         }
     }
@@ -180,7 +180,7 @@ public class Donor {
     }
 
     public void setLastName(String lastName) {
-        if (!this.lastName.equals(lastName)) {
+        if (this.birth == null || (this.birth !=null && birth.equals(this.birth))) {
             this.lastName = lastName;
             donorModified();
         }
@@ -191,7 +191,7 @@ public class Donor {
     }
 
     public void setBirth(LocalDate birth) {
-        if (!this.birth.equals(birth)) {
+        if (this.birth == null || (this.birth !=null && birth.equals(this.birth))) {
             this.birth = birth;
             donorModified();
         }
@@ -202,7 +202,7 @@ public class Donor {
     }
 
     public void setDeath(LocalDate death) {
-        if (!this.death.equals(death)) {
+        if (this.death == null || (this.death !=null && death.equals(this.death))) {
             this.death = death;
             donorModified();
         }
@@ -213,7 +213,7 @@ public class Donor {
     }
 
     public void setGender(Gender gender) {
-        if (!this.gender.equals(gender)) {
+        if (this.gender != gender) {
             this.gender = gender;
             donorModified();
         }
@@ -246,7 +246,7 @@ public class Donor {
     }
 
     public void setBloodGroup(BloodGroup bloodGroup) {
-       if (this.bloodGroup != bloodGroup){ //TODO:
+       if (this.bloodGroup != bloodGroup){
             this.bloodGroup = bloodGroup;
             donorModified();
         }
@@ -257,7 +257,7 @@ public class Donor {
     }
 
     public void setStreet1(String street1) {
-        if (!this.street1.equals(street1)) {
+        if (this.street1 == null || (this.street1 !=null && street1.equals(this.street1))){
             this.street1 = street1;
             donorModified();
         }
@@ -268,7 +268,7 @@ public class Donor {
     }
 
     public void setStreet2(String street2) {
-        if (!this.street2.equals(street2)) {
+        if (this.street2 == null || (this.street2 !=null && street2.equals(this.street2))) {
             this.street2 = street2;
             donorModified();
         }
@@ -279,7 +279,7 @@ public class Donor {
     }
 
     public void setSuburb(String suburb) {
-        if (!this.suburb.equals(suburb)) {
+        if (this.suburb == null || (this.suburb !=null && suburb.equals(this.suburb))) {
             this.suburb = suburb;
             donorModified();
         }
@@ -290,7 +290,7 @@ public class Donor {
     }
 
     public void setRegion(Region region) {
-        if (!this.region.equals(region)) {
+        if (this.region != region) {
             this.region = region;
             donorModified();
         }

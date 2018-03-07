@@ -11,7 +11,7 @@ public class CLIImport implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-f", "--file"}, required = true, description = "the file name you wish to import")
+    @Option(names = {"-f", "--file"}, required = true, description = "the file name you wish to import i.e. import -f=doc/examples/donor.json")
     private String fileName;
 
     public void run() {
