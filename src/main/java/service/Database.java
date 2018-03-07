@@ -23,6 +23,10 @@ public class Database {
         donors.add(newDonor);
     }
 
+    public static void removeDonor(int ird) throws InvalidObjectException {
+        donors.remove(Database.getDonorByIrd(ird));
+    }
+
     public static Donor getDonorByIrd(int ird) throws InvalidObjectException {
         for (Donor d : getDonors()) {
             if (d.getIrdNumber() == ird) {
