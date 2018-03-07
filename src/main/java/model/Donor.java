@@ -61,6 +61,24 @@ public class Donor {
     }
 
     //todo needs unit tests
+
+    /**
+     * Sets the attributes of the donor
+     * @param firstName
+     * @param lastName
+     * @param middleNames
+     * @param birth
+     * @param death
+     * @param street1
+     * @param street2
+     * @param suburb
+     * @param region
+     * @param gender
+     * @param bloodGroup
+     * @param height
+     * @param weight
+     * @param ird
+     */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames,
                                  LocalDate birth, LocalDate death, String street1, String street2,
                                  String suburb, String region, String gender, String bloodGroup,
@@ -102,7 +120,12 @@ public class Donor {
         if (ird > 0) setIrdNumber(ird);
     }
 
-    public void updateDonations(Donor d, ArrayList<String> newDonations, ArrayList<String> rmDonations) {
+    /**
+     * Update the organ donations list of the donor
+     * @param newDonations - list of organs to add
+     * @param rmDonations - list of organs to remove
+     */
+    public void updateDonations(ArrayList<String> newDonations, ArrayList<String> rmDonations) {
         if (newDonations != null) {
             for (String organ : newDonations) {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ); //null if invalid
@@ -120,13 +143,18 @@ public class Donor {
                 if (organEnum == null) {
                     System.out.println("Invalid organ " + organ + " given, hence was not added.");
                 } else {
-                    System.out.println(d.removeDonation(organEnum));
+                    System.out.println(removeDonation(organEnum));
                 }
             }
         }
     }
 
-    public static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException {
+    /**
+     * Checks the uniqueness of the ird number
+     * @param irdNumber - ird number of the donor
+     * @throws IllegalArgumentException
+     */
+    private static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException {
         for (Donor d : Database.getDonors()) {
             if (d.irdNumber == irdNumber) {
                 throw new IllegalArgumentException("IRD number " + irdNumber + " is not unique");
@@ -134,8 +162,20 @@ public class Donor {
         }
     }
 
+    /**
+     * Returns the name of the donor as a formatted concatenated string
+     * @return string named
+     */
     public String getNameConcatenated() {
-        return firstName + " " + (middleNames == null ? "" : middleNames + " ") + lastName;
+        String concatName = firstName + ", ";
+        if (middleNames != null || middleNames.size() > 0) {
+            for (int i=0; i<middleNames.size(); i++){
+                if (i == middleNames.size() - 1) concatName += middleNames.get(i) + ", ";
+                else concatName += middleNames.get(i) + " ";
+            }
+        }
+        concatName += lastName;
+        return concatName;
     }
 
     public ArrayList<Organ> getDonations() {
@@ -158,7 +198,7 @@ public class Donor {
     }
 
     public void setFirstName(String firstName) {
-        if (!this.firstName.equals(firstName)) {
+        if (this.firstName == null || (!firstName.equals(this.firstName))) {
             this.firstName = firstName;
             donorModified();
         }
@@ -168,9 +208,9 @@ public class Donor {
         return middleNames;
     }
 
-    public void setMiddleNames(ArrayList<String> middleName) {
-        if (!this.middleNames.equals(middleName)) {
-            this.middleNames = middleName;
+    public void setMiddleNames(ArrayList<String> middleNames) {
+        if (this.middleNames == null || (!middleNames.equals(this.middleNames))) {
+            this.middleNames = middleNames;
             donorModified();
         }
     }
@@ -180,7 +220,7 @@ public class Donor {
     }
 
     public void setLastName(String lastName) {
-        if (!this.lastName.equals(lastName)) {
+        if (this.lastName == null || (!lastName.equals(this.lastName))) {
             this.lastName = lastName;
             donorModified();
         }
@@ -191,7 +231,7 @@ public class Donor {
     }
 
     public void setBirth(LocalDate birth) {
-        if (!this.birth.equals(birth)) {
+        if (this.birth == null || (!birth.equals(this.birth))) {
             this.birth = birth;
             donorModified();
         }
@@ -202,7 +242,7 @@ public class Donor {
     }
 
     public void setDeath(LocalDate death) {
-        if (!this.death.equals(death)) {
+        if (this.death == null || (!death.equals(this.death))) {
             this.death = death;
             donorModified();
         }
@@ -213,7 +253,7 @@ public class Donor {
     }
 
     public void setGender(Gender gender) {
-        if (!this.gender.equals(gender)) {
+        if (this.gender != gender) {
             this.gender = gender;
             donorModified();
         }
@@ -246,7 +286,7 @@ public class Donor {
     }
 
     public void setBloodGroup(BloodGroup bloodGroup) {
-       if (this.bloodGroup != bloodGroup){ //TODO:
+       if (this.bloodGroup != bloodGroup){
             this.bloodGroup = bloodGroup;
             donorModified();
         }
@@ -257,7 +297,7 @@ public class Donor {
     }
 
     public void setStreet1(String street1) {
-        if (!this.street1.equals(street1)) {
+        if (this.street1 == null || (!street1.equals(this.street1))){
             this.street1 = street1;
             donorModified();
         }
@@ -268,7 +308,7 @@ public class Donor {
     }
 
     public void setStreet2(String street2) {
-        if (!this.street2.equals(street2)) {
+        if (this.street2 == null || (!street2.equals(this.street2))) {
             this.street2 = street2;
             donorModified();
         }
@@ -279,7 +319,7 @@ public class Donor {
     }
 
     public void setSuburb(String suburb) {
-        if (!this.suburb.equals(suburb)) {
+        if (this.suburb == null || !suburb.equals(this.suburb)) {
             this.suburb = suburb;
             donorModified();
         }
@@ -290,7 +330,7 @@ public class Donor {
     }
 
     public void setRegion(Region region) {
-        if (!this.region.equals(region)) {
+        if (this.region != region) {
             this.region = region;
             donorModified();
         }
@@ -315,6 +355,11 @@ public class Donor {
         return modified;
     }
 
+    /**
+     * Add organs to donor donations list
+     * @param organ - organ to add to the donors donation list
+     * @return string of message
+     */
     public String addDonation(Organ organ) {
         if (donations.contains(organ)) {
             return "Organ " + organ + " is already part of the donor's donations, so was not added.";
@@ -325,6 +370,11 @@ public class Donor {
         return "Successfully added " + organ + " to donations";
     }
 
+    /**
+     * Remove organs from donors donations list
+     * @param organ - organ to remove from the donors donations list
+     * @return string of message
+     */
     public String removeDonation(Organ organ){
         if (donations.contains(organ)) {
             donations.remove(organ);

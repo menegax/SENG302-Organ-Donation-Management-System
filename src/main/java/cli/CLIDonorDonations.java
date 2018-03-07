@@ -54,7 +54,7 @@ public class CLIDonorDonations implements Runnable {
                 displayDonorDonations(donor);
             }
             else {
-               donor.updateDonations(donor, newDonations, rmDonations);
+               donor.updateDonations(newDonations, rmDonations);
             }
         } catch (InvalidObjectException e) {
             System.out.println(e.getMessage());

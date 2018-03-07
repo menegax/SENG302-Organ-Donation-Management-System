@@ -1,11 +1,9 @@
 package cli;
-
 import picocli.CommandLine;
-
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CLIMain {
+
     public static void main(String[] argv) {
         String[] args;
         System.out.println("+  xxxxx   xxxxxxx  xx       xx    xxxxxxxxxx" + "\n" +
