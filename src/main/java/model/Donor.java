@@ -102,7 +102,7 @@ public class Donor {
         if (ird > 0) setIrdNumber(ird);
     }
 
-    public void updateDonations(Donor d, ArrayList<String> newDonations, ArrayList<String> rmDonations) {
+    public void updateDonations(ArrayList<String> newDonations, ArrayList<String> rmDonations) {
         if (newDonations != null) {
             for (String organ : newDonations) {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ); //null if invalid
@@ -120,13 +120,13 @@ public class Donor {
                 if (organEnum == null) {
                     System.out.println("Invalid organ " + organ + " given, hence was not added.");
                 } else {
-                    System.out.println(d.removeDonation(organEnum));
+                    System.out.println(removeDonation(organEnum));
                 }
             }
         }
     }
 
-    public static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException {
+    private static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException {
         for (Donor d : Database.getDonors()) {
             if (d.irdNumber == irdNumber) {
                 throw new IllegalArgumentException("IRD number " + irdNumber + " is not unique");
@@ -158,7 +158,7 @@ public class Donor {
     }
 
     public void setFirstName(String firstName) {
-        if (this.firstName == null || (this.firstName !=null && firstName.equals(this.firstName))) {
+        if (this.firstName == null || (!firstName.equals(this.firstName))) {
             this.firstName = firstName;
             donorModified();
         }
@@ -169,7 +169,7 @@ public class Donor {
     }
 
     public void setMiddleNames(ArrayList<String> middleNames) {
-        if (this.middleNames == null || (this.middleNames !=null && middleNames.equals(this.middleNames))) {
+        if (this.middleNames == null || (!middleNames.equals(this.middleNames))) {
             this.middleNames = middleNames;
             donorModified();
         }
@@ -180,7 +180,7 @@ public class Donor {
     }
 
     public void setLastName(String lastName) {
-        if (this.birth == null || (this.birth !=null && birth.equals(this.birth))) {
+        if (this.lastName == null || (!lastName.equals(this.lastName))) {
             this.lastName = lastName;
             donorModified();
         }
@@ -191,7 +191,7 @@ public class Donor {
     }
 
     public void setBirth(LocalDate birth) {
-        if (this.birth == null || (this.birth !=null && birth.equals(this.birth))) {
+        if (this.birth == null || (!birth.equals(this.birth))) {
             this.birth = birth;
             donorModified();
         }
@@ -202,7 +202,7 @@ public class Donor {
     }
 
     public void setDeath(LocalDate death) {
-        if (this.death == null || (this.death !=null && death.equals(this.death))) {
+        if (this.death == null || (!death.equals(this.death))) {
             this.death = death;
             donorModified();
         }
@@ -257,7 +257,7 @@ public class Donor {
     }
 
     public void setStreet1(String street1) {
-        if (this.street1 == null || (this.street1 !=null && street1.equals(this.street1))){
+        if (this.street1 == null || (!street1.equals(this.street1))){
             this.street1 = street1;
             donorModified();
         }
@@ -268,7 +268,7 @@ public class Donor {
     }
 
     public void setStreet2(String street2) {
-        if (this.street2 == null || (this.street2 !=null && street2.equals(this.street2))) {
+        if (this.street2 == null || (!street2.equals(this.street2))) {
             this.street2 = street2;
             donorModified();
         }
@@ -279,7 +279,7 @@ public class Donor {
     }
 
     public void setSuburb(String suburb) {
-        if (this.suburb == null || (this.suburb !=null && suburb.equals(this.suburb))) {
+        if (this.suburb == null || !suburb.equals(this.suburb)) {
             this.suburb = suburb;
             donorModified();
         }
