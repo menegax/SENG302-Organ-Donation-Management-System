@@ -49,33 +49,6 @@ public class CLIDonorDonations implements Runnable {
         else System.out.println(donations);
     }
 
-    private ArrayList<String> updateDonations(Donor d) {
-        ArrayList<String> informationMessages = new ArrayList<>();
-        if (newDonations != null) {
-            for (String organ : newDonations) {
-                Organ organEnum = (Organ) Organ.getEnumFromString(organ); //null if invalid
-                if (organEnum == null) {
-                    informationMessages.add("Error: Invalid organ " + organ + "given, hence was not added.");
-                }
-                else {
-                    informationMessages.add(d.addDonation(organEnum));
-                }
-            }
-        }
-        if (rmDonations != null) {
-            for (String organ : rmDonations) {
-                Organ organEnum = (Organ) Organ.getEnumFromString(organ);
-                if (organEnum == null) {
-                    informationMessages.add("Invalid organ " + organ + " given, hence was not added.");
-                }
-                else {
-                    informationMessages.add(d.removeDonation(organEnum));
-                }
-            }
-        }
-        return informationMessages;
-    }
-
     public void run() {
         try {
             Donor donor = Database.getDonorByIrd(searchIrd);
@@ -83,7 +56,7 @@ public class CLIDonorDonations implements Runnable {
                 displayDonorDonations(donor);
             }
             else {
-                displayInformationMessages(updateDonations(donor));
+               donor.updateDonations(donor, newDonations, rmDonations);
             }
         } catch (InvalidObjectException e) {
             System.out.println(e.getMessage());

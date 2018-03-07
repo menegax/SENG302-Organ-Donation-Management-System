@@ -59,6 +59,31 @@ public class Donor {
         this.donations = new ArrayList<>();
     }
 
+
+    public void updateDonations(Donor d, ArrayList<String> newDonations, ArrayList<String> rmDonations) {
+        if (newDonations != null) {
+            for (String organ : newDonations) {
+                Organ organEnum = (Organ) Organ.getEnumFromString(organ); //null if invalid
+                if (organEnum == null) {
+                    System.out.println("Error: Invalid organ " + organ + "given, hence was not added.");
+                }
+                else {
+                    System.out.println(addDonation(organEnum));
+                }
+            }
+        }
+        if (rmDonations != null) {
+            for (String organ : rmDonations) {
+                Organ organEnum = (Organ) Organ.getEnumFromString(organ);
+                if (organEnum == null) {
+                    System.out.println("Invalid organ " + organ + " given, hence was not added.");
+                } else {
+                    System.out.println(d.removeDonation(organEnum));
+                }
+            }
+        }
+    }
+
     public static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException {
         for (Donor d : Database.getDonors()) {
             if (d.irdNumber == irdNumber) {
