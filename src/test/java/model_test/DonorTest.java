@@ -150,5 +150,41 @@ public class DonorTest {
     }
 
 
+    /**
+     * Check name concat method with multiple middle names
+     */
+    @Test
+    public void testGetNameConcatenatedWithMiddles(){
+        setDonorNamesMultipleMiddle();
+        assertEquals("Joe, Jane Jarred, Bloggs", testDonor.getNameConcatenated());
+    }
+
+
+    /**
+     * Helper method for setting donor names with multiple middle names
+     */
+    private void setDonorNamesMultipleMiddle(){
+        testDonor.setFirstName("Joe");
+        testDonor.setMiddleNames(new ArrayList<String>() {{add("Jane");add("Jarred");}});
+        testDonor.setLastName("Bloggs");
+    }
+
+    /**
+     * Check name concat method with no middle names
+     */
+    @Test
+    public void testGetNameConcatenatedWithoutMiddles(){
+        setDonorNamesNoMiddle();
+        assertEquals("Joe, Bloggs", testDonor.getNameConcatenated());
+    }
+
+    /**
+     * Helper method for setting donor names with no middle names
+     */
+    private void setDonorNamesNoMiddle(){
+        testDonor.setFirstName("Joe");
+        testDonor.setMiddleNames(new ArrayList<>());
+        testDonor.setLastName("Bloggs");
+    }
 
 }

@@ -61,6 +61,24 @@ public class Donor {
     }
 
     //todo needs unit tests
+
+    /**
+     * Sets the attributes of the donor
+     * @param firstName
+     * @param lastName
+     * @param middleNames
+     * @param birth
+     * @param death
+     * @param street1
+     * @param street2
+     * @param suburb
+     * @param region
+     * @param gender
+     * @param bloodGroup
+     * @param height
+     * @param weight
+     * @param ird
+     */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames,
                                  LocalDate birth, LocalDate death, String street1, String street2,
                                  String suburb, String region, String gender, String bloodGroup,
@@ -102,6 +120,11 @@ public class Donor {
         if (ird > 0) setIrdNumber(ird);
     }
 
+    /**
+     * Update the organ donations list of the donor
+     * @param newDonations - list of organs to add
+     * @param rmDonations - list of organs to remove
+     */
     public void updateDonations(ArrayList<String> newDonations, ArrayList<String> rmDonations) {
         if (newDonations != null) {
             for (String organ : newDonations) {
@@ -126,6 +149,11 @@ public class Donor {
         }
     }
 
+    /**
+     * Checks the uniqueness of the ird number
+     * @param irdNumber - ird number of the donor
+     * @throws IllegalArgumentException
+     */
     private static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException {
         for (Donor d : Database.getDonors()) {
             if (d.irdNumber == irdNumber) {
@@ -134,8 +162,20 @@ public class Donor {
         }
     }
 
+    /**
+     * Returns the name of the donor as a formatted concatenated string
+     * @return string named
+     */
     public String getNameConcatenated() {
-        return firstName + " " + (middleNames == null ? "" : middleNames + " ") + lastName;
+        String concatName = firstName + ", ";
+        if (middleNames != null || middleNames.size() > 0) {
+            for (int i=0; i<middleNames.size(); i++){
+                if (i == middleNames.size() - 1) concatName += middleNames.get(i) + ", ";
+                else concatName += middleNames.get(i) + " ";
+            }
+        }
+        concatName += lastName;
+        return concatName;
     }
 
     public ArrayList<Organ> getDonations() {
@@ -315,6 +355,11 @@ public class Donor {
         return modified;
     }
 
+    /**
+     * Add organs to donor donations list
+     * @param organ - organ to add to the donors donation list
+     * @return string of message
+     */
     public String addDonation(Organ organ) {
         if (donations.contains(organ)) {
             return "Organ " + organ + " is already part of the donor's donations, so was not added.";
@@ -325,6 +370,11 @@ public class Donor {
         return "Successfully added " + organ + " to donations";
     }
 
+    /**
+     * Remove organs from donors donations list
+     * @param organ - organ to remove from the donors donations list
+     * @return string of message
+     */
     public String removeDonation(Organ organ){
         if (donations.contains(organ)) {
             donations.remove(organ);
