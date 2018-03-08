@@ -118,6 +118,7 @@ public class Donor {
         if (height > 0) setHeight(height);
         if (weight > 0) setWeight(weight);
         if (ird > 0) setIrdNumber(ird);
+        System.out .println("Successfully updated " + getNameConcatenated() + "\n");
     }
 
     /**
@@ -167,11 +168,10 @@ public class Donor {
      * @return string named
      */
     public String getNameConcatenated() {
-        String concatName = firstName + ", ";
-        if (middleNames != null || middleNames.size() > 0) {
+        String concatName = firstName + " ";
+        if (middleNames != null && middleNames.size() > 0) {
             for (int i=0; i<middleNames.size(); i++){
-                if (i == middleNames.size() - 1) concatName += middleNames.get(i) + ", ";
-                else concatName += middleNames.get(i) + " ";
+                concatName += middleNames.get(i) + " ";
             }
         }
         concatName += lastName;

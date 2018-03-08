@@ -143,7 +143,7 @@ public class DonorTest {
     @Test
     public void testGetNameConcatenatedWithMiddles() {
         setDonorNamesMultipleMiddle();
-        assertEquals("Joe, Jane Jarred, Bloggs", testDonor.getNameConcatenated());
+        assertEquals("Joe Jane Jarred Bloggs", testDonor.getNameConcatenated());
     }
 
 
@@ -153,7 +153,7 @@ public class DonorTest {
     @Test
     public void testGetNameConcatenatedWithoutMiddles() {
         setDonorNamesNoMiddle();
-        assertEquals("Joe, Bloggs", testDonor.getNameConcatenated());
+        assertEquals("Joe Bloggs", testDonor.getNameConcatenated());
     }
 
     /**

@@ -6,6 +6,8 @@ import java.util.HashSet;
 import com.google.gson.Gson;
 import model.Donor;
 
+import javax.xml.crypto.Data;
+
 public class Database {
 
     private static HashSet<Donor> donors = new HashSet<>();
@@ -21,7 +23,13 @@ public class Database {
      * @param newDonor the new donor to add
      */
     public static void addDonor(Donor newDonor) {
-        donors.add(newDonor);
+        try {
+            getDonorByIrd(newDonor.getIrdNumber());
+            System.out.println("Cannot add donor with IRD " + newDonor.getIrdNumber() + ", IRD is not unique");
+        } catch (InvalidObjectException o) {
+            donors.add(newDonor);
+        }
+
     }
 
     /**
