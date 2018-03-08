@@ -23,7 +23,7 @@ public class DatabaseTest {
     /**
      * Setup before all unit tests run
      */
-    public static void setup() {
+    private static void setup() {
         bob = new Donor(1381421476, "Bob", null,
                 "Wallace", LocalDate.of(1995, 12, 31));
         Database.addDonor(bob);
@@ -32,7 +32,7 @@ public class DatabaseTest {
 
     /**
      * Try find a donor who doesn't exist
-     * @throws InvalidObjectException
+     * @throws InvalidObjectException when donor object cannot be found
      */
     @Test(expected = InvalidObjectException.class)
     public void getDonorByIncorrectIrd() throws  InvalidObjectException{

@@ -20,7 +20,6 @@ public class CLIDonorView implements Runnable {
 
     public void run() {
         if (searchIrd != 0) {
-            // TODO fix entering `donor view` so that it fails, and prints help. no options are required right now.
             try {
                 System.out.println(Database.getDonorByIrd(searchIrd));
             } catch (InvalidObjectException e) {
@@ -28,8 +27,10 @@ public class CLIDonorView implements Runnable {
             }
         }
         if (searchAll) {
-            System.out.println((Database.getDonors().size() == 0 ?
-                    "No donors in the database" : Database.getDonors()));
+            System.out.println((Database.getDonors().size() == 0 ? "No donors in the database" : Database.getDonors()));
+        }
+        else {
+            System.out.println("donor view command invoked. Use donor view -h for help.");
         }
     }
 

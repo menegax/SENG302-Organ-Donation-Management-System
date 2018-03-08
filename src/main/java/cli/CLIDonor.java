@@ -10,7 +10,7 @@ public class CLIDonor implements Runnable {
     private boolean helpRequested = false;
 
     public void run() {
-        // todo make it display usage message when invoked without a subcommand
+        System.out.println("donor command invoked. Use donor -h for help.");
     }
 
 }

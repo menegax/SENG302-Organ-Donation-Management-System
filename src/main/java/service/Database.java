@@ -71,7 +71,7 @@ public class Database {
         String json = gson.toJson(donors);
 
         String donorPath = "./";
-        Writer writer = new FileWriter(new File(donorPath, "donor.json")); //todo change path to /team-27/data/
+        Writer writer = new FileWriter(new File(donorPath, "donor.json"));
         writer.write(json);
         writer.close();
     }

@@ -6,8 +6,6 @@ import picocli.CommandLine.Option;
 import service.Database;
 
 import java.io.InvalidObjectException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 @SuppressWarnings("unused")
 @Command(name = "remove", description = "used to remove existing donors")

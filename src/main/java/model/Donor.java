@@ -64,20 +64,20 @@ public class Donor {
 
     /**
      * Sets the attributes of the donor
-     * @param firstName
-     * @param lastName
-     * @param middleNames
-     * @param birth
-     * @param death
-     * @param street1
-     * @param street2
-     * @param suburb
-     * @param region
-     * @param gender
-     * @param bloodGroup
-     * @param height
-     * @param weight
-     * @param ird
+     * @param firstName first name
+     * @param lastName last name
+     * @param middleNames middle names
+     * @param birth birth date
+     * @param death death date
+     * @param street1 street 1 of address
+     * @param street2 street2 of address
+     * @param suburb suburb of address
+     * @param region region of address
+     * @param gender gender of address
+     * @param bloodGroup blood group
+     * @param height height
+     * @param weight weight
+     * @param ird ird
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames,
                                  LocalDate birth, LocalDate death, String street1, String street2,
@@ -152,7 +152,7 @@ public class Donor {
     /**
      * Checks the uniqueness of the ird number
      * @param irdNumber - ird number of the donor
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException when the ird number given is already in use
      */
     private static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException {
         for (Donor d : Database.getDonors()) {

@@ -34,7 +34,8 @@ public class CLIDonorUpdate implements Runnable {
     @Option(names = {"-d", "--dateofdeath"}, description = "The date of death of the donor (yyyy-mm-dd).")
     private LocalDate death;
 
-    @Option(names = {"--gender"}, description = "The gender of the donor.")
+    @Option(names = {"--gender"}, description = "The gender of the donor. Choose one from: \n" +
+            "FEMALE, MALE, OTHER")
     private String gender;
 
     @Option(names = {"--height"}, description = "The height of the donor (cm).")
@@ -52,7 +53,8 @@ public class CLIDonorUpdate implements Runnable {
     @Option(names = {"--suburb"}, description = "The suburb field for the address of the donor.")
     private String suburb;
 
-    @Option(names = {"--region"}, description = "NORTHLAND, AUCKLAND, WAIKATO, BAYOFPLENTY,\n" +
+    @Option(names = {"--region"}, description = "The region of the donor. Choose one from: \n" +
+            "NORTHLAND, AUCKLAND, WAIKATO, BAYOFPLENTY,\n" +
             "GISBORNE, HAWKESBAY, TARANAKI, MANAWATU,\n" +
             "WELLINGTON, TASMAN, NELSON, MARLBOROUGH,\n" +
             "WESTCOAST, CANTERBURY, OTAGO, SOUTHLAND")
@@ -65,7 +67,7 @@ public class CLIDonorUpdate implements Runnable {
     @Option(names = {"--ird"}, description = "The IRD number of the donor.")
     private int ird;
 
-    @Option(names = {"--bloodgroup"}, description = "The blood group of the donor. Valid groups are:\n" +
+    @Option(names = {"--bloodgroup"}, description = "The blood group of the donor. Choose one from:\n" +
             "A_POSITIVE, A_NEGATIVE, B_POSITIVE, B_NEGATIVE,\n" +
             "AB_POSITIVE, AB_NEGATIVE, O_POSITIVE, O_NEGATIVE")
     private String bloodGroup;
