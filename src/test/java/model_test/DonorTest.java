@@ -19,14 +19,16 @@ public class DonorTest {
      * Populate database with test donors
      */
     @BeforeClass
-    public static void setUp(){
-        testDonor = new Donor(98765,"James", null, "Wallace",
+    public static void setUp() {
+        testDonor = new Donor(98765, "James", null, "Wallace",
                 LocalDate.of(1970, 2, 12));
 
-        Database.addDonor(new Donor(1234567, "Joe", new ArrayList<String>() {{add("Jane");}},
+        Database.addDonor(new Donor(1234567, "Joe", new ArrayList<String>() {{
+            add("Jane");
+        }},
                 "Bloggs", LocalDate.of(1994, 12, 12)));
 
-        Database.addDonor(new Donor(7654321, "Bob", null,"Bobby",
+        Database.addDonor(new Donor(7654321, "Bob", null, "Bobby",
                 LocalDate.of(1994, 12, 12)));
     }
 
@@ -45,10 +47,11 @@ public class DonorTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testDonorAddIrdCollision() {
-        new Donor(1234567, "Joe", new ArrayList<String>() {{add("Jane");}},
+        new Donor(1234567, "Joe", new ArrayList<String>() {{
+            add("Jane");
+        }},
                 "Bloggs", LocalDate.of(1994, 12, 12));
     }
-
 
 
     /**
@@ -56,10 +59,16 @@ public class DonorTest {
      * expect all items passed to be added to donations
      */
     @Test
-    public void testUpdateDonationsMultiCorrectAdd(){
-        ArrayList<String> addDonations = new ArrayList<String>() {{add("liver"); add("lung");}};
+    public void testUpdateDonationsMultiCorrectAdd() {
+        ArrayList<String> addDonations = new ArrayList<String>() {{
+            add("liver");
+            add("lung");
+        }};
         testDonor.updateDonations(addDonations, null);
-        ArrayList<Organ> expected = new ArrayList<Organ>() {{add(Organ.LIVER); add(Organ.LUNG);}};
+        ArrayList<Organ> expected = new ArrayList<Organ>() {{
+            add(Organ.LIVER);
+            add(Organ.LUNG);
+        }};
         assertEquals(expected, testDonor.getDonations());
     }
 
@@ -69,10 +78,15 @@ public class DonorTest {
      * expect only liver to be added to donations
      */
     @Test
-    public void testUpdateDonationsAddContainInvalid(){
-        ArrayList<String> addDonations = new ArrayList<String>() {{add("liver"); add("test");}};
+    public void testUpdateDonationsAddContainInvalid() {
+        ArrayList<String> addDonations = new ArrayList<String>() {{
+            add("liver");
+            add("test");
+        }};
         testDonor.updateDonations(addDonations, null);
-        ArrayList<Organ> expected = new ArrayList<Organ>(){{add(Organ.LIVER);}};
+        ArrayList<Organ> expected = new ArrayList<Organ>() {{
+            add(Organ.LIVER);
+        }};
         assertEquals(expected, testDonor.getDonations());
     }
 
@@ -81,11 +95,15 @@ public class DonorTest {
      * expect donations to contain no organs
      */
     @Test
-    public void testUpdateDonationsRmValid(){
+    public void testUpdateDonationsRmValid() {
         addDonationsToDonor();
-        ArrayList<String> rmDonations = new ArrayList<String>() {{add("liver");}};
+        ArrayList<String> rmDonations = new ArrayList<String>() {{
+            add("liver");
+        }};
         testDonor.updateDonations(null, rmDonations);
-        ArrayList<Organ> expected = new ArrayList<Organ>() {{add(Organ.LUNG);}};
+        ArrayList<Organ> expected = new ArrayList<Organ>() {{
+            add(Organ.LUNG);
+        }};
         assertEquals(expected, testDonor.getDonations());
         resetDonationsDonor();
     }
@@ -95,9 +113,12 @@ public class DonorTest {
      * expect only liver to be in donations
      */
     @Test
-    public void testUpdateDonationsRmInvalid(){
+    public void testUpdateDonationsRmInvalid() {
         testDonor.addDonation(Organ.LIVER);
-        ArrayList<String> rmDonations = new ArrayList<String>() {{add("liver");add("test");}};
+        ArrayList<String> rmDonations = new ArrayList<String>() {{
+            add("liver");
+            add("test");
+        }};
         testDonor.updateDonations(null, rmDonations);
         ArrayList<Organ> expected = new ArrayList<>();
         assertEquals(expected, testDonor.getDonations());
@@ -109,7 +130,7 @@ public class DonorTest {
      * expect donations to be empty
      */
     @Test
-    public void testUpdateDonationsAddRmNull(){
+    public void testUpdateDonationsAddRmNull() {
         testDonor.updateDonations(null, null);
         ArrayList<Organ> expected = new ArrayList<>();
         assertEquals(expected, testDonor.getDonations());
@@ -120,7 +141,7 @@ public class DonorTest {
      * Check name concat method with multiple middle names
      */
     @Test
-    public void testGetNameConcatenatedWithMiddles(){
+    public void testGetNameConcatenatedWithMiddles() {
         setDonorNamesMultipleMiddle();
         assertEquals("Joe, Jane Jarred, Bloggs", testDonor.getNameConcatenated());
     }
@@ -130,7 +151,7 @@ public class DonorTest {
      * Check name concat method with no middle names
      */
     @Test
-    public void testGetNameConcatenatedWithoutMiddles(){
+    public void testGetNameConcatenatedWithoutMiddles() {
         setDonorNamesNoMiddle();
         assertEquals("Joe, Bloggs", testDonor.getNameConcatenated());
     }
@@ -139,7 +160,7 @@ public class DonorTest {
      * Create donor object
      */
     private Donor givenDonor() {
-        return new Donor(12,"Bob", null, "Wallace",
+        return new Donor(12, "Bob", null, "Wallace",
                 LocalDate.of(1995, 12, 31));
     }
 
@@ -151,13 +172,13 @@ public class DonorTest {
         assertEquals(donor.getFirstName(), "Bob");
         assertEquals(donor.getMiddleNames(), null);
         assertEquals(donor.getLastName(), "Wallace");
-        assertEquals(donor.getBirth(), LocalDate.of(1995,12,31));
+        assertEquals(donor.getBirth(), LocalDate.of(1995, 12, 31));
     }
 
     /**
      * Helper method for testUpdateDonationsRmValid to populate donations
      */
-    private void addDonationsToDonor(){
+    private void addDonationsToDonor() {
         testDonor.addDonation(Organ.LIVER);
         testDonor.addDonation(Organ.LUNG);
     }
@@ -165,23 +186,26 @@ public class DonorTest {
     /**
      * Helper method for testUpdateDonationsRmValid reset donations list
      */
-    private void resetDonationsDonor(){
+    private void resetDonationsDonor() {
         testDonor.setDonations(new ArrayList<>()); //set to empty
     }
 
     /**
      * Helper method for setting donor names with multiple middle names
      */
-    private void setDonorNamesMultipleMiddle(){
+    private void setDonorNamesMultipleMiddle() {
         testDonor.setFirstName("Joe");
-        testDonor.setMiddleNames(new ArrayList<String>() {{add("Jane");add("Jarred");}});
+        testDonor.setMiddleNames(new ArrayList<String>() {{
+            add("Jane");
+            add("Jarred");
+        }});
         testDonor.setLastName("Bloggs");
     }
 
     /**
      * Helper method for setting donor names with no middle names
      */
-    private void setDonorNamesNoMiddle(){
+    private void setDonorNamesNoMiddle() {
         testDonor.setFirstName("Joe");
         testDonor.setMiddleNames(new ArrayList<>());
         testDonor.setLastName("Bloggs");
