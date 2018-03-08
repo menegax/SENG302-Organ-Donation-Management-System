@@ -34,19 +34,22 @@ This requires a unique search term to be entered such that duplicates are not re
 We have decided that the maximum level of subcommands is three i.e. `donor update donations --option`
 
 #### Gson Library
-We've decided to use GSON library for parsing json files. This will be used for saving data to .json and importing data from .json.
+We've decided to use Gson library for parsing json files. This will be used for saving data to .json and importing data from .json.
 
-#### PICOCLI
-We have decided to use PicoCLI library to aid in the creation of our CLI. This was because unlike similar libraries, picocli is up to date and is continually worked on. It also the modern equivalent of other such libraries.
-Using this library makes our code easy to read and maintain.
+Moffat has approved the use of this library.
 
-#### TESTING
-Because we are using external libraries such as PicoCLI and GSON, we do not need to test a lot of codebase. This is because
-* GSON and PicoCLI have their own testing which ensure that their libraries are working correctly
-    * This reduces the amount of code we need to test considerably. We can rely on PICOCLI to deal with user input so we do not need to worry about testing this.
-    * GSON has their own tests to ensure that writing to files and reading from files will work as expected
-* We are manually testing saving and importing (for now).
-* After a discussion with Marina (senior tutor), we've decided that instead of testing the CLI by running its `main()` and 
-providing raw user input, we will instead assume the framework is fully functional, and instead test any methods called 
-by the `run()` method within a particular CLI command. This way we're only unit testing internal methods.
+#### Picocli
+We have decided to use Picocli library to aid in the creation of our CLI. Picocli is a modern, annotation-based external library which auto-populates help commands, usage messages, and other common features expected in a command line interface.
+Using this library and its abstraction features supports code maintainability and readability which are crucial during such rapid team changes throughout SENG302.
+
+Moffat has approved the use of this library.
+
+#### Testing
+Because we are using external libraries such as Picocli and Gson, we can assume the external libraries are sufficiently tested and therefore we do not need to test a lot of codebase. This is because
+
+We are manually testing saving and importing functionality from the Database class (for now). This is because writing and reading is used from the external Gson library, and any testing on writing would require using the reading functionality of the same library, and vice versa.
+
+After a discussion with Marina (senior tutor), we've decided that instead of testing the CLI by running its `main()` and 
+providing raw user input, we will instead assume the framework is fully functional, and test any internal method calls
+within the `run()` method for eachCLI command. This way we arere only unit testing internal methods.
  
