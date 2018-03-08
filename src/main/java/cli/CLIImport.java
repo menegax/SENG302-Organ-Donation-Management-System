@@ -17,7 +17,7 @@ public class CLIImport implements Runnable {
     public void run() {
         System.out.println("Importing...");
         Database.importFromDisk(fileName);
-        System.out.println("Done.");
+        System.out.println("Done importing.");
     }
 
 }

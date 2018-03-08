@@ -411,7 +411,7 @@ public class Donor {
                 "Last name: " + lastName + "\n" +
                 "Gender: " + gender + "\n" +
                 "Date of birth: " + birth + "\n" +
-                "Organs to Donate: " + donations + "\n" +
+                "Organs to donate: " + donations + "\n" +
                 "Street1: " + street1 + "\n" +
                 "Street2: " + street2 + "\n" +
                 "Suburb:" + suburb + "\n" +

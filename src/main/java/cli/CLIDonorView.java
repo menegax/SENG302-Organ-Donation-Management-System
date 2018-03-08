@@ -29,7 +29,7 @@ public class CLIDonorView implements Runnable {
         if (searchAll) {
             System.out.println((Database.getDonors().size() == 0 ? "No donors in the database" : Database.getDonors()));
         }
-        else {
+        if (searchIrd == 0 && !searchAll) {
             System.out.println("donor view command invoked. Use donor view -h for help.");
         }
     }
