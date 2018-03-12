@@ -8,3 +8,5 @@ Checklist
 - User manual updated
 - README updated
 - Updated UML diagram
+- Appropriate manual tests created where necessary
+- All manual tests passing
