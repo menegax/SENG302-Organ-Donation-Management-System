@@ -1,4 +1,4 @@
-# Sprint - Definition of Done
+# Sprint - Definition of Ready
 
 Checklist
 
