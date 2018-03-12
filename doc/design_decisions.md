@@ -53,3 +53,6 @@ After a discussion with Marina (senior tutor), we've decided that instead of tes
 providing raw user input, we will instead assume the framework is fully functional, and test any internal method calls
 within the `run()` method for eachCLI command. This way we arere only unit testing internal methods.
  
+## Sprint 2
+9th to the 23rd of March
+
