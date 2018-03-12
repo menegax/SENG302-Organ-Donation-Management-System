@@ -10,3 +10,5 @@ If a sprint is ready for review, it should be set to "Pending" on Agilefant.
 - User manual updated
 - README updated
 - Updated UML diagram
+- Appropriate manual tests created where necessary
+- All manual tests passing
