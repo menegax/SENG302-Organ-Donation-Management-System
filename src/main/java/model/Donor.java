@@ -60,7 +60,6 @@ public class Donor {
         this.donations = new ArrayList<>();
     }
 
-    //todo needs unit tests
 
     /**
      * Sets the attributes of the donor
