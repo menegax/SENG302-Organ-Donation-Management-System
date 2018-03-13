@@ -4,6 +4,7 @@ If a story is ready for review, it should be set to "Pending" on Agilefant.
   
 Checklist
 
+- Acceptance criteria reviewed and met
 - Story review (this DoD is part of it)
 - All tasks done
 - Tasks peer reviewed for code readability, refactoring, etc.
@@ -13,4 +14,3 @@ Checklist
 - JavaDoc added to appropriate methods and attributes
 - Regression testing done
 - Maven deploy and verify working .jar(s)
-- Acceptance criteria reviewed and met

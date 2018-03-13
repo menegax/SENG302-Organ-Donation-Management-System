@@ -10,3 +10,4 @@ Before work on a story can begin the following list must be followed.
 - Testing such implementation has been discussed
 - Each task has been given an estimated effort (hrs)
 - Everyone on the team has agreed
+- Story has been merged to development

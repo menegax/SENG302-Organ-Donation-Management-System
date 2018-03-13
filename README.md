@@ -15,6 +15,23 @@ last update 03/08/2018
  ### Setup
  
  1. Deploy the .jar file using Maven
- 2. Run command java -jar \<pathtojar> to begin the console application
+ 2. Run command `java -jar <pathtojar>` to begin the console application
  3. Type "quit" at any time into the command line to quit the application
- 4. Use -h for help
+ 4. Use `-h` for help
+ 
+ ### Available CLI Commands
+ 
+ * Donor
+    * Add
+    * Donations
+    * Remove
+    * Update
+    * View
+ * Import
+ * Save
+ 
+ ### Dependencies
+ 
+ * JUnit
+ * Picocli
+ * Gson
