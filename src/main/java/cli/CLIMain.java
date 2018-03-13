@@ -1,4 +1,6 @@
 package cli;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
 import picocli.CommandLine;
 import java.util.Scanner;
 
@@ -6,6 +8,20 @@ public class CLIMain {
 
     public static void main(String[] argv) {
         String[] args;
+
+        // setup keyboard listener
+        try {
+            GlobalScreen.registerNativeHook();
+        }
+        catch (NativeHookException ex) {
+            System.err.println("There was a problem registering the native hook.");
+            System.err.println(ex.getMessage());
+
+            System.exit(1);
+        }
+
+        GlobalScreen.addNativeKeyListener(new CLIKeyboardListener());
+
 
         // listen for input
         Scanner inputScanner = new Scanner(System.in);
