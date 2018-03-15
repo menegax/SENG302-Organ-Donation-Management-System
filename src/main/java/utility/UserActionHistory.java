@@ -14,26 +14,15 @@ public class UserActionHistory {
     static public void setup() {
         userActions.setUseParentHandlers(false); // disables default console userActions in parent
 
-        // todo set console handler settings
+        // Console handler
         Handler console = new ConsoleHandler();
-
-        // set filter
-        System.out.println("Console filter: " + console.getFilter());
-
-        // set formatter
-        console.setFormatter(logFormat);
-        System.out.println("Console formatter: " + console.getFormatter());
-
-        // set level
         console.setLevel(Level.INFO);
-        System.out.println("Console level: " + console.getLevel());
-
+        console.setFormatter(logFormat);
         userActions.addHandler(console);
-        System.out.println("Console level after change: " + console.getLevel());
 
-        // todo set file handler settings
+        // File handler
         try {
-            Handler file = new FileHandler("UserActionHistory%u.%g.xml"); //todo add %u or %g modifiers to file names
+            Handler file = new FileHandler("UserActionHistory%u.%g.xml");
             System.out.println("File filter: " + console.getFilter());
             System.out.println("File formatter: " + console.getFormatter());
             System.out.println("File level: " + console.getLevel());
