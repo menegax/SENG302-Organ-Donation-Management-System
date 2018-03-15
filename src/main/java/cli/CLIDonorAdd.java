@@ -18,8 +18,8 @@ class CLIDonorAdd implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-i", "--ird"}, required = true, description = "The IRD number of the donor.")
-    private int ird;
+    @Option(names = {"-n", "--nhi"}, required = true, description = "The NHI number of the donor.")
+    private String nhi;
 
     @Option(names = {"-f", "--firstname"}, required = true, description = "The first name of the donor.")
     private String firstName;
@@ -34,8 +34,8 @@ class CLIDonorAdd implements Runnable {
     private LocalDate birth;
 
     public void run() {
-        try {
-            Donor donor = new Donor(ird, firstName, middleNames, lastName, birth);
+        try{
+            Donor donor = new Donor(nhi, firstName, middleNames, lastName, birth);
             Database.addDonor(donor);
             userActions.log(Level.INFO, "Successfully added " + donor, donor);
         } catch (IllegalArgumentException e) {

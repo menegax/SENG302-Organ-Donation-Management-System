@@ -19,8 +19,8 @@ public class CLIDonorDonations implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-i", "--ird"}, required = true, description = "Search donor by the IRD number.")
-    private int searchIrd;
+    @Option(names = {"-n", "--nhi"}, required = true, description = "Search donor by the NHI number.")
+    private String searchNhi;
 
     @Option(names = {"-l", "--list"}, description = "Lists current organ donations.")
     private boolean donationsRequested;
@@ -55,7 +55,7 @@ public class CLIDonorDonations implements Runnable {
 
     public void run() {
         try {
-            Donor donor = Database.getDonorByIrd(searchIrd);
+            Donor donor = Database.getDonorByNhi(searchNhi);
             if (donationsRequested) {
                 displayDonorDonations(donor);
             }

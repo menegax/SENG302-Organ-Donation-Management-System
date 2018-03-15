@@ -25,8 +25,8 @@ public class Database {
      */
     public static void addDonor(Donor newDonor) {
         try {
-            getDonorByIrd(newDonor.getIrdNumber());
-            userActions.log(Level.WARNING,"Cannot add donor with IRD " + newDonor.getIrdNumber() + ", IRD is not unique");
+            getDonorByNhi(newDonor.getNhiNumber());
+            userActions.log(Level.WARNING,"Cannot add donor with NHI " + newDonor.getNhiNumber() + ", NHI is not unique");
         } catch (InvalidObjectException o) {
             donors.add(newDonor);
             userActions.log(Level.INFO, "donor added to database", newDonor);
@@ -36,27 +36,27 @@ public class Database {
     /**
      * Removes a donor from the database
      *
-     * @param ird the ird to search donors by
+     * @param nhi the nhi to search donors by
      * @throws InvalidObjectException when the object cannot be found
      */
-    public static void removeDonor(int ird) throws InvalidObjectException {
-        donors.remove(Database.getDonorByIrd(ird));
+    public static void removeDonor(String nhi) throws InvalidObjectException {
+        donors.remove(Database.getDonorByNhi(nhi));
     }
 
     /**
-     * Searches donors by ird
+     * Searches donors by nhi
      *
-     * @param ird the ird to search donors by
+     * @param nhi the nhi to search donors by
      * @return Donor object
      * @throws InvalidObjectException when the object cannot be found
      */
-    public static Donor getDonorByIrd(int ird) throws InvalidObjectException {
+    public static Donor getDonorByNhi(String nhi) throws InvalidObjectException {
         for (Donor d : getDonors()) {
-            if (d.getIrdNumber() == ird) {
+            if (d.getNhiNumber().equals(nhi.toUpperCase())) {
                 return d;
             }
         }
-        throw new InvalidObjectException("Donor with IRD number " + ird + " does not exist.");
+        throw new InvalidObjectException("Donor with NHI number " + nhi + " does not exist.");
     }
 
     /**

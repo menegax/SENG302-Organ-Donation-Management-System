@@ -20,15 +20,15 @@ public class DonorTest {
      */
     @BeforeClass
     public static void setUp() {
-        testDonor = new Donor(98765, "James", null, "Wallace",
+        testDonor = new Donor("ABC1234", "James", null, "Wallace",
                 LocalDate.of(1970, 2, 12));
 
-        Database.addDonor(new Donor(1234567, "Joe", new ArrayList<String>() {{
+        Database.addDonor(new Donor("XYZ9876", "Joe", new ArrayList<String>() {{
             add("Jane");
         }},
                 "Bloggs", LocalDate.of(1994, 12, 12)));
 
-        Database.addDonor(new Donor(7654321, "Bob", null, "Bobby",
+        Database.addDonor(new Donor("DEF4567", "Bob", null, "Bobby",
                 LocalDate.of(1994, 12, 12)));
     }
 
@@ -46,8 +46,8 @@ public class DonorTest {
      * expect IllegalArgument exception
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testDonorAddIrdCollision() {
-        new Donor(1234567, "Joe", new ArrayList<String>() {{
+    public void testDonorAddNhiCollision() {
+        new Donor("XYZ9876", "Joe", new ArrayList<String>() {{
             add("Jane");
         }},
                 "Bloggs", LocalDate.of(1994, 12, 12));
@@ -160,7 +160,7 @@ public class DonorTest {
      * Create donor object
      */
     private Donor givenDonor() {
-        return new Donor(12, "Bob", null, "Wallace",
+        return new Donor("AAA1111", "Bob", null, "Wallace",
                 LocalDate.of(1995, 12, 31));
     }
 

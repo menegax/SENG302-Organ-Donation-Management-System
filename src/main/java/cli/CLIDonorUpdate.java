@@ -19,8 +19,8 @@ public class CLIDonorUpdate implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-s", "--search"}, required = true, description = "Search donor by the IRD number of the donor.")
-    private int searchIrd;
+    @Option(names = {"-s", "--search"}, required = true, description = "Search donor by the NHI number of the donor.")
+    private String searchNhi;
 
     @Option(names = {"-f", "--firstname"}, description = "The first name of the donor.")
     private String firstName;
@@ -67,8 +67,8 @@ public class CLIDonorUpdate implements Runnable {
     @Option(names = {"--zip"}, description = "The zip field for the address of the donor.")
     private int zip;
 
-    @Option(names = {"--ird"}, description = "The IRD number of the donor.")
-    private int ird;
+    @Option(names = {"--nhi"}, description = "The NHI number of the donor.")
+    private String nhi;
 
     @Option(names = {"--bloodgroup"}, description = "The blood group of the donor. Choose one from:\n" +
             "A_POSITIVE, A_NEGATIVE, B_POSITIVE, B_NEGATIVE,\n" +
@@ -77,10 +77,10 @@ public class CLIDonorUpdate implements Runnable {
 
     public void run() {
         try {
-            Donor donor = Database.getDonorByIrd(searchIrd);
+            Donor donor = Database.getDonorByNhi(searchNhi);
             donor.updateAttributes(firstName, lastName, middleNames, birth, death, street1,
-                    street2, suburb, region, gender, bloodGroup, height, weight, ird);
-        } catch (InvalidObjectException e) {
+                    street2, suburb, region, gender, bloodGroup, height, weight, nhi);
+        } catch (InvalidObjectException | IllegalArgumentException e) {
             userActions.log(Level.SEVERE, e.getMessage());
         }
     }

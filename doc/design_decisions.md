@@ -56,6 +56,17 @@ within the `run()` method for eachCLI command. This way we arere only unit testi
 ## Sprint 2
 9th to the 23rd of March
 
+#### JLine
+
+We decided to go with the JLine library for story 9 (command line history). We decided to use this over the other option of JNativeHook as 
+JLine provided a simple implementation of the history and solely required us to set up the terminal using JLine's terminal builder and Line Reader, whereas
+JNativeHook captured keypress events on a global level (Even if the terminal didn't have focus). This also would have then left us with the tasks of having to store the commands in a list as well as 
+creating functionality in which the keypress events would 'navigate' through that list and fill out the terminal command line. 
+
+#### IRD -> NHI Transition
+
+We decided to change form using IRD as the identifier of a donor to the NHI number. The IRD number is thus no longer used. The reason behind this is that it makes
+more sense in the context of a health app, and users may feel more comfortable provided a NHI number instead of an IRD number due to NHI's association with health rather than tax and finance.
 #### Logging and System Print Messages
 We've decided to use a logger to log all actions and/or events during the application session. 
 The logger has associated handlers and one of those outputs appropriate messages to console. 
