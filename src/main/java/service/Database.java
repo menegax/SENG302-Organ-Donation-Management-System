@@ -7,8 +7,6 @@ import java.util.logging.Level;
 import com.google.gson.Gson;
 import model.Donor;
 
-import javax.xml.crypto.Data;
-
 import static utility.ActionHistory.logger;
 
 public class Database {
@@ -33,7 +31,6 @@ public class Database {
             donors.add(newDonor);
             logger.log(Level.INFO, "donor added to database", newDonor);
         }
-
     }
 
     /**
@@ -69,7 +66,7 @@ public class Database {
         try {
             saveToDiskDonors();
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //todo don't print to console, log error instead
         }
     }
 
@@ -95,7 +92,7 @@ public class Database {
         try {
             importFromDiskDonors(fileName);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage()); //todo log error don't print stack to console
         }
     }
 

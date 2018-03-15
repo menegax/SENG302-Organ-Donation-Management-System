@@ -18,8 +18,6 @@ public class ActionHistory {
         Handler console = new ConsoleHandler();
 
         // set filter
-        FilterUserOutput filter = new FilterUserOutput();
-        logger.setFilter(filter);
         System.out.println("Console filter: " + console.getFilter());
 
         // set formatter
@@ -34,13 +32,19 @@ public class ActionHistory {
         System.out.println("Console level after change: " + console.getLevel());
 
         // todo set file handler settings
-//        Handler file = new FileHandler();
-//        System.out.println(file.getFilter());
-//        System.out.println(file.getFormatter());
-//        System.out.println(file.getLevel());
-//        logger.addHandler(file);
+        try {
+            Handler file = new FileHandler("ActionHistory.xml"); //todo add %u or %g modifiers to file names
+            System.out.println("File filter: " + console.getFilter());
+            System.out.println("File formatter: " + console.getFormatter());
+            System.out.println("File level: " + console.getLevel());
+            logger.addHandler(file);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Unable to write log to file");
+        }
+
     }
 
+    @Deprecated
     static public void saveToDisk() {
         // todo this currently only add a file handler to logger
         // todo needs to actually print the logs to a file not just open a file and be ready to write

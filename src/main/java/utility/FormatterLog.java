@@ -1,5 +1,7 @@
 package utility;
+
 import org.apache.commons.lang3.StringUtils;
+
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
