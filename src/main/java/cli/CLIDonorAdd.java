@@ -31,13 +31,8 @@ class CLIDonorAdd implements Runnable {
     private LocalDate birth;
 
     public void run() {
-        try{
-            Donor donor = new Donor(nhi, firstName, middleNames, lastName, birth);
-            Database.addDonor(donor);
-            System.out.println("Successfully added " + donor);
-        }catch (IllegalArgumentException e){
-            System.out.println(e.getMessage());
-        }
+        Donor donor = new Donor(nhi, firstName, middleNames, lastName, birth);
+        Database.addDonor(donor);
     }
 
 }

@@ -2,7 +2,6 @@ package service;
 
 import java.io.*;
 import java.util.HashSet;
-
 import com.google.gson.Gson;
 import model.Donor;
 
@@ -17,17 +16,17 @@ public class Database {
 
     /**
      * Adds a donor to the database
-     *
      * @param newDonor the new donor to add
      */
     public static void addDonor(Donor newDonor) {
         try {
-            getDonorByNhi(newDonor.getNhiNumber());
-            System.out.println("Cannot add donor with IRD " + newDonor.getNhiNumber() + ", IRD is not unique");
-        } catch (InvalidObjectException o) {
+            newDonor.ensureValidNhi();
+            newDonor.ensureUniqueNhi();
             donors.add(newDonor);
+            System.out.println("Successfully added " + newDonor);
+        } catch (IllegalArgumentException o) {
+            System.out.println(o.getMessage());
         }
-
     }
 
     /**

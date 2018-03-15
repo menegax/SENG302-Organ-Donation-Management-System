@@ -42,19 +42,6 @@ public class DonorTest {
     }
 
     /**
-     * Try add a donor with the a conflicting IRD number,
-     * expect IllegalArgument exception
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testDonorAddNhiCollision() {
-        new Donor("XYZ9876", "Joe", new ArrayList<String>() {{
-            add("Jane");
-        }},
-                "Bloggs", LocalDate.of(1994, 12, 12));
-    }
-
-
-    /**
      * Add a list of valid organs,
      * expect all items passed to be added to donations
      */
