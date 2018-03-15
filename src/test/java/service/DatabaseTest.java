@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import static org.junit.Assert.*;

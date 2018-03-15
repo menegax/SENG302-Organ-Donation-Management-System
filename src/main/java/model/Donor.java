@@ -51,11 +51,8 @@ public class Donor {
     private String nhiNumber;
 
     public Donor(String nhiNumber, String firstName,
-                 ArrayList<String> middleNames, String lastName, LocalDate date) throws IllegalArgumentException {
-
+                 ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
-        ensureValidNhi(nhiNumber);
-        ensureUniqueNhi(nhiNumber);
         this.modified = CREATED;
         this.firstName = firstName;
         this.middleNames = middleNames;
@@ -156,10 +153,9 @@ public class Donor {
 
     /**
      * Checks that the nhi number consists (only) of 3 letters then 4 numbers
-     * @param nhiNumber - nhi number of the donor
      * @throws IllegalArgumentException when the nhi number given is not in the valid format
      */
-    private static void ensureValidNhi(String nhiNumber) throws IllegalArgumentException {
+    public void ensureValidNhi() throws IllegalArgumentException {
         if (!Pattern.matches("[A-Z]{3}[0-9]{4}", nhiNumber.toUpperCase())) {
             throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not in the correct format (3 letters followed by 4 numbers)");
         }
@@ -167,10 +163,9 @@ public class Donor {
 
     /**
      * Checks the uniqueness of the nhi number
-     * @param nhiNumber - nhi number of the donor
      * @throws IllegalArgumentException when the nhi number given is already in use
      */
-    private static void ensureUniqueNhi(String nhiNumber) throws IllegalArgumentException {
+    public void ensureUniqueNhi() throws IllegalArgumentException {
         for (Donor d : Database.getDonors()) {
             if (d.nhiNumber.equals(nhiNumber.toUpperCase())) {
                 throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
@@ -405,7 +400,7 @@ public class Donor {
     }
 
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
-        ensureValidNhi(nhiNumber);
+        ensureValidNhi(); //TODO
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
             this.nhiNumber = nhiNumber.toUpperCase();
             donorModified();

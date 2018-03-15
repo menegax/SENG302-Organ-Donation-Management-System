@@ -20,16 +20,16 @@ public class Database {
 
     /**
      * Adds a donor to the database
-     *
      * @param newDonor the new donor to add
      */
     public static void addDonor(Donor newDonor) {
         try {
-            getDonorByNhi(newDonor.getNhiNumber());
-            userActions.log(Level.WARNING,"Cannot add donor with NHI " + newDonor.getNhiNumber() + ", NHI is not unique");
-        } catch (InvalidObjectException o) {
+            newDonor.ensureValidNhi();
+            newDonor.ensureUniqueNhi();
             donors.add(newDonor);
-            userActions.log(Level.INFO, "donor added to database", newDonor);
+            userActions.log(Level.INFO,"Successfully added " + newDonor);
+        } catch (IllegalArgumentException o) {
+            userActions.log(Level.SEVERE, o.getMessage());
         }
     }
 
