@@ -44,19 +44,19 @@ public class Donor {
 
     private Timestamp modified;
 
-    private int irdNumber;
+    private String nhiNumber;
 
-    public Donor(int irdNumber, String firstName,
+    public Donor(String nhiNumber, String firstName,
                  ArrayList<String> middleNames, String lastName, LocalDate date) throws IllegalArgumentException {
 
         this.CREATED = new Timestamp(System.currentTimeMillis());
-        ensureUniqueIrd(irdNumber);
+        ensureUniqueNhi(nhiNumber);
         this.modified = CREATED;
         this.firstName = firstName;
         this.middleNames = middleNames;
         this.lastName = lastName;
         this.birth = date;
-        this.irdNumber = irdNumber;
+        this.nhiNumber = nhiNumber.toUpperCase();
         this.donations = new ArrayList<>();
     }
 
@@ -76,12 +76,12 @@ public class Donor {
      * @param bloodGroup blood group
      * @param height height
      * @param weight weight
-     * @param ird ird
+     * @param nhi nhi
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames,
                                  LocalDate birth, LocalDate death, String street1, String street2,
                                  String suburb, String region, String gender, String bloodGroup,
-                                 double height, double weight, int ird) {
+                                 double height, double weight, String nhi) {
         Enum globalEnum;
         if (firstName != null) setFirstName(firstName);
         if (lastName != null) setLastName(lastName);
@@ -116,7 +116,7 @@ public class Donor {
         }
         if (height > 0) setHeight(height);
         if (weight > 0) setWeight(weight);
-        if (ird > 0) setIrdNumber(ird);
+        if (nhi != null) setNhiNumber(nhi);
         System.out .println("Successfully updated " + getNameConcatenated() + "\n");
     }
 
@@ -150,14 +150,14 @@ public class Donor {
     }
 
     /**
-     * Checks the uniqueness of the ird number
-     * @param irdNumber - ird number of the donor
-     * @throws IllegalArgumentException when the ird number given is already in use
+     * Checks the uniqueness of the nhi number
+     * @param nhiNumber - nhi number of the donor
+     * @throws IllegalArgumentException when the nhi number given is already in use
      */
-    private static void ensureUniqueIrd(int irdNumber) throws IllegalArgumentException {
+    private static void ensureUniqueNhi(String nhiNumber) throws IllegalArgumentException {
         for (Donor d : Database.getDonors()) {
-            if (d.irdNumber == irdNumber) {
-                throw new IllegalArgumentException("IRD number " + irdNumber + " is not unique");
+            if (d.nhiNumber.equals(nhiNumber.toUpperCase())) {
+                throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
             }
         }
     }
@@ -384,13 +384,13 @@ public class Donor {
            return "Organ " + organ + " is not part of the donors donations, so could not be removed.";
     }
 
-    public int getIrdNumber() {
-        return irdNumber;
+    public String getNhiNumber() {
+        return nhiNumber;
     }
 
-    public void setIrdNumber(int irdNumber) {
-        if (this.irdNumber != irdNumber) {
-            this.irdNumber = irdNumber;
+    public void setNhiNumber(String nhiNumber) {
+        if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
+            this.nhiNumber = nhiNumber.toUpperCase();
             donorModified();
         }
     }
@@ -402,7 +402,7 @@ public class Donor {
 
     public String toString() {
         return "Donor: \n" +
-                "IRD: " + irdNumber + "\n" +
+                "NHI: " + nhiNumber + "\n" +
                 "Created date: " + CREATED + "\n" +
                 "Modified date: " + modified + "\n" +
                 "First name: " + firstName + "\n" +
@@ -424,7 +424,7 @@ public class Donor {
 
     public boolean equals(Object obj){
         Donor donor = (Donor) obj;
-        if (this.irdNumber == donor.irdNumber){
+        if (this.nhiNumber.equals(donor.nhiNumber)){
             return true;
         }
         return false;

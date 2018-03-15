@@ -12,16 +12,16 @@ public class CLIDonorView implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-i", "--ird"}, description = "Search donor by the IRD number of the donor.")
-    private int searchIrd;
+    @Option(names = {"-n", "--nhi"}, description = "Search donor by the NHI number of the donor.")
+    private String searchNhi;
 
     @Option(names = {"-a", "--all"}, description = "View all donors")
     private boolean searchAll;
 
     public void run() {
-        if (searchIrd != 0) {
+        if (!searchNhi.equals("")) {
             try {
-                System.out.println(Database.getDonorByIrd(searchIrd));
+                System.out.println(Database.getDonorByNhi(searchNhi));
             } catch (InvalidObjectException e) {
                 System.out.println(e.getMessage());
             }
@@ -29,7 +29,7 @@ public class CLIDonorView implements Runnable {
         if (searchAll) {
             System.out.println((Database.getDonors().size() == 0 ? "No donors in the database" : Database.getDonors()));
         }
-        if (searchIrd == 0 && !searchAll) {
+        if (searchNhi.equals("") && !searchAll) {
             System.out.println("donor view command invoked. Use donor view -h for help.");
         }
     }

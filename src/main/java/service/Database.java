@@ -6,8 +6,6 @@ import java.util.HashSet;
 import com.google.gson.Gson;
 import model.Donor;
 
-import javax.xml.crypto.Data;
-
 public class Database {
 
     private static HashSet<Donor> donors = new HashSet<>();
@@ -24,8 +22,8 @@ public class Database {
      */
     public static void addDonor(Donor newDonor) {
         try {
-            getDonorByIrd(newDonor.getIrdNumber());
-            System.out.println("Cannot add donor with IRD " + newDonor.getIrdNumber() + ", IRD is not unique");
+            getDonorByNhi(newDonor.getNhiNumber());
+            System.out.println("Cannot add donor with IRD " + newDonor.getNhiNumber() + ", IRD is not unique");
         } catch (InvalidObjectException o) {
             donors.add(newDonor);
         }
@@ -35,27 +33,27 @@ public class Database {
     /**
      * Removes a donor from the database
      *
-     * @param ird the ird to search donors by
+     * @param nhi the nhi to search donors by
      * @throws InvalidObjectException when the object cannot be found
      */
-    public static void removeDonor(int ird) throws InvalidObjectException {
-        donors.remove(Database.getDonorByIrd(ird));
+    public static void removeDonor(String nhi) throws InvalidObjectException {
+        donors.remove(Database.getDonorByNhi(nhi));
     }
 
     /**
-     * Searches donors by ird
+     * Searches donors by nhi
      *
-     * @param ird the ird to search donors by
+     * @param nhi the nhi to search donors by
      * @return Donor object
      * @throws InvalidObjectException when the object cannot be found
      */
-    public static Donor getDonorByIrd(int ird) throws InvalidObjectException {
+    public static Donor getDonorByNhi(String nhi) throws InvalidObjectException {
         for (Donor d : getDonors()) {
-            if (d.getIrdNumber() == ird) {
+            if (d.getNhiNumber().equals(nhi.toUpperCase())) {
                 return d;
             }
         }
-        throw new InvalidObjectException("Donor with IRD number " + ird + " does not exist.");
+        throw new InvalidObjectException("Donor with NHI number " + nhi + " does not exist.");
     }
 
     /**

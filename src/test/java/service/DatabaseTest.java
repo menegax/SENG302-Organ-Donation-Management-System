@@ -24,7 +24,7 @@ public class DatabaseTest {
      * Setup before all unit tests run
      */
     private static void setup() {
-        bob = new Donor(1381421476, "Bob", null,
+        bob = new Donor("ZZZ1234", "Bob", null,
                 "Wallace", LocalDate.of(1995, 12, 31));
         Database.addDonor(bob);
 
@@ -35,18 +35,18 @@ public class DatabaseTest {
      * @throws InvalidObjectException when donor object cannot be found
      */
     @Test(expected = InvalidObjectException.class)
-    public void getDonorByIncorrectIrd() throws  InvalidObjectException{
-        Database.getDonorByIrd(1);
+    public void getDonorByIncorrectNhi() throws  InvalidObjectException{
+        Database.getDonorByNhi("Z");
     }
 
     /**
      * Try find a donor who does exist
      */
     @Test
-    public void getDonorByCorrectIrd(){
+    public void getDonorByCorrectNhi(){
         Donor testDonor = null;
         try {
-            testDonor = Database.getDonorByIrd(1381421476);
+            testDonor = Database.getDonorByNhi("ZZZ1234");
         } catch (InvalidObjectException e) {
             e.printStackTrace();
         }
@@ -69,7 +69,7 @@ public class DatabaseTest {
     @Test
     public void removeDonor(){
         try {
-            Database.removeDonor(bob.getIrdNumber());
+            Database.removeDonor(bob.getNhiNumber());
         } catch (InvalidObjectException e) {
             e.printStackTrace();
         }

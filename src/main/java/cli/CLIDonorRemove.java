@@ -14,13 +14,13 @@ class CLIDonorRemove implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-i", "--ird"}, required = true, description = "The IRD number of the donor.")
-    private int ird;
+    @Option(names = {"-n", "--nhi"}, required = true, description = "The NHI number of the donor.")
+    private String nhi;
 
     public void run() {
         try {
-            Donor donor = Database.getDonorByIrd(ird);
-            Database.removeDonor(ird);
+            Donor donor = Database.getDonorByNhi(nhi);
+            Database.removeDonor(nhi);
             System.out.println("Successfully removed " + donor);
         } catch (InvalidObjectException e) {
             System.out.println(e.getMessage());
