@@ -26,11 +26,11 @@ public class CLIMain {
         LineReader reader = getLineReader();
         String userCommand;
         new CommandLine(new CLIOdms()).parseWithHandler(new CommandLine.RunLast(), System.err, "-h");
-        userCommand = reader.readLine("odms>> ");
+        userCommand = reader.readLine("\033[0;36modms>>\033[0m ");
         while (!userCommand.trim().equals("quit")) {
             args = userCommand.split(" "); //TODO: fix bug here
             new CommandLine(new CLIOdms()).parseWithHandler(new CommandLine.RunLast(), System.err, args);
-            userCommand = reader.readLine("odms>> ");
+            userCommand = reader.readLine("\033[0;36modms>>\033[0m ");
         }
     }
 }
