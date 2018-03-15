@@ -9,6 +9,7 @@ public class ActionHistory {
 
     private static FileHandler fileTxt;
     private static SimpleFormatter formatterTxt;
+    private static FormatterLog logFormat = new FormatterLog();
 
     static public void setup() {
         logger.setUseParentHandlers(false); // disables default console logger in parent
@@ -22,6 +23,7 @@ public class ActionHistory {
         System.out.println("Console filter: " + console.getFilter());
 
         // set formatter
+        console.setFormatter(logFormat);
         System.out.println("Console formatter: " + console.getFormatter());
 
         // set level
