@@ -1,14 +1,17 @@
 package model;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.time.LocalDate;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
-
 import service.Database;
 import utility.GlobalEnums;
-import utility.GlobalEnums.*;
+import utility.GlobalEnums.BloodGroup;
+import utility.GlobalEnums.Gender;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.Region;
+
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 

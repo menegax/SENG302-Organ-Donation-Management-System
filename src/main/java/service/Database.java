@@ -1,11 +1,11 @@
 package service;
 
+import com.google.gson.Gson;
+import model.Donor;
+
 import java.io.*;
 import java.util.HashSet;
 import java.util.logging.Level;
-
-import com.google.gson.Gson;
-import model.Donor;
 
 import static utility.UserActionHistory.userActions;
 

@@ -3,7 +3,6 @@ package cli;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import service.Database;
-import utility.UserActionHistory;
 
 import java.util.logging.Level;
 

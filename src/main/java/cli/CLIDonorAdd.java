@@ -7,9 +7,6 @@ import service.Database;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.logging.Level;
-
-import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
 @Command(name = "add", description = "used to add new donors")

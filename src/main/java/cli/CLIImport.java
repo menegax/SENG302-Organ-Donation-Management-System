@@ -1,7 +1,7 @@
 package cli;
 
-import picocli.CommandLine.Option;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 import service.Database;
 
 import java.util.logging.Level;
