@@ -5,18 +5,37 @@ import java.util.logging.*;
 
 public class ActionHistory {
 
-    public static final Logger logger =
-            Logger.getLogger(ActionHistory.class.getName());
+    public static final Logger logger = Logger.getLogger(ActionHistory.class.getName());
 
     private static FileHandler fileTxt;
     private static SimpleFormatter formatterTxt;
 
+    static public void setup() {
+        logger.setUseParentHandlers(false); // disables default console logger in parent
+
+        // todo Set console handler settings
+        Handler console = new ConsoleHandler();
+        System.out.println("Console filter: " + console.getFilter());
+        System.out.println("Console formatter: " + console.getFormatter());
+        System.out.println("Console level: " + console.getLevel());
+        logger.addHandler(console);
+        console.setLevel(Level.FINER);
+        System.out.println("Console level after change: " + console.getLevel());
+
+        // todo set file handler settings
+//        Handler file = new FileHandler();
+//        System.out.println(file.getFilter());
+//        System.out.println(file.getFormatter());
+//        System.out.println(file.getLevel());
+//        logger.addHandler(file);
+    }
+
     static public void saveToDisk() {
         // todo this currently only add a file handler to logger
         // todo needs to actually print the logs to a file not just open a file and be ready to write
-        logger.setLevel(Level.INFO);
+        logger.setLevel(Level.ALL);
         try {
-            fileTxt = new FileHandler("ActionHistory.txt");
+            fileTxt = new FileHandler("ActionHistory.txt"); //todo add %u or %g modifiers to file names
         } catch (IOException e) {
             System.out.println("An error occurred writing logs to disk");
         }
@@ -26,12 +45,8 @@ public class ActionHistory {
         logger.addHandler(fileTxt);
     }
 
-//    static public void addSomeHandlerThing() {
-//        Logger logger = Logger.getLogger("myLogger");
-//
-//        logger.addHandler(new ConsoleHandler());
-//
-//        logger.logrb(Level.SEVERE, "logging.LoggingExamples", "main",
-//                "resources.myresources", "key1");
-//    }
+    public static void consoleDebugVerbosity() {
+        // todo set console filter to keep all messages of any level
+
+    }
 }

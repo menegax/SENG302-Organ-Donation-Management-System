@@ -1,11 +1,15 @@
 package cli;
 import picocli.CommandLine;
+import utility.ActionHistory;
+
 import java.util.Scanner;
 
 public class CLIMain {
 
     public static void main(String[] argv) {
         String[] args;
+
+        ActionHistory.setup();
 
         // listen for input
         Scanner inputScanner = new Scanner(System.in);

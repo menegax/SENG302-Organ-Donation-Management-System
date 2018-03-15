@@ -31,7 +31,7 @@ public class Database {
             System.out.println("Cannot add donor with IRD " + newDonor.getIrdNumber() + ", IRD is not unique");
         } catch (InvalidObjectException o) {
             donors.add(newDonor);
-            logger.log(Level.INFO, "donor added to database");
+            logger.log(Level.INFO, "donor added to database", newDonor);
         }
 
     }
