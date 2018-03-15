@@ -11,6 +11,10 @@ public class UserActionHistory {
     private static SimpleFormatter formatterTxt;
     private static FormatterLog logFormat = new FormatterLog();
 
+    /**
+     * Sets up custom logger class.
+     * Disables parent inheritance and adds custom console and file handlers.
+     */
     static public void setup() {
         userActions.setUseParentHandlers(false); // disables default console userActions in parent
 
@@ -23,9 +27,6 @@ public class UserActionHistory {
         // File handler
         try {
             Handler file = new FileHandler("UserActionHistory%u.%g.xml");
-            System.out.println("File filter: " + console.getFilter());
-            System.out.println("File formatter: " + console.getFormatter());
-            System.out.println("File level: " + console.getLevel());
             userActions.addHandler(file);
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Unable to write log to file");
