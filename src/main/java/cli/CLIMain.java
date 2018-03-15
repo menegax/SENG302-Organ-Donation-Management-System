@@ -7,7 +7,6 @@ import picocli.CommandLine;
 import java.io.IOException;
 
 public class CLIMain {
-
     public static void main(String[] argv) {
         String[] args;
         try {
@@ -18,7 +17,7 @@ public class CLIMain {
             new CommandLine(new CLIOdms()).parseWithHandler(new CommandLine.RunLast(), System.err, "-h");
             userCommand = reader.readLine("odms>>");
             while (!userCommand.trim().equals("quit")) {
-                args = userCommand.split(" ");
+                args = userCommand.split(" "); //TODO: fix bug here
                 new CommandLine(new CLIOdms()).parseWithHandler(new CommandLine.RunLast(), System.err, args);
                 userCommand = reader.readLine("odms>>");
             }
