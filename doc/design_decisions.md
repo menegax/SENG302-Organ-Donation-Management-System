@@ -56,3 +56,9 @@ within the `run()` method for eachCLI command. This way we arere only unit testi
 ## Sprint 2
 9th to the 23rd of March
 
+#### JLine
+
+We decided to go with the JLine library for story 9 (command line history). We decided to use this over the other option of JNativeHook as 
+JLine provided a simple implementation of the history and solely required us to set up the terminal using JLine's terminal builder and Line Reader, whereas
+JNativeHook captured keypress events on a global level (Even if the terminal didn't have focus). This also would have then left us with the tasks of having to store the commands in a list as well as 
+creating functionality in which the keypress events would 'navigate' through that list and fill out the terminal command line. 
