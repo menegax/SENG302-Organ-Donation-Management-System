@@ -8,6 +8,9 @@ import service.Database;
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
 @Command(name = "update", description = "used to update donor attributes")
@@ -78,7 +81,7 @@ public class CLIDonorUpdate implements Runnable {
             donor.updateAttributes(firstName, lastName, middleNames, birth, death, street1,
                     street2, suburb, region, gender, bloodGroup, height, weight, ird);
         } catch (InvalidObjectException e) {
-            System.out.println(e.getMessage());
+            userActions.log(Level.SEVERE, e.getMessage());
         }
     }
 

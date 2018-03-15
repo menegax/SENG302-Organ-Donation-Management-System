@@ -7,6 +7,9 @@ import service.Database;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
 @Command(name = "add", description = "used to add new donors")
@@ -31,12 +34,12 @@ class CLIDonorAdd implements Runnable {
     private LocalDate birth;
 
     public void run() {
-        try{
-            Donor donor = new Donor(ird,firstName, middleNames, lastName, birth);
+        try {
+            Donor donor = new Donor(ird, firstName, middleNames, lastName, birth);
             Database.addDonor(donor);
-            System.out.println("Successfully added " + donor);
-        }catch (IllegalArgumentException e){
-            System.out.println(e.getMessage());
+            userActions.log(Level.INFO, "Successfully added " + donor, donor);
+        } catch (IllegalArgumentException e) {
+            userActions.log(Level.SEVERE, e.getMessage());
         }
     }
 

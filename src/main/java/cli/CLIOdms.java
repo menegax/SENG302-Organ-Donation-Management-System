@@ -29,18 +29,24 @@ public class CLIOdms implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-d", "--dev"}, usageHelp = false, description = "Auto adds a donor for your convenience.")
+    @Option(names = {"-d", "--dev"}, hidden = true, description = "Auto adds a donor for your convenience.")
     private boolean devMode;
 
     @Override
     public void run() {
         if (devMode) {
-            Database.addDonor(new Donor(1, "David", new ArrayList<String>() {{
-                add("John");
-            }}, "Denison", LocalDate.of(1994, 12, 12)));
-            Database.addDonor(new Donor(1, "Peggy", new ArrayList<String>() {{
-                add("Jane");
-            }}, "Petterson", LocalDate.of(1994, 12, 12)));
+            prepTheApp();
         }
+    }
+
+    private void prepTheApp() {
+
+        Database.addDonor(new Donor(1, "David", new ArrayList<String>() {{
+            add("John");
+        }}, "Denison", LocalDate.of(1994, 12, 12)));
+
+        Database.addDonor(new Donor(2, "Peggy", new ArrayList<String>() {{
+            add("Jane");
+        }}, "Petterson", LocalDate.of(1994, 12, 12)));
     }
 }

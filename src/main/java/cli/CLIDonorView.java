@@ -4,6 +4,9 @@ import picocli.CommandLine.Option;
 import service.Database;
 
 import java.io.InvalidObjectException;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
 @Command(name = "view", description = "used to view donor attributes")
@@ -21,16 +24,20 @@ public class CLIDonorView implements Runnable {
     public void run() {
         if (searchIrd != 0) {
             try {
-                System.out.println(Database.getDonorByIrd(searchIrd));
+                userActions.log(Level.INFO, Database.getDonorByIrd(searchIrd).toString());
             } catch (InvalidObjectException e) {
-                System.out.println(e.getMessage());
+                userActions.log(Level.SEVERE, e.getMessage());
             }
         }
         if (searchAll) {
-            System.out.println((Database.getDonors().size() == 0 ? "No donors in the database" : Database.getDonors()));
+            if (Database.getDonors().size() == 0) {
+                userActions.log(Level.INFO, "No donors in the database");
+            } else {
+                userActions.log(Level.WARNING, Database.getDonors().toString());
+            }
         }
         if (searchIrd == 0 && !searchAll) {
-            System.out.println("donor view command invoked. Use donor view -h for help.");
+            userActions.log(Level.INFO, "donor view command invoked. Use donor view -h for help.");
         }
     }
 

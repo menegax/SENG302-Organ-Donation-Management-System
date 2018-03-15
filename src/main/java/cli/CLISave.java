@@ -5,6 +5,10 @@ import picocli.CommandLine.Command;
 import service.Database;
 import utility.UserActionHistory;
 
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
+
 @SuppressWarnings("unused")
 @Command(name = "save", description = "Saves data to disk. Changes will not be saved without this command.")
 public class CLISave implements Runnable {
@@ -13,9 +17,9 @@ public class CLISave implements Runnable {
     private boolean helpRequested = false;
 
     public void run() {
-        System.out.print("Saving...");
+        userActions.log(Level.INFO, "Saving...");
         Database.saveToDisk();
-        System.out.println(" done.");
+        userActions.log(Level.INFO, "Done saving.");
     }
 
 }

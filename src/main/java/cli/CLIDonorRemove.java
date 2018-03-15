@@ -6,6 +6,9 @@ import picocli.CommandLine.Option;
 import service.Database;
 
 import java.io.InvalidObjectException;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
 @Command(name = "remove", description = "used to remove existing donors")
@@ -21,9 +24,9 @@ class CLIDonorRemove implements Runnable {
         try {
             Donor donor = Database.getDonorByIrd(ird);
             Database.removeDonor(ird);
-            System.out.println("Successfully removed " + donor);
+            userActions.log(Level.INFO, "Successfully removed " + donor);
         } catch (InvalidObjectException e) {
-            System.out.println(e.getMessage());
+            userActions.log(Level.SEVERE, e.getMessage());
         }
     }
 

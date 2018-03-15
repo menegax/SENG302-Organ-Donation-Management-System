@@ -26,7 +26,7 @@ public class Database {
     public static void addDonor(Donor newDonor) {
         try {
             getDonorByIrd(newDonor.getIrdNumber());
-            System.out.println("Cannot add donor with IRD " + newDonor.getIrdNumber() + ", IRD is not unique");
+            userActions.log(Level.WARNING,"Cannot add donor with IRD " + newDonor.getIrdNumber() + ", IRD is not unique");
         } catch (InvalidObjectException o) {
             donors.add(newDonor);
             userActions.log(Level.INFO, "donor added to database", newDonor);
@@ -66,7 +66,7 @@ public class Database {
         try {
             saveToDiskDonors();
         } catch (IOException e) {
-            e.printStackTrace(); //todo don't print to console, log error instead
+            userActions.log(Level.SEVERE, e.getMessage());
         }
     }
 
@@ -92,7 +92,7 @@ public class Database {
         try {
             importFromDiskDonors(fileName);
         } catch (IOException e) {
-            System.out.println(e.getMessage()); //todo log error don't print stack to console
+            userActions.log(Level.SEVERE, e.getMessage());
         }
     }
 

@@ -57,4 +57,7 @@ within the `run()` method for eachCLI command. This way we arere only unit testi
 9th to the 23rd of March
 
 #### Logging and System Print Messages
-We've decided to use a logger 
+We've decided to use a logger to log all actions and/or events during the application session. 
+The logger has associated handlers and one of those outputs appropriate messages to console. 
+Therefore from this point on there should never be a System.out.println call in our entire codebase.
+Refer to the appropriate logger to log INFO, WARNING, etc and its respective filter for end-user output to console.
