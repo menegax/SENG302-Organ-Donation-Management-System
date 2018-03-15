@@ -7,8 +7,6 @@ public class UserActionHistory {
 
     public static final Logger userActions = Logger.getLogger(UserActionHistory.class.getName());
 
-    private static FileHandler fileTxt;
-    private static SimpleFormatter formatterTxt;
     private static FormatterLog logFormat = new FormatterLog();
 
     /**
@@ -26,7 +24,7 @@ public class UserActionHistory {
 
         // File handler
         try {
-            Handler file = new FileHandler("UserActionHistory%u.%g.xml");
+            Handler file = new FileHandler("UserActionHistory%u.%u.xml", true);
             userActions.addHandler(file);
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Unable to write log to file");
