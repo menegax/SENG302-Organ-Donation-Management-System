@@ -1,9 +1,13 @@
 package service;
 
-import java.io.*;
-import java.util.HashSet;
 import com.google.gson.Gson;
 import model.Donor;
+
+import java.io.*;
+import java.util.HashSet;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 public class Database {
 
@@ -23,9 +27,9 @@ public class Database {
             newDonor.ensureValidNhi();
             newDonor.ensureUniqueNhi();
             donors.add(newDonor);
-            System.out.println("Successfully added " + newDonor);
+            userActions.log(Level.INFO,"Successfully added " + newDonor);
         } catch (IllegalArgumentException o) {
-            System.out.println(o.getMessage());
+            userActions.log(Level.SEVERE, o.getMessage());
         }
     }
 
@@ -62,7 +66,7 @@ public class Database {
         try {
             saveToDiskDonors();
         } catch (IOException e) {
-            e.printStackTrace();
+            userActions.log(Level.SEVERE, e.getMessage());
         }
     }
 
@@ -88,7 +92,7 @@ public class Database {
         try {
             importFromDiskDonors(fileName);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            userActions.log(Level.SEVERE, e.getMessage());
         }
     }
 

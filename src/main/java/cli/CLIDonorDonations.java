@@ -1,13 +1,16 @@
 package cli;
 
 import model.Donor;
-import picocli.CommandLine.Option;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 import service.Database;
 import utility.GlobalEnums.Organ;
 
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings({"unused"})
 @Command(name = "donations", description = "used to update the donations on a particular donor")
@@ -42,9 +45,12 @@ public class CLIDonorDonations implements Runnable {
 
     private void displayDonorDonations(Donor donor) {
         ArrayList<Organ> donations = donor.getDonations();
-        if (donations == null)
-            System.out.println("No donations registered for donor: " + donor.getNameConcatenated());
-        else System.out.println(donations);
+        if (donations == null) {
+            userActions.log(Level.WARNING, "No donations registered for donor: " + donor.getNameConcatenated());
+        }
+        else {
+            userActions.log(Level.INFO, donations.toString());
+        }
     }
 
     public void run() {
@@ -57,7 +63,7 @@ public class CLIDonorDonations implements Runnable {
                donor.updateDonations(newDonations, rmDonations);
             }
         } catch (InvalidObjectException e) {
-            System.out.println(e.getMessage());
+            userActions.log(Level.SEVERE, e.getMessage());
         }
     }
 

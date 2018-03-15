@@ -1,8 +1,12 @@
 package cli;
 
-import picocli.CommandLine.Option;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 import service.Database;
+
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
 @Command(name = "import", description = "Reads and loads data into the application")
@@ -15,9 +19,9 @@ public class CLIImport implements Runnable {
     private String fileName;
 
     public void run() {
-        System.out.println("Importing...");
+        userActions.log(Level.INFO, "Importing...");
         Database.importFromDisk(fileName);
-        System.out.println("Done importing.");
+        userActions.log(Level.INFO, "Done importing.");
     }
 
 }
