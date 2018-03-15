@@ -13,13 +13,22 @@ public class ActionHistory {
     static public void setup() {
         logger.setUseParentHandlers(false); // disables default console logger in parent
 
-        // todo Set console handler settings
+        // todo set console handler settings
         Handler console = new ConsoleHandler();
+
+        // set filter
+        FilterUserOutput filter = new FilterUserOutput();
+        logger.setFilter(filter);
         System.out.println("Console filter: " + console.getFilter());
+
+        // set formatter
         System.out.println("Console formatter: " + console.getFormatter());
+
+        // set level
+        console.setLevel(Level.INFO);
         System.out.println("Console level: " + console.getLevel());
+
         logger.addHandler(console);
-        console.setLevel(Level.FINER);
         System.out.println("Console level after change: " + console.getLevel());
 
         // todo set file handler settings
@@ -46,7 +55,6 @@ public class ActionHistory {
     }
 
     public static void consoleDebugVerbosity() {
-        // todo set console filter to keep all messages of any level
 
     }
 }
