@@ -56,3 +56,5 @@ within the `run()` method for eachCLI command. This way we arere only unit testi
 ## Sprint 2
 9th to the 23rd of March
 
+#### Logging and System Print Messages
+We've decided to use a logger 

@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import com.google.gson.Gson;
 import model.Donor;
 
-import static utility.ActionHistory.logger;
+import static utility.UserActionHistory.userActions;
 
 public class Database {
 
@@ -29,7 +29,7 @@ public class Database {
             System.out.println("Cannot add donor with IRD " + newDonor.getIrdNumber() + ", IRD is not unique");
         } catch (InvalidObjectException o) {
             donors.add(newDonor);
-            logger.log(Level.INFO, "donor added to database", newDonor);
+            userActions.log(Level.INFO, "donor added to database", newDonor);
         }
     }
 

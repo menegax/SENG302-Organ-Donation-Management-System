@@ -1,6 +1,6 @@
 package cli;
 import picocli.CommandLine;
-import utility.ActionHistory;
+import utility.UserActionHistory;
 
 import java.util.Scanner;
 
@@ -9,7 +9,7 @@ public class CLIMain {
     public static void main(String[] argv) {
         String[] args;
 
-        ActionHistory.setup();
+        UserActionHistory.setup();
 
         // listen for input
         Scanner inputScanner = new Scanner(System.in);
