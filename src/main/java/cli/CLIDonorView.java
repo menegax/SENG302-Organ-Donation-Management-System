@@ -19,7 +19,7 @@ public class CLIDonorView implements Runnable {
     private boolean searchAll;
 
     public void run() {
-        if (!searchNhi.equals("")) {
+        if (searchNhi != null) {
             try {
                 System.out.println(Database.getDonorByNhi(searchNhi));
             } catch (InvalidObjectException e) {
@@ -29,7 +29,7 @@ public class CLIDonorView implements Runnable {
         if (searchAll) {
             System.out.println((Database.getDonors().size() == 0 ? "No donors in the database" : Database.getDonors()));
         }
-        if (searchNhi.equals("") && !searchAll) {
+        if (searchNhi == null && !searchAll) {
             System.out.println("donor view command invoked. Use donor view -h for help.");
         }
     }

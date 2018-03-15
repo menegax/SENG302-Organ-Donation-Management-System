@@ -77,7 +77,7 @@ public class CLIDonorUpdate implements Runnable {
             Donor donor = Database.getDonorByNhi(searchNhi);
             donor.updateAttributes(firstName, lastName, middleNames, birth, death, street1,
                     street2, suburb, region, gender, bloodGroup, height, weight, nhi);
-        } catch (InvalidObjectException e) {
+        } catch (InvalidObjectException | IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }

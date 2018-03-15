@@ -3,6 +3,7 @@ package model;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.regex.Pattern;
 
 import service.Database;
 import utility.GlobalEnums;
@@ -50,6 +51,7 @@ public class Donor {
                  ArrayList<String> middleNames, String lastName, LocalDate date) throws IllegalArgumentException {
 
         this.CREATED = new Timestamp(System.currentTimeMillis());
+        ensureValidNhi(nhiNumber);
         ensureUniqueNhi(nhiNumber);
         this.modified = CREATED;
         this.firstName = firstName;
@@ -81,7 +83,7 @@ public class Donor {
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames,
                                  LocalDate birth, LocalDate death, String street1, String street2,
                                  String suburb, String region, String gender, String bloodGroup,
-                                 double height, double weight, String nhi) {
+                                 double height, double weight, String nhi) throws IllegalArgumentException {
         Enum globalEnum;
         if (firstName != null) setFirstName(firstName);
         if (lastName != null) setLastName(lastName);
@@ -146,6 +148,17 @@ public class Donor {
                     System.out.println(removeDonation(organEnum));
                 }
             }
+        }
+    }
+
+    /**
+     * Checks that the nhi number consists (only) of 3 letters then 4 numbers
+     * @param nhiNumber - nhi number of the donor
+     * @throws IllegalArgumentException when the nhi number given is not in the valid format
+     */
+    private static void ensureValidNhi(String nhiNumber) throws IllegalArgumentException {
+        if (!Pattern.matches("[A-Z]{3}[0-9]{4}", nhiNumber.toUpperCase())) {
+            throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not in the correct format (3 letters followed by 4 numbers)");
         }
     }
 
@@ -388,7 +401,8 @@ public class Donor {
         return nhiNumber;
     }
 
-    public void setNhiNumber(String nhiNumber) {
+    public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
+        ensureValidNhi(nhiNumber);
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
             this.nhiNumber = nhiNumber.toUpperCase();
             donorModified();
