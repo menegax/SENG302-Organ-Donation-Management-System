@@ -9,12 +9,14 @@ public class ActionHistory {
 
     private static FileHandler fileTxt;
     private static SimpleFormatter formatterTxt;
+    private static FormatterLog logFormat = new FormatterLog();
 
     static public void setup() {
         logger.setUseParentHandlers(false); // disables default console logger in parent
 
         // todo Set console handler settings
-        Handler console = new ConsoleHandler();
+        ConsoleHandler console = new ConsoleHandler();
+        console.setFormatter(logFormat);
         System.out.println("Console filter: " + console.getFilter());
         System.out.println("Console formatter: " + console.getFormatter());
         System.out.println("Console level: " + console.getLevel());
