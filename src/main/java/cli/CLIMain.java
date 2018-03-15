@@ -6,23 +6,31 @@ import org.jline.terminal.TerminalBuilder;
 import picocli.CommandLine;
 import java.io.IOException;
 
+@SuppressWarnings("ConstantConditions")
 public class CLIMain {
-    public static void main(String[] argv) {
-        String[] args;
+
+    private static LineReader getLineReader(){
         try {
             TerminalBuilder builder = TerminalBuilder.builder();
             Terminal terminal = builder.build();
-            LineReader reader = LineReaderBuilder.builder().terminal(terminal).build();
-            String userCommand;
-            new CommandLine(new CLIOdms()).parseWithHandler(new CommandLine.RunLast(), System.err, "-h");
-            userCommand = reader.readLine("odms>> ");
-            while (!userCommand.trim().equals("quit")) {
-                args = userCommand.split(" "); //TODO: fix bug here
-                new CommandLine(new CLIOdms()).parseWithHandler(new CommandLine.RunLast(), System.err, args);
-                userCommand = reader.readLine("odms>> ");
-            }
+            return LineReaderBuilder.builder().terminal(terminal).build();
         } catch (IOException e) {
             e.printStackTrace();
+            System.exit(0);
+        }
+        return null;
+    }
+
+    public static void main(String[] argv) {
+        String[] args;
+        LineReader reader = getLineReader();
+        String userCommand;
+        new CommandLine(new CLIOdms()).parseWithHandler(new CommandLine.RunLast(), System.err, "-h");
+        userCommand = reader.readLine("odms>> ");
+        while (!userCommand.trim().equals("quit")) {
+            args = userCommand.split(" "); //TODO: fix bug here
+            new CommandLine(new CLIOdms()).parseWithHandler(new CommandLine.RunLast(), System.err, args);
+            userCommand = reader.readLine("odms>> ");
         }
     }
 }
