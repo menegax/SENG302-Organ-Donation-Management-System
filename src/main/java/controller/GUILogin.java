@@ -9,8 +9,8 @@ import java.io.InvalidObjectException;
 public class GUILogin {
 
     @FXML
-    public void register(){
-//        GUIScreenControl.activate("home");
+    public void goToRegister(){
+        GUIScreenControl.activate("donorRegister");
     }
 
     @FXML
