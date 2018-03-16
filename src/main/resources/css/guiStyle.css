@@ -6,7 +6,16 @@
     -fx-text-fill: cornflowerblue;
     -fx-scale-y: 1.1;
 }
+
+.back:pressed{
+    -fx-text-fill: #235587;
+}
+
 .back{
     -fx-font-size: 22px;
 }
+
+.customButton{
+}
+
 

@@ -21,7 +21,7 @@ public class Database {
      * Adds a donor to the database
      * @param newDonor the new donor to add
      */
-    public static void addDonor(Donor newDonor) {
+    public static void addDonor(Donor newDonor) { //TODO: needs to throw to another layer
         try {
             newDonor.ensureValidNhi();
             newDonor.ensureUniqueNhi();
