@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -15,25 +16,65 @@
       </Label>
       <VBox layoutX="96.0" layoutY="100.0" prefHeight="200.0" prefWidth="240.0">
          <children>
-            <Label alignment="TOP_CENTER" prefHeight="30.0" text="NHI: ABC1234" />
-            <Label text="Name: BLOGGS, Joe Middle" />
-            <Label text="Gender: Male" />
-            <Label alignment="TOP_CENTER" prefHeight="30.0" text="Date of Birth: 10th June 1988 (30Y)" />
-            <Label text="Height: 1.8m" />
-            <Label text="Weight: 70kg" />
-            <Label alignment="TOP_CENTER" prefHeight="30.0" text="Blood Group: O+" />
-            <Label text="Address: 123 test rd" />
-            <Label text="Ilam">
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="NHI: " />
+                  <Label fx:id="nhiLbl" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="30.0" prefWidth="200.0">
+               <children>
+                  <Label text="Name: " />
+                  <Label fx:id="nameLbl" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="30.0" prefWidth="200.0">
+               <children>
+                  <Label text="Gender: " />
+                  <Label fx:id="genderLbl" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Date of Birth: " />
+                  <Label fx:id="dobLbl" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="30.0" prefWidth="200.0">
+               <children>
+                  <Label text="Height: " />
+                  <Label fx:id="heightLbl" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="30.0" prefWidth="200.0">
+               <children>
+                  <Label text="Weight: " />
+                  <Label fx:id="weightLbl" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Blood Group: " />
+                  <Label fx:id="bloodGroupLbl" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="30.0" prefWidth="200.0">
+               <children>
+                  <Label text="Address: " />
+                  <Label fx:id="addLbl1" text="Label" />
+               </children>
+            </HBox>
+            <Label fx:id="addLbl2" text="Ilam">
                <VBox.margin>
                   <Insets left="60.0" />
                </VBox.margin>
             </Label>
-            <Label text="Christchurch">
+            <Label fx:id="addLbl3" text="Christchurch">
                <VBox.margin>
                   <Insets left="60.0" />
                </VBox.margin>
             </Label>
-            <Label text="8030">
+            <Label fx:id="addLbl4" text="8030">
                <VBox.margin>
                   <Insets left="60.0" />
                </VBox.margin>
@@ -47,9 +88,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Heart" />
-            <Label text="Lung" />
-            <Label text="Skin" />
+            <Label fx:id="donationList" text="List" />
          </children>
       </VBox>
       <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToHome" styleClass="back" stylesheets="@css/guiStyle.css" text="〱back" />
