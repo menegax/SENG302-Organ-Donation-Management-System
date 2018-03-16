@@ -35,6 +35,6 @@
         </menus>
       </MenuBar>
       <Button layoutX="161.0" layoutY="136.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="79.0" prefWidth="111.0" text="Profile" />
-      <Button layoutX="333.0" layoutY="135.0" mnemonicParsing="false" prefHeight="79.0" prefWidth="110.0" text="History" />
+      <Button layoutX="333.0" layoutY="135.0" mnemonicParsing="false" onAction="#goToHistory" prefHeight="79.0" prefWidth="110.0" text="History" />
    </children>
 </AnchorPane>
