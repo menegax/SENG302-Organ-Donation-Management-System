@@ -144,6 +144,34 @@ public class DonorTest {
     }
 
     /**
+     * Checks correct age of deceased donor
+     */
+    @Test
+    public void testGetAge() {
+        testDonor.setDeath(LocalDate.of(2005, 5, 12));
+        assertEquals(35, testDonor.getAge());
+    }
+
+    /**
+     * Checks correct age of deceased donor who is just about to have a birthday
+     */
+    @Test
+    public void testGetAgeRightBeforeBirthday() {
+        testDonor.setDeath(LocalDate.of(2005, 2, 11));
+        assertEquals(34, testDonor.getAge());
+    }
+
+    /**
+     * Checks correct BMI for patient
+     */
+    @Test
+    public void testGetBmi() {
+        testDonor.setWeight(70.0);
+        testDonor.setHeight(1.80);
+        assertEquals(21.6, testDonor.getBmi(), 0.2);
+    }
+
+    /**
      * Create donor object
      */
     private Donor givenDonor() {

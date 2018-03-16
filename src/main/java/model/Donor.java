@@ -1,8 +1,12 @@
 package model;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 import service.Database;
@@ -25,9 +29,9 @@ public class Donor {
 
     private Gender gender;
 
-    private double height;
+    private double height; //Height in meters
 
-    private double weight;
+    private double weight; //Weight in kilograms
 
     private BloodGroup bloodGroup;
 
@@ -255,6 +259,19 @@ public class Donor {
         }
     }
 
+    /**
+     * Calculates the donors current age. If the patient is living, it is the difference between the current datetime
+     * and their date of birth, else if they are dead it is the difference between their date of death and date of birth
+     * @return Their calculated age
+     */
+    public int getAge() {
+        if (this.death != null) {
+            return (int) ChronoUnit.YEARS.between(this.birth, this.death);
+        } else {
+            return (int) ChronoUnit.YEARS.between(this.birth, LocalDate.now());
+        }
+    }
+
     public Gender getGender() {
         return gender;
     }
@@ -286,6 +303,14 @@ public class Donor {
             this.weight = weight;
             donorModified();
         }
+    }
+
+    /**
+     * Calculates the Body Mass Index of the donor
+     * @return The calculated BMI
+     */
+    public double getBmi() {
+        return (this.weight / (Math.pow(this.height, 2)));
     }
 
     public BloodGroup getBloodGroup() {
