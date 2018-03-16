@@ -13,7 +13,6 @@ public class Database {
 
     private static HashSet<Donor> donors = new HashSet<>();
 
-
     public static HashSet<Donor> getDonors() {
         return donors;
     }

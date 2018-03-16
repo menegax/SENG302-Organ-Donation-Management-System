@@ -2,3 +2,11 @@
     -fx-font-family: "Comic Sans MS";
     -fx-font-size: 28px;
 }
+.back:hover {
+    -fx-text-fill: cornflowerblue;
+    -fx-scale-y: 1.1;
+}
+.back{
+    -fx-font-size: 22px;
+}
+

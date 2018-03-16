@@ -17,6 +17,7 @@ public class Main extends Application {
         GUIScreenControl.setRootScene(rootScene); // set this scene in screen controller
 
         //TODO: if you have a FXML file, please add it to the screen controller! ty :)
+        GUIScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/login.fxml")));
         GUIScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/donorProfile.fxml")));
         GUIScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/donorRegister.fxml")));
         GUIScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/donorHistory.fxml")));
