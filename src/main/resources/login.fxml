@@ -13,6 +13,6 @@
          </font>
       </Label>
       <Button layoutX="156.0" layoutY="174.0" mnemonicParsing="false" onAction="#register" prefHeight="39.0" prefWidth="85.0" text="Register" />
-      <Button layoutX="359.0" layoutY="174.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="85.0" text="Log In" />
+      <Button layoutX="359.0" layoutY="174.0" mnemonicParsing="false" onAction="#logIn" prefHeight="39.0" prefWidth="85.0" text="Log In" />
    </children>
 </AnchorPane>

@@ -11,6 +11,7 @@ Checklist
 - Ask team members for questions on implementation
 - Acceptance criteria reviewed and met
 - Code peer reviewed for readability, refactoring, etc.
+- All todo's are removed
 - JavaDoc added to appropriate methods and attributes
 - Unit tests implemented where necessary
 - Manual tests documented and performed
