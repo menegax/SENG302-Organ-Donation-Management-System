@@ -8,14 +8,19 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    public static Stage parentWindow;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/donorProfile.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 600, 400));
+        parentWindow = primaryStage;
+        Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
+        Scene rootScene = new Scene(root, 600, 400);
+        primaryStage.setScene(rootScene);
         primaryStage.show();
+        GUIScreenControl screenController = new GUIScreenControl(rootScene);
+        screenController.addScreen("login", FXMLLoader.load(getClass().getResource( "/login.fxml" )));
+        screenController.activate("login");
     }
-
 
     public static void main(String[] args) {
         launch(args);
