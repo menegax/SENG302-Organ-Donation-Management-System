@@ -16,6 +16,7 @@ public class Main extends Application {
         primaryStage.setScene(rootScene);
         GUIScreenControl.setRootScene(rootScene);
         GUIScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/donorProfile.fxml")));
+        GUIScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/donorHistory.fxml")));
         primaryStage.show();
     }
 
