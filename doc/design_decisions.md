@@ -67,3 +67,8 @@ creating functionality in which the keypress events would 'navigate' through tha
 
 We decided to change form using IRD as the identifier of a donor to the NHI number. The IRD number is thus no longer used. The reason behind this is that it makes
 more sense in the context of a health app, and users may feel more comfortable provided a NHI number instead of an IRD number due to NHI's association with health rather than tax and finance.
+#### Logging and System Print Messages
+We've decided to use a logger to log all actions and/or events during the application session. 
+The logger has associated handlers and one of those outputs appropriate messages to console. 
+Therefore from this point on there should never be a System.out.println call in our entire codebase.
+Refer to the appropriate logger to log INFO, WARNING, etc and its respective filter for end-user output to console.

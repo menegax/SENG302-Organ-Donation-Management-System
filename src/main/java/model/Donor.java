@@ -1,5 +1,12 @@
 package model;
 
+import service.Database;
+import utility.GlobalEnums;
+import utility.GlobalEnums.BloodGroup;
+import utility.GlobalEnums.Gender;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.Region;
+
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -7,11 +14,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import service.Database;
-import utility.GlobalEnums;
-import utility.GlobalEnums.*;
+import static utility.UserActionHistory.userActions;
 
 public class Donor {
 
@@ -99,28 +106,28 @@ public class Donor {
             if (globalEnum != null) {
                 setRegion((GlobalEnums.Region) globalEnum);
             } else{
-               System.out.println("Invalid region, for help on what entries are valid, use donor update -h.");
+                userActions.log(Level.WARNING, "Invalid region, for help on what entries are valid, use donor update -h.");
             }
         }
         if (gender != null) {
             globalEnum = GlobalEnums.Gender.getEnumFromString(gender);
             if (globalEnum != null) setGender((GlobalEnums.Gender) globalEnum);
             else {
-                System.out.println("Invalid gender, for help on what entries are valid, use donor update -h.");
+                userActions.log(Level.WARNING, "Invalid gender, for help on what entries are valid, use donor update -h.");
             }
         }
         if (bloodGroup != null) {
             globalEnum = GlobalEnums.BloodGroup.getEnumFromString(bloodGroup);
             if (globalEnum != null) setBloodGroup((GlobalEnums.BloodGroup) globalEnum);
             else{
-                System.out.println("Invalid blood group, for help on what entries are valid, use donor update -h.");
+                userActions.log(Level.WARNING, "Invalid blood group, for help on what entries are valid, use donor update -h.");
             }
 
         }
         if (height > 0) setHeight(height);
         if (weight > 0) setWeight(weight);
         if (nhi != null) setNhiNumber(nhi);
-        System.out .println("Successfully updated " + getNameConcatenated() + "\n");
+        userActions.log(Level.INFO, "Successfully updated " + getNameConcatenated() + "\n");
     }
 
     /**
@@ -133,10 +140,10 @@ public class Donor {
             for (String organ : newDonations) {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ); //null if invalid
                 if (organEnum == null) {
-                    System.out.println("Error: Invalid organ " + organ + "given, hence was not added.");
+                    userActions.log(Level.SEVERE, "Invalid organ " + organ + "given, hence was not added.");
                 }
                 else {
-                    System.out.println(addDonation(organEnum));
+                    userActions.log(Level.INFO, addDonation(organEnum));
                 }
             }
         }
@@ -144,9 +151,9 @@ public class Donor {
             for (String organ : rmDonations) {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ);
                 if (organEnum == null) {
-                    System.out.println("Invalid organ " + organ + " given, hence was not added.");
+                    userActions.log(Level.SEVERE,"Invalid organ " + organ + " given, hence was not removed.");
                 } else {
-                    System.out.println(removeDonation(organEnum));
+                    userActions.log(Level.INFO, removeDonation(organEnum));
                 }
             }
         }
@@ -179,14 +186,14 @@ public class Donor {
      * @return string named
      */
     public String getNameConcatenated() {
-        String concatName = firstName + " ";
+        StringBuilder concatName = new StringBuilder(firstName + " ");
         if (middleNames != null && middleNames.size() > 0) {
-            for (int i=0; i<middleNames.size(); i++){
-                concatName += middleNames.get(i) + " ";
+            for (String middleName : middleNames) {
+                concatName.append(middleName).append(" ");
             }
         }
-        concatName += lastName;
-        return concatName;
+        concatName.append(lastName);
+        return concatName.toString();
     }
 
     public ArrayList<Organ> getDonations() {
@@ -458,10 +465,7 @@ public class Donor {
 
     public boolean equals(Object obj){
         Donor donor = (Donor) obj;
-        if (this.nhiNumber.equals(donor.nhiNumber)){
-            return true;
-        }
-        return false;
+        return this.nhiNumber.equals(donor.nhiNumber);
     }
 
 }

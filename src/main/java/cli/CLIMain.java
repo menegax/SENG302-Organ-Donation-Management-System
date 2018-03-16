@@ -1,9 +1,12 @@
 package cli;
+
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import picocli.CommandLine;
+import utility.UserActionHistory;
+
 import java.io.IOException;
 
 @SuppressWarnings("ConstantConditions")
@@ -23,6 +26,9 @@ public class CLIMain {
 
     public static void main(String[] argv) {
         String[] args;
+
+        UserActionHistory.setup();
+
         LineReader reader = getLineReader();
         String userCommand;
         new CommandLine(new CLIOdms()).parseWithHandler(new CommandLine.RunLast(), System.err, "-h");
