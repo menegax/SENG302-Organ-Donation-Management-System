@@ -16,21 +16,21 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
         Scene rootScene = new Scene(root, 600, 400);
         primaryStage.setScene(rootScene); //set scene on primary stage
-        GUIScreenControl.setRootScene(rootScene); // set this scene in screen controller
+        ScreenControl.setRootScene(rootScene); // set this scene in screen controller
 
         //TODO Remove below donor creation after testing
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
         Database.addDonor(new Donor("ABC1238", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
         //TODO: if you have a FXML file, please add it to the screen controller! ty :)
-        GUIScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/login.fxml")));
-        GUIScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/donorProfile.fxml")));
-        GUIScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/donorRegister.fxml")));
-        GUIScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/donorHistory.fxml")));
-        GUIScreenControl.addScreen("home", FXMLLoader.load(getClass().getResource("/home.fxml")));
+        ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+        ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+        ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
+        ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
+        ScreenControl.addScreen("home", FXMLLoader.load(getClass().getResource("/scene/home.fxml")));
         primaryStage.show();
     }
 

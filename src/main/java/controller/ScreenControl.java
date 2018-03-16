@@ -5,7 +5,7 @@ import javafx.scene.layout.Pane;
 
 import java.util.HashMap;
 
-class GUIScreenControl {
+class ScreenControl {
     private static HashMap<String, Pane> screenMap = new HashMap<>();
     private static Scene main;
 

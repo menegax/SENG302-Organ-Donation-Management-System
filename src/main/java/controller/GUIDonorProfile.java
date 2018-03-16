@@ -2,7 +2,6 @@ package controller;
 
 import model.Donor;
 import service.Database;
-import utility.GlobalEnums;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -72,7 +71,7 @@ public class GUIDonorProfile {
     }
 
     public void goToHome() {
-        GUIScreenControl.activate("home");
+        ScreenControl.activate("home");
     }
 
 

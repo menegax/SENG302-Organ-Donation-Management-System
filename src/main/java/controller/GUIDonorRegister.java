@@ -6,8 +6,6 @@ import javafx.scene.control.TextField;
 import model.Donor;
 import service.Database;
 
-import javax.xml.soap.Text;
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +29,7 @@ public class GUIDonorRegister {
 
     @FXML
     public void goBackToLogin(){
-        GUIScreenControl.activate("login");
+        ScreenControl.activate("login");
     }
 
     @FXML
@@ -43,7 +41,7 @@ public class GUIDonorRegister {
                         middlenameRegister.getText().isEmpty() ? new ArrayList<>() :
                                 new ArrayList<>(Arrays.asList(middlenameRegister.getText().split("\\s*,\\s*"))),
                         lastnameRegister.getText(), LocalDate.parse(birthRegister.getText())));
-                GUIScreenControl.activate("home");
+                ScreenControl.activate("home");
             }catch (IllegalArgumentException e){
                 e.printStackTrace();
             }

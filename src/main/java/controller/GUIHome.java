@@ -6,11 +6,11 @@ public class GUIHome {
 
     @FXML
     public void goToProfile(){
-        GUIScreenControl.activate("donorProfile");
+        ScreenControl.activate("donorProfile");
     }
 
     @FXML
     public void goToHistory(){
-        GUIScreenControl.activate("donorHistory");
+        ScreenControl.activate("donorHistory");
     }
 }
