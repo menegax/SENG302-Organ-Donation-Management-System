@@ -1,21 +1,43 @@
-.title{
-    -fx-font-family: "Comic Sans MS";
+/*Global attributes in root*/
+.root {
+    -fx-font-family: "Helvetica Neue";
+
+    /*colors from color scheme generator*/
+    color1: #F15025;
+    /*color2: ;*/
+    color3: #E6E8E6;
+    color4: #CED0CE;
+    color5: #FFFFFF;
+    black: #191919;
+    white: #FFFFFF;
+
+    -fx-base: color3;
+    -fx-background: white;
+}
+
+.title {
+    -fx-font-weight: bold;
     -fx-font-size: 28px;
 }
+
 .back:hover {
     -fx-text-fill: cornflowerblue;
     -fx-scale-y: 1.1;
 }
 
-.back:pressed{
+.back:pressed {
     -fx-text-fill: #235587;
 }
 
-.back{
-    -fx-font-size: 22px;
+.back {
+    -fx-font-size: 14px;
 }
 
-.customButton{
+.tile {
+    /*for custom title styles in the home scene*/
 }
 
+.customButton {
+
+}
 

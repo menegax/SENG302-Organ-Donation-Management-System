@@ -25,6 +25,7 @@ public class Main extends Application {
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
         Database.addDonor(new Donor("ABC1238", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+
         //TODO: if you have a FXML file, please add it to the screen controller! ty :)
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
         ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));

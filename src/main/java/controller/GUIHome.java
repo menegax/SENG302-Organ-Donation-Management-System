@@ -13,4 +13,9 @@ public class GUIHome {
     public void goToHistory(){
         ScreenControl.activate("donorHistory");
     }
+
+    @FXML
+    public void logOut() {
+        ScreenControl.activate("login");
+    }
 }
