@@ -38,6 +38,8 @@ public class GUIDonorProfile {
     private Label addLbl3;
     @FXML
     private Label addLbl4;
+    @FXML
+    private Label addLbl5;
 
     @FXML
     private Label donationList;
@@ -58,10 +60,11 @@ public class GUIDonorProfile {
             heightLbl.setText(String.valueOf(donor.getHeight()));
             weightLbl.setText(String.valueOf(donor.getWeight()));
             //bloodGroupLbl.setText(donor.getBloodGroup().getValue());
-            addLbl1.setText("TODO ADD_1");
-            addLbl2.setText("TODO ADD_2");
-            addLbl3.setText("TODO ADD_3");
-            addLbl4.setText("TODO ADD_4");
+            addLbl1.setText(donor.getStreet1());
+            addLbl2.setText(donor.getStreet2());
+            addLbl3.setText(donor.getSuburb());
+            addLbl4.setText("TODO region enum");
+            addLbl5.setText(String.valueOf(donor.getZip()));
             donationList.setText("ONE\nTWO\nTHREE");
         } catch(InvalidObjectException e) {
             e.printStackTrace();
