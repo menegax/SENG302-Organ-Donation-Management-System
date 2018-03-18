@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -60,25 +59,34 @@
             </HBox>
             <HBox prefHeight="30.0" prefWidth="200.0">
                <children>
-                  <Label text="Address: " />
+                  <Label text="Street 1: " />
                   <Label fx:id="addLbl1" text="Label" />
                </children>
             </HBox>
-            <Label fx:id="addLbl2" text="Ilam">
-               <VBox.margin>
-                  <Insets left="60.0" />
-               </VBox.margin>
-            </Label>
-            <Label fx:id="addLbl3" text="Christchurch">
-               <VBox.margin>
-                  <Insets left="60.0" />
-               </VBox.margin>
-            </Label>
-            <Label fx:id="addLbl4" text="8030">
-               <VBox.margin>
-                  <Insets left="60.0" />
-               </VBox.margin>
-            </Label>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Street 2: " />
+                  <Label fx:id="addLbl2" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Suburb: " />
+                  <Label fx:id="addLbl3" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Region: " />
+                  <Label fx:id="addLbl4" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Zip: " />
+                  <Label fx:id="addLbl5" text="Label" />
+               </children>
+            </HBox>
          </children>
       </VBox>
       <VBox layoutX="361.0" layoutY="100.0" prefHeight="200.0" prefWidth="162.0">
