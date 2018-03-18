@@ -7,6 +7,9 @@ import service.Database;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
 @Command(name = "add", description = "used to add new donors")
@@ -32,7 +35,11 @@ class CLIDonorAdd implements Runnable {
 
     public void run() {
         Donor donor = new Donor(nhi, firstName, middleNames, lastName, birth);
-        Database.addDonor(donor);
+        try {
+            Database.addDonor(donor);
+        } catch(IllegalArgumentException i){
+            userActions.log(Level.SEVERE, i.getMessage());
+        }
     }
 
 }

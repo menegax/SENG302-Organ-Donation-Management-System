@@ -59,10 +59,9 @@ public class DatabaseTest {
     /**
      * Try adding donors to database
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testAddDonor(){
         Database.addDonor(bob);
-        assertEquals(new HashSet<Donor>() { {add(bob);add(bob);} }, Database.getDonors());
     }
 
     /**

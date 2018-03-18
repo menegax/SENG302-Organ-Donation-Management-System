@@ -21,14 +21,14 @@ public class Database {
      * Adds a donor to the database
      * @param newDonor the new donor to add
      */
-    public static void addDonor(Donor newDonor) { //TODO: needs to throw to another layer
+    public static void addDonor(Donor newDonor) {
         try {
             newDonor.ensureValidNhi();
             newDonor.ensureUniqueNhi();
             donors.add(newDonor);
             userActions.log(Level.INFO,"Successfully added " + newDonor);
         } catch (IllegalArgumentException o) {
-            userActions.log(Level.SEVERE, o.getMessage());
+            throw new IllegalArgumentException(o.getMessage());
         }
     }
 
