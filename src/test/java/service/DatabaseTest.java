@@ -1,6 +1,7 @@
 package service;
 
 import model.Donor;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,27 +9,27 @@ import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.logging.Level;
 
 import static org.junit.Assert.*;
+import static utility.UserActionHistory.userActions;
 
 public class DatabaseTest {
 
     private static Donor bob;
 
-
+    /**
+     * Restores database before each test and disables console logging
+     */
     @Before
     public void restoreDatabase(){
         Database.resetDatabase();
-        setup();
-    }
-    /**
-     * Setup before all unit tests run
-     */
-    private static void setup() {
+
+        userActions.setLevel(Level.OFF);
+
         bob = new Donor("ZZZ1234", "Bob", null,
                 "Wallace", LocalDate.of(1995, 12, 31));
         Database.addDonor(bob);
-
     }
 
     /**
@@ -75,6 +76,15 @@ public class DatabaseTest {
             e.printStackTrace();
         }
         assertEquals(new HashSet<Donor>(), Database.getDonors());
+    }
+
+    /**
+     * Reset the logging level
+     */
+    @AfterClass
+    public static void tearDown() {
+
+        userActions.setLevel(Level.INFO);
     }
 
 
