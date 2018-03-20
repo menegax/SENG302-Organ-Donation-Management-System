@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Donor;
 import service.Database;
+import utility.GlobalEnums;
 import utility.UserActionHistory;
 
 import java.time.LocalDate;
@@ -25,6 +26,8 @@ public class Main extends Application {
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
         Database.addDonor(new Donor("ABC1238", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.CORNEA);
 
         //TODO: if you have a FXML file, please add it to the screen controller! ty :)
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
