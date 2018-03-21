@@ -6,8 +6,9 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import picocli.CommandLine;
 import utility.UserActionHistory;
-
 import java.io.IOException;
+import java.util.logging.Level;
+import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("ConstantConditions")
 public class CLIMain {
@@ -18,7 +19,7 @@ public class CLIMain {
             Terminal terminal = builder.build();
             return LineReaderBuilder.builder().terminal(terminal).build();
         } catch (IOException e) {
-            e.printStackTrace();
+            userActions.log(Level.SEVERE, "unable to start LineReader", "attempted to begin CLI application");
             System.exit(0);
         }
         return null;

@@ -46,10 +46,10 @@ public class CLIDonorDonations implements Runnable {
     private void displayDonorDonations(Donor donor) {
         ArrayList<Organ> donations = donor.getDonations();
         if (donations == null) {
-            userActions.log(Level.WARNING, "No donations registered for donor: " + donor.getNameConcatenated());
+            userActions.log(Level.WARNING, "No donations registered for donor: " + donor.getNameConcatenated(), "attempted to display donor donations");
         }
         else {
-            userActions.log(Level.INFO, donations.toString());
+            userActions.log(Level.INFO, donations.toString(), "attempted to display donor donations");
         }
     }
 
@@ -63,7 +63,7 @@ public class CLIDonorDonations implements Runnable {
                donor.updateDonations(newDonations, rmDonations);
             }
         } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, e.getMessage());
+            userActions.log(Level.SEVERE, e.getMessage(), "attempted to view or update donor donations");
         }
     }
 

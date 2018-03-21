@@ -19,9 +19,8 @@ public class CLIImport implements Runnable {
     private String fileName;
 
     public void run() {
-        userActions.log(Level.INFO, "Importing...");
         Database.importFromDisk(fileName);
-        userActions.log(Level.INFO, "Done importing.");
+        userActions.log(Level.INFO, "successfully imported", "attempting to import");
     }
 
 }

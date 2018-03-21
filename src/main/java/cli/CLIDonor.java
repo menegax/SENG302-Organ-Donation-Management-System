@@ -14,7 +14,7 @@ public class CLIDonor implements Runnable {
     private boolean helpRequested;
 
     public void run() {
-        userActions.log(Level.FINE, "donor command invoked. Use donor -h for help.");
+        userActions.log(Level.FINE, "use donor -h for help", "donor command invoked");
     }
 
 }

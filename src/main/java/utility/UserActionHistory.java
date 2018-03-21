@@ -5,6 +5,9 @@ import java.util.logging.*;
 
 public class UserActionHistory {
 
+    /**
+     * This log contains user actions and their results in parameters param and message respectively.
+     */
     public static final Logger userActions = Logger.getLogger(UserActionHistory.class.getName());
 
     private static FormatterLog logFormat = new FormatterLog();

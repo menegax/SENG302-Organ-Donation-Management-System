@@ -26,7 +26,7 @@ public class Database {
             newDonor.ensureValidNhi();
             newDonor.ensureUniqueNhi();
             donors.add(newDonor);
-            userActions.log(Level.INFO,"Successfully added " + newDonor);
+            userActions.log(Level.INFO,"Successfully added " + newDonor, "hello THIS IS A TEST ACTION BY USER");
         } catch (IllegalArgumentException o) {
             throw new IllegalArgumentException(o.getMessage());
         }

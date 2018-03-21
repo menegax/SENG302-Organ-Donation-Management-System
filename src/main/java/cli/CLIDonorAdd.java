@@ -38,7 +38,7 @@ class CLIDonorAdd implements Runnable {
         try {
             Database.addDonor(donor);
         } catch(IllegalArgumentException i){
-            userActions.log(Level.SEVERE, i.getMessage());
+            userActions.log(Level.SEVERE, i.getMessage(), "attempted to add donor");
         }
     }
 

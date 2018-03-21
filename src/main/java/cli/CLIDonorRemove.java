@@ -24,9 +24,9 @@ class CLIDonorRemove implements Runnable {
         try {
             Donor donor = Database.getDonorByNhi(nhi);
             Database.removeDonor(nhi);
-            userActions.log(Level.INFO, "Successfully removed " + donor);
+            userActions.log(Level.INFO, "Successfully removed donor " + donor.getNhiNumber(), "attempted to remove donor");
         } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, e.getMessage());
+            userActions.log(Level.SEVERE, e.getMessage(), "attempted to remove donor");
         }
     }
 
