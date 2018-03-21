@@ -14,6 +14,6 @@
       </Label>
       <Button layoutX="161.0" layoutY="136.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="79.0" prefWidth="111.0" text="Profile" />
       <Button layoutX="333.0" layoutY="135.0" mnemonicParsing="false" onAction="#goToHistory" prefHeight="79.0" prefWidth="110.0" text="History" />
-      <Label fx:id="logOut" alignment="CENTER" layoutX="14.0" layoutY="14.0" styleClass="back" text="〱 Log out" />
+      <Label fx:id="logOut" alignment="CENTER" layoutX="14.0" layoutY="14.0" onMouseClicked="#logOut" styleClass="back" text="〱 Log out" />
    </children>
 </AnchorPane>
