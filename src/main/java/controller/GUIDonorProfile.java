@@ -52,11 +52,11 @@ public class GUIDonorProfile {
 
     public void initialize() {
 
-        loadProfile("ABC1238");
+        loadProfile("ABC1238"); // todo remove
     }
 
     public void loadProfile(String nhi) {
-        try {
+        try { // todo remove this
             Donor donor = Database.getDonorByNhi(nhi);
 
             nhiLbl.setText(donor.getNhiNumber());
@@ -75,7 +75,7 @@ public class GUIDonorProfile {
                 donationList.setText(donationList.getText() + organ.getValue() + "\n");
             }
         } catch (InvalidObjectException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // todo remove
         }
     }
 
