@@ -57,15 +57,15 @@ public class GUIDonorProfile {
 
             nhiLbl.setText(donor.getNhiNumber());
             nameLbl.setText(donor.getNameConcatenated());
-            //genderLbl.setText(donor.getGender().getValue()); //TODO figure out enum string
+            genderLbl.setText(donor.getGender() == null ? "Not set" : donor.getGender().toString());
             dobLbl.setText(donor.getBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             heightLbl.setText(String.valueOf(donor.getHeight() + " kg"));
             weightLbl.setText(String.valueOf(donor.getWeight() + " m"));
-            //bloodGroupLbl.setText(donor.getBloodGroup().getValue());
-            addLbl1.setText(donor.getStreet1());
-            addLbl2.setText(donor.getStreet2());
-            addLbl3.setText(donor.getSuburb());
-            //addLbl4.setText(donor.getRegion().getValue());
+            bloodGroupLbl.setText(donor.getBloodGroup() == null ? "Not set" :  donor.getBloodGroup().getValue());
+            addLbl1.setText(donor.getStreet1() == null ? "Not set" : donor.getStreet1());
+            addLbl2.setText(donor.getStreet2() == null ? "Not set" : donor.getStreet2());
+            addLbl3.setText(donor.getSuburb() == null ? "Not set" : donor.getSuburb());
+            addLbl4.setText(donor.getRegion() == null ? "Not set" : donor.getRegion().getValue());
             addLbl5.setText(String.valueOf(donor.getZip()));
             for (GlobalEnums.Organ organ: donor.getDonations()) {
                 donationList.setText(donationList.getText() + organ.getValue() + "\n");
@@ -73,8 +73,6 @@ public class GUIDonorProfile {
         } catch(InvalidObjectException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public void goToHome() {
