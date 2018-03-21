@@ -113,12 +113,12 @@ public class GUIDonorRegister {
                 addDonorGui();
                 ScreenControl.activate("home"); //TODO: route to donations
             } catch (IllegalArgumentException e) {
-                userActions.log(Level.SEVERE, e.getMessage());
+                userActions.log(Level.SEVERE, e.getMessage(), "attempted to add donor from gui attributes");
                 alert.setContentText(e.getMessage());
                 alert.show();
             }
         } else {
-            userActions.log(Level.WARNING, "Not all fields were filled in");
+            userActions.log(Level.WARNING, "not all fields were filled in", "attempted to add donor from gui attributes");
             alert.setContentText("Enter all required fields.");
             alert.show();
         }

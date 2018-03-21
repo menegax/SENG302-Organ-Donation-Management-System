@@ -22,14 +22,14 @@ public class Main extends Application {
         primaryStage.setScene(rootScene); //set scene on primary stage
         ScreenControl.setRootScene(rootScene); // set this scene in screen controller
 
-        //TODO Remove below donor creation after testing
+        // TODO Remove below donor creation after testing
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
         Database.addDonor(new Donor("ABC1238", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
         Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.LIVER);
         Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.CORNEA);
 
-        //TODO: if you have a FXML file, please add it to the screen controller! ty :)
+        // Add FXML screens to ScreenControl
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
         ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
         ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
@@ -39,7 +39,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        UserActionHistory.setup(); // start logs
+        UserActionHistory.setup(); // start user action logs
         launch(args);
     }
 }

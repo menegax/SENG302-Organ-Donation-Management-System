@@ -26,7 +26,7 @@ public class Database {
             newDonor.ensureValidNhi();
             newDonor.ensureUniqueNhi();
             donors.add(newDonor);
-            userActions.log(Level.INFO,"Successfully added " + newDonor, "hello THIS IS A TEST ACTION BY USER");
+            userActions.log(Level.INFO,"Successfully added donor " + newDonor.getNhiNumber(), "attempted to add a donor");
         } catch (IllegalArgumentException o) {
             throw new IllegalArgumentException(o.getMessage());
         }
@@ -40,6 +40,7 @@ public class Database {
      */
     public static void removeDonor(String nhi) throws InvalidObjectException {
         donors.remove(Database.getDonorByNhi(nhi));
+        userActions.log(Level.INFO,"Successfully removed donor " + nhi, "attempted to remove a donor");
     }
 
     /**
@@ -65,7 +66,7 @@ public class Database {
         try {
             saveToDiskDonors();
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, e.getMessage());
+            userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
     }
 
@@ -91,7 +92,7 @@ public class Database {
         try {
             importFromDiskDonors(fileName);
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, e.getMessage());
+            userActions.log(Level.SEVERE, e.getMessage(), "attempted to import from disk");
         }
     }
 
