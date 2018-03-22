@@ -71,8 +71,8 @@ public class GUIDonorProfile {
             nameLbl.setText(donor.getNameConcatenated());
             genderLbl.setText(donor.getGender() == null ? "Not set" : donor.getGender().toString());
             dobLbl.setText(donor.getBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            heightLbl.setText(String.valueOf(donor.getHeight() + " kg"));
-            weightLbl.setText(String.valueOf(donor.getWeight() + " m"));
+            heightLbl.setText(String.valueOf(donor.getHeight() + " m"));
+            weightLbl.setText(String.valueOf(donor.getWeight() + " kg"));
             bloodGroupLbl.setText(donor.getBloodGroup() == null ? "Not set" : donor.getBloodGroup().getValue());
             addLbl1.setText(donor.getStreet1() == null ? "Not set" : donor.getStreet1());
             addLbl2.setText(donor.getStreet2() == null ? "Not set" : donor.getStreet2());
