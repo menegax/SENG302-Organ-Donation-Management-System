@@ -15,9 +15,9 @@
             <Font size="27.0" />
          </font>
       </Label>
-      <Button layoutX="207.0" layoutY="212.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="186.0" onAction="#logIn" text="Log In" />
+      <Button layoutX="207.0" layoutY="212.0" mnemonicParsing="false" onAction="#logIn" prefHeight="25.0" prefWidth="186.0" text="Log In" />
       <PasswordField alignment="CENTER" disable="true" layoutX="207.0" layoutY="175.0" prefHeight="25.0" prefWidth="186.0" promptText="Password" />
-      <TextField alignment="CENTER" layoutX="207.0" layoutY="140.0" prefHeight="25.0" prefWidth="186.0" promptText="NHI" />
+      <TextField fx:id="nhiLogin" alignment="CENTER" layoutX="207.0" layoutY="140.0" prefHeight="25.0" prefWidth="186.0" promptText="NHI" />
       <Hyperlink layoutX="278.0" layoutY="237.0" onAction="#goToRegister" text="Register">
          <font>
             <Font size="10.0" />
