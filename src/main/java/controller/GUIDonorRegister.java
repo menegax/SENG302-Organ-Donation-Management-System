@@ -110,6 +110,8 @@ public class GUIDonorRegister {
         if (!(hasAllRequired())) {
             try{
                 addDonorGui();
+                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Registered");
+                confirm.showAndWait();
                 ScreenControl.activate("login");
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, e.getMessage(), "attempted to add donor from gui attributes");
