@@ -23,6 +23,9 @@ public class GUIDonorHistory {
     @FXML
     private TableView<UserActionRecord> logHistoryTable;
 
+    /**
+     * Go to home page action listener for back button
+     */
     public void goToHome() {
         ScreenControl.activate("home");
     }
@@ -32,7 +35,9 @@ public class GUIDonorHistory {
     }
 
 
-
+    /**
+     * Populate
+     */
     public void populateTable(){
         timeStampColumn.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
         levelColumn.setCellValueFactory(new PropertyValueFactory<>("level"));
