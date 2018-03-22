@@ -8,7 +8,12 @@ import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
@@ -31,9 +36,9 @@ public class Donor {
 
     private Gender gender;
 
-    private double height;
+    private double height; //Height in meters
 
-    private double weight;
+    private double weight; //Weight in kilograms
 
     private BloodGroup bloodGroup;
 
@@ -101,28 +106,29 @@ public class Donor {
             if (globalEnum != null) {
                 setRegion((GlobalEnums.Region) globalEnum);
             } else{
-                userActions.log(Level.WARNING, "Invalid region, for help on what entries are valid, use donor update -h.");
+                userActions.log(Level.WARNING, "Invalid region", "attempted to update donor attributes");
             }
         }
         if (gender != null) {
             globalEnum = GlobalEnums.Gender.getEnumFromString(gender);
             if (globalEnum != null) setGender((GlobalEnums.Gender) globalEnum);
             else {
-                userActions.log(Level.WARNING, "Invalid gender, for help on what entries are valid, use donor update -h.");
+                userActions.log(Level.WARNING, "Invalid gender", "attempted to update donor attributes");
             }
         }
         if (bloodGroup != null) {
             globalEnum = GlobalEnums.BloodGroup.getEnumFromString(bloodGroup);
             if (globalEnum != null) setBloodGroup((GlobalEnums.BloodGroup) globalEnum);
             else{
-                userActions.log(Level.WARNING, "Invalid blood group, for help on what entries are valid, use donor update -h.");
+                userActions.log(Level.WARNING, "Invalid blood group", "attempted to update donor attributes");
             }
 
         }
         if (height > 0) setHeight(height);
         if (weight > 0) setWeight(weight);
         if (nhi != null) setNhiNumber(nhi);
-        userActions.log(Level.INFO, "Successfully updated " + getNameConcatenated() + "\n");
+        userActions.log(Level.INFO, "Successfully updated donor " + getNhiNumber(), "attempted to update donor attributes");
+        donorModified();
     }
 
     /**
@@ -135,10 +141,11 @@ public class Donor {
             for (String organ : newDonations) {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ); //null if invalid
                 if (organEnum == null) {
-                    userActions.log(Level.SEVERE, "Invalid organ " + organ + "given, hence was not added.");
+                    userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to donor donations");
                 }
                 else {
-                    userActions.log(Level.INFO, addDonation(organEnum));
+                    userActions.log(Level.INFO, addDonation(organEnum), "attempted to update donor donations");
+                    donorModified();
                 }
             }
         }
@@ -146,9 +153,10 @@ public class Donor {
             for (String organ : rmDonations) {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ);
                 if (organEnum == null) {
-                    userActions.log(Level.SEVERE,"Invalid organ " + organ + " given, hence was not removed.");
+                    userActions.log(Level.SEVERE,"Invalid organ \"" + organ + "\" given and not removed", "attempted to remove from donor donations");
                 } else {
-                    userActions.log(Level.INFO, removeDonation(organEnum));
+                    userActions.log(Level.INFO, removeDonation(organEnum), "attempted to remove from donor donations");
+                    donorModified();
                 }
             }
         }
@@ -261,6 +269,19 @@ public class Donor {
         }
     }
 
+    /**
+     * Calculates the donors current age. If the patient is living, it is the difference between the current datetime
+     * and their date of birth, else if they are dead it is the difference between their date of death and date of birth
+     * @return Their calculated age
+     */
+    public int getAge() {
+        if (this.death != null) {
+            return (int) ChronoUnit.YEARS.between(this.birth, this.death);
+        } else {
+            return (int) ChronoUnit.YEARS.between(this.birth, LocalDate.now());
+        }
+    }
+
     public Gender getGender() {
         return gender;
     }
@@ -292,6 +313,14 @@ public class Donor {
             this.weight = weight;
             donorModified();
         }
+    }
+
+    /**
+     * Calculates the Body Mass Index of the donor
+     * @return The calculated BMI
+     */
+    public double getBmi() {
+        return (this.weight / (Math.pow(this.height, 2)));
     }
 
     public BloodGroup getBloodGroup() {
@@ -360,7 +389,7 @@ public class Donor {
         }
     }
 
-    public String getAddress() {
+    public String getFormattedAddress() {
         return street1 + " " + street2 + " " + suburb + " " + region + " " + zip;
     }
 
@@ -379,8 +408,8 @@ public class Donor {
         } else {
             donations.add(organ);
             donorModified();
+            return "Successfully added " + organ + " to donations";
         }
-        return "Successfully added " + organ + " to donations";
     }
 
     /**
@@ -394,8 +423,9 @@ public class Donor {
             donorModified();
             return "Successfully removed " + organ + " from donations";
         }
-        else
-           return "Organ " + organ + " is not part of the donors donations, so could not be removed.";
+        else {
+            return "Organ " + organ + " is not part of the donors donations, so could not be removed.";
+        }
     }
 
     public String getNhiNumber() {
@@ -403,7 +433,7 @@ public class Donor {
     }
 
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
-        ensureValidNhi(); //TODO
+        ensureValidNhi(); // TODO
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
             this.nhiNumber = nhiNumber.toUpperCase();
             donorModified();

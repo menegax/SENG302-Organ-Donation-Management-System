@@ -24,20 +24,20 @@ public class CLIDonorView implements Runnable {
     public void run() {
         if (searchNhi != null) {
             try {
-                userActions.log(Level.INFO, Database.getDonorByNhi(searchNhi).toString());
+                userActions.log(Level.INFO, Database.getDonorByNhi(searchNhi).toString(), "attempted to view a particular donor");
             } catch (InvalidObjectException e) {
-                userActions.log(Level.SEVERE, e.getMessage());
+                userActions.log(Level.SEVERE, e.getMessage(), "attempted to view a particular donor");
             }
         }
         if (searchAll) {
             if (Database.getDonors().size() == 0) {
-                userActions.log(Level.INFO, "No donors in the database");
+                userActions.log(Level.INFO, "No donors in the database", "attempted to view all donors");
             } else {
-                userActions.log(Level.WARNING, Database.getDonors().toString());
+                userActions.log(Level.WARNING, Database.getDonors().toString(), "attempted to view all donors");
             }
         }
         if (searchNhi == null && !searchAll) {
-            userActions.log(Level.INFO, "donor view command invoked. Use donor view -h for help.");
+            userActions.log(Level.INFO, "use donor view -h for help", "donor view command invoked");
         }
     }
 

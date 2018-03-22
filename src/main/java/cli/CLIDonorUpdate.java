@@ -81,7 +81,7 @@ public class CLIDonorUpdate implements Runnable {
             donor.updateAttributes(firstName, lastName, middleNames, birth, death, street1,
                     street2, suburb, region, gender, bloodGroup, height, weight, nhi);
         } catch (InvalidObjectException | IllegalArgumentException e) {
-            userActions.log(Level.SEVERE, e.getMessage());
+            userActions.log(Level.SEVERE, e.getMessage(), "attempted to update donor attributes");
         }
     }
 

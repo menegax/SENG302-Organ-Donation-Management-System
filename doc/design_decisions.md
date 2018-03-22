@@ -51,24 +51,34 @@ We are manually testing saving and importing functionality from the Database cla
 
 After a discussion with Marina (senior tutor), we've decided that instead of testing the CLI by running its `main()` and 
 providing raw user input, we will instead assume the framework is fully functional, and test any internal method calls
-within the `run()` method for eachCLI command. This way we arere only unit testing internal methods.
+within the `run()` method for eachCLI command. This way we are only unit testing internal methods.
  
 ## Sprint 2
 9th to the 23rd of March
 
 #### JLine
-
 We decided to go with the JLine library for story 9 (command line history). We decided to use this over the other option of JNativeHook as 
 JLine provided a simple implementation of the history and solely required us to set up the terminal using JLine's terminal builder and Line Reader, whereas
 JNativeHook captured keypress events on a global level (Even if the terminal didn't have focus). This also would have then left us with the tasks of having to store the commands in a list as well as 
 creating functionality in which the keypress events would 'navigate' through that list and fill out the terminal command line. 
 
 #### IRD -> NHI Transition
-
 We decided to change form using IRD as the identifier of a donor to the NHI number. The IRD number is thus no longer used. The reason behind this is that it makes
 more sense in the context of a health app, and users may feel more comfortable provided a NHI number instead of an IRD number due to NHI's association with health rather than tax and finance.
+
 #### Logging and System Print Messages
 We've decided to use a logger to log all actions and/or events during the application session. 
 The logger has associated handlers and one of those outputs appropriate messages to console. 
 Therefore from this point on there should never be a System.out.println call in our entire codebase.
 Refer to the appropriate logger to log INFO, WARNING, etc and its respective filter for end-user output to console.
+
+#### GUI Back Button
+Each GUI screen other than the home screen should have a `back button` styled as a back button in the CSS class placed in the top left corner with text `〱back`
+
+#### GUI Method Names
+goToScreen() can be used as a method name only if the only code inside the method simply activates a new screen.
+
+See the GUIDonorRegister class for examples of goToLogin() and register()
+
+#### User Action History
+All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new donor would not be logged either.

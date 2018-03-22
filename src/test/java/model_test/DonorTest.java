@@ -2,12 +2,18 @@ package model_test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import model.Donor;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import service.Database;
 import utility.GlobalEnums.Organ;
+
+import static utility.UserActionHistory.userActions;
+
 
 import static org.junit.Assert.*;
 
@@ -16,10 +22,13 @@ public class DonorTest {
     private static Donor testDonor; //Donor obj not within the database
 
     /**
-     * Populate database with test donors
+     * Populate database with test donors and disables logging
      */
     @BeforeClass
     public static void setUp() {
+
+        userActions.setLevel(Level.OFF);
+
         testDonor = new Donor("ABC1234", "James", null, "Wallace",
                 LocalDate.of(1970, 2, 12));
 
@@ -141,6 +150,43 @@ public class DonorTest {
     public void testGetNameConcatenatedWithoutMiddles() {
         setDonorNamesNoMiddle();
         assertEquals("Joe Bloggs", testDonor.getNameConcatenated());
+    }
+
+    /**
+     * Checks correct age of deceased donor
+     */
+    @Test
+    public void testGetAge() {
+        testDonor.setDeath(LocalDate.of(2005, 5, 12));
+        assertEquals(35, testDonor.getAge());
+    }
+
+    /**
+     * Checks correct age of deceased donor who is just about to have a birthday
+     */
+    @Test
+    public void testGetAgeRightBeforeBirthday() {
+        testDonor.setDeath(LocalDate.of(2005, 2, 11));
+        assertEquals(34, testDonor.getAge());
+    }
+
+    /**
+     * Checks correct BMI for patient
+     */
+    @Test
+    public void testGetBmi() {
+        testDonor.setWeight(70.0);
+        testDonor.setHeight(1.80);
+        assertEquals(21.6, testDonor.getBmi(), 0.2);
+    }
+
+    /**
+     * Reset the logging level
+     */
+    @AfterClass
+    public static void tearDown() {
+
+        userActions.setLevel(Level.INFO);
     }
 
     /**

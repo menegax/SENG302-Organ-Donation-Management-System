@@ -4,18 +4,21 @@ If a story is ready for review, it should be set to "Pending" on Agilefant.
   
 Checklist
 
+- `development` has been merged into the branch
+- Regression testing done (latest GitLab build passed)
 - Story set to "Ready"
+- All story tasks set to "Done"
+- Ask team members for questions on implementation
 - Acceptance criteria reviewed and met
-- Story review (this DoD is part of it)
-- All tasks done
-- Tasks peer reviewed for code readability, refactoring, etc.
+- Code peer reviewed for readability, refactoring, etc.
+- All todo's are removed
+- JavaDoc added to appropriate methods and attributes
 - Unit tests implemented where necessary
 - Manual tests documented and performed
 - Design decisions documented
-- JavaDoc added to appropriate methods and attributes
-- Regression testing done
 - Maven deploy and verify working .jar(s)
 
-If it passes, do:
-- Set story to "Done"
+If it passes:
+
 - Merge to `development`
+- If build succeeds, set story to "Done"
