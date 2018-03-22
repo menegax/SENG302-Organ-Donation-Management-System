@@ -88,7 +88,6 @@ public class GUIDonorRegister {
                     return "";
                 }
             }
-
             @Override
             public LocalDate fromString(String string) {
                 if (string != null && !string.isEmpty()) {
@@ -103,10 +102,10 @@ public class GUIDonorRegister {
 
 
     /**
-     * Check users inputs and proceeds to the donations screen
+     * Check users inputs and registers the user donor profile
      */
     @FXML
-    public void goToDonations(){
+    public void register(){
         Alert alert = new Alert(Alert.AlertType.WARNING, "");
         if (!(hasAllRequired())) {
             try{
@@ -118,7 +117,6 @@ public class GUIDonorRegister {
                 alert.show();
             }
         } else {
-            userActions.log(Level.WARNING, "not all fields were filled in", "attempted to add donor from gui attributes");
             alert.setContentText("Enter all required fields.");
             alert.show();
         }

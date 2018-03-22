@@ -25,7 +25,7 @@ public class UserActionHistory {
         // File history handler
         userActions.addHandler(new Handler() {
             public void publish(LogRecord logRecord) {
-                LocalDateTime currentTimeStamp = new Timestamp(System.currentTimeMillis() / 1000).toLocalDateTime();
+                Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
                 UserActionRecord.logHistory.add(new UserActionRecord(String.valueOf(currentTimeStamp),
                         logRecord.getLevel().toString(),logRecord.getParameters()[0].toString(),logRecord.getMessage()));
             }
