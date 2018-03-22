@@ -14,10 +14,12 @@ last update 03/08/2018
  
  ### Setup
  
- 1. Deploy the .jar file using Maven
- 2. Run command `java -jar <pathtojar>` to begin the console application
- 3. Type "quit" at any time into the command line to quit the application
- 4. Use `-h` for help
+ 1. Deploy the .jar file(s) using Maven
+ 2. Run the terminal command `java -jar <pathtojar>` to begin the application
+ 
+ If you are running the CLI app:
+ * Type "quit" at any time into the command line to quit the application
+ * Use `-h` for help for any command or sub-command
  
  ### Available CLI Commands
  
@@ -33,5 +35,7 @@ last update 03/08/2018
  ### Dependencies
  
  * JUnit
+ * JLine
  * Picocli
  * Gson
+ * StringUtils
