@@ -1,13 +1,20 @@
 package controller;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import model.Donor;
 import service.Database;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import utility.GlobalEnums;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 import static controller.ScreenControl.donor;
 
@@ -56,7 +63,7 @@ public class GUIDonorProfile {
         loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
     }
 
-    public void loadProfile(String nhi) {
+    private void loadProfile(String nhi) {
         try { // todo remove this
             Donor donor = Database.getDonorByNhi(nhi);
 
@@ -77,6 +84,30 @@ public class GUIDonorProfile {
             }
         } catch (InvalidObjectException e) {
             e.printStackTrace(); // todo remove
+        }
+    }
+
+    public void goToEdit() {
+        ScreenControl.removeScreen("donorProfileUpdate");
+        try {
+            ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorProfileUpdate.fxml")));
+            ScreenControl.activate("donorProfileUpdate");
+        }catch (IOException e) {
+            userActions.log(Level.SEVERE, "Error loading update screen", "attempted to navigate from the profile page to the edit page");
+            new Alert(Alert.AlertType.WARNING, "ERROR loading edit page", ButtonType.OK).showAndWait();
+            e.printStackTrace();
+        }
+    }
+
+    public void goToDonations() {
+        ScreenControl.removeScreen("donorDonations");
+        try {
+            ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorDonations.fxml")));
+            ScreenControl.activate("donorDonations");
+        }catch (IOException e) {
+            userActions.log(Level.SEVERE, "Error loading donation screen", "attempted to navigate from the profile page to the donation page");
+            new Alert(Alert.AlertType.WARNING, "ERROR loading donation page", ButtonType.OK).showAndWait();
+            e.printStackTrace();
         }
     }
 
