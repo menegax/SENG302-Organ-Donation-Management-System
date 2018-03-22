@@ -9,6 +9,8 @@ import utility.GlobalEnums;
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
 
+import static controller.ScreenControl.donor;
+
 public class GUIDonorProfile {
 
     @FXML
@@ -51,8 +53,7 @@ public class GUIDonorProfile {
     private Label donationList;
 
     public void initialize() {
-
-        loadProfile("ABC1238"); // todo remove
+        loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
     }
 
     public void loadProfile(String nhi) {

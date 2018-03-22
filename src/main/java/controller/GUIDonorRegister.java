@@ -111,7 +111,7 @@ public class GUIDonorRegister {
         if (!(hasAllRequired())) {
             try{
                 addDonorGui();
-                ScreenControl.activate("home"); //TODO: route to donations
+                ScreenControl.activate("login");
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, e.getMessage(), "attempted to add donor from gui attributes");
                 alert.setContentText(e.getMessage());

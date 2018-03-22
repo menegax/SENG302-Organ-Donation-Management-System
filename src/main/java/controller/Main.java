@@ -31,9 +31,7 @@ public class Main extends Application {
 
         // Add FXML screens to ScreenControl
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
         ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
-        ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
         ScreenControl.addScreen("home", FXMLLoader.load(getClass().getResource("/scene/home.fxml")));
         primaryStage.show();
     }

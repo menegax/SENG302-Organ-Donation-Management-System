@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import model.Donor;
@@ -34,6 +35,8 @@ public class GUILogin {
             Donor newDonor = Database.getDonorByNhi(nhiLogin.getText());
             ScreenControl.setLoggedInDonor(newDonor);
             ScreenControl.activate("home");
+            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+            ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
         } catch (Exception e) {
             userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
             Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to log in");

@@ -3,16 +3,16 @@ package utility;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class CustomLogRecord {
+public class UserActionRecord {
 
     private String timestamp;
     private String level;
     private String message;
     private String action;
 
-    public static ObservableList<CustomLogRecord> logHistory = FXCollections.observableArrayList();
+    public static ObservableList<UserActionRecord> logHistory = FXCollections.observableArrayList();
 
-    CustomLogRecord(String timestamp, String level, String message, String action){
+    UserActionRecord(String timestamp, String level, String message, String action){
         this.timestamp = timestamp;
         this.level = level;
         this.message = message;
