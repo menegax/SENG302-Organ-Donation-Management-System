@@ -1,6 +1,10 @@
 package utility;
 
+import com.google.gson.JsonObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.*;
 
 public class UserActionHistory {
@@ -10,6 +14,8 @@ public class UserActionHistory {
      */
     public static final Logger userActions = Logger.getLogger(UserActionHistory.class.getName());
 
+    public static List<JsonObject> logHistory = new ArrayList<>();
+
     private static FormatterLog logFormat = new FormatterLog();
 
     /**
@@ -18,6 +24,23 @@ public class UserActionHistory {
      */
     static public void setup() {
         userActions.setUseParentHandlers(false); // disables default console userActions in parent
+
+        // File history handler
+        userActions.addHandler(new Handler() {
+            public void publish(LogRecord logRecord) {
+                JsonObject jsonLog = new JsonObject();
+                jsonLog.addProperty("level", logRecord.getLevel().toString());
+                jsonLog.addProperty("message", logRecord.getMessage());
+                jsonLog.addProperty("timestamp", logRecord.getMessage());
+                logHistory.add(jsonLog);
+            }
+            @Override
+            public void flush() {
+            }
+            @Override
+            public void close() throws SecurityException {
+            }
+        });
 
         // Console handler
         Handler console = new ConsoleHandler();
