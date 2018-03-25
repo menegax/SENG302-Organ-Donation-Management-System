@@ -18,7 +18,7 @@ Checklist
 - Design decisions documented
 - Maven deploy and verify working .jar(s)
 - Previous stories that are required to support future implementation are adapted (e.g. Undo/redo should work with this new story (if applicable))
-- GUIs include CSS
+- GUIs include CSS where applicable
 
 If it passes:
 
