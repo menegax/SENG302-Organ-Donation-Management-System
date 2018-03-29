@@ -45,7 +45,7 @@ public class UserActionHistory {
 
         // File handler
         try {
-            Handler file = new FileHandler("UserActionHistory%u.%u.xml", true);
+            Handler file = new FileHandler("UserActionHistory%u.xml", true);
             userActions.addHandler(file);
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Unable to write log to file");
