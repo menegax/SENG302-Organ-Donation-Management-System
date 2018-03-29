@@ -3,13 +3,11 @@ Before work on a story can begin the following list must be followed.
 
 ### Checklist
 
-- Team has discussed implementation
+- Implementation has been discussed
 - Testing such implementation has been discussed
 - Questions that arose have been asked of the PO / tutors
 - Tasks have been generated
-- Tasks have been assigned
 - Each task has been given an estimated effort (hrs)
-- Everyone on the team has agreed
 - Story has been merged to development
 
 ### Code review prep
@@ -18,4 +16,4 @@ Before work on a story can begin the following list must be followed.
 - A primary reviewer has been assigned by the person(s) implementing the feature
 
 
-THEN set story to "Ready" or "In Prog\ess" if implementing immediately
+THEN set story to "Ready" or "In Progress" if implementing immediately
