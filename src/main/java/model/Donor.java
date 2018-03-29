@@ -54,6 +54,10 @@ public class Donor {
 
     private String nhiNumber;
 
+    private ArrayList<Medication> currentMedications;
+
+    private ArrayList<Medication> medicationHistory;
+
     public Donor(String nhiNumber, String firstName,
                  ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
@@ -378,6 +382,22 @@ public class Donor {
         return zip;
     }
 
+    /**
+     * Gets the current medication list for a Donor
+     * @return ArrayList medications the Donor currently uses
+     */
+    public ArrayList<Medication> getCurrentMedications() {
+        return currentMedications;
+    }
+
+    /**
+     * Gets the medication history for a Donor
+     * @return ArrayList medications the Donor used to use
+     */
+    public ArrayList<Medication> getMedicationHistory() {
+        return medicationHistory;
+    }
+
     public void setZip(int zip) {
         if (this.zip != zip) {
             this.zip = zip;
@@ -434,6 +454,22 @@ public class Donor {
             this.nhiNumber = nhiNumber.toUpperCase();
             donorModified();
         }
+    }
+
+    /**
+     * Sets the current medication list for a Donor
+     * @param currentMedications medications to set as current for the Donor
+     */
+    public void setCurrentMedications(ArrayList<Medication> currentMedications) {
+        this.currentMedications = currentMedications;
+    }
+
+    /**
+     * Sets the medication history for a Donor
+     * @param medicationHistory medication list to set as history for a Donor
+     */
+    public void setMedicationHistory(ArrayList<Medication> medicationHistory) {
+        this.medicationHistory = medicationHistory;
     }
 
     private void donorModified() {
