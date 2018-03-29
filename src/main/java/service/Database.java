@@ -1,21 +1,27 @@
 package service;
 
 import com.google.gson.Gson;
+import model.Clinician;
 import model.Donor;
+import utility.GlobalEnums;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
 public class Database {
 
     private static HashSet<Donor> donors = new HashSet<>();
+    private static HashSet<Clinician> clinicians = new HashSet<>();
 
     public static HashSet<Donor> getDonors() {
         return donors;
     }
+    public static HashSet<Clinician> getClinicians() { return clinicians; }
 
     /**
      * Adds a donor to the database
@@ -57,6 +63,28 @@ public class Database {
             }
         }
         throw new InvalidObjectException("Donor with NHI number " + nhi + " does not exist.");
+    }
+
+    public static void addClinician(int staffID, String firstName, ArrayList<String> middleNames, String lastName, GlobalEnums.Region region) throws IllegalArgumentException {
+        Database.addClinician(staffID, firstName, middleNames, lastName, null, null, null, region);
+    }
+
+    public static void addClinician(int staffID, String firstName, ArrayList<String> middleNames, String lastName, String street1, String street2, String suburb, GlobalEnums.Region region) throws IllegalArgumentException {
+        if (!isUniqueStaffID(staffID)) throw new IllegalArgumentException("Clinician with staff ID " + staffID + " already exists");
+        if (!Pattern.matches("^[-a-zA-Z]+$", firstName)) throw new IllegalArgumentException("Invalid first name");
+        if (!Pattern.matches("^[-a-zA-Z]+$", lastName)) throw new IllegalArgumentException("Invalid last name");
+        if (street1 != null && !Pattern.matches("^[- a-zA-Z0-9]+$", street1)) throw new IllegalArgumentException("Invalid street address");
+
+        clinicians.add(new Clinician(staffID, firstName, middleNames, lastName, street1, street2, suburb, region));
+    }
+
+    private static boolean isUniqueStaffID(int id) {
+        for (Clinician clinician : clinicians) {
+            if (clinician.getStaffID() == id) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
