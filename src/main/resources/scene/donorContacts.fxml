@@ -10,19 +10,19 @@
     <children>
         <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToProfile" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
         <Label alignment="CENTER" layoutX="192.0" layoutY="23.0" prefHeight="55.0" prefWidth="217.0" styleClass="title" stylesheets="@../css/guiStyle.css" text="Contact Details" />
-        <Button layoutX="463.0" layoutY="341.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Save" />
+        <Button layoutX="463.0" layoutY="341.0" mnemonicParsing="false" onAction="#saveContactDetails" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Save" />
         <VBox layoutX="75.0" layoutY="100.0" prefHeight="200.0" prefWidth="190.0" spacing="1.0" stylesheets="@../css/guiStyle.css">
          <children>
             <Label alignment="CENTER" text="Donor Home Phone:" />
             <TextField fx:id="homePhoneField" />
             <Label text="Donor Mobile Phone:" />
-            <TextField fx:id="emailField" />
-            <Label text="Donor Work Phone:" />
             <TextField fx:id="mobilePhoneField" />
-            <Label text="Donor Email Address:" />
+            <Label text="Donor Work Phone:" />
             <TextField fx:id="workPhoneField" />
+            <Label text="Donor Email Address:" />
+            <TextField fx:id="emailAddressField" />
             <Label text="Emergency Contact Relationship:" />
-            <TextField />
+            <TextField fx:id="contactRelationshipField" layoutX="10.0" layoutY="191.0" />
          </children>
         </VBox>
         <VBox layoutX="325.0" layoutY="100.0" prefHeight="200.0" prefWidth="190.0" spacing="1.0">
