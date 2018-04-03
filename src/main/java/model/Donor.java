@@ -54,6 +54,26 @@ public class Donor {
 
     private String nhiNumber;
 
+    private String homePhone;
+
+    private String mobilePhone;
+
+    private String workPhone;
+
+    private String emailAddress;
+
+    private String contactName;
+
+    private String contactRelationship;
+
+    private String contactHomePhone;
+
+    private String contactMobilePhone;
+
+    private String contactWorkPhone;
+
+    private String contactEmailAddress;
+
     private ArrayList<Medication> currentMedications;
 
     private ArrayList<Medication> medicationHistory;
@@ -129,6 +149,35 @@ public class Donor {
         if (nhi != null) setNhiNumber(nhi);
         userActions.log(Level.INFO, "Successfully updated donor " + getNhiNumber(), "attempted to update donor attributes");
         donorModified();
+    }
+
+    /**
+     * Sets contact details of a donor, including details of the donor's emergency contact
+     * @param homePhone home phone
+     * @param mobilePhone mobile phone
+     * @param workPhone work phone
+     * @param emailAddress email address
+     * @param contactName emergency contact name
+     * @param contactRelationship emergency contact relationship
+     * @param contactHomePhone emergency contact home phone
+     * @param contactMobilePhone emergency contact mobile phone
+     * @param contactWorkPhone emergency contact work phone
+     * @param contactEmailAddress emergency contact email address
+     */
+    public void updateContactDetails(String homePhone, String mobilePhone, String workPhone,
+                                     String emailAddress, String contactName, String contactRelationship,
+                                     String contactHomePhone, String contactMobilePhone,
+                                     String contactWorkPhone, String contactEmailAddress) {
+        if(homePhone != null) setHomePhone(homePhone);
+        if(mobilePhone != null) setMobilePhone(mobilePhone);
+        if(workPhone != null) setWorkPhone(workPhone);
+        if(emailAddress != null) setEmailAddress(emailAddress);
+        if(contactName != null) setContactName(contactName);
+        if(contactRelationship != null) setContactRelationship(contactRelationship);
+        if(contactHomePhone != null) setContactHomePhone(contactHomePhone);
+        if(contactMobilePhone != null) setContactMobilePhone(contactMobilePhone);
+        if(contactWorkPhone != null) setContactWorkPhone(contactWorkPhone);
+        if(contactEmailAddress != null) setContactEmailAddress(contactEmailAddress);
     }
 
     /**
@@ -470,6 +519,86 @@ public class Donor {
      */
     public void setMedicationHistory(ArrayList<Medication> medicationHistory) {
         this.medicationHistory = medicationHistory;
+    }
+
+    public String getHomePhone() {
+        return homePhone;
+    }
+
+    public void setHomePhone(String homePhone) {
+        this.homePhone = homePhone;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getWorkPhone() {
+        return workPhone;
+    }
+
+    public void setWorkPhone(String workPhone) {
+        this.workPhone = workPhone;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public String getContactRelationship() {
+        return contactRelationship;
+    }
+
+    public void setContactRelationship(String contactRelationship) {
+        this.contactRelationship = contactRelationship;
+    }
+
+    public String getContactHomePhone() {
+        return contactHomePhone;
+    }
+
+    public void setContactHomePhone(String contactHomePhone) {
+        this.contactHomePhone = contactHomePhone;
+    }
+
+    public String getContactMobilePhone() {
+        return contactMobilePhone;
+    }
+
+    public void setContactMobilePhone(String contactMobilePhone) {
+        this.contactMobilePhone = contactMobilePhone;
+    }
+
+    public String getContactWorkPhone() {
+        return contactWorkPhone;
+    }
+
+    public void setContactWorkPhone(String contactWorkPhone) {
+        this.contactWorkPhone = contactWorkPhone;
+    }
+
+    public String getContactEmailAddress() {
+        return contactEmailAddress;
+    }
+
+    public void setContactEmailAddress(String contactEmailAddress) {
+        this.contactEmailAddress = contactEmailAddress;
     }
 
     private void donorModified() {
