@@ -82,3 +82,11 @@ See the GUIDonorRegister class for examples of goToLogin() and register()
 
 #### User Action History
 All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new donor would not be logged either.
+
+##Sprint 3
+23rd of March to 11th of April
+
+####Donor Contact Details
+Contact Details for a Donor are updated in a separate update method. This is because as contact details are implemented solely in the GUI application, and so will only need handling there.
+
+For viewing a Donor's contact details, a new window is shown for both editing and viewing contact details. This is to reduce clutter in the profile view screen.

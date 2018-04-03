@@ -109,6 +109,18 @@ public class GUIDonorProfile {
         }
     }
 
+    public void goToContactDetails() {
+        ScreenControl.removeScreen("donorContactDetails");
+        try {
+            ScreenControl.addScreen("donorContactDetails", FXMLLoader.load(getClass().getResource("/scene/donorContacts.fxml")));
+            ScreenControl.activate("donorContactDetails");
+        } catch(IOException e) {
+            userActions.log(Level.SEVERE, "Error loading contact details screen", "attempted to navigate from the profile page to the contact details page");
+            new Alert(Alert.AlertType.WARNING, "ERROR loading contact details page", ButtonType.OK).showAndWait();
+            e.printStackTrace();
+        }
+    }
+
     public void goToHome() {
         ScreenControl.activate("home");
     }
