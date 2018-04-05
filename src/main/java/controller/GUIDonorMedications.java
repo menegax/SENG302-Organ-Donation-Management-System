@@ -11,10 +11,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import model.Donor;
+import model.Medication;
 import service.Database;
 import java.awt.event.ActionEvent;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -52,17 +54,19 @@ public class GUIDonorMedications {
 
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
-    private ArrayList<String> current = new ArrayList<>(); // Under the assumption that medications arrays will be String and not model
-    private ArrayList<String> history = new ArrayList<>(); // Under the assumption that medications arrays will be String and not model
+    private ArrayList<String> current = new ArrayList<>();
+    private ArrayList<String> history = new ArrayList<>();
     private Donor target;
 
     @FXML
     public void initialize() {
         try {
             target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor().getNhiNumber());
-            current = target.getCurrentMedications();
+            //current = target.getCurrentMedications();
+            target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
             viewCurrentMedications();
-            history = target.getMedicationHistory();
+            //history = target.getMedicationHistory();
+            target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
             viewPastMedications();
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the medications for logged in user");
@@ -70,7 +74,7 @@ public class GUIDonorMedications {
         }
     }
 
-    public void saveMedications() {
+    public void saveMedications() { // CURRENTLY STILL RESEARCHING THE CORRECT METHOD(S) FOR THIS
         // on mouse click of registerMedication button
         //registerMedication(event);
 
@@ -89,9 +93,9 @@ public class GUIDonorMedications {
      * Displays the retrieved medications to the currentMedications listView.
      */
     private void viewCurrentMedications() {
-        currentListProperty.set( FXCollections.observableArrayList(current)); // Under the assumption that medications arrays will be String and not model
+        currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
-        target.setCurrentMedications(current);
+        target.setCurrentMedications(current); // REQUIRES CONVERTING ARRAYLIST TYPE STRING TO TYPE MEDICATION - NOT COMPLETED
     }
 
     /**
@@ -99,9 +103,9 @@ public class GUIDonorMedications {
      * Displays the retrieved medications to the pastMedications listView
      */
     private void viewPastMedications() {
-        historyListProperty.set( FXCollections.observableArrayList(history)); // Under the assumption that medications arrays will be String and not model
+        historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
-        target.setMedicationHistory(history);
+        target.setMedicationHistory(new ArrayList<Medication>(history)); // REQUIRES CONVERTING ARRAYLIST TYPE STRING TO TYPE MEDICATION - NOT COMPLETED
     }
 
     /**
@@ -110,7 +114,7 @@ public class GUIDonorMedications {
      *
      * @param medication The selected medication being added to the current ArrayList and listView
      */
-    private void addMedication(String medication) { // Under the assumption that medications arrays will be String and not model
+    private void addMedication(String medication) {
         if (!medication.equals("Enter a medication") && !medication.equals("") && !medication.equals(" ")) { // This could maybe do with some more thought
             if (!current.contains(medication) && !history.contains(medication)) {
                 current.add(medication);
@@ -125,7 +129,7 @@ public class GUIDonorMedications {
      *
      * @param medication The selected medication being removed from the history ArrayList and listView
      */
-    private void removeMedication(String medication) { // Under the assumption that medications arrays will be String and not model
+    private void removeMedication(String medication) {
         if (history.contains(medication)) {
             history.remove( medication );
             viewPastMedications();
@@ -138,7 +142,7 @@ public class GUIDonorMedications {
      *
      * @param medication The selected medication being moved from history to current ArrayLists and listViews
      */
-    private void moveToCurrent(String medication) { // Under the assumption that medications arrays will be String and not model
+    private void moveToCurrent(String medication) {
         if (history.contains(medication)) {
             history.remove( medication );
 
@@ -156,7 +160,7 @@ public class GUIDonorMedications {
      *
      * @param medication The selected medication being moved from current to history ArrayLists and listViews
      */
-    private void moveToHistory(String medication) { // Under the assumption that medications arrays will be String and not model
+    private void moveToHistory(String medication) {
         if (current.contains(medication)) {
             current.remove( medication );
 
