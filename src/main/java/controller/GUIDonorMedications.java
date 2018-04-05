@@ -4,25 +4,16 @@
 
 package controller;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.io.InvalidObjectException;
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 import model.Donor;
-import model.Medication;
 import service.Database;
-
-import javax.swing.text.html.ListView;
+import java.awt.event.ActionEvent;
+import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -31,38 +22,38 @@ import static utility.UserActionHistory.userActions;
 public class GUIDonorMedications {
 
     @FXML
-    private TextField newMedication;
+    private TextField newMedication; // The textField that new medications are entered into for adding to the currentMedications ArrayList and listView
 
     @FXML
-    private ListView currentMedications;
+    private ListView<String> currentMedications; // A listView for showing the current medications
 
     @FXML
-    private ListView pastMedications;
+    private ListView<String> pastMedications; // A listView for showing the past medications
 
     @FXML
     void deleteMedication(ActionEvent event) {
-        removeMedication(pastMedications.getSelectionModel().getSelectedItem().getText()); // found 'getSelectionModel().getSelectedItem() researching online. getText() is a guess
+        removeMedication(pastMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
     }
 
     @FXML
     void makeCurrent(ActionEvent event) {
-        moveToCurrent(pastMedications.getSelectionModel().getSelectedItem().getText()); // found 'getSelectionModel().getSelectedItem() researching online. getText() is a guess
+        moveToCurrent(pastMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
     }
 
     @FXML
     void makeHistory(ActionEvent event) {
-        moveToHistory(currentMedications.getSelectionModel().getSelectedItem().getText()); // found 'getSelectionModel().getSelectedItem() researching online. getText() is a guess
+        moveToHistory(currentMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
     }
 
     @FXML
     void registerMedication(ActionEvent event) {
         addMedication(newMedication.getText());
-    }
+    } // Adds a newly entered medication to the current medications array and the listView for the current medications
 
-    private ListProperty<String> currentListProperty = new SimpleListProperty<>(); // Not tested
-    private ListProperty<String> historyListProperty = new SimpleListProperty<>(); // Not tested
-    private ArrayList<Medication> current = new ArrayList<>();
-    private ArrayList<Medication> history = new ArrayList<>();
+    private ListProperty<String> currentListProperty = new SimpleListProperty<>();
+    private ListProperty<String> historyListProperty = new SimpleListProperty<>();
+    private ArrayList<String> current = new ArrayList<>(); // Under the assumption that medications arrays will be String and not model
+    private ArrayList<String> history = new ArrayList<>(); // Under the assumption that medications arrays will be String and not model
     private Donor target;
 
     @FXML
@@ -74,44 +65,106 @@ public class GUIDonorMedications {
             history = target.getMedicationHistory();
             viewPastMedications();
         } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
+            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the medications for logged in user");
             e.printStackTrace();
         }
     }
 
+    public void saveMedications() {
+        // on mouse click of registerMedication button
+        //registerMedication(event);
+
+        // on mouse click of deleteMedication button
+        //deleteMedication(event);
+
+        // on mouse click of makeCurrent button
+        //makeCurrent(event);
+
+        // on mouse click of makeHistory button
+        //makeHistory(event);
+    }
+
+    /**
+     * Retrieves the medications stored in the currentMedications ArrayList.
+     * Displays the retrieved medications to the currentMedications listView.
+     */
     private void viewCurrentMedications() {
-        currentListProperty.set(FXCollections.observableArrayList(current)); // Not tested
-        currentMedications.itemsProperty().bind(currentListProperty); // Not tested
+        currentListProperty.set( FXCollections.observableArrayList(current)); // Under the assumption that medications arrays will be String and not model
+        currentMedications.itemsProperty().bind(currentListProperty);
         target.setCurrentMedications(current);
     }
 
+    /**
+     * Retrieves the medications stored in the medicationHistory ArrayList
+     * Displays the retrieved medications to the pastMedications listView
+     */
     private void viewPastMedications() {
-        historyListProperty.set(FXCollections.observableArrayList(history)); // Not tested
-        pastMedications.itemsProperty().bind(historyListProperty); // Not tested
+        historyListProperty.set( FXCollections.observableArrayList(history)); // Under the assumption that medications arrays will be String and not model
+        pastMedications.itemsProperty().bind(historyListProperty);
         target.setMedicationHistory(history);
     }
 
-    private void addMedication(String medication) {
-        if (!medication.equals("Enter a medication") && !medication.equals("")) {
-            ; //if (mediation NOT IN current or pastMedications) { add new med to current meds Array list}
+    /**
+     * Adds a new medication to the currentMedications ArrayList
+     * Resets the currentMedications ListView to display the new medication
+     *
+     * @param medication The selected medication being added to the current ArrayList and listView
+     */
+    private void addMedication(String medication) { // Under the assumption that medications arrays will be String and not model
+        if (!medication.equals("Enter a medication") && !medication.equals("") && !medication.equals(" ")) { // This could maybe do with some more thought
+            if (!current.contains(medication) && !history.contains(medication)) {
+                current.add(medication);
+                viewCurrentMedications();
+            }
         }
-        viewCurrentMedications();
     }
 
-    private void removeMedication(String medication) {
-        ; // remove the medication from the history array list. Can only be deleted from history is my assumption
-        viewPastMedications();
+    /**
+     * Removes a selected medication from the medicationHistory ArrayList
+     * Resets the pastMedications ListView to display medicationHistory after the medication is removed
+     *
+     * @param medication The selected medication being removed from the history ArrayList and listView
+     */
+    private void removeMedication(String medication) { // Under the assumption that medications arrays will be String and not model
+        if (history.contains(medication)) {
+            history.remove( medication );
+            viewPastMedications();
+        }
     }
 
-    private void moveToCurrent(String medication) {
-        ; // remove the med from history, and add to current
-        viewPastMedications();
-        viewCurrentMedications();
+    /**
+     * Removes a selected medication from currentMedications ArrayList and adds the medication to medicationHistory ArrayList
+     * Updates the listViews for each of current and past medications to match the changes in the respective ArrayLists
+     *
+     * @param medication The selected medication being moved from history to current ArrayLists and listViews
+     */
+    private void moveToCurrent(String medication) { // Under the assumption that medications arrays will be String and not model
+        if (history.contains(medication)) {
+            history.remove( medication );
+
+            if (!current.contains(medication)) {
+                current.add( medication );
+                viewCurrentMedications();
+            }
+            viewPastMedications();
+        }
     }
 
-    private void moveToHistory(String medication) {
-        ; // remove the med from current, and add to history
-        viewPastMedications();
-        viewCurrentMedications();
+    /**
+     * Removes a selected medication from medicationHistory ArrayList and adds the medication to currentMedications ArrayList
+     * Updates the listViews for each of past and current medications to match the changes in the respective ArrayLists
+     *
+     * @param medication The selected medication being moved from current to history ArrayLists and listViews
+     */
+    private void moveToHistory(String medication) { // Under the assumption that medications arrays will be String and not model
+        if (current.contains(medication)) {
+            current.remove( medication );
+
+            if (!history.contains(medication)) {
+                history.add( medication );
+                viewPastMedications();
+            }
+            viewCurrentMedications();
+        }
     }
 }
