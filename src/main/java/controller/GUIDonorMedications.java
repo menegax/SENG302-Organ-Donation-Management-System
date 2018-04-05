@@ -11,12 +11,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import model.Donor;
-import model.Medication;
 import service.Database;
+
 import java.awt.event.ActionEvent;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -33,17 +32,17 @@ public class GUIDonorMedications {
     private ListView<String> pastMedications; // A listView for showing the past medications
 
     @FXML
-    void deleteMedication(ActionEvent event) {
+    void deleteMedication(ActionEvent event) { // Removes a medication from the history ArrayList and listView
         removeMedication(pastMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
     }
 
     @FXML
-    void makeCurrent(ActionEvent event) {
+    void makeCurrent(ActionEvent event) { // Swaps a medication in history to current ArrayList and listView
         moveToCurrent(pastMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
     }
 
     @FXML
-    void makeHistory(ActionEvent event) {
+    void makeHistory(ActionEvent event) { // Swaps a medication in current to history ArrayList and listView
         moveToHistory(currentMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
     }
 
@@ -62,11 +61,7 @@ public class GUIDonorMedications {
     public void initialize() {
         try {
             target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor().getNhiNumber());
-            //current = target.getCurrentMedications();
-            target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
             viewCurrentMedications();
-            //history = target.getMedicationHistory();
-            target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
             viewPastMedications();
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the medications for logged in user");
@@ -74,28 +69,14 @@ public class GUIDonorMedications {
         }
     }
 
-    public void saveMedications() { // CURRENTLY STILL RESEARCHING THE CORRECT METHOD(S) FOR THIS
-        // on mouse click of registerMedication button
-        //registerMedication(event);
-
-        // on mouse click of deleteMedication button
-        //deleteMedication(event);
-
-        // on mouse click of makeCurrent button
-        //makeCurrent(event);
-
-        // on mouse click of makeHistory button
-        //makeHistory(event);
-    }
-
     /**
      * Retrieves the medications stored in the currentMedications ArrayList.
      * Displays the retrieved medications to the currentMedications listView.
      */
     private void viewCurrentMedications() {
+        target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
-        target.setCurrentMedications(current); // REQUIRES CONVERTING ARRAYLIST TYPE STRING TO TYPE MEDICATION - NOT COMPLETED
     }
 
     /**
@@ -103,9 +84,9 @@ public class GUIDonorMedications {
      * Displays the retrieved medications to the pastMedications listView
      */
     private void viewPastMedications() {
+        target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
-        target.setMedicationHistory(new ArrayList<Medication>(history)); // REQUIRES CONVERTING ARRAYLIST TYPE STRING TO TYPE MEDICATION - NOT COMPLETED
     }
 
     /**
@@ -117,7 +98,7 @@ public class GUIDonorMedications {
     private void addMedication(String medication) {
         if (!medication.equals("Enter a medication") && !medication.equals("") && !medication.equals(" ")) { // This could maybe do with some more thought
             if (!current.contains(medication) && !history.contains(medication)) {
-                current.add(medication);
+                //target.setCurrentMedications(target.getCurrentMedications().add( ????? medication ????? ); // ADD THE NEW MEDICATION TO target's currentMedications
                 viewCurrentMedications();
             }
         }
@@ -131,7 +112,7 @@ public class GUIDonorMedications {
      */
     private void removeMedication(String medication) {
         if (history.contains(medication)) {
-            history.remove( medication );
+            //target.setMedicationHistory(target.getMedicationHistory().remove( ????? medication ????? ); // REMOVE THE SELECTED MEDICATION FROM target's medicationHistory
             viewPastMedications();
         }
     }
@@ -144,13 +125,13 @@ public class GUIDonorMedications {
      */
     private void moveToCurrent(String medication) {
         if (history.contains(medication)) {
-            history.remove( medication );
+            //target.setMedicationHistory(target.getMedicationHistory().remove( ????? medication ????? ); // REMOVE THE SELECTED MEDICATION FROM target's medicationHistory
+            viewPastMedications();
 
             if (!current.contains(medication)) {
-                current.add( medication );
+                //target.setCurrentMedications(target.getCurrentMedications().add( ????? medication ????? ); // ADD THE NEW MEDICATION TO target's currentMedications
                 viewCurrentMedications();
             }
-            viewPastMedications();
         }
     }
 
@@ -162,13 +143,13 @@ public class GUIDonorMedications {
      */
     private void moveToHistory(String medication) {
         if (current.contains(medication)) {
-            current.remove( medication );
+            //target.setCurrentMedications(target.getCurrentMedications().remove( ????? medication ????? ); // ADD THE NEW MEDICATION TO target's medicationHistory // REMOVE THE SELECTED MEDICATION FROM target's currentMedication
+            viewCurrentMedications();
 
             if (!history.contains(medication)) {
-                history.add( medication );
+                //target.setMedicationHistory(target.getMedicationHistory().add( ????? medication ????? ); // ADD THE NEW MEDICATION TO target's medicationHistory
                 viewPastMedications();
             }
-            viewCurrentMedications();
         }
     }
 }
