@@ -10,15 +10,10 @@
         <TextField fx:id="newMedication" focusTraversable="false" layoutX="242.0" layoutY="27.0" prefHeight="25.0" prefWidth="117.0" promptText="Enter a medication" />
         <Button layoutX="260.0" layoutY="62.0" mnemonicParsing="false" onAction="#registerMedication" prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="REGISTER" />
         <ListView fx:id="currentMedications" layoutX="242.0" layoutY="101.0" prefHeight="239.0" prefWidth="117.0" />
-<<<<<<< HEAD
-        <Button layoutX="161.0" layoutY="159.0" mnemonicParsing="false" onAction="#makeHistory" prefHeight="25.0" prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="REMOVE" />
-        <Button layoutX="170.0" layoutY="196.0" mnemonicParsing="false" onAction="#makeCurrent" prefHeight="25.0" prefWidth="50.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="ADD" />
-=======
         <Button layoutX="161.0" layoutY="159.0" mnemonicParsing="false" onAction="#makeHistory" prefHeight="25.0"
                 prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="REMOVE" />
         <Button layoutX="170.0" layoutY="196.0" mnemonicParsing="false" onAction="#makeCurrent" prefHeight="25.0"
                 prefWidth="50.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="ADD" />
->>>>>>> c82e8c684a95e571048c36eff95374084b37ed60
         <ListView fx:id="pastMedications" layoutX="31.0" layoutY="101.0" prefHeight="239.0" prefWidth="117.0" />
         <Button layoutX="31.0" layoutY="352.0" mnemonicParsing="false" onAction="#deleteMedication" prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="DELETE" />
     </children>
