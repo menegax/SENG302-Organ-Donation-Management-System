@@ -78,6 +78,7 @@ public class GUIDonorMedications {
             target.setCurrentMedications(new ArrayList<>());
             target.getCurrentMedications().add(new Medication("Ibuprofen"));
         }
+        current = new ArrayList<>();
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
@@ -92,6 +93,7 @@ public class GUIDonorMedications {
             target.setMedicationHistory(new ArrayList<>());
             target.getMedicationHistory().add(new Medication("Panadol"));
         }
+        history = new ArrayList<>();
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
@@ -139,7 +141,7 @@ public class GUIDonorMedications {
                 // although this should not happen, remove the medication from current listView prior to swapping
             }
             Medication.transferMedication(target.getMedicationHistory(), target.getCurrentMedications(),
-                    new Medication(medication), target.getMedicationHistory().indexOf(new Medication(medication)));
+                    new Medication(medication), history.indexOf(medication));
             viewPastMedications();
             viewCurrentMedications();
         }
@@ -157,7 +159,7 @@ public class GUIDonorMedications {
                 // although this should not happen, remove the from medication from history listView prior to swapping
             }
             Medication.transferMedication(target.getCurrentMedications(), target.getMedicationHistory(),
-                    new Medication(medication), target.getCurrentMedications().indexOf(new Medication(medication)));
+                    new Medication(medication), current.indexOf(medication));
             viewCurrentMedications();
             viewPastMedications();
         }
