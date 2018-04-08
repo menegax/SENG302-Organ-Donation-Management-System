@@ -116,14 +116,15 @@ public class GUIDonorMedications {
      * Removes a selected medication from the medicationHistory ArrayList
      * Resets the pastMedications ListView to display medicationHistory after the medication is removed
      *
-     * ASSUMPTION: delete only from history, as assuming a med can be clicked on in both lists, and then when pressing delete both will be deleted.
-     *
      * @param medication The selected medication being removed from the history ArrayList and listView
      */
     private void removeMedication(String medication) {
         if (history.contains(medication)) {
-            target.getMedicationHistory().remove(new Medication(medication));
+            target.getMedicationHistory().remove(history.indexOf(medication));
             viewPastMedications();
+        } else if (current.contains(medication)) {
+            target.getCurrentMedications().remove( current.indexOf( medication ) );
+            viewCurrentMedications();
         }
     }
 
