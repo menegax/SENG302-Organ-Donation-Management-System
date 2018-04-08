@@ -8,12 +8,16 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import model.Donor;
 import model.Medication;
 import service.Database;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -157,6 +161,18 @@ public class GUIDonorMedications {
                     new Medication(medication), current.indexOf(medication));
             viewCurrentMedications();
             viewPastMedications();
+        }
+    }
+
+    public void goToProfile() {
+        ScreenControl.removeScreen("donorProfile");
+        try {
+            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+            ScreenControl.activate("donorProfile");
+        }catch (IOException e) {
+            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the medication page to the profile page");
+            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+            e.printStackTrace();
         }
     }
 }
