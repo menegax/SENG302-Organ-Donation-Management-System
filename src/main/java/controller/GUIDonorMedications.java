@@ -124,7 +124,7 @@ public class GUIDonorMedications {
      */
     private void removeMedication(String medication) {
         if (history.contains(medication)) {
-            target.getMedicationHistory().add(new Medication(medication));
+            target.getMedicationHistory().remove(new Medication(medication));
             viewPastMedications();
         }
     }
@@ -137,9 +137,6 @@ public class GUIDonorMedications {
      */
     private void moveToCurrent(String medication) {
         if (history.contains(medication)) {
-            if (current.contains(medication)) {
-                // although this should not happen, remove the medication from current listView prior to swapping
-            }
             Medication.transferMedication(target.getMedicationHistory(), target.getCurrentMedications(),
                     new Medication(medication), history.indexOf(medication));
             viewPastMedications();
@@ -155,9 +152,6 @@ public class GUIDonorMedications {
      */
     private void moveToHistory(String medication) {
         if (current.contains(medication)) {
-            if (history.contains(medication)) {
-                // although this should not happen, remove the from medication from history listView prior to swapping
-            }
             Medication.transferMedication(target.getCurrentMedications(), target.getMedicationHistory(),
                     new Medication(medication), current.indexOf(medication));
             viewCurrentMedications();
