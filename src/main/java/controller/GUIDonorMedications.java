@@ -14,7 +14,6 @@ import model.Donor;
 import model.Medication;
 import service.Database;
 
-import java.awt.event.ActionEvent;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -107,7 +106,7 @@ public class GUIDonorMedications {
     private void addMedication(String medication) {
         if (!medication.equals("Enter a medication") && !medication.equals("") && !medication.equals(" ")) { // This could maybe do with some more thought
             if (!current.contains(medication) && !history.contains(medication)) {
-                //target.setCurrentMedications(target.getCurrentMedications().add( ????? medication ????? ); // ADD THE NEW MEDICATION TO target's currentMedications
+                target.getCurrentMedications().add(new Medication(medication));
                 viewCurrentMedications();
             }
         }
@@ -117,11 +116,13 @@ public class GUIDonorMedications {
      * Removes a selected medication from the medicationHistory ArrayList
      * Resets the pastMedications ListView to display medicationHistory after the medication is removed
      *
+     * ASSUMPTION: delete only from history, as assuming a med can be clicked on in both lists, and then when pressing delete both will be deleted.
+     *
      * @param medication The selected medication being removed from the history ArrayList and listView
      */
     private void removeMedication(String medication) {
         if (history.contains(medication)) {
-            //target.setMedicationHistory(target.getMedicationHistory().remove( ????? medication ????? ); // REMOVE THE SELECTED MEDICATION FROM target's medicationHistory
+            target.getMedicationHistory().add(new Medication(medication));
             viewPastMedications();
         }
     }
@@ -134,16 +135,13 @@ public class GUIDonorMedications {
      */
     private void moveToCurrent(String medication) {
         if (history.contains(medication)) {
-            //target.setMedicationHistory(target.getMedicationHistory().remove( ????? medication ????? ); // REMOVE THE SELECTED MEDICATION FROM target's medicationHistory
-            Medication newMedication = new Medication(medication);
-            Medication.transferMedication(target.getMedicationHistory(), target.getCurrentMedications(), newMedication,
-                    target.getMedicationHistory().indexOf(medication));
-            viewPastMedications();
-
-            if (!current.contains(medication)) {
-                //target.setCurrentMedications(target.getCurrentMedications().add( ????? medication ????? ); // ADD THE NEW MEDICATION TO target's currentMedications
-                viewCurrentMedications();
+            if (current.contains(medication)) {
+                // although this should not happen, remove the medication from current listView prior to swapping
             }
+            Medication.transferMedication(target.getMedicationHistory(), target.getCurrentMedications(),
+                    new Medication(medication), target.getMedicationHistory().indexOf(new Medication(medication)));
+            viewPastMedications();
+            viewCurrentMedications();
         }
     }
 
@@ -155,16 +153,13 @@ public class GUIDonorMedications {
      */
     private void moveToHistory(String medication) {
         if (current.contains(medication)) {
-            //target.setCurrentMedications(target.getCurrentMedications().remove( ????? medication ????? ); // ADD THE NEW MEDICATION TO target's medicationHistory // REMOVE THE SELECTED MEDICATION FROM target's currentMedication
-            Medication newMedication = new Medication(medication);
-            Medication.transferMedication(target.getCurrentMedications(), target.getMedicationHistory(), newMedication,
-                    current.indexOf(medication));
-            viewCurrentMedications();
-
-            if (!history.contains(medication)) {
-                //target.setMedicationHistory(target.getMedicationHistory().add( ????? medication ????? ); // ADD THE NEW MEDICATION TO target's medicationHistory
-                viewPastMedications();
+            if (history.contains(medication)) {
+                // although this should not happen, remove the from medication from history listView prior to swapping
             }
+            Medication.transferMedication(target.getCurrentMedications(), target.getMedicationHistory(),
+                    new Medication(medication), target.getCurrentMedications().indexOf(new Medication(medication)));
+            viewCurrentMedications();
+            viewPastMedications();
         }
     }
 }
