@@ -32,22 +32,22 @@ public class GUIDonorMedications {
     private ListView<String> pastMedications; // A listView for showing the past medications
 
     @FXML
-    void deleteMedication() { // Removes a medication from the history ArrayList and listView
+    public void deleteMedication() { // Removes a medication from the history ArrayList and listView
         removeMedication(pastMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
     }
 
     @FXML
-    void makeCurrent() { // Swaps a medication in history to current ArrayList and listView
+    public void makeCurrent() { // Swaps a medication in history to current ArrayList and listView
         moveToCurrent(pastMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
     }
 
     @FXML
-    void makeHistory() { // Swaps a medication in current to history ArrayList and listView
+    public void makeHistory() { // Swaps a medication in current to history ArrayList and listView
         moveToHistory(currentMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
     }
 
     @FXML
-    void registerMedication() {
+    public void registerMedication() {
         addMedication(newMedication.getText());
     } // Adds a newly entered medication to the current medications array and the listView for the current medications
 
@@ -74,6 +74,10 @@ public class GUIDonorMedications {
      * Displays the retrieved medications to the currentMedications listView.
      */
     private void viewCurrentMedications() {
+        if(target.getCurrentMedications() == null) {
+            target.setCurrentMedications(new ArrayList<>());
+            target.getCurrentMedications().add(new Medication("Ibuprofen"));
+        }
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
@@ -84,6 +88,10 @@ public class GUIDonorMedications {
      * Displays the retrieved medications to the pastMedications listView
      */
     private void viewPastMedications() {
+        if(target.getMedicationHistory() == null) {
+            target.setMedicationHistory(new ArrayList<>());
+            target.getMedicationHistory().add(new Medication("Panadol"));
+        }
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
