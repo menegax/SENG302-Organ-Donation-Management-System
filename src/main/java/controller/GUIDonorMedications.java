@@ -8,12 +8,16 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import model.Donor;
 import model.Medication;
 import service.Database;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -79,6 +83,7 @@ public class GUIDonorMedications {
             target.setCurrentMedications(new ArrayList<>());
             target.getCurrentMedications().add(new Medication("Ibuprofen"));
         }
+        current = new ArrayList<>();
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
@@ -93,6 +98,7 @@ public class GUIDonorMedications {
             target.setMedicationHistory(new ArrayList<>());
             target.getMedicationHistory().add(new Medication("Panadol"));
         }
+        history = new ArrayList<>();
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
@@ -135,7 +141,7 @@ public class GUIDonorMedications {
     private void moveToCurrent(String medication) {
         if (history.contains(medication)) {
             Medication.transferMedication(target.getMedicationHistory(), target.getCurrentMedications(),
-                    new Medication(medication), target.getMedicationHistory().indexOf(new Medication(medication)));
+                    new Medication(medication), history.indexOf(medication));
             viewPastMedications();
             viewCurrentMedications();
         }
@@ -150,9 +156,21 @@ public class GUIDonorMedications {
     private void moveToHistory(String medication) {
         if (current.contains(medication)) {
             Medication.transferMedication(target.getCurrentMedications(), target.getMedicationHistory(),
-                    new Medication(medication), target.getCurrentMedications().indexOf(new Medication(medication)));
+                    new Medication(medication), current.indexOf(medication));
             viewCurrentMedications();
             viewPastMedications();
+        }
+    }
+
+    public void goToProfile() {
+        ScreenControl.removeScreen("donorProfile");
+        try {
+            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+            ScreenControl.activate("donorProfile");
+        }catch (IOException e) {
+            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the medication page to the profile page");
+            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+            e.printStackTrace();
         }
     }
 }
