@@ -33,17 +33,18 @@ public class GUIDonorMedications {
 
     @FXML
     public void deleteMedication() { // Removes a medication from the history ArrayList and listView
-        removeMedication(pastMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
+        removeMedication(pastMedications.getSelectionModel().getSelectedItem());
+
     }
 
     @FXML
     public void makeCurrent() { // Swaps a medication in history to current ArrayList and listView
-        moveToCurrent(pastMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
+        moveToCurrent(pastMedications.getSelectionModel().getSelectedItem());
     }
 
     @FXML
     public void makeHistory() { // Swaps a medication in current to history ArrayList and listView
-        moveToHistory(currentMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
+        moveToHistory(currentMedications.getSelectionModel().getSelectedItem());
     }
 
     @FXML
@@ -122,9 +123,6 @@ public class GUIDonorMedications {
         if (history.contains(medication)) {
             target.getMedicationHistory().remove(history.indexOf(medication));
             viewPastMedications();
-        } else if (current.contains(medication)) {
-            target.getCurrentMedications().remove( current.indexOf( medication ) );
-            viewCurrentMedications();
         }
     }
 
