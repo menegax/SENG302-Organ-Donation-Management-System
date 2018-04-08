@@ -6,6 +6,10 @@ public class Medication {
 
     private String medicationName;
 
+    public Medication(String name) {
+        medicationName = name;
+    }
+
     public void setMedicationName(String medicationName) {
         this.medicationName = medicationName;
     }
