@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import model.Donor;
+import model.Medication;
 import service.Database;
 
 import java.awt.event.ActionEvent;
@@ -32,22 +33,22 @@ public class GUIDonorMedications {
     private ListView<String> pastMedications; // A listView for showing the past medications
 
     @FXML
-    void deleteMedication(ActionEvent event) { // Removes a medication from the history ArrayList and listView
+    public void deleteMedication() { // Removes a medication from the history ArrayList and listView
         removeMedication(pastMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
     }
 
     @FXML
-    void makeCurrent(ActionEvent event) { // Swaps a medication in history to current ArrayList and listView
+    public void makeCurrent() { // Swaps a medication in history to current ArrayList and listView
         moveToCurrent(pastMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
     }
 
     @FXML
-    void makeHistory(ActionEvent event) { // Swaps a medication in current to history ArrayList and listView
+    public void makeHistory() { // Swaps a medication in current to history ArrayList and listView
         moveToHistory(currentMedications.getSelectionModel().getSelectedItem()); // found 'getSelectionModel().getSelectedItem() researching online. It should retrieve the mouse selected med
     }
 
     @FXML
-    void registerMedication(ActionEvent event) {
+    public void registerMedication() {
         addMedication(newMedication.getText());
     } // Adds a newly entered medication to the current medications array and the listView for the current medications
 
@@ -74,6 +75,10 @@ public class GUIDonorMedications {
      * Displays the retrieved medications to the currentMedications listView.
      */
     private void viewCurrentMedications() {
+        if(target.getCurrentMedications() == null) {
+            target.setCurrentMedications(new ArrayList<>());
+            target.getCurrentMedications().add(new Medication("Ibuprofen"));
+        }
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
@@ -84,6 +89,10 @@ public class GUIDonorMedications {
      * Displays the retrieved medications to the pastMedications listView
      */
     private void viewPastMedications() {
+        if(target.getMedicationHistory() == null) {
+            target.setMedicationHistory(new ArrayList<>());
+            target.getMedicationHistory().add(new Medication("Panadol"));
+        }
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
@@ -126,6 +135,9 @@ public class GUIDonorMedications {
     private void moveToCurrent(String medication) {
         if (history.contains(medication)) {
             //target.setMedicationHistory(target.getMedicationHistory().remove( ????? medication ????? ); // REMOVE THE SELECTED MEDICATION FROM target's medicationHistory
+            Medication newMedication = new Medication(medication);
+            Medication.transferMedication(target.getMedicationHistory(), target.getCurrentMedications(), newMedication,
+                    target.getMedicationHistory().indexOf(medication));
             viewPastMedications();
 
             if (!current.contains(medication)) {
@@ -144,6 +156,9 @@ public class GUIDonorMedications {
     private void moveToHistory(String medication) {
         if (current.contains(medication)) {
             //target.setCurrentMedications(target.getCurrentMedications().remove( ????? medication ????? ); // ADD THE NEW MEDICATION TO target's medicationHistory // REMOVE THE SELECTED MEDICATION FROM target's currentMedication
+            Medication newMedication = new Medication(medication);
+            Medication.transferMedication(target.getCurrentMedications(), target.getMedicationHistory(), newMedication,
+                    current.indexOf(medication));
             viewCurrentMedications();
 
             if (!history.contains(medication)) {

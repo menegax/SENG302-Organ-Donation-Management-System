@@ -33,4 +33,9 @@ public class Medication {
         previous.remove(previousIndex);
     }
 
+    @Override
+    public String toString() {
+        return medicationName;
+    }
+
 }
