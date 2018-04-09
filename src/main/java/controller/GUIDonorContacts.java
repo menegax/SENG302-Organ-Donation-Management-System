@@ -43,7 +43,7 @@ public class GUIDonorContacts {
      * display current contact attributes.
      */
     public void initialize() {
-        loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
+        loadProfile();
         setContactFields();
     }
 
@@ -63,7 +63,7 @@ public class GUIDonorContacts {
         if(target.getContactEmailAddress() != null) contactEmailAddressField.setText(target.getContactEmailAddress());
     }
 
-    private void loadProfile(String nhi) {
+    private void loadProfile() {
         try {
             target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor().getNhiNumber());
 
@@ -85,7 +85,6 @@ public class GUIDonorContacts {
         if(!(contactMobilePhoneField.getText().equals(""))) target.setContactMobilePhone(contactMobilePhoneField.getText());
         if(!(contactWorkPhoneField.getText().equals(""))) target.setContactWorkPhone(contactWorkPhoneField.getText());
         if(!(contactEmailAddressField.getText().equals(""))) target.setContactEmailAddress(contactEmailAddressField.getText());
-
     }
 
     /**
@@ -105,6 +104,7 @@ public class GUIDonorContacts {
 
     public void saveContactDetails() {
         setDonorContactDetails();
+        Database.saveToDisk(); // I have included this as it currently seems to me that at initialization donor data is loaded from DB, yet only saved to Donor class afterward
         new Alert(Alert.AlertType.CONFIRMATION, "Contact details saved successfully", ButtonType.OK).showAndWait();
         goToProfile();
     }
