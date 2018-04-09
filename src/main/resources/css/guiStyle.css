@@ -41,3 +41,22 @@
 
 }
 
+.redo {
+    -fx-scale-y: 0.75;
+    -fx-scale-x: 0.75;
+    -fx-background-color: white;
+    -fx-background-image: url("../Icons/redo.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 30,30;
+}
+
+.undo {
+    -fx-scale-y: 0.75;
+    -fx-scale-x: 0.75;
+    -fx-background-color: white;
+    -fx-background-image: url("../Icons/undo.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 30,30;
+}
+
+
