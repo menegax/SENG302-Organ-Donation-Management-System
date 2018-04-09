@@ -82,3 +82,6 @@ See the GUIDonorRegister class for examples of goToLogin() and register()
 
 #### User Action History
 All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new donor would not be logged either.
+
+### Interface classes
+All interface classes must be prefixed with "I". i.e. IEnumberable. This is to be able to distinguish classes from interfaces easily when the repository gets larger.
