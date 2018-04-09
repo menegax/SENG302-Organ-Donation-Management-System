@@ -115,8 +115,8 @@ public class GUIDonorProfile {
             ScreenControl.addScreen("donorMedications", FXMLLoader.load(getClass().getResource("/scene/donorMedications.fxml")));
             ScreenControl.activate("donorMedications");
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading donation screen", "attempted to navigate from the profile page to the donation page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading donation page", ButtonType.OK).showAndWait();
+            userActions.log(Level.SEVERE, "Error loading medication screen", "attempted to navigate from the profile page to the medication page");
+            new Alert(Alert.AlertType.WARNING, "ERROR loading medication page", ButtonType.OK).showAndWait();
             e.printStackTrace();
         }
     }
