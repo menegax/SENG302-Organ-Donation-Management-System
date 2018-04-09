@@ -68,7 +68,15 @@ public class GUIDonorMedications {
     public void initialize() {
         try {
             target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor().getNhiNumber());
+
+            if(target.getCurrentMedications() == null) {
+                target.setCurrentMedications(new ArrayList<>());
+            }
             viewCurrentMedications();
+
+            if(target.getMedicationHistory() == null) {
+                target.setMedicationHistory(new ArrayList<>());
+            }
             viewPastMedications();
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the medications for logged in user");
@@ -81,10 +89,6 @@ public class GUIDonorMedications {
      * Displays the retrieved medications to the currentMedications listView.
      */
     private void viewCurrentMedications() {
-        if(target.getCurrentMedications() == null) {
-            target.setCurrentMedications(new ArrayList<>());
-        }
-        current = new ArrayList<>();
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
@@ -95,10 +99,6 @@ public class GUIDonorMedications {
      * Displays the retrieved medications to the pastMedications listView
      */
     private void viewPastMedications() {
-        if(target.getMedicationHistory() == null) {
-            target.setMedicationHistory(new ArrayList<>());
-        }
-        history = new ArrayList<>();
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
