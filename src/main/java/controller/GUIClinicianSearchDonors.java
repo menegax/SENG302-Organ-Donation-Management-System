@@ -1,5 +1,7 @@
 package controller;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,23 +23,19 @@ public class GUIClinicianSearchDonors implements Initializable {
     private TableView<Donor> donorDataTable;
 
     @FXML
-    private TableColumn<Donor, String> fullNameColumn;
+    private TableColumn<Donor, String> columnName;
 
     @FXML
-    private TableColumn<Donor, Double> ageColumn;
+    private TableColumn<Donor, String> columnAge;
 
     @FXML
-    private TableColumn<Donor, String> genderColumn;
+    private TableColumn<Donor, String> columnGender;
 
     @FXML
-    private TableColumn<Donor, String> regionColumn;
+    private TableColumn<Donor, String> columnRegion;
 
     @FXML
     private TextField searchEntry;
-
-    private ObservableList<Donor> searchedDonors;
-
-    private ArrayList<Donor> donors = new ArrayList<>(Database.getDonors());
 
 
     /**
@@ -55,52 +53,35 @@ public class GUIClinicianSearchDonors implements Initializable {
     /**
      * Loads the current donor data into the donor data table
      */
-    public void loadData() {
-        searchedDonors = FXCollections.observableArrayList(donors);
-        fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
-        genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
-        regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
-        donorDataTable.setItems(searchedDonors);
+    private void loadData() {
+
+        donorDataTable.getItems().addAll(Database.getDonors());
+
+        // for donor d
+        columnName.setCellValueFactory(d-> new SimpleStringProperty(d.getValue().getNameConcatenated()));
+        columnAge.setCellValueFactory(d-> new SimpleStringProperty(String.valueOf(d.getValue().getAge())));
+//        columnGender.setCellValueFactory(d-> new SimpleStringProperty(d.getValue().getGender().toString())); // todo issues with enum toString, added ternary operator to return "Not set" but still not working.
+//        columnRegion.setCellValueFactory(d-> new SimpleStringProperty(d.getValue().getRegion().toString())); // todo also an enum as above
     }
 
-    //        /**
-    //         * Calculates the required fields in the table for the current searched donor list
-    //         */
-    //        public void calculateFields() {
-    //            for (Donor donor : searchedDonors) {
-    //                if (donor.getMiddleNames() == null) {
-    //                    donor.setName(donor.getFirstName() + " " + donor.getLastName());
-    //                } else {
-    //                    donor.setName(donor.getFirstName() + " " + donor.getMiddleNames() + " " + donor.getLastName());
-    //                }
-    //                if (donor.isDead()) {
-    //                    donor.setAge(Utilities.calculateAge(donor.getDeath(), donor.getBirth()));
-    //                } else {
-    //                    donor.setAge(Utilities.calculateAge(new Date(), donor.getBirth()));
-    //                }
+    //    /**
+    //     * Updates the donors displayed based on the the search criteria in the search entry
+    //     */
+    //    private void search() {
+    //        searchedDonors.clear();
+    //        for (int i = 0; i < donors.size() && i < 30; i++) {
+    //            if (donors.get(i)
+    //                    .getName()
+    //                    .toLowerCase()
+    //                    .contains(searchEntry.getText()
+    //                            .toLowerCase()) && !donors.get(i)
+    //                    .getChanged()
+    //                    .equals("Delete")) {
+    //                searchedDonors.add(donors.get(i));
     //            }
     //        }
-
-
-//    /**
-//     * Updates the donors displayed based on the the search criteria in the search entry
-//     */
-//    private void search() {
-//        searchedDonors.clear();
-//        for (int i = 0; i < donors.size() && i < 30; i++) {
-//            if (donors.get(i)
-//                    .getName()
-//                    .toLowerCase()
-//                    .contains(searchEntry.getText()
-//                            .toLowerCase()) && !donors.get(i)
-//                    .getChanged()
-//                    .equals("Delete")) {
-//                searchedDonors.add(donors.get(i));
-//            }
-//        }
-//        calculateFields();
-//    }
+    //        calculateFields();
+    //    }
 
 
     public void goToClinicianHome() {

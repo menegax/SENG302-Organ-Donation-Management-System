@@ -15,12 +15,12 @@ public class GlobalEnums {
         }
 
         public String getValue() {
-            return value;
+            return value != null ? value : "Not set";
         }
 
         @Override
         public String toString() {
-            return this.getValue();
+            return this.getValue() != null ? this.getValue() : "Not set";
         }
 
         public static Enum getEnumFromString(String value) {
