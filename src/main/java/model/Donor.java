@@ -80,8 +80,8 @@ public class Donor {
      * @param region region of address
      * @param gender gender of address
      * @param bloodGroup blood group
-     * @param height height
-     * @param weight weight
+     * @param height height in meters
+     * @param weight weight in kilograms
      * @param nhi nhi
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames,
@@ -463,9 +463,8 @@ public class Donor {
                 "Blood group: " + bloodGroup + "\n";
     }
 
-    public boolean equals(Object obj){
+    public boolean equals(Object obj) {
         Donor donor = (Donor) obj;
         return this.nhiNumber.equals(donor.nhiNumber);
     }
-
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="993.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchDonors">
+    <TextField fx:id="searchEntry" layoutX="25.0" layoutY="81.0" prefHeight="27.0" prefWidth="205.0" promptText="Search by name" />
+    <Label alignment="CENTER" layoutX="277.0" layoutY="14.0" prefHeight="80.0" prefWidth="439.0" text="Search Donors" textAlignment="CENTER">
+        <font>
+          <Font name="Calibri" size="56.0" />
+        </font>
+    </Label>
+    <TableView fx:id="donorDataTable" layoutX="25.0" layoutY="115.0" prefHeight="400.0" prefWidth="945.0">
+      <columns>
+          <TableColumn fx:id="fullNameColumn" prefWidth="245.0" text="Name" />
+          <TableColumn fx:id="ageColumn" minWidth="0.0" prefWidth="92.0" text="NHI" />
+          <TableColumn fx:id="genderColumn" prefWidth="607.0" text="Donations" />
+      </columns>
+    </TableView>
+    <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToClinicianHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
+</AnchorPane>

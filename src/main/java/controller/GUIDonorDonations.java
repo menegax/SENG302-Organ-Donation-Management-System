@@ -9,6 +9,7 @@ import service.Database;
 import utility.GlobalEnums;
 
 import javafx.scene.control.CheckBox;
+
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
@@ -20,34 +21,48 @@ public class GUIDonorDonations {
 
     @FXML
     private CheckBox liverCB;
+
     @FXML
     private CheckBox kidneyCB;
+
     @FXML
     private CheckBox pancreasCB;
+
     @FXML
     private CheckBox heartCB;
+
     @FXML
     private CheckBox lungCB;
+
     @FXML
     private CheckBox intestineCB;
+
     @FXML
     private CheckBox corneaCB;
+
     @FXML
     private CheckBox middleearCB;
+
     @FXML
     private CheckBox skinCB;
+
     @FXML
     private CheckBox boneCB;
+
     @FXML
     private CheckBox bonemarrowCB;
+
     @FXML
     private CheckBox connectivetissueCB;
 
     private Donor target;
 
+
     public void initialize() {
-        loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
+        loadProfile(ScreenControl.getLoggedInDonor()
+                .getNhiNumber());
     }
+
 
     private void loadProfile(String nhi) {
         try {
@@ -55,103 +70,142 @@ public class GUIDonorDonations {
             target = donor;
             populateForm(donor);
 
-
-        } catch (InvalidObjectException e) {
+        }
+        catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
             e.printStackTrace();
         }
     }
 
+
     private void populateForm(Donor donor) {
         ArrayList<GlobalEnums.Organ> organs = donor.getDonations();
-        if (organs.contains(GlobalEnums.Organ.LIVER)) liverCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.KIDNEY)) kidneyCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.PANCREAS)) pancreasCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.HEART)) heartCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.LUNG)) lungCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.INTESTINE)) intestineCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.CORNEA)) corneaCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.MIDDLEEAR)) middleearCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.SKIN)) skinCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.BONE)) boneCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.BONE_MARROW)) bonemarrowCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) connectivetissueCB.setSelected(true);
+        if (organs.contains(GlobalEnums.Organ.LIVER)) {
+            liverCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.KIDNEY)) {
+            kidneyCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.PANCREAS)) {
+            pancreasCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.HEART)) {
+            heartCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.LUNG)) {
+            lungCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.INTESTINE)) {
+            intestineCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.CORNEA)) {
+            corneaCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.MIDDLEEAR)) {
+            middleearCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.SKIN)) {
+            skinCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.BONE)) {
+            boneCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.BONE_MARROW)) {
+            bonemarrowCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) {
+            connectivetissueCB.setSelected(true);
+        }
     }
+
 
     public void saveDonations() {
         if (liverCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.LIVER);
-        } else {
+        }
+        else {
             target.removeDonation(GlobalEnums.Organ.LIVER);
         }
         if (kidneyCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.KIDNEY);
-        } else {
+        }
+        else {
             target.removeDonation(GlobalEnums.Organ.KIDNEY);
         }
         if (pancreasCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.PANCREAS);
-        } else {
+        }
+        else {
             target.removeDonation(GlobalEnums.Organ.PANCREAS);
         }
         if (heartCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.HEART);
-        } else {
+        }
+        else {
             target.removeDonation(GlobalEnums.Organ.HEART);
         }
         if (lungCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.LUNG);
-        } else {
+        }
+        else {
             target.removeDonation(GlobalEnums.Organ.LUNG);
         }
         if (intestineCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.INTESTINE);
-        } else {
+        }
+        else {
             target.removeDonation(GlobalEnums.Organ.INTESTINE);
         }
         if (corneaCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.CORNEA);
-        } else {
+        }
+        else {
             target.removeDonation(GlobalEnums.Organ.CORNEA);
         }
         if (middleearCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.MIDDLEEAR);
-        } else {
+        }
+        else {
             target.removeDonation(GlobalEnums.Organ.MIDDLEEAR);
         }
         if (skinCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.SKIN);
-        } else {
+        }
+        else {
             target.removeDonation(GlobalEnums.Organ.SKIN);
         }
         if (boneCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.BONE);
-        } else {
+        }
+        else {
             target.removeDonation(GlobalEnums.Organ.BONE);
         }
         if (bonemarrowCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.BONE_MARROW);
-        } else {
+        }
+        else {
             target.removeDonation(GlobalEnums.Organ.BONE_MARROW);
         }
         if (connectivetissueCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
-        } else {
+        }
+        else {
             target.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
         new Alert(Alert.AlertType.CONFIRMATION, "Donations saved successfully", ButtonType.OK).showAndWait();
         goToProfile();
     }
 
+
     public void goToProfile() {
         ScreenControl.removeScreen("donorProfile");
         try {
             ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
             ScreenControl.activate("donorProfile");
-        }catch (IOException e) {
+        }
+        catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
         }
     }
 }

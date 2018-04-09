@@ -29,10 +29,14 @@ public class Main extends Application {
         Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.LIVER);
         Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.CORNEA);
 
-        // Add FXML screens to ScreenControl
+        // Add Donor scenes
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
         ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
         ScreenControl.addScreen("home", FXMLLoader.load(getClass().getResource("/scene/home.fxml")));
+
+        // Add Clinician scenes
+        ScreenControl.addScreen("clinicianSearchDonors", FXMLLoader.load(getClass().getResource("/scene/clinicianSearchDonors.fxml")));
+
         primaryStage.show();
     }
 
