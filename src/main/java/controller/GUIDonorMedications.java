@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.sql.Timestamp;
 
 import static utility.UserActionHistory.userActions;
 
@@ -60,6 +61,7 @@ public class GUIDonorMedications {
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
     private ArrayList<String> current = new ArrayList<>();
     private ArrayList<String> history = new ArrayList<>();
+    private Timestamp time;
     private Donor target;
 
     @FXML
@@ -81,7 +83,6 @@ public class GUIDonorMedications {
     private void viewCurrentMedications() {
         if(target.getCurrentMedications() == null) {
             target.setCurrentMedications(new ArrayList<>());
-            target.getCurrentMedications().add(new Medication("Ibuprofen"));
         }
         current = new ArrayList<>();
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
@@ -96,7 +97,6 @@ public class GUIDonorMedications {
     private void viewPastMedications() {
         if(target.getMedicationHistory() == null) {
             target.setMedicationHistory(new ArrayList<>());
-            target.getMedicationHistory().add(new Medication("Panadol"));
         }
         history = new ArrayList<>();
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
@@ -115,6 +115,15 @@ public class GUIDonorMedications {
             if (!current.contains(medication) && !history.contains(medication)) {
                 target.getCurrentMedications().add(new Medication(medication));
                 viewCurrentMedications();
+                time = new Timestamp(System.currentTimeMillis());
+
+                if (!target.getMedicationLog().containsKey(medication)) {
+                    ArrayList<String> newMedication = new ArrayList<String>();
+                    newMedication.add(time + " - registered to current: " + medication);
+                    target.getMedicationLog().put(medication, newMedication);
+                } else {
+                    target.getMedicationLog().get(medication).add(time + " - registered to current: " + medication);
+                }
             }
         }
     }
@@ -129,6 +138,8 @@ public class GUIDonorMedications {
         if (history.contains(medication)) {
             target.getMedicationHistory().remove(history.indexOf(medication));
             viewPastMedications();
+            time = new Timestamp(System.currentTimeMillis());
+            target.getMedicationLog().get(medication).add(time + " - deleted from history: " + medication);
         }
     }
 
@@ -144,6 +155,8 @@ public class GUIDonorMedications {
                     new Medication(medication), history.indexOf(medication));
             viewPastMedications();
             viewCurrentMedications();
+            time = new Timestamp(System.currentTimeMillis());
+            target.getMedicationLog().get(medication).add(time + " - moved to current: " + medication);
         }
     }
 
@@ -159,6 +172,8 @@ public class GUIDonorMedications {
                     new Medication(medication), current.indexOf(medication));
             viewCurrentMedications();
             viewPastMedications();
+            time = new Timestamp(System.currentTimeMillis());
+            target.getMedicationLog().get(medication).add(time + " - moved to history: " + medication);
         }
     }
 

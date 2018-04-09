@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -57,6 +58,8 @@ public class Donor {
     private ArrayList<Medication> currentMedications;
 
     private ArrayList<Medication> medicationHistory;
+
+    private HashMap<String, ArrayList<String>> medicationLog;
 
     public Donor(String nhiNumber, String firstName,
                  ArrayList<String> middleNames, String lastName, LocalDate date) {
@@ -397,6 +400,12 @@ public class Donor {
     public ArrayList<Medication> getMedicationHistory() {
         return medicationHistory;
     }
+
+    /**
+     * Gets the medication log with timestamps of each add/removal/swap between current and history
+     * @return HashMap of medication logging for a donor
+     */
+    public HashMap<String, ArrayList<String>> getMedicationLog() { return medicationLog; }
 
     public void setZip(int zip) {
         if (this.zip != zip) {
