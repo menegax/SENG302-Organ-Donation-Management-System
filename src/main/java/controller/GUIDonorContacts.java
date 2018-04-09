@@ -65,8 +65,7 @@ public class GUIDonorContacts {
 
     private void loadProfile(String nhi) {
         try {
-            Donor donor = Database.getDonorByNhi(nhi);
-            target = donor;
+            target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor().getNhiNumber());
 
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
