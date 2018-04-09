@@ -69,7 +69,7 @@ public class GUIDonorContacts {
             target = donor;
 
         } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
+            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
             e.printStackTrace();
         }
     }
@@ -98,7 +98,7 @@ public class GUIDonorContacts {
             ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
             ScreenControl.activate("donorProfile");
         }catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
+            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the contacts page to the profile page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
             //e.printStackTrace();
         }
