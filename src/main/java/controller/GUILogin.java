@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
 
@@ -15,7 +17,19 @@ import static utility.UserActionHistory.userActions;
 public class GUILogin {
 
     @FXML
+    private AnchorPane pane;
+
+    @FXML
     private TextField nhiLogin;
+
+    public void initialize() {
+        // Enter key triggers log in
+        pane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                logIn();
+            }
+        });
+    }
 
     /**
      * Open the register screen
