@@ -36,6 +36,11 @@ public class GUIDonorContacts {
 
     @FXML private TextField contactNameField;
 
+    @FXML
+    public void saveContactDetails() {
+        saveToDisk();
+    }
+
     private Donor target;
 
     /**
@@ -50,7 +55,7 @@ public class GUIDonorContacts {
     /**
      *
      */
-    public void setContactFields() {
+    private void setContactFields() {
         if(target.getHomePhone() != null) homePhoneField.setText(target.getHomePhone());
         if(target.getMobilePhone() != null) mobilePhoneField.setText(target.getMobilePhone());
         if(target.getWorkPhone() != null) workPhoneField.setText(target.getWorkPhone());
@@ -74,7 +79,7 @@ public class GUIDonorContacts {
     }
 
 
-    public void setDonorContactDetails() {
+    private void setDonorContactDetails() {
         if(!(homePhoneField.getText().equals(""))) target.setHomePhone(homePhoneField.getText());
         if(!(mobilePhoneField.getText().equals(""))) target.setMobilePhone(mobilePhoneField.getText());
         if(!(workPhoneField.getText().equals(""))) target.setWorkPhone(workPhoneField.getText());
@@ -102,9 +107,9 @@ public class GUIDonorContacts {
         }
     }
 
-    public void saveContactDetails() {
+    private void saveToDisk() {
         setDonorContactDetails();
-        Database.saveToDisk(); // I have included this as it currently seems to me that at initialization donor data is loaded from DB, yet only saved to Donor class afterward
+        Database.saveToDisk();
         new Alert(Alert.AlertType.CONFIRMATION, "Contact details saved successfully", ButtonType.OK).showAndWait();
         goToProfile();
     }
