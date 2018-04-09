@@ -124,7 +124,6 @@ public class GUIDonorMedications {
                 } else {
                     target.getMedicationLog().get(medication).add(time + " - registered to current: " + medication);
                 }
-                Database.saveToDisk();
             }
         }
     }
@@ -141,7 +140,6 @@ public class GUIDonorMedications {
             viewPastMedications();
             time = new Timestamp(System.currentTimeMillis());
             target.getMedicationLog().get(medication).add(time + " - deleted from history: " + medication);
-            Database.saveToDisk();
         }
     }
 
@@ -159,7 +157,6 @@ public class GUIDonorMedications {
             viewCurrentMedications();
             time = new Timestamp(System.currentTimeMillis());
             target.getMedicationLog().get(medication).add(time + " - moved to current: " + medication);
-            Database.saveToDisk();
         }
     }
 
@@ -177,7 +174,6 @@ public class GUIDonorMedications {
             viewPastMedications();
             time = new Timestamp(System.currentTimeMillis());
             target.getMedicationLog().get(medication).add(time + " - moved to history: " + medication);
-            Database.saveToDisk();
         }
     }
 
