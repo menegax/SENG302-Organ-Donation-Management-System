@@ -59,7 +59,7 @@ public class Donor {
 
     private ArrayList<Medication> medicationHistory;
 
-    private HashMap<String, ArrayList<String>> medicationLog;
+    private HashMap<String, ArrayList<String>> medicationLog = new HashMap<>();
 
     public Donor(String nhiNumber, String firstName,
                  ArrayList<String> middleNames, String lastName, LocalDate date) {
