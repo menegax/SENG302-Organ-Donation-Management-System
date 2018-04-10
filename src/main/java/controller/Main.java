@@ -6,8 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Donor;
-import service.Database;
 import utility.GlobalEnums;
+import service.Database;
 import utility.UserActionHistory;
 
 import java.time.LocalDate;
@@ -26,9 +26,9 @@ public class Main extends Application {
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
         Database.importFromDisk("./donor.json");
-//        Database.addDonor(new Donor("ABC1238", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-//        Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.LIVER);
-//        Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.addDonor(new Donor("ABC1238", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.CORNEA);
 
         // Add FXML screens to ScreenControl
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
