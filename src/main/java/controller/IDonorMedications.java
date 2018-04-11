@@ -1,7 +1,3 @@
-/**
- * Controller Class for'donorMedications.fxml'
- */
-
 package controller;
 
 import javafx.beans.property.ListProperty;
@@ -22,7 +18,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorMedications {
+public class IDonorMedications {
 
     @FXML
     private TextField newMedication; // Medications are entered for adding to the currentMedications ArrayList and listView
@@ -36,15 +32,9 @@ public class GUIDonorMedications {
     @FXML
     /*
      * Removes a medication from either the history or current ArrayList and listView
-     *
-     * Haven't yet found a method to remove the most recently selected medication between two different listViews
      */
     public void deleteMedication() {
-        if (pastMedications.getSelectionModel().getSelectedIndex() != -1) {
-            removeMedication(new ArrayList<>(pastMedications.getSelectionModel().getSelectedItems()));
-        } else if (currentMedications.getSelectionModel().getSelectedIndex() != -1) {
-            removeMedication(new ArrayList<>(currentMedications.getSelectionModel().getSelectedItems()));
-        }
+        removeMedication(new ArrayList<>(pastMedications.getSelectionModel().getSelectedItems()));
     }
 
     @FXML
@@ -64,7 +54,7 @@ public class GUIDonorMedications {
     }
 
     @FXML
-    /**
+    /*
      * Adds a newly entered medication to the current medications array and the listView for the current medications
      */
     public void registerMedication() {
