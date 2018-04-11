@@ -25,7 +25,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIDonorMedications {
 
     @FXML
-    private TextField newMedication; // The textField that new medications are entered into for adding to the currentMedications ArrayList and listView
+    private TextField newMedication; // Medications are entered for adding to the currentMedications ArrayList and listView
 
     @FXML
     private ListView<String> currentMedications; // A listView for showing the current medications
@@ -34,34 +34,43 @@ public class GUIDonorMedications {
     private ListView<String> pastMedications; // A listView for showing the past medications
 
     @FXML
-    public void deleteMedication() { // Removes a medication from either the history or current ArrayList and listView
+    /*
+     * Removes a medication from either the history or current ArrayList and listView
+     *
+     * Haven't yet found a method to remove the most recently selected medication between two different listViews
+     */
+    public void deleteMedication() {
         if (pastMedications.getSelectionModel().getSelectedIndex() != -1) {
             removeMedication(new ArrayList<>(pastMedications.getSelectionModel().getSelectedItems()));
         } else if (currentMedications.getSelectionModel().getSelectedIndex() != -1) {
             removeMedication(new ArrayList<>(currentMedications.getSelectionModel().getSelectedItems()));
         }
-        pastMedications.getSelectionModel().clearSelection();
-        currentMedications.getSelectionModel().clearSelection();
     }
 
     @FXML
-    public void makeCurrent() { // Swaps a medication in history to current ArrayList and listView
+    /*
+     * Swaps a medication in history to current ArrayList and listView
+     */
+    public void makeCurrent() {
         moveToCurrent(new ArrayList<>(pastMedications.getSelectionModel().getSelectedItems()));
-        pastMedications.getSelectionModel().clearSelection();
-        currentMedications.getSelectionModel().clearSelection();
     }
 
     @FXML
-    public void makeHistory() { // Swaps a medication in current to history ArrayList and listView
+    /*
+     * Swaps a medication in current to history ArrayList and listView
+     */
+    public void makeHistory() {
         moveToHistory(new ArrayList<>(currentMedications.getSelectionModel().getSelectedItems()));
-        pastMedications.getSelectionModel().clearSelection();
-        currentMedications.getSelectionModel().clearSelection();
     }
 
     @FXML
+    /**
+     * Adds a newly entered medication to the current medications array and the listView for the current medications
+     */
     public void registerMedication() {
         addMedication(newMedication.getText());
-    } // Adds a newly entered medication to the current medications array and the listView for the current medications
+        newMedication.clear();
+    }
 
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
@@ -98,6 +107,7 @@ public class GUIDonorMedications {
      */
     private void viewCurrentMedications() {
         current = new ArrayList<>();
+        currentMedications.getSelectionModel().clearSelection();
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
@@ -109,6 +119,7 @@ public class GUIDonorMedications {
      */
     private void viewPastMedications() {
         history = new ArrayList<>();
+        pastMedications.getSelectionModel().clearSelection();
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
