@@ -62,6 +62,15 @@ public class GUIDonorProfileUpdate {
     @FXML
     private ChoiceBox bloodGroupDD;
 
+    @FXML
+    private void undo() {
+        ;
+    }
+
+    @FXML
+    private void redo() {
+        ;
+    }
 
     private Donor target;
 
