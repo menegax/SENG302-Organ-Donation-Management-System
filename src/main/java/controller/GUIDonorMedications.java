@@ -18,7 +18,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class IDonorMedications {
+public class GUIDonorMedications {
 
     @FXML
     private TextField newMedication; // Medications are entered for adding to the currentMedications ArrayList and listView
