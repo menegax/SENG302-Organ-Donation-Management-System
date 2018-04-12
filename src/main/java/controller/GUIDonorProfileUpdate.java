@@ -64,12 +64,12 @@ public class GUIDonorProfileUpdate {
 
     @FXML
     private void undo() {
-        ;
+        System.out.println( "UNDO" );
     }
 
     @FXML
     private void redo() {
-        ;
+        System.out.println( "REDO" );
     }
 
     private Donor target;

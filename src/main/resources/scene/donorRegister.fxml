@@ -14,6 +14,7 @@
       <TextField fx:id="lastnameRegister" focusTraversable="false" layoutX="226.0" layoutY="200.0" promptText="Last name" />
       <TextField fx:id="middlenameRegister" focusTraversable="false" layoutX="226.0" layoutY="240.0" promptText="Middle name(s)" />
       <Button layoutX="463.0" layoutY="341.0" mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Done" />
+      <Button layoutX="82.0" layoutY="38.0" mnemonicParsing="false" onAction="#redo" prefHeight="36.0" prefWidth="31.0" styleClass="redo" stylesheets="@../css/guiStyle.css" />
       <TextField fx:id="nhiRegister" focusTraversable="false" layoutX="226.0" layoutY="123.0" promptText="NHI Number" />
       <DatePicker fx:id="birthRegister" editable="false" focusTraversable="false" layoutX="226.0" layoutY="282.0" prefHeight="25.0" prefWidth="149.0" promptText="Date of birth" />
    </children>

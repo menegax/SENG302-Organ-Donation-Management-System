@@ -33,8 +33,12 @@ public class GUIDonorRegister {
     @FXML
     private TextField nhiRegister;
 
-    private StringConverter<LocalDate> dateConverter;
+    @FXML
+    private void redo() {
+        System.out.println( "REDO" );
+    }
 
+    private StringConverter<LocalDate> dateConverter;
 
     /**
      * Back button listener to switch to the login screen

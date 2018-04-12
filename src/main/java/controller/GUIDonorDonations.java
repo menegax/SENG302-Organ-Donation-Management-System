@@ -43,6 +43,11 @@ public class GUIDonorDonations {
     @FXML
     private CheckBox connectivetissueCB;
 
+    @FXML
+    private void redo() {
+        System.out.println( "REDO" );
+    }
+
     private Donor target;
 
     public void initialize() {
