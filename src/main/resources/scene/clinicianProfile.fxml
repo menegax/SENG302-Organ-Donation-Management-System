@@ -56,7 +56,7 @@
             </HBox>
          </children>
       </VBox>
-      <Label layoutX="14.0" layoutY="27.0" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
+      <Label layoutX="14.0" layoutY="27.0" onMouseClicked="#goToHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
       <Button layoutX="258.0" layoutY="344.0" mnemonicParsing="false" text="Edit Profile" />
    </children>
 </AnchorPane>

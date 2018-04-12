@@ -7,9 +7,15 @@ import service.Database;
 
 public class GUIHome {
 
+    private static boolean clinician;
+
     @FXML
     public void goToProfile(){
-        ScreenControl.activate("donorProfile");
+        if (!clinician) {
+            ScreenControl.activate("donorProfile");
+        } else {
+            ScreenControl.activate("clinicianProfile");
+        }
     }
 
     @FXML
@@ -29,4 +35,7 @@ public class GUIHome {
         alert.showAndWait();
     }
 
+    public static boolean getClinician() { return clinician; }
+
+    public static boolean setClinician(boolean set) { return clinician = set; }
 }

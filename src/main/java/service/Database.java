@@ -65,6 +65,22 @@ public class Database {
         throw new InvalidObjectException("Donor with NHI number " + nhi + " does not exist.");
     }
 
+    /**
+     * Searches clinicians by staffID
+     *
+     * @param staffID the staff ID to search clinicians by
+     * @return Clinician object
+     * @throws InvalidObjectException when the object cannot be found
+     */
+    public static Clinician getClinicianByID(int staffID) throws InvalidObjectException {
+        for (Clinician c : getClinicians()) {
+            if (c.getStaffID() == staffID) {
+                return c;
+            }
+        }
+        throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
+    }
+
     public static void addClinician(String firstName, ArrayList<String> middleNames, String lastName, GlobalEnums.Region region) throws IllegalArgumentException {
         Database.addClinician(firstName, middleNames, lastName, null, null, null, region);
     }
@@ -79,8 +95,12 @@ public class Database {
     }
 
     private static int getNextStaffID() {
-        int currentID = clinicians.get(clinicians.size() - 1).getStaffID();
-        return currentID + 1;
+        if (clinicians.size() == 0) {
+            return 0;
+        } else {
+            int currentID = clinicians.get(clinicians.size() - 1).getStaffID();
+            return currentID + 1;
+        }
     }
 
     /**

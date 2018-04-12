@@ -33,6 +33,12 @@ public class Main extends Application {
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
         ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
         ScreenControl.addScreen("home", FXMLLoader.load(getClass().getResource("/scene/home.fxml")));
+
+        // initialising new clinician on startup
+        ArrayList<String> mid = new ArrayList<>();
+        mid.add("Middle");
+        Database.addClinician("initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY);
+
         primaryStage.show();
     }
 

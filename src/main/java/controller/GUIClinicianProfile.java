@@ -55,4 +55,8 @@ public class GUIClinicianProfile {
             e.printStackTrace();
         }
     }
+
+    public void goToHome() {
+        ScreenControl.activate("home");
+    }
 }
