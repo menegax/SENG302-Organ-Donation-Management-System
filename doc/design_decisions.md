@@ -82,3 +82,19 @@ See the GUIDonorRegister class for examples of goToLogin() and register()
 
 #### User Action History
 All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new donor would not be logged either.
+
+## Sprint 3
+26th March to the 4th of May
+
+#### GUI Donor Medications
+
+Adam Ross' decisions and assumptions for story 18:
+
+
+To reduce error, for in the case that a medication has been selected in each of the history and the current listViews, it has been decided to reserve deletion of a medication from the history listView only. Otherwise, if not reserve deletion to only one listView, and include both lists, regardless of which medication is the intended medication delete, only the most recently will be deleted. History has been assumed as the more appropriate of the two listViews for deleting from.
+
+If a medication is selected in each of the current and history listViews, and a user selects either a remove or add button unintentionally, then a medication will be swapped from one listView to the other, depending on which button is selected, even if this medication is not the most recently selected between the two listViews. If this is not the intention of the user, then this has been assumed to be determined as user error, and not the fault of the program.
+
+Medication selection is assumed to be possible in each listView simultaneously for the benefit of future stories.
+
+The current option of multiple selection in each listView may not be appropriate for future stories. 
