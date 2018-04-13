@@ -26,6 +26,11 @@ public class StateHistoryComboBox implements IUndoRedo {
      */
     private int index = 0;
 
+    /*
+     * True if an undo has been executed, false otherwise - could be reset at exit from each interface
+     */
+    private boolean undone = false;
+
     /**
      * Constructor for the state history
      * @param comboBox the ComboBox whose state we are storing
@@ -53,10 +58,14 @@ public class StateHistoryComboBox implements IUndoRedo {
         if (index != 0) {
             index -= 1;
             comboBox.getSelectionModel().select(states.get(index));
+            undone = true;
         }
     }
 
     public void redo() {
-
+        if (undone) {
+            index += 1;
+            comboBox.getSelectionModel().select(states.get(index));
+        }
     }
 }
