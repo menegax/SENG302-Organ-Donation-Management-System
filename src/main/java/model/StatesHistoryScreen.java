@@ -10,30 +10,30 @@ import java.util.ArrayList;
  */
 public class StatesHistoryScreen {
 
-    /**
-     * ArrayList that stores all the stateHistorys for a specific screen
+    /*
+     * ArrayList that stores all the stateHistories for a specific screen
      */
-    ArrayList<IUndoRedo> stateHistorys = new ArrayList<>();
+    private ArrayList<IUndoRedo> stateHistories = new ArrayList<>();
 
     /**
      * Constructor for the StatesHistoryScreen
-     * Creates the list of stateHistorys in its initialisation
-     * @param entrys the TextField widgets on the screen
+     * Creates the list of stateHistories in its initialisation
+     * @param entries the TextField widgets on the screen
      * @param comboBoxes the ComboBox widgets on the screen
      * @param checkBoxes the CheckBox widgets on the screen
      */
-    public StatesHistoryScreen(ArrayList<TextField> entrys, ArrayList<ComboBox> comboBoxes, ArrayList<CheckBox> checkBoxes) {
-        for (TextField entry : entrys) {
+    public StatesHistoryScreen(ArrayList<TextField> entries, ArrayList<ComboBox<String>> comboBoxes, ArrayList<CheckBox> checkBoxes) {
+        for (TextField entry : entries) {
             StateHistoryTextEntry entryState = new StateHistoryTextEntry(entry);
-            stateHistorys.add(entryState);
+            stateHistories.add(entryState);
         }
-        for (ComboBox comboBox : comboBoxes) {
+        for (ComboBox<String> comboBox : comboBoxes) {
             StateHistoryComboBox comboBoxState = new StateHistoryComboBox(comboBox);
-            stateHistorys.add(comboBoxState);
+            stateHistories.add(comboBoxState);
         }
         for (CheckBox checkBox : checkBoxes) {
             StateHistoryCheckBox checkBoxState = new StateHistoryCheckBox(checkBox);
-            stateHistorys.add(checkBoxState);
+            stateHistories.add(checkBoxState);
         }
     }
 
@@ -41,7 +41,7 @@ public class StatesHistoryScreen {
      * Stores the current state of the screen
      */
     public void store() {
-        for (IUndoRedo stateHistory : stateHistorys) {
+        for (IUndoRedo stateHistory : stateHistories) {
             stateHistory.store();
         }
     }
@@ -50,8 +50,17 @@ public class StatesHistoryScreen {
      * Undoes the previous action performed on the screen by returning it to its previous state
      */
     public void undo() {
-        for (IUndoRedo stateHistory : stateHistorys) {
+        for (IUndoRedo stateHistory : stateHistories) {
             stateHistory.undo();
+        }
+    }
+
+    /**
+     *
+     */
+    public void redo() {
+        for (IUndoRedo stateHistory : stateHistories) {
+            stateHistory.redo();
         }
     }
 }
