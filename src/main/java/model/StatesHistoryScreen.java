@@ -56,7 +56,7 @@ public class StatesHistoryScreen {
     }
 
     /**
-     *
+     * Resets the latest screen state undo by returning the the initial state immediately prior to undo
      */
     public void redo() {
         for (IUndoRedo stateHistory : stateHistories) {
