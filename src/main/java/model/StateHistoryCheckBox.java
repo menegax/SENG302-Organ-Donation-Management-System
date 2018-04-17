@@ -45,9 +45,9 @@ public class StateHistoryCheckBox implements IUndoRedo {
      * Also removes any states after the current action in the ArrayList
      */
     public void store() {
-        states.add(checkBox.isSelected());
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
+        states.add(checkBox.isSelected());
     }
 
     /**
@@ -69,5 +69,23 @@ public class StateHistoryCheckBox implements IUndoRedo {
             index += 1;
             checkBox.setSelected(states.get(index));
         }
+    }
+
+    /**
+     * Gets the states of the Check Box
+     * Currently only used in testing
+     * @return the states of the check box
+     */
+    public ArrayList<Boolean> getStates() {
+        return states;
+    }
+
+    /**
+     * Gets the index of the current state of the checkbox
+     * currently only used in testing
+     * @return the index of the current state
+     */
+    public int getIndex() {
+        return index;
     }
 }

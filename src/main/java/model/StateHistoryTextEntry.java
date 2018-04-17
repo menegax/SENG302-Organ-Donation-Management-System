@@ -45,9 +45,9 @@ public class StateHistoryTextEntry implements IUndoRedo {
      * Also removes any states after the current action in the ArrayList
      */
     public void store() {
-        states.add(entry.getText());
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
+        states.add(entry.getText());
     }
 
     /**
@@ -69,5 +69,23 @@ public class StateHistoryTextEntry implements IUndoRedo {
             index += 1;
             entry.setText(states.get(index));
         }
+    }
+
+    /**
+     * Gets the states of the Text Entry
+     * Currently only used in testing
+     * @return the states of the text entry
+     */
+    public ArrayList<String> getStates() {
+        return states;
+    }
+
+    /**
+     * Gets the index of the current state of the Text Entry
+     * currently only used in testing
+     * @return the index of the text entry
+     */
+    public int getIndex() {
+        return index;
     }
 }
