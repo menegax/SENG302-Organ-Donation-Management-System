@@ -44,6 +44,7 @@ public class GUIClinicianSearchDonors implements Initializable {
      * @param url Required parameter that is not used in the function
      * @param rb  Required parameter that is not used in the function
      */
+    @FXML
     public void initialize(URL url, ResourceBundle rb) {
         // todo implement below
         loadData();
@@ -53,15 +54,28 @@ public class GUIClinicianSearchDonors implements Initializable {
     /**
      * Loads the current donor data into the donor data table
      */
+    @FXML
     private void loadData() {
 
-        donorDataTable.getItems().addAll(Database.getDonors());
+//        donorDataTable.setItems(FXCollections.observableArrayList());
+
+        donorDataTable.getItems()
+                .addAll(Database.getDonors());
 
         // for each donor d
-        columnName.setCellValueFactory(d-> d.getValue().getNameConcatenated() != null ? new SimpleStringProperty(d.getValue().getNameConcatenated()) : new SimpleStringProperty(""));
-        columnAge.setCellValueFactory(d-> new SimpleStringProperty(String.valueOf(d.getValue().getAge())));
-        columnGender.setCellValueFactory(d->  d.getValue().getGender() != null ? new SimpleStringProperty(d.getValue().getGender().toString()) : new SimpleStringProperty(""));
-        columnRegion.setCellValueFactory(d-> d.getValue().getRegion() != null ? new SimpleStringProperty(d.getValue().getRegion().toString()) : new SimpleStringProperty(""));
+        columnName.setCellValueFactory(d -> d.getValue()
+                .getNameConcatenated() != null ? new SimpleStringProperty(d.getValue()
+                .getNameConcatenated()) : new SimpleStringProperty(""));
+        columnAge.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue()
+                .getAge())));
+        columnGender.setCellValueFactory(d -> d.getValue()
+                .getGender() != null ? new SimpleStringProperty(d.getValue()
+                .getGender()
+                .toString()) : new SimpleStringProperty(""));
+        columnRegion.setCellValueFactory(d -> d.getValue()
+                .getRegion() != null ? new SimpleStringProperty(d.getValue()
+                .getRegion()
+                .toString()) : new SimpleStringProperty(""));
     }
 
     //    /**
@@ -83,6 +97,10 @@ public class GUIClinicianSearchDonors implements Initializable {
     //        calculateFields();
     //    }
 
+    @FXML
+    private void refreshTable() {
+        donorDataTable.refresh();
+    }
 
     public void goToClinicianHome() {
         ScreenControl.activate("home");

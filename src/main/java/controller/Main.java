@@ -31,6 +31,12 @@ public class Main extends Application {
         Database.getDonorByNhi("ABC1238").setRegion(GlobalEnums.Region.AUCKLAND);
         Database.getDonorByNhi("ABC1238").setGender(GlobalEnums.Gender.OTHER);
 
+        Database.addDonor(new Donor("ABC1234", "Jane", dal,"Doe", LocalDate.of(1990, 2, 9)));
+        Database.getDonorByNhi("ABC1234").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getDonorByNhi("ABC1234").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.getDonorByNhi("ABC1234").setRegion(GlobalEnums.Region.CANTERBURY);
+        Database.getDonorByNhi("ABC1234").setGender(GlobalEnums.Gender.FEMALE);
+
 
         // Add Donor scenes
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
