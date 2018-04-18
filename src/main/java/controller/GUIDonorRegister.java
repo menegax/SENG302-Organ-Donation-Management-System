@@ -1,9 +1,8 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.StringConverter;
 import model.Donor;
 import service.Database;
@@ -17,6 +16,11 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 public class GUIDonorRegister {
+
+    @FXML
+    public AnchorPane registerPane;
+    public Label backLabel;
+    public Button doneButton;
 
     @FXML
     private TextField firstnameRegister;
@@ -111,7 +115,7 @@ public class GUIDonorRegister {
             try{
                 addDonorGui();
                 Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Registered");
-                confirm.showAndWait();
+                confirm.show();
                 ScreenControl.activate("login");
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, e.getMessage(), "attempted to add donor from gui attributes");

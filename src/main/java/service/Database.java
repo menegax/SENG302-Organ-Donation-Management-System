@@ -90,6 +90,7 @@ public class Database {
      */
     public static void importFromDisk(String fileName) {
         try {
+            donors = new HashSet<>();
             importFromDiskDonors(fileName);
         } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to import from disk");
