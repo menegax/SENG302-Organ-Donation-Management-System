@@ -158,7 +158,7 @@ public class GUIRegisterTest extends ApplicationTest {
     @Test
     public void unsuccessful_register_duplicate_nhi() {
         interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("ABC1234");
+            lookup("#nhiRegister").queryAs(TextField.class).setText("ABC1238");
             lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
             lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));

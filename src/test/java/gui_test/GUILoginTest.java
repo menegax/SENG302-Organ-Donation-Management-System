@@ -50,9 +50,11 @@ public class GUILoginTest extends ApplicationTest {
 
     @Test
     public void should_login() {
-        interact(() -> lookup("#nhiLogin").queryAs(TextField.class).setText("ABC1234"));
-        assertThat(lookup("#nhiLogin").queryAs(TextField.class)).hasText("ABC1234");
-        interact(() -> lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent()));
+        interact(() -> {
+            lookup("#nhiLogin").queryAs(TextField.class).setText("ABC1238");
+            assertThat(lookup("#nhiLogin").queryAs(TextField.class)).hasText("ABC1238");
+            lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
+        });
         verifyThat("#homePane", Node::isVisible);
     }
 
