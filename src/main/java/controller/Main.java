@@ -28,6 +28,9 @@ public class Main extends Application {
         Database.addDonor(new Donor("ABC1238", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
         Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.LIVER);
         Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.getDonorByNhi("ABC1238").setRegion(GlobalEnums.Region.AUCKLAND);
+        Database.getDonorByNhi("ABC1238").setGender(GlobalEnums.Gender.OTHER);
+
 
         // Add Donor scenes
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));

@@ -57,11 +57,11 @@ public class GUIClinicianSearchDonors implements Initializable {
 
         donorDataTable.getItems().addAll(Database.getDonors());
 
-        // for donor d
-        columnName.setCellValueFactory(d-> new SimpleStringProperty(d.getValue().getNameConcatenated()));
+        // for each donor d
+        columnName.setCellValueFactory(d-> d.getValue().getNameConcatenated() != null ? new SimpleStringProperty(d.getValue().getNameConcatenated()) : new SimpleStringProperty(""));
         columnAge.setCellValueFactory(d-> new SimpleStringProperty(String.valueOf(d.getValue().getAge())));
-//        columnGender.setCellValueFactory(d-> new SimpleStringProperty(d.getValue().getGender().toString())); // todo issues with enum toString, added ternary operator to return "Not set" but still not working.
-//        columnRegion.setCellValueFactory(d-> new SimpleStringProperty(d.getValue().getRegion().toString())); // todo also an enum as above
+        columnGender.setCellValueFactory(d->  d.getValue().getGender() != null ? new SimpleStringProperty(d.getValue().getGender().toString()) : new SimpleStringProperty(""));
+        columnRegion.setCellValueFactory(d-> d.getValue().getRegion() != null ? new SimpleStringProperty(d.getValue().getRegion().toString()) : new SimpleStringProperty(""));
     }
 
     //    /**
