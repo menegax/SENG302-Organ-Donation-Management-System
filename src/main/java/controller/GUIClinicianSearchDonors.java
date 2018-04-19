@@ -1,5 +1,7 @@
 package controller;
 
+import static utility.UserActionHistory.userActions;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -10,14 +12,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
+import utility.Search;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
 
 public class GUIClinicianSearchDonors implements Initializable {
+
+    @FXML
+    private AnchorPane pane;
 
     @FXML
     private TableView<Donor> donorDataTable;
@@ -46,8 +56,14 @@ public class GUIClinicianSearchDonors implements Initializable {
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
-        // todo implement below
         loadData();
+
+        // Enter key triggers search
+        pane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                donorSearch();
+            }
+        });
     }
 
 
@@ -56,8 +72,6 @@ public class GUIClinicianSearchDonors implements Initializable {
      */
     @FXML
     private void loadData() {
-
-//        donorDataTable.setItems(FXCollections.observableArrayList());
 
         donorDataTable.getItems()
                 .addAll(Database.getDonors());
@@ -78,29 +92,36 @@ public class GUIClinicianSearchDonors implements Initializable {
                 .toString()) : new SimpleStringProperty(""));
     }
 
-    //    /**
-    //     * Updates the donors displayed based on the the search criteria in the search entry
-    //     */
-    //    private void search() {
-    //        searchedDonors.clear();
-    //        for (int i = 0; i < donors.size() && i < 30; i++) {
-    //            if (donors.get(i)
-    //                    .getName()
-    //                    .toLowerCase()
-    //                    .contains(searchEntry.getText()
-    //                            .toLowerCase()) && !donors.get(i)
-    //                    .getChanged()
-    //                    .equals("Delete")) {
-    //                searchedDonors.add(donors.get(i));
-    //            }
-    //        }
-    //        calculateFields();
-    //    }
 
+    /**
+     * Searches the indices of donors
+     */
+    @FXML
+    private void donorSearch() {
+        try {
+            ArrayList<Donor> searchResults = Search.searchByName(searchEntry.getText());
+            userActions.log(Level.WARNING, "successfully searched donors", "attempted to search donors");
+
+            //todo make searchResults populate the table
+
+            System.out.println("DONORS HAVE BEEN SEARCHED THROUGH"); //todo remove
+        }
+        catch (IOException e) {
+            userActions.log(Level.WARNING, "failed to search donors", "attempted to search donors");
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to search donors");
+            alert.show();
+        }
+    }
+
+
+    /**
+     * Refreshes the table's data
+     */
     @FXML
     private void refreshTable() {
         donorDataTable.refresh();
     }
+
 
     public void goToClinicianHome() {
         ScreenControl.activate("home");

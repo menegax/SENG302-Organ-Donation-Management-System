@@ -54,6 +54,7 @@ public class Search {
      *
      */
     public static void createFullIndex() {
+        System.out.print("CREATING FULL INDEX OF DONORS... "); //todo remove
         HashSet<Donor> donors = Database.getDonors();
         for (Donor donor : donors) {
             try {
@@ -62,6 +63,7 @@ public class Search {
                 //todo
             }
         }
+        System.out.println("done"); //todo remove
     }
 
 
