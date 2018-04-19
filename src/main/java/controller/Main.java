@@ -23,6 +23,7 @@ public class Main extends Application {
         ScreenControl.setRootScene(rootScene); // set this scene in screen controller
 
         // TODO Remove below donor creation after testing
+        // Add dummy donors for testing
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
         Database.addDonor(new Donor("ABC1238", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
@@ -37,20 +38,15 @@ public class Main extends Application {
         Database.getDonorByNhi("ABC1234").setRegion(GlobalEnums.Region.CANTERBURY);
         Database.getDonorByNhi("ABC1234").setGender(GlobalEnums.Gender.FEMALE);
 
-
-        // Add Donor scenes
-        ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
-        ScreenControl.addScreen("home", FXMLLoader.load(getClass().getResource("/scene/home.fxml")));
-
-        // Add Clinician scenes
-        ScreenControl.addScreen("clinicianSearchDonors", FXMLLoader.load(getClass().getResource("/scene/clinicianSearchDonors.fxml")));
-
-
-        // initialising new clinician on startup
+        // Add dummy clinician for testing
         ArrayList<String> mid = new ArrayList<>();
         mid.add("Middle");
         Database.addClinician("initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY);
+
+        // Add scenes
+        ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+        ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
+        ScreenControl.addScreen("home", FXMLLoader.load(getClass().getResource("/scene/home.fxml")));
 
         primaryStage.show();
     }
