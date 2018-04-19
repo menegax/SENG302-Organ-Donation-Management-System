@@ -52,12 +52,15 @@ public class Search {
     /**
      * Creates a full index of all donors currently loaded into the app.
      *
-     * @exception IOException When unable to add an index
      */
-    public static void createFullIndex() throws IOException {
+    public static void createFullIndex() {
         HashSet<Donor> donors = Database.getDonors();
         for (Donor donor : donors) {
-            addIndex(donor);
+            try {
+                addIndex(donor);
+            } catch (IOException e) {
+                //todo
+            }
         }
     }
 

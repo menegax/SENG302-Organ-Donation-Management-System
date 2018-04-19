@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
+import utility.Search;
 import utility.UserActionHistory;
 
 import java.time.LocalDate;
@@ -35,13 +36,15 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         UserActionHistory.setup(); // start user action logs
+        Search.createFullIndex(); // index donors for search
         launch(args);
     }
 
 
     /**
      * Adds dummy test objects for testing purposes
-     * @throws Exception when the database cannot locate the given donor
+     *
+     * @exception Exception when the database cannot locate the given donor
      */
     private void addDummyTestObjects() throws Exception {
 
