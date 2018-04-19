@@ -1,16 +1,12 @@
 package controller;
 
+import static utility.UserActionHistory.userActions;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
-import model.Clinician;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
@@ -18,8 +14,6 @@ import model.Donor;
 import service.Database;
 
 import java.util.logging.Level;
-
-import static utility.UserActionHistory.userActions;
 
 public class GUILogin {
 

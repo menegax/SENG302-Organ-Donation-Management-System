@@ -29,6 +29,7 @@ public class SearchTest {
 //		fail("Not yet implemented");
 //	}
 
+	//todo rework
 	@Test
 	public void testSearchByName() {
     	Donor d1 = new Donor("abc1234", "Pat", null, "Laff", LocalDate.now());
