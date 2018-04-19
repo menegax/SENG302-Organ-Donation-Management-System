@@ -39,7 +39,7 @@ public class GUIDonorMedications {
 
     @FXML
     /*
-     * Removes a medication from either the history or current ArrayList and listView
+     * Removes a medication from the history ArrayList and listView
      */
     public void deleteMedication() {
         removeMedication(new ArrayList<>(pastMedications.getSelectionModel().getSelectedItems()));
