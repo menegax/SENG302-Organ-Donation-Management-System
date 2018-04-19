@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianProfile">
+   <children>
+      <Label layoutX="201.0" layoutY="35.0" text="Clinician Profile">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Label>
+      <VBox layoutX="181.0" layoutY="95.0" prefHeight="230.0" prefWidth="239.0">
+         <children>
+            <HBox prefHeight="25.0" prefWidth="239.0">
+               <children>
+                  <Label text="Staff ID: " />
+                  <Label fx:id="idTxt" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="25.0" prefWidth="239.0">
+               <children>
+                  <Label text="Name: " />
+                  <Label fx:id="nameTxt" text="Label" />
+               </children>
+            </HBox>
+            <Label prefHeight="33.0" prefWidth="87.0" text="Work Address" />
+            <HBox prefHeight="25.0" prefWidth="239.0">
+               <children>
+                  <Label text="Street 1: " />
+                  <Label fx:id="street1Txt" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="25.0" prefWidth="239.0">
+               <children>
+                  <Label text="Street 2: " />
+                  <Label fx:id="street2Txt" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="25.0" prefWidth="239.0">
+               <children>
+                  <Label text="Surburb: " />
+                  <Label fx:id="suburbTxt" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="25.0" prefWidth="239.0">
+               <children>
+                  <Label text="Region: " />
+                  <Label fx:id="regionTxt" text="Label" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Label layoutX="14.0" layoutY="27.0" onMouseClicked="#goToHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
+      <Button layoutX="258.0" layoutY="344.0" mnemonicParsing="false" text="Edit Profile" />
+   </children>
+</AnchorPane>

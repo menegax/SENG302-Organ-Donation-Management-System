@@ -46,6 +46,12 @@ public class Main extends Application {
         // Add Clinician scenes
         ScreenControl.addScreen("clinicianSearchDonors", FXMLLoader.load(getClass().getResource("/scene/clinicianSearchDonors.fxml")));
 
+
+        // initialising new clinician on startup
+        ArrayList<String> mid = new ArrayList<>();
+        mid.add("Middle");
+        Database.addClinician("initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY);
+
         primaryStage.show();
     }
 
