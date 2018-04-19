@@ -2,7 +2,9 @@ package controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
 import javafx.fxml.FXML;
@@ -17,6 +19,10 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 public class GUIDonorProfile {
+
+    @FXML
+    public AnchorPane profilePane;
+    public Button testMedication;
 
     @FXML
     private Label nhiLbl;

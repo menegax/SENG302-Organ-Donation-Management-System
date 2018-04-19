@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import model.Medication;
 import service.Database;
@@ -19,6 +20,13 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 public class GUIDonorMedications {
+
+    @FXML
+    public AnchorPane medicationPane;
+    public Button registerMed;
+    public Button removeMed;
+    public Button addMed;
+    public Button deleteMed;
 
     @FXML
     private TextField newMedication; // Medications are entered for adding to the currentMedications ArrayList and listView
