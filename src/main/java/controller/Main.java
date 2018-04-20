@@ -50,7 +50,9 @@ public class Main extends Application {
     private void addDummyTestObjects() throws Exception {
 
         // Add dummy donors for testing
-        Database.addDonor(new Donor("ABC1238", "Joe", null, "Bloggs", LocalDate.of(1990, 2, 9)));
+        ArrayList<String> middles = new ArrayList<>();
+        middles.add("middle");
+        Database.addDonor(new Donor("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
         Database.getDonorByNhi("ABC1238")
                 .addDonation(GlobalEnums.Organ.LIVER);
         Database.getDonorByNhi("ABC1238")
@@ -60,7 +62,7 @@ public class Main extends Application {
         Database.getDonorByNhi("ABC1238")
                 .setGender(GlobalEnums.Gender.OTHER);
 
-        Database.addDonor(new Donor("ABC1234", "Jane", null, "Doe", LocalDate.of(1990, 2, 9)));
+        Database.addDonor(new Donor("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
         Database.getDonorByNhi("ABC1234")
                 .addDonation(GlobalEnums.Organ.LIVER);
         Database.getDonorByNhi("ABC1234")
