@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
-import utility.Search;
+import utility.SearchDonors;
 import utility.UserActionHistory;
 
 import java.time.LocalDate;
@@ -24,6 +24,7 @@ public class Main extends Application {
         ScreenControl.setRootScene(rootScene); // set this scene in screen controller
 
         addDummyTestObjects();
+        SearchDonors.createFullIndex(); // index donors for search, needs to be after importing or adding any donors
 
         // Add scenes
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
@@ -36,7 +37,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         UserActionHistory.setup(); // start user action logs
-        Search.createFullIndex(); // index donors for search
         launch(args);
     }
 

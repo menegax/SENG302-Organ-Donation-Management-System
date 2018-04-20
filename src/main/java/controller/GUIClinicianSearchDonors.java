@@ -1,28 +1,22 @@
 package controller;
 
-import static utility.UserActionHistory.userActions;
-
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
-import utility.Search;
+import utility.SearchDonors;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public class GUIClinicianSearchDonors implements Initializable {
 
@@ -99,7 +93,7 @@ public class GUIClinicianSearchDonors implements Initializable {
     @FXML
     private void donorSearch() {
         try {
-            ArrayList<Donor> searchResults = Search.searchByName(searchEntry.getText());
+            ArrayList<Donor> searchResults = SearchDonors.searchByName(searchEntry.getText());
 
             //todo make searchResults populate the table
 
