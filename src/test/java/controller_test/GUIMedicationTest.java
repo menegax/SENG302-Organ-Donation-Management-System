@@ -184,13 +184,10 @@ public class GUIMedicationTest extends ApplicationTest {
 
         interact( () -> {
             clickOn("Pills");
-            // The following line doesn't do anything, but the clickOn is visibly working
-            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
         interact( () -> {
-            clickOn("Pills");  // Experiment: DOES IT WORK IF REPEATED??? ...
-            // The following line doesn't do anything, but the clickOn is visibly working
+            // Press the remove medication button for moving the selected medication from current to past medications
             lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
@@ -231,13 +228,10 @@ public class GUIMedicationTest extends ApplicationTest {
 
         interact( () -> {
             clickOn("Placebo");
-            // The following line doesn't do anything, but the clickOn is visibly working
-            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
         interact( () -> {
-            clickOn("Placebo");
-            // The following line doesn't do anything, but the clickOn is visibly working
+            // Press the remove medication button for moving the selected medication from current to past medications
             lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
@@ -247,13 +241,10 @@ public class GUIMedicationTest extends ApplicationTest {
 
         interact( () -> {
             clickOn("Placebo");
-            // The following line doesn't do anything, but the clickOn is visibly working
-            lookup( "#addMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
         interact( () -> {
-            clickOn("Placebo");
-            // The following line doesn't do anything, but the clickOn is visibly working
+            // Press the add medication button for moving the selected medication from past to current medications
             lookup( "#addMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
         // Verify that the currentMedications listView is now not empty as a medication has now been moved to it
@@ -321,13 +312,10 @@ public class GUIMedicationTest extends ApplicationTest {
 
         interact( () -> {
             clickOn("duplicateMed");
-            // The following line doesn't do anything, but the clickOn is visibly working
-            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
         interact( () -> {
-            clickOn("duplicateMed");
-            // The following line doesn't do anything, but the clickOn is visibly working
+            // Press the remove medication button for moving the selected medication from current to past medications
             lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
@@ -395,11 +383,11 @@ public class GUIMedicationTest extends ApplicationTest {
         interact( () -> {
             clickOn("Codeine");
             // The following line doesn't do anything, but the clickOn is visibly working
-            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+            //lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
         interact( () -> {
-            clickOn("Codeine");
+            //clickOn("Codeine");
             // The following line doesn't do anything, but the clickOn is visibly working
             lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
@@ -410,13 +398,10 @@ public class GUIMedicationTest extends ApplicationTest {
 
         interact( () -> {
             clickOn("Codeine");
-            // The following line doesn't do anything, but the clickOn is visibly working
-            lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
         interact( () -> {
-            clickOn("Codeine");
-            // The following line doesn't do anything, but the clickOn is visibly working
+            // Press the delete medication button for deleting the selected medication
             lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
         // Verify that the pastMedications listView is now empty as a medication has now been deleted from it
@@ -456,13 +441,10 @@ public class GUIMedicationTest extends ApplicationTest {
 
         interact( () -> {
             clickOn("Vitamins");
-            // The following line doesn't do anything, but the clickOn is visibly working
-            lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
         interact( () -> {
-            clickOn("Vitamins");
-            // The following line doesn't do anything, but the clickOn is visibly working
+            // Press the delete medication button for deleting the selected medication
             lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
         // Verify that the currentMedications listView is still not empty as a medication has been deleted from it
@@ -502,13 +484,10 @@ public class GUIMedicationTest extends ApplicationTest {
 
         interact( () -> {
             clickOn("validDuplicate");
-            // The following line doesn't do anything, but the clickOn is visibly working
-            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
         interact( () -> {
-            clickOn("validDuplicate");
-            // The following line doesn't do anything, but the clickOn is visibly working
+            // Press the remove medication button for moving the selected medication from current to past medications
             lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
@@ -518,13 +497,10 @@ public class GUIMedicationTest extends ApplicationTest {
 
         interact( () -> {
             clickOn("validDuplicate");
-            // The following line doesn't do anything, but the clickOn is visibly working
-            lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
         interact( () -> {
-            clickOn("validDuplicate");
-            // The following line doesn't do anything, but the clickOn is visibly working
+            // Press the delete medication button for deleting the selected medication
             lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
         // Verify that the pastMedications listView is now empty as a medication has now been deleted from it
@@ -580,6 +556,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has one entry as a medication has now been registered to it
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 1 ));
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -593,6 +570,7 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the currentMedications listView now has two medication entries
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 2));
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -607,6 +585,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Panadol"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 3 ));
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -622,6 +601,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Panadol"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Panadeine"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 4 ));
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -637,8 +617,8 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Panadol"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
-        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Anti-biotic"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 5 ));
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -654,9 +634,9 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Panadol"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
-        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Anti-biotic"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Anti-psychotics"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 6 ));
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -672,11 +652,26 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Panadol"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
-        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Anti-biotic"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Anti-psychotics"));
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("Prozac"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 7 ));
     }
+
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+    ////////////////// FOLLOWING TESTS MAY NOT BE REQUIRED IF NOT IMPLEMENTING MULTIPLE SELECTION //////////////////
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
     @Test
     /*
@@ -792,21 +787,24 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#currentMedications", ListViewMatchers.hasListCell("TestDrugG"));
 
         interact( () -> {
-            clickOn("TestDrugA");
-            clickOn("TestDrugA");
-            clickOn("TestDrugB");
-            clickOn("TestDrugB");
-            clickOn("TestDrugC");
-            clickOn("TestDrugC");
-            clickOn("TestDrugD");
-            clickOn("TestDrugD");
-            clickOn("TestDrugE");
-            clickOn("TestDrugE");
-            clickOn("TestDrugF");
-            clickOn("TestDrugF");
-            clickOn("TestDrugG");
-            clickOn("TestDrugG");
-            // The following line doesn't do anything, but the clickOn is visibly working
+                    clickOn( "TestDrugA" );
+                    clickOn( "TestDrugA" );
+                    clickOn( "TestDrugB" );
+                    clickOn( "TestDrugB" );
+                    clickOn( "TestDrugC" );
+                    clickOn( "TestDrugC" );
+                    clickOn( "TestDrugD" );
+                    clickOn( "TestDrugD" );
+                    clickOn( "TestDrugE" );
+                    clickOn( "TestDrugE" );
+                    clickOn( "TestDrugF" );
+                    clickOn( "TestDrugF" );
+                    clickOn( "TestDrugG" );
+                    clickOn( "TestDrugG" );
+        });
+
+        interact( () -> {
+            // Press the remove medication button for moving the selected medications from current to past medication
             lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
@@ -943,19 +941,27 @@ public class GUIMedicationTest extends ApplicationTest {
             clickOn("prescriptionE");
             clickOn("prescriptionF");
             clickOn("prescriptionG");
-            // The following line doesn't do anything, but the clickOn is visibly working
-            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
         interact( () -> {
+            // Press the remove medication button for moving the selected medication from current to past medication
+            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        });
+
+        // THE MULTIPLE SELECTION IS NOT YET COMPLETED SO WILL NOT TEST JUST AS OF YET
+
+        interact( () -> {
+            clickOn("prescriptionG");
             clickOn("prescriptionA");
             clickOn("prescriptionB");
             clickOn("prescriptionC");
             clickOn("prescriptionD");
             clickOn("prescriptionE");
             clickOn("prescriptionF");
-            clickOn("prescriptionG");
-            // The following line doesn't do anything, but the clickOn is visibly working
+        });
+
+        interact( () -> {
+            // Press the add medication button for moving the selected medication from past to current medication
             lookup( "#addMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
@@ -980,7 +986,8 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has one entry as a medication has now been registered to it
-        ;
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 1 ));
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -992,7 +999,9 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has two medication entries
-        ;
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 2));
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -1004,7 +1013,10 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has three medication entries
-        ;
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Panadol"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 3 ));
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -1016,7 +1028,11 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has four medication entries
-        ;
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Panadol"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Panadeine"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 4 ));
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -1028,7 +1044,12 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has five medication entries
-        ;
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Panadol"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Anti-biotic"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 5 ));
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -1040,7 +1061,13 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has six medication entries
-        ;
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Panadol"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Anti-biotic"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Anti-psychotics"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 6 ));
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -1052,7 +1079,14 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has seven medication entries
-        ;
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Aspirin"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Panadol"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Morphine"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Anti-biotic"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Anti-psychotics"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("Prozac"));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 7 ));
 
         interact( () -> {
             clickOn("Aspirin");
@@ -1062,7 +1096,10 @@ public class GUIMedicationTest extends ApplicationTest {
             clickOn("Panadol");
             clickOn("Prozac");
             clickOn("Anti-psychotics");
-            // The following line doesn't do anything, but the clickOn is visibly working
+        });
+
+        interact( () -> {
+            // Press the remove medication button for moving the selected medication from current to past medication
             lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
@@ -1074,7 +1111,10 @@ public class GUIMedicationTest extends ApplicationTest {
             clickOn("Panadol");
             clickOn("Aspirin");
             clickOn("Morphine");
-            // The following line doesn't do anything, but the clickOn is visibly working
+        });
+
+        interact( () -> {
+            // Press the delete medication button for deleting the selected medication
             lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
@@ -1202,7 +1242,10 @@ public class GUIMedicationTest extends ApplicationTest {
             clickOn( "TestDrugE" );
             clickOn( "TestDrugF" );
             clickOn( "TestDrugG" );
-            // The following line doesn't do anything, but the clickOn is visibly working
+        });
+
+        interact( () -> {
+            // Press the delete medication button for deleting the selected medication
             lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         } );
 
