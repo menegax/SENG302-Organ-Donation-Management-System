@@ -130,7 +130,7 @@ public class GUIDonorMedications {
      * @param medication The selected medication being added to the current ArrayList and listView
      */
     private void addMedication(String medication) {
-        if (!medication.equals("Enter a medication") && !medication.equals("") && !medication.equals(" ")) { // This could maybe do with some more thought
+        if (!medication.equals("Enter a medication") && !medication.equals("") && !medication.equals(" ")) { // This can be altered after story 19 is completed
             if (!(current.contains(medication) || history.contains(medication))) {
                 target.getCurrentMedications().add(new Medication(medication));
                 viewCurrentMedications();
@@ -178,8 +178,6 @@ public class GUIDonorMedications {
     private void moveToCurrent(ArrayList<String> medications) {
         for (String medication : medications) {
             if (history.contains( medication )) {
-                //Medication.transferMedication(target.getMedicationHistory(), target.getCurrentMedications(),
-                //      new Medication(medication), history.indexOf(medication));
                 target.getMedicationHistory().remove( history.indexOf( medication ) );
                 viewPastMedications();
 
@@ -202,8 +200,6 @@ public class GUIDonorMedications {
     private void moveToHistory(ArrayList<String> medications) {
         for (String medication : medications) {
             if (current.contains( medication )) {
-                //Medication.transferMedication(target.getCurrentMedications(), target.getMedicationHistory(),
-                //      new Medication(medication), current.indexOf(medication));
                 target.getCurrentMedications().remove( current.indexOf( medication ) );
                 viewCurrentMedications();
 
@@ -217,7 +213,11 @@ public class GUIDonorMedications {
         }
     }
 
+    /**
+     * Navigates from the Medication panel to the home panel after 'back' is selected, saves medication log
+     */
     public void goToProfile() {
+        Database.saveToDisk(); // Save to .json the changes made to the medications log
         ScreenControl.removeScreen("donorProfile");
         try {
             ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
