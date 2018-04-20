@@ -57,6 +57,6 @@ public class GUIClinicianProfile {
     }
 
     public void goToHome() {
-        ScreenControl.activate("home");
+        ScreenControl.activate("clinicianHome");
     }
 }
