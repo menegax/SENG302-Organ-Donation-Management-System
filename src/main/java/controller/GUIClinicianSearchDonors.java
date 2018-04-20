@@ -100,14 +100,12 @@ public class GUIClinicianSearchDonors implements Initializable {
     private void donorSearch() {
         try {
             ArrayList<Donor> searchResults = Search.searchByName(searchEntry.getText());
-            userActions.log(Level.WARNING, "successfully searched donors", "attempted to search donors");
 
             //todo make searchResults populate the table
 
             System.out.println("DONORS HAVE BEEN SEARCHED THROUGH"); //todo remove
         }
         catch (IOException e) {
-            userActions.log(Level.WARNING, "failed to search donors", "attempted to search donors");
             Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to search donors");
             alert.show();
         }
