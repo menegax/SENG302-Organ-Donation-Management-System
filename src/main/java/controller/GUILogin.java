@@ -44,7 +44,6 @@ public class GUILogin {
                 ScreenControl.activate("home");
                 ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
                 ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
-                GUIHome.setClinician(false);
             } catch (Exception e) {
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to log in");
@@ -53,14 +52,10 @@ public class GUILogin {
         } else {
             try {
                 Clinician newClinician = Database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
-                System.out.println("1");
                 ScreenControl.setLoggedInClinician(newClinician);
-                System.out.println("2");
                 ScreenControl.addScreen("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
-                System.out.println("3");
-                ScreenControl.activate("home");
-                GUIHome.setClinician(true);
-//                ScreenControl.addScreen("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
+                System.out.println("################################");
+                ScreenControl.activate("clinicianHome");
             } catch (Exception e) {
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to log in");
@@ -80,11 +75,9 @@ public class GUILogin {
         if (clinicianToggle.isSelected()) {
             clinicianToggle.setSelected(true);
             nhiLogin.setPromptText("Staff ID");
-            System.out.println("Checked");
         } else {
             clinicianToggle.setSelected(false);
             nhiLogin.setPromptText("NHI");
-            System.out.println("Un-checked");
         }
     }
 

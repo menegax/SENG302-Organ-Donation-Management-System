@@ -4,25 +4,22 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import service.Database;
 
-
-public class GUIHome {
+public class GUIClinicianHome {
     @FXML
-    public void goToProfile(){
-        ScreenControl.activate("donorProfile");
+    public void goToClinicianProfile(){ ScreenControl.activate("clinicianProfile"); }
+
+    @FXML
+    public void goToSearch(){
+        // implement search functionality
     }
 
     @FXML
-    public void goToHistory(){
-        ScreenControl.activate("donorHistory");
-    }
-
-    @FXML
-    public void logOut() {
+    public void logOutClinician() {
         ScreenControl.activate("login");
     }
 
     @FXML
-    public void save() {
+    public void saveClinician() {
         Database.saveToDisk();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Saved!");
         alert.showAndWait();
