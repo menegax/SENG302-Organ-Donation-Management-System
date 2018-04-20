@@ -51,7 +51,8 @@ public class Main extends Application {
 
         // Add dummy donors for testing
         ArrayList<String> middles = new ArrayList<>();
-        middles.add("middle");
+        middles.add("Middle");
+        middles.add("Xavier");
         Database.addDonor(new Donor("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
         Database.getDonorByNhi("ABC1238")
                 .addDonation(GlobalEnums.Organ.LIVER);
@@ -73,9 +74,7 @@ public class Main extends Application {
                 .setGender(GlobalEnums.Gender.FEMALE);
 
         // Add dummy clinician for testing
-        ArrayList<String> mid = new ArrayList<>();
-        mid.add("Middle");
-        Database.addClinician("initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY);
+        Database.addClinician("initial", middles, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY);
 
     }
 }

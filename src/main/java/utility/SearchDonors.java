@@ -54,17 +54,14 @@ public class SearchDonors {
      *
      */
     public static void createFullIndex() {
-        System.out.println("CREATING FULL INDEX OF DONORS... "); //todo remove
         HashSet<Donor> donors = Database.getDonors();
         for (Donor donor : donors) {
             try {
                 addIndex(donor);
-                System.out.println("donor added to index with NHI " + donor.getNhiNumber()); //todo remove
             } catch (IOException e) {
                 //todo
             }
         }
-        System.out.println("done"); //todo remove
     }
 
 
@@ -91,7 +88,7 @@ public class SearchDonors {
 
 
     //todo add javadoc
-    public static void closeWriter() throws IOException {
+    public static void closeIndex() throws IOException {
         ramDirectory.close();
         indexWriter.close();
     }
