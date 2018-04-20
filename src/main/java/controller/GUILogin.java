@@ -60,13 +60,14 @@ public class GUILogin {
 
                 // Add donor scenes
                 ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-                ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorProfileUpdate.fxml")));
+                ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorProfileUpdate.fxml"))); //todo if this is commented out it works. error loading profile update fxml.
                 ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorDonations.fxml")));
 
                 ScreenControl.activate("home");
                 GUIHome.setClinician(false);
             }
             catch (Exception e) {
+                System.out.println("EXCEPTION LOGGING IN: " + e.toString()); //todo remove debug print statement
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to log in");
                 alert.show();

@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -44,9 +45,8 @@ public class GUIClinicianSearchDonors implements Initializable {
 
     /**
      * Initialises the data within the table to all donors
-     *
-     * @param url Required parameter that is not used in the function
-     * @param rb  Required parameter that is not used in the function
+     * @param url URL not used
+     * @param rb Resource bundle not used
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
@@ -66,6 +66,15 @@ public class GUIClinicianSearchDonors implements Initializable {
      */
     @FXML
     private void loadData() {
+
+        donorDataTable.getItems().removeAll(); //todo does not seem to remove the donors. See print statements below after hitting search repeatedly
+
+        //todo remove debugging print statements
+        ObservableList<Donor> donorsInTable = donorDataTable.getItems();
+        System.out.println("After removing all, Donors currently in table:");
+        for (Donor donor : donorsInTable) {
+            System.out.println("Donor " + donor.getNameConcatenated());
+        }
 
         donorDataTable.getItems()
                 .addAll(Database.getDonors());
@@ -95,9 +104,15 @@ public class GUIClinicianSearchDonors implements Initializable {
         try {
             ArrayList<Donor> searchResults = SearchDonors.searchByName(searchEntry.getText());
 
-            //todo make searchResults populate the table
+            //todo remove debugging print statements
+            System.out.println("Search results:");
+            for (Donor donor : searchResults) {
+                System.out.println("Donor name: " + donor.getNameConcatenated());
+            }
 
-            System.out.println("DONORS HAVE BEEN SEARCHED THROUGH"); //todo remove
+            //todo make searchResults populate the table
+            donorDataTable.getItems().removeAll();
+            donorDataTable.getItems().addAll(searchResults);
         }
         catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to search donors");
@@ -108,10 +123,14 @@ public class GUIClinicianSearchDonors implements Initializable {
 
     /**
      * Refreshes the table's data
+     *
+     * Say a donor is added to the db or updated with new attributes, a refresh would be needed
      */
     @FXML
     private void refreshTable() {
         donorDataTable.refresh();
+
+        //todo make refreshing clear the search results from the table and load default data
     }
 
 

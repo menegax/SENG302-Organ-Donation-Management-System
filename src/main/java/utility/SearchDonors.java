@@ -81,7 +81,7 @@ public class SearchDonors {
         indexWriter.addDocument(createDocument(donor));
     }
 
-
+    // todo add javadoc
     private static Document createDocument(Donor donor) {
         Document donorDoc = new Document();
         donorDoc.add(new StringField("nhi", donor.getNhiNumber(), Field.Store.YES));
@@ -90,19 +90,20 @@ public class SearchDonors {
     }
 
 
-    public static void closeIndex() throws IOException {
+    //todo add javadoc
+    public static void closeWriter() throws IOException {
         ramDirectory.close();
         indexWriter.close();
     }
 
-
+    //todo add javadoc
     private static TopDocs searchQuery(FuzzyQuery query) throws IOException {
         IndexReader indexReader = DirectoryReader.open(ramDirectory);
         indexSearcher = new IndexSearcher(indexReader);
         return indexSearcher.search(query, NUM_RESULTS);
     }
 
-
+    //todo add javadoc
     public static ArrayList<Donor> searchByName(String name) throws IOException {
         ArrayList<Donor> results = new ArrayList<>();
         FuzzyQuery fuzzyQuery = new FuzzyQuery(new Term("name", name));
