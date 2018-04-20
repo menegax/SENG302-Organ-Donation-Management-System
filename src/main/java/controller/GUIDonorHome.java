@@ -18,11 +18,6 @@ public class GUIDonorHome {
         ScreenControl.activate("donorHistory");
     }
 
-    @FXML
-    public void goToSearchDonors() {
-        ScreenControl.activate("clinicianSearchDonors");
-    }
-
 
     @FXML
     public void logOut() {

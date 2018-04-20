@@ -30,7 +30,7 @@ public class Main extends Application {
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
         ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
         ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
-        ScreenControl.addScreen("home", FXMLLoader.load(getClass().getResource("/scene/home.fxml")));
+        ScreenControl.addScreen("donorHome", FXMLLoader.load(getClass().getResource("/scene/donorHome.fxml")));
 
         primaryStage.show();
     }

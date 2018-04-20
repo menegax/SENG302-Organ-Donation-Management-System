@@ -120,8 +120,8 @@ public class GUIDonorProfile {
     }
 
 
-    public void goToHome() {
-        ScreenControl.activate("home");
+    public void goToDonorHome() {
+        ScreenControl.activate("donorHome");
     }
 
 }

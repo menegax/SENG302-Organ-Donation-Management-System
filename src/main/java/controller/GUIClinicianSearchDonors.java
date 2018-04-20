@@ -135,7 +135,7 @@ public class GUIClinicianSearchDonors implements Initializable {
 
 
     public void goToClinicianHome() {
-        ScreenControl.activate("home");
+        ScreenControl.activate("clinicianHome");
     }
 }
 

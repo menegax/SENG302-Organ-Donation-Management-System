@@ -9,8 +9,8 @@ public class GUIClinicianHome {
     public void goToClinicianProfile(){ ScreenControl.activate("clinicianProfile"); }
 
     @FXML
-    public void goToSearch(){
-        // implement search functionality
+    public void goToSearchDonors(){
+        ScreenControl.activate("clinicianSearchDonors");
     }
 
     @FXML
