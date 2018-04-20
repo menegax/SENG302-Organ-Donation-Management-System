@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import static utility.UserActionHistory.userActions;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -63,7 +62,12 @@ public class SearchDonorsTest {
 
         // When index searched for a single specific donor
         ArrayList<Donor> results = SearchDonors.searchByName("Pati Laffe");
-
+        System.out.println("\ntest 1:\nShould contain: ");
+        System.out.println(d1);
+        for (Donor donor : results) {
+        	System.out.println("--------------------------");
+        	System.out.println(donor);
+        }
         // Should return that donor and no other
         assertTrue(results.contains(d1));
 
@@ -89,6 +93,12 @@ public class SearchDonorsTest {
 
         // Then searching by new first name returns correct results
         ArrayList<Donor> results = SearchDonors.searchByName("Andre Laf");
+        System.out.println("\ntest 2:\nShould contain: ");
+        System.out.println(donor1);
+        for (Donor donor : results) {
+        	System.out.println("--------------------------");
+        	System.out.println(donor);
+        }
         assertTrue(results.contains(Database.getDonorByNhi("abc4321")));
     }
 
