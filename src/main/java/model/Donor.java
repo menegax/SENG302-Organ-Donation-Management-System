@@ -2,6 +2,7 @@ package model;
 
 import service.Database;
 import utility.GlobalEnums;
+import utility.SearchDonors;
 import utility.GlobalEnums.BloodGroup;
 import utility.GlobalEnums.Gender;
 import utility.GlobalEnums.Organ;
@@ -89,6 +90,8 @@ public class Donor {
                                  String suburb, String region, String gender, String bloodGroup,
                                  double height, double weight, String nhi) throws IllegalArgumentException {
         Enum globalEnum;
+        // TODO Change this so that it only re-indexes on name or nhi change
+        SearchDonors.removeIndex(this);
         if (firstName != null) setFirstName(firstName);
         if (lastName != null) setLastName(lastName);
         if (middleNames != null) setMiddleNames(middleNames);
@@ -125,6 +128,7 @@ public class Donor {
         if (nhi != null) setNhiNumber(nhi);
         userActions.log(Level.INFO, "Successfully updated donor " + getNhiNumber(), "attempted to update donor attributes");
         donorModified();
+    	SearchDonors.addIndex(this);
     }
 
     /**

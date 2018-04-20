@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import model.Clinician;
 import model.Donor;
 import utility.GlobalEnums;
+import utility.SearchDonors;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class Database {
             newDonor.ensureValidNhi();
             newDonor.ensureUniqueNhi();
             donors.add(newDonor);
+            SearchDonors.addIndex(newDonor);
             userActions.log(Level.INFO,"Successfully added donor " + newDonor.getNhiNumber(), "attempted to add a donor");
         } catch (IllegalArgumentException o) {
             throw new IllegalArgumentException(o.getMessage());
@@ -135,6 +137,7 @@ public class Database {
     public static void importFromDisk(String fileName) {
         try {
             importFromDiskDonors(fileName);
+            SearchDonors.createFullIndex();
         } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to import from disk");
         }
