@@ -4,17 +4,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import service.Database;
 
-public class GUIHome {
 
-    private static boolean clinician;
+public class GUIDonorHome {
 
     @FXML
     public void goToProfile(){
-        if (!clinician) {
-            ScreenControl.activate("donorProfile");
-        } else {
-            ScreenControl.activate("clinicianProfile");
-        }
+        ScreenControl.activate("donorProfile");
     }
 
 
@@ -41,8 +36,4 @@ public class GUIHome {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Saved!");
         alert.showAndWait();
     }
-
-    public static boolean getClinician() { return clinician; }
-
-    public static boolean setClinician(boolean set) { return clinician = set; }
 }
