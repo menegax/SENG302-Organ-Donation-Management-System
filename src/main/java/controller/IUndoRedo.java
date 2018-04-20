@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.ArrayList;
+
 public interface IUndoRedo {
 
     /**
@@ -16,4 +18,17 @@ public interface IUndoRedo {
      * Display the last state of the object to the user
      */
     void undo();
+
+    /**
+     * Gets the states of the object
+     * Currently only used in testing
+     * @return the States of the object
+     */
+    ArrayList<Object> getStates();
+
+    /**
+     * Gets the index of the current state
+     * @return the index of the current state
+     */
+    int getIndex();
 }

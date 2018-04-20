@@ -74,8 +74,10 @@ public class StateHistoryComboBox implements IUndoRedo {
      * Currently only used in testing
      * @return the states of the combo box
      */
-    public ArrayList<String> getStates() {
-        return states;
+    public ArrayList<Object> getStates() {
+        ArrayList<Object> objectStates = new ArrayList<>();
+        objectStates.addAll(states);
+        return objectStates;
     }
 
     /**

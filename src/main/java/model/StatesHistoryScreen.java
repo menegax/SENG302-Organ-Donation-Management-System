@@ -63,4 +63,13 @@ public class StatesHistoryScreen {
             stateHistory.redo();
         }
     }
+
+    /**
+     * Gets the stateHistories ArrayList
+     * Currently only used for testing
+     * @return the ArrayList of state history objects
+     */
+    public ArrayList<IUndoRedo> getStateHistories() {
+        return stateHistories;
+    }
 }
