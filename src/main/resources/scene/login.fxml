@@ -15,7 +15,7 @@
             <Font size="27.0" />
          </font>
       </Label>
-      <Button layoutX="207.0" layoutY="212.0" mnemonicParsing="false" onAction="#logIn" prefHeight="25.0" prefWidth="186.0" text="Log In" />
+      <Button fx:id="loginButton" layoutX="207.0" layoutY="212.0" mnemonicParsing="false" onAction="#logIn" prefHeight="25.0" prefWidth="186.0" text="Log In" />
       <TextField fx:id="nhiLogin" alignment="CENTER" layoutX="207.0" layoutY="170.0" prefHeight="25.0" prefWidth="186.0" promptText="NHI" />
       <Hyperlink layoutX="278.0" layoutY="237.0" onAction="#goToRegister" text="Register">
          <font>
