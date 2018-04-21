@@ -27,6 +27,7 @@ public class GUIDonorMedications {
     public Button removeMed;
     public Button addMed;
     public Button deleteMed;
+    public Label goBack;
 
     @FXML
     private TextField newMedication; // Medications are entered for adding to the currentMedications ArrayList and listView
@@ -109,6 +110,7 @@ public class GUIDonorMedications {
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
+        Database.saveToDisk(); // Save to .json the changes made to medications
     }
 
     /**
@@ -121,6 +123,7 @@ public class GUIDonorMedications {
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
+        Database.saveToDisk(); // Save to .json the changes made to medications
     }
 
     /**
@@ -133,7 +136,6 @@ public class GUIDonorMedications {
         if (!medication.equals("Enter a medication") && !medication.equals("") && !medication.equals(" ")) { // This can be altered after story 19 is completed
             if (!(current.contains(medication) || history.contains(medication))) {
                 target.getCurrentMedications().add(new Medication(medication));
-                viewCurrentMedications();
                 time = new Timestamp(System.currentTimeMillis());
 
                 if (!target.getMedicationLog().containsKey(medication)) {
@@ -143,6 +145,7 @@ public class GUIDonorMedications {
                 } else {
                     target.getMedicationLog().get(medication).add(time + " - registered to current: " + medication);
                 }
+                viewCurrentMedications();
             }
         }
     }
@@ -157,14 +160,14 @@ public class GUIDonorMedications {
         for (String medication : medications) {
             if (history.contains( medication )) {
                 target.getMedicationHistory().remove( history.indexOf( medication ) );
-                viewPastMedications();
                 time = new Timestamp(System.currentTimeMillis());
                 target.getMedicationLog().get(medication).add(time + " - deleted from history: " + medication);
+                viewPastMedications();
             } else if (current.contains( medication )) {
                 target.getCurrentMedications().remove( current.indexOf( medication ) );
-                viewCurrentMedications();
                 time = new Timestamp(System.currentTimeMillis());
                 target.getMedicationLog().get(medication).add(time + " - deleted from current: " + medication);
+                viewCurrentMedications();
             }
         }
     }
@@ -179,7 +182,6 @@ public class GUIDonorMedications {
         for (String medication : medications) {
             if (history.contains( medication )) {
                 target.getMedicationHistory().remove( history.indexOf( medication ) );
-                viewPastMedications();
 
                 if (!current.contains( medication )) {
                     target.getCurrentMedications().add( new Medication( medication ) );
@@ -187,6 +189,7 @@ public class GUIDonorMedications {
                 }
                 time = new Timestamp(System.currentTimeMillis());
                 target.getMedicationLog().get(medication).add(time + " - moved to current: " + medication);
+                viewPastMedications();
             }
         }
     }
@@ -201,7 +204,6 @@ public class GUIDonorMedications {
         for (String medication : medications) {
             if (current.contains( medication )) {
                 target.getCurrentMedications().remove( current.indexOf( medication ) );
-                viewCurrentMedications();
 
                 if (!history.contains( medication )) {
                     target.getMedicationHistory().add( new Medication( medication ) );
@@ -209,15 +211,16 @@ public class GUIDonorMedications {
                 }
                 time = new Timestamp(System.currentTimeMillis());
                 target.getMedicationLog().get(medication).add(time + " - moved to history: " + medication);
+                viewCurrentMedications();
             }
         }
     }
 
-    /**
+    /*
      * Navigates from the Medication panel to the home panel after 'back' is selected, saves medication log
      */
+    @FXML
     public void goToProfile() {
-        Database.saveToDisk(); // Save to .json the changes made to the medications log
         ScreenControl.removeScreen("donorProfile");
         try {
             ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
