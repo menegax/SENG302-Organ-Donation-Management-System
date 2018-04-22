@@ -23,7 +23,10 @@ public class Main extends Application {
         primaryStage.setScene(rootScene); //set scene on primary stage
         ScreenControl.setRootScene(rootScene); // set this scene in screen controller
 
+        // import donors
+        Database.importFromDisk("./donor.json");
         addDummyTestObjects();
+
         SearchDonors.createFullIndex(); // index donors for search, needs to be after importing or adding any donors
 
         // Add scenes
