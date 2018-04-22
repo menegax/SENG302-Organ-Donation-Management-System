@@ -7,25 +7,18 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
 import utility.SearchDonors;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class GUIClinicianSearchDonors implements Initializable {
-
-    @FXML
-    private AnchorPane pane;
 
     @FXML
     private TableView<Donor> donorDataTable;
@@ -90,42 +83,27 @@ public class GUIClinicianSearchDonors implements Initializable {
                     return true;
                 }
 
-                // Compare first name and last name of every person with filter text.
-                String lowerCaseFilter = newValue.toLowerCase();
+//                if (donor.getFirstName().toLowerCase().contains(lowerCaseFilter)) { //todo old code, using only for reference temporarily
+//                    return true; // Filter matches first name.
+//                }
 
-                if (donor.getFirstName().toLowerCase().contains(lowerCaseFilter)) { //todo replace with single call to fuzzy
-                    return true; // Filter matches first name.
-                } else if (donor.getLastName().toLowerCase().contains(lowerCaseFilter)) { //todo
-                    return true; // Filter matches last name.
+                if (SearchDonors.searchByName(newValue).contains(donor)) { //todo here is hte new code to call fuzzy
+                    return true;
                 }
+
                 return false; // Does not match.
             });
         });
 
-        // 3. Wrap the FilteredList in a SortedList.
+        // wrap the FilteredList in a SortedList.
         SortedList<Donor> sortedData = new SortedList<>(filteredData);
 
-        // 4. Bind the SortedList comparator to the TableView comparator.
+        // bind the SortedList comparator to the TableView comparator.
         sortedData.comparatorProperty().bind(donorDataTable.comparatorProperty());
 
-        // 5. Add sorted (and filtered) data to the table.
+        // add sorted (and filtered) data to the table.
         donorDataTable.setItems(sortedData);
     }
-
-
-    //todo remove if not needed
-//    /**
-//     * Refreshes the table's data
-//     * <p>
-//     * Say a donor is added to the db or updated with new attributes, a refresh would be needed
-//     */
-//    @FXML
-//    private void refreshTable() {
-//        donorDataTable.refresh();
-//
-//        //todo make refreshing clear the search results from the table and load default data
-//    }
-
 
     public void goToClinicianHome() {
         ScreenControl.activate("clinicianHome");

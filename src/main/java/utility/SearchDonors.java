@@ -1,10 +1,6 @@
 package utility;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-
+import model.Donor;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -20,9 +16,11 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.RAMDirectory;
-
-import model.Donor;
 import service.Database;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class SearchDonors {
 
@@ -36,8 +34,8 @@ public class SearchDonors {
 
     private static IndexSearcher indexSearcher = null;
 
-    // TODO what is this? it just causes a warning on my machine.
-    //@SuppressWarnings("FieldCanBeLocal")
+    // TODO what is this? it just causes a warning on my machine. Andrew: it stops IntelliJ from giving a warning about a variable that could be localized. Looks like it's either a warning for you or me!
+//    @SuppressWarnings("FieldCanBeLocal")
     private static int NUM_RESULTS = 20;
 
 
@@ -127,7 +125,7 @@ public class SearchDonors {
     /**
      * Closes the index writer and ram directory freeing up the 
      * memory back to the operating system
-     * @throws IOException
+     * @throws IOException when the index or RAM memory cannot be accessed
      */
     public static void closeIndex() throws IOException {
         ramDirectory.close();
@@ -148,7 +146,7 @@ public class SearchDonors {
 
     /**
      * Searches through the index for donors by full name
-     * @param name The name you want to search for
+     * @param input The name you want to search for
      * @return ArrayList of the donors it found as a result of the search
      */
     public static ArrayList<Donor> searchByName(String input) {
