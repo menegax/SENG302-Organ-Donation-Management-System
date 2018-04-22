@@ -1,7 +1,10 @@
 package controller;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -42,44 +45,26 @@ public class GUIClinicianSearchDonors implements Initializable {
     @FXML
     private TextField searchEntry;
 
+    private ObservableList<Donor> masterData = FXCollections.observableArrayList();
 
     /**
-     * Initialises the data within the table to all donors
-     * @param url URL not used
-     * @param rb Resource bundle not used
+     * Adds all db data via constructor
      */
-    @FXML
-    public void initialize(URL url, ResourceBundle rb) {
-        loadData();
-
-        // Enter key triggers search
-        pane.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                donorSearch();
-            }
-        });
+    public GUIClinicianSearchDonors() {
+        masterData.addAll(Database.getDonors());
     }
 
 
     /**
-     * Loads the current donor data into the donor data table
+     * Initialises the data within the table to all donors
+     *
+     * @param url URL not used
+     * @param rb  Resource bundle not used
      */
     @FXML
-    private void loadData() {
+    public void initialize(URL url, ResourceBundle rb) {
 
-        donorDataTable.getItems().removeAll(); //todo does not seem to remove the donors. See print statements below after hitting search repeatedly
-
-        //todo remove debugging print statements
-        ObservableList<Donor> donorsInTable = donorDataTable.getItems();
-        System.out.println("After removing all, Donors currently in table:");
-        for (Donor donor : donorsInTable) {
-            System.out.println("Donor " + donor.getNameConcatenated());
-        }
-
-        donorDataTable.getItems()
-                .addAll(Database.getDonors());
-
-        // for each donor d
+        // initialize columns
         columnName.setCellValueFactory(d -> d.getValue()
                 .getNameConcatenated() != null ? new SimpleStringProperty(d.getValue()
                 .getNameConcatenated()) : new SimpleStringProperty(""));
@@ -93,45 +78,53 @@ public class GUIClinicianSearchDonors implements Initializable {
                 .getRegion() != null ? new SimpleStringProperty(d.getValue()
                 .getRegion()
                 .toString()) : new SimpleStringProperty(""));
+
+        // wrap ObservableList in a FilteredList
+        FilteredList<Donor> filteredData = new FilteredList<>(masterData, d -> true);
+
+        // 2. Set the filter Predicate whenever the filter changes.
+        searchEntry.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(donor -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Compare first name and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (donor.getFirstName().toLowerCase().contains(lowerCaseFilter)) { //todo replace with single call to fuzzy
+                    return true; // Filter matches first name.
+                } else if (donor.getLastName().toLowerCase().contains(lowerCaseFilter)) { //todo
+                    return true; // Filter matches last name.
+                }
+                return false; // Does not match.
+            });
+        });
+
+        // 3. Wrap the FilteredList in a SortedList.
+        SortedList<Donor> sortedData = new SortedList<>(filteredData);
+
+        // 4. Bind the SortedList comparator to the TableView comparator.
+        sortedData.comparatorProperty().bind(donorDataTable.comparatorProperty());
+
+        // 5. Add sorted (and filtered) data to the table.
+        donorDataTable.setItems(sortedData);
     }
 
 
-    /**
-     * Searches the indices of donors
-     */
-    @FXML
-    private void donorSearch() {
-        try {
-            ArrayList<Donor> searchResults = SearchDonors.searchByName(searchEntry.getText());
-
-            //todo remove debugging print statements
-            System.out.println("Search results:");
-            for (Donor donor : searchResults) {
-                System.out.println("Donor name: " + donor.getNameConcatenated());
-            }
-
-            //todo make searchResults populate the table
-            donorDataTable.getItems().removeAll();
-            donorDataTable.getItems().addAll(searchResults);
-        }
-        catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to search donors");
-            alert.show();
-        }
-    }
-
-
-    /**
-     * Refreshes the table's data
-     *
-     * Say a donor is added to the db or updated with new attributes, a refresh would be needed
-     */
-    @FXML
-    private void refreshTable() {
-        donorDataTable.refresh();
-
-        //todo make refreshing clear the search results from the table and load default data
-    }
+    //todo remove if not needed
+//    /**
+//     * Refreshes the table's data
+//     * <p>
+//     * Say a donor is added to the db or updated with new attributes, a refresh would be needed
+//     */
+//    @FXML
+//    private void refreshTable() {
+//        donorDataTable.refresh();
+//
+//        //todo make refreshing clear the search results from the table and load default data
+//    }
 
 
     public void goToClinicianHome() {
