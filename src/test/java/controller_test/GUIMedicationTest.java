@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.Donor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,16 +16,20 @@ import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 
+import java.util.ArrayList;
+
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 
 public class GUIMedicationTest extends ApplicationTest {
 
     private Main main = new Main();
+    private Donor target;
 
     @Override
     public void start(Stage stage) throws Exception {
         main.start( stage );
+        target = Database.getDonorByNhi("ABC1238");
     }
 
     @Before
@@ -39,7 +44,8 @@ public class GUIMedicationTest extends ApplicationTest {
             lookup( "#loginButton" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         } );
         verifyThat( "#homePane", Node::isVisible ); // Verify that login has taken "user" to home panel
-
+        target.setCurrentMedications( new ArrayList<>() );
+        target.setMedicationHistory( new ArrayList <>() );
         // Navigate to the profile panel (where the medication test button is currently found)
         interact( () -> {
             lookup( "#goToProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
