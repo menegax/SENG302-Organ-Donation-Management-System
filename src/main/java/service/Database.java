@@ -104,6 +104,7 @@ public class Database {
         if (street1 != null && !Pattern.matches("^[- a-zA-Z0-9]+$", street1)) throw new IllegalArgumentException("Invalid street address");
 
         clinicians.add(new Clinician(staffID, firstName, middleNames, lastName, street1, street2, suburb, region));
+        userActions.log(Level.INFO,"Successfully added clinician with id " + staffID, "attempted to add a clinician");
         return staffID;
     }
 

@@ -32,15 +32,15 @@ public class GUIClinicianProfile {
     private Label regionTxt;
 
     public void initialize() {
-        //loadProfile(ScreenControl.getLoggedInClinician()); //TODO waiting on clinician login functionality
+        loadProfile(ScreenControl.getLoggedInClinician());
     }
 
     private void loadProfile(Clinician clinician) {
         idTxt.setText(String.valueOf(clinician.getStaffID()));
         nameTxt.setText(clinician.getFirstName() + ' ' + clinician.getLastName());
-        street1Txt.setText(clinician.getStreet1());
-        street2Txt.setText(clinician.getStreet2());
-        suburbTxt.setText(clinician.getSuburb());
+        if (clinician.getStreet1() != null) street1Txt.setText(clinician.getStreet1());
+        if (clinician.getStreet2() != null) street2Txt.setText(clinician.getStreet2());
+        if (clinician.getSuburb() != null) suburbTxt.setText(clinician.getSuburb());
         if (clinician.getRegion() != null) regionTxt.setText(clinician.getRegion().getValue());
     }
 

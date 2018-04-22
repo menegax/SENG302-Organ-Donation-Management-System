@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianProfile">
    <children>
       <Label layoutX="201.0" layoutY="35.0" text="Clinician Profile">
@@ -20,38 +19,38 @@
             <HBox prefHeight="25.0" prefWidth="239.0">
                <children>
                   <Label text="Staff ID: " />
-                  <Label fx:id="idTxt" text="Label" />
+                  <Label fx:id="idTxt" />
                </children>
             </HBox>
             <HBox prefHeight="25.0" prefWidth="239.0">
                <children>
                   <Label text="Name: " />
-                  <Label fx:id="nameTxt" text="Label" />
+                  <Label fx:id="nameTxt" />
                </children>
             </HBox>
             <Label prefHeight="33.0" prefWidth="87.0" text="Work Address" />
             <HBox prefHeight="25.0" prefWidth="239.0">
                <children>
                   <Label text="Street 1: " />
-                  <Label fx:id="street1Txt" text="Label" />
+                  <Label fx:id="street1Txt" text="Not Set" />
                </children>
             </HBox>
             <HBox prefHeight="25.0" prefWidth="239.0">
                <children>
                   <Label text="Street 2: " />
-                  <Label fx:id="street2Txt" text="Label" />
+                  <Label fx:id="street2Txt" text="Not Set" />
                </children>
             </HBox>
             <HBox prefHeight="25.0" prefWidth="239.0">
                <children>
                   <Label text="Surburb: " />
-                  <Label fx:id="suburbTxt" text="Label" />
+                  <Label fx:id="suburbTxt" text="Not Set" />
                </children>
             </HBox>
             <HBox prefHeight="25.0" prefWidth="239.0">
                <children>
                   <Label text="Region: " />
-                  <Label fx:id="regionTxt" text="Label" />
+                  <Label fx:id="regionTxt" />
                </children>
             </HBox>
          </children>
