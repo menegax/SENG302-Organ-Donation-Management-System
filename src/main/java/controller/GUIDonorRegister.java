@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.StringConverter;
 import model.Donor;
 import service.Database;
@@ -17,6 +19,9 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 public class GUIDonorRegister {
+
+    @FXML
+    private AnchorPane pane;
 
     @FXML
     private TextField firstnameRegister;
@@ -37,19 +42,26 @@ public class GUIDonorRegister {
 
 
     /**
+     * Sets up register page GUI elements
+     */
+    public void initialize() {
+        setDateConverter();
+
+        // Enter key triggers log in
+        pane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                register();
+            }
+        });
+    }
+
+
+    /**
      * Back button listener to switch to the login screen
      */
     @FXML
     public void goBackToLogin() {
         ScreenControl.activate("login");
-    }
-
-
-    /**
-     * Sets up register page GUI elements
-     */
-    public void initialize() {
-        setDateConverter();
     }
 
 
