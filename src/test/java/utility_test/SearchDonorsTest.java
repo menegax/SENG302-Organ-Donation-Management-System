@@ -33,7 +33,11 @@ public class SearchDonorsTest {
     //		fail("Not yet implemented");
     //	}
 
-
+	private static Donor d1;
+	private static Donor d2;
+	private static Donor d3;
+	private static Donor d4;
+	
     /**
      * Populate database with test donors and disables logging
      */
@@ -42,6 +46,19 @@ public class SearchDonorsTest {
 
         userActions.setLevel(Level.OFF);
         Database.resetDatabase();
+        
+        // Given donors in a db
+        d1 = new Donor("abc1234", "Pat", null, "Laff", LocalDate.now());
+        d2 = new Donor("def1234", "Patik", null, "Laffey", LocalDate.now());
+        d3 = new Donor("ghi1234", "George", null, "Romera", LocalDate.now());
+        d4 = new Donor("jkl1234", "George", null, "Bobington", LocalDate.now());
+        Database.addDonor(d4);
+        Database.addDonor(d3);
+        Database.addDonor(d2);
+        Database.addDonor(d1);
+
+        // Given an index
+        SearchDonors.createFullIndex();
     }
 
 
@@ -49,28 +66,17 @@ public class SearchDonorsTest {
     @Test
     public void testSearchByName() throws IOException {
 
-        // Given donors in a db
-        Donor d1 = new Donor("abc1234", "Pat", null, "Laff", LocalDate.now());
-        Donor d2 = new Donor("def1234", "Patik", null, "Laffey", LocalDate.now());
-        Donor d3 = new Donor("ghi1234", "George", null, "Romera", LocalDate.now());
-        Database.addDonor(d3);
-        Database.addDonor(d2);
-        Database.addDonor(d1);
-
-        // Given an index
-        SearchDonors.createFullIndex();
-
         // When index searched for a single specific donor
-        ArrayList<Donor> results = SearchDonors.searchByName("Pati Laffe");
-        System.out.println("\ntest 1:\nShould contain: ");
-        System.out.println(d1);
-        for (Donor donor : results) {
-        	System.out.println("--------------------------");
-        	System.out.println(donor);
-        }
-        // Should return that donor and no other
-        assertTrue(results.contains(d1));
+        ArrayList<Donor> results = SearchDonors.searchByName("Pat Bobinton");
 
+        // Should contain Pat Laff
+        assertTrue(results.contains(d1));
+        // Should contain Patik Laffey
+        assertTrue(results.contains(d2));
+        // Shouldn't contain George Romera 
+        assertFalse(results.contains(d3));
+        // Should contain George Bobington
+        assertTrue(results.contains(d4));
     }
 
 
@@ -80,26 +86,13 @@ public class SearchDonorsTest {
     @Test
     public void testSearchAfterUpdateDonor() throws IOException {
 
-        // Given donor in db
-        Donor donor1 = new Donor("abc4321", "Pat", null, "Laff", LocalDate.now());
-        Database.addDonor(donor1);
-
-        // given an index
-        SearchDonors.createFullIndex();
-
         // When first name of donor changed
-        Database.getDonorByNhi("abc4321")
-                .setFirstName("Andrew");
+        Database.getDonorByNhi("abc1234").setFirstName("Andrew");
 
         // Then searching by new first name returns correct results
-        ArrayList<Donor> results = SearchDonors.searchByName("Andre Laf");
-        System.out.println("\ntest 2:\nShould contain: ");
-        System.out.println(donor1);
-        for (Donor donor : results) {
-        	System.out.println("--------------------------");
-        	System.out.println(donor);
-        }
-        assertTrue(results.contains(Database.getDonorByNhi("abc4321")));
+        ArrayList<Donor> results = SearchDonors.searchByName("Ande Lafey");
+ 
+        assertTrue(results.contains(Database.getDonorByNhi("abc1234")));
     }
 
 

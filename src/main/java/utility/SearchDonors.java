@@ -54,6 +54,9 @@ public class SearchDonors {
      *
      */
     public static void createFullIndex() {
+    	if (indexWriter != null) {
+    		SearchDonors.clearIndex();
+    	}
         HashSet<Donor> donors = Database.getDonors();
         for (Donor donor : donors) {
         	addIndex(donor);
