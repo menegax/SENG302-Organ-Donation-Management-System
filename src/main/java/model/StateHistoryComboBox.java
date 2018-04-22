@@ -63,7 +63,7 @@ public class StateHistoryComboBox implements IUndoRedo {
     }
 
     public void redo() {
-        if (undone) {
+        if (undone && index + 1 < states.size()) {
             index += 1;
             comboBox.getSelectionModel().select(states.get(index));
         }
@@ -75,9 +75,7 @@ public class StateHistoryComboBox implements IUndoRedo {
      * @return the states of the combo box
      */
     public ArrayList<Object> getStates() {
-        ArrayList<Object> objectStates = new ArrayList<>();
-        objectStates.addAll(states);
-        return objectStates;
+        return new ArrayList<>(states);
     }
 
     /**

@@ -2,6 +2,7 @@ package model;
 
 import controller.IUndoRedo;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
 
 import java.util.ArrayList;
 
@@ -65,7 +66,7 @@ public class StateHistoryCheckBox implements IUndoRedo {
      * Resets the Checkbox to the state immediately prior to an undo
      */
     public void redo() {
-        if (undone) {
+        if (undone && index +1 < states.size()) {
             index += 1;
             checkBox.setSelected(states.get(index));
         }
@@ -77,8 +78,7 @@ public class StateHistoryCheckBox implements IUndoRedo {
      * @return the states of the check box
      */
     public ArrayList<Object> getStates() {
-        ArrayList<Object> objectStates = new ArrayList<>();
-        objectStates.addAll(states);
+        ArrayList<Object> objectStates = new ArrayList<>(states);
         return objectStates;
     }
 

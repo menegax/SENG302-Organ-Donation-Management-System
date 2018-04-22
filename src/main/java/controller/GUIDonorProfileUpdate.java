@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import model.Donor;
+import model.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
 
@@ -60,25 +61,66 @@ public class GUIDonorProfileUpdate {
     private TextField heightTxt;
 
     @FXML
-    private ChoiceBox bloodGroupDD;
+    private ChoiceBox<String> bloodGroupDD;
 
+    private StatesHistoryScreen screenHistory;
     @FXML
     private void undo() {
-        System.out.println( "UNDO" );
+        screenHistory.undo();
     }
 
     @FXML
     private void redo() {
-        System.out.println( "REDO" );
+        screenHistory.redo();
     }
 
     private Donor target;
+
+    @FXML
+    private void store(){
+        screenHistory.store();
+    }
 
     public void initialize() {
         List<String> bloodGroups = Arrays.asList("a positive", "a negative", "b positive", "b negative", "ab positive", "ab negative", "o positive", "o negative");
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
         loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
+        addActionListeners();
+        setUpStateHistory();
+    }
+
+
+    private void setUpStateHistory(){
+        ArrayList<TextField> fields = new ArrayList<TextField>(){{
+            add(nhiTxt);
+            add(firstnameTxt);
+            add(lastnameTxt);
+            add(middlenameTxt);
+            add(street1Txt);
+            add(street2Txt);
+            add(suburbTxt);
+            add(regionTxt);
+            add(zipTxt);
+            add(weightTxt);
+            add(heightTxt);
+        }};
+
+        ArrayList<RadioButton> radio = new ArrayList<RadioButton>(){{
+            add(genderFemaleRadio);
+            add(genderOtherRadio);
+            add(genderMaleRadio);
+        }};
+
+        screenHistory = new StatesHistoryScreen(fields, new ArrayList<ChoiceBox>(){{add(bloodGroupDD);}}, radio);
+
+    }
+    private void addActionListeners(){
+//        bloodGroupDD.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+//            if (observable.)
+//            store();
+//            System.out.println(newValue + " " + oldValue);
+//        });
     }
 
     private void loadProfile(String nhi) {
@@ -86,8 +128,6 @@ public class GUIDonorProfileUpdate {
             Donor donor = Database.getDonorByNhi(nhi);
             target = donor;
             populateForm(donor);
-
-
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
             e.printStackTrace();
@@ -167,7 +207,7 @@ public class GUIDonorProfileUpdate {
             target.setFirstName(firstnameTxt.getText());
             target.setLastName(lastnameTxt.getText());
             List<String> middlenames = Arrays.asList(middlenameTxt.getText().split(" "));
-            ArrayList middles = new ArrayList();
+            ArrayList<String> middles = new ArrayList<String>();
             middles.addAll(middlenames);
             target.setMiddleNames(middles);
 

@@ -16,26 +16,87 @@ public class StatesHistoryScreen {
     private ArrayList<IUndoRedo> stateHistories = new ArrayList<>();
 
     /**
-     * Constructor for the StatesHistoryScreen
+     * Constructor for the StatesHistoryScreen, creates state objects of passed in control items to keep track of
      * Creates the list of stateHistories in its initialisation
-     * @param entries the TextField widgets on the screen
-     * @param comboBoxes the ComboBox widgets on the screen
-     * @param checkBoxes the CheckBox widgets on the screen
+     * @Object... params - optional number of params
      */
-    public StatesHistoryScreen(ArrayList<TextField> entries, ArrayList<ComboBox<String>> comboBoxes, ArrayList<CheckBox> checkBoxes) {
-        for (TextField entry : entries) {
-            StateHistoryTextEntry entryState = new StateHistoryTextEntry(entry);
-            stateHistories.add(entryState);
-        }
-        for (ComboBox<String> comboBox : comboBoxes) {
-            StateHistoryComboBox comboBoxState = new StateHistoryComboBox(comboBox);
-            stateHistories.add(comboBoxState);
-        }
-        for (CheckBox checkBox : checkBoxes) {
-            StateHistoryCheckBox checkBoxState = new StateHistoryCheckBox(checkBox);
-            stateHistories.add(checkBoxState);
+    public StatesHistoryScreen(Object... params) {
+       for (Object param : params) {
+           if (param instanceof ArrayList<?>){ // check if generic arraylist
+               Object firstItem = ((ArrayList) param).size() == 0 ? null : ((ArrayList) param).get(0); // avoid null pointers
+               if ((firstItem instanceof TextField)){
+                   createStateHistoriesTextField(param);
+               }
+               if ((firstItem) instanceof RadioButton){
+                   createStateHistoriesRadioButton(param);
+               }
+               if ((firstItem) instanceof CheckBox){
+                   createStateHistoriesCheckBox(param);
+               }
+               if ((firstItem) instanceof ChoiceBox){
+                   createStateHistoriesChoiceBox(param);
+               }
+               if (firstItem instanceof ComboBox){
+                   createStateHistoriesComboBox(param);
+               }
+           }
+       }
+    }
+
+    /**
+     * Creates state objects for every control item in the passed in array
+     * @param entries - object which can be cast to an arraylist<TextField>
+     */
+    private void createStateHistoriesTextField(Object entries){
+        for (Object entry : ((ArrayList<?>) entries)) {
+            stateHistories.add(new StateHistoryTextEntry((TextField)entry));
         }
     }
+
+    /**
+     * Creates state objects for every control item in the passed in array
+     * @param comboBoxes - object which can be cast to an arraylist<ComboBox>
+     */
+    private void createStateHistoriesComboBox(Object comboBoxes) {
+        for (Object comboBox : ((ArrayList<?>) comboBoxes)) {
+            stateHistories.add(new StateHistoryComboBox((ComboBox<String>)comboBox));
+        }
+    }
+
+    /**
+     * Creates state objects for every control item in the passed in array
+     * @param radioButtons - object which can be cast to an arraylist<RadioButton>
+     */
+
+    private void createStateHistoriesRadioButton(Object radioButtons){
+        for (Object radioButton : ((ArrayList<?>) radioButtons)) {
+            stateHistories.add(new StateHistoryRadioButton((RadioButton)radioButton));
+        }
+    }
+
+    /**
+     * Creates state objects for every control item in the passed in array
+     * @param checkBoxes - object which can be cast to an arraylist<CheckBox>
+     */
+
+    private void createStateHistoriesCheckBox(Object checkBoxes){
+        for (Object checkBox : ((ArrayList<?>) checkBoxes)) {
+            stateHistories.add(new StateHistoryCheckBox((CheckBox)checkBox));
+        }
+    }
+
+    /**
+     * Creates state objects for every control item in the passed in array
+     * @param choiceBoxes - object which can be cast to an arraylist<ChoiceBox>
+     */
+
+    private void createStateHistoriesChoiceBox(Object choiceBoxes){
+        for (Object choiceBox : ((ArrayList<?>) choiceBoxes)) {
+            stateHistories.add(new StateHistoryChoiceBox((ChoiceBox<String>)choiceBox));
+        }
+    }
+
+
 
     /**
      * Stores the current state of the screen

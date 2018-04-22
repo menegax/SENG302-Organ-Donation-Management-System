@@ -65,7 +65,7 @@ public class StateHistoryTextEntry implements IUndoRedo {
      * Resets the TextField to the state immediately prior to an undo
      */
     public void redo() {
-        if (undone) {
+        if (undone && index + 1 < states.size()) {
             index += 1;
             entry.setText(states.get(index));
         }
@@ -77,8 +77,7 @@ public class StateHistoryTextEntry implements IUndoRedo {
      * @return the states of the text entry
      */
     public ArrayList<Object> getStates() {
-        ArrayList<Object> objectStates = new ArrayList<>();
-        objectStates.addAll(states);
+        ArrayList<Object> objectStates = new ArrayList<>(states);
         return objectStates;
     }
 

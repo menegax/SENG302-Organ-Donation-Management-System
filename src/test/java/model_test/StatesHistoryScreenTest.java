@@ -74,7 +74,7 @@ public class StatesHistoryScreenTest {
         comboBox2.getSelectionModel().select(0);
         ArrayList<TextField> entryList = new ArrayList<>();
         ArrayList<CheckBox> checkBoxList = new ArrayList<>();
-        ArrayList<ComboBox<String>> comboBoxList = new ArrayList<ComboBox<String>>();
+        ArrayList<ComboBox<String>> comboBoxList = new ArrayList<>();
         entryList.add(textField1);
         entryList.add(textField2);
         checkBoxList.add(checkBox1);
