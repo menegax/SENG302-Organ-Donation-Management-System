@@ -27,6 +27,7 @@ public class GUIDonorMedications {
     public Button removeMed;
     public Button addMed;
     public Button deleteMed;
+    public Button saveMed;
     public Label goBack;
 
     @FXML
@@ -40,10 +41,30 @@ public class GUIDonorMedications {
 
     @FXML
     /*
-     * Removes a medication from the history ArrayList and listView
+     * Removes a medication from the history or current ArrayList and listView
      */
     public void deleteMedication() {
-        removeMedication(new ArrayList<>(pastMedications.getSelectionModel().getSelectedItems()));
+        if (pastMedications.getFocusModel().getFocusedItem() != null &&
+                currentMedications.getFocusModel().getFocusedItem() != null) {
+            System.out.println(new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems() ));
+            System.out.println(new ArrayList <>( currentMedications.getSelectionModel().getSelectedIndices()));
+            // DONT KNOW HOW TO SELECT THE MOST RECENT OF TWO SELECTION BETWEEN LISTVIEWS
+            // THINK MAY REQUIRE A LISTENER, OR SOMETHING SIMILAR
+        } else if (pastMedications.getFocusModel().getFocusedItem() != null) {
+            removeMedication( new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems() ) );
+        } else {
+            removeMedication( new ArrayList <>( currentMedications.getSelectionModel().getSelectedItems() ) );
+        }
+    }
+
+    @FXML
+    /*
+     * Saves the current state of the history and current medications ArrayLists
+     */
+    public void saveMedication() {
+        Database.saveToDisk(); // Save to .json the changes made to medications
+        currentMedications.getSelectionModel().clearSelection();
+        pastMedications.getSelectionModel().clearSelection();
     }
 
     @FXML
@@ -51,7 +72,11 @@ public class GUIDonorMedications {
      * Swaps a medication in history to current ArrayList and listView
      */
     public void makeCurrent() {
-        moveToCurrent(new ArrayList<>(pastMedications.getSelectionModel().getSelectedItems()));
+        if (pastMedications.getFocusModel().getFocusedItem() == null) {
+            currentMedications.getSelectionModel().clearSelection();
+        } else {
+            moveToCurrent( new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems() ) );
+        }
     }
 
     @FXML
@@ -59,7 +84,11 @@ public class GUIDonorMedications {
      * Swaps a medication in current to history ArrayList and listView
      */
     public void makeHistory() {
-        moveToHistory(new ArrayList<>(currentMedications.getSelectionModel().getSelectedItems()));
+        if (currentMedications.getFocusModel().getFocusedItem() == null) {
+            pastMedications.getSelectionModel().clearSelection();
+        } else {
+            moveToHistory( new ArrayList <>( currentMedications.getSelectionModel().getSelectedItems() ) );
+        }
     }
 
     @FXML
@@ -81,8 +110,8 @@ public class GUIDonorMedications {
     @FXML
     public void initialize() {
         try {
-            pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            pastMedications.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+            currentMedications.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
             target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor().getNhiNumber());
 
             if(target.getCurrentMedications() == null) {
@@ -107,10 +136,10 @@ public class GUIDonorMedications {
     private void viewCurrentMedications() {
         current = new ArrayList<>();
         currentMedications.getSelectionModel().clearSelection();
+        pastMedications.getSelectionModel().clearSelection();
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
-        Database.saveToDisk(); // Save to .json the changes made to medications
     }
 
     /**
@@ -120,10 +149,10 @@ public class GUIDonorMedications {
     private void viewPastMedications() {
         history = new ArrayList<>();
         pastMedications.getSelectionModel().clearSelection();
+        currentMedications.getSelectionModel().clearSelection();
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
-        Database.saveToDisk(); // Save to .json the changes made to medications
     }
 
     /**
