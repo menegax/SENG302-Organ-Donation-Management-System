@@ -25,7 +25,7 @@ public class Main extends Application {
 
         // import donors
         Database.importFromDisk("./donor.json");
-        addDummyTestObjects();
+//        addDummyTestObjects();
 
         SearchDonors.createFullIndex(); // index donors for search, needs to be after importing or adding any donors
 
@@ -50,7 +50,7 @@ public class Main extends Application {
      *
      * @exception Exception when the database cannot locate the given donor
      */
-    private void addDummyTestObjects() throws Exception {
+    private void addDummyTestObjects() throws Exception {d
 
         // Add dummy donors for testing
         ArrayList<String> middles = new ArrayList<>();

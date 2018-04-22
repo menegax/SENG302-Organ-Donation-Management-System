@@ -66,6 +66,18 @@ public class GUIDonorRegister {
 
 
     /**
+     * Clears the data in the fields of the GUI
+     */
+    private void clearFields(){
+        nhiRegister.clear();
+        firstnameRegister.clear();
+        lastnameRegister.clear();
+        middlenameRegister.clear();
+        birthRegister.getEditor().clear();
+    }
+
+
+    /**
      * Checks users have entered all REQUIRED fields
      *
      * @return boolean - if user has entered all required fields
@@ -139,7 +151,8 @@ public class GUIDonorRegister {
         if (!(hasAllRequired())) {
             try {
                 addDonorGui();
-                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Registered");
+                clearFields();
+                Alert confirm = new Alert(Alert.AlertType.INFORMATION, "Successfully registered!");
                 confirm.showAndWait();
                 ScreenControl.activate("login");
             }

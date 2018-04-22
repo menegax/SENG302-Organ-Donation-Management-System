@@ -28,7 +28,7 @@ public class GUIDonorHome {
     @FXML
     public void save() {
         Database.saveToDisk();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Saved!");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Successfully saved!");
         alert.showAndWait();
     }
 }
