@@ -47,44 +47,48 @@ public class Main extends Application {
 
     /**
      * Adds dummy test objects for testing purposes
-     *
-     * @exception Exception when the database cannot locate the given donor
      */
     private void addDummyTestObjects() {
 
         try {
 
+            // Add dummy donors for testing
+            ArrayList<String> middles = new ArrayList<>();
+            middles.add("Middle");
+            middles.add("Xavier");
+            Database.addDonor(new Donor("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
+            Database.getDonorByNhi("ABC1238")
+                    .addDonation(GlobalEnums.Organ.LIVER);
+            Database.getDonorByNhi("ABC1238")
+                    .addDonation(GlobalEnums.Organ.CORNEA);
+            Database.getDonorByNhi("ABC1238")
+                    .setRegion(GlobalEnums.Region.AUCKLAND);
+            Database.getDonorByNhi("ABC1238")
+                    .setGender(GlobalEnums.Gender.OTHER);
 
+            Database.addDonor(new Donor("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
+            Database.getDonorByNhi("ABC1234")
+                    .addDonation(GlobalEnums.Organ.LIVER);
+            Database.getDonorByNhi("ABC1234")
+                    .addDonation(GlobalEnums.Organ.CORNEA);
+            Database.getDonorByNhi("ABC1234")
+                    .setRegion(GlobalEnums.Region.CANTERBURY);
+            Database.getDonorByNhi("ABC1234")
+                    .setGender(GlobalEnums.Gender.FEMALE);
+        }
+        catch (Exception e) {
+            System.out.println("Unable to add dummy donors");
+        }
 
-        // Add dummy donors for testing
-        ArrayList<String> middles = new ArrayList<>();
-        middles.add("Middle");
-        middles.add("Xavier");
-        Database.addDonor(new Donor("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getDonorByNhi("ABC1238")
-                .addDonation(GlobalEnums.Organ.LIVER);
-        Database.getDonorByNhi("ABC1238")
-                .addDonation(GlobalEnums.Organ.CORNEA);
-        Database.getDonorByNhi("ABC1238")
-                .setRegion(GlobalEnums.Region.AUCKLAND);
-        Database.getDonorByNhi("ABC1238")
-                .setGender(GlobalEnums.Gender.OTHER);
-
-        Database.addDonor(new Donor("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
-        Database.getDonorByNhi("ABC1234")
-                .addDonation(GlobalEnums.Organ.LIVER);
-        Database.getDonorByNhi("ABC1234")
-                .addDonation(GlobalEnums.Organ.CORNEA);
-        Database.getDonorByNhi("ABC1234")
-                .setRegion(GlobalEnums.Region.CANTERBURY);
-        Database.getDonorByNhi("ABC1234")
-                .setGender(GlobalEnums.Gender.FEMALE);
-
-        // Add dummy clinician for testing
-        Database.addClinician("initial", middles, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY);
-
-        } catch (Exception e) {
-
+        try {
+            ArrayList<String> middles = new ArrayList<>();
+            middles.add("Jon");
+            middles.add("Periphery");
+            // Add dummy clinician for testing
+            Database.addClinician("initial", middles, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY);
+        }
+        catch (Exception e) {
+            System.out.println("Unable to add dummy clinicians");
         }
 
     }
