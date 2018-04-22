@@ -77,8 +77,8 @@ public class StatesHistoryScreenTest {
         checkBox2.setSelected(false);
         comboBox1.getSelectionModel().select(0);
         comboBox2.getSelectionModel().select(0);
-        radioButton1.selectedProperty().setValue(false);
-        radioButton2.selectedProperty().setValue(false);
+        radioButton1.setSelected(false);
+        radioButton2.setSelected(false);
         choiceBox1.getSelectionModel().select(0);
         choiceBox2.getSelectionModel().select(0);
         ArrayList<TextField> entryList = new ArrayList<>();
@@ -127,7 +127,7 @@ public class StatesHistoryScreenTest {
         checkBox1.setSelected(true);
         statesHistoryScreen.store();
         checkWidgets();
-        radioButton1.selectedProperty().setValue(true);
+        radioButton1.setSelected(true);
         statesHistoryScreen.store();
         checkWidgets();
         choiceBox1.getSelectionModel().select(1);
@@ -148,7 +148,7 @@ public class StatesHistoryScreenTest {
         statesHistoryScreen.store();
         checkWidgets();
         statesHistoryScreen.undo();
-        radioButton2.selectedProperty().setValue(true);
+        radioButton2.setSelected(true);
         statesHistoryScreen.store();
         checkWidgets();
         statesHistoryScreen.undo();
@@ -174,7 +174,7 @@ public class StatesHistoryScreenTest {
         statesHistoryScreen.store();
         statesHistoryScreen.undo();
         checkWidgets();
-        radioButton1.selectedProperty().setValue(true);
+        radioButton1.setSelected(true);
         statesHistoryScreen.store();
         statesHistoryScreen.undo();
         checkWidgets();
@@ -217,8 +217,8 @@ public class StatesHistoryScreenTest {
         assertEquals(comboBox2.getSelectionModel().getSelectedItem(), stateHistoryComboBox2.getStates().get(stateHistoryComboBox2.getIndex()));
         assertEquals(checkBox1.isSelected(), stateHistoryCheckBox1.getStates().get(stateHistoryCheckBox1.getIndex()));
         assertEquals(checkBox2.isSelected(), stateHistoryCheckBox2.getStates().get(stateHistoryCheckBox2.getIndex()));
-        assertEquals(radioButton1.selectedProperty().get(), stateHistoryRadioButton1.getStates().get(stateHistoryRadioButton1.getIndex()));
-        assertEquals(radioButton2.selectedProperty().get(), stateHistoryRadioButton2.getStates().get(stateHistoryRadioButton2.getIndex()));
+        assertEquals(radioButton1.isSelected(), stateHistoryRadioButton1.getStates().get(stateHistoryRadioButton1.getIndex()));
+        assertEquals(radioButton2.isSelected(), stateHistoryRadioButton2.getStates().get(stateHistoryRadioButton2.getIndex()));
         assertEquals(choiceBox1.getSelectionModel().getSelectedItem(), stateHistoryChoiceBox1.getStates().get(stateHistoryChoiceBox1.getIndex()));
         assertEquals(choiceBox2.getSelectionModel().getSelectedItem(), stateHistoryChoiceBox2.getStates().get(stateHistoryChoiceBox2.getIndex()));
     }
