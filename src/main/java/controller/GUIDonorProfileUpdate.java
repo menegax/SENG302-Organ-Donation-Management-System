@@ -21,6 +21,10 @@ import java.util.regex.Pattern;
 import static utility.UserActionHistory.userActions;
 
 public class GUIDonorProfileUpdate {
+
+
+    private boolean undoPressed = false;
+
     @FXML
     private Label lastModifiedLbl;
 
@@ -66,7 +70,9 @@ public class GUIDonorProfileUpdate {
     private StatesHistoryScreen screenHistory;
     @FXML
     private void undo() {
+        undoPressed = true;
         screenHistory.undo();
+        undoPressed = false;
     }
 
     @FXML
@@ -116,11 +122,12 @@ public class GUIDonorProfileUpdate {
 
     }
     private void addActionListeners(){
-//        bloodGroupDD.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-//            if (observable.)
-//            store();
-//            System.out.println(newValue + " " + oldValue);
-//        });
+        bloodGroupDD.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (((oldValue == null && newValue!= null) || (!oldValue.equals(newValue))) && !undoPressed) {
+                bloodGroupDD.getSelectionModel().select(newValue);
+                store();
+            }
+        });
     }
 
     private void loadProfile(String nhi) {
