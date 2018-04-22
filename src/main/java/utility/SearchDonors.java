@@ -1,6 +1,7 @@
 package utility;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -87,7 +88,7 @@ public class SearchDonors {
      * @param donor donor to remove index for
      */
     public static void removeIndex(Donor donor) {
-    	Term toDel = new Term("nhi", donor.getNhiNumber());
+    	Term toDel = new Term("nhi", donor.getNhiNumber().toUpperCase());
     	try {
 			indexWriter.deleteDocuments(toDel);
 		} catch (IOException e) {
@@ -111,8 +112,14 @@ public class SearchDonors {
      */
     private static Document createDocument(Donor donor) {
         Document donorDoc = new Document();
-        donorDoc.add(new StringField("nhi", donor.getNhiNumber(), Field.Store.YES));
-        donorDoc.add(new StringField("name", donor.getNameConcatenated(), Field.Store.YES));
+        donorDoc.add(new StringField("nhi", donor.getNhiNumber().toUpperCase(), Field.Store.YES));
+        donorDoc.add(new StringField("fName", donor.getFirstName().toUpperCase(), Field.Store.YES));
+        if (donor.getMiddleNames() != null) {
+        	for (String mName : donor.getMiddleNames()) {
+        		donorDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.YES));
+        	}
+        }
+        donorDoc.add(new StringField("lName", donor.getLastName().toUpperCase(), Field.Store.YES));
         return donorDoc;
     }
 
@@ -144,21 +151,59 @@ public class SearchDonors {
      * @param name The name you want to search for
      * @return ArrayList of the donors it found as a result of the search
      */
-    public static ArrayList<Donor> searchByName(String name) {
+    public static ArrayList<Donor> searchByName(String input) {
+    	String[] names = input.split(" ");
         ArrayList<Donor> results = new ArrayList<>();
-        FuzzyQuery fuzzyQuery = new FuzzyQuery(new Term("name", name));
+        ArrayList<FuzzyQuery> queries = new ArrayList<>();
+        for (String name : names) {
+            queries.add(new FuzzyQuery(new Term("fName", name.toUpperCase()), 2));
+            queries.add(new FuzzyQuery(new Term("mName", name.toUpperCase()), 2));
+            queries.add(new FuzzyQuery(new Term("lName", name.toUpperCase()), 2));
+        }
+
         TopDocs docs;
 		try {
-			docs = searchQuery(fuzzyQuery);
-	        String nhi;
-	        for (ScoreDoc doc : docs.scoreDocs) {
-	            Document thisDoc = indexSearcher.doc(doc.doc);
-	            nhi = thisDoc.get("nhi");
-	            results.add(Database.getDonorByNhi(nhi));
-	        }
+			String nhi;
+			Donor donor;
+			for (FuzzyQuery query : queries) {
+				docs = searchQuery(query);
+	        
+				for (ScoreDoc doc : docs.scoreDocs) {
+	            	Document thisDoc = indexSearcher.doc(doc.doc);
+	            	nhi = thisDoc.get("nhi");
+	            	donor = Database.getDonorByNhi(nhi);
+	            	if (!results.contains(donor)) {
+	            		results.add(donor);
+	            	}
+	        	}
+			}
 		} catch (IOException e) {
 			// TODO add error for unable to find or read from index
 		}
         return results;
     }
+    
+//    public static void main(String[] argv) {
+//    	Database.resetDatabase();
+//    	
+//    	Donor d1 = new Donor("abc1234", "Pat", null, "Laff", LocalDate.now());
+//        Donor d2 = new Donor("def1234", "Patik", null, "Laffey", LocalDate.now());
+//        Donor d3 = new Donor("ghi1234", "George", null, "Romera", LocalDate.now());
+//        Database.addDonor(d3);
+//        Database.addDonor(d2);
+//        Database.addDonor(d1);
+//        
+//        SearchDonors.clearIndex();
+//        // Given an index
+//        SearchDonors.createFullIndex();
+//
+//        // When index searched for a single specific donor
+//        ArrayList<Donor> results = SearchDonors.searchByName("Pati");
+//        System.out.println("Number of results: " + String.valueOf(results.size()));
+//        for (Donor donor : results) {
+//        	System.out.println(
+//        			donor.getNhiNumber() + " " +
+//        			donor.getNameConcatenated());
+//        }
+//    }
 }
