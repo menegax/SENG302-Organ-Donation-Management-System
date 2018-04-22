@@ -3,9 +3,9 @@
     <groupId>seng302</groupId>
     <artifactId>Main</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>3.0</version>
     <name>Big Pharma</name>
-    <url>https://eng-git.canterbury.ac.nz/SENG302-2016/team-27</url>
+    <url>https://eng-git.canterbury.ac.nz/SENG302-2016/team-800</url>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
