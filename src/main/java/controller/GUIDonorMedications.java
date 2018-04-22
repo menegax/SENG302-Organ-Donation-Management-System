@@ -28,7 +28,9 @@ public class GUIDonorMedications {
     public Button addMed;
     public Button deleteMed;
     public Button saveMed;
-    public Label goBack;
+    public Button undoEdit;
+    public Button redoEdit;
+    public Button goBack;
 
     @FXML
     private TextField newMedication; // Medications are entered for adding to the currentMedications ArrayList and listView
@@ -40,16 +42,25 @@ public class GUIDonorMedications {
     private ListView<String> pastMedications; // A listView for showing the past medications
 
     @FXML
+    public void undo() {
+        System.out.print( "undo" );
+    }
+
+    @FXML
+    public void redo() {
+        System.out.print( "redo" );
+    }
+
+    @FXML
     /*
      * Removes a medication from the history or current ArrayList and listView
      */
     public void deleteMedication() {
         if (pastMedications.getFocusModel().getFocusedItem() != null &&
                 currentMedications.getFocusModel().getFocusedItem() != null) {
-            System.out.println(new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems() ));
-            System.out.println(new ArrayList <>( currentMedications.getSelectionModel().getSelectedIndices()));
+            System.out.println(new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems() )); // just printing w/e
+            System.out.println(new ArrayList <>( currentMedications.getSelectionModel().getSelectedIndices())); // just printing w/e
             // DONT KNOW HOW TO SELECT THE MOST RECENT OF TWO SELECTION BETWEEN LISTVIEWS
-            // THINK MAY REQUIRE A LISTENER, OR SOMETHING SIMILAR
         } else if (pastMedications.getFocusModel().getFocusedItem() != null) {
             removeMedication( new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems() ) );
         } else {
@@ -110,8 +121,8 @@ public class GUIDonorMedications {
     @FXML
     public void initialize() {
         try {
-            pastMedications.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-            currentMedications.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+            pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor().getNhiNumber());
 
             if(target.getCurrentMedications() == null) {
@@ -162,18 +173,11 @@ public class GUIDonorMedications {
      * @param medication The selected medication being added to the current ArrayList and listView
      */
     private void addMedication(String medication) {
-        if (!medication.equals("Enter a medication") && !medication.equals("") && !medication.equals(" ")) { // This can be altered after story 19 is completed
-            if (!(current.contains(medication) || history.contains(medication))) {
-                target.getCurrentMedications().add(new Medication(medication));
-                time = new Timestamp(System.currentTimeMillis());
+        if (!medication.equals( "Enter a medication" ) && !medication.equals( "" ) && !medication.equals( " " )) { // This can be altered after story 19 is completed
+            if (!(current.contains( medication ) || history.contains( medication ))) {
+                target.getCurrentMedications().add( new Medication( medication ) );
 
-                if (!target.getMedicationLog().containsKey(medication)) {
-                    ArrayList<String> newMedication = new ArrayList<>();
-                    newMedication.add(time + " - registered to current: " + medication);
-                    target.getMedicationLog().put(medication, newMedication);
-                } else {
-                    target.getMedicationLog().get(medication).add(time + " - registered to current: " + medication);
-                }
+                userActions.log(Level.INFO, "Successfully registered a medication", "Registered a new medication for a donor");
                 viewCurrentMedications();
             }
         }
@@ -189,13 +193,11 @@ public class GUIDonorMedications {
         for (String medication : medications) {
             if (history.contains( medication )) {
                 target.getMedicationHistory().remove( history.indexOf( medication ) );
-                time = new Timestamp(System.currentTimeMillis());
-                target.getMedicationLog().get(medication).add(time + " - deleted from history: " + medication);
+                userActions.log(Level.INFO, "Successfully deleted a medication", "Deleted a past medication for a donor");
                 viewPastMedications();
             } else if (current.contains( medication )) {
                 target.getCurrentMedications().remove( current.indexOf( medication ) );
-                time = new Timestamp(System.currentTimeMillis());
-                target.getMedicationLog().get(medication).add(time + " - deleted from current: " + medication);
+                userActions.log(Level.INFO, "Successfully deleted a medication", "Deleted a current medication for a donor");
                 viewCurrentMedications();
             }
         }
@@ -216,8 +218,7 @@ public class GUIDonorMedications {
                     target.getCurrentMedications().add( new Medication( medication ) );
                     viewCurrentMedications();
                 }
-                time = new Timestamp(System.currentTimeMillis());
-                target.getMedicationLog().get(medication).add(time + " - moved to current: " + medication);
+                userActions.log(Level.INFO, "Successfully moved a medication", "Re-added a current medication for a donor");
                 viewPastMedications();
             }
         }
@@ -238,8 +239,7 @@ public class GUIDonorMedications {
                     target.getMedicationHistory().add( new Medication( medication ) );
                     viewPastMedications();
                 }
-                time = new Timestamp(System.currentTimeMillis());
-                target.getMedicationLog().get(medication).add(time + " - moved to history: " + medication);
+                userActions.log(Level.INFO, "Successfully moved a medication", "Removed a past medication for a donor");
                 viewCurrentMedications();
             }
         }

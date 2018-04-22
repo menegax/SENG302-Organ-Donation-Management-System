@@ -693,14 +693,15 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
         // Saves the Donor data to .json file
-        //Database.saveToDisk();
+        interact( () -> {
+            lookup( "#saveMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        } );
 
         interact( () -> {
             clickOn( "SavedMed" );
         } );
 
         interact( () -> {
-            // The following line doesn't do anything, but the clickOn is visibly working
             lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         } );
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
@@ -731,59 +732,80 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
 
         // Leave the Medication pane and navigates to Profile Pane
-        //interact( () -> {
-        //  lookup( "#goBack" ).queryAs( Label.class ).getOnMouseClicked().handle( new MouseEvent() );
-        //});
-        //verifyThat( "#profilePane", Node::isVisible ); // Verify that "user" has navigated to profile
+        interact( () -> {
+          lookup( "#goBack" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        });
+        verifyThat( "#profilePane", Node::isVisible ); // Verify that "user" has navigated to profile
 
         // Navigate to the medication panel via the temporary test medication button found in profile panel
-        //interact( () -> {
-        //   lookup( "#testMedication" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        //} );
-        //verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
+        interact( () -> {
+           lookup( "#testMedication" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        } );
+        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
-        //verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
+        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
         // Verify that the currentMedications listView to it's previously last saved state prior to remove and delete
-        //verifyThat("#currentMedications", ListViewMatchers.hasListCell("SavedMed"));
+        verifyThat("#currentMedications", ListViewMatchers.hasListCell("SavedMed"));
         // Verify that there is only one medication registered to currentMedications ListView
-        //verifyThat("#currentMedications", ListViewMatchers.hasItems( 1 ));
+        verifyThat("#currentMedications", ListViewMatchers.hasItems( 1 ));
         // Verify that the pastMedications listView is still empty as no medication has been registered to it
-        //verifyThat("#pastMedications", ListViewMatchers.isEmpty());
+        verifyThat("#pastMedications", ListViewMatchers.isEmpty());
 
 
         // Remove medication save from file
-        //interact( () -> {
-        //  clickOn("SavedMed");
-        //});
+        interact( () -> {
+          clickOn("SavedMed");
+        });
 
-        //interact( () -> {
-        // The following line doesn't do anything, but the clickOn is visibly working
-        //  lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        //});
+        interact( () -> {
+          lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        });
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
-        //verifyThat("#pastMedications", ListViewMatchers.hasListCell("SavedMed"));
+        verifyThat("#pastMedications", ListViewMatchers.hasListCell("SavedMed"));
         // Verify that there is only one medication moved to pastMedications ListView
-        //verifyThat("#pastMedications", ListViewMatchers.hasItems( 1 ));
+        verifyThat("#pastMedications", ListViewMatchers.hasItems( 1 ));
         // Verify that the currentMedications listView is now empty as a medication has now been moved from it
-        //verifyThat("#currentMedications", ListViewMatchers.isEmpty());
+        verifyThat("#currentMedications", ListViewMatchers.isEmpty());
 
-        //interact( () -> {
-        //  clickOn("SavedMed");
-        //});
+        interact( () -> {
+          clickOn("SavedMed");
+        });
 
-        //interact( () -> {
+        interact( () -> {
         // Press the delete medication button for deleting the selected medication
-        //  lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        //});
+          lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        });
         // Verify that both of the medications listViews are now empty as a medication has been deleted from it
-        //verifyThat("#currentMedications", ListViewMatchers.isEmpty());
-        //verifyThat("#pastMedications", ListViewMatchers.isEmpty());
-        //verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
+        verifyThat("#currentMedications", ListViewMatchers.isEmpty());
+        verifyThat("#pastMedications", ListViewMatchers.isEmpty());
+        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
-        //verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
+        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
         // Removes the donor medication save from .json file
-        //Database.saveToDisk();
+        interact( () -> {
+            lookup( "#saveMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        } );
+
+        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
+
+        // Leave the Medication pane and navigates to Profile Pane
+        interact( () -> {
+            lookup( "#goBack" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        });
+        verifyThat( "#profilePane", Node::isVisible ); // Verify that "user" has navigated to profile
+
+        // Navigate to the medication panel via the temporary test medication button found in profile panel
+        interact( () -> {
+            lookup( "#testMedication" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        } );
+        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
+        // Verify that the medication entry text field is empty prior to entering a new medication for registration
+        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
+
+        // Verify that both of the medications listViews are now empty as a medication has been deleted from it
+        verifyThat("#currentMedications", ListViewMatchers.isEmpty());
+        verifyThat("#pastMedications", ListViewMatchers.isEmpty());
     }
 }
