@@ -6,7 +6,7 @@ import model.Donor;
 
 import java.util.HashMap;
 
-class ScreenControl {
+public class ScreenControl {
 
     private static HashMap<String, Pane> screenMap = new HashMap<>();
 
@@ -18,7 +18,7 @@ class ScreenControl {
         donor = newDonor;
     }
 
-    static Donor getLoggedInDonor() {
+    public static Donor getLoggedInDonor() {
         return donor;
     }
 

@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import service.Database;
 
@@ -10,6 +11,11 @@ public class GUIHome {
 
     @FXML
     public AnchorPane homePane;
+    public Button profileButton;
+    public Button historyButton;
+    public Button saveButton;
+    public Button importButton;
+    public Button logOutButton;
 
     @FXML
     public void goToProfile(){

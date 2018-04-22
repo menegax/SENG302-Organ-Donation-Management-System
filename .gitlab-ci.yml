@@ -8,12 +8,12 @@ tag_checker:
 junit:
   stage: test
   script:
-    - mvn -B clean test
+    - mvn -B clean test -Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dheadless.geometry=1920x1080-32
 
 recent-artifacts:
   stage: deploy
   script:
-    - mvn -B clean site package
+    - mvn -B clean site package -Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dheadless.geometry=1920x1080-32
   artifacts:
     paths:
       - target/*.jar

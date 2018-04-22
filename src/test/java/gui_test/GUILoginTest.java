@@ -3,6 +3,7 @@ package gui_test;
 
 
 import controller.Main;
+import controller.ScreenControl;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -55,6 +56,7 @@ public class GUILoginTest extends ApplicationTest {
             assertThat(lookup("#nhiLogin").queryAs(TextField.class)).hasText("ABC1238");
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
         });
+        assertThat(ScreenControl.getLoggedInDonor().getNhiNumber().equals("ABC1238"));
         verifyThat("#homePane", Node::isVisible);
     }
 
@@ -65,6 +67,7 @@ public class GUILoginTest extends ApplicationTest {
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
+        assertThat(ScreenControl.getLoggedInDonor().getNhiNumber() == null);
         verifyThat("#loginPane", Node::isVisible);
     }
 
@@ -75,7 +78,7 @@ public class GUILoginTest extends ApplicationTest {
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-
+        assertThat(ScreenControl.getLoggedInDonor().getNhiNumber() == null);
         verifyThat("#loginPane", Node::isVisible);
     }
 

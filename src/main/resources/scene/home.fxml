@@ -5,17 +5,17 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="homePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIHome">
+<AnchorPane fx:id="homePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIHome">
    <children>
       <Label alignment="CENTER" layoutX="264.0" layoutY="50.0" styleClass="title" text="Home">
          <font>
             <Font size="27.0" />
          </font>
       </Label>
-      <Button layoutX="161.0" layoutY="136.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="79.0" prefWidth="111.0" text="Profile" />
-      <Button layoutX="333.0" layoutY="135.0" mnemonicParsing="false" onAction="#goToHistory" prefHeight="79.0" prefWidth="110.0" text="History" />
-      <Button layoutX="272.0" layoutY="338.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" prefWidth="57.0" text="Save" />
-      <Button disable="true" layoutX="360.0" layoutY="338.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" text="Import" />
-      <Button layoutX="188.0" layoutY="338.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+      <Button fx:id="profileButton" layoutX="161.0" layoutY="136.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="79.0" prefWidth="111.0" text="Profile" />
+      <Button fx:id="historyButton" layoutX="333.0" layoutY="135.0" mnemonicParsing="false" onAction="#goToHistory" prefHeight="79.0" prefWidth="110.0" text="History" />
+      <Button fx:id="saveButton" layoutX="272.0" layoutY="338.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" prefWidth="57.0" text="Save" />
+      <Button fx:id="importButton" disable="true" layoutX="360.0" layoutY="338.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" text="Import" />
+      <Button fx:id="logOutButton" layoutX="188.0" layoutY="338.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
    </children>
 </AnchorPane>
