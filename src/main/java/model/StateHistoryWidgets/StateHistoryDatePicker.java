@@ -1,26 +1,19 @@
 package model.StateHistoryWidgets;
 
 import controller.IUndoRedo;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
-import javafx.scene.control.TextField;
+import javafx.scene.control.DatePicker;
 
-import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
-/**
- * Represents the state history of a text entry field in the GUI
- */
-public class StateHistoryTextEntry implements IUndoRedo {
-
+public class StateHistoryDatePicker implements IUndoRedo {
     /**
-     * The TextField this object holds the states for
+     * The DatePicker this object holds the states for
      */
-    private TextField entry;
+    private DatePicker date;
 
     /**
-     * The states of the TextField
+     * The states of the DatePicker
      */
     private ArrayList<String> states = new ArrayList<>();
 
@@ -36,58 +29,58 @@ public class StateHistoryTextEntry implements IUndoRedo {
 
     /**
      * Constructor for the State History
-     * @param entry the Text Field whose state we are storing
+     * @param datePicker the datePicker whose state we are storing
      */
-    public StateHistoryTextEntry(TextField entry) {
-        this.entry = entry;
-        states.add(entry.getText());
+    public StateHistoryDatePicker(DatePicker datePicker) {
+        this.date = datePicker;
+        states.add(date.getValue().toString());
     }
 
     /**
      * Called whenever the user makes an action
-     * Stores the current state of the TextField and increments the index accordingly
+     * Stores the current state of the DatePicker and increments the index accordingly
      * Also removes any states after the current action in the ArrayList
      */
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(entry.getText());
+        states.add(date.getValue().toString());
     }
 
     /**
-     * Sets the TextField to the state before the current state
+     * Sets the DatePicker to the state before the current state
      */
     public void undo() {
         if (index != 0) {
             index -= 1;
-            entry.setText(states.get(index));
+            date.setValue(LocalDate.parse(states.get(index)));
             undone = true;
         }
     }
 
     /**
-     * Resets the TextField to the state immediately prior to an undo
+     * Resets the DatePicker to the state immediately prior to an undo
      */
     public void redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
-            entry.setText(states.get(index));
+            date.setValue(LocalDate.parse(states.get(index)));
         }
     }
 
     /**
-     * Gets the states of the Text Entry
+     * Gets the states of the DatePicker
      * Currently only used in testing
-     * @return the states of the text entry
+     * @return the states of the DatePicker
      */
     public ArrayList<Object> getStates() {
         return new ArrayList<>(states);
     }
 
     /**
-     * Gets the index of the current state of the Text Entry
+     * Gets the index of the current state of the DatePicker
      * currently only used in testing
-     * @return the index of the text entry
+     * @return the index of the DatePicker
      */
     public int getIndex() {
         return index;

@@ -70,13 +70,10 @@ public class GUIDonorProfileUpdate {
     private AnchorPane donorUpdateAnchorPane;
 
     private StatesHistoryScreen screenHistory;
-    private boolean undoPressed = false;
 
     @FXML
     private void undo() {
-        undoPressed = true;
         screenHistory.undo();
-        undoPressed = false;
     }
 
     @FXML
@@ -85,11 +82,6 @@ public class GUIDonorProfileUpdate {
     }
 
     private Donor target;
-
-    @FXML
-    private void store(){
-        screenHistory.store();
-    }
 
     public void initialize() {
         List<String> bloodGroups = Arrays.asList("a positive", "a negative", "b positive", "b negative", "ab positive", "ab negative", "o positive", "o negative");
@@ -126,12 +118,6 @@ public class GUIDonorProfileUpdate {
 
     }
     private void addActionListeners(){
-        bloodGroupDD.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (((oldValue == null && newValue!= null) || (!oldValue.equals(newValue))) && !undoPressed) {
-                bloodGroupDD.getSelectionModel().select(newValue);
-                store();
-            }
-        });
         donorUpdateAnchorPane.setOnKeyPressed(event -> {
             if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
                 undo();
