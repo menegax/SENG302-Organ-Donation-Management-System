@@ -5,11 +5,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
@@ -39,6 +44,7 @@ public class GUIClinicianSearchDonors implements Initializable {
     private TextField searchEntry;
 
     private ObservableList<Donor> masterData = FXCollections.observableArrayList();
+
 
     /**
      * Adds all db data via constructor
@@ -75,35 +81,73 @@ public class GUIClinicianSearchDonors implements Initializable {
         // wrap ObservableList in a FilteredList
         FilteredList<Donor> filteredData = new FilteredList<>(masterData, d -> true);
 
-        // 2. Set the filter Predicate whenever the filter changes.
-        searchEntry.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(donor -> {
-                // If filter text is empty, display all persons.
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
+        // set the filter Predicate whenever the filter changes.
+        searchEntry.textProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    filteredData.setPredicate(donor -> {
+                        // If filter text is empty, display all persons.
+                        if (newValue == null || newValue.isEmpty()) {
+                            return true;
+                        }
 
-//                if (donor.getFirstName().toLowerCase().contains(lowerCaseFilter)) { //todo old code, using only for reference temporarily
-//                    return true; // Filter matches first name.
-//                }
+                        //                if (donor.getFirstName().toLowerCase().contains(lowerCaseFilter)) { //todo old code, using only for reference temporarily
+                        //                    return true; // Filter matches first name.
+                        //                }
 
-                if (SearchDonors.searchByName(newValue).contains(donor)) { //todo here is hte new code to call fuzzy
-                    return true;
-                }
+                        if (SearchDonors.searchByName(newValue)
+                                .contains(donor)) { //todo here is hte new code to call fuzzy
+                            return true;
+                        }
 
-                return false; // Does not match.
-            });
-        });
+                        return false; // Does not match.
+                    });
+                });
 
         // wrap the FilteredList in a SortedList.
         SortedList<Donor> sortedData = new SortedList<>(filteredData);
 
         // bind the SortedList comparator to the TableView comparator.
-        sortedData.comparatorProperty().bind(donorDataTable.comparatorProperty());
+        sortedData.comparatorProperty()
+                .bind(donorDataTable.comparatorProperty());
 
         // add sorted (and filtered) data to the table.
         donorDataTable.setItems(sortedData);
+
+
+
+
+
+
+        // Add double-click event to rows
+        donorDataTable.setOnMouseClicked(click -> {
+            if (click.getClickCount() == 2 && donorDataTable.getSelectionModel().getSelectedItem() != null) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Double clicked!");
+                alert.showAndWait();
+            }
+            donorDataTable.refresh();
+        });
+
+        //        donorDataTable.setRowFactory(tv -> new TableRow<Donor>() {
+        //            private Tooltip tooltip = new Tooltip();
+        //            @Override
+        //            public void updateItem(Donor donor, boolean empty) {
+        //                super.updateItem(donor, empty);
+        //                if (donor == null) {
+        //                    setTooltip(null);
+        //                } else {
+        //                    String tooltipText = donor.getName() + ". Donor: ";
+        //                    for (String organ : donor.getOrgans()) {
+        //                        tooltipText += organ + ", ";
+        //                    }
+        //                    tooltipText = tooltipText.substring(0, tooltipText.length() - 2);
+        //                    tooltip.setText(tooltipText);
+        //                    setTooltip(tooltip);
+        //                }
+        //            }
+        //        });
+
     }
+
 
     public void goToClinicianHome() {
         ScreenControl.activate("clinicianHome");
