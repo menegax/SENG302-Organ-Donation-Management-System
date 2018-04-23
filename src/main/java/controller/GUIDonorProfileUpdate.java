@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import model.StatesHistoryScreen;
 import service.Database;
@@ -21,9 +23,6 @@ import java.util.regex.Pattern;
 import static utility.UserActionHistory.userActions;
 
 public class GUIDonorProfileUpdate {
-
-
-    private boolean undoPressed = false;
 
     @FXML
     private Label lastModifiedLbl;
@@ -67,7 +66,12 @@ public class GUIDonorProfileUpdate {
     @FXML
     private ChoiceBox<String> bloodGroupDD;
 
+    @FXML
+    private AnchorPane donorUpdateAnchorPane;
+
     private StatesHistoryScreen screenHistory;
+    private boolean undoPressed = false;
+
     @FXML
     private void undo() {
         undoPressed = true;
@@ -126,6 +130,13 @@ public class GUIDonorProfileUpdate {
             if (((oldValue == null && newValue!= null) || (!oldValue.equals(newValue))) && !undoPressed) {
                 bloodGroupDD.getSelectionModel().select(newValue);
                 store();
+            }
+        });
+        donorUpdateAnchorPane.setOnKeyPressed(event -> {
+            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+                undo();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+                redo();
             }
         });
     }

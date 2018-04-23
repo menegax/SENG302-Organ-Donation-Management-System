@@ -1,10 +1,10 @@
 package model_test;
 
-import controller.IUndoRedo;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.*;
 import model.*;
+import model.StateHistoryWidgets.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

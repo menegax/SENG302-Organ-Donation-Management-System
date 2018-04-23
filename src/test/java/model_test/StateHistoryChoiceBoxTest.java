@@ -3,7 +3,7 @@ package model_test;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.ChoiceBox;
-import model.StateHistoryChoiceBox;
+import model.StateHistoryWidgets.StateHistoryChoiceBox;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

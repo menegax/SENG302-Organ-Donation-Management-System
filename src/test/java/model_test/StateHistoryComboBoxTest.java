@@ -1,10 +1,9 @@
 package model_test;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.ComboBox;
-import model.StateHistoryComboBox;
+import model.StateHistoryWidgets.StateHistoryComboBox;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

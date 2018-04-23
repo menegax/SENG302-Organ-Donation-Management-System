@@ -1,4 +1,4 @@
-package model;
+package model.StateHistoryWidgets;
 
 import controller.IUndoRedo;
 import javafx.scene.control.ComboBox;

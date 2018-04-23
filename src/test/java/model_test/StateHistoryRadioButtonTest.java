@@ -2,7 +2,7 @@ package model_test;
 
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.RadioButton;
-import model.StateHistoryRadioButton;
+import model.StateHistoryWidgets.StateHistoryRadioButton;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

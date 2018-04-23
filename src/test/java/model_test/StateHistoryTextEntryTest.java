@@ -2,7 +2,7 @@ package model_test;
 
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.TextField;
-import model.StateHistoryTextEntry;
+import model.StateHistoryWidgets.StateHistoryTextEntry;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

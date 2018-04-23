@@ -2,6 +2,7 @@ package model;
 
 import controller.IUndoRedo;
 import javafx.scene.control.*;
+import model.StateHistoryWidgets.*;
 
 import java.util.ArrayList;
 

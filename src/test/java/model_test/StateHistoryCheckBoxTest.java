@@ -2,7 +2,7 @@ package model_test;
 
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.CheckBox;
-import model.StateHistoryCheckBox;
+import model.StateHistoryWidgets.StateHistoryCheckBox;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

@@ -1,8 +1,7 @@
-package model;
+package model.StateHistoryWidgets;
 
 import controller.IUndoRedo;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.RadioButton;
 
 import java.util.ArrayList;
 
