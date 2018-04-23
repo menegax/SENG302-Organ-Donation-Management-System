@@ -5,17 +5,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
@@ -91,16 +91,9 @@ public class GUIClinicianSearchDonors implements Initializable {
                             return true;
                         }
 
-                        //                if (donor.getFirstName().toLowerCase().contains(lowerCaseFilter)) { //todo old code, using only for reference temporarily
-                        //                    return true; // Filter matches first name.
-                        //                }
+                        return SearchDonors.searchByName(newValue)
+                                .contains(donor);
 
-                        if (SearchDonors.searchByName(newValue)
-                                .contains(donor)) { //todo here is hte new code to call fuzzy
-                            return true;
-                        }
-
-                        return false; // Does not match.
                     });
                 });
 
@@ -114,19 +107,40 @@ public class GUIClinicianSearchDonors implements Initializable {
         // add sorted (and filtered) data to the table.
         donorDataTable.setItems(sortedData);
 
+
+        //TODO EDIT HERE
+        //todo refactor out to method
         // Add double-click event to rows
         donorDataTable.setOnMouseClicked(click -> {
-            if (click.getClickCount() == 2 && donorDataTable.getSelectionModel()
-                    .getSelectedItem() != null) {
-                GUIDonorProfileUpdate donorUpdate = new GUIDonorProfileUpdate(); //todo make show many windows filled with donor profile
+            if (click.getClickCount() == 2 && donorDataTable.getSelectionModel().getSelectedItem() != null) {
+
+                System.out.println("Double clicked a row!"); //todo remove
+                try {
+
+                    //THIS CODE DOESN'T WORK. IT TRIES TO LOAD FXML. NO WINDOW IS SHOWN THOUGH.
+//                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfileUpdate.fxml"));
+//                    Parent root1 = fxmlLoader.load();
+//                    Stage stage = new Stage();
+//                    stage.setTitle("ABC");
+//                    stage.setScene(new Scene(root1));
+//                    stage.show();
+
+                    // THIS CODE WORKS. IT SHOWS A SIMPLE POPUP. LOADING FXML FAILS.
+                    Stage secondStage = new Stage();
+                    secondStage.setScene(new Scene(new HBox(4, new Label("Second window"))));
+                    secondStage.show();
+                }
+                catch (Exception e) {
+
+                }
             }
             donorDataTable.refresh(); //todo needs to be here? test
         });
 
-
         // add hover-over text to rows
         donorDataTable.setRowFactory(tv -> new TableRow<Donor>() {
             private Tooltip tooltip = new Tooltip();
+
 
             @Override
             public void updateItem(Donor donor, boolean empty) {
