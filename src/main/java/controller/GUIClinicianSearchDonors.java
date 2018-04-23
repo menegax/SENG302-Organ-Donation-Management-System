@@ -118,9 +118,7 @@ public class GUIClinicianSearchDonors implements Initializable {
         donorDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && donorDataTable.getSelectionModel()
                     .getSelectedItem() != null) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Double clicked!");
-                alert.showAndWait();
-
+                GUIDonorProfileUpdate donorUpdate = new GUIDonorProfileUpdate(); //todo make show many windows filled with donor profile
             }
             donorDataTable.refresh(); //todo needs to be here? test
         });
