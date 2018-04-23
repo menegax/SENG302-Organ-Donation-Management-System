@@ -18,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
+import utility.GlobalEnums;
 import utility.SearchDonors;
 
 import java.net.URL;
@@ -113,38 +114,40 @@ public class GUIClinicianSearchDonors implements Initializable {
         // add sorted (and filtered) data to the table.
         donorDataTable.setItems(sortedData);
 
-
-
-
-
-
         // Add double-click event to rows
         donorDataTable.setOnMouseClicked(click -> {
-            if (click.getClickCount() == 2 && donorDataTable.getSelectionModel().getSelectedItem() != null) {
+            if (click.getClickCount() == 2 && donorDataTable.getSelectionModel()
+                    .getSelectedItem() != null) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Double clicked!");
                 alert.showAndWait();
+
             }
-            donorDataTable.refresh();
+            donorDataTable.refresh(); //todo needs to be here? test
         });
 
-        //        donorDataTable.setRowFactory(tv -> new TableRow<Donor>() {
-        //            private Tooltip tooltip = new Tooltip();
-        //            @Override
-        //            public void updateItem(Donor donor, boolean empty) {
-        //                super.updateItem(donor, empty);
-        //                if (donor == null) {
-        //                    setTooltip(null);
-        //                } else {
-        //                    String tooltipText = donor.getName() + ". Donor: ";
-        //                    for (String organ : donor.getOrgans()) {
-        //                        tooltipText += organ + ", ";
-        //                    }
-        //                    tooltipText = tooltipText.substring(0, tooltipText.length() - 2);
-        //                    tooltip.setText(tooltipText);
-        //                    setTooltip(tooltip);
-        //                }
-        //            }
-        //        });
+
+        // add hover-over text to rows
+        donorDataTable.setRowFactory(tv -> new TableRow<Donor>() {
+            private Tooltip tooltip = new Tooltip();
+
+            @Override
+            public void updateItem(Donor donor, boolean empty) {
+                super.updateItem(donor, empty);
+                if (donor == null) {
+                    setTooltip(null);
+                }
+                else {
+                    StringBuilder tooltipText = new StringBuilder(donor.getNameConcatenated() + ". Donor: ");
+                    for (GlobalEnums.Organ organ : donor.getDonations()) {
+                        tooltipText.append(organ)
+                                .append(", ");
+                    }
+                    tooltipText = new StringBuilder(tooltipText.substring(0, tooltipText.length() - 2));
+                    tooltip.setText(tooltipText.toString());
+                    setTooltip(tooltip);
+                }
+            }
+        });
 
     }
 
