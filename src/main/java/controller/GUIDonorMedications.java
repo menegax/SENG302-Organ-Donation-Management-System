@@ -76,11 +76,9 @@ public class GUIDonorMedications {
     public void deleteMedication() {
         if (pastMedications.getFocusModel().getFocusedItem() != null &&
                 currentMedications.getFocusModel().getFocusedItem() != null) {
-            String message = "Select OK to exit error message";
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK);
-            alert.setTitle("Error!");
-            alert.setHeaderText("There are medicines currently selected in both lists!");
-            alert.show();
+            ArrayList<String> selections = new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems());
+            selections.addAll(currentMedications.getSelectionModel().getSelectedItems() );
+            removeMedication( selections );
         } else if (pastMedications.getFocusModel().getFocusedItem() != null) {
             removeMedication( new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems() ) );
         } else {
