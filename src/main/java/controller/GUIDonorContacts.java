@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
 
@@ -16,6 +17,7 @@ import static utility.UserActionHistory.userActions;
 
 public class GUIDonorContacts {
 
+    public AnchorPane donorContactsPane;
     @FXML private TextField homePhoneField;
 
     @FXML private TextField mobilePhoneField;

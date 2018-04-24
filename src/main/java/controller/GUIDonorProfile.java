@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import model.Donor;
 import service.Database;
@@ -18,6 +19,9 @@ import static utility.UserActionHistory.userActions;
 
 public class GUIDonorProfile {
 
+    public Button editDonorButton;
+    public Button contactButton;
+    public Button donationButton;
     @FXML
     private Label nhiLbl;
 
