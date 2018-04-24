@@ -97,13 +97,14 @@ public class StatesHistoryScreen {
                     store();
                 }
             });
-            ((ComboBox<String>) comboBox).setOnKeyPressed(event -> {
-                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-                    undo();
-                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                    redo();
-                }
-            });
+//            The following code is commented out as it is assumed, like choiceBox, Ctrl+Z still triggers on the AnchorPane when the comboBox is selected
+//            ((ComboBox<String>) comboBox).setOnKeyPressed(event -> {
+//                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+//                    undo();
+//                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+//                    redo();
+//                }
+//            });
         }
     }
 
@@ -166,13 +167,14 @@ public class StatesHistoryScreen {
                     store();
                 }
             });
-            ((ChoiceBox<String>) choiceBox).setOnKeyPressed(event -> {
-                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-                    undo();
-                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                    redo();
-                }
-            });
+//            The following code is commented out as Ctrl+Z still triggers on the AnchorPane when the choiceBox is selected
+//            ((ChoiceBox<String>) choiceBox).setOnKeyPressed(event -> {
+//                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+//                    undo();
+//                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+//                    redo();
+//                }
+//            });
         }
     }
 
