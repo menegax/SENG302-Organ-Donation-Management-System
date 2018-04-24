@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -32,6 +33,7 @@ public class GUIDonorMedications {
     public Button undoEdit;
     public Button redoEdit;
     public Button goBack;
+    public Button reviewMed;
     public Button clearMed;
 
     @FXML
@@ -44,13 +46,27 @@ public class GUIDonorMedications {
     private ListView<String> pastMedications; // A listView for showing the past medications
 
     @FXML
+    private ListView<String> medicineInformation; // A listView for showing medicine ingredients and interactions
+
+    @FXML
     public void undo() {
-        System.out.print( "undo" );
+        System.out.print( "undo" );  // To be completed by Story 12 and 13 responsible's
     }
 
     @FXML
     public void redo() {
-        System.out.print( "redo" );
+        System.out.print( "redo" );  // To be completed by Story 12 and 13 responsible's
+    }
+
+    @FXML
+    /*
+     * Retrieves selected medicines when review medicine button is activated, joins and sorts them for reviewing
+     */
+    public void reviewMedicine() {
+        ArrayList<String> selections = new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems());
+        selections.addAll(currentMedications.getSelectionModel().getSelectedItems() );
+        Collections.sort(selections);
+        removeMedication( selections );  // Lists the selected medicines for reviewing the ingredients
     }
 
     @FXML
@@ -274,5 +290,13 @@ public class GUIDonorMedications {
     public void clearSelections() {
         pastMedications.getSelectionModel().clearSelection();
         currentMedications.getSelectionModel().clearSelection();
+    }
+
+    /*
+     * Lists selected medicines and their ingredients
+     * @param medicines ArrayList of alphabetically sorted medicines for listing
+     */
+    private void showMedicineIngredients(ArrayList<String> medicines) {
+        ;
     }
 }
