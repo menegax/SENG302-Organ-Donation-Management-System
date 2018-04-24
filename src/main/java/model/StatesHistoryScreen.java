@@ -5,6 +5,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCodeCombination;
 import model.StateHistoryWidgets.*;
 
 import javax.swing.*;
@@ -74,6 +75,13 @@ public class StatesHistoryScreen {
                     store();
                 }
             });
+            ((TextField)entry).setOnKeyPressed(event -> {
+                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+                    undo();
+                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+                    redo();
+                }
+            });
         }
     }
 
@@ -87,6 +95,13 @@ public class StatesHistoryScreen {
             ((ComboBox<String>) comboBox).getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if ((oldValue == null && newValue!= null) || !newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when textfield has been undone
                     store();
+                }
+            });
+            ((ComboBox<String>) comboBox).setOnKeyPressed(event -> {
+                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+                    undo();
+                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+                    event.consume();
                 }
             });
         }
@@ -105,6 +120,13 @@ public class StatesHistoryScreen {
                     store();
                 }
             });
+            ((RadioButton) radioButton).setOnKeyPressed(event -> {
+                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+                    undo();
+                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+                    event.consume();
+                }
+            });
         }
     }
 
@@ -119,6 +141,13 @@ public class StatesHistoryScreen {
             ((CheckBox) checkBox).selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when textfield has been undone
                     store();
+                }
+            });
+            ((CheckBox) checkBox).setOnKeyPressed(event -> {
+                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+                    undo();
+                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+                    event.consume();
                 }
             });
         }
@@ -137,6 +166,13 @@ public class StatesHistoryScreen {
                     store();
                 }
             });
+            ((ChoiceBox<String>) choiceBox).setOnKeyPressed(event -> {
+                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+                    undo();
+                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+                    event.consume();
+                }
+            });
         }
     }
 
@@ -149,6 +185,13 @@ public class StatesHistoryScreen {
             stateHistories.add(new StateHistoryDatePicker((DatePicker)datePicker));
             ((DatePicker) datePicker).valueProperty().addListener((observable, oldValue, newValue) -> {
 
+            });
+            ((DatePicker) datePicker).setOnKeyPressed(event -> {
+                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+                    undo();
+                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+                    event.consume();
+                }
             });
         }
     }
