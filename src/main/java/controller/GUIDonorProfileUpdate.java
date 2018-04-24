@@ -114,7 +114,7 @@ public class GUIDonorProfileUpdate {
             add(genderMaleRadio);
         }};
 
-        screenHistory = new StatesHistoryScreen(fields, new ArrayList<ChoiceBox>(){{add(bloodGroupDD);}}, radio);
+        screenHistory = new StatesHistoryScreen(fields, new ArrayList<ChoiceBox>(){{add(bloodGroupDD);}}, radio, new ArrayList<DatePicker>(){{add(dobDate);}});
 
     }
     private void addActionListeners(){

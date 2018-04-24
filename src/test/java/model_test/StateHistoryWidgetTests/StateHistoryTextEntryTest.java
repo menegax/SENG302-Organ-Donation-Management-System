@@ -1,4 +1,4 @@
-package model_test;
+package model_test.StateHistoryWidgetTests;
 
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.TextField;

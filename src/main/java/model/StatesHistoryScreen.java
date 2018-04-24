@@ -93,7 +93,7 @@ public class StatesHistoryScreen {
         for (Object comboBox : ((ArrayList<?>) comboBoxes)) {
             stateHistories.add(new StateHistoryComboBox((ComboBox<String>)comboBox));
             ((ComboBox<String>) comboBox).getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if ((oldValue == null && newValue!= null) || !newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when textfield has been undone
+                if ((oldValue == null && newValue!= null) || !newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when ComboBox has been undone
                     store();
                 }
             });
@@ -101,7 +101,7 @@ public class StatesHistoryScreen {
                 if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
                     undo();
                 } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                    event.consume();
+                    redo();
                 }
             });
         }
@@ -116,7 +116,7 @@ public class StatesHistoryScreen {
         for (Object radioButton : ((ArrayList<?>) radioButtons)) {
             stateHistories.add(new StateHistoryRadioButton((RadioButton)radioButton));
             ((RadioButton) radioButton).selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when textfield has been undone
+                if (!newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when RadioButton has been undone
                     store();
                 }
             });
@@ -124,7 +124,7 @@ public class StatesHistoryScreen {
                 if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
                     undo();
                 } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                    event.consume();
+                    redo();
                 }
             });
         }
@@ -139,7 +139,7 @@ public class StatesHistoryScreen {
         for (Object checkBox : ((ArrayList<?>) checkBoxes)) {
             stateHistories.add(new StateHistoryCheckBox((CheckBox)checkBox));
             ((CheckBox) checkBox).selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when textfield has been undone
+                if (!newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when CheckBox has been undone
                     store();
                 }
             });
@@ -147,7 +147,7 @@ public class StatesHistoryScreen {
                 if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
                     undo();
                 } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                    event.consume();
+                    redo();
                 }
             });
         }
@@ -162,7 +162,7 @@ public class StatesHistoryScreen {
         for (Object choiceBox : ((ArrayList<?>) choiceBoxes)) {
             stateHistories.add(new StateHistoryChoiceBox((ChoiceBox<String>)choiceBox));
             ((ChoiceBox<String>) choiceBox).getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if (((oldValue == null || newValue == null) || !newValue.equals(oldValue)) && !undone && !redone){ //don't want to store state when textfield has been undone
+                if (((oldValue == null || newValue == null) || !newValue.equals(oldValue)) && !undone && !redone){ //don't want to store state when ChoiceBox has been undone
                     store();
                 }
             });
@@ -170,7 +170,7 @@ public class StatesHistoryScreen {
                 if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
                     undo();
                 } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                    event.consume();
+                    redo();
                 }
             });
         }
@@ -184,13 +184,15 @@ public class StatesHistoryScreen {
         for (Object datePicker : ((ArrayList<?>) datePickers)) {
             stateHistories.add(new StateHistoryDatePicker((DatePicker)datePicker));
             ((DatePicker) datePicker).valueProperty().addListener((observable, oldValue, newValue) -> {
-
+                if (newValue != oldValue && !undone && !redone){ //don't want to store state when DatePicker has been undone
+                    store();
+                }
             });
             ((DatePicker) datePicker).setOnKeyPressed(event -> {
                 if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
                     undo();
                 } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                    event.consume();
+                    redo();
                 }
             });
         }

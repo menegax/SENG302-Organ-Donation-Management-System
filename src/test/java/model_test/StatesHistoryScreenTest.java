@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.swing.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
@@ -30,6 +31,8 @@ public class StatesHistoryScreenTest {
     private static RadioButton radioButton2;
     private static ChoiceBox choiceBox1;
     private static ChoiceBox choiceBox2;
+    private static DatePicker datePicker1;
+    private static DatePicker datePicker2;
     private static StatesHistoryScreen statesHistoryScreen;
 
     /**
@@ -56,6 +59,8 @@ public class StatesHistoryScreenTest {
         radioButton2 = new RadioButton();
         choiceBox1 = new ChoiceBox();
         choiceBox2 = new ChoiceBox();
+        datePicker1 = new DatePicker();
+        datePicker2 = new DatePicker();
         ArrayList<String> items = new ArrayList<>();
         items.add("A");
         items.add("B");
@@ -81,11 +86,14 @@ public class StatesHistoryScreenTest {
         radioButton2.setSelected(false);
         choiceBox1.getSelectionModel().select(0);
         choiceBox2.getSelectionModel().select(0);
+        datePicker1.setValue(LocalDate.of(2001, 1, 1));
+        datePicker2.setValue(LocalDate.of(2001, 1, 1));
         ArrayList<TextField> entryList = new ArrayList<>();
         ArrayList<CheckBox> checkBoxList = new ArrayList<>();
         ArrayList<ComboBox> comboBoxList = new ArrayList<>();
         ArrayList<RadioButton> radioButtonList = new ArrayList<>();
         ArrayList<ChoiceBox> choiceBoxList = new ArrayList<>();
+        ArrayList<DatePicker> datePickerList = new ArrayList<>();
         entryList.add(textField1);
         entryList.add(textField2);
         checkBoxList.add(checkBox1);
@@ -96,7 +104,9 @@ public class StatesHistoryScreenTest {
         radioButtonList.add(radioButton2);
         choiceBoxList.add(choiceBox1);
         choiceBoxList.add(choiceBox2);
-        statesHistoryScreen = new StatesHistoryScreen(entryList, comboBoxList, checkBoxList, radioButtonList, choiceBoxList);
+        datePickerList.add(datePicker1);
+        datePickerList.add(datePicker2);
+        statesHistoryScreen = new StatesHistoryScreen(entryList, comboBoxList, checkBoxList, radioButtonList, choiceBoxList, datePickerList);
     }
 
     /**
@@ -133,6 +143,9 @@ public class StatesHistoryScreenTest {
         choiceBox1.getSelectionModel().select(1);
         statesHistoryScreen.store();
         checkWidgets();
+        datePicker1.setValue(LocalDate.of(2002, 2, 2));
+        statesHistoryScreen.store();
+        checkWidgets();
 
         // These asserts will fail if undo fails
         statesHistoryScreen.undo();
@@ -153,6 +166,10 @@ public class StatesHistoryScreenTest {
         checkWidgets();
         statesHistoryScreen.undo();
         choiceBox2.getSelectionModel().select(2);
+        statesHistoryScreen.store();
+        checkWidgets();
+        statesHistoryScreen.undo();
+        datePicker2.setValue(LocalDate.of(2003, 3, 3));
         statesHistoryScreen.store();
         checkWidgets();
     }
@@ -179,6 +196,10 @@ public class StatesHistoryScreenTest {
         statesHistoryScreen.undo();
         checkWidgets();
         choiceBox1.getSelectionModel().select(1);
+        statesHistoryScreen.store();
+        statesHistoryScreen.undo();
+        checkWidgets();
+        datePicker1.setValue(LocalDate.of(2002, 2, 2));
         statesHistoryScreen.store();
         statesHistoryScreen.undo();
         checkWidgets();
@@ -210,6 +231,8 @@ public class StatesHistoryScreenTest {
         StateHistoryRadioButton stateHistoryRadioButton2 = (StateHistoryRadioButton) statesHistoryScreen.getStateHistories().get(7);
         StateHistoryChoiceBox stateHistoryChoiceBox1 = (StateHistoryChoiceBox) statesHistoryScreen.getStateHistories().get(8);
         StateHistoryChoiceBox stateHistoryChoiceBox2 = (StateHistoryChoiceBox) statesHistoryScreen.getStateHistories().get(9);
+        StateHistoryDatePicker stateHistoryDatePicker1 = (StateHistoryDatePicker) statesHistoryScreen.getStateHistories().get(10);
+        StateHistoryDatePicker stateHistoryDatePicker2 = (StateHistoryDatePicker) statesHistoryScreen.getStateHistories().get(11);
 
         assertEquals(textField1.getText(), stateHistoryTextEntry1.getStates().get(stateHistoryTextEntry1.getIndex()));
         assertEquals(textField2.getText(), stateHistoryTextEntry2.getStates().get(stateHistoryTextEntry2.getIndex()));
@@ -221,5 +244,7 @@ public class StatesHistoryScreenTest {
         assertEquals(radioButton2.isSelected(), stateHistoryRadioButton2.getStates().get(stateHistoryRadioButton2.getIndex()));
         assertEquals(choiceBox1.getSelectionModel().getSelectedItem(), stateHistoryChoiceBox1.getStates().get(stateHistoryChoiceBox1.getIndex()));
         assertEquals(choiceBox2.getSelectionModel().getSelectedItem(), stateHistoryChoiceBox2.getStates().get(stateHistoryChoiceBox2.getIndex()));
+        assertEquals(datePicker1.getValue().toString(), stateHistoryDatePicker1.getStates().get(stateHistoryDatePicker1.getIndex()));
+        assertEquals(datePicker2.getValue().toString(), stateHistoryDatePicker2.getStates().get(stateHistoryDatePicker2.getIndex()));
     }
 }
