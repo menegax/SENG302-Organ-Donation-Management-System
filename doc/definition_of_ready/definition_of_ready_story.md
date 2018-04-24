@@ -7,8 +7,8 @@ Before work on a story can begin the following list must be followed.
 - Testing such implementation has been discussed
 - Questions that arose have been asked of the PO / tutors
 - Tasks have been generated
-- Tasks have been assigned
 - Each task has been given an estimated effort (hrs)
+- Story has been merged to development
 
 ### Code review prep
 - Branch has been created (with a salacious, humorous, or cool name!)
