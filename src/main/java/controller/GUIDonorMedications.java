@@ -13,7 +13,6 @@ import service.Database;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
@@ -22,6 +21,12 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 public class GUIDonorMedications {
+
+    private ListProperty<String> currentListProperty = new SimpleListProperty<>();
+    private ListProperty<String> historyListProperty = new SimpleListProperty<>();
+    private ArrayList<String> current;
+    private ArrayList<String> history;
+    private Donor target;
 
     @FXML
     public AnchorPane medicationPane;
@@ -33,20 +38,31 @@ public class GUIDonorMedications {
     public Button undoEdit;
     public Button redoEdit;
     public Button goBack;
-    public Button reviewMed;
     public Button clearMed;
 
+    /*
+     * Textfield for entering medications for adding to the currentMedications ArrayList and listView
+     */
     @FXML
-    private TextField newMedication; // Medications are entered for adding to the currentMedications ArrayList and listView
+    private TextField newMedication;
 
+    /*
+     * A listView for showing the current medications
+     */
     @FXML
-    private ListView<String> currentMedications; // A listView for showing the current medications
+    private ListView<String> currentMedications;
 
+    /*
+     * A listView for showing the past medications
+     */
     @FXML
-    private ListView<String> pastMedications; // A listView for showing the past medications
+    private ListView<String> pastMedications;
 
+    /*
+     * A listView for showing medicine ingredients and interactions
+     */
     @FXML
-    private ListView<String> medicineInformation; // A listView for showing medicine ingredients and interactions
+    private ListView<String> medicineInformation;
 
     @FXML
     public void undo() {
@@ -58,48 +74,31 @@ public class GUIDonorMedications {
         System.out.print( "redo" );  // To be completed by Story 12 and 13 responsible's
     }
 
-    @FXML
-    /*
-     * Retrieves selected medicines when review medicine button is activated, joins and sorts them for reviewing
-     */
-    public void reviewMedicine() {
-        ArrayList<String> selections = new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems());
-        selections.addAll(currentMedications.getSelectionModel().getSelectedItems() );
-        Collections.sort(selections);
-        removeMedication( selections );  // Lists the selected medicines for reviewing the ingredients
-    }
-
-    @FXML
-    /*
+    /**
      * Removes a medication from the history or current ArrayList and listView
      */
+    @FXML
     public void deleteMedication() {
-        if (pastMedications.getFocusModel().getFocusedItem() != null &&
-                currentMedications.getFocusModel().getFocusedItem() != null) {
-            ArrayList<String> selections = new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems());
-            selections.addAll(currentMedications.getSelectionModel().getSelectedItems() );
-            removeMedication( selections );
-        } else if (pastMedications.getFocusModel().getFocusedItem() != null) {
-            removeMedication( new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems() ) );
-        } else {
-            removeMedication( new ArrayList <>( currentMedications.getSelectionModel().getSelectedItems() ) );
-        }
+        ArrayList<String> selections = new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems());
+        selections.addAll(currentMedications.getSelectionModel().getSelectedItems() );
+        removeMedication( selections );
     }
 
-    @FXML
-    /*
+    /**
      * Saves the current state of the history and current medications ArrayLists
      */
+    @FXML
     public void saveMedication() {
+        Alert save = new Alert(Alert.AlertType.CONFIRMATION, "Medication(s) have been successfully saved");
+        save.show();
         Database.saveToDisk(); // Save to .json the changes made to medications
-        currentMedications.getSelectionModel().clearSelection();
-        pastMedications.getSelectionModel().clearSelection();
+        clearSelections();
     }
 
-    @FXML
-    /*
+    /**
      * Swaps a medication in history to current ArrayList and listView
      */
+    @FXML
     public void makeCurrent() {
         if (pastMedications.getFocusModel().getFocusedItem() == null) {
             currentMedications.getSelectionModel().clearSelection();
@@ -108,10 +107,10 @@ public class GUIDonorMedications {
         }
     }
 
-    @FXML
-    /*
+    /**
      * Swaps a medication in current to history ArrayList and listView
      */
+    @FXML
     public void makeHistory() {
         if (currentMedications.getFocusModel().getFocusedItem() == null) {
             pastMedications.getSelectionModel().clearSelection();
@@ -120,27 +119,23 @@ public class GUIDonorMedications {
         }
     }
 
-    @FXML
-    /*
+    /**
      * Adds a newly entered medication to the current medications array and the listView for the current medications
      */
+    @FXML
     public void registerMedication() {
         addMedication(newMedication.getText());
-        newMedication.clear();
     }
 
-    private ListProperty<String> currentListProperty = new SimpleListProperty<>();
-    private ListProperty<String> historyListProperty = new SimpleListProperty<>();
-    private ArrayList<String> current;
-    private ArrayList<String> history;
-    private Timestamp time;
-    private Donor target;
-
+    /**
+     * Initializes the Medication GUI pane, adds any medications stored for donor to current and past listViews
+     */
     @FXML
     public void initialize() {
+        pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
         try {
-            pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor().getNhiNumber());
 
             if(target.getCurrentMedications() == null) {
@@ -183,26 +178,53 @@ public class GUIDonorMedications {
     }
 
     /**
+     * Capitalizes a medication name being entered for registration
+     * @param medication The medication name being capitalized
+     * @return The capitalized medication name
+     */
+    private String capitalize(String medication) {
+        medication = medication.substring(0, 1).toUpperCase() + medication.substring(1).toLowerCase();
+
+        for (int i = 0; i < medication.length(); i++) {
+            if (medication.substring(i, i + 1).equals(" ") || medication.substring(i, i + 1).equals("-")) {
+                char[] chars = medication.toCharArray();
+                chars[i + 1] = medication.substring(i + 1, i + 2).toUpperCase().charAt(0);
+                medication = String.valueOf(chars);
+            }
+        }
+        return medication;
+    }
+
+    /**
      * Adds a new medication to the currentMedications ArrayList
      * Resets the currentMedications ListView to display the new medication
-     *
      * @param medication The selected medication being added to the current ArrayList and listView
      */
     private void addMedication(String medication) {
-        if (!medication.equals( "Enter a medication" ) && !medication.equals( "" ) && !medication.equals( " " )) { // This can be altered after story 19 is completed
-            if (!(current.contains( medication ) || history.contains( medication ))) {
-                target.getCurrentMedications().add( new Medication( medication ) );
+        if (!medication.equals( "Enter a medication" ) && !medication.equals( "" )) {
+            medication = capitalize(medication);
 
+            if (!(current.contains(medication) || history.contains(medication))) {
+                target.getCurrentMedications().add( new Medication(medication));
                 userActions.log(Level.INFO, "Successfully registered a medication", "Registered a new medication for a donor");
                 viewCurrentMedications();
+                newMedication.clear();
+            } else if (history.contains(medication) && !current.contains(medication)) {
+                moveToCurrent(new ArrayList<>(Collections.singleton( medication ) ));
+                newMedication.clear();
+            } else {
+                Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is already registered");
+                err.show();
             }
+        } else {
+            Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is invalid for registration");
+            err.show();
         }
     }
 
     /**
      * Removes a selected medication from the medicationHistory ArrayList
      * Resets the pastMedications ListView to display medicationHistory after the medication is removed
-     *
      * @param medications The selected medications being removed from the history ArrayList and listView
      */
     private void removeMedication(ArrayList<String> medications) {
@@ -226,7 +248,6 @@ public class GUIDonorMedications {
     /**
      * Removes a selected medication from currentMedications ArrayList and adds the medication to medicationHistory ArrayList
      * Updates the listViews for each of current and past medications to match the changes in the respective ArrayLists
-     *
      * @param medications The selected medications being moved from history to current ArrayLists and listViews
      */
     private void moveToCurrent(ArrayList<String> medications) {
@@ -247,7 +268,6 @@ public class GUIDonorMedications {
     /**
      * Removes a selected medication from medicationHistory ArrayList and adds the medication to currentMedications ArrayList
      * Updates the listViews for each of past and current medications to match the changes in the respective ArrayLists
-     *
      * @param medications The selected medications being moved from current to history ArrayLists and listViews
      */
     private void moveToHistory(ArrayList<String> medications) {
@@ -265,7 +285,7 @@ public class GUIDonorMedications {
         }
     }
 
-    /*
+    /**
      * Navigates from the Medication panel to the home panel after 'back' is selected, saves medication log
      */
     @FXML
@@ -281,20 +301,12 @@ public class GUIDonorMedications {
         }
     }
 
-    /*
+    /**
      * Clears each currently selected medication from being selected
      */
     @FXML
     public void clearSelections() {
         pastMedications.getSelectionModel().clearSelection();
         currentMedications.getSelectionModel().clearSelection();
-    }
-
-    /*
-     * Lists selected medicines and their ingredients
-     * @param medicines ArrayList of alphabetically sorted medicines for listing
-     */
-    private void showMedicineIngredients(ArrayList<String> medicines) {
-        ;
     }
 }
