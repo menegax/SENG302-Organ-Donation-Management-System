@@ -175,6 +175,7 @@ public class GUIDonorProfileUpdate {
             if (heightTxt.getText() != null) target.setHeight(Double.parseDouble(heightTxt.getText()));
             if (bloodGroupDD.getValue() != null) target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD.getValue().toString().replace(' ', '_')));
             new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
+            Database.saveToDisk();
             goBackToProfile();
         } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).showAndWait();

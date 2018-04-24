@@ -129,5 +129,4 @@ public class GUIDonorProfile {
         ScreenControl.activate("home");
     }
 
-
 }
