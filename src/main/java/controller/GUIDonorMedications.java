@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -31,6 +32,7 @@ public class GUIDonorMedications {
     public Button undoEdit;
     public Button redoEdit;
     public Button goBack;
+    public Button clearMed;
 
     @FXML
     private TextField newMedication; // Medications are entered for adding to the currentMedications ArrayList and listView
@@ -58,9 +60,11 @@ public class GUIDonorMedications {
     public void deleteMedication() {
         if (pastMedications.getFocusModel().getFocusedItem() != null &&
                 currentMedications.getFocusModel().getFocusedItem() != null) {
-            System.out.println(new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems() )); // just printing w/e
-            System.out.println(new ArrayList <>( currentMedications.getSelectionModel().getSelectedIndices())); // just printing w/e
-            // DONT KNOW HOW TO SELECT THE MOST RECENT OF TWO SELECTION BETWEEN LISTVIEWS
+            String message = "Select OK to exit error message";
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK);
+            alert.setTitle("Error!");
+            alert.setHeaderText("There are medicines currently selected in both lists!");
+            alert.show();
         } else if (pastMedications.getFocusModel().getFocusedItem() != null) {
             removeMedication( new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems() ) );
         } else {
@@ -146,8 +150,7 @@ public class GUIDonorMedications {
      */
     private void viewCurrentMedications() {
         current = new ArrayList<>();
-        currentMedications.getSelectionModel().clearSelection();
-        pastMedications.getSelectionModel().clearSelection();
+        clearSelections();
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
@@ -159,8 +162,7 @@ public class GUIDonorMedications {
      */
     private void viewPastMedications() {
         history = new ArrayList<>();
-        pastMedications.getSelectionModel().clearSelection();
-        currentMedications.getSelectionModel().clearSelection();
+        clearSelections();
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
@@ -191,14 +193,18 @@ public class GUIDonorMedications {
      */
     private void removeMedication(ArrayList<String> medications) {
         for (String medication : medications) {
-            if (history.contains( medication )) {
-                target.getMedicationHistory().remove( history.indexOf( medication ) );
-                userActions.log(Level.INFO, "Successfully deleted a medication", "Deleted a past medication for a donor");
-                viewPastMedications();
-            } else if (current.contains( medication )) {
-                target.getCurrentMedications().remove( current.indexOf( medication ) );
-                userActions.log(Level.INFO, "Successfully deleted a medication", "Deleted a current medication for a donor");
-                viewCurrentMedications();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confirm deletion of " + medication + "?");
+            Optional <ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                if (history.contains( medication )) {
+                    target.getMedicationHistory().remove( history.indexOf( medication ) );
+                    userActions.log( Level.INFO, "Successfully deleted a medication", "Deleted a past medication for a donor" );
+                    viewPastMedications();
+                } else if (current.contains( medication )) {
+                    target.getCurrentMedications().remove( current.indexOf( medication ) );
+                    userActions.log( Level.INFO, "Successfully deleted a medication", "Deleted a current medication for a donor" );
+                    viewCurrentMedications();
+                }
             }
         }
     }
@@ -259,5 +265,14 @@ public class GUIDonorMedications {
             new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
             e.printStackTrace();
         }
+    }
+
+    /*
+     * Clears each currently selected medication from being selected
+     */
+    @FXML
+    public void clearSelections() {
+        pastMedications.getSelectionModel().clearSelection();
+        currentMedications.getSelectionModel().clearSelection();
     }
 }
