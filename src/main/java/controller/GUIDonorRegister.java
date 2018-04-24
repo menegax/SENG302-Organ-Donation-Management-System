@@ -116,6 +116,7 @@ public class GUIDonorRegister {
                 addDonorGui();
                 Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Registered");
                 confirm.show();
+                Database.saveToDisk();
                 ScreenControl.activate("login");
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, e.getMessage(), "attempted to add donor from gui attributes");
