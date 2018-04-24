@@ -6,7 +6,9 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -118,20 +120,26 @@ public class GUIClinicianSearchDonors implements Initializable {
                 try {
 
                     //THIS CODE DOESN'T WORK. IT TRIES TO LOAD FXML. NO WINDOW IS SHOWN THOUGH.
-//                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfileUpdate.fxml"));
-//                    Parent root1 = fxmlLoader.load();
-//                    Stage stage = new Stage();
-//                    stage.setTitle("ABC");
-//                    stage.setScene(new Scene(root1));
-//                    stage.show();
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfileUpdate.fxml"));
+                    GUIDonorProfileUpdate editor = new GUIDonorProfileUpdate();
+
+                    System.out.println("Donor double clicked was: \n" + donorDataTable.getSelectionModel().getSelectedItem()); //todo remove
+
+                    editor.setDonorNHI(donorDataTable.getSelectionModel().getSelectedItem().getNhiNumber());
+
+                    Parent root1 = fxmlLoader.load();
+                    Stage stage = new Stage();
+                    stage.setTitle("Edit Donor");
+                    stage.setScene(new Scene(root1));
+                    stage.show();
 
                     // THIS CODE WORKS. IT SHOWS A SIMPLE POPUP. LOADING FXML FAILS.
-                    Stage secondStage = new Stage();
-                    secondStage.setScene(new Scene(new HBox(4, new Label("Second window"))));
-                    secondStage.show();
+//                    Stage secondStage = new Stage();
+//                    secondStage.setScene(new Scene(new HBox(4, new Label("Second window"))));
+//                    secondStage.show();
                 }
                 catch (Exception e) {
-
+                    e.printStackTrace(); //todo remove
                 }
             }
             donorDataTable.refresh(); //todo needs to be here? test
@@ -149,7 +157,7 @@ public class GUIClinicianSearchDonors implements Initializable {
                     setTooltip(null);
                 }
                 else {
-                    StringBuilder tooltipText = new StringBuilder(donor.getNameConcatenated() + ". Donor: ");
+                    StringBuilder tooltipText = new StringBuilder(donor.getNameConcatenated() + ". Donations: ");
                     for (GlobalEnums.Organ organ : donor.getDonations()) {
                         tooltipText.append(organ)
                                 .append(", ");

@@ -74,14 +74,21 @@ public class GUIDonorProfileUpdate {
 
     private Donor target;
 
+    public void setDonorNHI(String newNHI) throws InvalidObjectException {
+        target = Database.getDonorByNhi(newNHI);
+        loadProfile(newNHI);
+    }
+
 
     public void initialize() {
         List<String> bloodGroups =
-                Arrays.asList("a positive", "a negative", "b positive", "b negative", "ab positive", "ab negative", "o positive", "o negative");
+                Arrays.asList("A Positive", "A Negative", "B Positive", "B Negative", "AB Positive", "AB Negative", "O Positive", "O Negative");
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
-        loadProfile(ScreenControl.getLoggedInDonor()
-                .getNhiNumber());
+
+        if (ScreenControl.getLoggedInDonor().getNhiNumber() != null) {
+            loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
+        }
     }
 
 
