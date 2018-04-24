@@ -118,19 +118,17 @@ public class GUIClinicianSearchDonors implements Initializable {
 
                 System.out.println("Double clicked a row!"); //todo remove
                 try {
+                    System.out.println("Donor double clicked was: \n" + donorDataTable.getSelectionModel().getSelectedItem()); //todo remove
 
                     //THIS CODE DOESN'T WORK. IT TRIES TO LOAD FXML. NO WINDOW IS SHOWN THOUGH.
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfileUpdate.fxml"));
-                    GUIDonorProfileUpdate editor = new GUIDonorProfileUpdate();
+                    GUIDonorProfileUpdate donorProf = new GUIDonorProfileUpdate();
 
-                    System.out.println("Donor double clicked was: \n" + donorDataTable.getSelectionModel().getSelectedItem()); //todo remove
+                    donorProf.setDonorNHI(donorDataTable.getSelectionModel().getSelectedItem().getNhiNumber());
+                    donorProf.removeBackButton();
 
-                    editor.setDonorNHI(donorDataTable.getSelectionModel().getSelectedItem().getNhiNumber());
-
-                    Parent root1 = fxmlLoader.load();
                     Stage stage = new Stage();
-                    stage.setTitle("Edit Donor");
-                    stage.setScene(new Scene(root1));
+                    stage.setScene(new Scene(fxmlLoader.load()));
                     stage.show();
 
                     // THIS CODE WORKS. IT SHOWS A SIMPLE POPUP. LOADING FXML FAILS.
