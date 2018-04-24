@@ -74,16 +74,9 @@ public class GUIDonorMedications {
      * Removes a medication from the history or current ArrayList and listView
      */
     public void deleteMedication() {
-        if (pastMedications.getFocusModel().getFocusedItem() != null &&
-                currentMedications.getFocusModel().getFocusedItem() != null) {
-            ArrayList<String> selections = new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems());
-            selections.addAll(currentMedications.getSelectionModel().getSelectedItems() );
-            removeMedication( selections );
-        } else if (pastMedications.getFocusModel().getFocusedItem() != null) {
-            removeMedication( new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems() ) );
-        } else {
-            removeMedication( new ArrayList <>( currentMedications.getSelectionModel().getSelectedItems() ) );
-        }
+        ArrayList<String> selections = new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems());
+        selections.addAll(currentMedications.getSelectionModel().getSelectedItems() );
+        removeMedication( selections );
     }
 
     @FXML
