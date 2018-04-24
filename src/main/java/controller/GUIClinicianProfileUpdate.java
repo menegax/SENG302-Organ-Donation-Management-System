@@ -1,15 +1,16 @@
 package controller;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import model.Clinician;
 import service.Database;
-import utility.GlobalEnums;
+import utility.GlobalEnums.Region;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -42,11 +43,22 @@ public class GUIClinicianProfileUpdate {
     @FXML
     private TextField suburbTxt;
     @FXML
-    private TextField regionTxt;
+    private ChoiceBox regionDD;
 
     private Clinician target;
 
     public void initialize() {
+        // Populate region dropdown with values from the Regions enum
+        List<String> regions = new ArrayList<>();
+        for (Region region : Region.values()) {
+            regions.add(region.getValue());
+        }
+        ObservableList<String> regionsOL = FXCollections.observableList(regions);
+        regionDD.setItems(regionsOL);
+
+        // Registering a change event to clear the invalid class
+        regionDD.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> setValid(regionDD));
+
         loadProfile(ScreenControl.getLoggedInClincian().getStaffID());
     }
 
@@ -72,7 +84,9 @@ public class GUIClinicianProfileUpdate {
         if (clinician.getStreet1() != null) street1Txt.setText(clinician.getStreet1());
         if (clinician.getStreet2() != null) street2Txt.setText(clinician.getStreet2());
         if (clinician.getSuburb() != null) suburbTxt.setText(clinician.getSuburb());
-        if (clinician.getRegion() != null) regionTxt.setText(clinician.getRegion().getValue());
+        if (clinician.getRegion() != null) {
+            regionDD.getSelectionModel().select(clinician.getRegion().getValue());
+        }
     }
 
     public void saveProfile() {
@@ -89,13 +103,11 @@ public class GUIClinicianProfileUpdate {
             valid = false;
             setInvalid(lastnameTxt);
         }
-        if (regionTxt.getText().length() > 0) {
-            Enum region = GlobalEnums.Region.getEnumFromString(regionTxt.getText());
-            if (region == null) {
-                valid = false;
-                setInvalid(regionTxt);
-            }
+        if (regionDD.getSelectionModel().getSelectedIndex() == -1) { // If the selected item is nothing
+            valid = false;
+            setInvalid(regionDD);
         }
+        // If all the fields are entered correctly
         if (valid) {
             target.setStaffID(Integer.parseInt(staffId.getText()));
             target.setFirstName(firstnameTxt.getText());
@@ -108,7 +120,7 @@ public class GUIClinicianProfileUpdate {
             if (street1Txt.getText().length() > 0) target.setStreet1(street1Txt.getText());
             if (street2Txt.getText().length() > 0) target.setStreet2(street2Txt.getText());
             if (suburbTxt.getText().length() > 0) target.setSuburb(suburbTxt.getText());
-            if (regionTxt.getText().length() > 0) target.setRegion((GlobalEnums.Region) GlobalEnums.Region.getEnumFromString(regionTxt.getText()));
+            target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel().getSelectedItem().toString()));
             new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
             goBackToProfile();
         } else {
@@ -116,29 +128,46 @@ public class GUIClinicianProfileUpdate {
         }
     }
 
-    private void setInvalid(TextField target) {
+    /***
+     * Applies the invalid class to the target control
+     * @param target The target to add the class to
+     */
+    private void setInvalid(Control target) {
         target.getStyleClass().add("invalid");
     }
 
     /**
+     * Removes the invalid class from the target control if it has it
+     *
+     * @param target The target to remove the class from
+     */
+    private void setValid(Control target) {
+        if (target.getStyleClass().contains("invalid")) {
+            target.getStyleClass().remove("invalid");
+        }
+    }
+
+    /**
      * Checks if the keyevent target was a textfield. If so, if the target has the invalid class, it is removed.
+     *
      * @param e The KeyEvent instance
      */
     public void onKeyReleased(KeyEvent e) {
         if (e.getTarget().getClass() == TextField.class) {
             TextField target = (TextField) e.getTarget();
-            if (target.getStyleClass().contains("invalid")) {
-                target.getStyleClass().remove("invalid");
-            }
+            setValid(target);
         }
     }
 
+    /**
+     * Navigates back to the profile window
+     */
     public void goBackToProfile() {
         ScreenControl.removeScreen("clinicianProfile");
         try {
             ScreenControl.addScreen("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
             ScreenControl.activate("clinicianProfile");
-        }catch (IOException e) {
+        } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
             e.printStackTrace();

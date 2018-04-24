@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -26,6 +27,6 @@
         <TextField fx:id="street1Txt" layoutX="294.0" layoutY="119.0" prefHeight="26.0" prefWidth="235.0" />
         <TextField fx:id="street2Txt" layoutX="294.0" layoutY="152.0" prefHeight="26.0" prefWidth="235.0" />
         <TextField fx:id="suburbTxt" layoutX="294.0" layoutY="187.0" prefHeight="26.0" prefWidth="155.0" />
-        <TextField fx:id="regionTxt" layoutX="294.0" layoutY="216.0" prefHeight="26.0" prefWidth="155.0" />
+      <ChoiceBox fx:id="regionDD" layoutX="294.0" layoutY="216.0" prefHeight="27.0" prefWidth="155.0" />
     </children>
 </AnchorPane>
