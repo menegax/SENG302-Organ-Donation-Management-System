@@ -41,3 +41,12 @@
 
 }
 
+/* For invalid text-fields within forms */
+.invalid {
+    -fx-background-color: #e6b3b3;
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+    -fx-border-radius: 3px;
+}
+
+

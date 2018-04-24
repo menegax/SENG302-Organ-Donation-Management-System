@@ -1,12 +1,13 @@
 package controller;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import model.Clinician;
-import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
 
@@ -76,13 +77,23 @@ public class GUIClinicianProfileUpdate {
 
     public void saveProfile() {
         Boolean valid = true;
-        if (!Pattern.matches("[0-9]{1,3}", staffId.getText())) valid = false;
-        if (firstnameTxt.getText() == null) valid = false;
-        if (lastnameTxt.getText() == null) valid = false;
+        if (!Pattern.matches("[0-9]{1,3}", staffId.getText())) {
+            valid = false;
+            setInvalid(staffId);
+        }
+        if (firstnameTxt.getText().length() == 0) {
+            valid = false;
+            setInvalid(firstnameTxt);
+        }
+        if (lastnameTxt.getText().length() == 0) {
+            valid = false;
+            setInvalid(lastnameTxt);
+        }
         if (regionTxt.getText().length() > 0) {
             Enum region = GlobalEnums.Region.getEnumFromString(regionTxt.getText());
             if (region == null) {
                 valid = false;
+                setInvalid(regionTxt);
             }
         }
         if (valid) {
@@ -102,6 +113,23 @@ public class GUIClinicianProfileUpdate {
             goBackToProfile();
         } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).showAndWait();
+        }
+    }
+
+    private void setInvalid(TextField target) {
+        target.getStyleClass().add("invalid");
+    }
+
+    /**
+     * Checks if the keyevent target was a textfield. If so, if the target has the invalid class, it is removed.
+     * @param e The KeyEvent instance
+     */
+    public void onKeyReleased(KeyEvent e) {
+        if (e.getTarget().getClass() == TextField.class) {
+            TextField target = (TextField) e.getTarget();
+            if (target.getStyleClass().contains("invalid")) {
+                target.getStyleClass().remove("invalid");
+            }
         }
     }
 
