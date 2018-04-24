@@ -1,8 +1,12 @@
 package controller;
 
+import api.APIHelper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -16,6 +20,7 @@ import java.io.InvalidObjectException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -124,6 +129,7 @@ public class GUIDonorMedications {
 
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
+    private ListProperty<String> ingredientsListProperty = new SimpleListProperty<>();
     private ArrayList<String> current;
     private ArrayList<String> history;
     private Timestamp time;
@@ -131,6 +137,10 @@ public class GUIDonorMedications {
 
     @FXML
     public void initialize() {
+        //Register events for when an item is selected from a listview
+        currentMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(currentMedications));
+        pastMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(pastMedications));
+
         try {
             pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -256,6 +266,43 @@ public class GUIDonorMedications {
                 viewCurrentMedications();
             }
         }
+    }
+
+    /**
+     * Runs when an item is selected within a listview
+     * If there is only one item, the function to load the ingredients for the selected medication is called
+     * @param listview The listview of the selected item
+     */
+    private void onSelect(ListView listview) {
+        if (listview.getSelectionModel().getSelectedItems().size() == 1) {
+            loadMedicationIngredients(listview.getSelectionModel().getSelectedItem().toString());
+        }
+    }
+
+    /**
+     * Fetches the ingredients from the APIHelper, then converts the results into a List.
+     * The list is then passed to be binded to the listview
+     * @param medication The medication to fetch the ingredients for
+     */
+    private void loadMedicationIngredients(String medication) {
+        APIHelper helper = new APIHelper();
+        try {
+            JsonArray response = helper.getMapiDrugIngredients(medication);
+            List<String> ingredients = new ArrayList<>();
+            response.forEach((element) -> ingredients.add(element.getAsString()));
+            displayIngredients(ingredients);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Takes a string list of ingredients, and binds it to the medicineInformation listview to be displayed
+     * @param ingredients The List of ingredients
+     */
+    private void displayIngredients(List<String> ingredients) {
+        ingredientsListProperty.set(FXCollections.observableList(ingredients));
+        medicineInformation.itemsProperty().bind(ingredientsListProperty);
     }
 
     /*
