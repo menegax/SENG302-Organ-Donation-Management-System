@@ -1,11 +1,16 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import service.Database;
 
 
 public class GUIHome {
+
+    @FXML
+    public AnchorPane homePane;
+    public Button goToProfile;
 
     @FXML
     public void goToProfile(){

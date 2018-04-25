@@ -8,9 +8,9 @@ import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -53,6 +53,12 @@ public class Donor {
     private Timestamp modified;
 
     private String nhiNumber;
+
+    private ArrayList<Medication> currentMedications;
+
+    private ArrayList<Medication> medicationHistory;
+
+    //private HashMap<String, ArrayList<String>> medicationLog = new HashMap<>();
 
     public Donor(String nhiNumber, String firstName,
                  ArrayList<String> middleNames, String lastName, LocalDate date) {
@@ -378,6 +384,28 @@ public class Donor {
         return zip;
     }
 
+    /**
+     * Gets the current medication list for a Donor
+     * @return ArrayList medications the Donor currently uses
+     */
+    public ArrayList<Medication> getCurrentMedications() {
+        return currentMedications;
+    }
+
+    /**
+     * Gets the medication history for a Donor
+     * @return ArrayList medications the Donor used to use
+     */
+    public ArrayList<Medication> getMedicationHistory() {
+        return medicationHistory;
+    }
+
+    /**
+     * Gets the medication log with timestamps of each add/removal/swap between current and history
+     * @return HashMap of medication logging for a donor
+     */
+    //public HashMap<String, ArrayList<String>> getMedicationLog() { return medicationLog; }
+
     public void setZip(int zip) {
         if (this.zip != zip) {
             this.zip = zip;
@@ -434,6 +462,22 @@ public class Donor {
             this.nhiNumber = nhiNumber.toUpperCase();
             donorModified();
         }
+    }
+
+    /**
+     * Sets the current medication list for a Donor
+     * @param currentMedications medications to set as current for the Donor
+     */
+    public void setCurrentMedications(ArrayList<Medication> currentMedications) {
+        this.currentMedications = currentMedications;
+    }
+
+    /**
+     * Sets the medication history for a Donor
+     * @param medicationHistory medication list to set as history for a Donor
+     */
+    public void setMedicationHistory(ArrayList<Medication> medicationHistory) {
+        this.medicationHistory = medicationHistory;
     }
 
     private void donorModified() {

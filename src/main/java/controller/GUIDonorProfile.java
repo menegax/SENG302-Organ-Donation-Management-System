@@ -2,7 +2,9 @@ package controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
 import javafx.fxml.FXML;
@@ -17,6 +19,10 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 public class GUIDonorProfile {
+
+    @FXML
+    public AnchorPane profilePane;
+    public Button testMedication;
 
     @FXML
     private Label nhiLbl;
@@ -105,6 +111,18 @@ public class GUIDonorProfile {
         }catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading donation screen", "attempted to navigate from the profile page to the donation page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading donation page", ButtonType.OK).showAndWait();
+            e.printStackTrace();
+        }
+    }
+
+    public void openMedication() {
+        ScreenControl.removeScreen("donorMedications");
+        try {
+            ScreenControl.addScreen("donorMedications", FXMLLoader.load(getClass().getResource("/scene/donorMedications.fxml")));
+            ScreenControl.activate("donorMedications");
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE, "Error loading medication screen", "attempted to navigate from the profile page to the medication page");
+            new Alert(Alert.AlertType.WARNING, "ERROR loading medication page", ButtonType.OK).showAndWait();
             e.printStackTrace();
         }
     }
