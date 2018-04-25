@@ -1,5 +1,7 @@
 package controller;
 
+import api.APIHelper;
+import com.google.gson.JsonObject;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -14,10 +16,7 @@ import service.Database;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Observable;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -129,6 +128,7 @@ public class GUIDonorMedications {
     private ArrayList<String> history;
     private Timestamp time;
     private Donor target;
+    private JsonObject suggestions;
 
     @FXML
     public void initialize() {
@@ -155,16 +155,35 @@ public class GUIDonorMedications {
 
 
     /**
-     * Adds an actionlistener to the text property of the medication search field
+     * Adds an actionlistener to the text property of the medication search field and passes text
+     * to getDrugSuggestions
      */
     private void addActionListeners(){
         newMedication.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)){
-                System.out.println("typed");
+                getDrugSuggestions(newMedication.getText());
+                displayDrugSugggestions();
             }
         }));
     }
 
+    /**
+     *  Sets a list of suggestions given a partially matching string
+     * @param query - text to match drugs against
+     */
+    private void getDrugSuggestions(String query){
+        APIHelper apiHelper = new APIHelper();
+        try {
+           suggestions =  apiHelper.getMapiDrugSuggestions(query);
+        } catch (IOException exception) {
+            //TODO:
+        }
+    }
+
+    //TODO
+    private void displayDrugSugggestions(){
+        System.out.println(suggestions.get("suggestions"));
+    }
 
     /**
      * Retrieves the medications stored in the currentMedications ArrayList.
