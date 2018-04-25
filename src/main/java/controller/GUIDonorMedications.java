@@ -169,7 +169,7 @@ public class GUIDonorMedications {
                 textWatcher.afterTextChange(GUIDonorMedications.class.getMethod("parseAction"),
                         this); //start timer
             } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+                userActions.log(Level.SEVERE, e.getMessage());
             }
         });
     }
