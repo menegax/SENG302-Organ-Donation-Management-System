@@ -54,4 +54,9 @@ public class APIHelper {
     public JsonArray getMapiDrugIngredients(String medicationString) throws IOException {
         return getApiResponseAsArray("http://mapi-us.iterar.co/api/" + medicationString + "/substances.json");
     }
+
+    public void getDrugInteractions(String drugOne, String drugTwo) {
+
+    }
+
 }
