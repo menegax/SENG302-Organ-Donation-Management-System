@@ -17,6 +17,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Donor;
 import service.Database;
@@ -115,29 +116,18 @@ public class GUIClinicianSearchDonors implements Initializable {
         // Add double-click event to rows
         donorDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && donorDataTable.getSelectionModel().getSelectedItem() != null) {
-
-                System.out.println("Double clicked a row!"); //todo remove
                 try {
-                    System.out.println("Donor double clicked was: \n" + donorDataTable.getSelectionModel().getSelectedItem()); //todo remove
-
-                    //THIS CODE DOESN'T WORK. IT TRIES TO LOAD FXML. NO WINDOW IS SHOWN THOUGH.
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfileUpdate.fxml"));
-                    GUIDonorProfileUpdate donorProf = new GUIDonorProfileUpdate();
-
-                    donorProf.setDonorNHI(donorDataTable.getSelectionModel().getSelectedItem().getNhiNumber());
-                    donorProf.removeBackButton();
-
-                    Stage stage = new Stage();
-                    stage.setScene(new Scene(fxmlLoader.load()));
-                    stage.show();
-
-                    // THIS CODE WORKS. IT SHOWS A SIMPLE POPUP. LOADING FXML FAILS.
-//                    Stage secondStage = new Stage();
-//                    secondStage.setScene(new Scene(new HBox(4, new Label("Second window"))));
-//                    secondStage.show();
+                    Scene scene = new Scene(fxmlLoader.load());
+                    Stage popUpStage = new Stage();
+                    popUpStage.setScene(scene);
+                    GUIDonorProfileUpdate controller = fxmlLoader.getController(); //get controller from fxml
+                    controller.setViewedDonor(donorDataTable.getSelectionModel().getSelectedItem()); // load profile
+                    ScreenControl.addPopUp("donorProfileUpdatePopUp", popUpStage); //ADD to screen control
+                    ScreenControl.displayPopUp("donorProfileUpdatePopUp"); //display the popup
                 }
                 catch (Exception e) {
-                    e.printStackTrace(); //todo remove
+
                 }
             }
             donorDataTable.refresh(); //todo needs to be here? test
@@ -155,7 +145,7 @@ public class GUIClinicianSearchDonors implements Initializable {
                     setTooltip(null);
                 }
                 else {
-                    StringBuilder tooltipText = new StringBuilder(donor.getNameConcatenated() + ". Donations: ");
+                    StringBuilder tooltipText = new StringBuilder(donor.getNameConcatenated() + ". Donor: ");
                     for (GlobalEnums.Organ organ : donor.getDonations()) {
                         tooltipText.append(organ)
                                 .append(", ");

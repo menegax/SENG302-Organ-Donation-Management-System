@@ -72,35 +72,19 @@ public class GUIDonorProfileUpdate {
     @FXML
     private ChoiceBox bloodGroupDD;
 
-    @FXML
-    private Label back;
-
     private Donor target;
 
 
-    public void setDonorNHI(String newNHI) throws InvalidObjectException {
-        target = Database.getDonorByNhi(newNHI);
-        loadProfile(newNHI);
+    public void setViewedDonor(Donor donor) {
+        loadProfile(donor.getNhiNumber());
     }
-
-    public void removeBackButton() {
-        back.setVisible(false);
-    }
-
 
     public void initialize() {
         List<String> bloodGroups =
-                Arrays.asList("A Positive", "A Negative", "B Positive", "B Negative", "AB Positive", "AB Negative", "O Positive", "O Negative");
+                Arrays.asList("a positive", "a negative", "b positive", "b negative", "ab positive", "ab negative", "o positive", "o negative");
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
-
-        if (ScreenControl.getLoggedInDonor()
-                .getNhiNumber() != null) {
-            loadProfile(ScreenControl.getLoggedInDonor()
-                    .getNhiNumber());
-        }
     }
-
 
     private void loadProfile(String nhi) {
         try {
