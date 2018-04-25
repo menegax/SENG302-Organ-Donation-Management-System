@@ -95,13 +95,29 @@ public class GUIClinicianProfileUpdate {
             valid = false;
             setInvalid(staffId);
         }
-        if (firstnameTxt.getText().length() == 0) {
+        if (firstnameTxt.getText().length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", firstnameTxt.getText())) {
             valid = false;
             setInvalid(firstnameTxt);
         }
-        if (lastnameTxt.getText().length() == 0) {
+        if (lastnameTxt.getText().length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", lastnameTxt.getText())) {
             valid = false;
             setInvalid(lastnameTxt);
+        }
+        if (!Pattern.matches("[a-z|A-Z ]{0,50}", middlenameTxt.getText())) {
+            valid = false;
+            setInvalid(middlenameTxt);
+        }
+        if (!Pattern.matches("[a-z|A-Z ]{0,50}", street1Txt.getText())) {
+            valid = false;
+            setInvalid(street1Txt);
+        }
+        if (!Pattern.matches("[a-z|A-Z ]{0,50}", street2Txt.getText())) {
+            valid = false;
+            setInvalid(street2Txt);
+        }
+        if (!Pattern.matches("[a-z|A-Z ]{0,50}", suburbTxt.getText())) {
+            valid = false;
+            setInvalid(suburbTxt);
         }
         if (regionDD.getSelectionModel().getSelectedIndex() == -1) { // If the selected item is nothing
             valid = false;

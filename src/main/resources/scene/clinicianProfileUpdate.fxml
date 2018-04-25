@@ -8,12 +8,12 @@
 
 <AnchorPane fx:id="clinicianUpdate" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#onKeyReleased" prefHeight="319.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianProfileUpdate">
     <children>
-        <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goBackToProfile" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
+        <Button fx:id="back" layoutX="14.0" layoutY="14.0" onAction="#goBackToProfile" mnemonicParsing="false" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="〱back" />
         <Label layoutX="207.0" layoutY="23.0" prefHeight="55.0" prefWidth="203.0" styleClass="title" stylesheets="@../css/guiStyle.css" text="Update Profile" />
         <TextField fx:id="firstnameTxt" focusTraversable="false" layoutX="50.0" layoutY="165.0" promptText="First name" />
         <TextField fx:id="lastnameTxt" focusTraversable="false" layoutX="50.0" layoutY="216.0" promptText="Last name" />
         <TextField fx:id="middlenameTxt" focusTraversable="false" layoutX="50.0" layoutY="266.0" promptText="Middle name(s)" />
-        <Button layoutX="437.0" layoutY="266.0" mnemonicParsing="false" onAction="#saveProfile" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Save" />
+        <Button fx:id="saveProfile" layoutX="437.0" layoutY="266.0" mnemonicParsing="false" onAction="#saveProfile" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Save" />
         <TextField fx:id="staffId" focusTraversable="false" layoutX="50.0" layoutY="119.0" promptText="Staff ID" />
         <Label fx:id="lastModifiedLbl" alignment="CENTER" layoutX="180.0" layoutY="70.0" prefHeight="17.0" prefWidth="257.0" text="Last Modified: yada yada" />
         <Label layoutX="119.0" layoutY="102.0" text="Staff ID" />
