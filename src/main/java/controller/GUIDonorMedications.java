@@ -2,6 +2,7 @@ package controller;
 
 import api.APIHelper;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -116,6 +117,7 @@ public class GUIDonorMedications {
     private ArrayList<String> history;
     private ArrayList<String> ingredients = new ArrayList<>();
     private Donor target;
+    private JsonObject suggestions;
 
     @FXML
     public void initialize() {
@@ -140,6 +142,19 @@ public class GUIDonorMedications {
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the medications for logged in user");
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Sets a list of suggestions given a partially matching string
+     * @param query - text to match drugs against
+     */
+    private void getDrugSuggestions(String query){
+        APIHelper apiHelper = new APIHelper();
+        try {
+            suggestions =  apiHelper.getMapiDrugSuggestions(query);
+        } catch (IOException exception) {
+            suggestions = null;
         }
     }
 
@@ -266,17 +281,22 @@ public class GUIDonorMedications {
     private void loadMedicationIngredients(String medication) {
         APIHelper helper = new APIHelper();
         ArrayList <String> newIngredients = new ArrayList <>();
-        Boolean hasIngredients = true;
+        Boolean hasIngredients = false;
 
         if (!ingredients.contains( "Ingredients for " + medication + ": " )) {
             newIngredients.add( "Ingredients for " + medication + ": " );
 
             try {
-                JsonArray response = helper.getMapiDrugIngredients( medication );
-                if (response.size() == 0) {
-                    hasIngredients = false;
+                if (medication.length() == 1) {
+                    getDrugSuggestions( medication );
                 } else {
+                    getDrugSuggestions(Collections.max(new ArrayList <>(Arrays.asList( medication.split(" ")))));
+                }
+
+                if (suggestions.get( "suggestions" ).toString().contains( medication )) {
+                    JsonArray response = helper.getMapiDrugIngredients( medication );
                     response.forEach( ( element ) -> newIngredients.add( element.getAsString() ) );
+                    hasIngredients = true;
                 }
             } catch (IOException e) {
                 hasIngredients = false;
