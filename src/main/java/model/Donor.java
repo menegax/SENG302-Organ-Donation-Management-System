@@ -58,6 +58,10 @@ public class Donor {
 
     private ArrayList<Medication> medicationHistory;
 
+    private ArrayList<Disease> currentDiseases;
+
+    private ArrayList<Disease> pastDiseases;
+
     //private HashMap<String, ArrayList<String>> medicationLog = new HashMap<>();
 
     public Donor(String nhiNumber, String firstName,
@@ -478,6 +482,22 @@ public class Donor {
      */
     public void setMedicationHistory(ArrayList<Medication> medicationHistory) {
         this.medicationHistory = medicationHistory;
+    }
+
+    /**
+     * Gets the current diseases infecting a donor
+     * @return ArrayList current diseases
+     */
+    public ArrayList<Disease> getCurrentDiseases() {
+        return this.currentDiseases;
+    }
+
+    /**
+     * Gets the diseases the donor used to be infected with
+     * @return ArrayList past diseases
+     */
+    public ArrayList<Disease> getPastDiseases() {
+        return this.pastDiseases;
     }
 
     private void donorModified() {
