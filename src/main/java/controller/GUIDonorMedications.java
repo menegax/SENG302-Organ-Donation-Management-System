@@ -178,31 +178,13 @@ public class GUIDonorMedications {
     }
 
     /**
-     * Capitalizes a medication name being entered for registration
-     * @param medication The medication name being capitalized
-     * @return The capitalized medication name
-     */
-    private String capitalize(String medication) {
-        medication = medication.substring(0, 1).toUpperCase() + medication.substring(1).toLowerCase();
-
-        for (int i = 0; i < medication.length(); i++) {
-            if (medication.substring(i, i + 1).equals(" ") || medication.substring(i, i + 1).equals("-")) {
-                char[] chars = medication.toCharArray();
-                chars[i + 1] = medication.substring(i + 1, i + 2).toUpperCase().charAt(0);
-                medication = String.valueOf(chars);
-            }
-        }
-        return medication;
-    }
-
-    /**
      * Adds a new medication to the currentMedications ArrayList
      * Resets the currentMedications ListView to display the new medication
      * @param medication The selected medication being added to the current ArrayList and listView
      */
     private void addMedication(String medication) {
         if (!medication.equals( "Enter a medication" ) && !medication.equals( "" )) {
-            medication = capitalize(medication);
+            medication = medication.substring(0, 1).toUpperCase() + medication.substring(1).toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
                 target.getCurrentMedications().add( new Medication(medication));
