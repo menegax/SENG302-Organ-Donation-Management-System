@@ -155,7 +155,7 @@ public class GUIDonorMedications {
 
 
     /**
-     *
+     * Adds an actionlistener to the text property of the medication search field
      */
     private void addActionListeners(){
         newMedication.textProperty().addListener(((observable, oldValue, newValue) -> {
