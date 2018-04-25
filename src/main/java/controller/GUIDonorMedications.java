@@ -16,6 +16,7 @@ import java.io.InvalidObjectException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Observable;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -145,11 +146,25 @@ public class GUIDonorMedications {
                 target.setMedicationHistory(new ArrayList<>());
             }
             viewPastMedications();
+            addActionListeners();
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the medications for logged in user");
             e.printStackTrace();
         }
     }
+
+
+    /**
+     *
+     */
+    private void addActionListeners(){
+        newMedication.textProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!newValue.equals(oldValue)){
+                System.out.println("typed");
+            }
+        }));
+    }
+
 
     /**
      * Retrieves the medications stored in the currentMedications ArrayList.
