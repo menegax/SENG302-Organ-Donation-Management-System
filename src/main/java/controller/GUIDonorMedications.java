@@ -2,11 +2,9 @@ package controller;
 
 import api.APIHelper;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -17,11 +15,7 @@ import service.Database;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -38,7 +32,7 @@ public class GUIDonorMedications {
     public Button undoEdit;
     public Button redoEdit;
     public Button goBack;
-    public Button reviewMed;
+    public Button wipeReview;
     public Button clearMed;
 
     @FXML
@@ -63,41 +57,29 @@ public class GUIDonorMedications {
         System.out.print( "redo" );  // To be completed by Story 12 and 13 responsible's
     }
 
-    @FXML
-    /*
-     * Retrieves selected medicines when review medicine button is activated, joins and sorts them for reviewing
-     */
-    public void reviewMedicine() {
-        ArrayList<String> selections = new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems());
-        selections.addAll(currentMedications.getSelectionModel().getSelectedItems() );
-        Collections.sort(selections);
-        removeMedication( selections );  // Lists the selected medicines for reviewing the ingredients
-    }
-
-    @FXML
-    /*
+    /**
      * Removes a medication from the history or current ArrayList and listView
      */
+    @FXML
     public void deleteMedication() {
         ArrayList<String> selections = new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems());
         selections.addAll(currentMedications.getSelectionModel().getSelectedItems() );
         removeMedication( selections );
     }
 
-    @FXML
-    /*
+    /**
      * Saves the current state of the history and current medications ArrayLists
      */
+    @FXML
     public void saveMedication() {
         Database.saveToDisk(); // Save to .json the changes made to medications
-        currentMedications.getSelectionModel().clearSelection();
-        pastMedications.getSelectionModel().clearSelection();
+        clearSelections();
     }
 
-    @FXML
-    /*
+    /**
      * Swaps a medication in history to current ArrayList and listView
      */
+    @FXML
     public void makeCurrent() {
         if (pastMedications.getFocusModel().getFocusedItem() == null) {
             currentMedications.getSelectionModel().clearSelection();
@@ -106,10 +88,10 @@ public class GUIDonorMedications {
         }
     }
 
-    @FXML
-    /*
+    /**
      * Swaps a medication in current to history ArrayList and listView
      */
+    @FXML
     public void makeHistory() {
         if (currentMedications.getFocusModel().getFocusedItem() == null) {
             pastMedications.getSelectionModel().clearSelection();
@@ -118,10 +100,10 @@ public class GUIDonorMedications {
         }
     }
 
-    @FXML
-    /*
+    /**
      * Adds a newly entered medication to the current medications array and the listView for the current medications
      */
+    @FXML
     public void registerMedication() {
         addMedication(newMedication.getText());
         newMedication.clear();
@@ -129,15 +111,15 @@ public class GUIDonorMedications {
 
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
-    private ListProperty<String> ingredientsListProperty = new SimpleListProperty<>();
+    private ListProperty<String> informationListProperty = new SimpleListProperty<>();
     private ArrayList<String> current;
     private ArrayList<String> history;
-    private Timestamp time;
+    private ArrayList<String> ingredients = new ArrayList<>();
     private Donor target;
 
     @FXML
     public void initialize() {
-        //Register events for when an item is selected from a listview
+        //Register events for when an item is selected from a listView
         currentMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(currentMedications));
         pastMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(pastMedications));
 
@@ -188,7 +170,6 @@ public class GUIDonorMedications {
     /**
      * Adds a new medication to the currentMedications ArrayList
      * Resets the currentMedications ListView to display the new medication
-     *
      * @param medication The selected medication being added to the current ArrayList and listView
      */
     private void addMedication(String medication) {
@@ -205,7 +186,6 @@ public class GUIDonorMedications {
     /**
      * Removes a selected medication from the medicationHistory ArrayList
      * Resets the pastMedications ListView to display medicationHistory after the medication is removed
-     *
      * @param medications The selected medications being removed from the history ArrayList and listView
      */
     private void removeMedication(ArrayList<String> medications) {
@@ -229,7 +209,6 @@ public class GUIDonorMedications {
     /**
      * Removes a selected medication from currentMedications ArrayList and adds the medication to medicationHistory ArrayList
      * Updates the listViews for each of current and past medications to match the changes in the respective ArrayLists
-     *
      * @param medications The selected medications being moved from history to current ArrayLists and listViews
      */
     private void moveToCurrent(ArrayList<String> medications) {
@@ -250,7 +229,6 @@ public class GUIDonorMedications {
     /**
      * Removes a selected medication from medicationHistory ArrayList and adds the medication to currentMedications ArrayList
      * Updates the listViews for each of past and current medications to match the changes in the respective ArrayLists
-     *
      * @param medications The selected medications being moved from current to history ArrayLists and listViews
      */
     private void moveToHistory(ArrayList<String> medications) {
@@ -269,43 +247,73 @@ public class GUIDonorMedications {
     }
 
     /**
-     * Runs when an item is selected within a listview
+     * Runs when an item is selected within a listView
      * If there is only one item, the function to load the ingredients for the selected medication is called
-     * @param listview The listview of the selected item
+     * @param listView The listView of the selected item
      */
-    private void onSelect(ListView listview) {
-        if (listview.getSelectionModel().getSelectedItems().size() == 1) {
-            loadMedicationIngredients(listview.getSelectionModel().getSelectedItem().toString());
+    private void onSelect(ListView listView) {
+        if (listView.getSelectionModel().getSelectedItems().size() == 1) {
+            loadMedicationIngredients(listView.getSelectionModel().getSelectedItem().toString());
         }
     }
 
     /**
-     * Fetches the ingredients from the APIHelper, then converts the results into a List.
-     * The list is then passed to be binded to the listview
+     * Fetches the ingredients from the APIHelper, then converts the results into a temporary list.
+     * The list, after having a header included, is then added to existing listing of other medicine
+     * ingredients and medicine interactions and passed to be bound to the listView
      * @param medication The medication to fetch the ingredients for
      */
     private void loadMedicationIngredients(String medication) {
         APIHelper helper = new APIHelper();
-        try {
-            JsonArray response = helper.getMapiDrugIngredients(medication);
-            List<String> ingredients = new ArrayList<>();
-            response.forEach((element) -> ingredients.add(element.getAsString()));
-            displayIngredients(ingredients);
-        } catch (IOException e) {
-            e.printStackTrace();
+        ArrayList <String> newIngredients = new ArrayList <>();
+        Boolean hasIngredients = true;
+
+        if (!ingredients.contains( "Ingredients for " + medication + ": " )) {
+            newIngredients.add( "Ingredients for " + medication + ": " );
+
+            try {
+                JsonArray response = helper.getMapiDrugIngredients( medication );
+                if (response.size() == 0) {
+                    hasIngredients = false;
+                } else {
+                    response.forEach( ( element ) -> newIngredients.add( element.getAsString() ) );
+                }
+            } catch (IOException e) {
+                hasIngredients = false;
+            }
+
+            if (!hasIngredients) {
+                newIngredients.add( "There are no recorded ingredients for " + medication );
+            }
+            newIngredients.add( "" );
+            ingredients.addAll( 0, newIngredients );
+        } else {
+            int index = ingredients.indexOf("Ingredients for " + medication + ": ");
+            String entry;
+
+            for (int i = index; index < ingredients.size(); i++) {
+                entry = ingredients.get(i);
+                ingredients.remove(i);
+                ingredients.add(i - index,entry);
+
+                if (entry.equals("")) {
+                    break;
+                }
+            }
         }
+        displayIngredients( ingredients );
     }
 
     /**
-     * Takes a string list of ingredients, and binds it to the medicineInformation listview to be displayed
+     * Takes a string list of ingredients, and binds it to the medicineInformation listView to be displayed
      * @param ingredients The List of ingredients
      */
     private void displayIngredients(List<String> ingredients) {
-        ingredientsListProperty.set(FXCollections.observableList(ingredients));
-        medicineInformation.itemsProperty().bind(ingredientsListProperty);
+        informationListProperty.set(FXCollections.observableList(ingredients));
+        medicineInformation.itemsProperty().bind(informationListProperty);
     }
 
-    /*
+    /**
      * Navigates from the Medication panel to the home panel after 'back' is selected, saves medication log
      */
     @FXML
@@ -321,8 +329,8 @@ public class GUIDonorMedications {
         }
     }
 
-    /*
-     * Clears each currently selected medication from being selected
+    /**
+     * Button for clearing each currently selected medication from being selected on activation
      */
     @FXML
     public void clearSelections() {
@@ -330,11 +338,12 @@ public class GUIDonorMedications {
         currentMedications.getSelectionModel().clearSelection();
     }
 
-    /*
-     * Lists selected medicines and their ingredients
-     * @param medicines ArrayList of alphabetically sorted medicines for listing
+    /**
+     * Button for clearing the information being currently displayed on the medicine information ListView on activation
      */
-    private void showMedicineIngredients(ArrayList<String> medicines) {
-        ;
+    @FXML
+    public void refreshReview() {
+        ingredients = new ArrayList<>();
+        displayIngredients(ingredients);
     }
 }
