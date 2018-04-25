@@ -2,11 +2,14 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
 import model.Clinician;
 import model.Donor;
 import service.Database;
@@ -58,9 +61,14 @@ public class GUILogin {
         if (!clinicianToggle.isSelected()) {
             try {
                 Donor newDonor = Database.getDonorByNhi(nhiLogin.getText());
-                ScreenControl.setLoggedInDonor(newDonor);
+                ScreenControl.setLoggedInDonor(newDonor); // THIS SHOULD BE CAHCED
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene/donorProfileUpdate.fxml"));
+                Pane pane = loader.load();
+                GUIDonorProfileUpdate controller = loader.getController();
+                controller.setViewedDonor(newDonor);
+                loader.setController(controller);
+                ScreenControl.addScreen("donorProfileUpdate", pane);
                 ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-                ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorProfileUpdate.fxml"))); //todo fix
                 ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorDonations.fxml")));
                 ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
                 ScreenControl.activate("donorHome");

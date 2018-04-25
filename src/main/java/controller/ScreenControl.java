@@ -2,6 +2,7 @@ package controller;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import model.Clinician;
 import model.Donor;
 
@@ -10,6 +11,8 @@ import java.util.HashMap;
 class ScreenControl {
 
     private static HashMap<String, Pane> screenMap = new HashMap<>();
+
+    private static HashMap<String,Stage> popMap = new HashMap<>();
 
     private static Scene main;
 
@@ -65,5 +68,31 @@ class ScreenControl {
      */
     static void activate(String name){
         main.setRoot(screenMap.get(name));
+    }
+
+    /**
+     * Adds stage, name pair to a hashmap
+     * @param name - name of the popup
+     * @param stage - stage to display
+     */
+    static void addPopUp(String name, Stage stage) {
+        popMap.put(name, stage);
+    }
+
+
+    /**
+     * Displays a given popup
+     * @param name - name of the pop up to display
+     */
+    static void displayPopUp(String name) {
+        popMap.get(name).show();
+    }
+
+    /**
+     * Hides a given popup
+     * @param name - name of the popup to hide
+     */
+    static void hidePopUp(String name) {
+        popMap.get(name).close();
     }
 }
