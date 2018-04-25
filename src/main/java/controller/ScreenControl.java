@@ -29,7 +29,7 @@ class ScreenControl {
         clinician = newClinician;
     }
 
-    static Clinician getLoggedInClincian() {
+    static Clinician getLoggedInClinician() {
         return clinician;
     }
 
