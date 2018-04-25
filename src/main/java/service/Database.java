@@ -81,17 +81,31 @@ public class Database {
         throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
     }
 
-    public static void addClinician(String firstName, ArrayList<String> middleNames, String lastName, GlobalEnums.Region region) throws IllegalArgumentException {
-        Database.addClinician(firstName, middleNames, lastName, null, null, null, region);
+    public static int addClinician(String firstName, ArrayList<String> middleNames, String lastName, GlobalEnums.Region region) throws IllegalArgumentException {
+        return Database.addClinician(firstName, middleNames, lastName, null, null, null, region);
     }
 
-    public static void addClinician(String firstName, ArrayList<String> middleNames, String lastName, String street1, String street2, String suburb, GlobalEnums.Region region) throws IllegalArgumentException {
+    /**
+     * Adds a new clinician to the database. Staff IDs are in increasing integer order
+     * @param firstName     Clinicians first name
+     * @param middleNames   Clinicians middle names - an arraylist of names
+     * @param lastName      Clinicians last name
+     * @param street1       Clinicians street1 address
+     * @param street2       Clinicians street2 address
+     * @param suburb        Clinicians suburb
+     * @param region        Clinicians region - using the GlobalEnums.Region enum
+     * @return  The staff id of the new clinician
+     * @throws IllegalArgumentException If the first name, last name, or street address does not match its required regex
+     */
+    public static int addClinician(String firstName, ArrayList<String> middleNames, String lastName, String street1, String street2, String suburb, GlobalEnums.Region region) throws IllegalArgumentException {
         int staffID = getNextStaffID();
         if (!Pattern.matches("^[-a-zA-Z]+$", firstName)) throw new IllegalArgumentException("Invalid first name");
         if (!Pattern.matches("^[-a-zA-Z]+$", lastName)) throw new IllegalArgumentException("Invalid last name");
         if (street1 != null && !Pattern.matches("^[- a-zA-Z0-9]+$", street1)) throw new IllegalArgumentException("Invalid street address");
 
         clinicians.add(new Clinician(staffID, firstName, middleNames, lastName, street1, street2, suburb, region));
+        userActions.log(Level.INFO,"Successfully added clinician with id " + staffID, "attempted to add a clinician");
+        return staffID;
     }
 
     private static int getNextStaffID() {

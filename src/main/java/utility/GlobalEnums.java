@@ -67,7 +67,7 @@ public class GlobalEnums {
 
         public static Enum getEnumFromString(String value) {
             try {
-                return Region.valueOf(value.toUpperCase());
+                return Region.valueOf(value.toUpperCase().replaceAll("\\s+", ""));
             } catch (IllegalArgumentException e) {
                 return null;
             }

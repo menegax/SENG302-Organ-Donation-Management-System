@@ -1,7 +1,5 @@
 package controller;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -59,7 +57,7 @@ public class GUIClinicianProfileUpdate {
         // Registering a change event to clear the invalid class
         regionDD.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> setValid(regionDD));
 
-        loadProfile(ScreenControl.getLoggedInClincian().getStaffID());
+        loadProfile(ScreenControl.getLoggedInClinician().getStaffID());
     }
 
     private void loadProfile(int staffId) {
