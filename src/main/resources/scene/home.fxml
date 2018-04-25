@@ -12,7 +12,7 @@
             <Font size="27.0" />
          </font>
       </Label>
-      <Button layoutX="161.0" layoutY="136.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="79.0" prefWidth="111.0" text="Profile" />
+      <Button fx:id="profileButton" layoutX="161.0" layoutY="136.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="79.0" prefWidth="111.0" text="Profile" />
       <Button layoutX="333.0" layoutY="135.0" mnemonicParsing="false" onAction="#goToHistory" prefHeight="79.0" prefWidth="110.0" text="History" />
       <Button layoutX="272.0" layoutY="338.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" prefWidth="57.0" text="Save" />
       <Button disable="true" layoutX="360.0" layoutY="338.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" text="Import" />
