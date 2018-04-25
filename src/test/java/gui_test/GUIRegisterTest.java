@@ -28,6 +28,7 @@ public class GUIRegisterTest extends ApplicationTest {
 //        stage.show();
         main.start(stage);
         interact(() ->  lookup("#registerLabel").queryAs(Hyperlink.class).fire());
+
     }
 
     @After
@@ -67,14 +68,14 @@ public class GUIRegisterTest extends ApplicationTest {
     @Test
     public void should_successfully_register_without_middle_name() {
         interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("BBB2222");
-            lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
-            lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
+            lookup("#nhiRegister").queryAs(TextField.class).setText("BBB2782");
+            lookup("#firstnameRegister").queryAs(TextField.class).setText("Willis");
+            lookup("#lastnameRegister").queryAs(TextField.class).setText("Brucie");
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
-        assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("William"));
-        assertThat(lookup("#lastnameRegister").queryAs(TextField.class).getText().equals("Williamson"));
+        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2752"));
+        assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("Willis"));
+        assertThat(lookup("#lastnameRegister").queryAs(TextField.class).getText().equals("Brucie"));
         assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == d);
 
         interact(() -> {
