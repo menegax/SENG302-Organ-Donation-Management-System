@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import model.Donor;
 import model.Medication;
 import service.Database;
@@ -115,19 +116,19 @@ public class GUIDonorMedications {
     private ListProperty<String> informationListProperty = new SimpleListProperty<>();
     private ArrayList<String> current;
     private ArrayList<String> history;
-    private ArrayList<String> ingredients = new ArrayList<>();
+    private ArrayList<String> ingredients;
     private Donor target;
     private JsonObject suggestions;
 
     @FXML
     public void initialize() {
-        //Register events for when an item is selected from a listView
+        //Register events for when an item is selected from a listView and set selection mode to multiple
         currentMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(currentMedications));
         pastMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(pastMedications));
+        pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         try {
-            pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor().getNhiNumber());
 
             if(target.getCurrentMedications() == null) {
@@ -139,6 +140,7 @@ public class GUIDonorMedications {
                 target.setMedicationHistory(new ArrayList<>());
             }
             viewPastMedications();
+            refreshReview();
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the medications for logged in user");
             e.printStackTrace();
@@ -283,8 +285,8 @@ public class GUIDonorMedications {
         ArrayList <String> newIngredients = new ArrayList <>();
         Boolean hasIngredients = false;
 
-        if (!ingredients.contains( "Ingredients for " + medication + ": " )) {
-            newIngredients.add( "Ingredients for " + medication + ": " );
+        if (!ingredients.contains( "Ingredients for '" + medication + "': " )) {
+            newIngredients.add( "Ingredients for '" + medication + "': " );
 
             try {
                 if (medication.length() == 1) {
@@ -303,18 +305,18 @@ public class GUIDonorMedications {
             }
 
             if (!hasIngredients) {
-                newIngredients.add( "There are no recorded ingredients for " + medication );
+                newIngredients.add( "There are no recorded ingredients for '" + medication + "'");
             }
             newIngredients.add( "" );
-            ingredients.addAll( 0, newIngredients );
+            ingredients.addAll( 1, newIngredients );
         } else {
-            int index = ingredients.indexOf("Ingredients for " + medication + ": ");
+            int index = ingredients.indexOf("Ingredients for '" + medication + "': ");
             String entry;
 
             for (int i = index; index < ingredients.size(); i++) {
                 entry = ingredients.get(i);
                 ingredients.remove(i);
-                ingredients.add(i - index,entry);
+                ingredients.add(i - index + 1, entry);
 
                 if (entry.equals("")) {
                     break;
@@ -356,6 +358,7 @@ public class GUIDonorMedications {
     public void clearSelections() {
         pastMedications.getSelectionModel().clearSelection();
         currentMedications.getSelectionModel().clearSelection();
+        medicineInformation.getSelectionModel().clearSelection();
     }
 
     /**
@@ -363,7 +366,7 @@ public class GUIDonorMedications {
      */
     @FXML
     public void refreshReview() {
-        ingredients = new ArrayList<>();
-        displayIngredients(ingredients);
+        ingredients = new ArrayList<>(Collections.singletonList("ACTIVE INGREDIENTS FOR MEDICINE(S):"));
+        displayIngredients( ingredients );
     }
 }
