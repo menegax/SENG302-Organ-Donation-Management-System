@@ -115,14 +115,18 @@ public class GUIDonorProfile {
         }
     }
 
-    public void openMedication() {
-        ScreenControl.removeScreen("donorMedications");
+    /**
+     * Opens viewing screen for donor diagnoses of diseases.
+     * Catches IOException when fxml file is not read correctly.
+     */
+    public void openDonorDiagnoses() {
+        ScreenControl.removeScreen("donorDiagnoses");
         try {
-            ScreenControl.addScreen("donorMedications", FXMLLoader.load(getClass().getResource("/scene/donorMedications.fxml")));
-            ScreenControl.activate("donorMedications");
+            ScreenControl.addScreen("donorDiagnoses", FXMLLoader.load(getClass().getResource("/scene/donorDiagnosis.fxml")));
+            ScreenControl.activate("donorDiagnoses");
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading medication screen", "attempted to navigate from the profile page to the medication page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading medication page", ButtonType.OK).showAndWait();
+            userActions.log(Level.SEVERE, "Error loading diagnoses screen", "attempted to navigate from the profile page to the diagnoses page");
+            new Alert(Alert.AlertType.WARNING, "ERROR loading diagnoses page", ButtonType.OK).showAndWait();
             e.printStackTrace();
         }
     }
