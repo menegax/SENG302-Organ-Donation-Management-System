@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import model.Medication;
+import service.TextWatcher;
 import service.Database;
 
 import java.io.IOException;
@@ -159,12 +160,26 @@ public class GUIDonorMedications {
      * to getDrugSuggestions
      */
     private void addActionListeners(){
-        newMedication.textProperty().addListener(((observable, oldValue, newValue) -> {
+        TextWatcher textWatcher = new TextWatcher();
+        newMedication.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)){
-                getDrugSuggestions(newMedication.getText());
-                displayDrugSugggestions();
+                textWatcher.onTextChange(); //reset timer
             }
-        }));
+            try {
+                textWatcher.afterTextChange(GUIDonorMedications.class.getMethod("parseAction"),
+                        this); //start timer
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    /**
+     *
+     */
+    public void parseAction(){
+        getDrugSuggestions(newMedication.getText());
+        displayDrugSugggestions();
     }
 
     /**
