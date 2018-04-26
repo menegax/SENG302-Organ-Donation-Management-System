@@ -30,7 +30,10 @@
 }
 
 .back {
+    -fx-text-fill: black;
     -fx-font-size: 14px;
+    -fx-underline: false;
+    -fx-border-width: 0;
 }
 
 .tile {
