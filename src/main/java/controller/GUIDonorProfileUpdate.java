@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
@@ -76,6 +77,9 @@ public class GUIDonorProfileUpdate {
     @FXML
     private Label back;
 
+    @FXML
+    private AnchorPane pane;
+
     private Donor target;
 
     public void removeBack() {
@@ -94,9 +98,12 @@ public class GUIDonorProfileUpdate {
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
 
-
-
-
+        // Enter key triggers log in
+        pane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                saveProfile();
+            }
+        });
     }
 
     private void loadProfile(String nhi) {
