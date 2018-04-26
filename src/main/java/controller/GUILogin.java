@@ -18,18 +18,23 @@ public class GUILogin {
 
     @FXML
     public AnchorPane loginPane;
+
     public Button loginButton;
+
     public Hyperlink registerLabel;
 
     @FXML
     private TextField nhiLogin;
+
+
     /**
      * Open the register screen
      */
     @FXML
-    public void goToRegister(){
+    public void goToRegister() {
         ScreenControl.activate("donorRegister");
     }
+
 
     /**
      * Attempt to log the user in using the entered NHI
@@ -37,7 +42,7 @@ public class GUILogin {
      * If failed, gives alert
      */
     @FXML
-    public void logIn(){
+    public void logIn() {
         // todo surround with try catch. Try uses database getuserbyNHI, catch will throw a popup with warning alert
         try {
             Donor newDonor = Database.getDonorByNhi(nhiLogin.getText());
@@ -48,7 +53,8 @@ public class GUILogin {
             ScreenControl.activate("home");
             ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
             ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
             Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to log in");
             alert.show();
