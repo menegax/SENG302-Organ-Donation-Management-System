@@ -33,7 +33,7 @@ public class GUIDonorMedications {
     public Button saveMed;
     public Button undoEdit;
     public Button redoEdit;
-    public Button goBack;
+    public Hyperlink goBack;
     public Button wipeReview;
     public Button clearMed;
 
