@@ -5,7 +5,9 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import model.StateHistoryWidgets.*;
 
 import javax.swing.*;
@@ -190,12 +192,9 @@ public class StatesHistoryScreen {
                     store();
                 }
             });
+            // Allows for parent screen to listen for Ctrl z, Ctrl y, undo and redo as DatePicker does not recognise letters
             ((DatePicker) datePicker).setOnKeyPressed(event -> {
-                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-                    undo();
-                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                    redo();
-                }
+                ((DatePicker) datePicker).getParent().requestFocus();
             });
         }
     }
