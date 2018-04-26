@@ -37,7 +37,7 @@ public class StatesHistoryScreen {
     /**
      * Constructor for the StatesHistoryScreen, creates state objects of passed in control items to keep track of
      * Creates the list of stateHistories in its initialisation
-     * @Object... params - optional number of params
+     * @param params optional widget parameters to initialise
      */
     public StatesHistoryScreen(Object... params) {
        for (Object param : params) {

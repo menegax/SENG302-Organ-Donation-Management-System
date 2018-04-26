@@ -87,6 +87,7 @@ public class Database {
 
     /**
      * Calls importFromDisk and handles any errors
+     * @param fileName the filename of the file to import
      */
     public static void importFromDisk(String fileName) {
         try {
