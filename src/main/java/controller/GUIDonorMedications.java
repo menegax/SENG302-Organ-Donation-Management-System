@@ -159,7 +159,7 @@ public class GUIDonorMedications {
      */
     private void viewCurrentMedications() {
         clearSelections();
-        current = new ArrayList<>(Collections.singletonList("CURRENT USAGE:"));
+        current = new ArrayList<>();
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
@@ -171,7 +171,7 @@ public class GUIDonorMedications {
      */
     private void viewPastMedications() {
         clearSelections();
-        history = new ArrayList<>(Collections.singletonList("HISTORIC USAGE:"));
+        history = new ArrayList<>();
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
@@ -183,7 +183,7 @@ public class GUIDonorMedications {
      * @param medication The selected medication being added to the current ArrayList and listView
      */
     private void addMedication(String medication) {
-        if (!medication.equals( "Enter a medication" ) && !medication.equals( "" )) {
+        if (!medication.equals( "Enter a medication" ) && !medication.equals( "" ) && !medication.substring(0, 1).equals(" ")) {
             medication = medication.substring(0, 1).toUpperCase() + medication.substring(1).toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
@@ -211,9 +211,6 @@ public class GUIDonorMedications {
      */
     private void removeMedication(ArrayList<String> medications) {
         for (String medication : medications) {
-            if (!(medication.equals("CURRENT USAGE:") || medication.equals("HISTORIC USAGE:"))) {
-                continue;
-            }
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confirm deletion of " + medication + "?");
             Optional <ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
@@ -238,10 +235,10 @@ public class GUIDonorMedications {
     private void moveToCurrent(ArrayList<String> medications) {
         for (String medication : medications) {
             if (history.contains( medication )) {
-                target.getMedicationHistory().remove( history.indexOf( medication ) );
+                target.getMedicationHistory().remove( history.indexOf( medication ));
 
                 if (!current.contains( medication )) {
-                    target.getCurrentMedications().add( new Medication( medication ) );
+                    target.getCurrentMedications().add( new Medication( medication )  );
                     viewCurrentMedications();
                 }
                 userActions.log(Level.INFO, "Successfully moved a medication", "Re-added a current medication for a donor");
@@ -258,7 +255,7 @@ public class GUIDonorMedications {
     private void moveToHistory(ArrayList<String> medications) {
         for (String medication : medications) {
             if (current.contains( medication )) {
-                target.getCurrentMedications().remove( current.indexOf( medication ) );
+                target.getCurrentMedications().remove( current.indexOf( medication ));
 
                 if (!history.contains( medication )) {
                     target.getMedicationHistory().add( new Medication( medication ) );
