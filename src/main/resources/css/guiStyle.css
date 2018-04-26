@@ -37,6 +37,10 @@
     /*for custom title styles in the home scene*/
 }
 
+.listViewTitles {
+    -fx-font-size: 16px;
+}
+
 .customButton {
 
 }

@@ -167,7 +167,7 @@ public class GUIDonorMedications {
      */
     private void viewCurrentMedications() {
         clearSelections();
-        current = new ArrayList<>(Collections.singletonList("CURRENT USAGE:"));
+        current = new ArrayList<>();
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
@@ -179,7 +179,7 @@ public class GUIDonorMedications {
      */
     private void viewPastMedications() {
         clearSelections();
-        history = new ArrayList<>(Collections.singletonList("HISTORIC USAGE:"));
+        history = new ArrayList<>();
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
@@ -191,7 +191,7 @@ public class GUIDonorMedications {
      * @param medication The selected medication being added to the current ArrayList and listView
      */
     private void addMedication(String medication) {
-        if (!medication.equals( "Enter a medication" ) && !medication.equals( "" )) {
+        if (!medication.equals( "Enter a medication" ) && !medication.equals( "" ) && !medication.substring(0, 1).equals(" ")) {
             medication = medication.substring(0, 1).toUpperCase() + medication.substring(1).toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
@@ -219,9 +219,6 @@ public class GUIDonorMedications {
      */
     private void removeMedication(ArrayList<String> medications) {
         for (String medication : medications) {
-            if (!(medication.equals("CURRENT USAGE:") || medication.equals("HISTORIC USAGE:"))) {
-                continue;
-            }
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confirm deletion of " + medication + "?");
             Optional <ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
@@ -246,10 +243,10 @@ public class GUIDonorMedications {
     private void moveToCurrent(ArrayList<String> medications) {
         for (String medication : medications) {
             if (history.contains( medication )) {
-                target.getMedicationHistory().remove( history.indexOf( medication ) );
+                target.getMedicationHistory().remove( history.indexOf( medication ));
 
                 if (!current.contains( medication )) {
-                    target.getCurrentMedications().add( new Medication( medication ) );
+                    target.getCurrentMedications().add( new Medication( medication )  );
                     viewCurrentMedications();
                 }
                 userActions.log(Level.INFO, "Successfully moved a medication", "Re-added a current medication for a donor");
@@ -266,7 +263,7 @@ public class GUIDonorMedications {
     private void moveToHistory(ArrayList<String> medications) {
         for (String medication : medications) {
             if (current.contains( medication )) {
-                target.getCurrentMedications().remove( current.indexOf( medication ) );
+                target.getCurrentMedications().remove( current.indexOf( medication ));
 
                 if (!history.contains( medication )) {
                     target.getMedicationHistory().add( new Medication( medication ) );
@@ -284,8 +281,28 @@ public class GUIDonorMedications {
      * @param listView The listView of the selected item
      */
     private void onSelect(ListView listView) {
-        if (listView.getSelectionModel().getSelectedItems().size() == 1) {
-            loadMedicationIngredients(listView.getSelectionModel().getSelectedItem().toString());
+        if (listView.getSelectionModel().getSelectedItems().size() >= 1) {
+            for (Object item : listView.getSelectionModel().getSelectedItems()) {
+                loadMedicationIngredients( item.toString() );
+            }
+        }
+    }
+
+    /**
+     * Shifts an already existing ingredient/interaction listing entry to the top of the list
+     * @param index The current index in the list of the already existing entry
+     */
+    private void moveToTopInformationList(int index) {
+        String entry;
+
+        for (int i = index; index < ingredients.size(); i++) {
+            entry = ingredients.get(i);
+            ingredients.remove(i);
+            ingredients.add(i - index, entry);
+
+            if (entry.equals("")) {
+                break;
+            }
         }
     }
 
@@ -323,20 +340,10 @@ public class GUIDonorMedications {
                 newIngredients.add( "There are no recorded ingredients for '" + medication + "'");
             }
             newIngredients.add( "" );
-            ingredients.addAll( 1, newIngredients );
+            ingredients.addAll( 0, newIngredients );
         } else {
             int index = ingredients.indexOf("Ingredients for '" + medication + "': ");
-            String entry;
-
-            for (int i = index; index < ingredients.size(); i++) {
-                entry = ingredients.get(i);
-                ingredients.remove(i);
-                ingredients.add(i - index + 1, entry);
-
-                if (entry.equals("")) {
-                    break;
-                }
-            }
+            moveToTopInformationList(index);
         }
         displayIngredients( ingredients );
     }
@@ -381,7 +388,7 @@ public class GUIDonorMedications {
      */
     @FXML
     public void refreshReview() {
-        ingredients = new ArrayList<>(Collections.singletonList("ACTIVE INGREDIENTS FOR MEDICINE(S):"));
+        ingredients = new ArrayList<>();
         displayIngredients( ingredients );
     }
 }
