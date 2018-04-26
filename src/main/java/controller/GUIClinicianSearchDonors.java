@@ -10,24 +10,19 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
 import utility.SearchDonors;
-import utility.UserActionHistory;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,8 +30,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 public class GUIClinicianSearchDonors implements Initializable {
-
-    private UUID id = UUID.randomUUID();
 
     @FXML
     private TableView<Donor> donorDataTable;
@@ -60,14 +53,6 @@ public class GUIClinicianSearchDonors implements Initializable {
 
 
     /**
-     * Adds all db data via constructor
-     */
-    public GUIClinicianSearchDonors() {
-        masterData.addAll(Database.getDonors());
-    }
-
-
-    /**
      * Initialises the data within the table to all donors
      *
      * @param url URL not used
@@ -84,9 +69,10 @@ public class GUIClinicianSearchDonors implements Initializable {
     }
 
 
+    /**
+     * Sets up double-click functionality for each row to open a donor profile update
+     */
     private void setupDoubleClickToDonorEdit() {
-        //TODO EDIT HERE
-        //todo refactor out to method
         // Add double-click event to rows
         donorDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && donorDataTable.getSelectionModel()
@@ -95,14 +81,17 @@ public class GUIClinicianSearchDonors implements Initializable {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfileUpdate.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
                     Stage popUpStage = new Stage();
-                    popUpStage.setX(ScreenControl.getMain().getX() + 50); //offset popup
+                    popUpStage.setX(ScreenControl.getMain()
+                            .getX() + 50); //offset popup
                     popUpStage.setScene(scene);
                     GUIDonorProfileUpdate controller = fxmlLoader.getController(); //get controller from fxml
                     controller.removeBack(); //remove back button
                     controller.setViewedDonor(donorDataTable.getSelectionModel()
                             .getSelectedItem()); // load profile
-                    ScreenControl.addPopUp(controller.getId().toString(), popUpStage); //ADD to screen control
-                    ScreenControl.displayPopUp(controller.getId().toString()); //display the popup
+                    ScreenControl.addPopUp(controller.getId()
+                            .toString(), popUpStage); //ADD to screen control
+                    ScreenControl.displayPopUp(controller.getId()
+                            .toString()); //display the popup
                 }
                 catch (Exception e) {
                     userActions.log(Level.SEVERE,
@@ -115,14 +104,11 @@ public class GUIClinicianSearchDonors implements Initializable {
         });
     }
 
-    public void tableRefresh() {
-        donorDataTable.refresh(); //todo needs to be here? test
-    }
-
 
     /**
+     * Sets the table columns to pull the correct data from the donor objects
      *
-     * @return
+     * @return a filtered list of donors
      */
     private FilteredList<Donor> setupTableColumnsAndData() {
         // initialize columns
@@ -158,6 +144,7 @@ public class GUIClinicianSearchDonors implements Initializable {
 
     /**
      * Sets the search textfield to listen for any changes and search for the entry on change
+     *
      * @param filteredData the donors to be filtered/searched through
      */
     private void setupSearchingListener(FilteredList<Donor> filteredData) {
@@ -176,6 +163,7 @@ public class GUIClinicianSearchDonors implements Initializable {
                     });
                 });
     }
+
 
     /**
      * Adds custom hover-over text to each row in the table
@@ -206,8 +194,24 @@ public class GUIClinicianSearchDonors implements Initializable {
     }
 
 
+    /**
+     * Adds all db data via constructor
+     */
+    public GUIClinicianSearchDonors() {
+        masterData.addAll(Database.getDonors());
+    }
+
+
     public void goToClinicianHome() {
         ScreenControl.activate("clinicianHome");
+    }
+
+
+    /**
+     * Refreshes the table data
+     */
+    public void tableRefresh() {
+        donorDataTable.refresh(); //todo needs to be here? test
     }
 }
 

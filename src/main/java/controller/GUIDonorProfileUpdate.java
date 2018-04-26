@@ -214,7 +214,6 @@ public class GUIDonorProfileUpdate {
                 valid = false;
             }
         }
-        System.out.println(bloodGroupDD.getValue());
         if (bloodGroupDD.getValue() != null) {
             String bgStr = bloodGroupDD.getValue()
                     .toString()
@@ -278,12 +277,11 @@ public class GUIDonorProfileUpdate {
             }
             new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
 
-            if (ScreenControl.getLoggedInDonor() != null) {
+            if (ScreenControl.getLoggedInDonor() != null) { // donor is logged in
                 goBackToProfile();
             }
             else { // clinician is logged in
-                ScreenControl.hidePopUp(id.toString()); //todo fix
-
+                ScreenControl.hidePopUp(id.toString());
             }
         }
         else {
