@@ -122,18 +122,27 @@ public class GUIClinicianSearchDonors implements Initializable {
                     Stage popUpStage = new Stage();
                     popUpStage.setScene(scene);
                     GUIDonorProfileUpdate controller = fxmlLoader.getController(); //get controller from fxml
+                    controller.removeBack(); //remove back button
                     controller.setViewedDonor(donorDataTable.getSelectionModel().getSelectedItem()); // load profile
                     ScreenControl.addPopUp("donorProfileUpdatePopUp", popUpStage); //ADD to screen control
                     ScreenControl.displayPopUp("donorProfileUpdatePopUp"); //display the popup
                 }
                 catch (Exception e) {
-
+                    e.printStackTrace(); //todo remove
                 }
             }
             donorDataTable.refresh(); //todo needs to be here? test
         });
 
-        // add hover-over text to rows
+        addRowHoverOverText();
+
+    }
+
+
+    /**
+     * Adds custom hover-over text to each row in the table
+     */
+    private void addRowHoverOverText() {
         donorDataTable.setRowFactory(tv -> new TableRow<Donor>() {
             private Tooltip tooltip = new Tooltip();
 
@@ -156,7 +165,6 @@ public class GUIClinicianSearchDonors implements Initializable {
                 }
             }
         });
-
     }
 
 

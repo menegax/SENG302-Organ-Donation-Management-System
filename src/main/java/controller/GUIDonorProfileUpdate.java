@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
@@ -72,10 +73,18 @@ public class GUIDonorProfileUpdate {
     @FXML
     private ChoiceBox bloodGroupDD;
 
+    @FXML
+    private Label back;
+
     private Donor target;
 
+    public void removeBack() {
+        back.setDisable(true);
+        back.setVisible(false);
+    }
 
-    public void setViewedDonor(Donor donor) {
+
+    void setViewedDonor(Donor donor) {
         loadProfile(donor.getNhiNumber());
     }
 
@@ -84,6 +93,10 @@ public class GUIDonorProfileUpdate {
                 Arrays.asList("a positive", "a negative", "b positive", "b negative", "ab positive", "ab negative", "o positive", "o negative");
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
+
+
+
+
     }
 
     private void loadProfile(String nhi) {
@@ -252,7 +265,11 @@ public class GUIDonorProfileUpdate {
                         .replace(' ', '_')));
             }
             new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
-            goBackToProfile();
+            if (ScreenControl.getLoggedInDonor() != null) {
+                goBackToProfile();
+            } else {
+                ScreenControl.hidePopUp("donorProfileUpdatePopUp");
+            }
         }
         else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).showAndWait();

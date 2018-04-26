@@ -139,7 +139,7 @@ public class Database {
             importFromDiskDonors(fileName);
             SearchDonors.createFullIndex();
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, e.getMessage(), "attempted to import from disk");
+            userActions.log(Level.WARNING, e.getMessage(), "attempted to import from disk");
         }
     }
 
