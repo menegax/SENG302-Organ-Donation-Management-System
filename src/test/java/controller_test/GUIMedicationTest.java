@@ -4,6 +4,7 @@ import controller.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Donor;
@@ -743,7 +744,7 @@ public class GUIMedicationTest extends ApplicationTest {
 
         // Leave the Medication pane and navigates to Profile Pane
         interact( () -> {
-          lookup( "#goBack" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+          lookup( "#goBack" ).queryAs(Hyperlink.class).getOnAction().handle( new ActionEvent() );
         });
         verifyThat( "#profilePane", Node::isVisible ); // Verify that "user" has navigated to profile
 
@@ -802,7 +803,7 @@ public class GUIMedicationTest extends ApplicationTest {
 
         // Leave the Medication pane and navigates to Profile Pane
         interact( () -> {
-            lookup( "#goBack" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+            lookup( "#goBack" ).queryAs( Hyperlink.class ).getOnAction().handle( new ActionEvent() );
         });
         verifyThat( "#profilePane", Node::isVisible ); // Verify that "user" has navigated to profile
 
@@ -973,10 +974,8 @@ public class GUIMedicationTest extends ApplicationTest {
         interact(() -> {
             lookup( "#wipeReview" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
-        //Verify that the ingredients listview has 1 item (The listview header)
-        verifyThat("#medicineInformation", ListViewMatchers.hasItems(1));
-        //Verify that the ingredients listviews one item is the listview header)
-        verifyThat("#medicineInformation", ListViewMatchers.hasListCell("ACTIVE INGREDIENTS FOR MEDICINE(S):"));
+        //Verify that the ingredients listview has no items
+        verifyThat("#medicineInformation", ListViewMatchers.hasItems(0));
     }
 
     @Test
