@@ -449,6 +449,10 @@ public class GUIMedicationTest extends ApplicationTest {
             // Press the delete medication button for deleting the selected medication
             lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         } );
+        //Confirm the deletion in the alert window
+        interact( () -> {
+            lookup("OK").queryAs(Button.class).fire();
+        });
         // Verify that the pastMedications listView is now empty as a medication has now been deleted from it
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
         // Verify that the currentMedications listView is now empty the only medication was deleted from pastMedications
@@ -511,6 +515,10 @@ public class GUIMedicationTest extends ApplicationTest {
             // Press the delete medication button for deleting the selected medication
             lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         } );
+        //Confirm the deletion in the alert window
+        interact( () -> {
+            lookup("OK").queryAs(Button.class).fire();
+        });
         // Verify that the pastMedications listView is now empty as a medication has now been deleted from it
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
         // Verify that the currentMedications listView is now empty the only medication was deleted from pastMedications
@@ -730,6 +738,10 @@ public class GUIMedicationTest extends ApplicationTest {
             // Press the delete medication button for deleting the selected medication
             lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         } );
+        //Confirm the deletion in the alert window
+        interact( () -> {
+            lookup("OK").queryAs(Button.class).fire();
+        });
         // Verify that both of the medications listViews are now empty as a medication has been deleted from it
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
@@ -772,6 +784,7 @@ public class GUIMedicationTest extends ApplicationTest {
         interact( () -> {
           lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
+
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
         verifyThat("#pastMedications", ListViewMatchers.hasListCell("Savedmed"));
         // Verify that there is only one medication moved to pastMedications ListView
@@ -786,6 +799,10 @@ public class GUIMedicationTest extends ApplicationTest {
         interact( () -> {
         // Press the delete medication button for deleting the selected medication
           lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        });
+        //Confirm the deletion in the alert window
+        interact( () -> {
+            lookup("OK").queryAs(Button.class).fire();
         });
         // Verify that both of the medications listViews are now empty as a medication has been deleted from it
         verifyThat("#currentMedications", ListViewMatchers.isEmpty());
@@ -905,6 +922,14 @@ public class GUIMedicationTest extends ApplicationTest {
         interact( () -> {
             lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         } );
+        //Confirm the deletion of the first medication
+        interact( () -> {
+            lookup("OK").queryAs(Button.class).fire();
+        });
+        //Confirm the deletion of the second medication
+        interact( () -> {
+            lookup("OK").queryAs(Button.class).fire();
+        });
         // Verify that the pastMedications listView is now empty as a medication has now been deleted from it
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
         // Verify that the currentMedications listView is now empty the only medication was deleted from pastMedications
