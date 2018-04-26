@@ -4,6 +4,7 @@ import com.sun.javafx.application.PlatformImpl;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import model.*;
 import model.StateHistoryWidgets.*;
 import org.junit.Before;
@@ -82,25 +83,21 @@ public class StatesHistoryScreenTest {
         choiceBox2.getSelectionModel().select(0);
         datePicker1.setValue(LocalDate.of(2001, 1, 1));
         datePicker2.setValue(LocalDate.of(2001, 1, 1));
-        ArrayList<TextField> entryList = new ArrayList<>();
-        ArrayList<CheckBox> checkBoxList = new ArrayList<>();
-        ArrayList<ComboBox> comboBoxList = new ArrayList<>();
-        ArrayList<RadioButton> radioButtonList = new ArrayList<>();
-        ArrayList<ChoiceBox> choiceBoxList = new ArrayList<>();
-        ArrayList<DatePicker> datePickerList = new ArrayList<>();
-        entryList.add(textField1);
-        entryList.add(textField2);
-        checkBoxList.add(checkBox1);
-        checkBoxList.add(checkBox2);
-        comboBoxList.add(comboBox1);
-        comboBoxList.add(comboBox2);
-        radioButtonList.add(radioButton1);
-        radioButtonList.add(radioButton2);
-        choiceBoxList.add(choiceBox1);
-        choiceBoxList.add(choiceBox2);
-        datePickerList.add(datePicker1);
-        datePickerList.add(datePicker2);
-        statesHistoryScreen = new StatesHistoryScreen(entryList, comboBoxList, checkBoxList, radioButtonList, choiceBoxList, datePickerList);
+        ArrayList<Control> controlList = new ArrayList<Control>() {{
+            add(textField1);
+            add(textField2);
+            add(comboBox1);
+            add(comboBox2);
+            add(checkBox1);
+            add(checkBox2);
+            add(radioButton1);
+            add(radioButton2);
+            add(choiceBox1);
+            add(choiceBox2);
+            add(datePicker1);
+            add(datePicker2);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(new Pane(), controlList);
     }
 
     /**
@@ -109,9 +106,7 @@ public class StatesHistoryScreenTest {
     @Test
     public void testConstructor() {
         checkWidgets();
-        statesHistoryScreen = new StatesHistoryScreen(new ArrayList<TextField>(), new ArrayList<ComboBox<String>>(), new ArrayList<CheckBox>());
-        assertEquals(statesHistoryScreen.getStateHistories().size(), 0);
-        statesHistoryScreen = new StatesHistoryScreen();
+        statesHistoryScreen = new StatesHistoryScreen(new Pane(), new ArrayList<Control>());
         assertEquals(statesHistoryScreen.getStateHistories().size(), 0);
     }
 

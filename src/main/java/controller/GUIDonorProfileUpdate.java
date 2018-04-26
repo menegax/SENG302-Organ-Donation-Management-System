@@ -14,6 +14,7 @@ import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -88,13 +89,12 @@ public class GUIDonorProfileUpdate {
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
         loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
-        addActionListeners();
         setUpStateHistory();
     }
 
 
-    private void setUpStateHistory(){
-        ArrayList<TextField> fields = new ArrayList<TextField>(){{
+    private void setUpStateHistory() {
+        ArrayList<Control> elements = new ArrayList<Control>() {{
             add(nhiTxt);
             add(firstnameTxt);
             add(lastnameTxt);
@@ -106,25 +106,13 @@ public class GUIDonorProfileUpdate {
             add(zipTxt);
             add(weightTxt);
             add(heightTxt);
-        }};
-
-        ArrayList<RadioButton> radio = new ArrayList<RadioButton>(){{
             add(genderFemaleRadio);
             add(genderOtherRadio);
             add(genderMaleRadio);
+            add(dobDate);
+            add(bloodGroupDD);
         }};
-
-        screenHistory = new StatesHistoryScreen(fields, new ArrayList<ChoiceBox>(){{add(bloodGroupDD);}}, radio, new ArrayList<DatePicker>(){{add(dobDate);}});
-
-    }
-    private void addActionListeners(){
-        donorUpdateAnchorPane.setOnKeyPressed(event -> {
-            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-                undo();
-            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                redo();
-            }
-        });
+        screenHistory = new StatesHistoryScreen(donorUpdateAnchorPane, elements);
     }
 
     private void loadProfile(String nhi) {
@@ -147,10 +135,16 @@ public class GUIDonorProfileUpdate {
             middlenameTxt.setText(middlenameTxt.getText() + name + " ");
         }
         if (donor.getGender() != null) {
-            switch(donor.getGender().getValue()) {
-                case "male": genderMaleRadio.setSelected(true); break;
-                case "female": genderFemaleRadio.setSelected(true); break;
-                case "other": genderOtherRadio.setSelected(true); break;
+            switch (donor.getGender().getValue()) {
+                case "male":
+                    genderMaleRadio.setSelected(true);
+                    break;
+                case "female":
+                    genderFemaleRadio.setSelected(true);
+                    break;
+                case "other":
+                    genderOtherRadio.setSelected(true);
+                    break;
             }
         }
         dobDate.setValue(donor.getBirth());
@@ -215,18 +209,23 @@ public class GUIDonorProfileUpdate {
             middles.addAll(middlenames);
             target.setMiddleNames(middles);
 
-            if (genderMaleRadio.isSelected()) target.setGender((GlobalEnums.Gender) GlobalEnums.Gender.getEnumFromString("male"));
-            if (genderFemaleRadio.isSelected()) target.setGender((GlobalEnums.Gender) GlobalEnums.Gender.getEnumFromString("female"));
-            if (genderOtherRadio.isSelected()) target.setGender((GlobalEnums.Gender) GlobalEnums.Gender.getEnumFromString("other"));
+            if (genderMaleRadio.isSelected())
+                target.setGender((GlobalEnums.Gender) GlobalEnums.Gender.getEnumFromString("male"));
+            if (genderFemaleRadio.isSelected())
+                target.setGender((GlobalEnums.Gender) GlobalEnums.Gender.getEnumFromString("female"));
+            if (genderOtherRadio.isSelected())
+                target.setGender((GlobalEnums.Gender) GlobalEnums.Gender.getEnumFromString("other"));
             if (dobDate.getValue() != null) target.setBirth(dobDate.getValue());
             if (street1Txt.getText().length() > 0) target.setStreet1(street1Txt.getText());
             if (street2Txt.getText().length() > 0) target.setStreet2(street2Txt.getText());
             if (suburbTxt.getText().length() > 0) target.setSuburb(suburbTxt.getText());
-            if (regionTxt.getText().length() > 0) target.setRegion((GlobalEnums.Region) GlobalEnums.Region.getEnumFromString(regionTxt.getText()));
+            if (regionTxt.getText().length() > 0)
+                target.setRegion((GlobalEnums.Region) GlobalEnums.Region.getEnumFromString(regionTxt.getText()));
             if (zipTxt.getText() != null) target.setZip(Integer.parseInt(zipTxt.getText()));
             if (weightTxt.getText() != null) target.setWeight(Double.parseDouble(weightTxt.getText()));
             if (heightTxt.getText() != null) target.setHeight(Double.parseDouble(heightTxt.getText()));
-            if (bloodGroupDD.getValue() != null) target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD.getValue().toString().replace(' ', '_')));
+            if (bloodGroupDD.getValue() != null)
+                target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD.getValue().toString().replace(' ', '_')));
             new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
             goBackToProfile();
         } else {
@@ -239,7 +238,7 @@ public class GUIDonorProfileUpdate {
         try {
             ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
             ScreenControl.activate("donorProfile");
-        }catch (IOException e) {
+        } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
             e.printStackTrace();

@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.Pane;
 import model.StateHistoryWidgets.*;
 
 import javax.swing.*;
@@ -39,164 +40,155 @@ public class StatesHistoryScreen {
      * Creates the list of stateHistories in its initialisation
      * @param params optional widget parameters to initialise
      */
-    public StatesHistoryScreen(Object... params) {
-       for (Object param : params) {
-           if (param instanceof ArrayList<?>){ // check if generic arraylist
-               Object firstItem = ((ArrayList) param).size() == 0 ? null : ((ArrayList) param).get(0); // avoid null pointers
-               if ((firstItem instanceof TextField)){
-                   createStateHistoriesTextField(param);
-               }
-               if ((firstItem) instanceof RadioButton){
-                   createStateHistoriesRadioButton(param);
-               }
-               if ((firstItem) instanceof CheckBox){
-                   createStateHistoriesCheckBox(param);
-               }
-               if ((firstItem) instanceof ChoiceBox){
-                   createStateHistoriesChoiceBox(param);
-               }
-               if (firstItem instanceof ComboBox){
-                   createStateHistoriesComboBox(param);
-               }
-               if (firstItem instanceof DatePicker) {
-                   createStateHistoriesDatePicker(param);
-               }
+    public StatesHistoryScreen(Pane pane, ArrayList<Control> params) {
+        pane.setOnKeyPressed(event -> {
+            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+                undo();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+                redo();
+            }
+        });
+       for (Control param : params) {
+           if ((param instanceof TextField)){
+               createStateHistoriesTextField(param);
+           }
+           if ((param) instanceof RadioButton){
+               createStateHistoriesRadioButton(param);
+           }
+           if ((param) instanceof CheckBox){
+               createStateHistoriesCheckBox(param);
+           }
+           if ((param) instanceof ChoiceBox){
+               createStateHistoriesChoiceBox(param);
+           }
+           if (param instanceof ComboBox){
+               createStateHistoriesComboBox(param);
+           }
+           if (param instanceof DatePicker) {
+               createStateHistoriesDatePicker(param);
            }
        }
     }
 
     /**
      * Creates state objects for every control item in the passed in array
-     * @param entries - object which can be cast to an arraylist<TextField>
+     * @param entry - object which can be cast to an arraylist<TextField>
      */
-    private void createStateHistoriesTextField(Object entries){
-        for (Object entry : ((ArrayList<?>) entries)) {
-            stateHistories.add(new StateHistoryTextEntry((TextField)entry));
-            ((TextField)entry).textProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when textfield has been undone or redone
-                    store();
-                }
-            });
-            ((TextField)entry).setOnKeyPressed(event -> {
-                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-                    undo();
-                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                    redo();
-                }
-            });
-        }
+    private void createStateHistoriesTextField(Object entry){
+        stateHistories.add(new StateHistoryTextEntry((TextField)entry));
+        ((TextField)entry).textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when textfield has been undone or redone
+                store();
+            }
+        });
+        ((TextField)entry).setOnKeyPressed(event -> {
+            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+                undo();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+                redo();
+            }
+        });
     }
 
     /**
      * Creates state objects for every control item in the passed in array
-     * @param comboBoxes - object which can be cast to an arraylist<ComboBox>
+     * @param comboBox - object which can be cast to an arraylist<ComboBox>
      */
-    private void createStateHistoriesComboBox(Object comboBoxes) {
-        for (Object comboBox : ((ArrayList<?>) comboBoxes)) {
-            stateHistories.add(new StateHistoryComboBox((ComboBox<String>)comboBox));
-            ((ComboBox<String>) comboBox).getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if ((oldValue == null && newValue!= null) || !newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when ComboBox has been undone
-                    store();
-                }
-            });
-//            The following code is commented out as it is assumed, like choiceBox, Ctrl+Z still triggers on the AnchorPane when the comboBox is selected
-//            ((ComboBox<String>) comboBox).setOnKeyPressed(event -> {
-//                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-//                    undo();
-//                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-//                    redo();
-//                }
-//            });
-        }
+    private void createStateHistoriesComboBox(Object comboBox) {
+        stateHistories.add(new StateHistoryComboBox((ComboBox<String>)comboBox));
+        ((ComboBox<String>) comboBox).getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if ((oldValue == null && newValue!= null) || !newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when ComboBox has been undone
+                store();
+            }
+        });
+//        The following code is commented out as it is assumed, like choiceBox, Ctrl+Z still triggers on the AnchorPane when the comboBox is selected
+//        ((ComboBox<String>) comboBox).setOnKeyPressed(event -> {
+//            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+//                undo();
+//            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+//                redo();
+//            }
+//        });
     }
 
     /**
      * Creates state objects for every control item in the passed in array
-     * @param radioButtons - object which can be cast to an arraylist<RadioButton>
+     * @param radioButton - object which can be cast to an arraylist<RadioButton>
      */
 
-    private void createStateHistoriesRadioButton(Object radioButtons){
-        for (Object radioButton : ((ArrayList<?>) radioButtons)) {
-            stateHistories.add(new StateHistoryRadioButton((RadioButton)radioButton));
-            ((RadioButton) radioButton).selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when RadioButton has been undone
-                    store();
-                }
-            });
-            ((RadioButton) radioButton).setOnKeyPressed(event -> {
-                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-                    undo();
-                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                    redo();
-                }
-            });
-        }
+    private void createStateHistoriesRadioButton(Object radioButton){
+        stateHistories.add(new StateHistoryRadioButton((RadioButton)radioButton));
+        ((RadioButton) radioButton).selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when RadioButton has been undone
+                store();
+            }
+        });
+        ((RadioButton) radioButton).setOnKeyPressed(event -> {
+            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+                undo();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+                redo();
+            }
+        });
     }
 
     /**
      * Creates state objects for every control item in the passed in array
-     * @param checkBoxes - object which can be cast to an arraylist<CheckBox>
+     * @param checkBox - object which can be cast to an arraylist<CheckBox>
      */
-
-    private void createStateHistoriesCheckBox(Object checkBoxes){
-        for (Object checkBox : ((ArrayList<?>) checkBoxes)) {
-            stateHistories.add(new StateHistoryCheckBox((CheckBox)checkBox));
-            ((CheckBox) checkBox).selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when CheckBox has been undone
-                    store();
-                }
-            });
-            ((CheckBox) checkBox).setOnKeyPressed(event -> {
-                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-                    undo();
-                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                    redo();
-                }
-            });
-        }
+    private void createStateHistoriesCheckBox(Object checkBox){
+        stateHistories.add(new StateHistoryCheckBox((CheckBox)checkBox));
+        ((CheckBox) checkBox).selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.equals(oldValue) && !undone && !redone){ //don't want to store state when CheckBox has been undone
+                store();
+            }
+        });
+        ((CheckBox) checkBox).setOnKeyPressed(event -> {
+            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+                undo();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+                redo();
+            }
+        });
     }
 
     /**
      * Creates state objects for every control item in the passed in array
-     * @param choiceBoxes - object which can be cast to an arraylist<ChoiceBox>
+     * @param choiceBox - object which can be cast to an arraylist<ChoiceBox>
      */
 
-    private void createStateHistoriesChoiceBox(Object choiceBoxes){
-        for (Object choiceBox : ((ArrayList<?>) choiceBoxes)) {
-            stateHistories.add(new StateHistoryChoiceBox((ChoiceBox<String>)choiceBox));
-            ((ChoiceBox<String>) choiceBox).getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if (((oldValue == null || newValue == null) || !newValue.equals(oldValue)) && !undone && !redone){ //don't want to store state when ChoiceBox has been undone
-                    store();
-                }
-            });
-//            The following code is commented out as Ctrl+Z still triggers on the AnchorPane when the choiceBox is selected
-//            ((ChoiceBox<String>) choiceBox).setOnKeyPressed(event -> {
-//                if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-//                    undo();
-//                } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-//                    redo();
-//                }
-//            });
-        }
+    private void createStateHistoriesChoiceBox(Object choiceBox){
+        stateHistories.add(new StateHistoryChoiceBox((ChoiceBox<String>)choiceBox));
+        ((ChoiceBox<String>) choiceBox).getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (((oldValue == null || newValue == null) || !newValue.equals(oldValue)) && !undone && !redone){ //don't want to store state when ChoiceBox has been undone
+                store();
+            }
+        });
+//        The following code is commented out as Ctrl+Z still triggers on the AnchorPane when the choiceBox is selected
+//        ((ChoiceBox<String>) choiceBox).setOnKeyPressed(event -> {
+//            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+//                undo();
+//            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+//                redo();
+//            }
+//        });
     }
 
     /**
      * Creates state objects for every control item in the passed in array
-     * @param datePickers - object which can be cast to an arraylist<DatePicker>
+     * @param datePicker - object which can be cast to an arraylist<DatePicker>
      */
-    private void createStateHistoriesDatePicker(Object datePickers) {
-        for (Object datePicker : ((ArrayList<?>) datePickers)) {
-            stateHistories.add(new StateHistoryDatePicker((DatePicker)datePicker));
-            ((DatePicker) datePicker).valueProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != oldValue && !undone && !redone){ //don't want to store state when DatePicker has been undone
-                    store();
-                }
-            });
-            // Allows for parent screen to listen for Ctrl z, Ctrl y, undo and redo as DatePicker does not recognise letters
-            ((DatePicker) datePicker).setOnKeyPressed(event -> {
-                ((DatePicker) datePicker).getParent().requestFocus();
-            });
-        }
+    private void createStateHistoriesDatePicker(Object datePicker) {
+        stateHistories.add(new StateHistoryDatePicker((DatePicker)datePicker));
+        ((DatePicker) datePicker).valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != oldValue && !undone && !redone){ //don't want to store state when DatePicker has been undone
+                store();
+            }
+        });
+        // Allows for parent screen to listen for Ctrl z, Ctrl y, undo and redo as DatePicker does not recognise letters
+        ((DatePicker) datePicker).setOnKeyPressed(event -> {
+            ((DatePicker) datePicker).getParent().requestFocus();
+        });
     }
 
     /**
