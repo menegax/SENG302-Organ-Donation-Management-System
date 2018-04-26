@@ -122,7 +122,7 @@ public class GUIDonorProfile {
     public void openDonorDiagnoses() {
         ScreenControl.removeScreen("donorDiagnoses");
         try {
-            ScreenControl.addScreen("donorDiagnoses", FXMLLoader.load(getClass().getResource("/scene/donorDiagnosis.fxml")));
+            ScreenControl.addScreen("donorDiagnoses", FXMLLoader.load(getClass().getResource("/scene/clinicianDiagnosis.fxml")));
             ScreenControl.activate("donorDiagnoses");
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading diagnoses screen", "attempted to navigate from the profile page to the diagnoses page");
