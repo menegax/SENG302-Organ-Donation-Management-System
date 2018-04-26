@@ -16,12 +16,15 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
 public class GUIDonorProfileUpdate {
+
+    private UUID id = UUID.randomUUID();
 
     @FXML
     private Label lastModifiedLbl;
@@ -88,11 +91,12 @@ public class GUIDonorProfileUpdate {
     }
 
 
-    void setViewedDonor(Donor donor) {
+    public void setViewedDonor(Donor donor) {
         loadProfile(donor.getNhiNumber());
     }
 
-    public void initialize() {
+
+    public void initialize(UUID id) {
         List<String> bloodGroups =
                 Arrays.asList("a positive", "a negative", "b positive", "b negative", "ab positive", "ab negative", "o positive", "o negative");
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
@@ -105,6 +109,7 @@ public class GUIDonorProfileUpdate {
             }
         });
     }
+
 
     private void loadProfile(String nhi) {
         try {
@@ -272,10 +277,13 @@ public class GUIDonorProfileUpdate {
                         .replace(' ', '_')));
             }
             new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
+
             if (ScreenControl.getLoggedInDonor() != null) {
                 goBackToProfile();
-            } else {
-                ScreenControl.hidePopUp("donorProfileUpdatePopUp");
+            }
+            else { // clinician is logged in
+                ScreenControl.hidePopUp(id.toString()); //todo fix
+
             }
         }
         else {
@@ -296,4 +304,9 @@ public class GUIDonorProfileUpdate {
         }
     }
 
+
+
+    public UUID getId() {
+        return id;
+    }
 }

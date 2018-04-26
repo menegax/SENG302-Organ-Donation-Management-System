@@ -1,5 +1,7 @@
 package controller;
 
+import static utility.UserActionHistory.userActions;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +12,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -23,11 +27,16 @@ import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
 import utility.SearchDonors;
+import utility.UserActionHistory;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
+import java.util.logging.Level;
 
 public class GUIClinicianSearchDonors implements Initializable {
+
+    private UUID id = UUID.randomUUID();
 
     @FXML
     private TableView<Donor> donorDataTable;
@@ -66,7 +75,56 @@ public class GUIClinicianSearchDonors implements Initializable {
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
+        FilteredList<Donor> filteredData = setupTableColumnsAndData();
 
+        setupSearchingListener(filteredData);
+        setupDoubleClickToDonorEdit();
+        setupRowHoverOverText();
+
+    }
+
+
+    private void setupDoubleClickToDonorEdit() {
+        //TODO EDIT HERE
+        //todo refactor out to method
+        // Add double-click event to rows
+        donorDataTable.setOnMouseClicked(click -> {
+            if (click.getClickCount() == 2 && donorDataTable.getSelectionModel()
+                    .getSelectedItem() != null) {
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfileUpdate.fxml"));
+                    Scene scene = new Scene(fxmlLoader.load());
+                    Stage popUpStage = new Stage();
+                    popUpStage.setX(ScreenControl.getMain().getX() + 50); //offset popup
+                    popUpStage.setScene(scene);
+                    GUIDonorProfileUpdate controller = fxmlLoader.getController(); //get controller from fxml
+                    controller.removeBack(); //remove back button
+                    controller.setViewedDonor(donorDataTable.getSelectionModel()
+                            .getSelectedItem()); // load profile
+                    ScreenControl.addPopUp(controller.getId().toString(), popUpStage); //ADD to screen control
+                    ScreenControl.displayPopUp(controller.getId().toString()); //display the popup
+                }
+                catch (Exception e) {
+                    userActions.log(Level.SEVERE,
+                            "Failed to open donor profile scene from search donors table",
+                            "attempted to open donor edit window from search donors table");
+                    new Alert(Alert.AlertType.ERROR, "Unable to open donor edit window", ButtonType.OK).showAndWait();
+                }
+            }
+
+        });
+    }
+
+    public void tableRefresh() {
+        donorDataTable.refresh(); //todo needs to be here? test
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    private FilteredList<Donor> setupTableColumnsAndData() {
         // initialize columns
         columnName.setCellValueFactory(d -> d.getValue()
                 .getNameConcatenated() != null ? new SimpleStringProperty(d.getValue()
@@ -85,6 +143,24 @@ public class GUIClinicianSearchDonors implements Initializable {
         // wrap ObservableList in a FilteredList
         FilteredList<Donor> filteredData = new FilteredList<>(masterData, d -> true);
 
+        // wrap the FilteredList in a SortedList.
+        SortedList<Donor> sortedData = new SortedList<>(filteredData);
+
+        // bind the SortedList comparator to the TableView comparator.
+        sortedData.comparatorProperty()
+                .bind(donorDataTable.comparatorProperty());
+
+        // add sorted (and filtered) data to the table.
+        donorDataTable.setItems(sortedData);
+        return filteredData;
+    }
+
+
+    /**
+     * Sets the search textfield to listen for any changes and search for the entry on change
+     * @param filteredData the donors to be filtered/searched through
+     */
+    private void setupSearchingListener(FilteredList<Donor> filteredData) {
         // set the filter Predicate whenever the filter changes.
         searchEntry.textProperty()
                 .addListener((observable, oldValue, newValue) -> {
@@ -99,50 +175,12 @@ public class GUIClinicianSearchDonors implements Initializable {
 
                     });
                 });
-
-        // wrap the FilteredList in a SortedList.
-        SortedList<Donor> sortedData = new SortedList<>(filteredData);
-
-        // bind the SortedList comparator to the TableView comparator.
-        sortedData.comparatorProperty()
-                .bind(donorDataTable.comparatorProperty());
-
-        // add sorted (and filtered) data to the table.
-        donorDataTable.setItems(sortedData);
-
-
-        //TODO EDIT HERE
-        //todo refactor out to method
-        // Add double-click event to rows
-        donorDataTable.setOnMouseClicked(click -> {
-            if (click.getClickCount() == 2 && donorDataTable.getSelectionModel().getSelectedItem() != null) {
-                try {
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfileUpdate.fxml"));
-                    Scene scene = new Scene(fxmlLoader.load());
-                    Stage popUpStage = new Stage();
-                    popUpStage.setScene(scene);
-                    GUIDonorProfileUpdate controller = fxmlLoader.getController(); //get controller from fxml
-                    controller.removeBack(); //remove back button
-                    controller.setViewedDonor(donorDataTable.getSelectionModel().getSelectedItem()); // load profile
-                    ScreenControl.addPopUp("donorProfileUpdatePopUp", popUpStage); //ADD to screen control
-                    ScreenControl.displayPopUp("donorProfileUpdatePopUp"); //display the popup
-                }
-                catch (Exception e) {
-                    e.printStackTrace(); //todo remove
-                }
-            }
-            donorDataTable.refresh(); //todo needs to be here? test
-        });
-
-        addRowHoverOverText();
-
     }
-
 
     /**
      * Adds custom hover-over text to each row in the table
      */
-    private void addRowHoverOverText() {
+    private void setupRowHoverOverText() {
         donorDataTable.setRowFactory(tv -> new TableRow<Donor>() {
             private Tooltip tooltip = new Tooltip();
 

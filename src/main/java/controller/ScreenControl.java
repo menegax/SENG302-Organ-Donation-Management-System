@@ -14,7 +14,9 @@ class ScreenControl {
 
     private static HashMap<String,Stage> popMap = new HashMap<>();
 
+
     private static Scene main;
+
 
     public static Donor donor;
 
@@ -26,6 +28,10 @@ class ScreenControl {
 
     static Donor getLoggedInDonor() {
         return donor;
+    }
+
+    public static Scene getMain() {
+        return main;
     }
 
     static void setLoggedInClinician(Clinician newClinician) {
