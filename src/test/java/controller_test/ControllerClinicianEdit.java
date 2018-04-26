@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 
-public class ClinicianEdit extends ApplicationTest {
+public class ControllerClinicianEdit extends ApplicationTest {
     private Main main = new Main();
     private ArrayList<Clinician> clinicians = Database.getClinicians();
     private String staffId;
@@ -42,10 +42,11 @@ public class ClinicianEdit extends ApplicationTest {
         staffId = Integer.toString(clinicians.get(0).getStaffID());
         //Check 'I am Clinician" checkbox to login as clinician
         interact( () -> {
-            lookup( "#clinicianToggle" ).queryAs( CheckBox.class ).setSelected(true);
-            assertThat( lookup ("#clinicianToggle" ).queryAs( CheckBox.class ).isSelected());
-            lookup( "#nhiLogin" ).queryAs( TextField.class ).setText( staffId );
-            assertThat( lookup( "#nhiLogin" ).queryAs( TextField.class ) ).hasText( staffId );
+            lookup("#clinicianToggle").queryAs(CheckBox.class).setSelected(true);
+            lookup("#nhiLogin").queryAs(TextField.class).setText(staffId);
+        });
+        verifyThat("#nhiLogin", TextInputControlMatchers.hasText( staffId ));
+        interact( () -> {
             lookup( "#loginButton" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
         verifyThat( "#clinicianHomePane", Node::isVisible ); // Verify that login has taken "user" to the clinician home panel
@@ -72,7 +73,9 @@ public class ClinicianEdit extends ApplicationTest {
     public void successfulUpdateClinicianId () {
         interact( () -> {
             lookup("#staffId").queryAs(TextField.class).setText("1");
-            assertThat( lookup( "#staffId" ).queryAs( TextField.class ) ).hasText( "1" );
+        });
+        verifyThat("#staffId", TextInputControlMatchers.hasText( "1" ));
+        interact( () -> {
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
             lookup("OK").queryAs(Button.class).fire();
         });
@@ -87,7 +90,9 @@ public class ClinicianEdit extends ApplicationTest {
     public void unsuccessfulUpdateClinicianId () {
         interact( () -> {
             lookup("#staffId").queryAs(TextField.class).setText("A");
-            assertThat( lookup( "#staffId" ).queryAs( TextField.class ) ).hasText( "A" );
+        });
+        verifyThat("#staffId", TextInputControlMatchers.hasText( "A" ));
+        interact( () -> {
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
             lookup("OK").queryAs(Button.class).fire();
         });
@@ -102,7 +107,9 @@ public class ClinicianEdit extends ApplicationTest {
     public void successfulUpdateClinicianFirstName () {
         interact( () -> {
             lookup("#firstnameTxt").queryAs(TextField.class).setText("James");
-            assertThat( lookup( "#firstnameTxt" ).queryAs( TextField.class ) ).hasText( "James" );
+        });
+        verifyThat("#firstnameTxt", TextInputControlMatchers.hasText( "James" ));
+        interact( () -> {
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
             lookup("OK").queryAs(Button.class).fire();
         });
@@ -116,8 +123,10 @@ public class ClinicianEdit extends ApplicationTest {
      */
     public void unsuccessfulUpdateClinicianFirstName () {
         interact(() -> {
-            lookup("#firstnameTxt").queryAs(TextField.class).setText("12");
-            assertThat(lookup("#firstnameTxt").queryAs(TextField.class)).hasText("12");
+            lookup("#firstnameTxt").queryAs(TextField.class).setText("122");
+        });
+        verifyThat("#firstnameTxt", TextInputControlMatchers.hasText( "122" ));
+        interact( () -> {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
@@ -132,7 +141,9 @@ public class ClinicianEdit extends ApplicationTest {
     public void successfulUpdateClinicianLastName () {
         interact( () -> {
             lookup("#lastnameTxt").queryAs(TextField.class).setText("Bond");
-            assertThat( lookup( "#lastnameTxt" ).queryAs( TextField.class ) ).hasText( "Bond" );
+        });
+        verifyThat("#lastnameTxt", TextInputControlMatchers.hasText( "Bond" ));
+        interact( () -> {
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
             lookup("OK").queryAs(Button.class).fire();
         });
@@ -146,8 +157,10 @@ public class ClinicianEdit extends ApplicationTest {
      */
     public void unsuccessfulUpdateClinicianLastName () {
         interact( () -> {
-            lookup("#lastnameTxt").queryAs(TextField.class).setText("12");
-            assertThat( lookup( "#lastnameTxt" ).queryAs( TextField.class ) ).hasText( "12" );
+            lookup("#lastnameTxt").queryAs(TextField.class).setText("122");
+        });
+        verifyThat("#lastnameTxt", TextInputControlMatchers.hasText( "122" ));
+        interact( () -> {
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
             lookup("OK").queryAs(Button.class).fire();
         });
@@ -162,7 +175,9 @@ public class ClinicianEdit extends ApplicationTest {
     public void successfulUpdateClinicianMiddleName () {
         interact( () -> {
             lookup("#middlenameTxt").queryAs(TextField.class).setText("Andre");
-            assertThat( lookup( "#middlenameTxt" ).queryAs( TextField.class ) ).hasText( "Andre" );
+        });
+        verifyThat("#middlenameTxt", TextInputControlMatchers.hasText( "Andre" ));
+        interact( () -> {
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
             lookup("OK").queryAs(Button.class).fire();
         });
@@ -176,8 +191,10 @@ public class ClinicianEdit extends ApplicationTest {
      */
     public void unsuccessfulUpdateClinicianMiddleName () {
         interact( () -> {
-            lookup("#middlenameTxt").queryAs(TextField.class).setText("12");
-            assertThat( lookup( "#middlenameTxt" ).queryAs( TextField.class ) ).hasText( "12" );
+            lookup("#middlenameTxt").queryAs(TextField.class).setText("122");
+        });
+        verifyThat("#middlenameTxt", TextInputControlMatchers.hasText( "122" ));
+        interact( () -> {
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
             lookup("OK").queryAs(Button.class).fire();
         });
@@ -192,7 +209,9 @@ public class ClinicianEdit extends ApplicationTest {
     public void successfulUpdateClinicianStreet1 () {
         interact( () -> {
             lookup("#street1Txt").queryAs(TextField.class).setText("Riccarton RD");
-            assertThat( lookup( "#street1Txt" ).queryAs( TextField.class ) ).hasText( "Riccarton RD" );
+        });
+        verifyThat("#street1Txt", TextInputControlMatchers.hasText( "Riccarton RD" ));
+        interact( () -> {
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
             lookup("OK").queryAs(Button.class).fire();
         });
@@ -206,8 +225,10 @@ public class ClinicianEdit extends ApplicationTest {
      */
     public void unsuccessfulUpdateClinicianStreet1 () {
         interact( () -> {
-            lookup("#street1Txt").queryAs(TextField.class).setText("12 RD");
-            assertThat( lookup( "#street1Txt" ).queryAs( TextField.class ) ).hasText( "12 RD" );
+            lookup("#street1Txt").queryAs(TextField.class).setText("122 RD");
+        });
+        verifyThat("#street1Txt", TextInputControlMatchers.hasText( "122 RD" ));
+        interact( () -> {
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
             lookup("OK").queryAs(Button.class).fire();
         });
@@ -222,7 +243,9 @@ public class ClinicianEdit extends ApplicationTest {
     public void successfulUpdateClinicianStreet2 () {
         interact( () -> {
             lookup("#street2Txt").queryAs(TextField.class).setText("Hanrahan RD");
-            assertThat( lookup( "#street2Txt" ).queryAs( TextField.class ) ).hasText( "Hanrahan RD" );
+        });
+        verifyThat("#street2Txt", TextInputControlMatchers.hasText( "Hanrahan RD" ));
+        interact( () -> {
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
             lookup("OK").queryAs(Button.class).fire();
         });
@@ -236,8 +259,10 @@ public class ClinicianEdit extends ApplicationTest {
      */
     public void unsuccessfulUpdateClinicianStreet2 () {
         interact( () -> {
-            lookup("#street2Txt").queryAs(TextField.class).setText("12 RD");
-            assertThat( lookup( "#street2Txt" ).queryAs( TextField.class ) ).hasText( "12 RD" );
+            lookup("#street2Txt").queryAs(TextField.class).setText("122 RD");
+        });
+        verifyThat("#street2Txt", TextInputControlMatchers.hasText( "122 RD" ));
+        interact( () -> {
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
             lookup("OK").queryAs(Button.class).fire();
         });
@@ -252,7 +277,9 @@ public class ClinicianEdit extends ApplicationTest {
     public void successfulUpdateClinicianSuburb () {
         interact( () -> {
             lookup("#suburbTxt").queryAs(TextField.class).setText("Fendalton");
-            assertThat( lookup( "#suburbTxt" ).queryAs( TextField.class ) ).hasText( "Fendalton" );
+        });
+        verifyThat("#suburbTxt", TextInputControlMatchers.hasText( "Fendalton" ));
+        interact( () -> {
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
             lookup("OK").queryAs(Button.class).fire();
         });
@@ -266,8 +293,10 @@ public class ClinicianEdit extends ApplicationTest {
      */
     public void unsuccessfulUpdateClinicianSuburb () {
         interact( () -> {
-            lookup("#suburbTxt").queryAs(TextField.class).setText("12");
-            assertThat( lookup( "#suburbTxt" ).queryAs( TextField.class ) ).hasText( "12" );
+            lookup("#suburbTxt").queryAs(TextField.class).setText("122");
+        });
+        verifyThat("#suburbTxt", TextInputControlMatchers.hasText( "122" ));
+        interact( () -> {
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
             lookup("OK").queryAs(Button.class).fire();
         });
