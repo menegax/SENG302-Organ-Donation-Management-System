@@ -21,6 +21,9 @@ import service.Database;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 public class SearchDonors {
 
@@ -73,14 +76,14 @@ public class SearchDonors {
             try {
 				initializeWriter();
 			} catch (IOException e) {
-				// TODO add error for failure to initialize index writer
+				userActions.log(Level.SEVERE, "Failure to initialize index writer");
 			}
         }
         try {
-			indexWriter.commit();
 			indexWriter.addDocument(createDocument(donor));
+			indexWriter.commit();
 		} catch (IOException e) {
-			// TODO add error for failure to write to index
+			userActions.log(Level.SEVERE, "Failure to write index");
 		}
     }
 
@@ -93,7 +96,7 @@ public class SearchDonors {
     	try {
 			indexWriter.deleteDocuments(toDel);
 		} catch (IOException e) {
-			// TODO add error for failure to delete index
+			userActions.log(Level.SEVERE, "Failure to delete search index");
 		}
     }
     
@@ -104,7 +107,7 @@ public class SearchDonors {
     	try {
 			indexWriter.deleteAll();
 		} catch (IOException e) {
-			// TODO add error for failure to delete all indices 
+			userActions.log(Level.SEVERE, "Failure to delete all search indices"); 
 		}
     }
     
@@ -179,32 +182,8 @@ public class SearchDonors {
 	        	}
 			}
 		} catch (IOException e) {
-			// TODO add error for unable to find or read from index
+			userActions.log(Level.SEVERE, "Failure to find or read from index");
 		}
         return results;
     }
-    
-//    public static void main(String[] argv) {
-//    	Database.resetDatabase();
-//    	
-//    	Donor d1 = new Donor("abc1234", "Pat", null, "Laff", LocalDate.now());
-//        Donor d2 = new Donor("def1234", "Patik", null, "Laffey", LocalDate.now());
-//        Donor d3 = new Donor("ghi1234", "George", null, "Romera", LocalDate.now());
-//        Database.addDonor(d3);
-//        Database.addDonor(d2);
-//        Database.addDonor(d1);
-//        
-//        SearchDonors.clearIndex();
-//        // Given an index
-//        SearchDonors.createFullIndex();
-//
-//        // When index searched for a single specific donor
-//        ArrayList<Donor> results = SearchDonors.searchByName("Pati");
-//        System.out.println("Number of results: " + String.valueOf(results.size()));
-//        for (Donor donor : results) {
-//        	System.out.println(
-//        			donor.getNhiNumber() + " " +
-//        			donor.getNameConcatenated());
-//        }
-//    }
 }

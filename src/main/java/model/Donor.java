@@ -435,7 +435,9 @@ public class Donor {
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
         ensureValidNhi(); // TODO
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
+            SearchDonors.removeIndex(this);
             this.nhiNumber = nhiNumber.toUpperCase();
+            SearchDonors.addIndex(this);
             donorModified();
         }
     }

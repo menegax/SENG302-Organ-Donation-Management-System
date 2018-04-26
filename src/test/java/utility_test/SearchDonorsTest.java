@@ -62,7 +62,6 @@ public class SearchDonorsTest {
     }
 
 
-    //todo rework
     @Test
     public void testSearchByName() throws IOException {
 
@@ -84,7 +83,7 @@ public class SearchDonorsTest {
      *
      */
     @Test
-    public void testSearchAfterUpdateDonor() throws IOException {
+    public void testSearchAfterNameUpdate() throws IOException {
 
         // When first name of donor changed
         Database.getDonorByNhi("abc1234").setFirstName("Andrew");
@@ -96,6 +95,17 @@ public class SearchDonorsTest {
     }
 
 
+    @Test
+    public void testSearchAfterNhiUpdate() throws IOException {
+    	
+    	String name = Database.getDonorByNhi("def1234").getFirstName();
+    	Database.getDonorByNhi("def1234").setNhiNumber("def5678");
+    	
+    	ArrayList<Donor> results = SearchDonors.searchByName(name);
+    	
+    	assertTrue(results.contains(Database.getDonorByNhi("def5678")));
+    }
+    
     /**
      * Reset the logging level
      */
