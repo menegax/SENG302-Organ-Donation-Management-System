@@ -135,10 +135,10 @@ public class GUIClinicianProfileUpdate {
             if (street2Txt.getText().length() > 0) target.setStreet2(street2Txt.getText());
             if (suburbTxt.getText().length() > 0) target.setSuburb(suburbTxt.getText());
             target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel().getSelectedItem().toString()));
-            new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK).show();
             goBackToProfile();
         } else {
-            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }
     }
 

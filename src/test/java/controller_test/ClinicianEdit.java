@@ -62,7 +62,7 @@ public class ClinicianEdit extends ApplicationTest {
     @After
     public void waitForEvents() {
         WaitForAsyncUtils.waitForFxEvents();
-        sleep( 1000 );
+        sleep( 500 );
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#staffId").queryAs(TextField.class).setText("1");
             assertThat( lookup( "#staffId" ).queryAs( TextField.class ) ).hasText( "1" );
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(Database.getClinicians().get(0).getStaffID() == 1);
         verifyThat( "#clinicianProfilePane", Node::isVisible ); // Verify that save button has taken the "user to the profile page
@@ -89,7 +89,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#staffId").queryAs(TextField.class).setText("A");
             assertThat( lookup( "#staffId" ).queryAs( TextField.class ) ).hasText( "A" );
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(Database.getClinicians().get(0).getStaffID() == 1);
         verifyThat( "#clinicianUpdate", Node::isVisible ); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
@@ -104,7 +104,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#firstnameTxt").queryAs(TextField.class).setText("James");
             assertThat( lookup( "#firstnameTxt" ).queryAs( TextField.class ) ).hasText( "James" );
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(Database.getClinicians().get(0).getFirstName().equals("James"));
         verifyThat( "#clinicianProfilePane", Node::isVisible );  // Verify that save button has taken the "user to the profile page
@@ -119,7 +119,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#firstnameTxt").queryAs(TextField.class).setText("12");
             assertThat(lookup("#firstnameTxt").queryAs(TextField.class)).hasText("12");
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(!Database.getClinicians().get(0).getFirstName().equals("12"));
         verifyThat("#clinicianUpdate", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
@@ -134,7 +134,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#lastnameTxt").queryAs(TextField.class).setText("Bond");
             assertThat( lookup( "#lastnameTxt" ).queryAs( TextField.class ) ).hasText( "Bond" );
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(Database.getClinicians().get(0).getLastName().equals("Bond"));
         verifyThat( "#clinicianProfilePane", Node::isVisible ); // Verify that profile button has taken "user" to the clinician profile panel
@@ -149,7 +149,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#lastnameTxt").queryAs(TextField.class).setText("12");
             assertThat( lookup( "#lastnameTxt" ).queryAs( TextField.class ) ).hasText( "12" );
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(!Database.getClinicians().get(0).getLastName().equals("12"));
         verifyThat( "#clinicianUpdate", Node::isVisible ); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
@@ -164,7 +164,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#middlenameTxt").queryAs(TextField.class).setText("Andre");
             assertThat( lookup( "#middlenameTxt" ).queryAs( TextField.class ) ).hasText( "Andre" );
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(Database.getClinicians().get(0).getMiddleNames().get(0).equals("Andre"));
         verifyThat( "#clinicianProfilePane", Node::isVisible ); // Verify that profile button has taken "user" to the clinician profile panel
@@ -179,7 +179,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#middlenameTxt").queryAs(TextField.class).setText("12");
             assertThat( lookup( "#middlenameTxt" ).queryAs( TextField.class ) ).hasText( "12" );
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(!Database.getClinicians().get(0).getMiddleNames().get(0).equals("12"));
         verifyThat( "#clinicianUpdate", Node::isVisible ); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
@@ -194,7 +194,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#street1Txt").queryAs(TextField.class).setText("Riccarton RD");
             assertThat( lookup( "#street1Txt" ).queryAs( TextField.class ) ).hasText( "Riccarton RD" );
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(Database.getClinicians().get(0).getStreet1().equals("Riccarton RD"));
         verifyThat( "#clinicianProfilePane", Node::isVisible ); // Verify that the save button has taken "user" to the profile panel
@@ -209,7 +209,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#street1Txt").queryAs(TextField.class).setText("12 RD");
             assertThat( lookup( "#street1Txt" ).queryAs( TextField.class ) ).hasText( "12 RD" );
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(!Database.getClinicians().get(0).getStreet1().equals("12 RD"));
         verifyThat( "#clinicianUpdate", Node::isVisible ); // Verify that save button has prompted the "user" with an invalid field alert
@@ -224,7 +224,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#street2Txt").queryAs(TextField.class).setText("Hanrahan RD");
             assertThat( lookup( "#street2Txt" ).queryAs( TextField.class ) ).hasText( "Hanrahan RD" );
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(Database.getClinicians().get(0).getStreet2().equals("Hanrahan RD"));
         verifyThat( "#clinicianProfilePane", Node::isVisible ); // Verify that profile button has taken "user" to the clinician profile panel
@@ -239,7 +239,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#street2Txt").queryAs(TextField.class).setText("12 RD");
             assertThat( lookup( "#street2Txt" ).queryAs( TextField.class ) ).hasText( "12 RD" );
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(!Database.getClinicians().get(0).getStreet1().equals("12 RD"));
         verifyThat( "#clinicianUpdate", Node::isVisible ); // Verify that save button has prompted the "user" with an invalid field alert
@@ -254,7 +254,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#suburbTxt").queryAs(TextField.class).setText("Fendalton");
             assertThat( lookup( "#suburbTxt" ).queryAs( TextField.class ) ).hasText( "Fendalton" );
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(Database.getClinicians().get(0).getSuburb().equals("Fendalton"));
         verifyThat( "#clinicianProfilePane", Node::isVisible ); // Verify that profile button has taken "user" to the clinician profile panel
@@ -269,7 +269,7 @@ public class ClinicianEdit extends ApplicationTest {
             lookup("#suburbTxt").queryAs(TextField.class).setText("12");
             assertThat( lookup( "#suburbTxt" ).queryAs( TextField.class ) ).hasText( "12" );
             lookup( "#saveProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-//            lookup("#OK").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(!Database.getClinicians().get(0).getStreet1().equals("12 RD"));
         verifyThat( "#clinicianUpdate", Node::isVisible ); // Verify that save button has prompted the "user" with an invalid field alert
@@ -285,7 +285,8 @@ public class ClinicianEdit extends ApplicationTest {
         interact( () -> {
             lookup( "#back" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent());
         });
-        verifyThat( "#clinicianProfilePane", Node::isVisible ); // Verify that back button has taken "user" to the profile panel
+        verifyThat( "#clinicianProfilePane", Node::isVisible ); // Verify that back
+        // button has taken "user" to the profile panel
         interact( () -> {
             lookup( "#back" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
