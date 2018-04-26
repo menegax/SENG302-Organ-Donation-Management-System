@@ -357,7 +357,7 @@ public class GUIDonorMedications {
             ScreenControl.activate("donorProfile");
         }catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the medication page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).show();
             e.printStackTrace();
         }
     }
