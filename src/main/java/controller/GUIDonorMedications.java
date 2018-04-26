@@ -48,6 +48,7 @@ public class GUIDonorMedications {
 
     @FXML
     private ListView<String> medicineInformation; // A listView for showing medicine ingredients and interactions
+    private ListView <String> currentMedications1;
 
     @FXML
     public void undo() {
@@ -165,8 +166,8 @@ public class GUIDonorMedications {
      * Displays the retrieved medications to the currentMedications listView.
      */
     private void viewCurrentMedications() {
-        current = new ArrayList<>();
         clearSelections();
+        current = new ArrayList<>(Collections.singletonList("CURRENT USAGE:"));
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set( FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
@@ -177,8 +178,8 @@ public class GUIDonorMedications {
      * Displays the retrieved medications to the pastMedications listView
      */
     private void viewPastMedications() {
-        history = new ArrayList<>();
         clearSelections();
+        history = new ArrayList<>(Collections.singletonList("HISTORIC USAGE:"));
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set( FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
