@@ -284,6 +284,9 @@ public class GUIDonorMedications {
      */
     private void removeMedication(ArrayList<String> medications) {
         for (String medication : medications) {
+            if (!(medication.equals("CURRENT USAGE:") || medication.equals("HISTORIC USAGE:"))) {
+                continue;
+            }
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confirm deletion of " + medication + "?");
             Optional <ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
