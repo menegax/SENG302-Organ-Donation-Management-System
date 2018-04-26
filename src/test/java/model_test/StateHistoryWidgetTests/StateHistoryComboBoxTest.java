@@ -1,5 +1,6 @@
 package model_test.StateHistoryWidgetTests;
 
+import com.sun.javafx.application.PlatformImpl;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.ComboBox;
@@ -26,14 +27,7 @@ public class StateHistoryComboBoxTest {
      */
     @BeforeClass
     public static void setup() throws InterruptedException{
-        final CountDownLatch latch = new CountDownLatch(1);
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new JFXPanel(); // initializes JavaFX environment
-                latch.countDown();
-            }
-        });
-        latch.await();
+        PlatformImpl.startup(() -> {});
         comboBox = new ComboBox();
         ArrayList<String> items = new ArrayList<>();
         items.add("A");

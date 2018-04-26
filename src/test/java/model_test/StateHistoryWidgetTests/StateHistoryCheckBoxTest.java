@@ -1,5 +1,6 @@
 package model_test.StateHistoryWidgetTests;
 
+import com.sun.javafx.application.PlatformImpl;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.CheckBox;
 import model.StateHistoryWidgets.StateHistoryCheckBox;
@@ -25,14 +26,7 @@ public class StateHistoryCheckBoxTest {
      */
     @BeforeClass
     public static void setup() throws InterruptedException{
-        final CountDownLatch latch = new CountDownLatch(1);
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new JFXPanel(); // initializes JavaFX environment
-                latch.countDown();
-            }
-        });
-        latch.await();
+        PlatformImpl.startup(() -> {});
         checkBox = new CheckBox();
         checkBox.setSelected(false);
     }

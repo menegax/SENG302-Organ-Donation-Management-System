@@ -1,5 +1,6 @@
 package model_test;
 
+import com.sun.javafx.application.PlatformImpl;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.*;
@@ -41,14 +42,7 @@ public class StatesHistoryScreenTest {
      */
     @BeforeClass
     public static void setup() throws InterruptedException{
-        final CountDownLatch latch = new CountDownLatch(1);
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new JFXPanel(); // initializes JavaFX environment
-                latch.countDown();
-            }
-        });
-        latch.await();
+        PlatformImpl.startup(() -> {});
         textField1 = new TextField();
         textField2 = new TextField();
         checkBox1 = new CheckBox();

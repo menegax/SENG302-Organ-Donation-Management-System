@@ -1,5 +1,6 @@
 package model_test.StateHistoryWidgetTests;
 
+import com.sun.javafx.application.PlatformImpl;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.ChoiceBox;
@@ -26,14 +27,7 @@ public class StateHistoryChoiceBoxTest {
      */
     @BeforeClass
     public static void setup() throws InterruptedException{
-        final CountDownLatch latch = new CountDownLatch(1);
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new JFXPanel(); // initializes JavaFX environment
-                latch.countDown();
-            }
-        });
-        latch.await();
+        PlatformImpl.startup(() -> {});
         choiceBox = new ChoiceBox();
         ArrayList<String> items = new ArrayList<>();
         items.add("A");
