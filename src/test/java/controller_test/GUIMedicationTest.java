@@ -899,4 +899,114 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the currentMedications listView is now empty the only medication was deleted from pastMedications
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
     }
+
+    @Test
+    public void testIngredientHeadersShowOnClick() {
+        // Verify that the medication entry text field is empty prior to entering a new medication for registration
+        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
+
+        interact( () -> {
+            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "reserpine" ); // Enters new medication
+        } );
+
+        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        // Verify that the textfield currently has the entered medication prior to registration being initiated
+        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "reserpine" ) ) );
+
+        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
+        interact( () -> {
+            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        } );
+
+        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
+        verifyThat( "#currentMedications", ListViewMatchers.hasListCell( "reserpine" ) );
+
+        // Select the medicine in the listview
+        interact(() -> {
+            clickOn("reserpine");
+        });
+
+        verifyThat("#medicineInformation", ListViewMatchers.hasListCell("Ingredients for 'reserpine': "));
+    }
+
+    @Test
+    public void testIngredientClearClearsListview() {
+        // Verify that the medication entry text field is empty prior to entering a new medication for registration
+        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
+
+        interact( () -> {
+            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "codeine" ); // Enters new medication
+        } );
+
+        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        // Verify that the textfield currently has the entered medication prior to registration being initiated
+        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "codeine" ) ) );
+
+        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
+        interact( () -> {
+            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        } );
+
+        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
+        verifyThat( "#currentMedications", ListViewMatchers.hasListCell( "codeine" ) );
+
+        // Select the medicine in the listview
+        interact(() -> {
+            clickOn("codeine");
+        });
+
+        verifyThat("#medicineInformation", ListViewMatchers.hasListCell("Ingredients for 'codeine': "));
+
+        // Press the refresh button
+        interact(() -> {
+            lookup( "#wipeReview" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        });
+        //Verify that the ingredients listview has 1 item (The listview header)
+        verifyThat("#medicineInformation", ListViewMatchers.hasItems(1));
+        //Verify that the ingredients listviews one item is the listview header)
+        verifyThat("#medicineInformation", ListViewMatchers.hasListCell("ACTIVE INGREDIENTS FOR MEDICINE(S):"));
+    }
+
+    @Test
+    public void testIngredientHeadersShowOnClickFromHistory() {
+        // Verify that the medication entry text field is empty prior to entering a new medication for registration
+        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
+
+        interact( () -> {
+            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "morphine" ); // Enters new medication
+        } );
+
+        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        // Verify that the textfield currently has the entered medication prior to registration being initiated
+        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "morphine" ) ) );
+
+        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
+        interact( () -> {
+            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        } );
+
+        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
+        verifyThat( "#currentMedications", ListViewMatchers.hasListCell( "morphine" ) );
+
+        // Select the medicine in the listview
+        interact(() -> {
+            clickOn("morphine");
+        });
+
+        // Move the medication to the past listview
+        interact(() -> {
+            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+        });
+        // Verify that the medication is in the pastMedications listview
+        verifyThat("#pastMedications", ListViewMatchers.hasListCell("morphine"));
+        // Click on the medication within the pastMedications listview
+        interact(() -> {
+            clickOn("morphine");
+        });
+        //Verify that the ingredients listview contains the header for the medication
+        verifyThat("#medicineInformation", ListViewMatchers.hasListCell("Ingredients for 'morphine': "));
+    }
 }
