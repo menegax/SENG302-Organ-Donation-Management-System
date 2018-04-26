@@ -13,6 +13,9 @@ import java.util.ArrayList;
 
 import static junit.framework.TestCase.*;
 
+/**
+ * Tests valid & invalid controller creation, fetching clinicians from the database, as well as updating clinicians
+ */
 public class ClinicianTest {
     private Clinician clinician;
 
