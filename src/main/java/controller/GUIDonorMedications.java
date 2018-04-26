@@ -190,13 +190,24 @@ public class GUIDonorMedications {
      * @param medication The selected medication being added to the current ArrayList and listView
      */
     private void addMedication(String medication) {
-        if (!medication.equals( "Enter a medication" ) && !medication.equals( "" ) && !medication.equals( " " )) { // This can be altered after story 19 is completed
-            if (!(current.contains( medication ) || history.contains( medication ))) {
-                target.getCurrentMedications().add( new Medication( medication ) );
+        if (!medication.equals( "Enter a medication" ) && !medication.equals( "" )) {
+            medication = medication.substring(0, 1).toUpperCase() + medication.substring(1).toLowerCase();
 
+            if (!(current.contains(medication) || history.contains(medication))) {
+                target.getCurrentMedications().add( new Medication(medication));
                 userActions.log(Level.INFO, "Successfully registered a medication", "Registered a new medication for a donor");
                 viewCurrentMedications();
+                newMedication.clear();
+            } else if (history.contains(medication) && !current.contains(medication)) {
+                moveToCurrent(new ArrayList<>(Collections.singleton( medication ) ));
+                newMedication.clear();
+            } else {
+                Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is already registered");
+                err.show();
             }
+        } else {
+            Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is invalid for registration");
+            err.show();
         }
     }
 
