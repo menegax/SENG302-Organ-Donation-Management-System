@@ -1,19 +1,29 @@
 package controller;
 
 import api.APIHelper;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import model.Donor;
 import model.Medication;
 import service.TextWatcher;
 import service.Database;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.sql.Timestamp;
@@ -127,7 +137,6 @@ public class GUIDonorMedications {
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
     private ArrayList<String> current;
     private ArrayList<String> history;
-    private Timestamp time;
     private Donor target;
     private JsonObject suggestions;
 
@@ -156,7 +165,7 @@ public class GUIDonorMedications {
 
 
     /**
-     * Adds an actionlistener to the text property of the medication search field and passes text
+     * Adds an actionListener to the text property of the medication search field and passes text
      * to getDrugSuggestions
      */
     private void addActionListeners(){
@@ -179,25 +188,51 @@ public class GUIDonorMedications {
      */
     public void parseAction(){
         getDrugSuggestions(newMedication.getText());
-        displayDrugSugggestions();
+        displayDrugSuggestions();
     }
 
     /**
-     *  Sets a list of suggestions given a partially matching string
+     * Sets a list of suggestions given a partially matching string
      * @param query - text to match drugs against
      */
     private void getDrugSuggestions(String query){
         APIHelper apiHelper = new APIHelper();
         try {
-           suggestions =  apiHelper.getMapiDrugSuggestions(query);
+            suggestions =  apiHelper.getMapiDrugSuggestions(query);
         } catch (IOException exception) {
-            //TODO:
+            suggestions = null;
         }
     }
 
     //TODO
-    private void displayDrugSugggestions(){
+    private void displayDrugSuggestions(){
+        Stage stage = new Stage();
+        Scene scene = new Scene(new Group(), 450, 250);
+
         System.out.println(suggestions.get("suggestions"));
+
+        String[] sug = suggestions.get("suggestions").toString().split(" ");
+
+        ContextMenu contextMenu = new ContextMenu();
+
+        for (String suggestion : sug) {
+            MenuItem item = new MenuItem(suggestion);
+            contextMenu.getItems().add(item);
+        }
+
+        newMedication.setContextMenu(contextMenu);
+
+        GridPane grid = new GridPane();
+        grid.setVgap(4);
+        grid.setHgap(10);
+        //grid.setPadding(new Insets(5, 5, 5, 5));
+        grid.add(new Label("To: "), 0, 0);
+        grid.add(newMedication, 1, 0);
+
+        Group root = (Group) scene.getRoot();
+        root.getChildren().add(grid);
+        stage.setScene(scene);
+        stage.show();
     }
 
     /**
