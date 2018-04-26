@@ -103,14 +103,6 @@ public class GUIDonorMedications {
     }
 
     /**
-     * When activated displays the interactions between the two most recently selected medications
-     */
-    @FXML
-    public void reviewInteractions() {
-        ; // TO DO
-    }
-
-    /**
      * Adds a newly entered medication to the current medications array and the listView for the current medications
      */
     @FXML
@@ -294,6 +286,24 @@ public class GUIDonorMedications {
     }
 
     /**
+     * Shifts an already existing ingredient/interaction listing entry to the top of the list
+     * @param index The current index in the list of the already existing entry
+     */
+    private void moveToTOpInformationList(int index) {
+        String entry;
+
+        for (int i = index; index < ingredients.size(); i++) {
+            entry = ingredients.get(i);
+            ingredients.remove(i);
+            ingredients.add(i - index + 1, entry);
+
+            if (entry.equals("")) {
+                break;
+            }
+        }
+    }
+
+    /**
      * Fetches the ingredients from the APIHelper, then converts the results into a temporary list.
      * The list, after having a header included, is then added to existing listing of other medicine
      * ingredients and medicine interactions and passed to be bound to the listView
@@ -330,19 +340,70 @@ public class GUIDonorMedications {
             ingredients.addAll( 1, newIngredients );
         } else {
             int index = ingredients.indexOf("Ingredients for '" + medication + "': ");
-            String entry;
-
-            for (int i = index; index < ingredients.size(); i++) {
-                entry = ingredients.get(i);
-                ingredients.remove(i);
-                ingredients.add(i - index + 1, entry);
-
-                if (entry.equals("")) {
-                    break;
-                }
-            }
+            moveToTOpInformationList(index);
         }
         displayIngredients( ingredients );
+    }
+
+    /**
+     * When activated displays the interactions between the two most recently selected medications
+     */
+    @FXML
+    public void reviewInteractions() {
+        ArrayList <String> newInteractions = new ArrayList <>();
+        String medicationOne = null, medicationTwo = null;
+        Boolean hasInteractions = true;
+
+        if (ingredients.size() > 1) {
+            medicationOne = ingredients.get( 1 ).split( "'" )[1];
+
+            if (!ingredients.get(2).split(" ")[0].equals("There")) {
+                int index = ingredients.size();
+
+                for (int i = 3; i < ingredients.size(); i++) {
+                    if (ingredients.get( i ).equals( "" )) {
+                        index = i;
+                        break;
+                    }
+                }
+
+                if (index < ingredients.size() - 1 && (!ingredients.get( index - 1).split( " " )[0].equals( "There" ))) {
+                    medicationTwo = ingredients.get( index + 1 ).split( "'" )[1];
+                } else {
+                    hasInteractions = false;
+                }
+            } else {
+                hasInteractions = false;
+            }
+        } else {
+            hasInteractions = false;
+        }
+
+        if (hasInteractions) {
+            if (!ingredients.contains("Interactions between '" + medicationOne + "' and '" + medicationTwo + "':")) {
+                newInteractions.add( "Interactions between '" + medicationOne + "' and '" + medicationTwo + "':" );
+
+                //try {
+                    //JsonArray response = helper.getMapiDrugIngredients( medication );
+                    //response.forEach( ( element ) -> newInteractions.add( element.getAsString() ) );
+                //} catch (IOException e) {
+                  //  newInteractions.add( "There are no recorded ingredients for '" + medicationOne + "' and '" + medicationTwo + "'");
+                //}
+
+                if (newInteractions.size() == 1) {
+                    newInteractions.add( "There are no recorded ingredients for '" + medicationOne + "' and '" + medicationTwo + "'");
+                }
+                newInteractions.add( "" );
+                ingredients.addAll( 1, newInteractions );
+            } else {
+                int index = ingredients.indexOf("Interactions between '" + medicationOne + "' and '" + medicationTwo + "':");
+                moveToTOpInformationList(index);
+            }
+            displayIngredients( ingredients );
+        } else {
+            Alert interact = new Alert(Alert.AlertType.ERROR, "Reviewing interactions requires two medications ");
+            interact.show();
+        }
     }
 
     /**
