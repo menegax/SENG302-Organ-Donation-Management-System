@@ -401,7 +401,8 @@ public class Donor {
      */
     public double getBmi() {
         DecimalFormat df = new DecimalFormat("#.0");
-        return Double.valueOf(df.format(this.weight / (Math.pow(this.height, 2))));
+        if(this.height == 0) return 0.0;
+        else return Double.valueOf(df.format(this.weight / (Math.pow(this.height, 2))));
     }
 
     public BloodGroup getBloodGroup() {

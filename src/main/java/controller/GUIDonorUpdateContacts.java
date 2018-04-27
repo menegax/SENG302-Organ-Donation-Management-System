@@ -147,22 +147,22 @@ public class GUIDonorUpdateContacts {
      * attribute. If the text field for an attribute is empty, the contact detail is not updated.
      */
     private void setDonorContactDetails() {
-        if (!(homePhoneField.getText().equals(""))) {
+        if (!(homePhoneField.getText().equals("")) && homePhoneField.getText().matches("[0-9]+")) {
             target.setHomePhone(homePhoneField.getText());
         } else if((homePhoneField.getText().equals("") && target.getHomePhone() != null)) {
             target.setHomePhone(null);
         }
-        if (!(mobilePhoneField.getText().equals(""))) {
+        if (!(mobilePhoneField.getText().equals("")) && mobilePhoneField.getText().matches("[0-9]+")) {
             target.setMobilePhone(mobilePhoneField.getText());
         } else if((mobilePhoneField.getText().equals("") && target.getMobilePhone() != null)) {
             target.setMobilePhone(null);
         }
-        if (!(workPhoneField.getText().equals(""))) {
+        if (!(workPhoneField.getText().equals("")) && workPhoneField.getText().matches("[0-9]+")) {
             target.setWorkPhone(workPhoneField.getText());
         } else if((workPhoneField.getText().equals("") && target.getWorkPhone() != null)) {
             target.setWorkPhone(null);
         }
-        if (!(emailAddressField.getText().equals(""))) {
+        if (!(emailAddressField.getText().equals("")) && emailAddressField.getText().matches("([A-Z][a-z][0-9])+@[a-z]+.([a-z]+.)+")) {
             target.setEmailAddress(emailAddressField.getText());
         } else if((emailAddressField.getText().equals("") && target.getEmailAddress() != null)) {
             target.setEmailAddress(null);
@@ -177,22 +177,22 @@ public class GUIDonorUpdateContacts {
         } else if((contactNameField.getText().equals("") && target.getContactName() != null)) {
             target.setContactName(null);
         }
-        if (!(contactHomePhoneField.getText().equals(""))) {
+        if (!(contactHomePhoneField.getText().equals("")) && contactHomePhoneField.getText().matches("[0-9]+")) {
             target.setContactHomePhone(contactHomePhoneField.getText());
         } else if((contactHomePhoneField.getText().equals("") && target.getContactHomePhone() != null)) {
             target.setContactHomePhone(null);
         }
-        if (!(contactMobilePhoneField.getText().equals(""))) {
+        if (!(contactMobilePhoneField.getText().equals("")) && contactMobilePhoneField.getText().matches("[0-9]+")) {
             target.setContactMobilePhone(contactMobilePhoneField.getText());
         } else if((contactMobilePhoneField.getText().equals("") && target.getContactMobilePhone() != null)) {
             target.setContactMobilePhone(null);
         }
-        if (!(contactWorkPhoneField.getText().equals(""))) {
+        if (!(contactWorkPhoneField.getText().equals("")) && contactWorkPhoneField.getText().matches("[0-9]+")) {
             target.setContactWorkPhone(contactWorkPhoneField.getText());
         } else if((contactWorkPhoneField.getText().equals("") && target.getContactWorkPhone() != null)) {
             target.setContactWorkPhone(null);
         }
-        if (!(contactEmailAddressField.getText().equals(""))) {
+        if (!(contactEmailAddressField.getText().equals("") && emailAddressField.getText().matches("([A-Z][a-z][0-9])+@[a-z]+.([a-z]+.)+"))) {
             target.setContactEmailAddress(contactEmailAddressField.getText());
         } else if((contactEmailAddressField.getText().equals("") && target.getContactEmailAddress() != null)) {
             target.setContactEmailAddress(null);
