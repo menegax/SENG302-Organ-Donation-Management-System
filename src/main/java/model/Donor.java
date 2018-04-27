@@ -399,7 +399,7 @@ public class Donor {
      * @return The calculated BMI
      */
     public double getBmi() {
-        return (this.weight / (Math.pow(this.height, 2)));
+        return Math.round(this.weight / (Math.pow(this.height, 2)));
     }
 
 

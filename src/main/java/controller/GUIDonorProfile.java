@@ -38,10 +38,16 @@ public class GUIDonorProfile {
     private Label dobLbl;
 
     @FXML
+    private Label age;
+
+    @FXML
     private Label heightLbl;
 
     @FXML
     private Label weightLbl;
+
+    @FXML
+    private Label bmi;
 
     @FXML
     private Label bloodGroupLbl;
@@ -72,7 +78,7 @@ public class GUIDonorProfile {
 
 
     private void loadProfile(String nhi) {
-        try { // todo remove this
+        try {
             Donor donor = Database.getDonorByNhi(nhi);
 
             nhiLbl.setText(donor.getNhiNumber());
@@ -81,8 +87,10 @@ public class GUIDonorProfile {
                     .toString());
             dobLbl.setText(donor.getBirth()
                     .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            age.setText(String.valueOf(donor.getAge()));
             heightLbl.setText(String.valueOf(donor.getHeight() + " m"));
             weightLbl.setText(String.valueOf(donor.getWeight() + " kg"));
+            bmi.setText(String.valueOf(donor.getBmi()));
             bloodGroupLbl.setText(donor.getBloodGroup() == null ? "Not set" : donor.getBloodGroup()
                     .getValue());
             addLbl1.setText(donor.getStreet1() == null ? "Not set" : donor.getStreet1());
@@ -96,7 +104,9 @@ public class GUIDonorProfile {
             }
         }
         catch (InvalidObjectException e) {
-            e.printStackTrace(); // todo remove
+            userActions.log(Level.SEVERE, "Unable to load donor from database", "Attempted to load donor profile");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Unable to load donor from database");
+            alert.showAndWait();
         }
     }
 
@@ -110,7 +120,6 @@ public class GUIDonorProfile {
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading update screen", "attempted to navigate from the profile page to the edit page");
             new Alert(Alert.AlertType.WARNING, "Error loading edit page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
         }
     }
 
@@ -124,7 +133,6 @@ public class GUIDonorProfile {
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading donation screen", "attempted to navigate from the profile page to the donation page");
             new Alert(Alert.AlertType.WARNING, "Error loading donation page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
         }
     }
 
