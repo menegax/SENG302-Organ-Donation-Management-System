@@ -533,7 +533,7 @@ public class Donor {
 
 
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
-        ensureValidNhi(); // TODO
+        ensureValidNhi();
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
             this.nhiNumber = nhiNumber.toUpperCase();
             donorModified();
