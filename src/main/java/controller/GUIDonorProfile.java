@@ -106,7 +106,7 @@ public class GUIDonorProfile {
                 .getValue());
         addLbl5.setText(String.valueOf(donor.getZip()));
         for (GlobalEnums.Organ organ : donor.getDonations()) {
-            donationList.setText(donationList.getText() + organ.getValue() + "\n");
+            donationList.setText(donationList.getText() + StringUtils.capitalize(organ.getValue()) + "\n");
         }
     }
 
