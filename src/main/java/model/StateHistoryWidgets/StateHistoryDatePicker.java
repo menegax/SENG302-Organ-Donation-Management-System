@@ -33,7 +33,11 @@ public class StateHistoryDatePicker implements IUndoRedo {
      */
     public StateHistoryDatePicker(DatePicker datePicker) {
         this.date = datePicker;
-        states.add(date.getValue().toString());
+        if (date.getValue() == null) {
+            states.add(null);
+        } else {
+            states.add(date.getValue().toString());
+        }
     }
 
     /**
@@ -44,7 +48,11 @@ public class StateHistoryDatePicker implements IUndoRedo {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(date.getValue().toString());
+        if (date.getValue() == null) {
+            states.add(null);
+        } else {
+            states.add(date.getValue().toString());
+        }
     }
 
     /**
@@ -53,7 +61,11 @@ public class StateHistoryDatePicker implements IUndoRedo {
     public void undo() {
         if (index != 0) {
             index -= 1;
-            date.setValue(LocalDate.parse(states.get(index)));
+            if (states.get(index) == null) {
+                date.setValue(null);
+            } else {
+                date.setValue(LocalDate.parse(states.get(index)));
+            }
             undone = true;
         }
     }
@@ -64,7 +76,11 @@ public class StateHistoryDatePicker implements IUndoRedo {
     public void redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
-            date.setValue(LocalDate.parse(states.get(index)));
+            if (states.get(index) == null) {
+                date.setValue(null);
+            } else {
+                date.setValue(LocalDate.parse(states.get(index)));
+            }
         }
     }
 

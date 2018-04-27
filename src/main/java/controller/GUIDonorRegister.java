@@ -2,10 +2,13 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import model.Donor;
+import model.StatesHistoryScreen;
 import service.Database;
 
 import java.time.LocalDate;
@@ -34,11 +37,21 @@ public class GUIDonorRegister {
     private TextField nhiRegister;
 
     @FXML
+    private Pane donorRegisterAnchorPane;
+
+    @FXML
+    private void undo() {
+        statesHistoryScreen.undo();
+    }
+
+    @FXML
     private void redo() {
-        System.out.println( "REDO" );
+        statesHistoryScreen.redo();
     }
 
     private StringConverter<LocalDate> dateConverter;
+
+    private StatesHistoryScreen statesHistoryScreen;
 
     /**
      * Back button listener to switch to the login screen
@@ -53,6 +66,14 @@ public class GUIDonorRegister {
      */
     public void initialize(){
         setDateConverter();
+        ArrayList<Control> controls = new ArrayList<Control>() {{
+            add(firstnameRegister);
+            add(lastnameRegister);
+            add(middlenameRegister);
+            add(birthRegister);
+            add(nhiRegister);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(donorRegisterAnchorPane, controls);
     }
 
 
