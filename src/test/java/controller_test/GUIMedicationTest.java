@@ -33,10 +33,10 @@ public class GUIMedicationTest extends ApplicationTest {
         target = Database.getDonorByNhi( "ABC1238" );
     }
 
-    @Before
-    /*
+    /**
      * Tests logging in, navigating to medication panel
      */
+    @Before
     public void LoginAndNaivgateToMedicationPanel() {
         // Log in to the app
         interact( () -> {
@@ -66,10 +66,10 @@ public class GUIMedicationTest extends ApplicationTest {
         sleep( 1000 );
     }
 
-    @Test
-    /*
+    /**
      * Tests entering a valid medication to textfield and registering that medication to currentMedications listView
      */
+    @Test
     public void testValidMedicationRegistration() {
         verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
@@ -101,10 +101,10 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
     }
 
-    @Test
-    /*
+    /**
      * Tests entering an invalid medication to textfield and registering that medication to currentMedications listView
      */
+    @Test
     public void testInvalidMedicationRegistration() {
         verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
@@ -139,10 +139,10 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
     }
 
-    @Test
-    /*
+    /**
      * Tests the selecting of a single medication in the currentMedications listView
      */
+    @Test
     public void testSelectingMedication() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -178,10 +178,10 @@ public class GUIMedicationTest extends ApplicationTest {
         // Currently unsure how test other than visual observation - which is passing
     }
 
-    @Test
-    /*
+    /**
      * Tests moving a single medication from the currentMedications listView to the pastMedications listView
      */
+    @Test
     public void testRemovingMedication() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -227,10 +227,10 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
     }
 
-    @Test
-    /*
+    /**
      * Tests moving a single medication from the pastMedications listView to the currentMedications listView
      */
+    @Test
     public void testAddingMedication() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -291,10 +291,10 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
     }
 
-    @Test
-    /*
+    /**
      * Tests can't register medication if duplicate medication already registered to either current or past medications
      */
+    @Test
     public void testInvalidDuplicateRegistration() {
         // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
@@ -393,10 +393,10 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#currentMedications", ListViewMatchers.hasItems(1) );
     }
 
-    @Test
-    /*
+    /**
      * Tests deleting a single medication from the pastMedications listView and from the medicationHistory ArrayList
      */
+    @Test
     public void testValidDeletingMedication() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -454,10 +454,10 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
     }
 
-    @Test
     /*
      * Tests that a duplicate medication CAN be registered ONLY AFTER the already registered duplicate is DELETED
      */
+    @Test
     public void testValidDuplicateRegistrationAfterDeletion() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
