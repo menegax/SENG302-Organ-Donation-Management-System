@@ -37,7 +37,7 @@
       <TextField fx:id="heightTxt" layoutX="455.0" layoutY="315.0" prefHeight="26.0" prefWidth="85.0" promptText="Height" />
       <Label layoutX="222.0" layoutY="320.0" text="Weight (kg)" />
       <TextField fx:id="weightTxt" layoutX="294.0" layoutY="315.0" prefHeight="26.0" prefWidth="85.0" promptText="Weight" />
-      <ChoiceBox fx:id="bloodGroupDD" layoutX="52.0" layoutY="365.0" prefHeight="26.0" prefWidth="155.0" />
+      <ChoiceBox fx:id="bloodGroupDD" layoutX="52.0" layoutY="365.0" prefHeight="27.0" prefWidth="167.0" />
       <Label layoutX="93.0" layoutY="349.0" text="Blood Group" />
       <Label layoutX="244.0" layoutY="124.0" text="Street 1" />
       <Label layoutX="244.0" layoutY="157.0" text="Street 2" />
@@ -46,8 +46,8 @@
       <TextField fx:id="street1Txt" layoutX="294.0" layoutY="119.0" prefHeight="26.0" prefWidth="235.0" />
       <TextField fx:id="street2Txt" layoutX="294.0" layoutY="152.0" prefHeight="26.0" prefWidth="235.0" />
       <TextField fx:id="suburbTxt" layoutX="294.0" layoutY="187.0" prefHeight="26.0" prefWidth="155.0" />
-      <TextField fx:id="regionTxt" layoutX="294.0" layoutY="216.0" prefHeight="26.0" prefWidth="155.0" />
       <Label layoutX="258.0" layoutY="250.0" text="Zip" />
       <TextField fx:id="zipTxt" layoutX="294.0" layoutY="245.0" prefHeight="26.0" prefWidth="70.0" />
+      <ChoiceBox fx:id="regionDD" layoutX="294.0" layoutY="216.0" prefHeight="27.0" prefWidth="155.0" />
    </children>
 </AnchorPane>
