@@ -220,11 +220,7 @@ public class GUIDonorMedications {
         for (String medication : medications) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confirm deletion of " + medication + "?");
             final Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
-<<<<<<< HEAD
             dialogOK.addEventFilter(ActionEvent.ACTION, event -> performDelete(medication));
-=======
-            dialogOK.addEventFilter(ActionEvent.ACTION, event -> performDelete(medication)); //Register the event for when the action is accepted
->>>>>>> 162d6d524f1b1dd2c3e3599fd8f58564e56322e0
             alert.show();
         }
     }
@@ -241,10 +237,6 @@ public class GUIDonorMedications {
             target.getCurrentMedications().remove( current.indexOf( medication ) );
             userActions.log( Level.INFO, "Successfully deleted a medication", "Deleted a current medication for a donor" );
             viewCurrentMedications();
-<<<<<<< HEAD
-
-=======
->>>>>>> 162d6d524f1b1dd2c3e3599fd8f58564e56322e0
         }
     }
 
