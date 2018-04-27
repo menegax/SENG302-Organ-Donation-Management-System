@@ -77,7 +77,7 @@ public class GUIDonorProfileUpdate {
 
     public void initialize() {
         List<String> bloodGroups =
-                Arrays.asList("a positive", "a negative", "b positive", "b negative", "ab positive", "ab negative", "o positive", "o negative");
+                Arrays.asList("A positive", "A negative", "B positive", "B negative", "AB positive", "AB negative", "O positive", "O negative");
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
         loadProfile(ScreenControl.getLoggedInDonor()
@@ -97,6 +97,7 @@ public class GUIDonorProfileUpdate {
             e.printStackTrace();
         }
     }
+
 
 
     private void populateForm(Donor donor) {
@@ -144,6 +145,21 @@ public class GUIDonorProfileUpdate {
         }
     }
 
+    /**
+     * Checks for invalidity of a double used for height or weight.
+     * Returns true if input is not a valid double or the input is a valid double with a value of less than 0.
+     * @param input String input from text field
+     * @return boolean is invalid
+     */
+    private boolean isInvalidDouble(String input) {
+        try {
+            double value = Double.parseDouble(input);
+            return (value < 0);
+        }
+        catch (NumberFormatException e) {
+            return true;
+        }
+    }
 
     public void saveProfile() {
         Boolean valid = true;
@@ -167,29 +183,19 @@ public class GUIDonorProfileUpdate {
         }
         if (zipTxt.getText() != null) {
             try {
-                Integer.parseInt(zipTxt.getText());
+                int testZIP = Integer.parseInt(zipTxt.getText());
+                if(testZIP < 1000 || testZIP > 9999) valid = false;
             }
             catch (NumberFormatException e) {
                 valid = false;
             }
         }
         if (weightTxt.getText() != null) {
-            try {
-                Double.parseDouble(weightTxt.getText());
-            }
-            catch (NumberFormatException e) {
-                valid = false;
-            }
+            if(isInvalidDouble(weightTxt.getText())) valid = false;
         }
         if (heightTxt.getText() != null) {
-            try {
-                Double.parseDouble(heightTxt.getText());
-            }
-            catch (NumberFormatException e) {
-                valid = false;
-            }
+            if(isInvalidDouble(heightTxt.getText())) valid = false;
         }
-        System.out.println(bloodGroupDD.getValue());
         if (bloodGroupDD.getValue() != null) {
             String bgStr = bloodGroupDD.getValue()
                     .toString()
@@ -270,7 +276,6 @@ public class GUIDonorProfileUpdate {
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
         }
     }
 

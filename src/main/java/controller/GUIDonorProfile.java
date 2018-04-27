@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import model.Donor;
+import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -77,8 +78,8 @@ public class GUIDonorProfile {
 
             nhiLbl.setText(donor.getNhiNumber());
             nameLbl.setText(donor.getNameConcatenated());
-            genderLbl.setText(donor.getGender() == null ? "Not set" : donor.getGender()
-                    .toString());
+            genderLbl.setText(donor.getGender() == null ? "Not set" : StringUtils.capitalize(donor.getGender()
+                    .toString()));
             dobLbl.setText(donor.getBirth()
                     .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             heightLbl.setText(String.valueOf(donor.getHeight() + " m"));
@@ -92,7 +93,7 @@ public class GUIDonorProfile {
                     .getValue());
             addLbl5.setText(String.valueOf(donor.getZip()));
             for (GlobalEnums.Organ organ : donor.getDonations()) {
-                donationList.setText(donationList.getText() + organ.getValue() + "\n");
+                donationList.setText(donationList.getText() + StringUtils.capitalize(organ.getValue()) + "\n");
             }
         }
         catch (InvalidObjectException e) {

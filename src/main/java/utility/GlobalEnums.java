@@ -36,9 +36,9 @@ public class GlobalEnums {
     }
 
     public enum Region {
-        NORTHLAND("northland"), AUCKLAND("auckland"), WAIKATO("waikato"), BAYOFPLENTY("bay of plenty"), GISBORNE("gisborne"), HAWKESBAY("hawkesbay"), TARANAKI(
-                "taranaki"), MANAWATU("manawatu"), WELLINGTON("wellington"), TASMAN("tasman"), NELSON("nelson"), MARLBOROUGH("marlborough"), WESTCOAST(
-                "west coast"), CANTERBURY("canterbury"), OTAGO("otago"), SOUTHLAND("southland");
+        NORTHLAND("Northland"), AUCKLAND("Auckland"), WAIKATO("Waikato"), BAYOFPLENTY("Bay of Plenty"), GISBORNE("Gisborne"), HAWKESBAY("Hawkes Bay"), TARANAKI(
+                "Taranaki"), MANAWATU("Manawatu"), WELLINGTON("Wellington"), TASMAN("Tasman"), NELSON("Nelson"), MARLBOROUGH("Marlborough"), WESTCOAST(
+                "West Coast"), CANTERBURY("Canterbury"), OTAGO("Otago"), SOUTHLAND("Southland");
 
         private String value;
 
@@ -103,8 +103,8 @@ public class GlobalEnums {
     }
 
     public enum BloodGroup {
-        A_POSITIVE("a positive"), A_NEGATIVE("a negative"), B_POSITIVE("b positive"), B_NEGATIVE("b negative"), AB_POSITIVE("ab positive"), AB_NEGATIVE(
-                "ab negative"), O_POSITIVE("o positive"), O_NEGATIVE("o negative");
+        A_POSITIVE("A positive"), A_NEGATIVE("A negative"), B_POSITIVE("B positive"), B_NEGATIVE("B negative"), AB_POSITIVE("AB positive"), AB_NEGATIVE(
+                "AB negative"), O_POSITIVE("O positive"), O_NEGATIVE("O negative");
 
         private String value;
 
