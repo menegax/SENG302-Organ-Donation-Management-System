@@ -39,10 +39,16 @@ public class GUIDonorProfile {
     private Label dobLbl;
 
     @FXML
+    private Label age;
+
+    @FXML
     private Label heightLbl;
 
     @FXML
     private Label weightLbl;
+
+    @FXML
+    private Label bmi;
 
     @FXML
     private Label bloodGroupLbl;
@@ -71,8 +77,9 @@ public class GUIDonorProfile {
             loadProfile(ScreenControl.getLoggedInDonor()
                     .getNhiNumber());
         } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading profile", "attempted to load the logged in donors profile");
-            new Alert(Alert.AlertType.WARNING, "Error loading profile", ButtonType.OK).showAndWait();
+            userActions.log(Level.SEVERE, "Unable to load donor from database", "Attempted to load donor profile");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Unable to load donor from database");
+            alert.showAndWait();
         }
     }
 
@@ -86,8 +93,10 @@ public class GUIDonorProfile {
                 .toString());
         dobLbl.setText(donor.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        age.setText(String.valueOf(donor.getAge()));
         heightLbl.setText(String.valueOf(donor.getHeight() + " m"));
         weightLbl.setText(String.valueOf(donor.getWeight() + " kg"));
+        bmi.setText(String.valueOf(donor.getBmi()));
         bloodGroupLbl.setText(donor.getBloodGroup() == null ? "Not set" : donor.getBloodGroup()
                 .getValue());
         addLbl1.setText(donor.getStreet1() == null ? "Not set" : donor.getStreet1());
@@ -97,9 +106,10 @@ public class GUIDonorProfile {
                 .getValue());
         addLbl5.setText(String.valueOf(donor.getZip()));
         for (GlobalEnums.Organ organ : donor.getDonations()) {
-            donationList.setText(donationList.getText() + StringUtils.capitalize(organ.getValue()) + "\n");
+            donationList.setText(donationList.getText() + organ.getValue() + "\n");
         }
     }
+
 
 
     public void goToEdit() {
