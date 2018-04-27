@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="donorProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIDonorProfile">
+<AnchorPane fx:id="donorProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIDonorProfile">
    <children>
       <Label layoutX="264.0" layoutY="32.0" styleClass="title" text="Profile">
          <font>
@@ -97,12 +97,12 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="donationList" />
+            <Label fx:id="donationList" alignment="CENTER" prefHeight="209.0" prefWidth="162.0" />
          </children>
       </VBox>
       <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-      <Button fx:id="editDonorButton" layoutX="494.0" layoutY="36.0" mnemonicParsing="false" onAction="#goToEdit" text="Edit" />
-      <Button fx:id="donationButton" layoutX="241.0" layoutY="314.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
-      <Button fx:id="contactButton" layoutX="228.0" layoutY="351.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contact Details" />
+      <Button fx:id="editDonorButton" layoutX="252.0" layoutY="338.0" mnemonicParsing="false" onAction="#goToEdit" text="Manage Profile" />
+      <Button fx:id="donationButton" layoutX="105.0" layoutY="338.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
+      <Button fx:id="contactButton" layoutX="379.0" layoutY="338.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contacts" />
    </children>
 </AnchorPane>
