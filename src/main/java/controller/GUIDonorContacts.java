@@ -16,7 +16,10 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 /**
- *
+ * Controller class for handling GUI application contact detail viewing and editing for a Donor.
+ * Contact fields are editable and are pre-filled with the Donor's existing contact details.
+ * Details are saved when the Save button is selected, and the user is returned to the donor profile view screen.
+ * @author Maree Palmer
  */
 public class GUIDonorContacts {
 
@@ -52,6 +55,9 @@ public class GUIDonorContacts {
     @FXML
     private TextField contactNameField;
 
+    /**
+     * Donor that is currently logged in
+     */
     private Donor target;
 
 

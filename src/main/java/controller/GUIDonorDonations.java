@@ -55,6 +55,9 @@ public class GUIDonorDonations {
     @FXML
     private CheckBox connectivetissueCB;
 
+    /**
+     * Donor that is currently logged in
+     */
     private Donor target;
 
 
