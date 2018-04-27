@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
@@ -19,7 +21,10 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorProfileUpdate {
+public class GUIDonorUpdateProfile {
+
+    @FXML
+    private AnchorPane donorUpdatePane;
 
     @FXML
     private Label lastModifiedLbl;
@@ -79,6 +84,13 @@ public class GUIDonorProfileUpdate {
         populateDropdowns();
         loadProfile(ScreenControl.getLoggedInDonor()
                 .getNhiNumber());
+
+        // Enter key
+        donorUpdatePane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                saveProfile();
+            }
+        });
     }
 
     /**
@@ -264,7 +276,7 @@ public class GUIDonorProfileUpdate {
                 target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD
                         .getSelectionModel().getSelectedItem().toString()));
             }
-            new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.INFORMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
             Database.saveToDisk();
             goBackToProfile();
         } else {
@@ -280,8 +292,7 @@ public class GUIDonorProfileUpdate {
             ScreenControl.activate("donorProfile");
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
+            new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).showAndWait();
         }
     }
 

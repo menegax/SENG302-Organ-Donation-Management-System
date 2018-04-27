@@ -17,8 +17,6 @@ public class GUIHome {
 
     public Button saveButton;
 
-    public Button importButton;
-
     public Button logOutButton;
 
 
@@ -43,7 +41,7 @@ public class GUIHome {
     @FXML
     public void save() {
         Database.saveToDisk();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Saved!");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Successfully Saved!");
         alert.showAndWait();
     }
 
