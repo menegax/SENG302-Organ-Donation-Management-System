@@ -263,7 +263,7 @@ public class GUIDonorProfileUpdate {
                         .toString()
                         .replace(' ', '_')));
             }
-            new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.INFORMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
             Database.saveToDisk();
             goBackToProfile();
         }
@@ -281,7 +281,7 @@ public class GUIDonorProfileUpdate {
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).showAndWait();
         }
     }
 

@@ -33,9 +33,9 @@
       </RadioButton>
       <RadioButton fx:id="genderFemaleRadio" layoutX="470.0" layoutY="426.0" mnemonicParsing="false" text="Female" toggleGroup="$gender" />
       <RadioButton fx:id="genderOtherRadio" layoutX="539.0" layoutY="426.0" mnemonicParsing="false" text="Other" toggleGroup="$gender" />
-      <Label layoutX="362.0" layoutY="388.0" text="Height (m):" />
+      <Label layoutX="352.0" layoutY="388.0" text="Height (m):" />
       <TextField fx:id="heightTxt" layoutX="431.0" layoutY="383.0" prefHeight="26.0" prefWidth="85.0" promptText="Height" />
-      <Label layoutX="359.0" layoutY="338.0" text="Weight (kg):" />
+      <Label layoutX="348.0" layoutY="338.0" text="Weight (kg):" />
       <TextField fx:id="weightTxt" layoutX="431.0" layoutY="333.0" prefHeight="26.0" prefWidth="85.0" promptText="Weight" />
       <ChoiceBox fx:id="bloodGroupDD" layoutX="182.0" layoutY="421.0" prefHeight="26.0" prefWidth="155.0" />
       <Label layoutX="92.0" layoutY="426.0" text="Blood Group:" />

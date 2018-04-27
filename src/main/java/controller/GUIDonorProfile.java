@@ -109,7 +109,7 @@ public class GUIDonorProfile {
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading update screen", "attempted to navigate from the profile page to the edit page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading edit page", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.WARNING, "Error loading edit page", ButtonType.OK).showAndWait();
             e.printStackTrace();
         }
     }
@@ -123,7 +123,7 @@ public class GUIDonorProfile {
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading donation screen", "attempted to navigate from the profile page to the donation page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading donation page", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.WARNING, "Error loading donation page", ButtonType.OK).showAndWait();
             e.printStackTrace();
         }
     }
@@ -139,8 +139,7 @@ public class GUIDonorProfile {
             userActions.log(Level.SEVERE,
                     "Error loading contact details screen",
                     "attempted to navigate from the profile page to the contact details page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading contact details page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
+            new Alert(Alert.AlertType.WARNING, "Error loading contact details page", ButtonType.OK).showAndWait();
         }
     }
 

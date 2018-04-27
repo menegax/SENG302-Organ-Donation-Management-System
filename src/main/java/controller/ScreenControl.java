@@ -36,7 +36,7 @@ public class ScreenControl {
 
 
     /**
-     * Add screen to the hashmap of screens
+     * Add screen to the hash map of screens
      *
      * @param name - name of screen to add
      * @param pane - Pane object from FXML
@@ -47,7 +47,7 @@ public class ScreenControl {
 
 
     /**
-     * Remove screen from hashmap
+     * Remove screen from hash map
      *
      * @param name - screen to remove from the hashmap of screens
      */
