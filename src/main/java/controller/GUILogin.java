@@ -53,7 +53,6 @@ public class GUILogin {
      */
     @FXML
     public void logIn() {
-        // todo surround with try catch. Try uses database getuserbyNHI, catch will throw a popup with warning alert
         try {
             Donor newDonor = Database.getDonorByNhi(nhiLogin.getText());
             ScreenControl.setLoggedInDonor(newDonor);
