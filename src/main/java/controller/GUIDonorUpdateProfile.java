@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
@@ -19,7 +21,10 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorProfileUpdate {
+public class GUIDonorUpdateProfile {
+
+    @FXML
+    private AnchorPane donorUpdatePane;
 
     @FXML
     private Label lastModifiedLbl;
@@ -49,6 +54,9 @@ public class GUIDonorProfileUpdate {
     private DatePicker dobDate;
 
     @FXML
+    private DatePicker dateOfDeath;
+
+    @FXML
     private TextField street1Txt;
 
     @FXML
@@ -58,7 +66,7 @@ public class GUIDonorProfileUpdate {
     private TextField suburbTxt;
 
     @FXML
-    private TextField regionTxt;
+    private ChoiceBox<String> regionDD;
 
     @FXML
     private TextField zipTxt;
@@ -70,7 +78,7 @@ public class GUIDonorProfileUpdate {
     private TextField heightTxt;
 
     @FXML
-    private ChoiceBox bloodGroupDD;
+    private ChoiceBox<String> bloodGroupDD;
 
     private Donor target;
 
@@ -80,8 +88,38 @@ public class GUIDonorProfileUpdate {
                 Arrays.asList("A positive", "A negative", "B positive", "B negative", "AB positive", "AB negative", "O positive", "O negative");
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
+        populateDropdowns();
         loadProfile(ScreenControl.getLoggedInDonor()
                 .getNhiNumber());
+
+        // Enter key
+        donorUpdatePane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                saveProfile();
+            }
+        });
+    }
+
+    /**
+     * Populates drop down menus that represent enum data
+     */
+    private void populateDropdowns() {
+        // Populate blood group drop down with values from the Blood groups enum
+        List<String> bloodGroups = new ArrayList<>();
+        for (GlobalEnums.BloodGroup bloodgroup : GlobalEnums.BloodGroup.values()) {
+            bloodGroups.add(bloodgroup.getValue());
+        }
+        ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
+        bloodGroupDD.setItems(bloodGroupsOL);
+
+        // Populate region drop down with values from the Regions enum
+        List<String> regions = new ArrayList<>();
+        for (GlobalEnums.Region region : GlobalEnums.Region.values()) {
+            regions.add(region.getValue());
+        }
+        ObservableList<String> regionsOL = FXCollections.observableList(regions);
+        regionDD.setItems(regionsOL);
+
     }
 
 
@@ -91,8 +129,7 @@ public class GUIDonorProfileUpdate {
             target = donor;
             populateForm(donor);
 
-        }
-        catch (InvalidObjectException e) {
+        } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
             e.printStackTrace();
         }
@@ -133,7 +170,7 @@ public class GUIDonorProfileUpdate {
             suburbTxt.setText(donor.getSuburb());
         }
         if (donor.getRegion() != null) {
-            regionTxt.setText(donor.getRegion()
+            regionDD.setValue(donor.getRegion()
                     .getValue());
         }
         zipTxt.setText(String.valueOf(donor.getZip()));
@@ -174,9 +211,9 @@ public class GUIDonorProfileUpdate {
         if (lastnameTxt.getText() == null) {
             valid = false;
         }
-        if (regionTxt.getText()
-                .length() > 0) {
-            Enum region = GlobalEnums.Region.getEnumFromString(regionTxt.getText());
+        if (regionDD.getSelectionModel().getSelectedIndex() != -1) {
+            Enum region = GlobalEnums.Region.getEnumFromString(regionDD
+                    .getSelectionModel().getSelectedItem());
             if (region == null) {
                 valid = false;
             }
@@ -198,7 +235,6 @@ public class GUIDonorProfileUpdate {
         }
         if (bloodGroupDD.getValue() != null) {
             String bgStr = bloodGroupDD.getValue()
-                    .toString()
                     .replace(' ', '_');
             Enum bloodgroup = GlobalEnums.BloodGroup.getEnumFromString(bgStr);
             if (bloodgroup == null) {
@@ -211,8 +247,7 @@ public class GUIDonorProfileUpdate {
             target.setLastName(lastnameTxt.getText());
             List<String> middlenames = Arrays.asList(middlenameTxt.getText()
                     .split(" "));
-            ArrayList middles = new ArrayList();
-            middles.addAll(middlenames);
+            ArrayList<String> middles = new ArrayList<>(middlenames);
             target.setMiddleNames(middles);
 
             if (genderMaleRadio.isSelected()) {
@@ -227,6 +262,9 @@ public class GUIDonorProfileUpdate {
             if (dobDate.getValue() != null) {
                 target.setBirth(dobDate.getValue());
             }
+            if (dateOfDeath.getValue() != null) {
+                target.setDeath(dateOfDeath.getValue());
+            }
             if (street1Txt.getText()
                     .length() > 0) {
                 target.setStreet1(street1Txt.getText());
@@ -239,9 +277,9 @@ public class GUIDonorProfileUpdate {
                     .length() > 0) {
                 target.setSuburb(suburbTxt.getText());
             }
-            if (regionTxt.getText()
-                    .length() > 0) {
-                target.setRegion((GlobalEnums.Region) GlobalEnums.Region.getEnumFromString(regionTxt.getText()));
+            if (regionDD.getValue() != null) {
+                target.setRegion((GlobalEnums.Region) GlobalEnums.Region.getEnumFromString(regionDD.getSelectionModel()
+                        .getSelectedItem()));
             }
             if (zipTxt.getText() != null) {
                 target.setZip(Integer.parseInt(zipTxt.getText()));
@@ -253,15 +291,13 @@ public class GUIDonorProfileUpdate {
                 target.setHeight(Double.parseDouble(heightTxt.getText()));
             }
             if (bloodGroupDD.getValue() != null) {
-                target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD.getValue()
-                        .toString()
-                        .replace(' ', '_')));
+                target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD
+                        .getSelectionModel().getSelectedItem()));
             }
-            new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.INFORMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
             Database.saveToDisk();
             goBackToProfile();
-        }
-        else {
+        } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).showAndWait();
         }
     }
@@ -272,8 +308,7 @@ public class GUIDonorProfileUpdate {
         try {
             ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
             ScreenControl.activate("donorProfile");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
         }

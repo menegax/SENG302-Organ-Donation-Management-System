@@ -61,9 +61,10 @@ public class GlobalEnums {
 
         public static Enum getEnumFromString(String value) {
             try {
-                return Region.valueOf(value.toUpperCase());
+                return Region.valueOf(value.toUpperCase().replaceAll("\\s+", ""));
             }
             catch (IllegalArgumentException e) {
+                System.out.println("TEIAJDJASDIJADI");
                 return null;
             }
         }
@@ -127,7 +128,7 @@ public class GlobalEnums {
 
         public static Enum getEnumFromString(String value) {
             try {
-                return BloodGroup.valueOf(value.toUpperCase());
+                return BloodGroup.valueOf(value.toUpperCase().replaceAll("\\s+", "_"));
             }
             catch (IllegalArgumentException e) {
                 return null;

@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
@@ -21,8 +22,9 @@ import static utility.UserActionHistory.userActions;
  * Details are saved when the Save button is selected, and the user is returned to the donor profile view screen.
  * @author Maree Palmer
  */
-public class GUIDonorContacts {
+public class GUIDonorUpdateContacts {
 
+    @FXML
     public AnchorPane donorContactsPane;
 
     @FXML
@@ -77,6 +79,13 @@ public class GUIDonorContacts {
     public void initialize() {
         loadProfile();
         setContactFields();
+
+        // Enter key triggers log in
+        donorContactsPane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                saveContactDetails();
+            }
+        });
     }
 
 

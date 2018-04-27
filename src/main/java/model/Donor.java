@@ -399,7 +399,7 @@ public class Donor {
      * @return The calculated BMI
      */
     public double getBmi() {
-        return (this.weight / (Math.pow(this.height, 2)));
+        return Math.round(this.weight / (Math.pow(this.height, 2)));
     }
 
 
@@ -533,7 +533,7 @@ public class Donor {
 
 
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
-        ensureValidNhi(); // TODO
+        ensureValidNhi();
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
             this.nhiNumber = nhiNumber.toUpperCase();
             donorModified();

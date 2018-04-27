@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
@@ -17,7 +19,10 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorDonations {
+public class GUIDonorUpdateDonations {
+
+    @FXML
+    private AnchorPane donorDonationPane;
 
     @FXML
     private CheckBox liverCB;
@@ -64,6 +69,13 @@ public class GUIDonorDonations {
     public void initialize() {
         loadProfile(ScreenControl.getLoggedInDonor()
                 .getNhiNumber());
+
+        // Enter key triggers log in
+        donorDonationPane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                saveDonations();
+            }
+        });
     }
 
 
