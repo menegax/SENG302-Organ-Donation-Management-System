@@ -143,13 +143,14 @@ public class StatesHistoryScreen {
                 store();
             }
         });
-        ((CheckBox) checkBox).setOnKeyPressed(event -> {
-            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-                undo();
-            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                redo();
-            }
-        });
+//        The following code is commented out as Ctrl + Z still still triggers on parent pane when checkbox is selected
+//        ((CheckBox) checkBox).setOnKeyPressed(event -> {
+//            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+//                undo();
+//            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+//                redo();
+//            }
+//        });
     }
 
     /**

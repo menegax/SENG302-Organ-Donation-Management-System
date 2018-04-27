@@ -4,7 +4,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Control;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
+import model.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
 
@@ -42,13 +45,22 @@ public class GUIDonorDonations {
     private CheckBox bonemarrowCB;
     @FXML
     private CheckBox connectivetissueCB;
+    @FXML
+    private AnchorPane donorDonationsAnchorPane;
 
     @FXML
     private void redo() {
-        System.out.println( "REDO" );
+        statesHistoryScreen.redo();
+    }
+
+    @FXML
+    private void undo() {
+        statesHistoryScreen.undo();
     }
 
     private Donor target;
+
+    private StatesHistoryScreen statesHistoryScreen;
 
     public void initialize() {
         loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
@@ -65,6 +77,21 @@ public class GUIDonorDonations {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
             e.printStackTrace();
         }
+        ArrayList<Control> controls = new ArrayList<Control>() {{
+            add(liverCB);
+            add(kidneyCB);
+            add(pancreasCB);
+            add(heartCB);
+            add(lungCB);
+            add(intestineCB);
+            add(corneaCB);
+            add(middleearCB);
+            add(skinCB);
+            add(boneCB);
+            add(bonemarrowCB);
+            add(connectivetissueCB);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(donorDonationsAnchorPane, controls);
     }
 
     private void populateForm(Donor donor) {
