@@ -219,7 +219,6 @@ public class GUIDonorUpdateDonations {
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
             new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).showAndWait();
-            e.printStackTrace(); //todo remove and add
         }
     }
 }
