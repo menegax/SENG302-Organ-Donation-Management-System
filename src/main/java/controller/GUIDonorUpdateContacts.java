@@ -146,57 +146,79 @@ public class GUIDonorUpdateContacts {
      * Sets a donor's contact details to the text entered in the text fields for each individual
      * attribute. If the text field for an attribute is empty, the contact detail is not updated.
      */
-    private void setDonorContactDetails() {
+    private boolean setDonorContactDetails() {
+        boolean valid = true;
         if (!(homePhoneField.getText().equals("")) && homePhoneField.getText().matches("[0-9]+")) {
             target.setHomePhone(homePhoneField.getText());
-        } else if((homePhoneField.getText().equals("") && target.getHomePhone() != null)) {
+        } else if(homePhoneField.getText().equals("")) {
             target.setHomePhone(null);
+        } else {
+            valid = false;
         }
         if (!(mobilePhoneField.getText().equals("")) && mobilePhoneField.getText().matches("[0-9]+")) {
             target.setMobilePhone(mobilePhoneField.getText());
-        } else if((mobilePhoneField.getText().equals("") && target.getMobilePhone() != null)) {
+        } else if(mobilePhoneField.getText().equals("")) {
             target.setMobilePhone(null);
+        } else {
+            valid = false;
         }
         if (!(workPhoneField.getText().equals("")) && workPhoneField.getText().matches("[0-9]+")) {
             target.setWorkPhone(workPhoneField.getText());
-        } else if((workPhoneField.getText().equals("") && target.getWorkPhone() != null)) {
+        } else if(workPhoneField.getText().equals("")) {
             target.setWorkPhone(null);
+        } else {
+            valid = false;
         }
-        if (!(emailAddressField.getText().equals("")) && emailAddressField.getText().matches("([A-Z][a-z][0-9])+@[a-z]+.([a-z]+.)+")) {
+        if (!(emailAddressField.getText().equals("")) && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
             target.setEmailAddress(emailAddressField.getText());
-        } else if((emailAddressField.getText().equals("") && target.getEmailAddress() != null)) {
+        } else if(emailAddressField.getText().equals("")) {
             target.setEmailAddress(null);
+        } else {
+            valid = false;
         }
         if (!(contactRelationshipField.getText().equals(""))) {
             target.setContactRelationship(contactRelationshipField.getText());
-        } else if((contactRelationshipField.getText().equals("") && target.getContactRelationship() != null)) {
+        } else if(contactRelationshipField.getText().equals("")) {
             target.setContactRelationship(null);
+        } else {
+            valid = false;
         }
         if (!(contactNameField.getText().equals(""))) {
             target.setContactName(contactNameField.getText());
-        } else if((contactNameField.getText().equals("") && target.getContactName() != null)) {
+        } else if(contactNameField.getText().equals("")) {
             target.setContactName(null);
+        } else {
+            valid = false;
         }
         if (!(contactHomePhoneField.getText().equals("")) && contactHomePhoneField.getText().matches("[0-9]+")) {
             target.setContactHomePhone(contactHomePhoneField.getText());
-        } else if((contactHomePhoneField.getText().equals("") && target.getContactHomePhone() != null)) {
+        } else if(contactHomePhoneField.getText().equals("")) {
             target.setContactHomePhone(null);
+        } else {
+            valid = false;
         }
         if (!(contactMobilePhoneField.getText().equals("")) && contactMobilePhoneField.getText().matches("[0-9]+")) {
             target.setContactMobilePhone(contactMobilePhoneField.getText());
-        } else if((contactMobilePhoneField.getText().equals("") && target.getContactMobilePhone() != null)) {
+        } else if(contactMobilePhoneField.getText().equals("")) {
             target.setContactMobilePhone(null);
+        } else {
+            valid = false;
         }
         if (!(contactWorkPhoneField.getText().equals("")) && contactWorkPhoneField.getText().matches("[0-9]+")) {
             target.setContactWorkPhone(contactWorkPhoneField.getText());
-        } else if((contactWorkPhoneField.getText().equals("") && target.getContactWorkPhone() != null)) {
+        } else if(contactWorkPhoneField.getText().equals("")) {
             target.setContactWorkPhone(null);
+        } else {
+            valid = false;
         }
-        if (!(contactEmailAddressField.getText().equals("") && emailAddressField.getText().matches("([A-Z][a-z][0-9])+@[a-z]+.([a-z]+.)+"))) {
+        if (!(contactEmailAddressField.getText().equals("") && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+"))) {
             target.setContactEmailAddress(contactEmailAddressField.getText());
-        } else if((contactEmailAddressField.getText().equals("") && target.getContactEmailAddress() != null)) {
+        } else if(contactEmailAddressField.getText().equals("")) {
             target.setContactEmailAddress(null);
+        } else {
+            valid = false;
         }
+        return valid;
     }
 
 
@@ -222,9 +244,13 @@ public class GUIDonorUpdateContacts {
      * profile window is shown.
      */
     private void saveToDisk() {
-        setDonorContactDetails();
-        Database.saveToDisk();
-        new Alert(Alert.AlertType.CONFIRMATION, "Contact details saved successfully", ButtonType.OK).show();
-        goToProfile();
+        boolean valid = setDonorContactDetails();
+        if(valid) {
+            Database.saveToDisk();
+            new Alert(Alert.AlertType.CONFIRMATION, "Contact details saved successfully", ButtonType.OK).show();
+            goToProfile();
+        } else {
+            new Alert(Alert.AlertType.CONFIRMATION, "Invalid fields", ButtonType.OK).show();
+        }
     }
 }
