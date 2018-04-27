@@ -544,10 +544,10 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
     }
 
-    @Test
-    /*
+    /**
      * Enter seven more new medications to textfield and register them to current ArrayList and listView
      */
+    @Test
     public void testValidMultipleMedicationRegistrations() {
         // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
@@ -665,13 +665,10 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#currentMedications", ListViewMatchers.hasItems( 7 ) );
     }
 
-    @Test
-    /*
-     * Tests that medications save when Donor data is saved - does not test exact implementation just yet
-     *
-     * INCOMPLETE AS REQUIRES ONE ASSERT TO BE COMPLETED SO NUMEROUS LINES HASHED OUT
-     *
+    /**
+     * Tests that medications save when Donor data is saved - does not test exact implementation just yet     *
      */
+    @Test
     public void testMedicationSaving() {
         verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
