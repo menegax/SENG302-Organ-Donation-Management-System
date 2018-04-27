@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.StringConverter;
 import model.Donor;
@@ -43,19 +44,26 @@ public class GUIDonorRegister {
 
 
     /**
+     * Sets up register page GUI elements
+     */
+    public void initialize() {
+        setDateConverter();
+
+        // Enter key
+        registerPane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                register();
+            }
+        });
+    }
+
+
+    /**
      * Back button listener to switch to the login screen
      */
     @FXML
     public void goBackToLogin() {
         ScreenControl.activate("login");
-    }
-
-
-    /**
-     * Sets up register page GUI elements
-     */
-    public void initialize() {
-        setDateConverter();
     }
 
 

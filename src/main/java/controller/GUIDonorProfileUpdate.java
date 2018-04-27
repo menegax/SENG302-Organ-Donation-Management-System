@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
@@ -20,6 +22,9 @@ import java.util.regex.Pattern;
 import static utility.UserActionHistory.userActions;
 
 public class GUIDonorProfileUpdate {
+
+    @FXML
+    private AnchorPane donorUpdatePane;
 
     @FXML
     private Label lastModifiedLbl;
@@ -82,6 +87,13 @@ public class GUIDonorProfileUpdate {
         bloodGroupDD.setItems(bloodGroupsOL);
         loadProfile(ScreenControl.getLoggedInDonor()
                 .getNhiNumber());
+
+        // Enter key
+        donorUpdatePane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                saveProfile();
+            }
+        });
     }
 
 
@@ -270,7 +282,6 @@ public class GUIDonorProfileUpdate {
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
         }
     }
 
