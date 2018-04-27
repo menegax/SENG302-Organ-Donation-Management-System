@@ -55,7 +55,19 @@ public class APIHelper {
         return getApiResponseAsArray("http://mapi-us.iterar.co/api/" + medicationString + "/substances.json");
     }
 
-    public void getDrugInteractions(String drugOne, String drugTwo) {
+    /**
+     * Builds API query and gets the response as a json object
+     * @param drugOne - Drug to be compared with when getting interactions
+     * @param drugTwo - Drug to be compared with when getting interactions
+     * @return - JsonObject
+     * @throws IOException -
+     */
+    public JsonObject getDrugInteractions(String drugOne, String drugTwo) throws IOException{
+        try {
+            return getApiResponse(String.format("https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/", drugOne, drugTwo));
+        } catch (IOException e) { //make a second API call be this is literally the worst API ever (like really)
+            return getApiResponse(String.format("https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/", drugTwo, drugOne));
+        }
 
     }
 
