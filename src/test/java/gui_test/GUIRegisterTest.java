@@ -5,12 +5,18 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import model.Donor;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
+import service.Database;
+import utility.GlobalEnums;
 
+import java.io.InvalidObjectException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -20,12 +26,13 @@ public class GUIRegisterTest extends ApplicationTest {
     private Main main = new Main();
     private LocalDate d = LocalDate.of(1957,6,21);
 
+    @Before
+    public void setup() {
+        Database.resetDatabase();
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
-//        Parent root = FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml"));
-//        Scene rootScene = new Scene(root, 600, 400);
-//        stage.setScene(rootScene); //set scene on primary stage
-//        stage.show();
         main.start(stage);
         interact(() ->  lookup("#registerLabel").queryAs(Hyperlink.class).fire());
 
@@ -33,6 +40,7 @@ public class GUIRegisterTest extends ApplicationTest {
 
     @After
     public void waitForEvents() {
+        Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }
@@ -45,13 +53,13 @@ public class GUIRegisterTest extends ApplicationTest {
     @Test
     public void should_successfully_register_with_middle_name() {
         interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("BBB2222");
+            lookup("#nhiRegister").queryAs(TextField.class).setText("BBB9922");
             lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
             lookup("#middlenameRegister").queryAs(TextField.class).setText("Wil");
             lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
+        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB9922"));
         assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("William"));
         assertThat(lookup("#middlenameRegister").queryAs(TextField.class).getText().equals("Wil"));
         assertThat(lookup("#lastnameRegister").queryAs(TextField.class).getText().equals("Williamson"));
@@ -68,12 +76,12 @@ public class GUIRegisterTest extends ApplicationTest {
     @Test
     public void should_successfully_register_without_middle_name() {
         interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("BBB2782");
+            lookup("#nhiRegister").queryAs(TextField.class).setText("BBB9782");
             lookup("#firstnameRegister").queryAs(TextField.class).setText("Willis");
             lookup("#lastnameRegister").queryAs(TextField.class).setText("Brucie");
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2752"));
+        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB9752"));
         assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("Willis"));
         assertThat(lookup("#lastnameRegister").queryAs(TextField.class).getText().equals("Brucie"));
         assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == d);
@@ -157,9 +165,16 @@ public class GUIRegisterTest extends ApplicationTest {
     }
 
     @Test
-    public void unsuccessful_register_duplicate_nhi() {
+    public void unsuccessful_register_duplicate_nhi() throws InvalidObjectException {
+
+        ArrayList<String> dal = new ArrayList<>();
+        dal.add("Middle");
+        Database.addDonor(new Donor("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+
         interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("ABC1238");
+            lookup("#nhiRegister").queryAs(TextField.class).setText("TFX9999");
             lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
             lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
@@ -168,11 +183,5 @@ public class GUIRegisterTest extends ApplicationTest {
         });
         verifyThat("#registerPane", Node::isVisible);
     }
-
-//    @Test
-//    public void should_return_to_login() {
-//        interact(() -> lookup("#backLabel").queryAs(Label.class).getOnMouseClicked());
-//        verifyThat("#loginPane", Node::isVisible);
-//    }
 
 }
