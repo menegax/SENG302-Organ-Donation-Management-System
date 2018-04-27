@@ -191,9 +191,7 @@ public class GUIDonorUpdateProfile {
         if (regionDD.getSelectionModel().getSelectedIndex() != -1) {
             Enum region = GlobalEnums.Region.getEnumFromString(regionDD
                     .getSelectionModel().getSelectedItem().toString());
-            System.out.println("TEST");
             if (region == null) {
-                System.out.println("BLAHBLAH");
                 valid = false;
             }
         }
