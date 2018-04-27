@@ -19,7 +19,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorDonations {
+public class GUIDonorUpdateDonations {
 
     @FXML
     private AnchorPane donorDonationPane;

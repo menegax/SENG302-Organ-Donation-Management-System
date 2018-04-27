@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorProfileUpdate {
+public class GUIDonorUpdateProfile {
 
     @FXML
     private AnchorPane donorUpdatePane;

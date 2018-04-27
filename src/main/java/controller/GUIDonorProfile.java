@@ -104,7 +104,7 @@ public class GUIDonorProfile {
     public void goToEdit() {
         ScreenControl.removeScreen("donorProfileUpdate");
         try {
-            ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorProfileUpdate.fxml")));
+            ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorUpdateProfile.fxml")));
             ScreenControl.activate("donorProfileUpdate");
         }
         catch (IOException e) {
@@ -118,7 +118,7 @@ public class GUIDonorProfile {
     public void goToDonations() {
         ScreenControl.removeScreen("donorDonations");
         try {
-            ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorDonations.fxml")));
+            ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorUpdateDonations.fxml")));
             ScreenControl.activate("donorDonations");
         }
         catch (IOException e) {
@@ -132,7 +132,7 @@ public class GUIDonorProfile {
     public void goToContactDetails() {
         ScreenControl.removeScreen("donorContactDetails");
         try {
-            ScreenControl.addScreen("donorContactDetails", FXMLLoader.load(getClass().getResource("/scene/donorContacts.fxml")));
+            ScreenControl.addScreen("donorContactDetails", FXMLLoader.load(getClass().getResource("/scene/donorUpdateContacts.fxml")));
             ScreenControl.activate("donorContactDetails");
         }
         catch (IOException e) {

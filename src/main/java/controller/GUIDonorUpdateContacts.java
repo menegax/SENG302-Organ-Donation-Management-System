@@ -16,7 +16,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorContacts {
+public class GUIDonorUpdateContacts {
 
     @FXML
     public AnchorPane donorContactsPane;
