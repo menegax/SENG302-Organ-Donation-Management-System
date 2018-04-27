@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -32,7 +33,7 @@ public class GUIDonorMedications {
     public Button saveMed;
     public Button undoEdit;
     public Button redoEdit;
-    public Button goBack;
+    public Hyperlink goBack;
     public Button wipeReview;
     public Button clearMed;
     public Button compareMeds;
@@ -74,8 +75,13 @@ public class GUIDonorMedications {
      */
     @FXML
     public void saveMedication() {
-        Database.saveToDisk(); // Save to .json the changes made to medications
-        clearSelections();
+        if (current.size() + history.size() > 0) {
+            Alert save = new Alert( Alert.AlertType.CONFIRMATION, "Medication(s) have been successfully saved" );
+            final Button dialogOK = (Button) save.getDialogPane().lookupButton( ButtonType.OK );
+            dialogOK.addEventFilter( ActionEvent.ACTION, event -> Database.saveToDisk() );// Save to .json the changes made to medications
+            save.show();
+            clearSelections();
+        }
     }
 
     /**
@@ -219,18 +225,25 @@ public class GUIDonorMedications {
     private void removeMedication(ArrayList<String> medications) {
         for (String medication : medications) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confirm deletion of " + medication + "?");
-            Optional <ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                if (history.contains( medication )) {
-                    target.getMedicationHistory().remove( history.indexOf( medication ) );
-                    userActions.log( Level.INFO, "Successfully deleted a medication", "Deleted a past medication for a donor" );
-                    viewPastMedications();
-                } else if (current.contains( medication )) {
-                    target.getCurrentMedications().remove( current.indexOf( medication ) );
-                    userActions.log( Level.INFO, "Successfully deleted a medication", "Deleted a current medication for a donor" );
-                    viewCurrentMedications();
-                }
-            }
+            final Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+            dialogOK.addEventFilter(ActionEvent.ACTION, event -> performDelete(medication));
+            alert.show();
+        }
+    }
+
+    /**
+     * Called when the user confirms the deletion of the selected medication(s) in the alert window.
+     */
+    private void performDelete(String medication) {
+        if (history.contains( medication )) {
+            target.getMedicationHistory().remove( history.indexOf( medication ) );
+            userActions.log( Level.INFO, "Successfully deleted a medication", "Deleted a past medication for a donor" );
+            viewPastMedications();
+        } else if (current.contains( medication )) {
+            target.getCurrentMedications().remove( current.indexOf( medication ) );
+            userActions.log( Level.INFO, "Successfully deleted a medication", "Deleted a current medication for a donor" );
+            viewCurrentMedications();
+
         }
     }
 
