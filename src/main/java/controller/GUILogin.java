@@ -67,6 +67,7 @@ public class GUILogin {
         catch (Exception e) {
             userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
             Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to log in");
+            e.printStackTrace();
             alert.show();
         }
     }

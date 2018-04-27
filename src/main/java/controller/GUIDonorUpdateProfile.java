@@ -54,6 +54,9 @@ public class GUIDonorUpdateProfile {
     private DatePicker dobDate;
 
     @FXML
+    private DatePicker dateOfDeath;
+
+    @FXML
     private TextField street1Txt;
 
     @FXML
@@ -63,7 +66,7 @@ public class GUIDonorUpdateProfile {
     private TextField suburbTxt;
 
     @FXML
-    private ChoiceBox regionDD;
+    private ChoiceBox<String> regionDD;
 
     @FXML
     private TextField zipTxt;
@@ -75,7 +78,7 @@ public class GUIDonorUpdateProfile {
     private TextField heightTxt;
 
     @FXML
-    private ChoiceBox bloodGroupDD;
+    private ChoiceBox<String> bloodGroupDD;
 
     private Donor target;
 
@@ -94,10 +97,10 @@ public class GUIDonorUpdateProfile {
     }
 
     /**
-     * Populates dropdown menus that represent enum data
+     * Populates drop down menus that represent enum data
      */
     private void populateDropdowns() {
-        // Populate bloodgroup dropdown with values from the Bloodgroups enum
+        // Populate blood group drop down with values from the Blood groups enum
         List<String> bloodGroups = new ArrayList<>();
         for (GlobalEnums.BloodGroup bloodgroup : GlobalEnums.BloodGroup.values()) {
             bloodGroups.add(bloodgroup.getValue());
@@ -105,7 +108,7 @@ public class GUIDonorUpdateProfile {
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
 
-        // Populate region dropdown with values from the Regions enum
+        // Populate region drop down with values from the Regions enum
         List<String> regions = new ArrayList<>();
         for (GlobalEnums.Region region : GlobalEnums.Region.values()) {
             regions.add(region.getValue());
@@ -190,7 +193,7 @@ public class GUIDonorUpdateProfile {
         }
         if (regionDD.getSelectionModel().getSelectedIndex() != -1) {
             Enum region = GlobalEnums.Region.getEnumFromString(regionDD
-                    .getSelectionModel().getSelectedItem().toString());
+                    .getSelectionModel().getSelectedItem());
             if (region == null) {
                 valid = false;
             }
@@ -218,7 +221,7 @@ public class GUIDonorUpdateProfile {
         }
         if (bloodGroupDD.getSelectionModel().getSelectedIndex() != -1) {
             Enum bloodgroup = GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD
-                    .getValue().toString());
+                    .getValue());
             if (bloodgroup == null) {
                 valid = false;
             }
@@ -229,8 +232,7 @@ public class GUIDonorUpdateProfile {
             target.setLastName(lastnameTxt.getText());
             List<String> middlenames = Arrays.asList(middlenameTxt.getText()
                     .split(" "));
-            ArrayList middles = new ArrayList();
-            middles.addAll(middlenames);
+            ArrayList<String> middles = new ArrayList<>(middlenames);
             target.setMiddleNames(middles);
 
             if (genderMaleRadio.isSelected()) {
@@ -244,6 +246,9 @@ public class GUIDonorUpdateProfile {
             }
             if (dobDate.getValue() != null) {
                 target.setBirth(dobDate.getValue());
+            }
+            if (dateOfDeath.getValue() != null) {
+                target.setDeath(dateOfDeath.getValue());
             }
             if (street1Txt.getText()
                     .length() > 0) {
@@ -259,7 +264,7 @@ public class GUIDonorUpdateProfile {
             }
             if (regionDD.getValue() != null) {
                 target.setRegion((GlobalEnums.Region) GlobalEnums.Region.getEnumFromString(regionDD.getSelectionModel()
-                        .getSelectedItem().toString()));
+                        .getSelectedItem()));
             }
             if (zipTxt.getText() != null) {
                 target.setZip(Integer.parseInt(zipTxt.getText()));
@@ -272,7 +277,7 @@ public class GUIDonorUpdateProfile {
             }
             if (bloodGroupDD.getValue() != null) {
                 target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD
-                        .getSelectionModel().getSelectedItem().toString()));
+                        .getSelectionModel().getSelectedItem()));
             }
             new Alert(Alert.AlertType.INFORMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
             Database.saveToDisk();

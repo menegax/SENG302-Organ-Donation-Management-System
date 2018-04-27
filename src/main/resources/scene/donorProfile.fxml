@@ -14,7 +14,7 @@
             <Font size="40.0" />
          </font>
       </Label>
-      <VBox layoutX="96.0" layoutY="100.0" prefHeight="213.0" prefWidth="240.0">
+      <VBox layoutX="86.0" layoutY="81.0" prefHeight="213.0" prefWidth="240.0">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -38,6 +38,12 @@
                <children>
                   <Label prefHeight="16.0" prefWidth="112.0" text="Date of Birth: " />
                   <Label fx:id="dobLbl" text="Label" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="61.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Date of Death: " />
+                  <Label fx:id="dateOfDeath" text="Label" />
                </children>
             </HBox>
             <HBox layoutX="10.0" layoutY="62.0" prefHeight="100.0" prefWidth="200.0">
@@ -102,7 +108,7 @@
             </HBox>
          </children>
       </VBox>
-      <VBox layoutX="361.0" layoutY="100.0" prefHeight="200.0" prefWidth="162.0">
+      <VBox layoutX="363.0" layoutY="81.0" prefHeight="200.0" prefWidth="162.0">
          <children>
             <Label alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Donations">
                <font>

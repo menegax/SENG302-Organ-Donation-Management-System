@@ -38,6 +38,9 @@ public class GUIDonorProfile {
     private Label dobLbl;
 
     @FXML
+    private Label dateOfDeath;
+
+    @FXML
     private Label age;
 
     @FXML
@@ -87,6 +90,7 @@ public class GUIDonorProfile {
                     .toString());
             dobLbl.setText(donor.getBirth()
                     .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            dateOfDeath.setText(donor.getDeath() == null ? "Not set" : donor.getDeath().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             age.setText(String.valueOf(donor.getAge()));
             heightLbl.setText(String.valueOf(donor.getHeight() + " m"));
             weightLbl.setText(String.valueOf(donor.getWeight() + " kg"));
