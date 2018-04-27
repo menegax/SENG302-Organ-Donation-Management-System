@@ -90,31 +90,29 @@ public class GUIDonorProfile {
     private void loadProfile(String nhi) throws InvalidObjectException {
         Donor donor = Database.getDonorByNhi(nhi);
 
-            nhiLbl.setText(donor.getNhiNumber());
-            nameLbl.setText(donor.getNameConcatenated());
-            genderLbl.setText(donor.getGender() == null ? "Not set" : donor.getGender()
-                    .toString());
-            dobLbl.setText(donor.getBirth()
-                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            dateOfDeath.setText(donor.getDeath() == null ? "Not set" : donor.getDeath().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            age.setText(String.valueOf(donor.getAge()));
-            heightLbl.setText(String.valueOf(donor.getHeight() + " m"));
-            weightLbl.setText(String.valueOf(donor.getWeight() + " kg"));
-            bmi.setText(String.valueOf(donor.getBmi()));
-            bloodGroupLbl.setText(donor.getBloodGroup() == null ? "Not set" : donor.getBloodGroup()
-                    .getValue());
-            addLbl1.setText(donor.getStreet1() == null ? "Not set" : donor.getStreet1());
-            addLbl2.setText(donor.getStreet2() == null ? "Not set" : donor.getStreet2());
-            addLbl3.setText(donor.getSuburb() == null ? "Not set" : donor.getSuburb());
-            addLbl4.setText(donor.getRegion() == null ? "Not set" : donor.getRegion()
-                    .getValue());
-            addLbl5.setText(String.valueOf(donor.getZip()));
-            for (GlobalEnums.Organ organ : donor.getDonations()) {
-                donationList.setText(donationList.getText() + organ.getValue() + "\n");
-            }
+        nhiLbl.setText(donor.getNhiNumber());
+        nameLbl.setText(donor.getNameConcatenated());
+        genderLbl.setText(donor.getGender() == null ? "Not set" : donor.getGender()
+                .toString());
+        dobLbl.setText(donor.getBirth()
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        dateOfDeath.setText(donor.getDeath() == null ? "Not set" : donor.getDeath().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        age.setText(String.valueOf(donor.getAge()));
+        heightLbl.setText(String.valueOf(donor.getHeight() + " m"));
+        weightLbl.setText(String.valueOf(donor.getWeight() + " kg"));
+        bmi.setText(String.valueOf(donor.getBmi()));
+        bloodGroupLbl.setText(donor.getBloodGroup() == null ? "Not set" : donor.getBloodGroup()
+                .getValue());
+        addLbl1.setText(donor.getStreet1() == null ? "Not set" : donor.getStreet1());
+        addLbl2.setText(donor.getStreet2() == null ? "Not set" : donor.getStreet2());
+        addLbl3.setText(donor.getSuburb() == null ? "Not set" : donor.getSuburb());
+        addLbl4.setText(donor.getRegion() == null ? "Not set" : donor.getRegion()
+                .getValue());
+        addLbl5.setText(String.valueOf(donor.getZip()));
+        for (GlobalEnums.Organ organ : donor.getDonations()) {
+            donationList.setText(donationList.getText() + StringUtils.capitalize(organ.getValue()) + "\n");
         }
     }
-
 
 
     public void goToEdit() {
