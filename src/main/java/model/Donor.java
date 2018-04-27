@@ -74,10 +74,6 @@ public class Donor {
 
     private String contactEmailAddress;
 
-    private ArrayList<Medication> currentMedications;
-
-    private ArrayList<Medication> medicationHistory;
-
 
     public Donor(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
@@ -177,57 +173,6 @@ public class Donor {
         userActions.log(Level.INFO, "Successfully updated donor " + getNhiNumber(), "attempted to update donor attributes");
         donorModified();
     }
-
-
-    /**
-     * Sets contact details of a donor, including details of the donor's emergency contact
-     *
-     * @param homePhone           home phone
-     * @param mobilePhone         mobile phone
-     * @param workPhone           work phone
-     * @param emailAddress        email address
-     * @param contactName         emergency contact name
-     * @param contactRelationship emergency contact relationship
-     * @param contactHomePhone    emergency contact home phone
-     * @param contactMobilePhone  emergency contact mobile phone
-     * @param contactWorkPhone    emergency contact work phone
-     * @param contactEmailAddress emergency contact email address
-     */
-    public void updateContactDetails(String homePhone, String mobilePhone, String workPhone, String emailAddress, String contactName,
-                                     String contactRelationship, String contactHomePhone, String contactMobilePhone, String contactWorkPhone,
-                                     String contactEmailAddress) {
-        if (homePhone != null) {
-            setHomePhone(homePhone);
-        }
-        if (mobilePhone != null) {
-            setMobilePhone(mobilePhone);
-        }
-        if (workPhone != null) {
-            setWorkPhone(workPhone);
-        }
-        if (emailAddress != null) {
-            setEmailAddress(emailAddress);
-        }
-        if (contactName != null) {
-            setContactName(contactName);
-        }
-        if (contactRelationship != null) {
-            setContactRelationship(contactRelationship);
-        }
-        if (contactHomePhone != null) {
-            setContactHomePhone(contactHomePhone);
-        }
-        if (contactMobilePhone != null) {
-            setContactMobilePhone(contactMobilePhone);
-        }
-        if (contactWorkPhone != null) {
-            setContactWorkPhone(contactWorkPhone);
-        }
-        if (contactEmailAddress != null) {
-            setContactEmailAddress(contactEmailAddress);
-        }
-    }
-
 
     /**
      * Update the organ donations list of the donor
@@ -528,26 +473,6 @@ public class Donor {
     }
 
 
-    /**
-     * Gets the current medication list for a Donor
-     *
-     * @return ArrayList medications the Donor currently uses
-     */
-    public ArrayList<Medication> getCurrentMedications() {
-        return currentMedications;
-    }
-
-
-    /**
-     * Gets the medication history for a Donor
-     *
-     * @return ArrayList medications the Donor used to use
-     */
-    public ArrayList<Medication> getMedicationHistory() {
-        return medicationHistory;
-    }
-
-
     public void setZip(int zip) {
         if (this.zip != zip) {
             this.zip = zip;
@@ -614,27 +539,6 @@ public class Donor {
             donorModified();
         }
     }
-
-
-    /**
-     * Sets the current medication list for a Donor
-     *
-     * @param currentMedications medications to set as current for the Donor
-     */
-    public void setCurrentMedications(ArrayList<Medication> currentMedications) {
-        this.currentMedications = currentMedications;
-    }
-
-
-    /**
-     * Sets the medication history for a Donor
-     *
-     * @param medicationHistory medication list to set as history for a Donor
-     */
-    public void setMedicationHistory(ArrayList<Medication> medicationHistory) {
-        this.medicationHistory = medicationHistory;
-    }
-
 
     public String getHomePhone() {
         return homePhone;

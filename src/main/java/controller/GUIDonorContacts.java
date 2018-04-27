@@ -15,6 +15,9 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
+/**
+ *
+ */
 public class GUIDonorContacts {
 
     public AnchorPane donorContactsPane;
@@ -49,14 +52,16 @@ public class GUIDonorContacts {
     @FXML
     private TextField contactNameField;
 
+    private Donor target;
 
+
+    /**
+     * Saves changes to a donor's contact details by calling the Database saving method.
+     */
     @FXML
     public void saveContactDetails() {
         saveToDisk();
     }
-
-
-    private Donor target;
 
 
     /**
@@ -70,7 +75,8 @@ public class GUIDonorContacts {
 
 
     /**
-     *
+     * Sets initial contact text fields to a donor's existing contact details.
+     * The fields are left blank if no contact detail is present for that field.
      */
     private void setContactFields() {
         if (target.getHomePhone() != null) {
@@ -106,59 +112,75 @@ public class GUIDonorContacts {
     }
 
 
+    /**
+     * Sets the target donor to the currently logged in donor.
+     * Throws an InvalidObjectException if the logged in donor can not be retrieved
+     */
     private void loadProfile() {
         try {
             target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor()
                     .getNhiNumber());
-
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
-            e.printStackTrace();
         }
     }
 
 
+    /**
+     * Sets a donor's contact details to the text entered in the text fields for each individual
+     * attribute. If the text field for an attribute is empty, the contact detail is not updated.
+     */
     private void setDonorContactDetails() {
-        if (!(homePhoneField.getText()
-                .equals(""))) {
+        if (!(homePhoneField.getText().equals(""))) {
             target.setHomePhone(homePhoneField.getText());
+        } else if((homePhoneField.getText().equals("") && target.getHomePhone() != null)) {
+            target.setHomePhone(null);
         }
-        if (!(mobilePhoneField.getText()
-                .equals(""))) {
+        if (!(mobilePhoneField.getText().equals(""))) {
             target.setMobilePhone(mobilePhoneField.getText());
+        } else if((mobilePhoneField.getText().equals("") && target.getMobilePhone() != null)) {
+            target.setMobilePhone(null);
         }
-        if (!(workPhoneField.getText()
-                .equals(""))) {
+        if (!(workPhoneField.getText().equals(""))) {
             target.setWorkPhone(workPhoneField.getText());
+        } else if((workPhoneField.getText().equals("") && target.getWorkPhone() != null)) {
+            target.setWorkPhone(null);
         }
-        if (!(emailAddressField.getText()
-                .equals(""))) {
+        if (!(emailAddressField.getText().equals(""))) {
             target.setEmailAddress(emailAddressField.getText());
+        } else if((emailAddressField.getText().equals("") && target.getEmailAddress() != null)) {
+            target.setEmailAddress(null);
         }
-        if (!(contactRelationshipField.getText()
-                .equals(""))) {
+        if (!(contactRelationshipField.getText().equals(""))) {
             target.setContactRelationship(contactRelationshipField.getText());
+        } else if((contactRelationshipField.getText().equals("") && target.getContactRelationship() != null)) {
+            target.setContactRelationship(null);
         }
-        if (!(contactNameField.getText()
-                .equals(""))) {
+        if (!(contactNameField.getText().equals(""))) {
             target.setContactName(contactNameField.getText());
+        } else if((contactNameField.getText().equals("") && target.getContactName() != null)) {
+            target.setContactName(null);
         }
-        if (!(contactHomePhoneField.getText()
-                .equals(""))) {
+        if (!(contactHomePhoneField.getText().equals(""))) {
             target.setContactHomePhone(contactHomePhoneField.getText());
+        } else if((contactHomePhoneField.getText().equals("") && target.getContactHomePhone() != null)) {
+            target.setContactHomePhone(null);
         }
-        if (!(contactMobilePhoneField.getText()
-                .equals(""))) {
+        if (!(contactMobilePhoneField.getText().equals(""))) {
             target.setContactMobilePhone(contactMobilePhoneField.getText());
+        } else if((contactMobilePhoneField.getText().equals("") && target.getContactMobilePhone() != null)) {
+            target.setContactMobilePhone(null);
         }
-        if (!(contactWorkPhoneField.getText()
-                .equals(""))) {
+        if (!(contactWorkPhoneField.getText().equals(""))) {
             target.setContactWorkPhone(contactWorkPhoneField.getText());
+        } else if((contactWorkPhoneField.getText().equals("") && target.getContactWorkPhone() != null)) {
+            target.setContactWorkPhone(null);
         }
-        if (!(contactEmailAddressField.getText()
-                .equals(""))) {
+        if (!(contactEmailAddressField.getText().equals(""))) {
             target.setContactEmailAddress(contactEmailAddressField.getText());
+        } else if((contactEmailAddressField.getText().equals("") && target.getContactEmailAddress() != null)) {
+            target.setContactEmailAddress(null);
         }
     }
 
@@ -175,15 +197,19 @@ public class GUIDonorContacts {
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the contacts page to the profile page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-            //e.printStackTrace();
         }
     }
 
 
+    /**
+     * Sets the donor's contact details to the values specified in the GUI, and runs the save operation from
+     * the application database. An alert is then shown to inform the user of a successful save, and the donor
+     * profile window is shown.
+     */
     private void saveToDisk() {
         setDonorContactDetails();
         Database.saveToDisk();
-        new Alert(Alert.AlertType.CONFIRMATION, "Contact details saved successfully", ButtonType.OK).showAndWait();
+        new Alert(Alert.AlertType.CONFIRMATION, "Contact details saved successfully", ButtonType.OK).show();
         goToProfile();
     }
 }
