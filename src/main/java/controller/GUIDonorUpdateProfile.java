@@ -63,7 +63,7 @@ public class GUIDonorUpdateProfile {
     private TextField suburbTxt;
 
     @FXML
-    private TextField regionTxt;
+    private ChoiceBox regionDD;
 
     @FXML
     private TextField zipTxt;
@@ -81,10 +81,7 @@ public class GUIDonorUpdateProfile {
 
 
     public void initialize() {
-        List<String> bloodGroups =
-                Arrays.asList("a positive", "a negative", "b positive", "b negative", "ab positive", "ab negative", "o positive", "o negative");
-        ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
-        bloodGroupDD.setItems(bloodGroupsOL);
+        populateDropdowns();
         loadProfile(ScreenControl.getLoggedInDonor()
                 .getNhiNumber());
 
@@ -96,6 +93,28 @@ public class GUIDonorUpdateProfile {
         });
     }
 
+    /**
+     * Populates dropdown menus that represent enum data
+     */
+    private void populateDropdowns() {
+        // Populate bloodgroup dropdown with values from the Bloodgroups enum
+        List<String> bloodGroups = new ArrayList<>();
+        for (GlobalEnums.BloodGroup bloodgroup : GlobalEnums.BloodGroup.values()) {
+            bloodGroups.add(bloodgroup.getValue());
+        }
+        ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
+        bloodGroupDD.setItems(bloodGroupsOL);
+
+        // Populate region dropdown with values from the Regions enum
+        List<String> regions = new ArrayList<>();
+        for (GlobalEnums.Region region : GlobalEnums.Region.values()) {
+            regions.add(region.getValue());
+        }
+        ObservableList<String> regionsOL = FXCollections.observableList(regions);
+        regionDD.setItems(regionsOL);
+
+    }
+
 
     private void loadProfile(String nhi) {
         try {
@@ -103,8 +122,7 @@ public class GUIDonorUpdateProfile {
             target = donor;
             populateForm(donor);
 
-        }
-        catch (InvalidObjectException e) {
+        } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
             e.printStackTrace();
         }
@@ -144,7 +162,7 @@ public class GUIDonorUpdateProfile {
             suburbTxt.setText(donor.getSuburb());
         }
         if (donor.getRegion() != null) {
-            regionTxt.setText(donor.getRegion()
+            regionDD.setValue(donor.getRegion()
                     .getValue());
         }
         zipTxt.setText(String.valueOf(donor.getZip()));
@@ -170,9 +188,9 @@ public class GUIDonorUpdateProfile {
         if (lastnameTxt.getText() == null) {
             valid = false;
         }
-        if (regionTxt.getText()
-                .length() > 0) {
-            Enum region = GlobalEnums.Region.getEnumFromString(regionTxt.getText());
+        if (regionDD.getSelectionModel().getSelectedIndex() != -1) {
+            Enum region = GlobalEnums.Region.getEnumFromString(regionDD
+                    .getSelectionModel().getSelectedItem().toString());
             if (region == null) {
                 valid = false;
             }
@@ -180,33 +198,27 @@ public class GUIDonorUpdateProfile {
         if (zipTxt.getText() != null) {
             try {
                 Integer.parseInt(zipTxt.getText());
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 valid = false;
             }
         }
         if (weightTxt.getText() != null) {
             try {
                 Double.parseDouble(weightTxt.getText());
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 valid = false;
             }
         }
         if (heightTxt.getText() != null) {
             try {
                 Double.parseDouble(heightTxt.getText());
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 valid = false;
             }
         }
-        System.out.println(bloodGroupDD.getValue());
-        if (bloodGroupDD.getValue() != null) {
-            String bgStr = bloodGroupDD.getValue()
-                    .toString()
-                    .replace(' ', '_');
-            Enum bloodgroup = GlobalEnums.BloodGroup.getEnumFromString(bgStr);
+        if (bloodGroupDD.getSelectionModel().getSelectedIndex() != -1) {
+            Enum bloodgroup = GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD
+                    .getValue().toString());
             if (bloodgroup == null) {
                 valid = false;
             }
@@ -245,9 +257,9 @@ public class GUIDonorUpdateProfile {
                     .length() > 0) {
                 target.setSuburb(suburbTxt.getText());
             }
-            if (regionTxt.getText()
-                    .length() > 0) {
-                target.setRegion((GlobalEnums.Region) GlobalEnums.Region.getEnumFromString(regionTxt.getText()));
+            if (regionDD.getValue() != null) {
+                target.setRegion((GlobalEnums.Region) GlobalEnums.Region.getEnumFromString(regionDD.getSelectionModel()
+                        .getSelectedItem().toString()));
             }
             if (zipTxt.getText() != null) {
                 target.setZip(Integer.parseInt(zipTxt.getText()));
@@ -259,15 +271,13 @@ public class GUIDonorUpdateProfile {
                 target.setHeight(Double.parseDouble(heightTxt.getText()));
             }
             if (bloodGroupDD.getValue() != null) {
-                target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD.getValue()
-                        .toString()
-                        .replace(' ', '_')));
+                target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD
+                        .getSelectionModel().getSelectedItem().toString()));
             }
             new Alert(Alert.AlertType.INFORMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
             Database.saveToDisk();
             goBackToProfile();
-        }
-        else {
+        } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).showAndWait();
         }
     }
@@ -278,8 +288,7 @@ public class GUIDonorUpdateProfile {
         try {
             ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
             ScreenControl.activate("donorProfile");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
             new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).showAndWait();
         }
