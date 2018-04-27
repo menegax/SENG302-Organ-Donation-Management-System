@@ -8,6 +8,7 @@ import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.time.LocalDate;
@@ -399,9 +400,9 @@ public class Donor {
      * @return The calculated BMI
      */
     public double getBmi() {
-        return Math.round(this.weight / (Math.pow(this.height, 2)));
+        DecimalFormat df = new DecimalFormat("#.0");
+        return Double.valueOf(df.format(this.weight / (Math.pow(this.height, 2))));
     }
-
 
     public BloodGroup getBloodGroup() {
         return bloodGroup;
