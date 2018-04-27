@@ -9,45 +9,47 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="donorUpdatePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="419.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIDonorProfileUpdate">
+<AnchorPane fx:id="donorUpdatePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="518.0" prefWidth="666.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIDonorProfileUpdate">
    <children>
       <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goBackToProfile" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-      <Label layoutX="207.0" layoutY="23.0" prefHeight="55.0" prefWidth="203.0" styleClass="title" stylesheets="@../css/guiStyle.css" text="Update Profile" />
-      <TextField fx:id="firstnameTxt" focusTraversable="false" layoutX="50.0" layoutY="165.0" promptText="First name" />
-      <TextField fx:id="lastnameTxt" focusTraversable="false" layoutX="50.0" layoutY="216.0" promptText="Last name" />
-      <TextField fx:id="middlenameTxt" focusTraversable="false" layoutX="50.0" layoutY="266.0" promptText="Middle name(s)" />
-      <Button layoutX="439.0" layoutY="365.0" mnemonicParsing="false" onAction="#saveProfile" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Save" />
-      <TextField fx:id="nhiTxt" focusTraversable="false" layoutX="50.0" layoutY="119.0" promptText="NHI Number" />
-      <DatePicker fx:id="dobDate" editable="false" focusTraversable="false" layoutX="50.0" layoutY="315.0" prefHeight="26.0" prefWidth="155.0" promptText="Date of birth" />
-      <Label fx:id="lastModifiedLbl" alignment="CENTER" layoutX="180.0" layoutY="70.0" prefHeight="17.0" prefWidth="257.0" text="Last Modified: yada yada" />
-      <Label layoutX="245.0" layoutY="284.0" text="Gender" />
-      <Label layoutX="119.0" layoutY="102.0" text="NHI" />
-      <Label layoutX="98.0" layoutY="149.0" text="First Name" />
-      <Label layoutX="98.0" layoutY="200.0" text="Last Name" />
-      <Label layoutX="86.0" layoutY="250.0" text="Middle Name(s)" />
-      <Label layoutX="94.0" layoutY="299.0" text="Date of Birth" />
-      <RadioButton fx:id="genderMaleRadio" layoutX="299.0" layoutY="283.0" mnemonicParsing="false" text="Male">
+      <Label layoutX="236.0" layoutY="32.0" prefHeight="55.0" prefWidth="203.0" styleClass="title" stylesheets="@../css/guiStyle.css" text="Update Profile" />
+      <TextField fx:id="firstnameTxt" focusTraversable="false" layoutX="135.0" layoutY="168.0" promptText="First name" />
+      <TextField fx:id="lastnameTxt" focusTraversable="false" layoutX="135.0" layoutY="219.0" promptText="Last name" />
+      <TextField fx:id="middlenameTxt" focusTraversable="false" layoutX="135.0" layoutY="269.0" promptText="Middle name(s)" />
+      <Button layoutX="553.0" layoutY="477.0" mnemonicParsing="false" onAction="#saveProfile" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Save" />
+      <TextField fx:id="nhiTxt" focusTraversable="false" layoutX="135.0" layoutY="122.0" promptText="NHI Number" />
+      <DatePicker fx:id="dobDate" editable="false" focusTraversable="false" layoutX="182.0" layoutY="371.0" prefHeight="26.0" prefWidth="155.0" promptText="Date of birth" />
+      <Label fx:id="lastModifiedLbl" alignment="CENTER" layoutX="209.0" layoutY="79.0" prefHeight="17.0" prefWidth="257.0" text="Last Modified: " />
+      <Label layoutX="362.0" layoutY="427.0" text="Gender:" />
+      <Label layoutX="105.0" layoutY="127.0" text="NHI:" />
+      <Label layoutX="60.0" layoutY="174.0" text="First Name:" />
+      <Label layoutX="61.0" layoutY="224.0" text="Last Name:" />
+      <Label layoutX="29.0" layoutY="274.0" text="Middle Name(s):" />
+      <Label layoutX="93.0" layoutY="376.0" text="Date of Birth:" />
+      <RadioButton fx:id="genderMaleRadio" layoutX="416.0" layoutY="426.0" mnemonicParsing="false" text="Male">
          <toggleGroup>
             <ToggleGroup fx:id="gender" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="genderFemaleRadio" layoutX="353.0" layoutY="283.0" mnemonicParsing="false" text="Female" toggleGroup="$gender" />
-      <RadioButton fx:id="genderOtherRadio" layoutX="422.0" layoutY="283.0" mnemonicParsing="false" text="Other" toggleGroup="$gender" />
-      <Label layoutX="389.0" layoutY="320.0" text="Height (m)" />
-      <TextField fx:id="heightTxt" layoutX="455.0" layoutY="315.0" prefHeight="26.0" prefWidth="85.0" promptText="Height" />
-      <Label layoutX="222.0" layoutY="320.0" text="Weight (kg)" />
-      <TextField fx:id="weightTxt" layoutX="294.0" layoutY="315.0" prefHeight="26.0" prefWidth="85.0" promptText="Weight" />
-      <ChoiceBox fx:id="bloodGroupDD" layoutX="52.0" layoutY="365.0" prefHeight="26.0" prefWidth="155.0" />
-      <Label layoutX="93.0" layoutY="349.0" text="Blood Group" />
-      <Label layoutX="244.0" layoutY="124.0" text="Street 1" />
-      <Label layoutX="244.0" layoutY="157.0" text="Street 2" />
-      <Label layoutX="246.0" layoutY="192.0" text="Suburb" />
-      <Label layoutX="247.0" layoutY="221.0" text="Region" />
-      <TextField fx:id="street1Txt" layoutX="294.0" layoutY="119.0" prefHeight="26.0" prefWidth="235.0" />
-      <TextField fx:id="street2Txt" layoutX="294.0" layoutY="152.0" prefHeight="26.0" prefWidth="235.0" />
-      <TextField fx:id="suburbTxt" layoutX="294.0" layoutY="187.0" prefHeight="26.0" prefWidth="155.0" />
-      <TextField fx:id="regionTxt" layoutX="294.0" layoutY="216.0" prefHeight="26.0" prefWidth="155.0" />
-      <Label layoutX="258.0" layoutY="250.0" text="Zip" />
-      <TextField fx:id="zipTxt" layoutX="294.0" layoutY="245.0" prefHeight="26.0" prefWidth="70.0" />
+      <RadioButton fx:id="genderFemaleRadio" layoutX="470.0" layoutY="426.0" mnemonicParsing="false" text="Female" toggleGroup="$gender" />
+      <RadioButton fx:id="genderOtherRadio" layoutX="539.0" layoutY="426.0" mnemonicParsing="false" text="Other" toggleGroup="$gender" />
+      <Label layoutX="362.0" layoutY="388.0" text="Height (m):" />
+      <TextField fx:id="heightTxt" layoutX="431.0" layoutY="383.0" prefHeight="26.0" prefWidth="85.0" promptText="Height" />
+      <Label layoutX="359.0" layoutY="338.0" text="Weight (kg):" />
+      <TextField fx:id="weightTxt" layoutX="431.0" layoutY="333.0" prefHeight="26.0" prefWidth="85.0" promptText="Weight" />
+      <ChoiceBox fx:id="bloodGroupDD" layoutX="182.0" layoutY="421.0" prefHeight="26.0" prefWidth="155.0" />
+      <Label layoutX="92.0" layoutY="426.0" text="Blood Group:" />
+      <Label layoutX="325.0" layoutY="127.0" text="Street 1:" />
+      <Label layoutX="325.0" layoutY="169.0" text="Street 2:" />
+      <Label layoutX="327.0" layoutY="204.0" text="Suburb:" />
+      <Label layoutX="328.0" layoutY="238.0" text="Region:" />
+      <TextField fx:id="street1Txt" layoutX="381.0" layoutY="122.0" prefHeight="26.0" prefWidth="235.0" promptText="Street 1" />
+      <TextField fx:id="street2Txt" layoutX="381.0" layoutY="161.0" prefHeight="26.0" prefWidth="235.0" promptText="Street 2" />
+      <TextField fx:id="suburbTxt" layoutX="381.0" layoutY="199.0" prefHeight="26.0" prefWidth="155.0" promptText="Suburb" />
+      <TextField fx:id="regionTxt" layoutX="381.0" layoutY="236.0" prefHeight="26.0" prefWidth="155.0" />
+      <Label layoutX="347.0" layoutY="274.0" text="Zip:" />
+      <TextField fx:id="zipTxt" layoutX="381.0" layoutY="269.0" prefHeight="26.0" prefWidth="70.0" promptText="Zip" />
+      <DatePicker fx:id="dateOfDeath" editable="false" focusTraversable="false" layoutX="182.0" layoutY="335.0" prefHeight="26.0" prefWidth="155.0" promptText="Date of death" />
+      <Label layoutX="88.0" layoutY="340.0" text="Date of Death:" />
    </children>
 </AnchorPane>
