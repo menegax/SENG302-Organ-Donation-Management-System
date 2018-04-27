@@ -1,16 +1,13 @@
-package model_test.StateHistoryWidgetTests;
+package model_test.stateHistoryWidgetTests;
 
 import com.sun.javafx.application.PlatformImpl;
 import javafx.collections.FXCollections;
-import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.ComboBox;
-import model.StateHistoryWidgets.StateHistoryComboBox;
+import model.stateHistoryWidgets.StateHistoryComboBox;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.swing.*;
 import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
 
 import static org.junit.Assert.*;
 

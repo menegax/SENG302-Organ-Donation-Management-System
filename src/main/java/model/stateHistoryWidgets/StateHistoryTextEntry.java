@@ -1,12 +1,8 @@
-package model.StateHistoryWidgets;
+package model.stateHistoryWidgets;
 
 import controller.IUndoRedo;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.scene.control.TextField;
 
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**

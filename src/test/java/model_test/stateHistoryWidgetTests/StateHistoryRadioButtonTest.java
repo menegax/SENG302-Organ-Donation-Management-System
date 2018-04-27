@@ -1,15 +1,12 @@
-package model_test.StateHistoryWidgetTests;
+package model_test.stateHistoryWidgetTests;
 
 import com.sun.javafx.application.PlatformImpl;
-import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.RadioButton;
-import model.StateHistoryWidgets.StateHistoryRadioButton;
+import model.stateHistoryWidgets.StateHistoryRadioButton;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.swing.*;
 import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
 
 import static org.junit.Assert.*;
 

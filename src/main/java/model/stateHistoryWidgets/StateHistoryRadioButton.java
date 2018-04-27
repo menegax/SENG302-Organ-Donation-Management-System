@@ -1,4 +1,4 @@
-package model.StateHistoryWidgets;
+package model.stateHistoryWidgets;
 
 import controller.IUndoRedo;
 import javafx.scene.control.RadioButton;

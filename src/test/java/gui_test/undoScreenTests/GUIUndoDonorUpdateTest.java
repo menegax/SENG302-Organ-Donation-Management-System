@@ -1,4 +1,4 @@
-package gui_test;
+package gui_test.undoScreenTests;
 
 import controller.Main;
 import javafx.application.Platform;

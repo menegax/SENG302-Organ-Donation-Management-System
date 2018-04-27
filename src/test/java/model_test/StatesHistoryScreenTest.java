@@ -2,19 +2,16 @@ package model_test;
 
 import com.sun.javafx.application.PlatformImpl;
 import javafx.collections.FXCollections;
-import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import model.*;
-import model.StateHistoryWidgets.*;
+import model.stateHistoryWidgets.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.swing.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
 
 import static org.junit.Assert.assertEquals;
 

@@ -1,18 +1,12 @@
 package model;
 
 import controller.IUndoRedo;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
-import model.StateHistoryWidgets.*;
+import model.stateHistoryWidgets.*;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
