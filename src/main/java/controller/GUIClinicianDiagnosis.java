@@ -124,12 +124,8 @@ public class GUIClinicianDiagnosis {
             if (confirmation.get() == ButtonType.YES) {
                 back = true;
                 System.out.println(currentDiseases);
-                for (int i=0; i<deletedCurrent.size(); i++) {
-                    currentDiseases.add(deletedCurrent.get(i));
-                }
-                for (int i=0; i<deletedPast.size(); i++) {
-                    pastDiseases.add(deletedPast.get(i));
-                }
+                currentDiseases.addAll(deletedCurrent);
+                pastDiseases.addAll(deletedPast);
                 System.out.println(currentDiseases);
             }
         } else {
@@ -153,7 +149,8 @@ public class GUIClinicianDiagnosis {
         currentDonor.setCurrentDiseases(currentDiseases);
         currentDonor.setPastDiseases(pastDiseases);
         Database.saveToDisk();
-        new Alert(Alert.AlertType.CONFIRMATION, "Diagnoses saved successfully", ButtonType.OK).show();
+        new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis saved successfully", ButtonType.OK).show();
+        changed = false;
         goToProfile();
     }
 
