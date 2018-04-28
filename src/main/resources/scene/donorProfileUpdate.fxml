@@ -17,7 +17,7 @@
       <TextField fx:id="lastnameTxt" focusTraversable="false" layoutX="50.0" layoutY="216.0" promptText="Last name" />
       <TextField fx:id="middlenameTxt" focusTraversable="false" layoutX="50.0" layoutY="266.0" promptText="Middle name(s)" />
       <Button layoutX="439.0" layoutY="365.0" mnemonicParsing="false" onAction="#saveProfile" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Save" />
-      <TextField fx:id="nhiTxt" focusTraversable="false" layoutX="50.0" layoutY="119.0"  promptText="NHI Number" />
+      <TextField fx:id="nhiTxt" focusTraversable="false" layoutX="50.0" layoutY="119.0" promptText="NHI Number" />
       <DatePicker fx:id="dobDate" editable="false" focusTraversable="false" layoutX="50.0" layoutY="315.0" prefHeight="26.0" prefWidth="155.0" promptText="Date of birth" />
       <Label fx:id="lastModifiedLbl" alignment="CENTER" layoutX="180.0" layoutY="70.0" prefHeight="17.0" prefWidth="257.0" text="Last Modified: yada yada" />
       <Label layoutX="245.0" layoutY="284.0" text="Gender" />
@@ -50,6 +50,6 @@
       <Label layoutX="258.0" layoutY="250.0" text="Zip" />
       <TextField fx:id="zipTxt" layoutX="294.0" layoutY="245.0" prefHeight="26.0" prefWidth="70.0" />
       <Button fx:id="undoButton" layoutX="82.0" layoutY="38.0" mnemonicParsing="false" onAction="#redo" prefHeight="36.0" prefWidth="31.0" styleClass="redo" stylesheets="@../css/guiStyle.css" />
-      <Button fx:id="redoButton" layoutX="35.0" layoutY="39.0" mnemonicParsing="false" onAction="#undo" prefHeight="36.0" prefWidth="31.0" styleClass="undo" stylesheets="@../css/guiStyle.css" />
+      <Button fx:id="redoButton" layoutX="47.0" layoutY="38.0" mnemonicParsing="false" onAction="#undo" prefHeight="36.0" prefWidth="31.0" styleClass="undo" stylesheets="@../css/guiStyle.css" />
    </children>
 </AnchorPane>
