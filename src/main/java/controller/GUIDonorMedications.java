@@ -11,12 +11,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
+import model.DrugInteraction;
 import model.Medication;
 import service.Database;
 import utility.GlobalEnums.Gender;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -153,12 +155,6 @@ public class GUIDonorMedications {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the medications for logged in user");
             e.printStackTrace();
         }
-    }
-
-
-    private JsonObject getDrugInteractions(String drugOne, String drugTwo) throws IOException{
-        APIHelper apiHelper = new APIHelper();
-        return apiHelper.getDrugInteractions("Aspirin", "Alcohol");
     }
 
 
@@ -303,6 +299,7 @@ public class GUIDonorMedications {
      */
     private void onSelect(ListView listView) {
         if (listView.getSelectionModel().getSelectedItems().size() >= 1) {
+            System.out.println(listView.getSelectionModel().getSelectedItems());
             for (Object item : listView.getSelectionModel().getSelectedItems()) {
                 loadMedicationIngredients( item.toString() );
             }
@@ -340,7 +337,6 @@ public class GUIDonorMedications {
 
         if (!ingredients.contains( "Ingredients for '" + medication + "': " )) {
             newIngredients.add( "Ingredients for '" + medication + "': " );
-
             try {
                 if (medication.length() == 1) {
                     getDrugSuggestions( medication );
@@ -375,57 +371,16 @@ public class GUIDonorMedications {
     /**
      * When activated displays the interactions between the two most recently selected medications
      */
-    @FXML
-    public void reviewInteractions2() {
-        ArrayList <String> newInteractions = new ArrayList <>();
-        String medicationOne = null, medicationTwo = null;
-        Boolean hasInteractions = false;
-
-        if (ingredients.size() > 1 ) {
-            medicationOne = ingredients.get( 0 ).split( "'" )[1];
-
-            if (!ingredients.get(1).split(" ")[0].equals("There")) {
-                int index = ingredients.size();
-
-                for (int i = 2; i < ingredients.size(); i++) {
-                    if (ingredients.get( i ).equals( "" )) {
-                        index = i;
-                        break;
-                    }
-                }
-
-                if (index < ingredients.size() - 1 && (!ingredients.get( index - 1).split( " " )[0].equals( "There" ))) {
-                    medicationTwo = ingredients.get( index + 1 ).split( "'" )[1];
-                    hasInteractions = true;
-                }
-            }
+    private void displayInteractions(HashMap<String, Set<String>> interactions, String drugOne, String drugTwo) {
+        Set<String> keys = interactions.keySet();
+        ingredients.clear();
+        ingredients.add("Interactions for " + drugOne + " & " + drugTwo);
+        ingredients.add("");
+        for (String key : keys ){
+            interactions.get(key).forEach( (interaction) ->
+                    ingredients.add(interaction.replace("\"", "") + "  (" + key + ")"));
         }
-
-        if (hasInteractions) {
-            if (!ingredients.contains("Interactions between '" + medicationOne + "' and '" + medicationTwo + "':")) {
-                newInteractions.add( "Interactions between '" + medicationOne + "' and '" + medicationTwo + "':" );
-
-                //try {
-                //JsonArray response = helper.getMapiDrugIngredients( medication );
-                //response.forEach( ( element ) -> newInteractions.add( element.getAsString() ) );
-                //} catch (IOException e) {
-                //  newInteractions.add( "There are no recorded ingredients for '" + medicationOne + "' and '" + medicationTwo + "'");
-                //}
-
-                if (newInteractions.size() == 1) {
-                    newInteractions.add( "There are no recorded ingredients for '" + medicationOne + "' and '" + medicationTwo + "'");
-                }
-                newInteractions.add( "" );
-                ingredients.addAll( 0, newInteractions );
-            } else {
-                int index = ingredients.indexOf("Interactions between '" + medicationOne + "' and '" + medicationTwo + "':");
-                moveToTopInformationList(index);
-            }
-            displayIngredients( ingredients );
-        } else {
-            Alert interact = new Alert(Alert.AlertType.ERROR, "Reviewing interactions requires two medications ");
-            interact.show();
-        }
+        displayIngredients(ingredients);
     }
 
 
@@ -440,10 +395,8 @@ public class GUIDonorMedications {
         }};
         if ( selectedMedications.size()  == 2){ //if two are selected
             try {
-                JsonObject response = getDrugInteractions(selectedMedications.get(0), selectedMedications.get(1)); //get the text to display
-                filterInteractionsResponse(response); //TODO: will return hashMap of duration:interaction pairs. "<1 month" : "nausea"
-
-                //TODO:
+                DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1));
+                displayInteractions(interaction.getInteractionsWithDurations(), selectedMedications.get(0), selectedMedications.get(1));
             } catch (IOException e ){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Drug interactions not available");
                 alert.show();
@@ -452,120 +405,7 @@ public class GUIDonorMedications {
     }
 
 
-    /**
-     *
-     * @param response -
-     * @return -
-     */
-    private HashMap<String, ArrayList<String>>  filterInteractionsResponse(JsonObject response){
-        Donor donor = ScreenControl.getLoggedInDonor();
-        int donorAge = donor.getAge();
-        Gender donorGender = donor.getGender();
-        JsonElement ageInteraction =  response.get("age_interaction");
-        Set<String> ageSets = ageInteraction.getAsJsonObject().keySet(); //get age sets
-        JsonElement interactionsAgeGroup = null;
-        for (String ageSet: ageSets) {
-            if (inAgeGroup(donorAge, ageSet)){ //check what age group the donor is in
-                interactionsAgeGroup = ageInteraction.getAsJsonObject().get(ageSet); //find which age group the current donor is in
-                break;
-            }
-        }
 
-        JsonArray interactions = new JsonArray();
-        interactions.addAll(Objects.requireNonNull(interactionsAgeGroup != null ? interactionsAgeGroup.getAsJsonArray() : null));
-        JsonArray genderInteractions = getGenderInteractions(donorGender, response);
-        if (genderInteractions != null) {
-            interactions.addAll(genderInteractions);
-        }
-        Set<String> interactionNoDuplicates = new HashSet<>();
-        interactions.forEach((jsonElement -> interactionNoDuplicates.add(jsonElement.toString()))); //remove duplicates
-        System.out.println(getInteractionsWithDurations(interactionNoDuplicates, response));
-
-        return getInteractionsWithDurations(interactionNoDuplicates, response);
-    }
-
-
-    /**
-     *
-     * @param donorGender -
-     * @param response -
-     * @return -
-     */
-    private JsonArray getGenderInteractions(Gender donorGender, JsonObject response) {
-        if (donorGender != null){//get the correct gender interaction
-            JsonElement genderInteractions = donorGender != Gender.OTHER ?
-                    response.get("gender_interaction").getAsJsonObject().get(donorGender.name().toLowerCase()): response.get("gender_interaction");
-            JsonArray gender = new JsonArray();
-            if (donorGender == Gender.OTHER) {
-                gender.addAll(genderInteractions.getAsJsonObject().get("female").getAsJsonArray());
-                gender.addAll(genderInteractions.getAsJsonObject().get("male").getAsJsonArray());
-            } else {
-                gender.addAll(genderInteractions.getAsJsonArray());
-            }
-            return gender;
-        }
-        return null;
-    }
-
-    /**
-     *
-     * @param donorAge -
-     * @param ageSet -
-     * @return -
-     */
-    private boolean inAgeGroup(int donorAge, String ageSet){
-        Pattern pattern = Pattern.compile("\\d{2}");
-        Matcher matcher = pattern.matcher(ageSet);
-        ArrayList<Integer> matches = new ArrayList<>();
-        while (matcher.find()) {
-            matches.add(Integer.parseInt(matcher.group()));
-        }
-        if (matches.size() == 1 && donorAge >= matches.get(0)) { //60+
-            return true;
-        } else return donorAge >= matches.get(0) && donorAge <= matches.get(1); //all other age groups
-    }
-
-    /**
-     *
-     * @param interactions -
-     * @param response -
-     * @return -
-     */
-    private HashMap<String, ArrayList<String>> getInteractionsWithDurations(Set interactions, JsonObject response) {
-        HashMap<String, ArrayList<String>> interactionWithDuration = new HashMap<>();
-        JsonElement durationInteraction = response.get("duration_interaction").getAsJsonObject();
-        Set<String> durationSets = durationInteraction.getAsJsonObject().keySet(); //get duration sets
-        for (Object interaction : interactions) {
-            boolean inHashMap = false;
-            for (String durationSet : durationSets) {
-                for (JsonElement element : ((JsonObject) durationInteraction).get(durationSet).getAsJsonArray()) {
-                    String interactUnderDuration = element.getAsString();
-                    if (interactUnderDuration.equals(interaction.toString().replaceAll("\"", ""))) {
-                        if (interactionWithDuration.get(durationSet) == null) { //if duration is not in the hash map already
-                            interactionWithDuration.put(durationSet, new ArrayList<String>(){{
-                                add(interaction.toString());}});
-                        } else {
-                            interactionWithDuration.get(durationSet).add(interaction.toString());
-                        }
-                        inHashMap = true;
-                    }
-                }
-            }
-            if (!inHashMap) { //put all interactions that do not have a duration as not specified
-                if (interactionWithDuration.get("not specified") != null) {
-                    interactionWithDuration.get("not specified").add(interaction.toString());
-                } else {
-                    interactionWithDuration.put("not specified", new ArrayList<String>(){{
-                        add(interaction.toString());}});
-                }
-            }
-        }
-        return interactionWithDuration;
-    }
-
-    public void populateInformationList(){
-
-    }
 
     /**
      * Takes a string list of ingredients, and binds it to the medicineInformation listView to be displayed
