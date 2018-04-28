@@ -5,8 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCode;
+import javafx.scene.control.Control;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
+import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
 
@@ -60,10 +62,26 @@ public class GUIDonorUpdateDonations {
     @FXML
     private CheckBox connectivetissueCB;
 
-    /**
-     * Donor that is currently logged in
-     */
+
+    @FXML
+    private AnchorPane donorDonationsAnchorPane;
+
+
+    @FXML
+    private void redo() {
+        statesHistoryScreen.redo();
+    }
+
+
+    @FXML
+    private void undo() {
+        statesHistoryScreen.undo();
+    }
+
+
     private Donor target;
+
+    private StatesHistoryScreen statesHistoryScreen;
 
 
     public void initialize() {
@@ -88,8 +106,22 @@ public class GUIDonorUpdateDonations {
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
-            e.printStackTrace();
         }
+        ArrayList<Control> controls = new ArrayList<Control>() {{
+            add(liverCB);
+            add(kidneyCB);
+            add(pancreasCB);
+            add(heartCB);
+            add(lungCB);
+            add(intestineCB);
+            add(corneaCB);
+            add(middleearCB);
+            add(skinCB);
+            add(boneCB);
+            add(bonemarrowCB);
+            add(connectivetissueCB);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(donorDonationsAnchorPane, controls);
     }
 
 

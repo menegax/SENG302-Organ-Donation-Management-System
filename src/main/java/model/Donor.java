@@ -175,6 +175,7 @@ public class Donor {
         donorModified();
     }
 
+
     /**
      * Update the organ donations list of the donor
      *
@@ -404,6 +405,7 @@ public class Donor {
         if(this.height == 0) return 0.0;
         else return Double.valueOf(df.format(this.weight / (Math.pow(this.height, 2))));
     }
+
 
     public BloodGroup getBloodGroup() {
         return bloodGroup;
