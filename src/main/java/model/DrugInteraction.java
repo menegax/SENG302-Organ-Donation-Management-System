@@ -47,7 +47,7 @@ public class DrugInteraction {
         }
         JsonArray interactions = new JsonArray();
         interactions.addAll(Objects.requireNonNull(interactionsAgeGroup != null ? interactionsAgeGroup.getAsJsonArray() : null));
-        JsonArray genderInteractions = getGenderInteractionsHelper(donorGender);
+        JsonArray genderInteractions = getGenderInteractionsHelper(donorGender == null ? GlobalEnums.Gender.OTHER : donorGender); //if donor gender is null, treat is as other
         if (genderInteractions != null) {
             interactions.addAll(genderInteractions);
         }
@@ -62,20 +62,21 @@ public class DrugInteraction {
      * @param donorGender - Gender of the donor
      * @return - interactions based on the gender of the donor
      */
-    private JsonArray getGenderInteractionsHelper(GlobalEnums.Gender donorGender) {
-        if (donorGender != null){//get the correct gender interaction
-            JsonElement genderInteractions = donorGender != GlobalEnums.Gender.OTHER ?
-                    response.get("gender_interaction").getAsJsonObject().get(donorGender.name().toLowerCase()): response.get("gender_interaction");
-            JsonArray gender = new JsonArray();
-            if (donorGender == GlobalEnums.Gender.OTHER) {
-                gender.addAll(genderInteractions.getAsJsonObject().get("female").getAsJsonArray());
-                gender.addAll(genderInteractions.getAsJsonObject().get("male").getAsJsonArray());
-            } else {
-                gender.addAll(genderInteractions.getAsJsonArray());
-            }
-            return gender;
+    public JsonArray getGenderInteractionsHelper(GlobalEnums.Gender donorGender) {
+
+        JsonElement genderInteractions = donorGender != GlobalEnums.Gender.OTHER ?
+                response.get("gender_interaction").getAsJsonObject().get(donorGender.name().toLowerCase()):
+                response.get("gender_interaction");
+
+        JsonArray gender = new JsonArray();
+        if (donorGender == GlobalEnums.Gender.OTHER) {
+            gender.addAll(genderInteractions.getAsJsonObject().get("female").getAsJsonArray());
+            gender.addAll(genderInteractions.getAsJsonObject().get("male").getAsJsonArray());
+        } else {
+            gender.addAll(genderInteractions.getAsJsonArray());
         }
-        return null;
+        return gender;
+
     }
 
     /**
@@ -106,22 +107,24 @@ public class DrugInteraction {
         JsonElement durationInteraction = response.get("duration_interaction").getAsJsonObject();
         Set<String> durationSets = durationInteraction.getAsJsonObject().keySet(); //get duration sets
         for (Object interaction : interactions) {
+            String druInteraction = interaction.toString().replaceAll("\"", "");
             boolean inHashMap = false; //keep flag to see if a interaction is within one of the duration categories
             for (String durationSet : durationSets) {
                 for (JsonElement element : ((JsonObject) durationInteraction).get(durationSet).getAsJsonArray()) {
                     String interactUnderDuration = element.getAsString();
-                    if (interactUnderDuration.equals(interaction.toString().replaceAll("\"", ""))) {
+
+                    if (interactUnderDuration.equals(druInteraction)) {
                         if (interactionWithDuration.get(durationSet) == null) { //if duration is not in the hash map already
                             interactionWithDuration.put(durationSet, new HashSet<String>(){{
-                                add(interaction.toString());}});
+                                add(druInteraction);}});
                         } else {
-                            interactionWithDuration.get(durationSet).add(interaction.toString());
+                            interactionWithDuration.get(durationSet).add(druInteraction);
                         }
                         inHashMap = true;
                     }
                 }
             }
-            placeUnderNotSpecified(interactionWithDuration, interaction, inHashMap);
+            placeUnderNotSpecified(interactionWithDuration, druInteraction, inHashMap);
 
         }
         return interactionWithDuration;

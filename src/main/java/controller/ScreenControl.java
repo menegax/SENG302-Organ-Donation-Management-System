@@ -14,7 +14,7 @@ public class ScreenControl {
 
     public static Donor donor;
 
-    static void setLoggedInDonor(Donor newDonor) {
+    public static void setLoggedInDonor(Donor newDonor) {
         donor = newDonor;
     }
 
