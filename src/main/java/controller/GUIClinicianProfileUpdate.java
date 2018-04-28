@@ -2,6 +2,7 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -135,8 +136,10 @@ public class GUIClinicianProfileUpdate {
             if (street2Txt.getText().length() > 0) target.setStreet2(street2Txt.getText());
             if (suburbTxt.getText().length() > 0) target.setSuburb(suburbTxt.getText());
             target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel().getSelectedItem().toString()));
-            new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK).show();
-            goBackToProfile();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK);
+            final Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+            dialogOK.addEventFilter(ActionEvent.ACTION, event -> goBackToProfile());
+            alert.show();
         } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }
