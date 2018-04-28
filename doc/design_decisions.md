@@ -82,3 +82,18 @@ See the GUIDonorRegister class for examples of goToLogin() and register()
 
 #### User Action History
 All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new donor would not be logged either.
+
+## Sprint 3
+26th of March to the 3rd of May
+
+#### Interface classes
+All interface classes must be prefixed with "I". i.e. IEnumberable. This is to be able to distinguish classes from interfaces easily when the repository gets larger.
+
+#### Undo
+We've decided to have the action listeners linked to the state history for each control.  
+This allows undo to be generalised and applied much easier.  
+It also allows for separate actions to listen to for store(state change) and undo(Ctrl Z).  
+This therefore lead to the decision to only undo one letter at a time in all scenarios as this is how it was being stored.  
+We store and undo all control widgets at once as this circumvents the need to identify what control changed last, while also keeping the same user experience.   
+We decided to implement an IUndoRedo interface which all controls used will have an applicable StateHistory which represents it.  
+This interface shows exactly what is expected of the StateHistorys and is also used for iteration purposes in the StatesHistoryScreen object.
