@@ -38,6 +38,7 @@ public class GUIClinicianDiagnosis {
     private Donor currentDonor;
     private ArrayList<Disease> currentDiseases;
     private ArrayList<Disease> pastDiseases;
+    private Disease chosen;
 
 
     @FXML
@@ -61,6 +62,8 @@ public class GUIClinicianDiagnosis {
                 });
                 rightClickPast.getItems().addAll(makeChronicAction);
                 rightClickPast.show(pastDiagnosesView.getSelectionModel().getTableView(), click.getScreenX(), click.getScreenY());
+            } else if (click.getButton() == MouseButton.PRIMARY && pastDiagnosesView.getSelectionModel().getSelectedItem() != null) {
+                chosen = pastDiagnosesView.getSelectionModel().getSelectedItem();
             }
         });
 
@@ -84,6 +87,8 @@ public class GUIClinicianDiagnosis {
                 });
                 rightClickCurrent.getItems().addAll(makeChronicAction, makeCuredAction);
                 rightClickCurrent.show(currentDiagnosesView.getSelectionModel().getTableView(), click.getScreenX(), click.getScreenY());
+            } else if (click.getButton() == MouseButton.PRIMARY && currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
+                chosen = currentDiagnosesView.getSelectionModel().getSelectedItem();
             }
         });
     }
@@ -126,5 +131,20 @@ public class GUIClinicianDiagnosis {
         Database.saveToDisk();
         new Alert(Alert.AlertType.CONFIRMATION, "Diagnoses saved successfully", ButtonType.OK).show();
         goToProfile();
+    }
+
+    @FXML
+    public void deleteDiagnoses() {
+        if (pastDiagnosesView.getSelectionModel().getSelectedItem() != null) {
+            pastDiseases.remove(chosen);
+            loadPastDiseases();
+            new Alert(Alert.AlertType.CONFIRMATION, "Diagnoses deleted successfully", ButtonType.OK).show();
+        } else if (currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
+            currentDiseases.remove(chosen);
+            loadCurrentDiseases();
+            new Alert(Alert.AlertType.CONFIRMATION, "Diagnoses deleted successfully", ButtonType.OK).show();
+        } else {
+            new Alert(Alert.AlertType.WARNING, "No Diagnosis selected", ButtonType.OK).show();
+        }
     }
 }
