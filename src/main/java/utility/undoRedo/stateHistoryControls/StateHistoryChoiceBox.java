@@ -1,4 +1,4 @@
-package model.stateHistoryWidgets;
+package utility.undoRedo.stateHistoryControls;
 
 import controller.IUndoRedo;
 import javafx.scene.control.ChoiceBox;
@@ -15,15 +15,19 @@ public class StateHistoryChoiceBox implements IUndoRedo {
 
     private int index = 0;
 
+
     /**
      * Constructor which adds the current (base) state of the choice box to the history
+     *
      * @param choiceBox - ChoiceBox the object will be keeping history of
      */
 
-    public StateHistoryChoiceBox(ChoiceBox<String> choiceBox){
+    public StateHistoryChoiceBox(ChoiceBox<String> choiceBox) {
         this.choiceBox = choiceBox;
-        states.add(choiceBox.getSelectionModel().getSelectedItem());
+        states.add(choiceBox.getSelectionModel()
+                .getSelectedItem());
     }
+
 
     /**
      * Called whenever the user makes an action
@@ -33,8 +37,10 @@ public class StateHistoryChoiceBox implements IUndoRedo {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(choiceBox.getSelectionModel().getSelectedItem());
+        states.add(choiceBox.getSelectionModel()
+                .getSelectedItem());
     }
+
 
     /**
      * Sets the ChoiceBox to the state before the current state
@@ -42,30 +48,37 @@ public class StateHistoryChoiceBox implements IUndoRedo {
     public void undo() {
         if (index != 0) {
             index -= 1;
-            choiceBox.getSelectionModel().select(states.get(index));
+            choiceBox.getSelectionModel()
+                    .select(states.get(index));
             undone = true;
         }
     }
 
+
     public void redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
-            choiceBox.getSelectionModel().select(states.get(index));
+            choiceBox.getSelectionModel()
+                    .select(states.get(index));
         }
     }
+
 
     /**
      * Gets the states of the Combo Box
      * Currently only used in testing
+     *
      * @return the states of the combo box
      */
     public ArrayList<Object> getStates() {
         return new ArrayList<>(states);
     }
 
+
     /**
      * Gets the index of the current state of the ChoiceBox
      * currently only used in testing
+     *
      * @return the index of the current state
      */
     public int getIndex() {

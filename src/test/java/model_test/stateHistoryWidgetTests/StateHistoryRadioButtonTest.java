@@ -2,7 +2,7 @@ package model_test.stateHistoryWidgetTests;
 
 import com.sun.javafx.application.PlatformImpl;
 import javafx.scene.control.RadioButton;
-import model.stateHistoryWidgets.StateHistoryRadioButton;
+import utility.undoRedo.stateHistoryControls.StateHistoryRadioButton;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

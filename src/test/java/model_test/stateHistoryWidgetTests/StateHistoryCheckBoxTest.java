@@ -2,7 +2,7 @@ package model_test.stateHistoryWidgetTests;
 
 import com.sun.javafx.application.PlatformImpl;
 import javafx.scene.control.CheckBox;
-import model.stateHistoryWidgets.StateHistoryCheckBox;
+import utility.undoRedo.stateHistoryControls.StateHistoryCheckBox;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

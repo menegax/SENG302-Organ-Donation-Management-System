@@ -1,4 +1,4 @@
-package model.stateHistoryWidgets;
+package utility.undoRedo.stateHistoryControls;
 
 import controller.IUndoRedo;
 import javafx.scene.control.DatePicker;

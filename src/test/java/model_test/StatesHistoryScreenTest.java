@@ -4,11 +4,11 @@ import com.sun.javafx.application.PlatformImpl;
 import javafx.collections.FXCollections;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-import model.*;
-import model.stateHistoryWidgets.*;
+import utility.undoRedo.stateHistoryControls.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

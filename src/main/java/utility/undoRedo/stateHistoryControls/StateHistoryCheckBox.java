@@ -1,4 +1,4 @@
-package model.stateHistoryWidgets;
+package utility.undoRedo.stateHistoryControls;
 
 import controller.IUndoRedo;
 import javafx.scene.control.CheckBox;
@@ -25,19 +25,22 @@ public class StateHistoryCheckBox implements IUndoRedo {
      */
     private int index = 0;
 
-    /*
+    /**
      * True if an undo has been executed, false otherwise - could be reset at exit from each interface
      */
     private boolean undone = false;
 
+
     /**
      * Constructor for the State History
+     *
      * @param checkBox the CheckBox whose state we are storing
      */
     public StateHistoryCheckBox(CheckBox checkBox) {
         this.checkBox = checkBox;
         states.add(checkBox.isSelected());
     }
+
 
     /**
      * Called whenever the user makes an action
@@ -50,6 +53,7 @@ public class StateHistoryCheckBox implements IUndoRedo {
         states.add(checkBox.isSelected());
     }
 
+
     /**
      * Sets the CheckBox to the state before the current state
      */
@@ -61,19 +65,22 @@ public class StateHistoryCheckBox implements IUndoRedo {
         }
     }
 
+
     /**
      * Resets the Checkbox to the state immediately prior to an undo
      */
     public void redo() {
-        if (undone && index +1 < states.size()) {
+        if (undone && index + 1 < states.size()) {
             index += 1;
             checkBox.setSelected(states.get(index));
         }
     }
 
+
     /**
      * Gets the states of the Check Box
      * Currently only used in testing
+     *
      * @return the states of the check box
      */
     public ArrayList<Object> getStates() {
@@ -81,9 +88,11 @@ public class StateHistoryCheckBox implements IUndoRedo {
         return objectStates;
     }
 
+
     /**
      * Gets the index of the current state of the checkbox
      * currently only used in testing
+     *
      * @return the index of the current state
      */
     public int getIndex() {

@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import model.Donor;
-import model.StatesHistoryScreen;
+import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 
 import java.time.LocalDate;
@@ -39,32 +39,37 @@ public class GUIDonorRegister {
     @FXML
     private Pane donorRegisterAnchorPane;
 
+
     @FXML
     private void undo() {
         statesHistoryScreen.undo();
     }
+
 
     @FXML
     private void redo() {
         statesHistoryScreen.redo();
     }
 
+
     private StringConverter<LocalDate> dateConverter;
 
     private StatesHistoryScreen statesHistoryScreen;
+
 
     /**
      * Back button listener to switch to the login screen
      */
     @FXML
-    public void goBackToLogin(){
+    public void goBackToLogin() {
         ScreenControl.activate("login");
     }
+
 
     /**
      * Sets up register page GUI elements
      */
-    public void initialize(){
+    public void initialize() {
         setDateConverter();
         ArrayList<Control> controls = new ArrayList<Control>() {{
             add(firstnameRegister);
@@ -79,45 +84,61 @@ public class GUIDonorRegister {
 
     /**
      * Checks users have entered all REQUIRED fields
+     *
      * @return boolean - if user has entered all required fields
      */
 
-    private boolean hasAllRequired(){
-        return firstnameRegister.getText().isEmpty() || lastnameRegister.getText().isEmpty()
-                || birthRegister.getValue() == null || nhiRegister.getText().isEmpty();
+    private boolean hasAllRequired() {
+        return firstnameRegister.getText()
+                .isEmpty() || lastnameRegister.getText()
+                .isEmpty() || birthRegister.getValue() == null || nhiRegister.getText()
+                .isEmpty();
     }
+
 
     /**
      * Adds donor to database
-     * @throws IllegalArgumentException - if entered NHI is not unique
+     *
+     * @exception IllegalArgumentException - if entered NHI is not unique
      */
 
     private void addDonorGui() throws IllegalArgumentException {
-        Database.addDonor(new Donor(nhiRegister.getText(), firstnameRegister.getText(),
-                middlenameRegister.getText().isEmpty() ? new ArrayList<>() :
-                        new ArrayList<>(Arrays.asList(middlenameRegister.getText().split("\\s*,\\s*"))),
-                lastnameRegister.getText(), dateConverter.fromString(birthRegister.getValue().toString())));
+        Database.addDonor(new Donor(nhiRegister.getText(),
+                firstnameRegister.getText(),
+                middlenameRegister.getText()
+                        .isEmpty() ? new ArrayList<>() : new ArrayList<>(Arrays.asList(middlenameRegister.getText()
+                        .split("\\s*,\\s*"))),
+                lastnameRegister.getText(),
+                dateConverter.fromString(birthRegister.getValue()
+                        .toString())));
     }
+
 
     /**
      * Sets the date picker format to be yyyy-MM-dd
      */
-    private void setDateConverter(){
+    private void setDateConverter() {
         dateConverter = new StringConverter<LocalDate>() {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+
             @Override
             public String toString(LocalDate date) {
                 if (date != null) {
                     return dateFormatter.format(date);
-                } else {
+                }
+                else {
                     return "";
                 }
             }
+
+
             @Override
             public LocalDate fromString(String string) {
                 if (string != null && !string.isEmpty()) {
                     return LocalDate.parse(string, dateFormatter);
-                } else {
+                }
+                else {
                     return null;
                 }
             }
@@ -130,24 +151,25 @@ public class GUIDonorRegister {
      * Check users inputs and registers the user donor profile
      */
     @FXML
-    public void register(){
+    public void register() {
         Alert alert = new Alert(Alert.AlertType.WARNING, "");
         if (!(hasAllRequired())) {
-            try{
+            try {
                 addDonorGui();
                 Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Registered");
                 confirm.showAndWait();
                 ScreenControl.activate("login");
-            } catch (IllegalArgumentException e) {
+            }
+            catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, e.getMessage(), "attempted to add donor from gui attributes");
                 alert.setContentText(e.getMessage());
                 alert.show();
             }
-        } else {
+        }
+        else {
             alert.setContentText("Enter all required fields.");
             alert.show();
         }
     }
-
 
 }

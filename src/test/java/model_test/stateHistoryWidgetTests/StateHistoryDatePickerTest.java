@@ -2,7 +2,7 @@ package model_test.stateHistoryWidgetTests;
 
 import com.sun.javafx.application.PlatformImpl;
 import javafx.scene.control.DatePicker;
-import model.stateHistoryWidgets.StateHistoryDatePicker;
+import utility.undoRedo.stateHistoryControls.StateHistoryDatePicker;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
