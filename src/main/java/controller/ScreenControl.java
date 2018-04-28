@@ -2,6 +2,7 @@ package controller;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import model.Clinician;
 import model.Donor;
 
 import java.util.HashMap;
@@ -14,12 +15,22 @@ class ScreenControl {
 
     public static Donor donor;
 
+    public static Clinician clinician;
+
     static void setLoggedInDonor(Donor newDonor) {
         donor = newDonor;
     }
 
     static Donor getLoggedInDonor() {
         return donor;
+    }
+
+    static void setLoggedInClinician(Clinician newClinician) {
+        clinician = newClinician;
+    }
+
+    static Clinician getLoggedInClinician() {
+        return clinician;
     }
 
     /**
