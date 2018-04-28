@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import controller.ScreenControl;
-import utility.GlobalEnums;
+import utility.GlobalEnums.Gender;
 
 import java.io.IOException;
 import java.util.*;
@@ -32,28 +32,43 @@ public class DrugInteraction {
      *  Get interactions based on age and gender of the donor
      * @return - set of interactions between the two drugs
      */
-    private Set getInteractionsAgeGender(){
+    private Set<String> getInteractionsAgeGender(){
+        Set<String> allInteractions = new HashSet<>();
         Donor donor = ScreenControl.getLoggedInDonor();
         int donorAge = donor.getAge();
-        GlobalEnums.Gender donorGender = donor.getGender();
+        Gender donorGender = donor.getGender() != Gender.FEMALE &&
+                             donor.getGender() != Gender.MALE
+                             && donor.getGender() != Gender.OTHER
+                             ? Gender.OTHER : donor.getGender();
+
+        JsonArray interactionsAgeGroup = getAgeInteractionsHelper(donorAge);
+        JsonArray genderInteractions = getGenderInteractionsHelper(donorGender); //if donor gender is null, treat is as other
+        if (genderInteractions != null) {
+            genderInteractions.forEach((jsonElement -> allInteractions.add(jsonElement.toString())));
+        }
+        if (interactionsAgeGroup != null) {
+           interactionsAgeGroup.forEach((jsonElement -> allInteractions.add(jsonElement.toString())));
+        }
+        return allInteractions;
+    }
+
+
+    /**
+     * Helper method to get the interactions based on the donors age
+     * @param donorAge - age of the donor
+     * @return - JSONArray of the interactions for the given age
+     */
+    public JsonArray getAgeInteractionsHelper(int donorAge){
         JsonElement ageInteraction =  response.get("age_interaction");
         Set<String> ageSets = ageInteraction.getAsJsonObject().keySet(); //get age sets
-        JsonElement interactionsAgeGroup = null;
+        JsonArray interactionsAgeGroup = new JsonArray();
         for (String ageSet: ageSets) {
             if (inAgeGroup(donorAge, ageSet)){ //check what age group the donor is in
-                interactionsAgeGroup = ageInteraction.getAsJsonObject().get(ageSet); //find which age group the current donor is in
+                interactionsAgeGroup = ageInteraction.getAsJsonObject().get(ageSet).getAsJsonArray(); //find which age group the current donor is in
                 break;
             }
         }
-        JsonArray interactions = new JsonArray();
-        interactions.addAll(Objects.requireNonNull(interactionsAgeGroup != null ? interactionsAgeGroup.getAsJsonArray() : null));
-        JsonArray genderInteractions = getGenderInteractionsHelper(donorGender == null ? GlobalEnums.Gender.OTHER : donorGender); //if donor gender is null, treat is as other
-        if (genderInteractions != null) {
-            interactions.addAll(genderInteractions);
-        }
-        Set<String> interactionNoDuplicates = new HashSet<>();
-        interactions.forEach((jsonElement -> interactionNoDuplicates.add(jsonElement.toString()))); //remove duplicates
-        return interactionNoDuplicates;
+        return interactionsAgeGroup;
     }
 
 
@@ -62,14 +77,13 @@ public class DrugInteraction {
      * @param donorGender - Gender of the donor
      * @return - interactions based on the gender of the donor
      */
-    public JsonArray getGenderInteractionsHelper(GlobalEnums.Gender donorGender) {
-
-        JsonElement genderInteractions = donorGender != GlobalEnums.Gender.OTHER ?
+    public JsonArray getGenderInteractionsHelper(Gender donorGender) {
+        JsonElement genderInteractions = donorGender != Gender.OTHER ?
                 response.get("gender_interaction").getAsJsonObject().get(donorGender.name().toLowerCase()):
                 response.get("gender_interaction");
 
         JsonArray gender = new JsonArray();
-        if (donorGender == GlobalEnums.Gender.OTHER) {
+        if (donorGender == Gender.OTHER) {
             gender.addAll(genderInteractions.getAsJsonObject().get("female").getAsJsonArray());
             gender.addAll(genderInteractions.getAsJsonObject().get("male").getAsJsonArray());
         } else {
@@ -94,7 +108,12 @@ public class DrugInteraction {
         }
         if (matches.size() == 1 && donorAge >= matches.get(0)) { //60+
             return true;
-        } else return donorAge >= matches.get(0) && donorAge <= matches.get(1); //all other age groups
+        }
+        if (matches.size() == 0) { // no match found for the donor age
+            return false;
+        } else {
+            return (donorAge >= matches.get(0) && donorAge <= matches.get(1)); //all other age groups
+        }
     }
 
     /**
@@ -102,7 +121,7 @@ public class DrugInteraction {
      * @return - HashMap as duration : interaction pairs, interactions are a set
      */
     public HashMap<String, Set<String>> getInteractionsWithDurations() {
-        Set interactions = getInteractionsAgeGender();
+        Set<String> interactions = getInteractionsAgeGender();
         HashMap<String, Set<String>> interactionWithDuration = new HashMap<>();
         JsonElement durationInteraction = response.get("duration_interaction").getAsJsonObject();
         Set<String> durationSets = durationInteraction.getAsJsonObject().keySet(); //get duration sets
@@ -112,7 +131,6 @@ public class DrugInteraction {
             for (String durationSet : durationSets) {
                 for (JsonElement element : ((JsonObject) durationInteraction).get(durationSet).getAsJsonArray()) {
                     String interactUnderDuration = element.getAsString();
-
                     if (interactUnderDuration.equals(druInteraction)) {
                         if (interactionWithDuration.get(durationSet) == null) { //if duration is not in the hash map already
                             interactionWithDuration.put(durationSet, new HashSet<String>(){{
