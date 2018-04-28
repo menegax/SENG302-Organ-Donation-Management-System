@@ -101,7 +101,7 @@
          </children>
       </VBox>
       <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-      <Button layoutX="494.0" layoutY="36.0" mnemonicParsing="false" onAction="#goToEdit" text="Edit" />
-      <Button layoutX="241.0" layoutY="314.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
+      <Button fx:id="editButton" layoutX="494.0" layoutY="36.0" mnemonicParsing="false" onAction="#goToEdit" text="Edit" />
+      <Button fx:id="donationsButton" layoutX="241.0" layoutY="314.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
    </children>
 </AnchorPane>
