@@ -128,6 +128,8 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#firstnameTxt", TextInputControlMatchers.hasText( "122" ));
         interact( () -> {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
+        });
+        interact( () -> {
             lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(!Database.getClinicians().get(0).getFirstName().equals("12"));
