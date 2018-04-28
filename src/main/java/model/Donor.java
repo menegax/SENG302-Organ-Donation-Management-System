@@ -8,13 +8,9 @@ import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 

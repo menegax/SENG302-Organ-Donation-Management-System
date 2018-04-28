@@ -16,8 +16,6 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-import static controller.ScreenControl.donor;
-
 public class GUIDonorProfile {
 
     @FXML
