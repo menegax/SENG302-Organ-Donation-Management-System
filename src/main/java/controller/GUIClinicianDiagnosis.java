@@ -10,6 +10,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import model.Disease;
 import model.Donor;
+import service.Database;
 import utility.GlobalEnums;
 
 import java.io.IOException;
@@ -81,7 +82,7 @@ public class GUIClinicianDiagnosis {
                     loadCurrentDiseases();
                     loadPastDiseases();
                 });
-                rightClickCurrent.getItems().addAll(makeChronicAction);
+                rightClickCurrent.getItems().addAll(makeChronicAction, makeCuredAction);
                 rightClickCurrent.show(currentDiagnosesView.getSelectionModel().getTableView(), click.getScreenX(), click.getScreenY());
             }
         });
@@ -89,8 +90,6 @@ public class GUIClinicianDiagnosis {
 
     private void loadCurrentDiseases() {
         if(currentDiseases == null) currentDiseases = new ArrayList<>();
-        currentDiseases.add(new Disease("ChickenPox", currentDonor, null));
-        currentDiseases.add(new Disease("Death Curse", currentDonor, GlobalEnums.DiseaseState.CHRONIC));
         ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(currentDiseases);
         currentDateCol.setCellValueFactory(new PropertyValueFactory<>("dateDiagnosed"));
         currentDiagnosisCol.setCellValueFactory(new PropertyValueFactory<>("diseaseName"));
@@ -100,7 +99,6 @@ public class GUIClinicianDiagnosis {
 
     private void loadPastDiseases() {
         if(pastDiseases == null) pastDiseases = new ArrayList<>();
-        pastDiseases.add(new Disease("Influenza", currentDonor, null));
         ObservableList<Disease> observablePastDiseases = FXCollections.observableArrayList(pastDiseases);
         pastDateCol.setCellValueFactory(new PropertyValueFactory<>("dateDiagnosed"));
         pastDiagnosisCol.setCellValueFactory(new PropertyValueFactory<>("diseaseName"));
@@ -123,6 +121,9 @@ public class GUIClinicianDiagnosis {
 
     @FXML
     public void saveDiagnoses() {
+        currentDonor.setCurrentDiseases(currentDiseases);
+        currentDonor.setPastDiseases(pastDiseases);
+        Database.saveToDisk();
         new Alert(Alert.AlertType.CONFIRMATION, "Diagnoses saved successfully", ButtonType.OK).show();
         goToProfile();
     }

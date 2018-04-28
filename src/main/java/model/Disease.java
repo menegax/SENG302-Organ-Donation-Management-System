@@ -11,19 +11,16 @@ public class Disease {
 
     private LocalDate dateDiagnosed;
 
-    private Donor diseaseCarrier;
-
     private DiseaseState diseaseState;
 
     /**
      *  Constructor for a disease
      * @param diseaseName - name of the disease
-     * @param diseaseCarrier - Donor who carries the disease
+     * @param diseaseState - disease state
      */
-    public Disease(String diseaseName, Donor diseaseCarrier, DiseaseState diseaseState){
+    public Disease(String diseaseName, DiseaseState diseaseState){
         this.diseaseName = diseaseName;
         this.dateDiagnosed = LocalDate.now();
-        this.diseaseCarrier = diseaseCarrier;
         this.diseaseState = diseaseState;
     }
 
@@ -56,28 +53,28 @@ public class Disease {
      *  Sets the diagnosed date of the disease
      * @param date - date to set as the diagnosed date
      */
-    public void setDateDiagnosed(LocalDate date) throws InvalidObjectException {
-        if ((date.isAfter(LocalDate.now()) || date.isBefore(diseaseCarrier.getBirth()))){
+    public void setDateDiagnosed(LocalDate date, Donor donor) throws InvalidObjectException {
+        if ((date.isAfter(LocalDate.now()) || date.isBefore(donor.getBirth()))){
             throw new InvalidObjectException("Invalid date provided");
         }
         dateDiagnosed = date;
     }
 
-    /**
-     *  Gets the disease carrier
-     * @return - Donor object of the carrier
-     */
-    public Donor getDiseaseCarrier() {
-        return diseaseCarrier;
-    }
-
-    /**
-     *  Sets the carrier of the disease
-     * @param diseaseCarrier - Donor object to set as the disease carrier
-     */
-    public void setDiseaseCarrier(Donor diseaseCarrier) {
-        this.diseaseCarrier = diseaseCarrier;
-    }
+//    /**
+//     *  Gets the disease carrier
+//     * @return - Donor object of the carrier
+//     */
+//    public Donor getDiseaseCarrier() {
+//        return diseaseCarrier;
+//    }
+//
+//    /**
+//     *  Sets the carrier of the disease
+//     * @param diseaseCarrier - Donor object to set as the disease carrier
+//     */
+//    public void setDiseaseCarrier(Donor diseaseCarrier) {
+//        this.diseaseCarrier = diseaseCarrier;
+//    }
 
     /**
      * Gets the disease state

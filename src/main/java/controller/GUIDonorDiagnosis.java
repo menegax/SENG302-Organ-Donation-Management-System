@@ -37,19 +37,20 @@ public class GUIDonorDiagnosis {
     public TableColumn<Disease, GlobalEnums.DiseaseState> currentTagsCol;
 
     private Donor currentDonor;
+    private ArrayList<Disease> currentDiseases;
+    private ArrayList<Disease> pastDiseases;
 
     @FXML
     public void initialize() {
         currentDonor = ScreenControl.getLoggedInDonor();
+        currentDiseases = currentDonor.getCurrentDiseases();
+        pastDiseases = currentDonor.getPastDiseases();
         loadCurrentDiseases();
         loadPastDiseases();
     }
 
     public void loadCurrentDiseases() {
-        ArrayList<Disease> currentDiseases = currentDonor.getCurrentDiseases();
         if(currentDiseases == null) currentDiseases = new ArrayList<>();
-        currentDiseases.add(new Disease("Measles", currentDonor, null));
-        currentDiseases.add(new Disease("Death Curse", currentDonor, GlobalEnums.DiseaseState.CHRONIC));
         ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(currentDiseases);
         currentDateCol.setCellValueFactory(new PropertyValueFactory<>("dateDiagnosed"));
         currentDiagnosisCol.setCellValueFactory(new PropertyValueFactory<>("diseaseName"));
@@ -58,9 +59,7 @@ public class GUIDonorDiagnosis {
     }
 
     public void loadPastDiseases() {
-        ArrayList<Disease> pastDiseases = currentDonor.getPastDiseases();
         if(pastDiseases == null) pastDiseases = new ArrayList<>();
-        pastDiseases.add(new Disease("Flu", currentDonor, null));
         ObservableList<Disease> observablePastDiseases = FXCollections.observableArrayList(pastDiseases);
         pastDateCol.setCellValueFactory(new PropertyValueFactory<>("dateDiagnosed"));
         pastDiagnosisCol.setCellValueFactory(new PropertyValueFactory<>("diseaseName"));

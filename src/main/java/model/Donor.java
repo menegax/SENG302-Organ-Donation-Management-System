@@ -493,12 +493,24 @@ public class Donor {
     }
 
     /**
+     * Sets the donor's current diseases to the given list
+     * @param currentDiseases list of diseases currently infecting a donor
+     */
+    public void setCurrentDiseases(ArrayList<Disease> currentDiseases) { this.currentDiseases = currentDiseases; }
+
+    /**
      * Gets the diseases the donor used to be infected with
      * @return ArrayList past diseases
      */
     public ArrayList<Disease> getPastDiseases() {
         return this.pastDiseases;
     }
+
+    /**
+     * Set the donor's past diseases to the given list
+     * @param pastDiseases list of diseases that used to infect a donor
+     */
+    public void setPastDiseases(ArrayList<Disease> pastDiseases) { this.pastDiseases = pastDiseases; }
 
     private void donorModified() {
         this.modified = new Timestamp(System.currentTimeMillis());

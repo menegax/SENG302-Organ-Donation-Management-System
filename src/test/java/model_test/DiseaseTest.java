@@ -13,11 +13,12 @@ import java.time.LocalDate;
 public class DiseaseTest {
 
     private Disease disease;
+    private Donor diseaseCarrier;
 
     @Before
     public void setUp(){
-        Donor diseaseCarrier = new Donor("ABC1239", "Joe",null,"Bloggs",LocalDate.of(2018,01,01));
-        disease = new Disease("Aids", diseaseCarrier, GlobalEnums.DiseaseState.CHRONIC);
+        disease = new Disease("Aids", GlobalEnums.DiseaseState.CHRONIC);
+        diseaseCarrier = new Donor("ABC1239", "Joe",null,"Bloggs",LocalDate.of(2018,01,01));
     }
 
 
@@ -35,7 +36,7 @@ public class DiseaseTest {
      */
     @Test(expected = InvalidObjectException.class)
     public void setDateDiagnosedInFutureTest() throws InvalidObjectException{
-        disease.setDateDiagnosed(LocalDate.of(2050,12,12));
+        disease.setDateDiagnosed(LocalDate.of(2050,12,12), diseaseCarrier);
     }
 
 
@@ -45,7 +46,7 @@ public class DiseaseTest {
      */
     @Test(expected = InvalidObjectException.class)
     public void setDateDiagnosedBeforeDonorBirthTest() throws InvalidObjectException{
-        disease.setDateDiagnosed(LocalDate.of(2000,12,12));
+        disease.setDateDiagnosed(LocalDate.of(2000,12,12), diseaseCarrier);
     }
 
     /**
@@ -54,7 +55,7 @@ public class DiseaseTest {
     @Test
     public void setDateDiagnosedBirthTest() throws InvalidObjectException{
         LocalDate dateDiagnosed = LocalDate.of(2018,02,12);
-        disease.setDateDiagnosed(dateDiagnosed);
+        disease.setDateDiagnosed(dateDiagnosed, diseaseCarrier);
         Assert.assertEquals(disease.getDateDiagnosed(), dateDiagnosed);
     }
 
