@@ -1,7 +1,6 @@
 package service;
 
 import com.google.gson.Gson;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import model.Clinician;
 import model.Donor;
 
@@ -21,10 +20,14 @@ public class Database {
     public static HashSet<Donor> getDonors() {
         return donors;
     }
-    public static ArrayList<Clinician> getClinicians() { return clinicians; }
+
+    public static ArrayList<Clinician> getClinicians() {
+        return clinicians;
+    }
 
     /**
      * Adds a donor to the database
+     *
      * @param newDonor the new donor to add
      */
     public static void addDonor(Donor newDonor) {
@@ -32,7 +35,7 @@ public class Database {
             newDonor.ensureValidNhi();
             newDonor.ensureUniqueNhi();
             donors.add(newDonor);
-            userActions.log(Level.INFO,"Successfully added donor " + newDonor.getNhiNumber(), "attempted to add a donor");
+            userActions.log(Level.INFO, "Successfully added donor " + newDonor.getNhiNumber(), "attempted to add a donor");
         } catch (IllegalArgumentException o) {
             throw new IllegalArgumentException(o.getMessage());
         }
@@ -46,7 +49,7 @@ public class Database {
      */
     public static void removeDonor(String nhi) throws InvalidObjectException {
         donors.remove(Database.getDonorByNhi(nhi));
-        userActions.log(Level.INFO,"Successfully removed donor " + nhi, "attempted to remove a donor");
+        userActions.log(Level.INFO, "Successfully removed donor " + nhi, "attempted to remove a donor");
     }
 
     /**
@@ -83,14 +86,18 @@ public class Database {
 
     /**
      * Adds a clinician to the database
+     *
      * @param newClinician the new clinician to add
      */
     public static void addClinician(Clinician newClinician) throws IllegalArgumentException {
         try {
-            if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getFirstName())) throw new IllegalArgumentException("firstname");
-            if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getLastName())) throw new IllegalArgumentException("lastname");
+            if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getFirstName()))
+                throw new IllegalArgumentException("firstname");
+            if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getLastName()))
+                throw new IllegalArgumentException("lastname");
 
-            if (newClinician.getStreet1() != null && !Pattern.matches("^[- a-zA-Z0-9]+$", newClinician.getStreet1())) throw new IllegalArgumentException("street1");
+            if (newClinician.getStreet1() != null && !Pattern.matches("^[- a-zA-Z0-9]+$", newClinician.getStreet1()))
+                throw new IllegalArgumentException("street1");
 
             if (newClinician.getStaffID() == Database.getNextStaffID()) {
                 clinicians.add(newClinician);
@@ -106,6 +113,7 @@ public class Database {
 
     /**
      * Returns the next valid staffID based on IDs in the clinician list
+     *
      * @return the valid id
      */
     public static int getNextStaffID() {
@@ -203,7 +211,7 @@ public class Database {
     /**
      *
      */
-    public static void resetDatabase(){
+    public static void resetDatabase() {
         donors = new HashSet<>();
     }
 
