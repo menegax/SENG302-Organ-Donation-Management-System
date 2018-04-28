@@ -113,6 +113,21 @@ public class Clinician {
         }
     }
 
+    /**
+     * Concatenates a clinician's first, middle and last names, and returns the full name as a String
+     * @return String concatenated name
+     */
+    public String getConcatenatedName() {
+        String name = this.firstName;
+        if(this.middleNames != null) {
+            for(String middleName : this.middleNames) {
+                name = name + " " + middleName;
+            }
+        }
+        name = name + " " + this.lastName;
+        return name;
+    }
+
     public String getStreet1() {
         return street1;
     }

@@ -37,7 +37,7 @@ public class GUIClinicianProfile {
 
     private void loadProfile(Clinician clinician) {
         idTxt.setText(String.valueOf(clinician.getStaffID()));
-        nameTxt.setText(clinician.getFirstName() + ' ' + clinician.getLastName());
+        nameTxt.setText(clinician.getConcatenatedName());
         if (clinician.getStreet1() != null) street1Txt.setText(clinician.getStreet1());
         if (clinician.getStreet2() != null) street2Txt.setText(clinician.getStreet2());
         if (clinician.getSuburb() != null) suburbTxt.setText(clinician.getSuburb());
