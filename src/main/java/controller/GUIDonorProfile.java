@@ -123,7 +123,7 @@ public class GUIDonorProfile {
 
 
     public void goToHome() {
-        ScreenControl.activate("home");
+        ScreenControl.activate("donorHome");
     }
 
 }
