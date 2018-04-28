@@ -4,8 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import service.Database;
 
-public class GUIHome {
 
+public class GUIDonorHome {
     @FXML
     public void goToProfile() {
         ScreenControl.activate("donorProfile");
@@ -30,5 +30,4 @@ public class GUIHome {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Saved!");
         alert.showAndWait();
     }
-
 }
