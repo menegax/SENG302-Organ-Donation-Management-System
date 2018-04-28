@@ -16,6 +16,7 @@ import utility.GlobalEnums;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -36,9 +37,12 @@ public class GUIClinicianDiagnosis {
     public Button addDiagnosisButton;
 
     private Donor currentDonor;
+    private ArrayList<Disease> deletedPast = new ArrayList<Disease>();
+    private ArrayList<Disease> deletedCurrent = new ArrayList<Disease>();
     private ArrayList<Disease> currentDiseases;
     private ArrayList<Disease> pastDiseases;
     private Disease chosen;
+    private boolean changed = false;
 
 
     @FXML
@@ -113,14 +117,34 @@ public class GUIClinicianDiagnosis {
 
     @FXML
     public void goToProfile() {
-        ScreenControl.removeScreen("donorProfile");
-        try {
-            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-            ScreenControl.activate("donorProfile");
-        }catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the clinician diagnoses page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
+        boolean back = false;
+        if (changed) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You have made some changes, are you sure you want to continue?", ButtonType.YES, ButtonType.CANCEL);
+            Optional<ButtonType> confirmation = alert.showAndWait();
+            if (confirmation.get() == ButtonType.YES) {
+                back = true;
+                System.out.println(currentDiseases);
+                for (int i=0; i<deletedCurrent.size(); i++) {
+                    currentDiseases.add(deletedCurrent.get(i));
+                }
+                for (int i=0; i<deletedPast.size(); i++) {
+                    pastDiseases.add(deletedPast.get(i));
+                }
+                System.out.println(currentDiseases);
+            }
+        } else {
+            back = true;
+        }
+        if (back){
+            ScreenControl.removeScreen("donorProfile");
+            try {
+                ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+                ScreenControl.activate("donorProfile");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the clinician diagnoses page to the profile page");
+                new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+                e.printStackTrace();
+            }
         }
     }
 
@@ -133,14 +157,19 @@ public class GUIClinicianDiagnosis {
         goToProfile();
     }
 
+
     @FXML
     public void deleteDiagnoses() {
         if (pastDiagnosesView.getSelectionModel().getSelectedItem() != null) {
+            changed = true;
             pastDiseases.remove(chosen);
+            deletedPast.add(chosen);
             loadPastDiseases();
             new Alert(Alert.AlertType.CONFIRMATION, "Diagnoses deleted successfully", ButtonType.OK).show();
         } else if (currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
+            changed = true;
             currentDiseases.remove(chosen);
+            deletedCurrent.add(chosen);
             loadCurrentDiseases();
             new Alert(Alert.AlertType.CONFIRMATION, "Diagnoses deleted successfully", ButtonType.OK).show();
         } else {
