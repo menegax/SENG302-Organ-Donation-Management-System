@@ -2,7 +2,7 @@ package model_test.stateHistoryWidgetTests;
 
 import com.sun.javafx.application.PlatformImpl;
 import javafx.scene.control.TextField;
-import utility.undoRedo.stateHistoryControls.StateHistoryTextEntry;
+import utility.undoRedo.stateHistoryWidgets.StateHistoryTextEntry;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

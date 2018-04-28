@@ -3,7 +3,7 @@ package model_test.stateHistoryWidgetTests;
 import com.sun.javafx.application.PlatformImpl;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
-import utility.undoRedo.stateHistoryControls.StateHistoryComboBox;
+import utility.undoRedo.stateHistoryWidgets.StateHistoryComboBox;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

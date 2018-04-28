@@ -5,7 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.Pane;
-import utility.undoRedo.stateHistoryControls.*;
+import utility.undoRedo.stateHistoryWidgets.*;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package utility.undoRedo.stateHistoryControls;
+package utility.undoRedo.stateHistoryWidgets;
 
 import controller.IUndoRedo;
 import javafx.scene.control.ComboBox;
