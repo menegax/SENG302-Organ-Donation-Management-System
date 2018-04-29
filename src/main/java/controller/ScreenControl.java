@@ -14,7 +14,7 @@ class ScreenControl {
 
     private static HashMap<String, Pane> screenMap = new HashMap<>();
 
-    private static HashMap<Stage, Donor> popMap = new HashMap<>();
+    private static HashMap<String, Stage> popMap = new HashMap<>();
 
     private static Scene main;
 
@@ -84,13 +84,21 @@ class ScreenControl {
     /**
      * Adds stage, name pair to a hashmap
      *
+     * @param name  - name of the popup
      * @param stage - stage to display
-     * @param donor - the donor the popup is focused on
      */
-    static void addPopUp(Stage stage, Donor donor) {
-        popMap.put(stage, donor);
+    static void addPopUp(String name, Stage stage) {
+        popMap.put(name, stage);
     }
 
+    /**
+     * Switches panes within a popup window, while passing along the current viewed donor
+     *
+     * @param scene      The scene to load the new pane into
+     * @param fxmlLoader The fxmlLoader for the new pane
+     * @param donor      The donor to pass to the next pane
+     * @throws IOException If the pane fails to load
+     */
     static void loadPopUpPane(Scene scene, FXMLLoader fxmlLoader, Donor donor) throws IOException {
         scene.setRoot(fxmlLoader.load());
         IPopupable controller = fxmlLoader.getController();
@@ -100,10 +108,19 @@ class ScreenControl {
     /**
      * Displays a given popup
      *
-     * @param stage - name of the pop up to display
+     * @param name - name of the pop up to display
      */
-    static void displayPopUp(Stage stage) {
-        stage.show();
+    static void displayPopUp(String name) {
+        popMap.get(name).show();
+    }
+
+    /**
+     * Hides a given popup
+     *
+     * @param name - name of the popup to hide
+     */
+    static void hidePopUp(String name) {
+        popMap.get(name).close();
     }
 
 }

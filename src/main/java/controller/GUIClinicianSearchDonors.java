@@ -83,8 +83,9 @@ public class GUIClinicianSearchDonors implements Initializable {
                             .getX() + 50); //offset popup
                     popUpStage.setScene(scene);
 
-                    ScreenControl.addPopUp(popUpStage, selectedDonor); //ADD to screen control
-                    ScreenControl.displayPopUp(popUpStage); //display the popup
+                    //Add and show the popup
+                    ScreenControl.addPopUp("searchPopup", popUpStage); //ADD to screen control
+                    ScreenControl.displayPopUp("searchPopup"); //display the popup
                 } catch (Exception e) {
                     e.printStackTrace();
                     userActions.log(Level.SEVERE,
