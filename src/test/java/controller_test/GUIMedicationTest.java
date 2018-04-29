@@ -4,6 +4,7 @@ import controller.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Donor;
@@ -790,7 +791,7 @@ public class GUIMedicationTest extends ApplicationTest {
 
         // Leave the Medication pane and navigates to Profile Pane
         interact( () -> {
-          lookup( "#goBack" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+          lookup( "#goBack" ).queryAs( Hyperlink.class ).getOnAction().handle( new ActionEvent() );
         });
 
         verifyThat( "#profilePane", Node::isVisible ); // Verify that "user" has navigated to profile
@@ -858,7 +859,7 @@ public class GUIMedicationTest extends ApplicationTest {
 
         // Leave the Medication pane and navigates to Profile Pane
         interact( () -> {
-            lookup( "#goBack" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+            lookup( "#goBack" ).queryAs( Hyperlink.class ).getOnAction().handle( new ActionEvent() );
         });
         verifyThat( "#profilePane", Node::isVisible ); // Verify that "user" has navigated to profile
 
