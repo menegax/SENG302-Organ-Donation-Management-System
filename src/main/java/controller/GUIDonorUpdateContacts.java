@@ -182,75 +182,124 @@ public class GUIDonorUpdateContacts {
         boolean valid = true;
         if (!(homePhoneField.getText().equals("")) && homePhoneField.getText().matches("[0-9]+")) {
             target.setHomePhone(homePhoneField.getText());
+            setValid(homePhoneField);
         } else if(homePhoneField.getText().equals("")) {
             target.setHomePhone(null);
+            setValid(homePhoneField);
         } else {
             valid = false;
+            setInvalid(homePhoneField);
         }
         if (!(mobilePhoneField.getText().equals("")) && mobilePhoneField.getText().matches("[0-9]+")) {
             target.setMobilePhone(mobilePhoneField.getText());
+            setValid(mobilePhoneField);
         } else if(mobilePhoneField.getText().equals("")) {
             target.setMobilePhone(null);
+            setValid(mobilePhoneField);
         } else {
             valid = false;
+            setInvalid(mobilePhoneField);
         }
         if (!(workPhoneField.getText().equals("")) && workPhoneField.getText().matches("[0-9]+")) {
             target.setWorkPhone(workPhoneField.getText());
+            setValid(workPhoneField);
         } else if(workPhoneField.getText().equals("")) {
             target.setWorkPhone(null);
+            setValid(workPhoneField);
         } else {
             valid = false;
+            setInvalid(workPhoneField);
         }
         if (!(emailAddressField.getText().equals("")) && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
             target.setEmailAddress(emailAddressField.getText());
+            setValid(emailAddressField);
         } else if(emailAddressField.getText().equals("")) {
             target.setEmailAddress(null);
+            setValid(emailAddressField);
         } else {
             valid = false;
+            setInvalid(emailAddressField);
         }
         if (!(contactRelationshipField.getText().equals(""))) {
             target.setContactRelationship(contactRelationshipField.getText());
+            setValid(contactRelationshipField);
         } else if(contactRelationshipField.getText().equals("")) {
             target.setContactRelationship(null);
+            setValid(contactRelationshipField);
         } else {
             valid = false;
+            setInvalid(contactRelationshipField);
         }
         if (!(contactNameField.getText().equals(""))) {
             target.setContactName(contactNameField.getText());
+            setValid(contactNameField);
         } else if(contactNameField.getText().equals("")) {
             target.setContactName(null);
+            setValid(contactNameField);
         } else {
             valid = false;
+            setInvalid(contactNameField);
         }
         if (!(contactHomePhoneField.getText().equals("")) && contactHomePhoneField.getText().matches("[0-9]+")) {
             target.setContactHomePhone(contactHomePhoneField.getText());
+            setValid(contactHomePhoneField);
         } else if(contactHomePhoneField.getText().equals("")) {
             target.setContactHomePhone(null);
+            setValid(contactHomePhoneField);
         } else {
             valid = false;
+            setInvalid(contactHomePhoneField);
         }
         if (!(contactMobilePhoneField.getText().equals("")) && contactMobilePhoneField.getText().matches("[0-9]+")) {
             target.setContactMobilePhone(contactMobilePhoneField.getText());
+            setValid(contactMobilePhoneField);
         } else if(contactMobilePhoneField.getText().equals("")) {
             target.setContactMobilePhone(null);
+            setValid(contactMobilePhoneField);
         } else {
             valid = false;
+            setInvalid(contactMobilePhoneField);
         }
         if (!(contactWorkPhoneField.getText().equals("")) && contactWorkPhoneField.getText().matches("[0-9]+")) {
             target.setContactWorkPhone(contactWorkPhoneField.getText());
+            setValid(contactWorkPhoneField);
         } else if(contactWorkPhoneField.getText().equals("")) {
             target.setContactWorkPhone(null);
+            setValid(contactWorkPhoneField);
         } else {
             valid = false;
+            setInvalid(contactWorkPhoneField);
         }
         if (!(contactEmailAddressField.getText().equals("") && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+"))) {
             target.setContactEmailAddress(contactEmailAddressField.getText());
+            setValid(contactEmailAddressField);
         } else if(contactEmailAddressField.getText().equals("")) {
             target.setContactEmailAddress(null);
+            setValid(contactEmailAddressField);
         } else {
             valid = false;
+            setInvalid(contactEmailAddressField);
         }
         return valid;
+    }
+
+    /***
+     * Applies the invalid class to the target control
+     * @param target The target to add the class to
+     */
+    private void setInvalid(Control target) {
+        target.getStyleClass().add("invalid");
+    }
+
+    /**
+     * Removes the invalid class from the target control if it has it
+     *
+     * @param target The target to remove the class from
+     */
+    private void setValid(Control target) {
+        if (target.getStyleClass().contains("invalid")) {
+            target.getStyleClass().remove("invalid");
+        }
     }
 
 
