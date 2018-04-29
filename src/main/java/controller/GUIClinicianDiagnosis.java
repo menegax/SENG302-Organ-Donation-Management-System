@@ -36,6 +36,20 @@ public class GUIClinicianDiagnosis {
     public Button deleteButton;
     public Button addDiagnosisButton;
 
+    /*
+     * Textfield for entering diagnosis for adding to the current diagnosis ArrayList and table
+     */
+    @FXML
+    private TextField newDiagnosis;
+
+    /**
+     * Adds a newly entered medication to the current medications array and the listView for the current medications
+     */
+    @FXML
+    public void registerDiagnosis() {
+        addDiagnosis(newDiagnosis.getText());
+    }
+
     private Donor currentDonor;
     private ArrayList<Disease> deletedPast = new ArrayList<Disease>();
     private ArrayList<Disease> deletedCurrent = new ArrayList<Disease>();
@@ -95,6 +109,23 @@ public class GUIClinicianDiagnosis {
                 chosen = currentDiagnosesView.getSelectionModel().getSelectedItem();
             }
         });
+    }
+
+    /**
+     * Registers a new diagnosis entry for a donor when 'Add diagnosis' is activated
+     * @param diagnosis The entered diagnosis to textField for registration
+     */
+    private void addDiagnosis(String diagnosis) {
+        if (!diagnosis.equals( "Enter a diagnosis" ) && !diagnosis.equals( "" ) && !diagnosis.substring(0, 1).equals(" ")) {
+            diagnosis = diagnosis.substring(0, 1).toUpperCase() + diagnosis.substring(1).toLowerCase();
+            currentDiseases.add( new Disease(diagnosis, null));
+            userActions.log(Level.INFO, "Successfully registered a disease", "Registered a new disease for a donor");
+            loadCurrentDiseases();
+            newDiagnosis.clear();
+        } else {
+            Alert err = new Alert(Alert.AlertType.ERROR, "'" + diagnosis + "' is invalid for registration");
+            err.show();
+        }
     }
 
     private void loadCurrentDiseases() {
