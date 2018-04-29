@@ -1,6 +1,7 @@
 package cli;
 
 import model.Donor;
+import model.Human;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
@@ -77,7 +78,7 @@ public class CLIDonorUpdate implements Runnable {
 
     public void run() {
         try {
-            Donor donor = Database.getDonorByNhi(searchNhi);
+            Human donor = Database.getDonorByNhi(searchNhi);
             donor.updateAttributes(firstName, lastName, middleNames, birth, death, street1,
                     street2, suburb, region, gender, bloodGroup, height, weight, nhi);
         } catch (InvalidObjectException | IllegalArgumentException e) {

@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Donor;
+import model.Receiver;
 import service.Database;
 import utility.GlobalEnums;
 import utility.UserActionHistory;
@@ -32,6 +33,9 @@ public class Main extends Application {
         ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
         ScreenControl.addScreen("donorHome", FXMLLoader.load(getClass().getResource("/scene/donorHome.fxml")));
 
+        //initialising new receiver
+        Database.importFromDisk("./receiver.json");
+
         // initialising new clinician on startup
         ArrayList<String> mid = new ArrayList<>();
         mid.add("Middle");
@@ -46,6 +50,14 @@ public class Main extends Application {
         launch(args);
     }
 
+    private void setUpDummyReceivers() throws InvalidObjectException {
+        ArrayList<String> dal = new ArrayList<>();
+        dal.add("Andre");
+        Database.importFromDisk("./receiver.json");
+        Database.addReceiver(new Receiver("JAM3577", "Joshua", dal,"Meneghini", LocalDate.of(1997, 9, 17)));
+        Database.getDonorByNhi("JAM3577").addDonation(GlobalEnums.Organ.HEART);
+        Database.getDonorByNhi("JAM3577").addDonation(GlobalEnums.Organ.INTESTINE);
+    }
 
     private void setUpDummyDonors() throws InvalidObjectException {
         ArrayList<String> dal = new ArrayList<>();

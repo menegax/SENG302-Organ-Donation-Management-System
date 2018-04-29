@@ -2,21 +2,17 @@ package model;
 
 import service.Database;
 import utility.GlobalEnums;
-import utility.GlobalEnums.BloodGroup;
-import utility.GlobalEnums.Gender;
-import utility.GlobalEnums.Organ;
-import utility.GlobalEnums.Region;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class Donor extends Human {
+public class Receiver extends Human {
 
     private final Timestamp CREATED;
 
@@ -30,13 +26,13 @@ public class Donor extends Human {
 
     private LocalDate death;
 
-    private Gender gender;
+    private GlobalEnums.Gender gender;
 
     private double height; //Height in meters
 
     private double weight; //Weight in kilograms
 
-    private BloodGroup bloodGroup;
+    private GlobalEnums.BloodGroup bloodGroup;
 
     private String street1;
 
@@ -44,18 +40,17 @@ public class Donor extends Human {
 
     private String suburb;
 
-    private Region region;
+    private GlobalEnums.Region region;
 
     private int zip;
 
-    private ArrayList<Organ> donations;
+    private ArrayList<GlobalEnums.Organ> requirements;
 
     private Timestamp modified;
 
     private String nhiNumber;
 
-
-    public Donor(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
+    public Receiver(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
         this.firstName = firstName;
@@ -63,12 +58,11 @@ public class Donor extends Human {
         this.lastName = lastName;
         this.birth = date;
         this.nhiNumber = nhiNumber.toUpperCase();
-        this.donations = new ArrayList<>();
+        this.requirements = new ArrayList<>();
     }
 
-
     /**
-     * Sets the attributes of the donor
+     * Sets the attributes of the receiver
      *
      * @param firstName   first name
      * @param lastName    last name
@@ -119,7 +113,7 @@ public class Donor extends Human {
                 setRegion((GlobalEnums.Region) globalEnum);
             }
             else {
-                userActions.log(Level.WARNING, "Invalid region", "attempted to update donor attributes");
+                userActions.log(Level.WARNING, "Invalid region", "attempted to update receiver attributes");
             }
         }
         if (gender != null) {
@@ -128,7 +122,7 @@ public class Donor extends Human {
                 setGender((GlobalEnums.Gender) globalEnum);
             }
             else {
-                userActions.log(Level.WARNING, "Invalid gender", "attempted to update donor attributes");
+                userActions.log(Level.WARNING, "Invalid gender", "attempted to update receiver attributes");
             }
         }
         if (bloodGroup != null) {
@@ -137,7 +131,7 @@ public class Donor extends Human {
                 setBloodGroup((GlobalEnums.BloodGroup) globalEnum);
             }
             else {
-                userActions.log(Level.WARNING, "Invalid blood group", "attempted to update donor attributes");
+                userActions.log(Level.WARNING, "Invalid blood group", "attempted to update receiver attributes");
             }
 
         }
@@ -150,40 +144,41 @@ public class Donor extends Human {
         if (nhi != null) {
             setNhiNumber(nhi);
         }
-        userActions.log(Level.INFO, "Successfully updated donor " + getNhiNumber(), "attempted to update donor attributes");
+        userActions.log(Level.INFO, "Successfully updated receiver " + getNhiNumber(), "attempted to update receiver attributes");
+        //todo receiverModified();
         donorModified();
     }
 
 
     /**
-     * Update the organ donations list of the donor
-     *
-     * @param newDonations - list of organs to add
-     * @param rmDonations  - list of organs to remove
+     * Update the organ requirement list of the receiver
+     * @param newRequirements - list of organs to add
+     * @param rmRequirements  - list of organs to remove
      */
-    public void updateDonations(ArrayList<String> newDonations, ArrayList<String> rmDonations) {
-        if (newDonations != null) {
-            for (String organ : newDonations) {
-                Organ organEnum = (Organ) Organ.getEnumFromString(organ); //null if invalid
+    // todo updateRequirements()
+    public void updateDonations(ArrayList<String> newRequirements, ArrayList<String> rmRequirements) {
+        if (newRequirements != null) {
+            for (String organ : newRequirements) {
+                GlobalEnums.Organ organEnum = (GlobalEnums.Organ) GlobalEnums.Organ.getEnumFromString(organ); //null if invalid
                 if (organEnum == null) {
-                    userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to donor donations");
+                    userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to receiver requirements");
                 }
                 else {
-                    userActions.log(Level.INFO, addDonation(organEnum), "attempted to update donor donations");
+                    userActions.log(Level.INFO, addDonation(organEnum), "attempted to update receiver requirements");
                     donorModified();
                 }
             }
         }
-        if (rmDonations != null) {
-            for (String organ : rmDonations) {
-                Organ organEnum = (Organ) Organ.getEnumFromString(organ);
+        if (rmRequirements != null) {
+            for (String organ : rmRequirements) {
+                GlobalEnums.Organ organEnum = (GlobalEnums.Organ) GlobalEnums.Organ.getEnumFromString(organ);
                 if (organEnum == null) {
                     userActions.log(Level.SEVERE,
                             "Invalid organ \"" + organ + "\" given and not removed",
-                            "attempted to remove from donor donations");
+                            "attempted to remove from receiver requirements");
                 }
                 else {
-                    userActions.log(Level.INFO, removeDonation(organEnum), "attempted to remove from donor donations");
+                    userActions.log(Level.INFO, removeDonation(organEnum), "attempted to remove from receiver requirements");
                     donorModified();
                 }
             }
@@ -210,8 +205,8 @@ public class Donor extends Human {
      * @exception IllegalArgumentException when the nhi number given is already in use
      */
     public void ensureUniqueNhi() throws IllegalArgumentException {
-        for (Human d : Database.getDonors()) {
-            String nhi = d.getNhiNumber();
+        for (Human r : Database.getReceivers()) {
+            String nhi = r.getNhiNumber();
             if (nhi.equals(nhiNumber.toUpperCase())) {
                 throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
             }
@@ -220,7 +215,7 @@ public class Donor extends Human {
 
 
     /**
-     * Returns the name of the donor as a formatted concatenated string
+     * Returns the name of the receiver as a formatted concatenated string
      *
      * @return string named
      */
@@ -237,14 +232,15 @@ public class Donor extends Human {
     }
 
 
-    public ArrayList<Organ> getDonations() {
-        return donations == null ? new ArrayList<>() : donations;
+    //todo getRequirements()
+    public ArrayList<GlobalEnums.Organ> getDonations() {
+        return requirements == null ? new ArrayList<>() : requirements;
     }
 
-
-    public void setDonations(ArrayList<Organ> donations) {
-        if (this.donations != donations) {
-            this.donations = donations;
+    //todo setRequirements(ArrayList<GlobalEnums.Organ> requirements)
+    public void setDonations(ArrayList<GlobalEnums.Organ> donations) {
+        if (this.requirements != donations) {
+            this.requirements = donations;
             donorModified();
         }
     }
@@ -321,7 +317,7 @@ public class Donor extends Human {
 
 
     /**
-     * Calculates the donors current age. If the patient is living, it is the difference between the current datetime
+     * Calculates the receivers current age. If the patient is living, it is the difference between the current datetime
      * and their date of birth, else if they are dead it is the difference between their date of death and date of birth
      *
      * @return Their calculated age
@@ -336,12 +332,12 @@ public class Donor extends Human {
     }
 
 
-    public Gender getGender() {
+    public GlobalEnums.Gender getGender() {
         return gender;
     }
 
 
-    public void setGender(Gender gender) {
+    public void setGender(GlobalEnums.Gender gender) {
         if (this.gender != gender) {
             this.gender = gender;
             donorModified();
@@ -376,7 +372,7 @@ public class Donor extends Human {
 
 
     /**
-     * Calculates the Body Mass Index of the donor
+     * Calculates the Body Mass Index of the receiver
      *
      * @return The calculated BMI
      */
@@ -385,12 +381,12 @@ public class Donor extends Human {
     }
 
 
-    public BloodGroup getBloodGroup() {
+    public GlobalEnums.BloodGroup getBloodGroup() {
         return bloodGroup;
     }
 
 
-    public void setBloodGroup(BloodGroup bloodGroup) {
+    public void setBloodGroup(GlobalEnums.BloodGroup bloodGroup) {
         if (this.bloodGroup != bloodGroup) {
             this.bloodGroup = bloodGroup;
             donorModified();
@@ -437,12 +433,12 @@ public class Donor extends Human {
     }
 
 
-    public Region getRegion() {
+    public GlobalEnums.Region getRegion() {
         return region;
     }
 
 
-    public void setRegion(Region region) {
+    public void setRegion(GlobalEnums.Region region) {
         if (this.region != region) {
             this.region = region;
             donorModified();
@@ -474,37 +470,38 @@ public class Donor extends Human {
 
 
     /**
-     * Add organs to donor donations list
+     * Add organs to receiver requirements list
      *
-     * @param organ - organ to add to the donors donation list
+     * @param organ - organ to add to the receiver requirements list
      * @return string of message
      */
-    public String addDonation(Organ organ) {
-        if (donations.contains(organ)) {
-            return "Organ " + organ + " is already part of the donor's donations, so was not added.";
+    //todo addRequirement(GlobalEnums.Organ organ)
+    public String addDonation(GlobalEnums.Organ organ) {
+        if (requirements.contains(organ)) {
+            return "Organ " + organ + " is already part of the receiver's requirements, so was not added.";
         }
         else {
-            donations.add(organ);
+            requirements.add(organ);
             donorModified();
-            return "Successfully added " + organ + " to donations";
+            return "Successfully added " + organ + " to requirements";
         }
     }
 
 
     /**
-     * Remove organs from donors donations list
+     * Remove organs from receiver requirements list
      *
-     * @param organ - organ to remove from the donors donations list
+     * @param organ - organ to remove from the receiver requirements list
      * @return string of message
      */
-    public String removeDonation(Organ organ) {
-        if (donations.contains(organ)) {
-            donations.remove(organ);
+    public String removeDonation(GlobalEnums.Organ organ) {
+        if (requirements.contains(organ)) {
+            requirements.remove(organ);
             donorModified();
-            return "Successfully removed " + organ + " from donations";
+            return "Successfully removed " + organ + " from requirements";
         }
         else {
-            return "Organ " + organ + " is not part of the donors donations, so could not be removed.";
+            return "Organ " + organ + " is not part of the receiver requirements, so could not be removed.";
         }
     }
 
@@ -522,24 +519,23 @@ public class Donor extends Human {
         }
     }
 
-
+    //todo receiverModified()
     public void donorModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
 
 
     public String toString() {
-        return "Donor: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
+        return "Receiver: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
                 + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Gender: " + gender + "\n"
-                + "Date of birth: " + birth + "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + street1 + "\n" + "Street2: " + street2
+                + "Date of birth: " + birth + "\n" + "Organs required: " + requirements + "\n" + "Street1: " + street1 + "\n" + "Street2: " + street2
                 + "\n" + "Suburb:" + suburb + "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: "
                 + height + "\n" + "Weight: " + weight + "\n" + "Blood group: " + bloodGroup + "\n";
     }
 
 
     public boolean equals(Object obj) {
-        Donor donor = (Donor) obj;
-        return this.nhiNumber.equals(donor.nhiNumber);
+        Receiver receiver = (Receiver) obj;
+        return this.nhiNumber.equals(receiver.nhiNumber);
     }
-
 }

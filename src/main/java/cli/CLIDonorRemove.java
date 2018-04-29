@@ -1,6 +1,7 @@
 package cli;
 
 import model.Donor;
+import model.Human;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
@@ -22,7 +23,7 @@ class CLIDonorRemove implements Runnable {
 
     public void run() {
         try {
-            Donor donor = Database.getDonorByNhi(nhi);
+            Human donor = Database.getDonorByNhi(nhi);
             Database.removeDonor(nhi);
             userActions.log(Level.INFO, "Successfully removed donor " + donor.getNhiNumber(), "attempted to remove donor");
         } catch (InvalidObjectException e) {

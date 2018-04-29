@@ -1,6 +1,7 @@
 package cli;
 
 import model.Donor;
+import model.Human;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
@@ -43,7 +44,7 @@ public class CLIDonorDonations implements Runnable {
     @Option(names = {"-rm", "--remove"}, split = ",", description = "Takes a comma-separated list of organs to remove from donations.")
     private ArrayList<String> rmDonations;
 
-    private void displayDonorDonations(Donor donor) {
+    private void displayDonorDonations(Human donor) {
         ArrayList<Organ> donations = donor.getDonations();
         if (donations == null) {
             userActions.log(Level.WARNING, "No donations registered for donor: " + donor.getNameConcatenated(), "attempted to display donor donations");
@@ -55,7 +56,7 @@ public class CLIDonorDonations implements Runnable {
 
     public void run() {
         try {
-            Donor donor = Database.getDonorByNhi(searchNhi);
+            Human donor = Database.getDonorByNhi(searchNhi);
             if (donationsRequested) {
                 displayDonorDonations(donor);
             }

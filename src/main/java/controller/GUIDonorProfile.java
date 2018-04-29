@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import model.Donor;
+import model.Human;
 import service.Database;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -59,14 +60,13 @@ public class GUIDonorProfile {
 
 
     public void initialize() {
-        loadProfile(ScreenControl.getLoggedInDonor()
-                .getNhiNumber());
+        loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
     }
 
 
     private void loadProfile(String nhi) {
         try {
-            Donor donor = Database.getDonorByNhi(nhi);
+            Human donor = Database.getDonorByNhi(nhi);
 
             nhiLbl.setText(donor.getNhiNumber());
             nameLbl.setText(donor.getNameConcatenated());
@@ -109,16 +109,30 @@ public class GUIDonorProfile {
 
 
     public void goToDonations() {
-        ScreenControl.removeScreen("donorDonations");
-        try {
-            ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorDonations.fxml")));
-            ScreenControl.activate("donorDonations");
+        if (ScreenControl.getLoggedInDonor() instanceof Donor) {
+            ScreenControl.removeScreen("donorDonations");
+            try {
+                ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorDonations.fxml")));
+                ScreenControl.activate("donorDonations");
+            }
+            catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading donation screen", "attempted to navigate from the profile page to the donation page");
+                new Alert(Alert.AlertType.WARNING, "ERROR loading donation page", ButtonType.OK).showAndWait();
+                e.printStackTrace();
+            }
+        } else {
+            ScreenControl.removeScreen("receiverRequirements");
+            try {
+                ScreenControl.addScreen("receiverRequirements", FXMLLoader.load(getClass().getResource("/scene/receiverRequirements.fxml")));
+                ScreenControl.activate("receiverRequirements");
+            }
+            catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading donation screen", "attempted to navigate from the profile page to the donation page");
+                new Alert(Alert.AlertType.WARNING, "ERROR loading donation page", ButtonType.OK).showAndWait();
+                e.printStackTrace();
+            }
         }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading donation screen", "attempted to navigate from the profile page to the donation page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading donation page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
-        }
+
     }
 
 

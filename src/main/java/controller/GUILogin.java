@@ -9,6 +9,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.Donor;
+import model.Human;
+import model.Receiver;
 import service.Database;
 
 import java.util.logging.Level;
@@ -57,13 +59,19 @@ public class GUILogin {
         // todo surround with try catch. Try uses database getuserbyNHI, catch will throw a popup with warning alert
         if (!clinicianToggle.isSelected()) {
             try {
-                Donor newDonor = Database.getDonorByNhi(nhiLogin.getText());
-                ScreenControl.setLoggedInDonor(newDonor);
-                ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+                Human newHuman = Database.getDonorByNhi(nhiLogin.getText());
+                newHuman.getClass();
+                if (newHuman instanceof Donor) {
+                    ScreenControl.setLoggedInDonor(newHuman);
+                    ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+                    ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorDonations.fxml")));
+                } else {
+                    ScreenControl.setLoggedInDonor(newHuman);
+                    ScreenControl.addScreen("receiverProfile", FXMLLoader.load(getClass().getResource("/scene/receiverProfile.fxml")));
+                    ScreenControl.addScreen("receiverRequirements", FXMLLoader.load(getClass().getResource("/scene/receiverRequirements.fxml")));
+                }
                 ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorProfileUpdate.fxml")));
-                ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorDonations.fxml")));
                 ScreenControl.activate("donorHome");
-                ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
                 ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
             }
             catch (Exception e) {

@@ -2,13 +2,18 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import model.Donor;
 import service.Database;
 
 
 public class GUIDonorHome {
     @FXML
     public void goToProfile() {
-        ScreenControl.activate("donorProfile");
+        if (ScreenControl.getLoggedInDonor() instanceof Donor) {
+            ScreenControl.activate("donorProfile");
+        } else {
+            ScreenControl.activate("receiverProfile");
+        }
     }
 
 

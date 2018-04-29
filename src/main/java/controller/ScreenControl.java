@@ -4,6 +4,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import model.Clinician;
 import model.Donor;
+import model.Human;
+import model.Receiver;
 
 import java.util.HashMap;
 
@@ -13,20 +15,18 @@ class ScreenControl {
 
     private static Scene main;
 
-    public static Donor donor;
+    public static Human donor;
 
     public static Clinician clinician;
 
 
-    static void setLoggedInDonor(Donor newDonor) {
+    static void setLoggedInDonor(Human newDonor) {
         donor = newDonor;
     }
 
-
-    static Donor getLoggedInDonor() {
+    static Human getLoggedInDonor() {
         return donor;
     }
-
 
     static void setLoggedInClinician(Clinician newClinician) {
         clinician = newClinician;

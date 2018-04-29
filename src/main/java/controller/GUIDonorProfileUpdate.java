@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
+import model.Human;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
@@ -92,7 +93,7 @@ public class GUIDonorProfileUpdate {
     }
 
 
-    private Donor target;
+    private Human target;
 
 
     public void initialize() {
@@ -100,8 +101,7 @@ public class GUIDonorProfileUpdate {
                 Arrays.asList("a positive", "a negative", "b positive", "b negative", "ab positive", "ab negative", "o positive", "o negative");
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
-        loadProfile(ScreenControl.getLoggedInDonor()
-                .getNhiNumber());
+        loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
         setUpStateHistory();
     }
 
@@ -131,9 +131,9 @@ public class GUIDonorProfileUpdate {
 
     private void loadProfile(String nhi) {
         try {
-            Donor donor = Database.getDonorByNhi(nhi);
-            target = donor;
-            populateForm(donor);
+            Human human = Database.getDonorByNhi(nhi);
+            target = human;
+            populateForm(human);
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
@@ -141,16 +141,16 @@ public class GUIDonorProfileUpdate {
     }
 
 
-    private void populateForm(Donor donor) {
-        lastModifiedLbl.setText("Last Modified: " + donor.getModified());
-        nhiTxt.setText(donor.getNhiNumber());
-        firstnameTxt.setText(donor.getFirstName());
-        lastnameTxt.setText(donor.getLastName());
-        for (String name : donor.getMiddleNames()) {
+    private void populateForm(Human human) {
+        lastModifiedLbl.setText("Last Modified: " + human.getModified());
+        nhiTxt.setText(human.getNhiNumber());
+        firstnameTxt.setText(human.getFirstName());
+        lastnameTxt.setText(human.getLastName());
+        for (String name : human.getMiddleNames()) {
             middlenameTxt.setText(middlenameTxt.getText() + name + " ");
         }
-        if (donor.getGender() != null) {
-            switch (donor.getGender()
+        if (human.getGender() != null) {
+            switch (human.getGender()
                     .getValue()) {
                 case "male":
                     genderMaleRadio.setSelected(true);
@@ -163,25 +163,25 @@ public class GUIDonorProfileUpdate {
                     break;
             }
         }
-        dobDate.setValue(donor.getBirth());
-        if (donor.getStreet1() != null) {
-            street1Txt.setText(donor.getStreet1());
+        dobDate.setValue(human.getBirth());
+        if (human.getStreet1() != null) {
+            street1Txt.setText(human.getStreet1());
         }
-        if (donor.getStreet2() != null) {
-            street2Txt.setText(donor.getStreet2());
+        if (human.getStreet2() != null) {
+            street2Txt.setText(human.getStreet2());
         }
-        if (donor.getSuburb() != null) {
-            suburbTxt.setText(donor.getSuburb());
+        if (human.getSuburb() != null) {
+            suburbTxt.setText(human.getSuburb());
         }
-        if (donor.getRegion() != null) {
-            regionTxt.setText(donor.getRegion()
+        if (human.getRegion() != null) {
+            regionTxt.setText(human.getRegion()
                     .getValue());
         }
-        zipTxt.setText(String.valueOf(donor.getZip()));
-        weightTxt.setText(String.valueOf(donor.getWeight()));
-        heightTxt.setText(String.valueOf(donor.getHeight()));
-        if (donor.getBloodGroup() != null) {
-            bloodGroupDD.setValue(donor.getBloodGroup()
+        zipTxt.setText(String.valueOf(human.getZip()));
+        weightTxt.setText(String.valueOf(human.getWeight()));
+        heightTxt.setText(String.valueOf(human.getHeight()));
+        if (human.getBloodGroup() != null) {
+            bloodGroupDD.setValue(human.getBloodGroup()
                     .getValue());
         }
     }
@@ -190,8 +190,7 @@ public class GUIDonorProfileUpdate {
     public void saveProfile() {
         Boolean valid = true;
         if (!Pattern.matches("[A-Z]{3}[0-9]{4}",
-                nhiTxt.getText()
-                        .toUpperCase())) {
+                nhiTxt.getText().toUpperCase())) {
             valid = false;
         }
         if (firstnameTxt.getText() == null) {
@@ -200,8 +199,7 @@ public class GUIDonorProfileUpdate {
         if (lastnameTxt.getText() == null) {
             valid = false;
         }
-        if (regionTxt.getText()
-                .length() > 0) {
+        if (regionTxt.getText().length() > 0) {
             Enum region = GlobalEnums.Region.getEnumFromString(regionTxt.getText());
             if (region == null) {
                 valid = false;
@@ -232,9 +230,7 @@ public class GUIDonorProfileUpdate {
             }
         }
         if (bloodGroupDD.getValue() != null) {
-            String bgStr = bloodGroupDD.getValue()
-                    .toString()
-                    .replace(' ', '_');
+            String bgStr = bloodGroupDD.getValue().toString().replace(' ', '_');
             Enum bloodgroup = GlobalEnums.BloodGroup.getEnumFromString(bgStr);
             if (bloodgroup == null) {
                 valid = false;
@@ -292,7 +288,7 @@ public class GUIDonorProfileUpdate {
                         .toString()
                         .replace(' ', '_')));
             }
-            new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.CONFIRMATION, "User successfully updated", ButtonType.OK).showAndWait();
             goBackToProfile();
         }
         else {

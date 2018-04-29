@@ -7,6 +7,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
+import model.Human;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
@@ -74,26 +75,25 @@ public class GUIDonorDonations {
     }
 
 
-    private Donor target;
+    private Human target;
 
     private StatesHistoryScreen statesHistoryScreen;
 
 
     public void initialize() {
-        loadProfile(ScreenControl.getLoggedInDonor()
-                .getNhiNumber());
+        loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
     }
 
 
     private void loadProfile(String nhi) {
         try {
-            Donor donor = Database.getDonorByNhi(nhi);
-            target = donor;
-            populateForm(donor);
+            Human human = Database.getDonorByNhi(nhi);
+            target = human;
+            populateForm(human);
 
         }
         catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
+            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the organs for logged in user");
         }
         ArrayList<Control> controls = new ArrayList<Control>() {{
             add(liverCB);
@@ -113,8 +113,8 @@ public class GUIDonorDonations {
     }
 
 
-    private void populateForm(Donor donor) {
-        ArrayList<GlobalEnums.Organ> organs = donor.getDonations();
+    private void populateForm(Human human) {
+        ArrayList<GlobalEnums.Organ> organs = human.getDonations();
         if (organs.contains(GlobalEnums.Organ.LIVER)) {
             liverCB.setSelected(true);
         }
@@ -227,7 +227,7 @@ public class GUIDonorDonations {
         else {
             target.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
-        new Alert(Alert.AlertType.CONFIRMATION, "Donations saved successfully", ButtonType.OK).showAndWait();
+        new Alert(Alert.AlertType.CONFIRMATION, "Organ management saved successfully", ButtonType.OK).showAndWait();
         goToProfile();
     }
 
