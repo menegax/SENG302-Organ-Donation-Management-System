@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static utility.UserActionHistory.userActions;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -57,6 +58,8 @@ public class SearchDonorsTest {
         Database.addDonor(d2);
         Database.addDonor(d1);
 
+        SearchDonors.clearIndex();
+        
         // Given an index
         SearchDonors.createFullIndex();
     }
@@ -64,18 +67,35 @@ public class SearchDonorsTest {
 
     @Test
     public void testSearchByName() throws IOException {
+    	//Bug with setup() means it has to be copied here or wont work
+        Database.resetDatabase();
+        
+        // Given donors in a db
+        d1 = new Donor("abc1234", "Pat", null, "Laff", LocalDate.now());
+        d2 = new Donor("def1234", "Patik", null, "Laffey", LocalDate.now());
+        d3 = new Donor("ghi1234", "George", null, "Romera", LocalDate.now());
+        d4 = new Donor("jkl1234", "George", null, "Bobington", LocalDate.now());
+        Database.addDonor(d4);
+        Database.addDonor(d3);
+        Database.addDonor(d2);
+        Database.addDonor(d1);
 
+        SearchDonors.clearIndex();
+        
+        // Given an index
+        SearchDonors.createFullIndex();
+    	
         // When index searched for a single specific donor
         ArrayList<Donor> results = SearchDonors.searchByName("Pat Bobinton");
 
         // Should contain Pat Laff
-        assertTrue(results.contains(d1));
+        assertTrue(results.contains(Database.getDonorByNhi("abc1234")));
         // Should contain Patik Laffey
-        assertTrue(results.contains(d2));
+        assertTrue(results.contains(Database.getDonorByNhi("def1234")));
         // Shouldn't contain George Romera 
-        assertFalse(results.contains(d3));
+        assertFalse(results.contains(Database.getDonorByNhi("ghi1234")));
         // Should contain George Bobington
-        assertTrue(results.contains(d4));
+        assertTrue(results.contains(Database.getDonorByNhi("jkl1234")));
     }
 
 
@@ -97,7 +117,23 @@ public class SearchDonorsTest {
 
     @Test
     public void testSearchAfterNhiUpdate() throws IOException {
-    	
+    	//Bug with setup() means it has to be copied here or wont work
+        Database.resetDatabase();
+        
+        // Given donors in a db
+        d1 = new Donor("abc1234", "Pat", null, "Laff", LocalDate.now());
+        d2 = new Donor("def1234", "Patik", null, "Laffey", LocalDate.now());
+        d3 = new Donor("ghi1234", "George", null, "Romera", LocalDate.now());
+        d4 = new Donor("jkl1234", "George", null, "Bobington", LocalDate.now());
+        Database.addDonor(d4);
+        Database.addDonor(d3);
+        Database.addDonor(d2);
+        Database.addDonor(d1);
+
+        SearchDonors.clearIndex();
+        
+        // Given an index
+        SearchDonors.createFullIndex();
     	String name = Database.getDonorByNhi("def1234").getFirstName();
     	Database.getDonorByNhi("def1234").setNhiNumber("def5678");
     	
@@ -106,12 +142,81 @@ public class SearchDonorsTest {
     	assertTrue(results.contains(Database.getDonorByNhi("def5678")));
     }
     
+    @Test 
+    public void testSearchUnusualNameResults() throws InvalidObjectException {
+        Database.resetDatabase();
+        
+        // Given donors in a db
+        d1 = new Donor("abc9876", "Joe", null, "Plaffer", LocalDate.now());
+        d2 = new Donor("def9876", "Johnothan", null, "Doe", LocalDate.now());
+        d3 = new Donor("ghi9876", "John", null, "Romera", LocalDate.now());
+        d4 = new Donor("jkl9876", "Samantha", null, "Fon", LocalDate.now());
+        Database.addDonor(d4);
+        Database.addDonor(d3);
+        Database.addDonor(d2);
+        Database.addDonor(d1);
+
+        SearchDonors.clearIndex();
+        
+        // Given an index
+        SearchDonors.createFullIndex();
+        
+    	ArrayList<Donor> results = SearchDonors.searchByName("Jone");
+    	
+    	// Should contain Joe Plaffer, remove 'n' for Joe
+    	assertTrue(results.contains(Database.getDonorByNhi("abc9876")));
+    	
+    	// Should contain Johnothan Doe, remove 'n' and replace 'J' with 'D' for Doe
+    	assertTrue(results.contains(Database.getDonorByNhi("def9876")));
+    	
+    	// Should contain John Romera, remove 'e' and insert 'h' before 'n' for John
+    	assertTrue(results.contains(Database.getDonorByNhi("ghi9876")));
+    	
+    	// Should contain Samantha Fon, remove 'e' and replace 'J' with 'F' for Fon
+    	assertTrue(results.contains(Database.getDonorByNhi("jkl9876")));
+    }
+    
+    @Test 
+    public void testSearchUnusualNameResults2() throws InvalidObjectException {
+        Database.resetDatabase();
+        
+        // Given donors in a db
+        d1 = new Donor("abc9876", "Joe", null, "Plaffer", LocalDate.now());
+        d2 = new Donor("def9876", "Jane", null, "Gregor", LocalDate.now());
+        d3 = new Donor("ghi9876", "John", null, "Romera", LocalDate.now());
+        d4 = new Donor("jkl9876", "Samantha", null, "Done", LocalDate.now());
+        Database.addDonor(d4);
+        Database.addDonor(d3);
+        Database.addDonor(d2);
+        Database.addDonor(d1);
+
+        SearchDonors.clearIndex();
+        
+        // Given an index
+        SearchDonors.createFullIndex();
+        
+    	ArrayList<Donor> results = SearchDonors.searchByName("Joe");
+    	
+    	// Should contain Joe Plaffer
+    	assertTrue(results.contains(Database.getDonorByNhi("abc9876")));
+    	
+    	// Should contain Jane Gregor, insert 'n' before 'e' and replace 'o' with 'a' for Jane
+    	assertTrue(results.contains(Database.getDonorByNhi("def9876")));
+    	
+    	// Should contain John Romera, replace 'e' with 'n' and insert 'h' before 'n' for John
+    	assertTrue(results.contains(Database.getDonorByNhi("ghi9876")));
+    	
+    	// Should contain Samantha Done, insert 'n' before 'e' and replace 'J' with 'D' for Done
+    	assertTrue(results.contains(Database.getDonorByNhi("jkl9876")));
+    }
+    
     /**
      * Reset the logging level
      */
     @AfterClass
     public static void tearDown() {
-
+    	Database.resetDatabase();
+    	SearchDonors.clearIndex();
         userActions.setLevel(Level.INFO);
     }
 
