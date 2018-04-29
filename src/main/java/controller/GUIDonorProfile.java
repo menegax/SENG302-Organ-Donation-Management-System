@@ -108,10 +108,12 @@ public class GUIDonorProfile {
         addLbl3.setText(donor.getSuburb() == null ? "Not set" : donor.getSuburb());
         addLbl4.setText(donor.getRegion() == null ? "Not set" : donor.getRegion()
                 .getValue());
-        addLbl5.setText(String.valueOf(donor.getZip()));
-        while (addLbl5.getText().length() < 4) {
-            addLbl5.setText("0" + addLbl5.getText());
-        }
+        if(donor.getZip() != 0) {
+            addLbl5.setText(String.valueOf(donor.getZip()));
+            while (addLbl5.getText().length() < 4) {
+                addLbl5.setText("0" + addLbl5.getText());
+            }
+        } else addLbl5.setText("n/a");
         for (GlobalEnums.Organ organ : donor.getDonations()) {
             donationList.setText(donationList.getText() + StringUtils.capitalize(organ.getValue()) + "\n");
         }

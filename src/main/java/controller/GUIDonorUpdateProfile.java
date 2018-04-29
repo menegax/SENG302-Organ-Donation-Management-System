@@ -215,9 +215,11 @@ public class GUIDonorUpdateProfile {
             regionDD.setValue(donor.getRegion()
                     .getValue());
         }
-        zipTxt.setText(donor.getZip() == 0 ? "" : String.valueOf(donor.getZip()));
-        while(zipTxt.getText().length() < 4) {
-            zipTxt.setText("0" + zipTxt.getText());
+        if(donor.getZip() != 0) {
+            zipTxt.setText(String.valueOf(donor.getZip()));
+            while(zipTxt.getText().length() < 4) {
+                zipTxt.setText("0" + zipTxt.getText());
+            }
         }
         weightTxt.setText(String.valueOf(donor.getWeight()));
         heightTxt.setText(String.valueOf(donor.getHeight()));
