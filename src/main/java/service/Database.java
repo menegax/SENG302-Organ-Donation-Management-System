@@ -163,7 +163,7 @@ public class Database {
      */
     public static void importFromDisk(String fileName) {
         try {
-            donors = new HashSet<>();
+            //donors = new HashSet<>();
             importFromDiskDonors(fileName);
         }
         catch (IOException e) {

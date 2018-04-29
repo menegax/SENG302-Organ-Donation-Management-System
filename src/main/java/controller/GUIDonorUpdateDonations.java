@@ -24,9 +24,6 @@ import static utility.UserActionHistory.userActions;
 public class GUIDonorUpdateDonations {
 
     @FXML
-    private AnchorPane donorDonationPane;
-
-    @FXML
     private CheckBox liverCB;
 
     @FXML
@@ -89,7 +86,7 @@ public class GUIDonorUpdateDonations {
                 .getNhiNumber());
 
         // Enter key triggers log in
-        donorDonationPane.setOnKeyPressed(e -> {
+        donorDonationsAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveDonations();
             }

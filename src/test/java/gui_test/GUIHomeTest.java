@@ -27,6 +27,7 @@ public class GUIHomeTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
+        Database.resetDatabase();
 
         // add dummy donor
         ArrayList<String> dal = new ArrayList<>();

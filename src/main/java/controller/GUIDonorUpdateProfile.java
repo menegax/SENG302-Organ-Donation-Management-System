@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -24,7 +25,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIDonorUpdateProfile {
 
     @FXML
-    private AnchorPane donorUpdatePane;
+    private AnchorPane donorUpdateAnchorPane;
 
     @FXML
     private Label lastModifiedLbl;
@@ -82,6 +83,20 @@ public class GUIDonorUpdateProfile {
 
     private Donor target;
 
+    private StatesHistoryScreen statesHistoryScreen;
+
+
+    @FXML
+    private void redo() {
+        statesHistoryScreen.redo();
+    }
+
+
+    @FXML
+    private void undo() {
+        statesHistoryScreen.undo();
+    }
+
 
     public void initialize() {
         List<String> bloodGroups =
@@ -93,7 +108,7 @@ public class GUIDonorUpdateProfile {
                 .getNhiNumber());
 
         // Enter key
-        donorUpdatePane.setOnKeyPressed(e -> {
+        donorUpdateAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveProfile();
             }
@@ -128,6 +143,27 @@ public class GUIDonorUpdateProfile {
             Donor donor = Database.getDonorByNhi(nhi);
             target = donor;
             populateForm(donor);
+
+            ArrayList<Control> controls = new ArrayList<Control>() {{
+                add(nhiTxt);
+                add(firstnameTxt);
+                add(lastnameTxt);
+                add(middlenameTxt);
+                add(bloodGroupDD);
+                add(regionDD);
+                add(dobDate);
+                add(dateOfDeath);
+                add(genderMaleRadio);
+                add(genderFemaleRadio);
+                add(genderOtherRadio);
+                add(street1Txt);
+                add(street2Txt);
+                add(suburbTxt);
+                add(weightTxt);
+                add(heightTxt);
+                add(zipTxt);
+            }};
+            statesHistoryScreen = new StatesHistoryScreen(donorUpdateAnchorPane, controls);
 
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");

@@ -95,8 +95,8 @@ public class GUILoginTest extends ApplicationTest {
 
     @Test
     public void should_open_register_form() {
-        interact(() -> lookup("#registerLabel").queryAs(Hyperlink.class).fire());
-        verifyThat("#registerPane", Node::isVisible);
+        interact(() -> lookup("#registerHyperlink").queryAs(Hyperlink.class).fire());
+        verifyThat("#donorRegisterAnchorPane", Node::isVisible);
     }
 
 

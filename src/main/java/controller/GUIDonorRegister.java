@@ -79,7 +79,7 @@ public class GUIDonorRegister {
         }};
         statesHistoryScreen = new StatesHistoryScreen(donorRegisterAnchorPane, controls);
         // Enter key
-        registerPane.setOnKeyPressed(e -> {
+        donorRegisterAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 register();
             }
