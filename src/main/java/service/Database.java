@@ -1,21 +1,28 @@
 package service;
 
 import com.google.gson.Gson;
+import model.Clinician;
 import model.Donor;
+import utility.GlobalEnums;
+import utility.SearchDonors;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
 public class Database {
 
     private static HashSet<Donor> donors = new HashSet<>();
+    private static ArrayList<Clinician> clinicians = new ArrayList<>();
 
     public static HashSet<Donor> getDonors() {
         return donors;
     }
+    public static ArrayList<Clinician> getClinicians() { return clinicians; }
 
     /**
      * Adds a donor to the database
@@ -26,6 +33,7 @@ public class Database {
             newDonor.ensureValidNhi();
             newDonor.ensureUniqueNhi();
             donors.add(newDonor);
+            SearchDonors.addIndex(newDonor);
             userActions.log(Level.INFO,"Successfully added donor " + newDonor.getNhiNumber(), "attempted to add a donor");
         } catch (IllegalArgumentException o) {
             throw new IllegalArgumentException(o.getMessage());
@@ -57,6 +65,44 @@ public class Database {
             }
         }
         throw new InvalidObjectException("Donor with NHI number " + nhi + " does not exist.");
+    }
+
+    /**
+     * Searches clinicians by staffID
+     *
+     * @param staffID the staff ID to search clinicians by
+     * @return Clinician object
+     * @throws InvalidObjectException when the object cannot be found
+     */
+    public static Clinician getClinicianByID(int staffID) throws InvalidObjectException {
+        for (Clinician c : getClinicians()) {
+            if (c.getStaffID() == staffID) {
+                return c;
+            }
+        }
+        throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
+    }
+
+    public static void addClinician(String firstName, ArrayList<String> middleNames, String lastName, GlobalEnums.Region region) throws IllegalArgumentException {
+        Database.addClinician(firstName, middleNames, lastName, null, null, null, region);
+    }
+
+    public static void addClinician(String firstName, ArrayList<String> middleNames, String lastName, String street1, String street2, String suburb, GlobalEnums.Region region) throws IllegalArgumentException {
+        int staffID = getNextStaffID();
+        if (!Pattern.matches("^[-a-zA-Z]+$", firstName)) throw new IllegalArgumentException("Invalid first name");
+        if (!Pattern.matches("^[-a-zA-Z]+$", lastName)) throw new IllegalArgumentException("Invalid last name");
+        if (street1 != null && !Pattern.matches("^[- a-zA-Z0-9]+$", street1)) throw new IllegalArgumentException("Invalid street address");
+
+        clinicians.add(new Clinician(staffID, firstName, middleNames, lastName, street1, street2, suburb, region));
+    }
+
+    private static int getNextStaffID() {
+        if (clinicians.size() == 0) {
+            return 0;
+        } else {
+            int currentID = clinicians.get(clinicians.size() - 1).getStaffID();
+            return currentID + 1;
+        }
     }
 
     /**
@@ -93,8 +139,9 @@ public class Database {
         try {
             donors = new HashSet<>();
             importFromDiskDonors(fileName);
+            SearchDonors.createFullIndex();
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, e.getMessage(), "attempted to import from disk");
+            userActions.log(Level.WARNING, e.getMessage(), "attempted to import from disk");
         }
     }
 

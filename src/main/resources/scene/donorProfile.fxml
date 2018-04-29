@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="profilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIDonorProfile">
+<AnchorPane fx:id="profilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIDonorProfile">
    <children>
       <Label layoutX="264.0" layoutY="32.0" styleClass="title" text="Profile">
          <font>
@@ -100,7 +100,7 @@
             <Label fx:id="donationList" />
          </children>
       </VBox>
-      <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
+      <Label fx:id="back" layoutX="14.0" layoutY="14.0" onMouseClicked="#goToDonorHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
       <Button layoutX="494.0" layoutY="36.0" mnemonicParsing="false" onAction="#goToEdit" text="Edit" />
       <Button layoutX="241.0" layoutY="314.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
       <Button fx:id="testMedication" layoutX="249.0" layoutY="348.0" mnemonicParsing="false" onAction="#openMedication" text="Medication Test" />

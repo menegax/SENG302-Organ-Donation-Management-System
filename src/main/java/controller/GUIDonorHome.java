@@ -6,7 +6,7 @@ import javafx.scene.layout.AnchorPane;
 import service.Database;
 
 
-public class GUIHome {
+public class GUIDonorHome {
 
     @FXML
     public AnchorPane homePane;
@@ -17,21 +17,24 @@ public class GUIHome {
         ScreenControl.activate("donorProfile");
     }
 
+
     @FXML
-    public void goToHistory(){
+    public void goToHistory() {
         ScreenControl.activate("donorHistory");
     }
 
+
     @FXML
     public void logOut() {
+        ScreenControl.setLoggedInDonor(null);
         ScreenControl.activate("login");
     }
+
 
     @FXML
     public void save() {
         Database.saveToDisk();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Saved!");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Successfully saved!");
         alert.showAndWait();
     }
-
 }

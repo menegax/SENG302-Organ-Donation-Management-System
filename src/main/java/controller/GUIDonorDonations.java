@@ -4,11 +4,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
 
-import javafx.scene.control.CheckBox;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
@@ -16,38 +17,64 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorDonations {
+public class GUIDonorDonations implements IPopupable {
+
+    @FXML
+    private AnchorPane donationPane;
 
     @FXML
     private CheckBox liverCB;
+
     @FXML
     private CheckBox kidneyCB;
+
     @FXML
     private CheckBox pancreasCB;
+
     @FXML
     private CheckBox heartCB;
+
     @FXML
     private CheckBox lungCB;
+
     @FXML
     private CheckBox intestineCB;
+
     @FXML
     private CheckBox corneaCB;
+
     @FXML
     private CheckBox middleearCB;
+
     @FXML
     private CheckBox skinCB;
+
     @FXML
     private CheckBox boneCB;
+
     @FXML
     private CheckBox bonemarrowCB;
+
     @FXML
     private CheckBox connectivetissueCB;
 
     private Donor target;
 
-    public void initialize() {
-        loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
+    private Donor viewedDonor;
+
+    public void setViewedDonor(Donor donor) {
+        viewedDonor = donor;
+        loadProfile(donor.getNhiNumber());
     }
+
+
+    public void initialize() {
+        if (ScreenControl.getLoggedInDonor() != null) {
+            loadProfile(ScreenControl.getLoggedInDonor()
+                    .getNhiNumber());
+        }
+    }
+
 
     private void loadProfile(String nhi) {
         try {
@@ -55,28 +82,53 @@ public class GUIDonorDonations {
             target = donor;
             populateForm(donor);
 
-
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
             e.printStackTrace();
         }
     }
 
+
     private void populateForm(Donor donor) {
         ArrayList<GlobalEnums.Organ> organs = donor.getDonations();
-        if (organs.contains(GlobalEnums.Organ.LIVER)) liverCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.KIDNEY)) kidneyCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.PANCREAS)) pancreasCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.HEART)) heartCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.LUNG)) lungCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.INTESTINE)) intestineCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.CORNEA)) corneaCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.MIDDLEEAR)) middleearCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.SKIN)) skinCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.BONE)) boneCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.BONE_MARROW)) bonemarrowCB.setSelected(true);
-        if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) connectivetissueCB.setSelected(true);
+        if (organs.contains(GlobalEnums.Organ.LIVER)) {
+            liverCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.KIDNEY)) {
+            kidneyCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.PANCREAS)) {
+            pancreasCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.HEART)) {
+            heartCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.LUNG)) {
+            lungCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.INTESTINE)) {
+            intestineCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.CORNEA)) {
+            corneaCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.MIDDLEEAR)) {
+            middleearCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.SKIN)) {
+            skinCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.BONE)) {
+            boneCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.BONE_MARROW)) {
+            bonemarrowCB.setSelected(true);
+        }
+        if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) {
+            connectivetissueCB.setSelected(true);
+        }
     }
+
 
     public void saveDonations() {
         if (liverCB.isSelected()) {
@@ -143,15 +195,25 @@ public class GUIDonorDonations {
         goToProfile();
     }
 
+
     public void goToProfile() {
-        ScreenControl.removeScreen("donorProfile");
-        try {
-            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-            ScreenControl.activate("donorProfile");
-        }catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
+        if (ScreenControl.getLoggedInDonor() != null) {
+            ScreenControl.removeScreen("donorProfile");
+            try {
+                ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+                ScreenControl.activate("donorProfile");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
+                new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfile.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(donationPane.getScene(), fxmlLoader, viewedDonor);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
+                new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+            }
         }
     }
 }
