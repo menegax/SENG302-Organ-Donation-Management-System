@@ -187,8 +187,7 @@ public class GUIDonorUpdateContacts {
             target.setHomePhone(null);
             setValid(homePhoneField);
         } else {
-            valid = false;
-            setInvalid(homePhoneField);
+            valid = setInvalid(homePhoneField);
         }
         if (!(mobilePhoneField.getText().equals("")) && mobilePhoneField.getText().matches("[0-9]+")) {
             target.setMobilePhone(mobilePhoneField.getText());
@@ -197,8 +196,7 @@ public class GUIDonorUpdateContacts {
             target.setMobilePhone(null);
             setValid(mobilePhoneField);
         } else {
-            valid = false;
-            setInvalid(mobilePhoneField);
+            valid = setInvalid(mobilePhoneField);
         }
         if (!(workPhoneField.getText().equals("")) && workPhoneField.getText().matches("[0-9]+")) {
             target.setWorkPhone(workPhoneField.getText());
@@ -207,8 +205,7 @@ public class GUIDonorUpdateContacts {
             target.setWorkPhone(null);
             setValid(workPhoneField);
         } else {
-            valid = false;
-            setInvalid(workPhoneField);
+            valid = setInvalid(workPhoneField);
         }
         if (!(emailAddressField.getText().equals("")) && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
             target.setEmailAddress(emailAddressField.getText());
@@ -217,8 +214,7 @@ public class GUIDonorUpdateContacts {
             target.setEmailAddress(null);
             setValid(emailAddressField);
         } else {
-            valid = false;
-            setInvalid(emailAddressField);
+            valid = setInvalid(emailAddressField);
         }
         if (!(contactRelationshipField.getText().equals(""))) {
             target.setContactRelationship(contactRelationshipField.getText());
@@ -227,8 +223,7 @@ public class GUIDonorUpdateContacts {
             target.setContactRelationship(null);
             setValid(contactRelationshipField);
         } else {
-            valid = false;
-            setInvalid(contactRelationshipField);
+            valid = setInvalid(contactRelationshipField);
         }
         if (!(contactNameField.getText().equals(""))) {
             target.setContactName(contactNameField.getText());
@@ -237,8 +232,7 @@ public class GUIDonorUpdateContacts {
             target.setContactName(null);
             setValid(contactNameField);
         } else {
-            valid = false;
-            setInvalid(contactNameField);
+            valid = setInvalid(contactNameField);
         }
         if (!(contactHomePhoneField.getText().equals("")) && contactHomePhoneField.getText().matches("[0-9]+")) {
             target.setContactHomePhone(contactHomePhoneField.getText());
@@ -247,8 +241,7 @@ public class GUIDonorUpdateContacts {
             target.setContactHomePhone(null);
             setValid(contactHomePhoneField);
         } else {
-            valid = false;
-            setInvalid(contactHomePhoneField);
+            valid = setInvalid(contactHomePhoneField);
         }
         if (!(contactMobilePhoneField.getText().equals("")) && contactMobilePhoneField.getText().matches("[0-9]+")) {
             target.setContactMobilePhone(contactMobilePhoneField.getText());
@@ -257,8 +250,7 @@ public class GUIDonorUpdateContacts {
             target.setContactMobilePhone(null);
             setValid(contactMobilePhoneField);
         } else {
-            valid = false;
-            setInvalid(contactMobilePhoneField);
+            valid = setInvalid(contactMobilePhoneField);
         }
         if (!(contactWorkPhoneField.getText().equals("")) && contactWorkPhoneField.getText().matches("[0-9]+")) {
             target.setContactWorkPhone(contactWorkPhoneField.getText());
@@ -267,8 +259,7 @@ public class GUIDonorUpdateContacts {
             target.setContactWorkPhone(null);
             setValid(contactWorkPhoneField);
         } else {
-            valid = false;
-            setInvalid(contactWorkPhoneField);
+            valid = setInvalid(contactWorkPhoneField);
         }
         if (!(contactEmailAddressField.getText().equals("") && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+"))) {
             target.setContactEmailAddress(contactEmailAddressField.getText());
@@ -277,8 +268,7 @@ public class GUIDonorUpdateContacts {
             target.setContactEmailAddress(null);
             setValid(contactEmailAddressField);
         } else {
-            valid = false;
-            setInvalid(contactEmailAddressField);
+            valid = setInvalid(contactEmailAddressField);
         }
         return valid;
     }
@@ -287,8 +277,9 @@ public class GUIDonorUpdateContacts {
      * Applies the invalid class to the target control
      * @param target The target to add the class to
      */
-    private void setInvalid(Control target) {
+    private boolean setInvalid(Control target) {
         target.getStyleClass().add("invalid");
+        return false;
     }
 
     /**

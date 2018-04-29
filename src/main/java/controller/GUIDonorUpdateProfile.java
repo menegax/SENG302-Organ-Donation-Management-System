@@ -216,6 +216,9 @@ public class GUIDonorUpdateProfile {
                     .getValue());
         }
         zipTxt.setText(donor.getZip() == 0 ? "" : String.valueOf(donor.getZip()));
+        while(zipTxt.getText().length() < 4) {
+            zipTxt.setText("0" + zipTxt.getText());
+        }
         weightTxt.setText(String.valueOf(donor.getWeight()));
         heightTxt.setText(String.valueOf(donor.getHeight()));
         if (donor.getBloodGroup() != null) {
@@ -250,29 +253,30 @@ public class GUIDonorUpdateProfile {
         if (!Pattern.matches("[A-Z]{3}[0-9]{4}",
                 nhiTxt.getText()
                         .toUpperCase())) {
-            valid = false;
-            setInvalid(nhiTxt);
+            valid = setInvalid(nhiTxt);
         } else setValid(nhiTxt);
 
         // first name
-        if (firstnameTxt.getText() == null || firstnameTxt.getText().length() < 1) {
-            valid = false;
-            setInvalid(firstnameTxt);
+        if (!firstnameTxt.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
+            valid = setInvalid(firstnameTxt);
         } else setValid(firstnameTxt);
 
         // last name
-        if (lastnameTxt.getText() == null || lastnameTxt.getText().length() < 1) {
-            valid = false;
-            setInvalid(lastnameTxt);
+        if (!lastnameTxt.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
+            valid = setInvalid(lastnameTxt);
         } else setValid(lastnameTxt);
+
+        //middle names
+        if (!middlenameTxt.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
+            valid = setInvalid(middlenameTxt);
+        } else setValid(middlenameTxt);
 
         // region
         if (regionDD.getSelectionModel().getSelectedIndex() != -1) {
             Enum region = GlobalEnums.Region.getEnumFromString(regionDD
                     .getSelectionModel().getSelectedItem());
             if (region == null) {
-                valid = false;
-                setInvalid(regionDD);
+                valid = setInvalid(regionDD);
             } else setValid(regionDD);
         } else setValid(regionDD);
 
@@ -280,32 +284,28 @@ public class GUIDonorUpdateProfile {
         if (!zipTxt.getText().equals("")) {
             try {
                 if (zipTxt.getText().length() != 4 && !(zipTxt.getText().equals(""))) {
-                    valid = false;
-                    setInvalid(zipTxt);
+                    valid = setInvalid(zipTxt);
                 } else {
                     Integer.parseInt(zipTxt.getText());
                     setValid(zipTxt);
                 }
             }
             catch (NumberFormatException e) {
-                valid = false;
-                setInvalid(zipTxt);
+                valid = setInvalid(zipTxt);
             }
         } else setValid(zipTxt);
 
         // weight
         if (weightTxt.getText() != null) {
             if(isInvalidDouble(weightTxt.getText())) {
-                valid = false;
-                setInvalid(weightTxt);
+                valid = setInvalid(weightTxt);
             } else setValid(weightTxt);
         } else setValid(weightTxt);
 
         // height
         if (heightTxt.getText() != null) {
             if(isInvalidDouble(heightTxt.getText())) {
-                valid = false;
-                setInvalid(heightTxt);
+                valid = setInvalid(heightTxt);
             } else setValid(heightTxt);
         } else setValid(heightTxt);
 
@@ -315,28 +315,24 @@ public class GUIDonorUpdateProfile {
                     .replace(' ', '_');
             Enum bloodgroup = GlobalEnums.BloodGroup.getEnumFromString(bgStr);
             if (bloodgroup == null) {
-                valid = false;
-                setInvalid(bloodGroupDD);
+                valid = setInvalid(bloodGroupDD);
             } else setValid(bloodGroupDD);
         } else setValid(bloodGroupDD);
 
         // date of birth
         if(dobDate.getValue() != null) {
             if(dobDate.getValue().isAfter(LocalDate.now())) {
-                valid = false;
-                setInvalid(dobDate);
+                valid = setInvalid(dobDate);
             } else setValid(dobDate);
         } else {
-            valid = false;
-            setInvalid(dobDate);
+            valid = setInvalid(dobDate);
         }
 
         // date of death
         if(dateOfDeath.getValue() != null) {
             if((dobDate.getValue() != null && dateOfDeath.getValue().isBefore(dobDate.getValue())) ||
                     dateOfDeath.getValue().isAfter(LocalDate.now())) {
-                valid = false;
-                setInvalid(dateOfDeath);
+                valid = setInvalid(dateOfDeath);
             } else setValid(dateOfDeath);
         } else setValid(dateOfDeath);
 
@@ -345,10 +341,13 @@ public class GUIDonorUpdateProfile {
             target.setNhiNumber(nhiTxt.getText());
             target.setFirstName(firstnameTxt.getText());
             target.setLastName(lastnameTxt.getText());
-            List<String> middlenames = Arrays.asList(middlenameTxt.getText()
-                    .split(" "));
-            ArrayList<String> middles = new ArrayList<>(middlenames);
-            target.setMiddleNames(middles);
+            if(middlenameTxt.getText().equals("")) target.setMiddleNames(new ArrayList<>());
+            else {
+                List<String> middlenames = Arrays.asList(middlenameTxt.getText()
+                        .split(" "));
+                ArrayList<String> middles = new ArrayList<>(middlenames);
+                target.setMiddleNames(middles);
+            }
             if (genderMaleRadio.isSelected()) {
                 target.setGender((GlobalEnums.Gender) GlobalEnums.Gender.getEnumFromString("male"));
             }
@@ -406,8 +405,10 @@ public class GUIDonorUpdateProfile {
      * Applies the invalid class to the target control
      * @param target The target to add the class to
      */
-    private void setInvalid(Control target) {
+    private boolean setInvalid(Control target) {
+
         target.getStyleClass().add("invalid");
+        return false;
     }
 
     /**
