@@ -11,6 +11,9 @@ import utility.GlobalEnums;
 import utility.SearchDonors;
 import utility.UserActionHistory;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 public class Main extends Application {
 
     @Override

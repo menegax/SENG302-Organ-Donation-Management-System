@@ -103,6 +103,6 @@
       <Label fx:id="back" layoutX="14.0" layoutY="14.0" onMouseClicked="#goToDonorHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
       <Button layoutX="494.0" layoutY="36.0" mnemonicParsing="false" onAction="#goToEdit" text="Edit" />
       <Button layoutX="241.0" layoutY="314.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
-      <Button fx:id="testMedication" layoutX="249.0" layoutY="348.0" mnemonicParsing="false" onAction="#openMedication" text="Medication Test" />
+      <Button fx:id="medicationBtn" layoutX="261.0" layoutY="348.0" mnemonicParsing="false" onAction="#openMedication" text="Medications" />
    </children>
 </AnchorPane>

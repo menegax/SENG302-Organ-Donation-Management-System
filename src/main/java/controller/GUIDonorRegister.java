@@ -22,7 +22,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIDonorRegister {
 
     @FXML
-    public AnchorPane registerPane;
+    public AnchorPane pane;
     public Label backLabel;
     public Button doneButton;
 
