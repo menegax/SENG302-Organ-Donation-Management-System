@@ -1,5 +1,9 @@
 package service;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,7 +20,7 @@ import static utility.UserActionHistory.userActions;
 public class TextWatcher {
 
     private Timer timer = new Timer();
-
+    private Timeline timeLine = new Timeline();
 
     /**
      *  Starts timer with a delay of 300ms, after delay has been exceeded, given method is called
@@ -30,11 +34,12 @@ public class TextWatcher {
             public void run() {
                 try {
                     method.invoke(classInstance,null); //invoke the method with the given class instance
+                    timer.cancel(); //CANCEL TIMER THREAD!!!
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     userActions.log(Level.SEVERE, "Could not invoke method from timer");
                 }
             }
-        }, 300); // delay 300ms before executing timer task
+        }, 500); // delay 500ms before executing timer task
     }
 
     /**

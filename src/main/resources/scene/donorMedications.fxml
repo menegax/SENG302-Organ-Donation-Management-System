@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<?import javafx.scene.control.Label?>
-<AnchorPane fx:id="medicationPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIDonorMedications">
+<AnchorPane fx:id="medicationPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIDonorMedications">
     <children>
-        <Label alignment="CENTER" layoutX="200.0" layoutY="6.0" styleClass="title" text="Medication"/>
-        <TextField fx:id="newMedication" focusTraversable="false" layoutX="225.0" layoutY="56.0" prefHeight="25.0" prefWidth="100.0" promptText="Enter medicine" />
-        <Button fx:id="registerMed" layoutX="235.0" layoutY="91.0" mnemonicParsing="false" onAction="#registerMedication"
-                prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="REGISTER" />
+        <Label alignment="CENTER" layoutX="200.0" layoutY="6.0" styleClass="title" text="Medication" />
+        <TextField fx:id="newMedication" focusTraversable="false" layoutX="179.0" layoutY="57.0" prefHeight="26.0" prefWidth="191.0" promptText="Enter medicine">
+         <contextMenu>
+            <ContextMenu fx:id="contextMenu">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+              </items>
+            </ContextMenu>
+         </contextMenu></TextField>
+        <Button fx:id="registerMed" layoutX="235.0" layoutY="91.0" mnemonicParsing="false" onAction="#registerMedication" prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="REGISTER" />
         <ListView fx:id="currentMedications" layoutX="218.0" layoutY="130.0" prefHeight="210.0" prefWidth="111.0" />
         <ListView fx:id="medicineInformation" layoutX="424.0" layoutY="14.0" prefHeight="326.0" prefWidth="162.0" />
-        <Button fx:id="reviewMed" layoutX="341.0" layoutY="188.0" mnemonicParsing="false" onAction="#reviewMedicine" prefHeight="25.0"
-                prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="REVIEW" />
-        <Button fx:id="removeMed" layoutX="137.0" layoutY="188.0" mnemonicParsing="false" onAction="#makeHistory" prefHeight="25.0"
-                prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="REMOVE" />
-        <Button fx:id="addMed" layoutX="137.0" layoutY="225.0" mnemonicParsing="false" onAction="#makeCurrent" prefHeight="25.0"
-                prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="RE-ADD" />
+        <Button fx:id="reviewMed" layoutX="341.0" layoutY="188.0" mnemonicParsing="false" onAction="#reviewMedicine" prefHeight="25.0" prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="REVIEW" />
+        <Button fx:id="removeMed" layoutX="137.0" layoutY="188.0" mnemonicParsing="false" onAction="#makeHistory" prefHeight="25.0" prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="REMOVE" />
+        <Button fx:id="addMed" layoutX="137.0" layoutY="225.0" mnemonicParsing="false" onAction="#makeCurrent" prefHeight="25.0" prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="RE-ADD" />
         <ListView fx:id="pastMedications" layoutX="14.0" layoutY="130.0" prefHeight="210.0" prefWidth="110.0" />
-        <Button fx:id="deleteMed" layoutX="29.0" layoutY="352.0" mnemonicParsing="false" onAction="#deleteMedication"
-                prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="DELETE" />
-        <Button fx:id="clearMed" layoutX="235.0" layoutY="352.0" mnemonicParsing="false" onAction="#clearSelections"
-                prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="CLEAR" />
-        <Button fx:id="saveMed" layoutX="489.0" layoutY="352.0" mnemonicParsing="false" onAction="#saveMedication"
-                prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="SAVE" />
-        <Button fx:id="goBack" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#goToProfile"
-                prefHeight="25.0" prefWidth="50.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="BACK" />
+        <Button fx:id="deleteMed" layoutX="29.0" layoutY="352.0" mnemonicParsing="false" onAction="#deleteMedication" prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="DELETE" />
+        <Button fx:id="clearMed" layoutX="235.0" layoutY="352.0" mnemonicParsing="false" onAction="#clearSelections" prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="CLEAR" />
+        <Button fx:id="saveMed" layoutX="489.0" layoutY="352.0" mnemonicParsing="false" onAction="#saveMedication" prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="SAVE" />
+        <Button fx:id="goBack" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="25.0" prefWidth="50.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="BACK" />
         <Button fx:id="undoEdit" layoutX="14.0" layoutY="52.0" mnemonicParsing="false" onAction="#undo" prefHeight="36.0" prefWidth="31.0" styleClass="undo" stylesheets="@../css/guiStyle.css" />
         <Button fx:id="redoEdit" layoutX="61.0" layoutY="52.0" mnemonicParsing="false" onAction="#redo" prefHeight="36.0" prefWidth="31.0" styleClass="redo" stylesheets="@../css/guiStyle.css" />
     </children>
