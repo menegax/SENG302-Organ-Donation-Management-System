@@ -8,14 +8,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
@@ -71,26 +69,24 @@ public class GUIClinicianSearchDonors implements Initializable {
      * Sets up double-click functionality for each row to open a donor profile update
      */
     private void setupDoubleClickToDonorEdit() {
+
         // Add double-click event to rows
         donorDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && donorDataTable.getSelectionModel()
                     .getSelectedItem() != null) {
                 try {
-                    Donor selectedDonor = donorDataTable.getSelectionModel().getSelectedItem();
-
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfile.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
                     GUIDonorProfile controller = fxmlLoader.getController();
-                    controller.setViewedDonor(selectedDonor);
+                    controller.setViewedDonor(donorDataTable.getSelectionModel().getSelectedItem());
 
                     Stage popUpStage = new Stage();
                     popUpStage.setX(ScreenControl.getMain()
-                            .getX() + 50); //offset popup
+                            .getX()); //offset popup
                     popUpStage.setScene(scene);
 
                     // When pop up is closed, refresh the table
-                    popUpStage.setOnHiding(event -> Platform.runLater(() -> tableRefresh()));
-
+                    popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
 
                     //Add and show the popup
                     ScreenControl.addPopUp("searchPopup", popUpStage); //ADD to screen control
@@ -153,18 +149,16 @@ public class GUIClinicianSearchDonors implements Initializable {
     private void setupSearchingListener(FilteredList<Donor> filteredData) {
         // set the filter Predicate whenever the filter changes.
         searchEntry.textProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    filteredData.setPredicate(donor -> {
-                        // If filter text is empty, display all persons.
-                        if (newValue == null || newValue.isEmpty()) {
-                            return true;
-                        }
+                .addListener((observable, oldValue, newValue) -> filteredData.setPredicate(donor -> {
+                    // If filter text is empty, display all persons.
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
 
-                        return SearchDonors.searchByName(newValue)
-                                .contains(donor);
+                    return SearchDonors.searchByName(newValue)
+                            .contains(donor);
 
-                    });
-                });
+                }));
     }
 
 
@@ -212,8 +206,8 @@ public class GUIClinicianSearchDonors implements Initializable {
     /**
      * Refreshes the table data
      */
-    public void tableRefresh() {
-        donorDataTable.refresh(); //todo needs to be here? test
+    private void tableRefresh() {
+        donorDataTable.refresh();
     }
 }
 
