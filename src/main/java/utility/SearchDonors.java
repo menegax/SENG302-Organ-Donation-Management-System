@@ -37,8 +37,6 @@ public class SearchDonors {
 
     private static IndexSearcher indexSearcher = null;
 
-    // TODO what is this? it just causes a warning on my machine. Andrew: it stops IntelliJ from giving a warning about a variable that could be localized. Looks like it's either a warning for you or me!
-//    @SuppressWarnings("FieldCanBeLocal")
     private static int NUM_RESULTS = 20;
 
 
@@ -76,14 +74,14 @@ public class SearchDonors {
             try {
 				initializeWriter();
 			} catch (IOException e) {
-				userActions.log(Level.SEVERE, "Failure to initialize index writer");
+				userActions.log(Level.SEVERE, "Failure to initialize index writer", "Attempted to intialize the index writer");
 			}
         }
         try {
 			indexWriter.addDocument(createDocument(donor));
 			indexWriter.commit();
 		} catch (IOException e) {
-			userActions.log(Level.SEVERE, "Failure to write index");
+			userActions.log(Level.SEVERE, "Failure to write index", "Attempted to write donor to search index");
 		}
     }
 
@@ -95,8 +93,9 @@ public class SearchDonors {
     	Term toDel = new Term("nhi", donor.getNhiNumber().toUpperCase());
     	try {
 			indexWriter.deleteDocuments(toDel);
+            userActions.log(Level.INFO,"Successfully removed donor: " + donor.getNhiNumber() + " from the search index", "Attempted to remove donor " + donor.getNhiNumber() + " from the search index");
 		} catch (IOException e) {
-			userActions.log(Level.SEVERE, "Failure to delete search index");
+			userActions.log(Level.SEVERE, "Failure to delete donor: " + donor.getNhiNumber() + " from the search index", "Attempted to remove donor " + donor.getNhiNumber() + " from the search index");
 		}
     }
     
@@ -106,8 +105,9 @@ public class SearchDonors {
     public static void clearIndex() {
     	try {
 			indexWriter.deleteAll();
+            userActions.log(Level.INFO,"Successfully cleared donor search index", "Attempted to delete all donors search indices");
 		} catch (IOException e) {
-			userActions.log(Level.SEVERE, "Failure to delete all search indices"); 
+			userActions.log(Level.SEVERE, "Failure to delete all search indices", "Attempted to delete all donors search indices"); 
 		}
     }
     
@@ -181,8 +181,9 @@ public class SearchDonors {
 	            	}
 	        	}
 			}
+            userActions.log(Level.INFO,"Successfully searched for donors with input " + input, "Attempted to search for donors");
 		} catch (IOException e) {
-			userActions.log(Level.SEVERE, "Failure to find or read from index");
+			userActions.log(Level.SEVERE, "Failure to find or read from index", "Attempted to search for donors");
 		}
         return results;
     }
