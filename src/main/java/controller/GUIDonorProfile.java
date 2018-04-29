@@ -22,7 +22,7 @@ public class GUIDonorProfile {
 
     @FXML
     public AnchorPane profilePane;
-    public Button testMedication;
+    public Button diseaseHistoryButton;
 
     @FXML
     private Label nhiLbl;

@@ -43,7 +43,7 @@ public class GUIClinicianDiagnosis {
     private TextField newDiagnosis;
 
     /**
-     * Adds a newly entered medication to the current medications array and the listView for the current medications
+     * Adds a newly entered diagnosis as a String to the current disease class and updates the table
      */
     @FXML
     public void registerDiagnosis() {
