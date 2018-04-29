@@ -7,14 +7,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="profilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIDonorProfile">
+<AnchorPane fx:id="donorProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIDonorProfile">
    <children>
       <Label layoutX="264.0" layoutY="32.0" styleClass="title" text="Profile">
          <font>
             <Font size="40.0" />
          </font>
       </Label>
-      <VBox layoutX="96.0" layoutY="100.0" prefHeight="200.0" prefWidth="240.0">
+      <VBox layoutX="86.0" layoutY="81.0" prefHeight="213.0" prefWidth="240.0">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -25,7 +25,7 @@
             <HBox prefHeight="30.0" prefWidth="200.0">
                <children>
                   <Label prefHeight="16.0" prefWidth="112.0" text="Name: " />
-                  <Label fx:id="nameLbl" text="Label" />
+                  <Label fx:id="nameLbl" text="Label" textOverrun="CENTER_ELLIPSIS" />
                </children>
             </HBox>
             <HBox prefHeight="30.0" prefWidth="200.0">
@@ -40,6 +40,18 @@
                   <Label fx:id="dobLbl" text="Label" />
                </children>
             </HBox>
+            <HBox layoutX="10.0" layoutY="61.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Date of Death: " />
+                  <Label fx:id="dateOfDeath" text="Label" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="62.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Age:" />
+                  <Label fx:id="age" text="Label" />
+               </children>
+            </HBox>
             <HBox prefHeight="30.0" prefWidth="200.0">
                <children>
                   <Label prefHeight="16.0" prefWidth="112.0" text="Height: " />
@@ -50,6 +62,12 @@
                <children>
                   <Label prefHeight="16.0" prefWidth="112.0" text="Weight: " />
                   <Label fx:id="weightLbl" text="Label" />
+               </children>
+            </HBox>
+            <HBox prefHeight="30.0" prefWidth="200.0">
+               <children>
+                  <Label prefHeight="16.0" prefWidth="112.0" text="BMI: " />
+                  <Label fx:id="bmi" text="Label" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
@@ -90,18 +108,19 @@
             </HBox>
          </children>
       </VBox>
-      <VBox layoutX="361.0" layoutY="100.0" prefHeight="200.0" prefWidth="162.0">
+      <VBox layoutX="363.0" layoutY="81.0" prefHeight="200.0" prefWidth="162.0">
          <children>
             <Label alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Donations">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="donationList" />
+            <Label fx:id="donationList" alignment="CENTER" prefHeight="209.0" prefWidth="162.0" />
          </children>
       </VBox>
       <Label fx:id="back" layoutX="14.0" layoutY="14.0" onMouseClicked="#goToDonorHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-      <Button layoutX="494.0" layoutY="36.0" mnemonicParsing="false" onAction="#goToEdit" text="Edit" />
-      <Button layoutX="241.0" layoutY="314.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
+      <Button fx:id="editDonorButton" layoutX="254.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToEdit" text="Manage Profile" />
+      <Button fx:id="donationsButton" layoutX="107.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
+      <Button fx:id="contactButton" layoutX="381.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contacts" />
    </children>
 </AnchorPane>

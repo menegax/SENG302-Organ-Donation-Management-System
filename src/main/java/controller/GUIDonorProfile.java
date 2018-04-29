@@ -3,10 +3,13 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Label;
 import model.Donor;
+import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import utility.GlobalEnums;
 
@@ -25,6 +28,12 @@ public class GUIDonorProfile implements IPopupable {
     @FXML
     private AnchorPane profilePane;
 
+    public Button editDonorButton;
+
+    public Button contactButton;
+
+    public Button donationButton;
+
     @FXML
     private Label nhiLbl;
 
@@ -38,10 +47,19 @@ public class GUIDonorProfile implements IPopupable {
     private Label dobLbl;
 
     @FXML
+    private Label dateOfDeath;
+
+    @FXML
+    private Label age;
+
+    @FXML
     private Label heightLbl;
 
     @FXML
     private Label weightLbl;
+
+    @FXML
+    private Label bmi;
 
     @FXML
     private Label bloodGroupLbl;
@@ -84,6 +102,7 @@ public class GUIDonorProfile implements IPopupable {
         loadProfile(this.viewedDonor.getNhiNumber());
     }
 
+
     public void initialize() {
         if (ScreenControl.getLoggedInDonor() != null) {
             loadProfile(ScreenControl.getLoggedInDonor()
@@ -92,33 +111,32 @@ public class GUIDonorProfile implements IPopupable {
     }
 
 
-    private void loadProfile(String nhi) {
-        try { // todo remove this
-            Donor donor = Database.getDonorByNhi(nhi);
+
+    private void loadProfile(String nhi) throws InvalidObjectException {
+        Donor donor = Database.getDonorByNhi(nhi);
 
             nhiLbl.setText(donor.getNhiNumber());
             nameLbl.setText(donor.getNameConcatenated());
-            genderLbl.setText(donor.getGender() == null ? "Not set" : donor.getGender()
-                    .toString());
-            dobLbl.setText(donor.getBirth()
-                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            heightLbl.setText(String.valueOf(donor.getHeight() + " m"));
-            weightLbl.setText(String.valueOf(donor.getWeight() + " kg"));
-            bloodGroupLbl.setText(donor.getBloodGroup() == null ? "Not set" : donor.getBloodGroup()
-                    .getValue());
+            genderLbl.setText(donor.getGender() == null ? "Not set" : donor.getGender().toString());
+            dobLbl.setText(donor.getBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        dateOfDeath.setText(donor.getDeath() == null ? "Not set" : donor.getDeath().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        age.setText(String.valueOf(donor.getAge()));    heightLbl.setText(String.valueOf(donor.getHeight() + " m"));
+            weightLbl.setText(String.valueOf(donor.getWeight() + " kg"));bmi.setText(String.valueOf(donor.getBmi()));
+            bloodGroupLbl.setText(donor.getBloodGroup() == null ? "Not set" : donor.getBloodGroup().getValue());
             addLbl1.setText(donor.getStreet1() == null ? "Not set" : donor.getStreet1());
             addLbl2.setText(donor.getStreet2() == null ? "Not set" : donor.getStreet2());
             addLbl3.setText(donor.getSuburb() == null ? "Not set" : donor.getSuburb());
-            addLbl4.setText(donor.getRegion() == null ? "Not set" : donor.getRegion()
-                    .getValue());
+            addLbl4.setText(donor.getRegion() == null ? "Not set" : donor.getRegion().getValue());if(donor.getZip() != 0) {
             addLbl5.setText(String.valueOf(donor.getZip()));
-            for (GlobalEnums.Organ organ : donor.getDonations()) {
-                donationList.setText(donationList.getText() + organ.getValue() + "\n");
+            while (addLbl5.getText().length() < 4) {
+                addLbl5.setText("0" + addLbl5.getText());
             }
-        } catch (InvalidObjectException e) {
-            e.printStackTrace(); // todo remove
+        } else addLbl5.setText("Not set");
+        for (GlobalEnums.Organ organ : donor.getDonations()) {
+            donationList.setText(donationList.getText() + StringUtils.capitalize(organ.getValue()) + "\n");
         }
     }
+
 
 
     public void goToEdit() {
@@ -161,6 +179,18 @@ public class GUIDonorProfile implements IPopupable {
                 userActions.log(Level.SEVERE, "Error loading donation screen in popup", "attempted to navigate from the profile page to the donation page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading edit page", ButtonType.OK).showAndWait();
             }
+        }
+
+    public void goToContactDetails() {
+        ScreenControl.removeScreen("donorContactDetails");
+        try {
+            ScreenControl.addScreen("donorContactDetails", FXMLLoader.load(getClass().getResource("/scene/donorUpdateContacts.fxml")));
+            ScreenControl.activate("donorContactDetails");
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE,
+                    "Error loading contact details screen",
+                    "attempted to navigate from the profile page to the contact details page");
+            new Alert(Alert.AlertType.WARNING, "Error loading contact details page", ButtonType.OK).showAndWait();
         }
     }
 
