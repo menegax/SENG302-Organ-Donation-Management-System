@@ -17,8 +17,7 @@ import service.Database;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -34,7 +33,7 @@ public class GUIDonorMedications {
     public Button saveMed;
     public Button undoEdit;
     public Button redoEdit;
-    public Button goBack;
+    public Hyperlink goBack;
     public Button clearMed;
     public Button compareMeds;
 
@@ -304,7 +303,6 @@ public class GUIDonorMedications {
      */
     private void onSelect(ListView listView) {
         if (listView.getSelectionModel().getSelectedItems().size() >= 1) {
-            System.out.println(listView.getSelectionModel().getSelectedItems());
             for (Object item : listView.getSelectionModel().getSelectedItems()) {
                 loadMedicationIngredients( item.toString() );
             }
