@@ -129,13 +129,13 @@ public class StatesHistoryScreen {
      */
 
     private void createStateHistoriesRadioButton(Object radioButton) {
-        stateHistories.add(new StateHistoryRadioButton((RadioButton) radioButton));
-        ((RadioButton) radioButton).selectedProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    if (!newValue.equals(oldValue) && !undone && !redone) { //don't want to store state when RadioButton has been undone
-                        store();
-                    }
-                });
+        StateHistoryRadioButton stateHistoryRadioButton = new StateHistoryRadioButton((RadioButton) radioButton);
+        stateHistories.add(stateHistoryRadioButton);
+        ((RadioButton) radioButton).setOnMouseClicked(event -> {
+            if (!(boolean) stateHistoryRadioButton.getStates().get(stateHistoryRadioButton.getIndex())) {
+                store();
+            }
+        });
         ((RadioButton) radioButton).setOnKeyPressed(event -> {
             if (KeyCodeCombination.keyCombination("Ctrl+Z")
                     .match(event)) {
