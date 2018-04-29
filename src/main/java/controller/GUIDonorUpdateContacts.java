@@ -4,14 +4,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -61,6 +64,21 @@ public class GUIDonorUpdateContacts {
      * Donor that is currently logged in
      */
     private Donor target;
+
+    private StatesHistoryScreen statesHistoryScreen;
+
+    @FXML
+    private void redo() {
+        statesHistoryScreen.redo();
+    }
+
+
+    @FXML
+    private void undo() {
+        statesHistoryScreen.undo();
+    }
+
+
 
 
     /**
@@ -135,6 +153,20 @@ public class GUIDonorUpdateContacts {
         try {
             target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor()
                     .getNhiNumber());
+
+            ArrayList<Control> controls = new ArrayList<Control>() {{
+                add(homePhoneField);
+                add(mobilePhoneField);
+                add(workPhoneField);
+                add(emailAddressField);
+                add(contactNameField);
+                add(contactRelationshipField);
+                add(contactHomePhoneField);
+                add(contactMobilePhoneField);
+                add(contactWorkPhoneField);
+                add(contactEmailAddressField);
+            }};
+            statesHistoryScreen = new StatesHistoryScreen(donorContactsPane, controls);
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");

@@ -256,8 +256,8 @@ public class GUIDonorUpdateProfile {
         }
         if (zipTxt.getText() != null) {
             try {
-                int testZIP = Integer.parseInt(zipTxt.getText());
-                if(testZIP < 1000 || testZIP > 9999) valid = false;
+                if(zipTxt.getText().length() != 4 && !(zipTxt.getText().equals(""))) valid = false;
+                Integer.parseInt(zipTxt.getText());
             }
             catch (NumberFormatException e) {
                 valid = false;
