@@ -14,6 +14,7 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.ListViewMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
+import service.Database;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -28,6 +29,7 @@ public class ControllerClinicianTest extends ApplicationTest {
 
     @After
     public void waitForEvents() {
+        Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep( 1000 );
     }
@@ -67,6 +69,6 @@ public class ControllerClinicianTest extends ApplicationTest {
             lookup( "#loginButton" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
 //            lookup("OK").queryAs(Button.class).fire();
         });
-        verifyThat( "#pane", Node::isVisible ); // Verify that logout button has taken "user" to the login panel
+        verifyThat( "#loginPane", Node::isVisible ); // Verify that logout button has taken "user" to the login panel
     }
 }

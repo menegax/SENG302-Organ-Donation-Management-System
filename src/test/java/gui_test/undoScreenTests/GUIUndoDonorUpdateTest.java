@@ -5,14 +5,18 @@ import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import model.Donor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
+import service.Database;
+import utility.GlobalEnums;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static javafx.scene.input.KeyCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,12 +36,20 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
      */
     @Override
     public void start(Stage stage) throws Exception {
+
+        // add dummy donor
+        ArrayList<String> dal = new ArrayList<>();
+        dal.add("Middle");
+        Database.addDonor(new Donor("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+
         main.start(stage);
         interact(() -> {
-            lookup("#nhiLogin").queryAs(TextField.class).setText("ABC1238");
+            lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).fire();
             lookup("#profileButton").queryAs(Button.class).fire();
-            lookup("#editButton").queryAs(Button.class).fire();
+            lookup("#editDonorButton").queryAs(Button.class).fire();
         });
     }
 
@@ -54,7 +66,7 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             lookup("#street1Txt").queryAs(TextField.class).setText("1 Test Street");
             lookup("#street2Txt").queryAs(TextField.class).setText("2 Test Street");
             lookup("#suburbTxt").queryAs(TextField.class).setText("Suburb");
-            lookup("#regionTxt").queryAs(TextField.class).setText("Region");
+            lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().select(0);
             lookup("#zipTxt").queryAs(TextField.class).setText("0001");
             lookup("#weightTxt").queryAs(TextField.class).setText("50");
             lookup("#heightTxt").queryAs(TextField.class).setText("2");
@@ -74,6 +86,7 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
      */
     @After
     public void waitForEvents() {
+        Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }
@@ -107,7 +120,6 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#suburbTxt").queryAs(TextField.class).setText("Suburb2");
             lookup("#undoButton").queryAs(Button.class).fire();
-            lookup("#regionTxt").queryAs(TextField.class).setText("Region2");
             lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#zipTxt").queryAs(TextField.class).setText("0002");
             lookup("#undoButton").queryAs(Button.class).fire();
@@ -124,7 +136,6 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         assertThat(lookup("#street1Txt").queryAs(TextField.class).getText().equals("1 Test Street"));
         assertThat(lookup("#street2Txt").queryAs(TextField.class).getText().equals("2 Test Street"));
         assertThat(lookup("#suburbTxt").queryAs(TextField.class).getText().equals("Suburb"));
-        assertThat(lookup("#regionTxt").queryAs(TextField.class).getText().equals("Region"));
         assertThat(lookup("#zipTxt").queryAs(TextField.class).getText().equals("0001"));
         assertThat(lookup("#weightTxt").queryAs(TextField.class).getText().equals("50"));
         assertThat(lookup("#heightTxt").queryAs(TextField.class).getText().equals("2"));
@@ -145,8 +156,6 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             press(CONTROL).press(Z).release(Z).release(CONTROL);
             lookup("#suburbTxt").queryAs(TextField.class).setText("Suburb3");
             press(CONTROL).press(Z).release(CONTROL).release(Z);
-            lookup("#regionTxt").queryAs(TextField.class).setText("Region3");
-            press(CONTROL).press(Z).release(CONTROL).release(Z);
             lookup("#zipTxt").queryAs(TextField.class).setText("0003");
             press(CONTROL).press(Z).release(CONTROL).release(Z);
             lookup("#weightTxt").queryAs(TextField.class).setText("53");
@@ -162,7 +171,6 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         assertThat(lookup("#street1Txt").queryAs(TextField.class).getText().equals("1 Test Street"));
         assertThat(lookup("#street2Txt").queryAs(TextField.class).getText().equals("2 Test Street"));
         assertThat(lookup("#suburbTxt").queryAs(TextField.class).getText().equals("Suburb"));
-        assertThat(lookup("#regionTxt").queryAs(TextField.class).getText().equals("Region"));
         assertThat(lookup("#zipTxt").queryAs(TextField.class).getText().equals("0001"));
         assertThat(lookup("#weightTxt").queryAs(TextField.class).getText().equals("50"));
         assertThat(lookup("#heightTxt").queryAs(TextField.class).getText().equals("2"));
@@ -176,18 +184,24 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         // Check undo button first
         interact(() -> {
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
+            lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().select(2);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#undoButton").queryAs(Button.class).fire();
         });
 
         assertThat(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 0);
+        assertThat(lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().isSelected(0));
 
         // Check Ctrl Z next
         interact(() -> {
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(2);
+            lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().select(3);
+            press(CONTROL).press(Z).release(CONTROL).release(Z);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
 
         assertThat(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 0);
+        assertThat(lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().isSelected(0));
     }
 
     /**

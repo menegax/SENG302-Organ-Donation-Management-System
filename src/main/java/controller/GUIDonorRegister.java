@@ -1,6 +1,9 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
@@ -20,6 +23,13 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 public class GUIDonorRegister {
+
+    @FXML
+    public AnchorPane registerPane;
+
+    public Label backLabel;
+
+    public Button doneButton;
 
     @FXML
     private TextField firstnameRegister;
@@ -57,18 +67,7 @@ public class GUIDonorRegister {
     private StatesHistoryScreen statesHistoryScreen;
 
 
-    /**
-     * Back button listener to switch to the login screen
-     */
-    @FXML
-    public void goBackToLogin() {
-        ScreenControl.activate("login");
-    }
 
-
-    /**
-     * Sets up register page GUI elements
-     */
     public void initialize() {
         setDateConverter();
         ArrayList<Control> controls = new ArrayList<Control>() {{
@@ -79,8 +78,21 @@ public class GUIDonorRegister {
             add(nhiRegister);
         }};
         statesHistoryScreen = new StatesHistoryScreen(donorRegisterAnchorPane, controls);
+        // Enter key
+        donorRegisterAnchorPane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                register();
+            }
+        });
     }
 
+    /**
+     * Back button listener to switch to the login screen
+     */
+    @FXML
+    public void goBackToLogin() {
+        ScreenControl.activate("login");
+    }
 
     /**
      * Checks users have entered all REQUIRED fields
@@ -156,12 +168,13 @@ public class GUIDonorRegister {
         if (!(hasAllRequired())) {
             try {
                 addDonorGui();
-                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Registered");
-                confirm.showAndWait();
+                Alert confirm = new Alert(Alert.AlertType.INFORMATION, "Successfully Registered");
+                confirm.show();
+                Database.saveToDisk();
                 ScreenControl.activate("login");
             }
             catch (IllegalArgumentException e) {
-                userActions.log(Level.SEVERE, e.getMessage(), "attempted to add donor from gui attributes");
+                userActions.log(Level.SEVERE, e.getMessage(), "attempted to add donor from GUI attributes");
                 alert.setContentText(e.getMessage());
                 alert.show();
             }
