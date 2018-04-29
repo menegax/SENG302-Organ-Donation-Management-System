@@ -113,7 +113,7 @@ public class GUIDonorProfile {
             while (addLbl5.getText().length() < 4) {
                 addLbl5.setText("0" + addLbl5.getText());
             }
-        } else addLbl5.setText("n/a");
+        } else addLbl5.setText("Not set");
         for (GlobalEnums.Organ organ : donor.getDonations()) {
             donationList.setText(donationList.getText() + StringUtils.capitalize(organ.getValue()) + "\n");
         }

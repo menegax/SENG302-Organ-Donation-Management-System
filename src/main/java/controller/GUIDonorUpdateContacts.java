@@ -319,7 +319,6 @@ public class GUIDonorUpdateContacts {
         boolean valid = setDonorContactDetails();
         if(valid) {
             Database.saveToDisk();
-            new Alert(Alert.AlertType.CONFIRMATION, "Contact details saved successfully", ButtonType.OK).show();
             goToProfile();
         } else {
             new Alert(Alert.AlertType.CONFIRMATION, "Invalid fields", ButtonType.OK).show();

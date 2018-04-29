@@ -236,7 +236,6 @@ public class GUIDonorUpdateDonations {
         else {
             target.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
-        new Alert(Alert.AlertType.CONFIRMATION, "Donations saved successfully", ButtonType.OK).showAndWait();
         Database.saveToDisk();
         goToProfile();
     }
