@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorProfileUpdate {
+public class GUIDonorProfileUpdate implements IPopupable {
 
     private UUID id = UUID.randomUUID();
 
@@ -85,29 +85,31 @@ public class GUIDonorProfileUpdate {
 
     private Donor target;
 
-    public void removeBack() {
-        back.setDisable(true);
-        back.setVisible(false);
-    }
+    private Donor viewedDonor;
 
 
     public void setViewedDonor(Donor donor) {
-        loadProfile(donor.getNhiNumber());
+        viewedDonor = donor;
+        loadProfile(viewedDonor.getNhiNumber());
     }
 
-
-    public void initialize(UUID id) {
+    public void initialize() {
         List<String> bloodGroups =
                 Arrays.asList("a positive", "a negative", "b positive", "b negative", "ab positive", "ab negative", "o positive", "o negative");
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
 
-        // Enter key triggers log in
+        // Enter key triggers profile save
         pane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveProfile();
             }
         });
+
+        if (ScreenControl.getLoggedInDonor() != null) {
+            loadProfile(ScreenControl.getLoggedInDonor()
+                    .getNhiNumber());
+        }
     }
 
 
@@ -117,8 +119,7 @@ public class GUIDonorProfileUpdate {
             target = donor;
             populateForm(donor);
 
-        }
-        catch (InvalidObjectException e) {
+        } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }
@@ -193,24 +194,21 @@ public class GUIDonorProfileUpdate {
         if (zipTxt.getText() != null) {
             try {
                 Integer.parseInt(zipTxt.getText());
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 valid = false;
             }
         }
         if (weightTxt.getText() != null) {
             try {
                 Double.parseDouble(weightTxt.getText());
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 valid = false;
             }
         }
         if (heightTxt.getText() != null) {
             try {
                 Double.parseDouble(heightTxt.getText());
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 valid = false;
             }
         }
@@ -280,28 +278,32 @@ public class GUIDonorProfileUpdate {
             if (ScreenControl.getLoggedInDonor() != null) { // donor is logged in
                 goBackToProfile();
             }
-            else { // clinician is logged in
-                ScreenControl.hidePopUp(id.toString());
-            }
-        }
-        else {
+        } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).showAndWait();
         }
     }
 
 
     public void goBackToProfile() {
-        ScreenControl.removeScreen("donorProfile");
-        try {
-            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-            ScreenControl.activate("donorProfile");
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
-            new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
+        if (ScreenControl.getLoggedInDonor() != null) {
+            ScreenControl.removeScreen("donorProfile");
+            try {
+                ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+                ScreenControl.activate("donorProfile");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
+                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfile.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(pane.getScene(), fxmlLoader, viewedDonor);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the edit page to the profile page in popup");
+                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
+            }
         }
     }
-
 
 
     public UUID getId() {

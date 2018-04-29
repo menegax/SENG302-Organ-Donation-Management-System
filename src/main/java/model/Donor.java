@@ -2,22 +2,25 @@ package model;
 
 import service.Database;
 import utility.GlobalEnums;
-import utility.SearchDonors;
 import utility.GlobalEnums.BloodGroup;
 import utility.GlobalEnums.Gender;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
+import utility.SearchDonors;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.time.LocalDate;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
 public class Donor {
+
+    private UUID uuid = UUID.randomUUID();
 
     private final Timestamp CREATED;
 
@@ -67,23 +70,23 @@ public class Donor {
         this.donations = new ArrayList<>();
     }
 
-
     /**
      * Sets the attributes of the donor
-     * @param firstName first name
-     * @param lastName last name
+     *
+     * @param firstName   first name
+     * @param lastName    last name
      * @param middleNames middle names
-     * @param birth birth date
-     * @param death death date
-     * @param street1 street 1 of address
-     * @param street2 street2 of address
-     * @param suburb suburb of address
-     * @param region region of address
-     * @param gender gender of address
-     * @param bloodGroup blood group
-     * @param height height in meters
-     * @param weight weight in kilograms
-     * @param nhi nhi
+     * @param birth       birth date
+     * @param death       death date
+     * @param street1     street 1 of address
+     * @param street2     street2 of address
+     * @param suburb      suburb of address
+     * @param region      region of address
+     * @param gender      gender of address
+     * @param bloodGroup  blood group
+     * @param height      height in meters
+     * @param weight      weight in kilograms
+     * @param nhi         nhi
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames,
                                  LocalDate birth, LocalDate death, String street1, String street2,
@@ -104,7 +107,7 @@ public class Donor {
             globalEnum = GlobalEnums.Region.getEnumFromString(region);
             if (globalEnum != null) {
                 setRegion((GlobalEnums.Region) globalEnum);
-            } else{
+            } else {
                 userActions.log(Level.WARNING, "Invalid region", "attempted to update donor attributes");
             }
         }
@@ -118,7 +121,7 @@ public class Donor {
         if (bloodGroup != null) {
             globalEnum = GlobalEnums.BloodGroup.getEnumFromString(bloodGroup);
             if (globalEnum != null) setBloodGroup((GlobalEnums.BloodGroup) globalEnum);
-            else{
+            else {
                 userActions.log(Level.WARNING, "Invalid blood group", "attempted to update donor attributes");
             }
 
@@ -128,13 +131,14 @@ public class Donor {
         if (nhi != null) setNhiNumber(nhi);
         userActions.log(Level.INFO, "Successfully updated donor " + getNhiNumber(), "attempted to update donor attributes");
         donorModified();
-    	SearchDonors.addIndex(this);
+        SearchDonors.addIndex(this);
     }
 
     /**
      * Update the organ donations list of the donor
+     *
      * @param newDonations - list of organs to add
-     * @param rmDonations - list of organs to remove
+     * @param rmDonations  - list of organs to remove
      */
     public void updateDonations(ArrayList<String> newDonations, ArrayList<String> rmDonations) {
         if (newDonations != null) {
@@ -142,8 +146,7 @@ public class Donor {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ); //null if invalid
                 if (organEnum == null) {
                     userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to donor donations");
-                }
-                else {
+                } else {
                     userActions.log(Level.INFO, addDonation(organEnum), "attempted to update donor donations");
                     donorModified();
                 }
@@ -153,7 +156,7 @@ public class Donor {
             for (String organ : rmDonations) {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ);
                 if (organEnum == null) {
-                    userActions.log(Level.SEVERE,"Invalid organ \"" + organ + "\" given and not removed", "attempted to remove from donor donations");
+                    userActions.log(Level.SEVERE, "Invalid organ \"" + organ + "\" given and not removed", "attempted to remove from donor donations");
                 } else {
                     userActions.log(Level.INFO, removeDonation(organEnum), "attempted to remove from donor donations");
                     donorModified();
@@ -164,6 +167,7 @@ public class Donor {
 
     /**
      * Checks that the nhi number consists (only) of 3 letters then 4 numbers
+     *
      * @throws IllegalArgumentException when the nhi number given is not in the valid format
      */
     public void ensureValidNhi() throws IllegalArgumentException {
@@ -174,6 +178,7 @@ public class Donor {
 
     /**
      * Checks the uniqueness of the nhi number
+     *
      * @throws IllegalArgumentException when the nhi number given is already in use
      */
     public void ensureUniqueNhi() throws IllegalArgumentException {
@@ -186,6 +191,7 @@ public class Donor {
 
     /**
      * Returns the name of the donor as a formatted concatenated string
+     *
      * @return string named
      */
     public String getNameConcatenated() {
@@ -272,6 +278,7 @@ public class Donor {
     /**
      * Calculates the donors current age. If the patient is living, it is the difference between the current datetime
      * and their date of birth, else if they are dead it is the difference between their date of death and date of birth
+     *
      * @return Their calculated age
      */
     public int getAge() {
@@ -317,6 +324,7 @@ public class Donor {
 
     /**
      * Calculates the Body Mass Index of the donor
+     *
      * @return The calculated BMI
      */
     public double getBmi() {
@@ -328,7 +336,7 @@ public class Donor {
     }
 
     public void setBloodGroup(BloodGroup bloodGroup) {
-       if (this.bloodGroup != bloodGroup){
+        if (this.bloodGroup != bloodGroup) {
             this.bloodGroup = bloodGroup;
             donorModified();
         }
@@ -339,7 +347,7 @@ public class Donor {
     }
 
     public void setStreet1(String street1) {
-        if (this.street1 == null || (!street1.equals(this.street1))){
+        if (this.street1 == null || (!street1.equals(this.street1))) {
             this.street1 = street1;
             donorModified();
         }
@@ -399,6 +407,7 @@ public class Donor {
 
     /**
      * Add organs to donor donations list
+     *
      * @param organ - organ to add to the donors donation list
      * @return string of message
      */
@@ -414,16 +423,16 @@ public class Donor {
 
     /**
      * Remove organs from donors donations list
+     *
      * @param organ - organ to remove from the donors donations list
      * @return string of message
      */
-    public String removeDonation(Organ organ){
+    public String removeDonation(Organ organ) {
         if (donations.contains(organ)) {
             donations.remove(organ);
             donorModified();
             return "Successfully removed " + organ + " from donations";
-        }
-        else {
+        } else {
             return "Organ " + organ + " is not part of the donors donations, so could not be removed.";
         }
     }

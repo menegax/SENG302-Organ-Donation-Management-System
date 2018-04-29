@@ -13,13 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.Donor;
@@ -29,8 +23,9 @@ import utility.SearchDonors;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.UUID;
 import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianSearchDonors implements Initializable {
 
@@ -81,26 +76,27 @@ public class GUIClinicianSearchDonors implements Initializable {
             if (click.getClickCount() == 2 && donorDataTable.getSelectionModel()
                     .getSelectedItem() != null) {
                 try {
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfileUpdate.fxml"));
+                    Donor selectedDonor = donorDataTable.getSelectionModel().getSelectedItem();
+
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfile.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
+                    GUIDonorProfile controller = fxmlLoader.getController();
+                    controller.setViewedDonor(selectedDonor);
+
                     Stage popUpStage = new Stage();
                     popUpStage.setX(ScreenControl.getMain()
                             .getX() + 50); //offset popup
                     popUpStage.setScene(scene);
-                    GUIDonorProfileUpdate controller = fxmlLoader.getController(); //get controller from fxml
-                    controller.removeBack(); //remove back button
-                    controller.setViewedDonor(donorDataTable.getSelectionModel()
-                            .getSelectedItem()); // load profile
-                    ScreenControl.addPopUp(controller.getId()
-                            .toString(), popUpStage); //ADD to screen control
-                    ScreenControl.displayPopUp(controller.getId()
-                            .toString()); //display the popup
 
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> Platform.runLater(() -> tableRefresh()));
 
-                }
-                catch (Exception e) {
+
+                    //Add and show the popup
+                    ScreenControl.addPopUp("searchPopup", popUpStage); //ADD to screen control
+                    ScreenControl.displayPopUp("searchPopup"); //display the popup
+                } catch (Exception e) {
+                    e.printStackTrace();
                     userActions.log(Level.SEVERE,
                             "Failed to open donor profile scene from search donors table",
                             "attempted to open donor edit window from search donors table");
@@ -185,8 +181,7 @@ public class GUIClinicianSearchDonors implements Initializable {
                 super.updateItem(donor, empty);
                 if (donor == null) {
                     setTooltip(null);
-                }
-                else {
+                } else {
                     StringBuilder tooltipText = new StringBuilder(donor.getNameConcatenated() + ". Donor: ");
                     for (GlobalEnums.Organ organ : donor.getDonations()) {
                         tooltipText.append(organ)

@@ -65,7 +65,7 @@ public class GUILogin {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene/donorProfileUpdate.fxml"));
                 Pane pane = loader.load();
                 GUIDonorProfileUpdate controller = loader.getController();
-                controller.setViewedDonor(newDonor);
+                ScreenControl.setLoggedInDonor(newDonor);
                 loader.setController(controller);
                 ScreenControl.addScreen("donorProfileUpdate", pane);
                 ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
