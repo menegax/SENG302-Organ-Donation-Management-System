@@ -97,3 +97,10 @@ This therefore lead to the decision to only undo one letter at a time in all sce
 We store and undo all control widgets at once as this circumvents the need to identify what control changed last, while also keeping the same user experience.   
 We decided to implement an IUndoRedo interface which all controls used will have an applicable StateHistory which represents it.  
 This interface shows exactly what is expected of the StateHistorys and is also used for iteration purposes in the StatesHistoryScreen object.
+
+#### Redo
+We decided to implement redo as almost the opposite of undo to maintain simplicity for both the user and the development team.  
+This meant that an action could not be undone after another action was performed.  
+This allows the user to more easily keep track of what changes they have made and what states they can switch between.  
+In addition we decided to bind redo to Ctrl + Y. This is because Ctrl + Y is the industry standard undo for non-technical applications (such as word).  
+This is how we aim to target our application, as we do not see most of our users having software development or similar backgrounds.
