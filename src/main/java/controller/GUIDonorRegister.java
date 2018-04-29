@@ -70,6 +70,9 @@ public class GUIDonorRegister {
 
 
 
+    /**
+     * Sets up register page GUI elements
+     */
     public void initialize() {
         setDateConverter();
         ArrayList<Control> controls = new ArrayList<Control>() {{
@@ -80,6 +83,7 @@ public class GUIDonorRegister {
             add(nhiRegister);
         }};
         statesHistoryScreen = new StatesHistoryScreen(donorRegisterAnchorPane, controls);
+
         // Enter key
         donorRegisterAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -87,21 +91,6 @@ public class GUIDonorRegister {
             }
         });
     }
-
-    /**
-     * Sets up register page GUI elements
-     */
-    public void initialize() {
-        setDateConverter();
-
-        // Enter key triggers log in
-        pane.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                register();
-            }
-        });
-    }
-
 
     /**
      * Back button listener to switch to the login screen

@@ -16,6 +16,5 @@
         <Button fx:id="saveButton" layoutX="360.0" layoutY="338.0" mnemonicParsing="false" onAction="#saveClinician" prefHeight="25.0" prefWidth="57.0" text="Save" />
         <Button fx:id="logoutButton" layoutX="184.0" layoutY="338.0" mnemonicParsing="false" onAction="#logOutClinician" text="Log out" />
         <Button layoutX="333.0" layoutY="135.0" mnemonicParsing="false" onAction="#goToSearchDonors" prefHeight="79.0" prefWidth="110.0" text="Search Donors" />
-        <Button disable="true" layoutX="360.0" layoutY="338.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" text="Import" />
     </children>
 </AnchorPane>

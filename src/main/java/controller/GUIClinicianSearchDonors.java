@@ -92,7 +92,6 @@ public class GUIClinicianSearchDonors implements Initializable {
                     ScreenControl.addPopUp("searchPopup", popUpStage); //ADD to screen control
                     ScreenControl.displayPopUp("searchPopup"); //display the popup
                 } catch (Exception e) {
-                    e.printStackTrace();
                     userActions.log(Level.SEVERE,
                             "Failed to open donor profile scene from search donors table",
                             "attempted to open donor edit window from search donors table");

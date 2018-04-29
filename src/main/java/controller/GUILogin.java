@@ -39,7 +39,7 @@ public class GUILogin {
 
     public void initialize() {
         // Enter key triggers log in
-        pane.setOnKeyPressed(e -> {
+        loginPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 logIn();
             }
