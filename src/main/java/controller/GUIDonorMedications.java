@@ -196,7 +196,7 @@ public class GUIDonorMedications implements IPopupable {
      * @param medication The selected medication being added to the current ArrayList and listView
      */
     private void addMedication(String medication) {
-        if (!medication.equals( "Enter a medication" ) && !medication.equals( "" ) && !medication.substring(0, 1).equals(" ")) {
+        if (!medication.equals( "Enter medicine" ) && !medication.equals( "" ) && !medication.substring(0, 1).equals(" ")) {
             medication = medication.substring(0, 1).toUpperCase() + medication.substring(1).toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
