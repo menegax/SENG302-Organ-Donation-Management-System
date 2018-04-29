@@ -14,27 +14,25 @@
         <Label alignment="CENTER" layoutX="217.0" layoutY="125.0" styleClass="listViewTitles" text="Current usage"/>
         <Label alignment="CENTER" layoutX="18.0" layoutY="125.0" styleClass="listViewTitles" text="Historic usage"/>
         <Label alignment="CENTER" layoutX="342.0" layoutY="9.0" styleClass="listViewTitles" text="Active ingredients and interactions"/>
-        <TextField fx:id="newMedication" focusTraversable="false" layoutX="214.0" layoutY="56.0" prefHeight="25.0" prefWidth="109.0" promptText="Enter a medicine" />
-        <Button fx:id="registerMed" layoutX="228.0" layoutY="91.0" mnemonicParsing="false" onAction="#registerMedication"
-                prefHeight="25.0" prefWidth="81.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Register" />
-        <ListView fx:id="currentMedications" layoutX="214.0" layoutY="150.0" prefHeight="190.0" prefWidth="109.0" />
-        <ListView fx:id="medicineInformation" layoutX="337.0" layoutY="34.0" prefHeight="306.0" prefWidth="249.0" />
-        <Button fx:id="wipeReview" layoutX="350.0" layoutY="352.0" mnemonicParsing="false" onAction="#refreshReview" prefHeight="25.0"
-                prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Clear" />
-        <Button fx:id="removeMed" layoutX="133.0" layoutY="185.0" mnemonicParsing="false" onAction="#makeHistory" prefHeight="25.0"
+        <TextField fx:id="newMedication" focusTraversable="false" layoutX="225.0" layoutY="56.0" prefHeight="25.0" prefWidth="100.0" promptText="Enter medicine" />
+        <Button fx:id="registerMed" layoutX="235.0" layoutY="91.0" mnemonicParsing="false" onAction="#registerMedication"
+                prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Register" />
+        <ListView fx:id="currentMedications" layoutX="218.0" layoutY="130.0" prefHeight="210.0" prefWidth="111.0" />
+        <ListView fx:id="medicineInformation" layoutX="424.0" layoutY="14.0" prefHeight="326.0" prefWidth="162.0" />
+        <Button fx:id="removeMed" layoutX="137.0" layoutY="188.0" mnemonicParsing="false" onAction="#makeHistory" prefHeight="25.0"
                 prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Remove" />
-        <Button fx:id="compareMeds" layoutX="133.0" layoutY="259.0" mnemonicParsing="false" onAction="#reviewInteractions" prefHeight="25.0"
-                prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Compare" />
-        <Button fx:id="addMed" layoutX="133.0" layoutY="222.0" mnemonicParsing="false" onAction="#makeCurrent" prefHeight="25.0"
+        <Button fx:id="addMed" layoutX="137.0" layoutY="225.0" mnemonicParsing="false" onAction="#makeCurrent" prefHeight="25.0"
                 prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Re-add" />
-        <ListView fx:id="pastMedications" layoutX="14.0" layoutY="150.0" prefHeight="190.0" prefWidth="109.0" />
-        <Button fx:id="deleteMed" layoutX="27.0" layoutY="352.0" mnemonicParsing="false" onAction="#deleteMedication"
-                prefHeight="25.0" prefWidth="81.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Delete" />
-        <Button fx:id="clearMed" layoutX="229.0" layoutY="352.0" mnemonicParsing="false" onAction="#clearSelections"
-                prefHeight="25.0" prefWidth="81.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Un-select" />
-        <Button fx:id="saveMed" layoutX="493.0" layoutY="352.0" mnemonicParsing="false" onAction="#saveMedication"
+        <ListView fx:id="pastMedications" layoutX="14.0" layoutY="130.0" prefHeight="210.0" prefWidth="110.0" />
+        <Button fx:id="deleteMed" layoutX="29.0" layoutY="352.0" mnemonicParsing="false" onAction="#deleteMedication"
+                prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Delete" />
+        <Button fx:id="clearMed" layoutX="235.0" layoutY="352.0" mnemonicParsing="false" onAction="#clearSelections"
+                prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Clear" />
+        <Button fx:id="saveMed" layoutX="489.0" layoutY="352.0" mnemonicParsing="false" onAction="#saveMedication"
                 prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Save" />
         <Hyperlink fx:id="goBack" layoutX="2.0" layoutY="10.0" onAction="#goToProfile" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
+        <Button fx:id="compareMeds" layoutX="133.0" layoutY="259.0" mnemonicParsing="false" onAction="#reviewInteractions" prefHeight="25.0"
+                prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Compare" />
         <Button fx:id="undoEdit" layoutX="14.0" layoutY="52.0" mnemonicParsing="false" onAction="#undo" prefHeight="36.0" prefWidth="31.0" styleClass="undo" stylesheets="@../css/guiStyle.css" />
         <Button fx:id="redoEdit" layoutX="61.0" layoutY="52.0" mnemonicParsing="false" onAction="#redo" prefHeight="36.0" prefWidth="31.0" styleClass="redo" stylesheets="@../css/guiStyle.css" />
     </children>

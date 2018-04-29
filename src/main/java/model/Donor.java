@@ -400,10 +400,10 @@ public class Donor {
         return medicationHistory;
     }
 
-    /**
-     * Gets the medication log with timestamps of each add/removal/swap between current and history
-     * @return HashMap of medication logging for a donor
-     */
+    //**
+     //* Gets the medication log with timestamps of each add/removal/swap between current and history
+     //* @return HashMap of medication logging for a donor
+     //*/
     //public HashMap<String, ArrayList<String>> getMedicationLog() { return medicationLog; }
 
     public void setZip(int zip) {

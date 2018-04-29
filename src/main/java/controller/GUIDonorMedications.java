@@ -14,15 +14,12 @@ import model.Donor;
 import model.DrugInteraction;
 import model.Medication;
 import service.Database;
-import utility.GlobalEnums.Gender;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
@@ -37,22 +34,33 @@ public class GUIDonorMedications {
     public Button saveMed;
     public Button undoEdit;
     public Button redoEdit;
-    public Hyperlink goBack;
-    public Button wipeReview;
+    public Button goBack;
     public Button clearMed;
     public Button compareMeds;
 
+    /*
+     * Textfield for entering medications for adding to the currentMedications ArrayList and listView
+     */
     @FXML
-    private TextField newMedication; // Medications are entered for adding to the currentMedications ArrayList and listView
+    private TextField newMedication;
 
+    /*
+     * A listView for showing the current medications
+     */
     @FXML
-    private ListView<String> currentMedications; // A listView for showing the current medications
+    private ListView<String> currentMedications;
 
+    /*
+     * A listView for showing the past medications
+     */
     @FXML
-    private ListView<String> pastMedications; // A listView for showing the past medications
+    private ListView<String> pastMedications;
 
+    /*
+     * A listView for showing medicine ingredients and interactions
+     */
     @FXML
-    private ListView<String> medicineInformation; // A listView for showing medicine ingredients and interactions
+    private ListView<String> medicineInformation;
 
     @FXML
     public void undo() {
@@ -79,13 +87,11 @@ public class GUIDonorMedications {
      */
     @FXML
     public void saveMedication() {
-        if (current.size() + history.size() > 0) {
-            Alert save = new Alert( Alert.AlertType.CONFIRMATION, "Medication(s) have been successfully saved" );
-            final Button dialogOK = (Button) save.getDialogPane().lookupButton( ButtonType.OK );
-            dialogOK.addEventFilter( ActionEvent.ACTION, event -> Database.saveToDisk() );// Save to .json the changes made to medications
-            save.show();
-            clearSelections();
-        }
+        Alert save = new Alert(Alert.AlertType.CONFIRMATION, "Medication(s) have been successfully saved");
+        final Button dialogOK = (Button) save.getDialogPane().lookupButton(ButtonType.OK);
+        dialogOK.addEventFilter(ActionEvent.ACTION, event -> Database.saveToDisk());// Save to .json the changes made to medications
+        save.show();
+        clearSelections();
     }
 
     /**
@@ -118,7 +124,6 @@ public class GUIDonorMedications {
     @FXML
     public void registerMedication() {
         addMedication(newMedication.getText());
-        newMedication.clear();
     }
 
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
@@ -201,7 +206,7 @@ public class GUIDonorMedications {
      * @param medication The selected medication being added to the current ArrayList and listView
      */
     private void addMedication(String medication) {
-        if (!medication.equals( "Enter a medication" ) && !medication.equals( "" ) && !medication.substring(0, 1).equals(" ")) {
+        if (!medication.equals( "Enter medicine" ) && !medication.equals( "" ) && !medication.substring(0, 1).equals(" ")) {
             medication = medication.substring(0, 1).toUpperCase() + medication.substring(1).toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
