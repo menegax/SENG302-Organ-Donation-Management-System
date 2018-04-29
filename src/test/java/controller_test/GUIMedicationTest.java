@@ -14,8 +14,8 @@ import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.ListViewMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
-import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import testfx.TestFxHelper;
 
 import java.util.ArrayList;
 
@@ -25,6 +25,7 @@ import static org.testfx.assertions.api.Assertions.assertThat;
 public class GUIMedicationTest extends ApplicationTest {
 
     private Main main = new Main();
+    private TestFxHelper testFxHelper = new TestFxHelper();
     private Donor target;
 
     @Override
@@ -39,31 +40,18 @@ public class GUIMedicationTest extends ApplicationTest {
     @Before
     public void LoginAndNavigateToMedicationPanel() {
         // Log in to the app
-        interact( () -> {
-            lookup( "#nhiLogin" ).queryAs( TextField.class ).setText( "ABC1238" );
-            assertThat( lookup( "#nhiLogin" ).queryAs( TextField.class ) ).hasText( "ABC1238" );
-            lookup( "#loginButton" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#homePane", Node::isVisible ); // Verify that login has taken "user" to home panel
+        testFxHelper.loginDonor("ABC1238");
         target.setCurrentMedications( new ArrayList <>() );
         target.setMedicationHistory( new ArrayList <>() );
         // Navigate to the profile panel (where the medication test button is currently found)
-        interact( () -> {
-            lookup( "#goToProfile" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#profilePane", Node::isVisible ); // Verify that "user" has navigated to profile
-
+        testFxHelper.toProfileFromHomeDonor();
         // Navigate to the medication panel via the temporary test medication button found in profile panel
-        interact( () -> {
-            lookup( "#testMedication" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible );  // Verify "user" has navigated to medications
+        testFxHelper.toMedicationsFromProfile();
     }
 
     @After
     public void waitForEvents() {
-        WaitForAsyncUtils.waitForFxEvents();
-        sleep( 1000 );
+        testFxHelper.waitForEvents();
     }
 
     /**
@@ -71,26 +59,17 @@ public class GUIMedicationTest extends ApplicationTest {
      */
     @Test
     public void testValidMedicationRegistration() {
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
-        // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "Steroids" ); // Enters new medication
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "Steroids" ) ) );
         // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
+        // Enter a new medication to textfield for registering to the current medications registry
+        testFxHelper.registerMedication("Steroids");
+
         // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
@@ -106,25 +85,16 @@ public class GUIMedicationTest extends ApplicationTest {
      */
     @Test
     public void testInvalidMedicationRegistration() {
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
-        // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "" ); // Enters new medication
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
         // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
+        testFxHelper.registerMedication("");
+
         interact( () -> {
             lookup("OK").queryAs(Button.class).fire();
         });
