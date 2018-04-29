@@ -100,11 +100,9 @@ public class GUIDonorUpdateProfile {
 
 
     public void initialize() {
-        List<String> bloodGroups =
-                Arrays.asList("A positive", "A negative", "B positive", "B negative", "AB positive", "AB negative", "O positive", "O negative");
-        ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
-        bloodGroupDD.setItems(bloodGroupsOL);
+
         populateDropdowns();
+
         loadProfile(ScreenControl.getLoggedInDonor()
                 .getNhiNumber());
 
@@ -139,6 +137,10 @@ public class GUIDonorUpdateProfile {
     }
 
 
+    /**
+     * Loads the donor's profile into the gui
+     * @param nhi the NHI of the donor to load
+     */
     private void loadProfile(String nhi) {
         try {
             Donor donor = Database.getDonorByNhi(nhi);
@@ -168,12 +170,14 @@ public class GUIDonorUpdateProfile {
 
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
-            e.printStackTrace();
         }
     }
 
 
-
+    /**
+     * Populates the scene controls with values from the donor object
+     * @param donor the donor object whose attributes are used to load into the form
+     */
     private void populateForm(Donor donor) {
         lastModifiedLbl.setText("Last Modified: " + donor.getModified());
         nhiTxt.setText(donor.getNhiNumber());
@@ -197,6 +201,7 @@ public class GUIDonorUpdateProfile {
             }
         }
         dobDate.setValue(donor.getBirth());
+        dateOfDeath.setValue(donor.getDeath());
         if (donor.getStreet1() != null) {
             street1Txt.setText(donor.getStreet1());
         }
@@ -210,7 +215,7 @@ public class GUIDonorUpdateProfile {
             regionDD.setValue(donor.getRegion()
                     .getValue());
         }
-        zipTxt.setText(String.valueOf(donor.getZip()));
+        zipTxt.setText(donor.getZip() == 0 ? "" : String.valueOf(donor.getZip()));
         weightTxt.setText(String.valueOf(donor.getWeight()));
         heightTxt.setText(String.valueOf(donor.getHeight()));
         if (donor.getBloodGroup() != null) {
@@ -240,20 +245,28 @@ public class GUIDonorUpdateProfile {
      */
     public void saveProfile() {
         Boolean valid = true;
+
+        // nhi
         if (!Pattern.matches("[A-Z]{3}[0-9]{4}",
                 nhiTxt.getText()
                         .toUpperCase())) {
             valid = false;
             setInvalid(nhiTxt);
         } else setValid(nhiTxt);
+
+        // first name
         if (firstnameTxt.getText() == null || firstnameTxt.getText().length() < 1) {
             valid = false;
             setInvalid(firstnameTxt);
         } else setValid(firstnameTxt);
+
+        // last name
         if (lastnameTxt.getText() == null || lastnameTxt.getText().length() < 1) {
             valid = false;
             setInvalid(lastnameTxt);
         } else setValid(lastnameTxt);
+
+        // region
         if (regionDD.getSelectionModel().getSelectedIndex() != -1) {
             Enum region = GlobalEnums.Region.getEnumFromString(regionDD
                     .getSelectionModel().getSelectedItem());
@@ -262,32 +275,41 @@ public class GUIDonorUpdateProfile {
                 setInvalid(regionDD);
             } else setValid(regionDD);
         } else setValid(regionDD);
-        if (zipTxt.getText() != null) {
+
+        // zip
+        if (!zipTxt.getText().equals("")) {
             try {
-                if(zipTxt.getText().length() != 4 && !(zipTxt.getText().equals(""))) {
+                if (zipTxt.getText().length() != 4 && !(zipTxt.getText().equals(""))) {
                     valid = false;
                     setInvalid(zipTxt);
-                } else setValid(zipTxt);
-                Integer.parseInt(zipTxt.getText());
-                setValid(zipTxt);
+                } else {
+                    Integer.parseInt(zipTxt.getText());
+                    setValid(zipTxt);
+                }
             }
             catch (NumberFormatException e) {
                 valid = false;
                 setInvalid(zipTxt);
             }
         } else setValid(zipTxt);
+
+        // weight
         if (weightTxt.getText() != null) {
             if(isInvalidDouble(weightTxt.getText())) {
                 valid = false;
                 setInvalid(weightTxt);
             } else setValid(weightTxt);
         } else setValid(weightTxt);
+
+        // height
         if (heightTxt.getText() != null) {
             if(isInvalidDouble(heightTxt.getText())) {
                 valid = false;
                 setInvalid(heightTxt);
             } else setValid(heightTxt);
         } else setValid(heightTxt);
+
+        // blood group
         if (bloodGroupDD.getValue() != null) {
             String bgStr = bloodGroupDD.getValue()
                     .replace(' ', '_');
@@ -297,6 +319,8 @@ public class GUIDonorUpdateProfile {
                 setInvalid(bloodGroupDD);
             } else setValid(bloodGroupDD);
         } else setValid(bloodGroupDD);
+
+        // date of birth
         if(dobDate.getValue() != null) {
             if(dobDate.getValue().isAfter(LocalDate.now())) {
                 valid = false;
@@ -306,6 +330,8 @@ public class GUIDonorUpdateProfile {
             valid = false;
             setInvalid(dobDate);
         }
+
+        // date of death
         if(dateOfDeath.getValue() != null) {
             if((dobDate.getValue() != null && dateOfDeath.getValue().isBefore(dobDate.getValue())) ||
                     dateOfDeath.getValue().isAfter(LocalDate.now())) {
@@ -313,6 +339,8 @@ public class GUIDonorUpdateProfile {
                 setInvalid(dateOfDeath);
             } else setValid(dateOfDeath);
         } else setValid(dateOfDeath);
+
+        // if all are valid
         if (valid) {
             target.setNhiNumber(nhiTxt.getText());
             target.setFirstName(firstnameTxt.getText());
@@ -353,7 +381,7 @@ public class GUIDonorUpdateProfile {
                         .getSelectedItem()));
             }
             if (zipTxt.getText() != null) {
-                target.setZip(Integer.parseInt(zipTxt.getText()));
+                target.setZip(zipTxt.getText().equals("") ? 0 : Integer.parseInt(zipTxt.getText()));
             }
             if (weightTxt.getText() != null) {
                 target.setWeight(Double.parseDouble(weightTxt.getText()));
@@ -365,10 +393,11 @@ public class GUIDonorUpdateProfile {
                 target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD
                         .getSelectionModel().getSelectedItem()));
             }
-            new Alert(Alert.AlertType.INFORMATION, "Donor successfully updated", ButtonType.OK).show();
+            userActions.log(Level.INFO, "Successfully updated donor profile", "Attempted to update donor profile");
             Database.saveToDisk();
             goBackToProfile();
         } else {
+            userActions.log(Level.WARNING, "Failed to update donor profile", "Attempted to update donor profile");
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }
     }
@@ -401,7 +430,7 @@ public class GUIDonorUpdateProfile {
             ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
             ScreenControl.activate("donorProfile");
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
+            userActions.log(Level.SEVERE, "Error loading profile screen", "Attempted to navigate from the edit page to the profile page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
         }
     }
