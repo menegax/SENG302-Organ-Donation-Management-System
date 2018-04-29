@@ -1,7 +1,6 @@
 package cli;
 
-import model.Donor;
-import model.Human;
+import model.Patient;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
@@ -15,7 +14,7 @@ import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings({"unused"})
 @Command(name = "donations", description = "used to update the donations on a particular donor")
-public class CLIDonorDonations implements Runnable {
+public class CLIPatientDonations implements Runnable {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
@@ -44,10 +43,10 @@ public class CLIDonorDonations implements Runnable {
     @Option(names = {"-rm", "--remove"}, split = ",", description = "Takes a comma-separated list of organs to remove from donations.")
     private ArrayList<String> rmDonations;
 
-    private void displayDonorDonations(Human donor) {
-        ArrayList<Organ> donations = donor.getDonations();
+    private void displayDonorDonations(Patient patient) {
+        ArrayList<Organ> donations = patient.getDonations();
         if (donations == null) {
-            userActions.log(Level.WARNING, "No donations registered for donor: " + donor.getNameConcatenated(), "attempted to display donor donations");
+            userActions.log(Level.WARNING, "No donations registered for donor: " + patient.getNameConcatenated(), "attempted to display donor donations");
         }
         else {
             userActions.log(Level.INFO, donations.toString(), "attempted to display donor donations");
@@ -56,7 +55,7 @@ public class CLIDonorDonations implements Runnable {
 
     public void run() {
         try {
-            Human donor = Database.getDonorByNhi(searchNhi);
+            Patient donor = Database.getPatientByNhi(searchNhi);
             if (donationsRequested) {
                 displayDonorDonations(donor);
             }

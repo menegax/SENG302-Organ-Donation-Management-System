@@ -6,8 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import model.Donor;
-import model.Human;
+import model.Patient;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
@@ -22,7 +21,7 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorProfileUpdate {
+public class GUIPatientProfileUpdate {
 
     @FXML
     private Label lastModifiedLbl;
@@ -93,7 +92,7 @@ public class GUIDonorProfileUpdate {
     }
 
 
-    private Human target;
+    private Patient target;
 
 
     public void initialize() {
@@ -131,9 +130,9 @@ public class GUIDonorProfileUpdate {
 
     private void loadProfile(String nhi) {
         try {
-            Human human = Database.getDonorByNhi(nhi);
-            target = human;
-            populateForm(human);
+            Patient patient = Database.getPatientByNhi(nhi);
+            target = patient;
+            populateForm(patient);
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
@@ -141,16 +140,16 @@ public class GUIDonorProfileUpdate {
     }
 
 
-    private void populateForm(Human human) {
-        lastModifiedLbl.setText("Last Modified: " + human.getModified());
-        nhiTxt.setText(human.getNhiNumber());
-        firstnameTxt.setText(human.getFirstName());
-        lastnameTxt.setText(human.getLastName());
-        for (String name : human.getMiddleNames()) {
+    private void populateForm(Patient patient) {
+        lastModifiedLbl.setText("Last Modified: " + patient.getModified());
+        nhiTxt.setText(patient.getNhiNumber());
+        firstnameTxt.setText(patient.getFirstName());
+        lastnameTxt.setText(patient.getLastName());
+        for (String name : patient.getMiddleNames()) {
             middlenameTxt.setText(middlenameTxt.getText() + name + " ");
         }
-        if (human.getGender() != null) {
-            switch (human.getGender()
+        if (patient.getGender() != null) {
+            switch (patient.getGender()
                     .getValue()) {
                 case "male":
                     genderMaleRadio.setSelected(true);
@@ -163,25 +162,25 @@ public class GUIDonorProfileUpdate {
                     break;
             }
         }
-        dobDate.setValue(human.getBirth());
-        if (human.getStreet1() != null) {
-            street1Txt.setText(human.getStreet1());
+        dobDate.setValue(patient.getBirth());
+        if (patient.getStreet1() != null) {
+            street1Txt.setText(patient.getStreet1());
         }
-        if (human.getStreet2() != null) {
-            street2Txt.setText(human.getStreet2());
+        if (patient.getStreet2() != null) {
+            street2Txt.setText(patient.getStreet2());
         }
-        if (human.getSuburb() != null) {
-            suburbTxt.setText(human.getSuburb());
+        if (patient.getSuburb() != null) {
+            suburbTxt.setText(patient.getSuburb());
         }
-        if (human.getRegion() != null) {
-            regionTxt.setText(human.getRegion()
+        if (patient.getRegion() != null) {
+            regionTxt.setText(patient.getRegion()
                     .getValue());
         }
-        zipTxt.setText(String.valueOf(human.getZip()));
-        weightTxt.setText(String.valueOf(human.getWeight()));
-        heightTxt.setText(String.valueOf(human.getHeight()));
-        if (human.getBloodGroup() != null) {
-            bloodGroupDD.setValue(human.getBloodGroup()
+        zipTxt.setText(String.valueOf(patient.getZip()));
+        weightTxt.setText(String.valueOf(patient.getWeight()));
+        heightTxt.setText(String.valueOf(patient.getHeight()));
+        if (patient.getBloodGroup() != null) {
+            bloodGroupDD.setValue(patient.getBloodGroup()
                     .getValue());
         }
     }
@@ -298,10 +297,10 @@ public class GUIDonorProfileUpdate {
 
 
     public void goBackToProfile() {
-        ScreenControl.removeScreen("donorProfile");
+        ScreenControl.removeScreen("patientProfile");
         try {
-            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-            ScreenControl.activate("donorProfile");
+            ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+            ScreenControl.activate("patientProfile");
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");

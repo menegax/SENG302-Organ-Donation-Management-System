@@ -5,8 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model.Donor;
-import model.Receiver;
+import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 import utility.UserActionHistory;
@@ -25,16 +24,13 @@ public class Main extends Application {
         ScreenControl.setRootScene(rootScene); // set this scene in screen controller
 
 //        setUpDummyDonors();
-        Database.importFromDisk("./donor.json");
+        Database.importFromDisk("./patient.json");
 
         // Add FXML screens to ScreenControl
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
+        ScreenControl.addScreen("patientRegister", FXMLLoader.load(getClass().getResource("/scene/patientRegister.fxml")));
         ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
-        ScreenControl.addScreen("donorHome", FXMLLoader.load(getClass().getResource("/scene/donorHome.fxml")));
-
-        //initialising new receiver
-        Database.importFromDisk("./receiver.json");
+        ScreenControl.addScreen("patientHome", FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml")));
 
         // initialising new clinician on startup
         ArrayList<String> mid = new ArrayList<>();
@@ -50,21 +46,13 @@ public class Main extends Application {
         launch(args);
     }
 
-    private void setUpDummyReceivers() throws InvalidObjectException {
-        ArrayList<String> dal = new ArrayList<>();
-        dal.add("Andre");
-        Database.importFromDisk("./receiver.json");
-        Database.addReceiver(new Receiver("JAM3577", "Joshua", dal,"Meneghini", LocalDate.of(1997, 9, 17)));
-        Database.getDonorByNhi("JAM3577").addDonation(GlobalEnums.Organ.HEART);
-        Database.getDonorByNhi("JAM3577").addDonation(GlobalEnums.Organ.INTESTINE);
-    }
 
-    private void setUpDummyDonors() throws InvalidObjectException {
+    private void setUpDummyPatients() throws InvalidObjectException {
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.importFromDisk("./donor.json");
-        Database.addDonor(new Donor("ABC1238", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getDonorByNhi("ABC1238").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.importFromDisk("./patient.json");
+        Database.addPatients(new Patient("ABC1238", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getPatientByNhi("ABC1238").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("ABC1238").addDonation(GlobalEnums.Organ.CORNEA);
     }
 }

@@ -8,9 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
-import model.Donor;
-import model.Human;
-import model.Receiver;
+import model.Patient;
 import service.Database;
 
 import java.util.logging.Level;
@@ -45,7 +43,7 @@ public class GUILogin {
      */
     @FXML
     public void goToRegister() {
-        ScreenControl.activate("donorRegister");
+        ScreenControl.activate("patientRegister");
     }
 
 
@@ -58,21 +56,14 @@ public class GUILogin {
     public void logIn() {
         // todo surround with try catch. Try uses database getuserbyNHI, catch will throw a popup with warning alert
         if (!clinicianToggle.isSelected()) {
-            try {
-                Human newHuman = Database.getDonorByNhi(nhiLogin.getText());
-                newHuman.getClass();
-                if (newHuman instanceof Donor) {
-                    ScreenControl.setLoggedInDonor(newHuman);
-                    ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-                    ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorDonations.fxml")));
-                } else {
-                    ScreenControl.setLoggedInDonor(newHuman);
-                    ScreenControl.addScreen("receiverProfile", FXMLLoader.load(getClass().getResource("/scene/receiverProfile.fxml")));
-                    ScreenControl.addScreen("receiverRequirements", FXMLLoader.load(getClass().getResource("/scene/receiverRequirements.fxml")));
-                }
-                ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorProfileUpdate.fxml")));
-                ScreenControl.activate("donorHome");
-                ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
+        try {
+                Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
+                ScreenControl.setLoggedInDonor(newPatient);
+                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                ScreenControl.addScreen("patientDonations", FXMLLoader.load(getClass().getResource("/scene/patientDonations.fxml")));
+                ScreenControl.addScreen("patientProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/patientProfileUpdate.fxml")));
+                ScreenControl.activate("patientHome");
+                ScreenControl.addScreen("patientHistory", FXMLLoader.load(getClass().getResource("/scene/patientHistory.fxml")));
             }
             catch (Exception e) {
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");

@@ -7,7 +7,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
-import model.Donor;
+import model.Patient;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 
@@ -19,7 +19,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorRegister {
+public class GUIPatientRegister {
 
     @FXML
     private TextField firstnameRegister;
@@ -97,13 +97,13 @@ public class GUIDonorRegister {
 
 
     /**
-     * Adds donor to database
+     * Adds patient to database
      *
      * @exception IllegalArgumentException - if entered NHI is not unique
      */
 
-    private void addDonorGui() throws IllegalArgumentException {
-        Database.addDonor(new Donor(nhiRegister.getText(),
+    private void addPatientGui() throws IllegalArgumentException {
+        Database.addPatients(new Patient(nhiRegister.getText(),
                 firstnameRegister.getText(),
                 middlenameRegister.getText()
                         .isEmpty() ? new ArrayList<>() : new ArrayList<>(Arrays.asList(middlenameRegister.getText()
@@ -155,7 +155,7 @@ public class GUIDonorRegister {
         Alert alert = new Alert(Alert.AlertType.WARNING, "");
         if (!(hasAllRequired())) {
             try {
-                addDonorGui();
+                addPatientGui();
                 Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Registered");
                 confirm.showAndWait();
                 ScreenControl.activate("login");

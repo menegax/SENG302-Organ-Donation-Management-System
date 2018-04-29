@@ -6,8 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
 import javafx.scene.layout.AnchorPane;
-import model.Donor;
-import model.Human;
+import model.Patient;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
@@ -21,7 +20,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorDonations {
+public class GUIPatientDonations {
 
     @FXML
     private CheckBox liverCB;
@@ -75,7 +74,7 @@ public class GUIDonorDonations {
     }
 
 
-    private Human target;
+    private Patient target;
 
     private StatesHistoryScreen statesHistoryScreen;
 
@@ -87,9 +86,9 @@ public class GUIDonorDonations {
 
     private void loadProfile(String nhi) {
         try {
-            Human human = Database.getDonorByNhi(nhi);
-            target = human;
-            populateForm(human);
+            Patient patient = Database.getPatientByNhi(nhi);
+            target = patient;
+            populateForm(patient);
 
         }
         catch (InvalidObjectException e) {
@@ -113,8 +112,8 @@ public class GUIDonorDonations {
     }
 
 
-    private void populateForm(Human human) {
-        ArrayList<GlobalEnums.Organ> organs = human.getDonations();
+    private void populateForm(Patient patient) {
+        ArrayList<GlobalEnums.Organ> organs = patient.getDonations();
         if (organs.contains(GlobalEnums.Organ.LIVER)) {
             liverCB.setSelected(true);
         }
@@ -235,7 +234,7 @@ public class GUIDonorDonations {
     public void goToProfile() {
         ScreenControl.removeScreen("donorProfile");
         try {
-            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
             ScreenControl.activate("donorProfile");
         }
         catch (IOException e) {

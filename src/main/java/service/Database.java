@@ -2,9 +2,7 @@ package service;
 
 import com.google.gson.Gson;
 import model.Clinician;
-import model.Donor;
-import model.Human;
-import model.Receiver;
+import model.Patient;
 import utility.GlobalEnums;
 
 import java.io.*;
@@ -17,48 +15,27 @@ import static utility.UserActionHistory.userActions;
 
 public class Database {
 
-    private static HashSet<Human> donors = new HashSet<>();
-    private static HashSet<Human> receivers = new HashSet<>();
+    private static HashSet<Patient> patients = new HashSet<>();
     private static ArrayList<Clinician> clinicians = new ArrayList<>();
 
 
-    public static HashSet<Human> getDonors() {
-        return donors;
-    }
-    public static HashSet<Human> getReceivers() {
-        return receivers;
+    public static HashSet<Patient> getPatients() {
+        return patients;
     }
     public static ArrayList<Clinician> getClinicians() { return clinicians; }
 
 
     /**
-     * Adds a donor to the database
+     * Adds a patient to the database
      *
-     * @param newDonor the new donor to add
+     * @param newPatient the new patient to add
      */
-    public static void addDonor(Donor newDonor) {
+    public static void addPatients(Patient newPatient) {
         try {
-            newDonor.ensureValidNhi();
-            newDonor.ensureUniqueNhi();
-            donors.add(newDonor);
-            userActions.log(Level.INFO, "Successfully added donor " + newDonor.getNhiNumber(), "attempted to add a donor");
-        }
-        catch (IllegalArgumentException o) {
-            throw new IllegalArgumentException(o.getMessage());
-        }
-    }
-
-    /**
-     * Adds a receiver to the database
-     *
-     * @param newReceiver the new receiver to add
-     */
-    public static void addReceiver(Receiver newReceiver) {
-        try {
-            newReceiver.ensureValidNhi();
-            newReceiver.ensureUniqueNhi();
-            receivers.add(newReceiver);
-            userActions.log(Level.INFO, "Successfully added receiver " + newReceiver.getNhiNumber(), "attempted to add a receiver");
+            newPatient.ensureValidNhi();
+            newPatient.ensureUniqueNhi();
+            patients.add(newPatient);
+            userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "attempted to add a patient");
         }
         catch (IllegalArgumentException o) {
             throw new IllegalArgumentException(o.getMessage());
@@ -67,39 +44,33 @@ public class Database {
 
 
     /**
-     * Removes a donor from the database
+     * Removes a patient from the database
      *
-     * @param nhi the nhi to search donors by
+     * @param nhi the nhi to search patients by
      * @exception InvalidObjectException when the object cannot be found
      */
-    public static void removeDonor(String nhi) throws InvalidObjectException {
-        donors.remove(Database.getDonorByNhi(nhi));
-        userActions.log(Level.INFO, "Successfully removed donor " + nhi, "attempted to remove a donor");
+    public static void removePatient(String nhi) throws InvalidObjectException {
+        patients.remove(Database.getPatientByNhi(nhi));
+        userActions.log(Level.INFO, "Successfully removed patient " + nhi, "attempted to remove a patient");
     }
 
 
     /**
-     * Searches donors by nhi
+     * Searches patients by nhi
      *
-     * @param nhi the nhi to search donors by
-     * @return Donor object
+     * @param nhi the nhi to search patients by
+     * @return Patient object
      *
      * @exception InvalidObjectException when the object cannot be found
      */
-    public static Human getDonorByNhi(String nhi) throws InvalidObjectException {
-        for (Human d : getDonors()) {
-            if (d.getNhiNumber()
+    public static Patient getPatientByNhi(String nhi) throws InvalidObjectException {
+        for (Patient p : getPatients()) {
+            if (p.getNhiNumber()
                     .equals(nhi.toUpperCase())) {
-                return d;
+                return p;
             }
         }
-        for (Human r : getReceivers()) {
-            if (r.getNhiNumber()
-                    .equals(nhi.toUpperCase())) {
-                return r;
-            }
-        }
-        throw new InvalidObjectException("Donor with NHI number " + nhi + " does not exist.");
+        throw new InvalidObjectException("Patient with NHI number " + nhi + " does not exist.");
     }
 
     /**
@@ -159,8 +130,7 @@ public class Database {
      */
     public static void saveToDisk() {
         try {
-            saveToDiskHumans(donors, "donor.json");
-            saveToDiskHumans(receivers, "receiver.json");
+            saveToDiskPatients();
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
@@ -168,16 +138,16 @@ public class Database {
     }
 
     /**
-     * Writes database receivers or donors to file on disk
+     * Writes database patients to file on disk
      *
      * @exception IOException when the file cannot be found nor created
      */
-    private static void saveToDiskHumans(HashSet<Human>  human, String path) throws IOException {
+    private static void saveToDiskPatients() throws IOException {
         Gson gson = new Gson();
-        String json = gson.toJson(human);
+        String json = gson.toJson(patients);
 
-        String humanPath = "./";
-        Writer writer = new FileWriter(new File(humanPath, path));
+        String PatientPath = "./";
+        Writer writer = new FileWriter(new File(PatientPath, "patient.json"));
         writer.write(json);
         writer.close();
     }
@@ -190,13 +160,8 @@ public class Database {
      */
     public static void importFromDisk(String fileName) {
         try {
-            if (fileName.toLowerCase().contains("donor")) {
-                donors = new HashSet<>();
-                importFromDiskDonors(fileName);
-            } else {
-                receivers = new HashSet<>();
-                importFromDiskReceivers(fileName);
-            }
+                patients = new HashSet<>();
+                importFromDiskPatients(fileName);
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to import from disk");
@@ -204,30 +169,16 @@ public class Database {
     }
 
     /**
-     * Reads receiver data from disk
+     * Reads patient data from disk
      *
      * @exception IOException when the file cannot be found
      */
-    private static void importFromDiskReceivers(String fileName) throws IOException {
+    private static void importFromDiskPatients(String fileName) throws IOException {
         Gson gson = new Gson();
         BufferedReader br = new BufferedReader(new FileReader(fileName));
-        Receiver[] receiver = gson.fromJson(br, Receiver[].class);
-        for (Receiver r : receiver) {
-            Database.addReceiver(r);
-        }
-    }
-
-    /**
-     * Reads donor data from disk
-     *
-     * @exception IOException when the file cannot be found
-     */
-    private static void importFromDiskDonors(String fileName) throws IOException {
-        Gson gson = new Gson();
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        Donor[] donor = gson.fromJson(br, Donor[].class);
-        for (Donor d : donor) {
-            Database.addDonor(d);
+        Patient[] patients = gson.fromJson(br, Patient[].class);
+        for (Patient p : patients) {
+            Database.addPatients(p);
         }
     }
 
@@ -236,8 +187,7 @@ public class Database {
      *
      */
     public static void resetDatabase() {
-        donors = new HashSet<>();
-        receivers = new HashSet<>();
+        patients = new HashSet<>();
     }
 
 }
