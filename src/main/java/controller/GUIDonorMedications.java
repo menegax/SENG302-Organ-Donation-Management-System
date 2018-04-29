@@ -201,7 +201,7 @@ public class GUIDonorMedications {
     public void autoComplete(){
         Platform.runLater(() -> { // run this on the FX thread (next available)
             getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread
-            displayDrugSugggestions();//UPDATE UI
+            displayDrugSuggestions();//UPDATE UI
         });
     }
 
@@ -221,7 +221,7 @@ public class GUIDonorMedications {
     /**
      * Display the drug suggestions in the context menu
      */
-    private void displayDrugSugggestions(){
+    private void displayDrugSuggestions(){
         contextMenu.getItems().clear();
         List<String> suggestionArray = new ArrayList<>();
         suggestions.get("suggestions").getAsJsonArray().forEach((suggestion) -> suggestionArray.add(suggestion.getAsString()));
