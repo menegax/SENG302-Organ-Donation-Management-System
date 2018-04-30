@@ -67,9 +67,9 @@ public class GUILogin {
             try {
                 Donor newDonor = Database.getDonorByNhi(nhiLogin.getText());
                 ScreenControl.setLoggedInDonor(newDonor); // THIS SHOULD BE CAHCED
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene/donorProfileUpdate.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene/donorUpdateProfile.fxml"));
                 Pane pane = loader.load();
-                GUIDonorProfileUpdate controller = loader.getController();
+                GUIDonorUpdateProfile controller = loader.getController();
                 ScreenControl.setLoggedInDonor(newDonor);
                 loader.setController(controller);
                 ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));

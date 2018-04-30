@@ -166,8 +166,8 @@ public class GUIDonorProfile implements IPopupable {
         if (ScreenControl.getLoggedInDonor() != null) {
             ScreenControl.removeScreen("donorProfileUpdate");
             try {
-                ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorProfileUpdate.fxml")));
-                ScreenControl.activate("donorProfileUpdate");
+                ScreenControl.addScreen("donorUpdateProfile", FXMLLoader.load(getClass().getResource("/scene/donorUpdateProfile.fxml")));
+                ScreenControl.activate("donorUpdateProfile");
             }
             catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading update screen", "attempted to navigate from the profile page to the edit page");
@@ -175,7 +175,7 @@ public class GUIDonorProfile implements IPopupable {
             }
         }
         else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfileUpdate.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorUpdateProfile.fxml"));
             try {
                 ScreenControl.loadPopUpPane(profilePane.getScene(), fxmlLoader, viewedDonor);
             }
@@ -202,11 +202,11 @@ public class GUIDonorProfile implements IPopupable {
             }
         }
         else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorDonations.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorUpdateDonations.fxml"));
             try {
                 ScreenControl.loadPopUpPane(profilePane.getScene(), fxmlLoader, viewedDonor);
             }
-            catch (IOException e) {
+            catch (Exception e) {
                 userActions.log(Level.SEVERE,
                         "Error loading donation screen in popup",
                         "attempted to navigate from the profile page to the donation page in popup");
@@ -226,7 +226,8 @@ public class GUIDonorProfile implements IPopupable {
             userActions.log(Level.SEVERE,
                     "Error loading contact details screen",
                     "attempted to navigate from the profile page to the contact details page");
-            new Alert(Alert.AlertType.WARNING, "Error loading contact details page", ButtonType.OK).showAndWait();
+            e.printStackTrace(); //todo remove
+            new Alert(Alert.AlertType.ERROR, "Error loading contact details page", ButtonType.OK).showAndWait();
         }
     }
 
