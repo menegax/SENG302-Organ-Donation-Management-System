@@ -176,8 +176,13 @@ public class GUIClinicianSearchDonors implements Initializable {
                 if (donor == null) {
                     setTooltip(null);
                 }
+                else if (donor.getDonations().isEmpty()) {
+
+                    tooltip.setText(donor.getNameConcatenated() + ". No donations.");
+                    setTooltip(tooltip);
+                }
                 else {
-                    StringBuilder tooltipText = new StringBuilder(donor.getNameConcatenated() + ". Donor: ");
+                    StringBuilder tooltipText = new StringBuilder(donor.getNameConcatenated() + ". Donations: ");
                     for (GlobalEnums.Organ organ : donor.getDonations()) {
                         tooltipText.append(organ)
                                 .append(", ");
