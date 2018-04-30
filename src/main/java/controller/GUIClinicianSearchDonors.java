@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
-import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianSearchDonors implements Initializable {
 
@@ -78,7 +77,8 @@ public class GUIClinicianSearchDonors implements Initializable {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfile.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
                     GUIDonorProfile controller = fxmlLoader.getController();
-                    controller.setViewedDonor(donorDataTable.getSelectionModel().getSelectedItem());
+                    controller.setViewedDonor(donorDataTable.getSelectionModel()
+                            .getSelectedItem());
 
                     Stage popUpStage = new Stage();
                     popUpStage.setX(ScreenControl.getMain()
@@ -91,7 +91,8 @@ public class GUIClinicianSearchDonors implements Initializable {
                     //Add and show the popup
                     ScreenControl.addPopUp("searchPopup", popUpStage); //ADD to screen control
                     ScreenControl.displayPopUp("searchPopup"); //display the popup
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open donor profile scene from search donors table",
                             "attempted to open donor edit window from search donors table");
@@ -174,7 +175,8 @@ public class GUIClinicianSearchDonors implements Initializable {
                 super.updateItem(donor, empty);
                 if (donor == null) {
                     setTooltip(null);
-                } else {
+                }
+                else {
                     StringBuilder tooltipText = new StringBuilder(donor.getNameConcatenated() + ". Donor: ");
                     for (GlobalEnums.Organ organ : donor.getDonations()) {
                         tooltipText.append(organ)

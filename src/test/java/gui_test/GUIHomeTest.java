@@ -25,6 +25,7 @@ public class GUIHomeTest extends ApplicationTest {
 
     private Main main = new Main();
 
+
     @Override
     public void start(Stage stage) throws Exception {
         Database.resetDatabase();
@@ -32,16 +33,21 @@ public class GUIHomeTest extends ApplicationTest {
         // add dummy donor
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addDonor(new Donor("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.addDonor(new Donor("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getDonorByNhi("TFX9999")
+                .addDonation(GlobalEnums.Organ.LIVER);
+        Database.getDonorByNhi("TFX9999")
+                .addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
-        interact(() ->  {
-            lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
-            lookup("#loginButton").queryAs(Button.class).fire();
+        interact(() -> {
+            lookup("#nhiLogin").queryAs(TextField.class)
+                    .setText("TFX9999");
+            lookup("#loginButton").queryAs(Button.class)
+                    .fire();
         });
     }
+
 
     @After
     public void waitForEvents() {
@@ -50,31 +56,37 @@ public class GUIHomeTest extends ApplicationTest {
         sleep(1000);
     }
 
+
     @Test
     public void should_be_on_home_screen() {
         verifyThat("#homePane", Node::isVisible);
     }
 
+
     @Test
     public void should_logout() {
         interact(() -> {
-            lookup("#logOutButton").queryAs(Button.class).fire();
+            lookup("#logOutButton").queryAs(Button.class)
+                    .fire();
         });
         assertThat(ScreenControl.getLoggedInDonor() == null);
         verifyThat("#loginPane", Node::isVisible);
     }
 
+
     @Test
     public void should_go_to_profile() {
-        interact(() -> lookup("#profileButton").queryAs(Button.class).fire());
+        interact(() -> lookup("#profileButton").queryAs(Button.class)
+                .fire());
         verifyThat("#donorProfilePane", Node::isVisible);
     }
 
+
     @Test
     public void should_go_to_log() {
-        interact(() -> lookup("#historyButton").queryAs(Button.class).fire());
+        interact(() -> lookup("#historyButton").queryAs(Button.class)
+                .fire());
         verifyThat("#donorLogPane", Node::isVisible);
     }
-
 
 }

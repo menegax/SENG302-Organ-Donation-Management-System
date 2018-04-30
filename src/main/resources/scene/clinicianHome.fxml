@@ -15,6 +15,6 @@
         <Button fx:id="profileButton" layoutX="161.0" layoutY="136.0" mnemonicParsing="false" onAction="#goToClinicianProfile" prefHeight="79.0" prefWidth="111.0" text="Profile" />
         <Button fx:id="saveButton" layoutX="360.0" layoutY="338.0" mnemonicParsing="false" onAction="#saveClinician" prefHeight="25.0" prefWidth="57.0" text="Save" />
         <Button fx:id="logoutButton" layoutX="184.0" layoutY="338.0" mnemonicParsing="false" onAction="#logOutClinician" text="Log out" />
-        <Button layoutX="333.0" layoutY="135.0" mnemonicParsing="false" onAction="#goToSearchDonors" prefHeight="79.0" prefWidth="110.0" text="Search Donors" />
+        <Button fx:id="searchDonors" layoutX="333.0" layoutY="135.0" mnemonicParsing="false" onAction="#goToSearchDonors" prefHeight="79.0" prefWidth="110.0" text="Search Donors" />
     </children>
 </AnchorPane>

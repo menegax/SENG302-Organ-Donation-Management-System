@@ -113,7 +113,6 @@ public class Donor {
                                  String street2, String suburb, String region, String gender, String bloodGroup, double height, double weight,
                                  String nhi) throws IllegalArgumentException {
         Enum globalEnum;
-        // TODO Change this so that it only re-indexes on name or nhi change
         SearchDonors.removeIndex(this);
         if (firstName != null) {
             setFirstName(firstName);

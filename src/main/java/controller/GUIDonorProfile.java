@@ -180,7 +180,6 @@ public class GUIDonorProfile implements IPopupable {
                 ScreenControl.loadPopUpPane(donorProfilePane.getScene(), fxmlLoader, viewedDonor);
             }
             catch (IOException e) {
-                e.printStackTrace(); //todo remove
                 userActions.log(Level.SEVERE,
                         "Error loading update screen in popup",
                         "attempted to navigate from the profile page to the edit page in popup");
@@ -227,7 +226,6 @@ public class GUIDonorProfile implements IPopupable {
                 userActions.log(Level.SEVERE,
                         "Error loading contact details screen",
                         "attempted to navigate from the profile page to the contact details page");
-                e.printStackTrace(); //todo remove
                 new Alert(Alert.AlertType.ERROR, "Error loading contact details page", ButtonType.OK).showAndWait();
             }
         } else {

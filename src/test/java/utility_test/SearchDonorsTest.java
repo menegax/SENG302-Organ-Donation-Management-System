@@ -61,25 +61,6 @@ public class SearchDonorsTest {
         SearchDonors.createFullIndex();
     }
 
-
-    //todo rework
-//    @Test
-//    public void testSearchByName() throws IOException {
-//
-//        // When index searched for a single specific donor
-//        ArrayList<Donor> results = SearchDonors.searchByName("Pat Bobinton");
-//
-//        // Should contain Pat Laff
-//        assertTrue(results.contains(d1));
-//        // Should contain Patik Laffey
-//        assertTrue(results.contains(d2));
-//        // Shouldn't contain George Romera
-//        assertFalse(results.contains(d3));
-//        // Should contain George Bobington
-//        assertTrue(results.contains(d4));
-//    }
-
-
     /**
      *
      */
