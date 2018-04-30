@@ -3,7 +3,7 @@ package controller;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import model.Clinician;
-import model.Donor;
+import model.Patient;
 
 import java.util.HashMap;
 
@@ -13,20 +13,18 @@ public class ScreenControl {
 
     private static Scene main;
 
-    public static Donor donor;
+    public static Patient patient;
 
     public static Clinician clinician;
 
 
-    static void setLoggedInDonor(Donor newDonor) {
-        donor = newDonor;
+    static void setLoggedInPatient(Patient newPatient) {
+        patient = newPatient;
     }
 
-
-    public static Donor getLoggedInDonor() {
-        return donor;
+    public static Patient getLoggedInPatient() {
+        return patient;
     }
-
 
     static void setLoggedInClinician(Clinician newClinician) {
         clinician = newClinician;
@@ -47,12 +45,7 @@ public class ScreenControl {
 
 
     /**
-<<<<<<< HEAD
-     * Add screen to the hash map of screens
-=======
      * Add screen to the hashmap of screens
->>>>>>> origin/development
-     *
      * @param name - name of screen to add
      * @param pane - Pane object from FXML
      */
@@ -62,11 +55,7 @@ public class ScreenControl {
 
 
     /**
-<<<<<<< HEAD
-     * Remove screen from hash map
-=======
      * Remove screen from hashmap
->>>>>>> origin/development
      *
      * @param name - screen to remove from the hashmap of screens
      */

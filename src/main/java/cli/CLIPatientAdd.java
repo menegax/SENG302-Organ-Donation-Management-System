@@ -1,6 +1,6 @@
 package cli;
 
-import model.Donor;
+import model.Patient;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
@@ -13,7 +13,7 @@ import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
 @Command(name = "add", description = "used to add new donors")
-class CLIDonorAdd implements Runnable {
+class CLIPatientAdd implements Runnable {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")
     private boolean helpRequested = false;
@@ -34,9 +34,9 @@ class CLIDonorAdd implements Runnable {
     private LocalDate birth;
 
     public void run() {
-        Donor donor = new Donor(nhi, firstName, middleNames, lastName, birth);
+        Patient patient = new Patient(nhi, firstName, middleNames, lastName, birth);
         try {
-            Database.addDonor(donor);
+            Database.addPatients(patient);
         } catch(IllegalArgumentException i){
             userActions.log(Level.SEVERE, i.getMessage(), "attempted to add donor");
         }

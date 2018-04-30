@@ -1,14 +1,12 @@
 package gui_test.undoScreenTests;
 
 import controller.Main;
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import model.Donor;
+import model.Patient;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
@@ -40,16 +38,16 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         // add dummy donor
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addDonor(new Donor("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.addPatients(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
         interact(() -> {
             lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).fire();
             lookup("#profileButton").queryAs(Button.class).fire();
-            lookup("#editDonorButton").queryAs(Button.class).fire();
+            lookup("#editPatientButton").queryAs(Button.class).fire();
         });
     }
 
@@ -96,7 +94,7 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
      */
     @Test
     public void verifyScreen() {
-        verifyThat("#donorUpdateAnchorPane", Node::isVisible);
+        verifyThat("#patientUpdateAnchorPane", Node::isVisible);
     }
 
     /**

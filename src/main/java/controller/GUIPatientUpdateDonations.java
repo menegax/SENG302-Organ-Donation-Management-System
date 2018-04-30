@@ -4,10 +4,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import javafx.scene.layout.AnchorPane;
-import model.Donor;
+import model.Patient;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
@@ -21,7 +20,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorUpdateDonations {
+public class GUIPatientUpdateDonations {
 
     @FXML
     private CheckBox liverCB;
@@ -59,7 +58,6 @@ public class GUIDonorUpdateDonations {
     @FXML
     private CheckBox connectivetissueCB;
 
-
     @FXML
     private AnchorPane donorDonationsAnchorPane;
 
@@ -76,33 +74,25 @@ public class GUIDonorUpdateDonations {
     }
 
 
-    private Donor target;
+    private Patient target;
 
     private StatesHistoryScreen statesHistoryScreen;
 
 
     public void initialize() {
-        loadProfile(ScreenControl.getLoggedInDonor()
-                .getNhiNumber());
-
-        // Enter key triggers log in
-        donorDonationsAnchorPane.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                saveDonations();
-            }
-        });
+        loadProfile(ScreenControl.getLoggedInPatient().getNhiNumber());
     }
 
 
     private void loadProfile(String nhi) {
         try {
-            Donor donor = Database.getDonorByNhi(nhi);
-            target = donor;
-            populateForm(donor);
+            Patient patient = Database.getPatientByNhi(nhi);
+            target = patient;
+            populateForm(patient);
 
         }
         catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
+            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the organs for logged in user");
         }
         ArrayList<Control> controls = new ArrayList<Control>() {{
             add(liverCB);
@@ -122,8 +112,8 @@ public class GUIDonorUpdateDonations {
     }
 
 
-    private void populateForm(Donor donor) {
-        ArrayList<GlobalEnums.Organ> organs = donor.getDonations();
+    private void populateForm(Patient patient) {
+        ArrayList<GlobalEnums.Organ> organs = patient.getDonations();
         if (organs.contains(GlobalEnums.Organ.LIVER)) {
             liverCB.setSelected(true);
         }
@@ -236,7 +226,7 @@ public class GUIDonorUpdateDonations {
         else {
             target.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
-        Database.saveToDisk();
+        new Alert(Alert.AlertType.CONFIRMATION, "Organ management saved successfully", ButtonType.OK).showAndWait();
         goToProfile();
     }
 
@@ -244,7 +234,7 @@ public class GUIDonorUpdateDonations {
     public void goToProfile() {
         ScreenControl.removeScreen("donorProfile");
         try {
-            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
             ScreenControl.activate("donorProfile");
         }
         catch (IOException e) {

@@ -7,7 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import model.Donor;
+import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
@@ -23,10 +23,10 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorUpdateProfile {
+public class GUIPatientUpdateProfile {
 
     @FXML
-    private AnchorPane donorUpdateAnchorPane;
+    private AnchorPane patientUpdateAnchorPane;
 
     @FXML
     private Label lastModifiedLbl;
@@ -82,7 +82,7 @@ public class GUIDonorUpdateProfile {
     @FXML
     private ChoiceBox<String> bloodGroupDD;
 
-    private Donor target;
+    private Patient target;
 
     private StatesHistoryScreen statesHistoryScreen;
 
@@ -103,11 +103,11 @@ public class GUIDonorUpdateProfile {
 
         populateDropdowns();
 
-        loadProfile(ScreenControl.getLoggedInDonor()
+        loadProfile(ScreenControl.getLoggedInPatient()
                 .getNhiNumber());
 
         // Enter key
-        donorUpdateAnchorPane.setOnKeyPressed(e -> {
+        patientUpdateAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveProfile();
             }
@@ -138,14 +138,14 @@ public class GUIDonorUpdateProfile {
 
 
     /**
-     * Loads the donor's profile into the gui
-     * @param nhi the NHI of the donor to load
+     * Loads the patient's profile into the gui
+     * @param nhi the NHI of the patient to load
      */
     private void loadProfile(String nhi) {
         try {
-            Donor donor = Database.getDonorByNhi(nhi);
-            target = donor;
-            populateForm(donor);
+            Patient patient = Database.getPatientByNhi(nhi);
+            target = patient;
+            populateForm(patient);
 
             ArrayList<Control> controls = new ArrayList<Control>() {{
                 add(nhiTxt);
@@ -166,7 +166,7 @@ public class GUIDonorUpdateProfile {
                 add(heightTxt);
                 add(zipTxt);
             }};
-            statesHistoryScreen = new StatesHistoryScreen(donorUpdateAnchorPane, controls);
+            statesHistoryScreen = new StatesHistoryScreen(patientUpdateAnchorPane, controls);
 
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
@@ -175,19 +175,19 @@ public class GUIDonorUpdateProfile {
 
 
     /**
-     * Populates the scene controls with values from the donor object
-     * @param donor the donor object whose attributes are used to load into the form
+     * Populates the scene controls with values from the patient object
+     * @param patient the patient object whose attributes are used to load into the form
      */
-    private void populateForm(Donor donor) {
-        lastModifiedLbl.setText("Last Modified: " + donor.getModified());
-        nhiTxt.setText(donor.getNhiNumber());
-        firstnameTxt.setText(donor.getFirstName());
-        lastnameTxt.setText(donor.getLastName());
-        for (String name : donor.getMiddleNames()) {
+    private void populateForm(Patient patient) {
+        lastModifiedLbl.setText("Last Modified: " + patient.getModified());
+        nhiTxt.setText(patient.getNhiNumber());
+        firstnameTxt.setText(patient.getFirstName());
+        lastnameTxt.setText(patient.getLastName());
+        for (String name : patient.getMiddleNames()) {
             middlenameTxt.setText(middlenameTxt.getText() + name + " ");
         }
-        if (donor.getGender() != null) {
-            switch (donor.getGender()
+        if (patient.getGender() != null) {
+            switch (patient.getGender()
                     .getValue()) {
                 case "male":
                     genderMaleRadio.setSelected(true);
@@ -200,31 +200,31 @@ public class GUIDonorUpdateProfile {
                     break;
             }
         }
-        dobDate.setValue(donor.getBirth());
-        dateOfDeath.setValue(donor.getDeath());
-        if (donor.getStreet1() != null) {
-            street1Txt.setText(donor.getStreet1());
+        dobDate.setValue(patient.getBirth());
+        dateOfDeath.setValue(patient.getDeath());
+        if (patient.getStreet1() != null) {
+            street1Txt.setText(patient.getStreet1());
         }
-        if (donor.getStreet2() != null) {
-            street2Txt.setText(donor.getStreet2());
+        if (patient.getStreet2() != null) {
+            street2Txt.setText(patient.getStreet2());
         }
-        if (donor.getSuburb() != null) {
-            suburbTxt.setText(donor.getSuburb());
+        if (patient.getSuburb() != null) {
+            suburbTxt.setText(patient.getSuburb());
         }
-        if (donor.getRegion() != null) {
-            regionDD.setValue(donor.getRegion()
+        if (patient.getRegion() != null) {
+            regionDD.setValue(patient.getRegion()
                     .getValue());
         }
-        if(donor.getZip() != 0) {
-            zipTxt.setText(String.valueOf(donor.getZip()));
+        if(patient.getZip() != 0) {
+            zipTxt.setText(String.valueOf(patient.getZip()));
             while(zipTxt.getText().length() < 4) {
                 zipTxt.setText("0" + zipTxt.getText());
             }
         }
-        weightTxt.setText(String.valueOf(donor.getWeight()));
-        heightTxt.setText(String.valueOf(donor.getHeight()));
-        if (donor.getBloodGroup() != null) {
-            bloodGroupDD.setValue(donor.getBloodGroup()
+        weightTxt.setText(String.valueOf(patient.getWeight()));
+        heightTxt.setText(String.valueOf(patient.getHeight()));
+        if (patient.getBloodGroup() != null) {
+            bloodGroupDD.setValue(patient.getBloodGroup()
                     .getValue());
         }
     }
@@ -394,11 +394,11 @@ public class GUIDonorUpdateProfile {
                 target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD
                         .getSelectionModel().getSelectedItem()));
             }
-            userActions.log(Level.INFO, "Successfully updated donor profile", "Attempted to update donor profile");
+            userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
             Database.saveToDisk();
             goBackToProfile();
         } else {
-            userActions.log(Level.WARNING, "Failed to update donor profile", "Attempted to update donor profile");
+            userActions.log(Level.WARNING, "Failed to update patient profile", "Attempted to update patient profile");
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }
     }
@@ -425,13 +425,13 @@ public class GUIDonorUpdateProfile {
     }
 
     /**
-     * Returns to donor profile screen
+     * Returns to patient profile screen
      */
     public void goBackToProfile() {
-        ScreenControl.removeScreen("donorProfile");
+        ScreenControl.removeScreen("patientProfile");
         try {
-            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-            ScreenControl.activate("donorProfile");
+            ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+            ScreenControl.activate("patientProfile");
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "Attempted to navigate from the edit page to the profile page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();

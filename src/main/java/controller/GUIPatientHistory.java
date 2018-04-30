@@ -6,7 +6,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import utility.UserActionRecord;
 
-public class GUIDonorHistory {
+public class GUIPatientHistory {
 
     @FXML
     private TableColumn<UserActionRecord, String> timeStampColumn;
@@ -28,7 +28,7 @@ public class GUIDonorHistory {
      * Go to home page action listener for back button
      */
     public void goToHome() {
-        ScreenControl.activate("donorHome");
+        ScreenControl.activate("patientHome");
     }
 
 

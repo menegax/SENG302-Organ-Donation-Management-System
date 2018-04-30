@@ -8,7 +8,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import model.Donor;
+import model.Patient;
 import service.Database;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -20,15 +20,15 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 /**
- * Controller class for handling GUI application contact detail viewing and editing for a Donor.
- * Contact fields are editable and are pre-filled with the Donor's existing contact details.
- * Details are saved when the Save button is selected, and the user is returned to the donor profile view screen.
+ * Controller class for handling GUI application contact detail viewing and editing for a Patient.
+ * Contact fields are editable and are pre-filled with the Patient's existing contact details.
+ * Details are saved when the Save button is selected, and the user is returned to the patient profile view screen.
  * @author Maree Palmer
  */
-public class GUIDonorUpdateContacts {
+public class GUIPatientUpdateContacts {
 
     @FXML
-    public AnchorPane donorContactsPane;
+    public AnchorPane patientContactsPane;
 
     @FXML
     private TextField homePhoneField;
@@ -61,9 +61,9 @@ public class GUIDonorUpdateContacts {
     private TextField contactNameField;
 
     /**
-     * Donor that is currently logged in
+     * Patient that is currently logged in
      */
-    private Donor target;
+    private Patient target;
 
     private StatesHistoryScreen statesHistoryScreen;
 
@@ -82,7 +82,7 @@ public class GUIDonorUpdateContacts {
 
 
     /**
-     * Saves changes to a donor's contact details by calling the Database saving method.
+     * Saves changes to a patient's contact details by calling the Database saving method.
      */
     @FXML
     public void saveContactDetails() {
@@ -91,7 +91,7 @@ public class GUIDonorUpdateContacts {
 
 
     /**
-     * Initializes the contact details screen. Loads in the current donor and sets the text fields to
+     * Initializes the contact details screen. Loads in the current patient and sets the text fields to
      * display current contact attributes.
      */
     public void initialize() {
@@ -99,7 +99,7 @@ public class GUIDonorUpdateContacts {
         setContactFields();
 
         // Enter key triggers log in
-        donorContactsPane.setOnKeyPressed(e -> {
+        patientContactsPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveContactDetails();
             }
@@ -108,7 +108,7 @@ public class GUIDonorUpdateContacts {
 
 
     /**
-     * Sets initial contact text fields to a donor's existing contact details.
+     * Sets initial contact text fields to a patient's existing contact details.
      * The fields are left blank if no contact detail is present for that field.
      */
     private void setContactFields() {
@@ -146,12 +146,12 @@ public class GUIDonorUpdateContacts {
 
 
     /**
-     * Sets the target donor to the currently logged in donor.
-     * Throws an InvalidObjectException if the logged in donor can not be retrieved
+     * Sets the target patient to the currently logged in patient.
+     * Throws an InvalidObjectException if the logged in patient can not be retrieved
      */
     private void loadProfile() {
         try {
-            target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor()
+            target = Database.getPatientByNhi(ScreenControl.getLoggedInPatient()
                     .getNhiNumber());
 
             ArrayList<Control> controls = new ArrayList<Control>() {{
@@ -166,7 +166,7 @@ public class GUIDonorUpdateContacts {
                 add(contactWorkPhoneField);
                 add(contactEmailAddressField);
             }};
-            statesHistoryScreen = new StatesHistoryScreen(donorContactsPane, controls);
+            statesHistoryScreen = new StatesHistoryScreen(patientContactsPane, controls);
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
@@ -175,10 +175,10 @@ public class GUIDonorUpdateContacts {
 
 
     /**
-     * Sets a donor's contact details to the text entered in the text fields for each individual
+     * Sets a patient's contact details to the text entered in the text fields for each individual
      * attribute. If the text field for an attribute is empty, the contact detail is not updated.
      */
-    private boolean setDonorContactDetails() {
+    private boolean setPatientContactDetails() {
         boolean valid = true;
         if (!(homePhoneField.getText().equals("")) && homePhoneField.getText().matches("[0-9]+")) {
             target.setHomePhone(homePhoneField.getText());
@@ -298,10 +298,10 @@ public class GUIDonorUpdateContacts {
      * Closes the contact details screen and returns the user to the profile window without saving changes.
      */
     public void goToProfile() {
-        ScreenControl.removeScreen("donorProfile");
+        ScreenControl.removeScreen("patientProfile");
         try {
-            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-            ScreenControl.activate("donorProfile");
+            ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+            ScreenControl.activate("patientProfile");
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the contacts page to the profile page");
@@ -311,12 +311,12 @@ public class GUIDonorUpdateContacts {
 
 
     /**
-     * Sets the donor's contact details to the values specified in the GUI, and runs the save operation from
-     * the application database. An alert is then shown to inform the user of a successful save, and the donor
+     * Sets the patient's contact details to the values specified in the GUI, and runs the save operation from
+     * the application database. An alert is then shown to inform the user of a successful save, and the patient
      * profile window is shown.
      */
     private void saveToDisk() {
-        boolean valid = setDonorContactDetails();
+        boolean valid = setPatientContactDetails();
         if(valid) {
             Database.saveToDisk();
             goToProfile();

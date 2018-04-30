@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class Donor {
+public class Patient {
 
     private final Timestamp CREATED;
 
@@ -51,6 +51,8 @@ public class Donor {
 
     private ArrayList<Organ> donations;
 
+    private ArrayList<Organ> requiredOrgans;
+
     private Timestamp modified;
 
     private String nhiNumber;
@@ -76,7 +78,7 @@ public class Donor {
     private String contactEmailAddress;
 
 
-    public Donor(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
+    public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
         this.firstName = firstName;
@@ -172,7 +174,7 @@ public class Donor {
             setNhiNumber(nhi);
         }
         userActions.log(Level.INFO, "Successfully updated donor " + getNhiNumber(), "attempted to update donor attributes");
-        donorModified();
+        patientModified();
     }
 
 
@@ -191,7 +193,7 @@ public class Donor {
                 }
                 else {
                     userActions.log(Level.INFO, addDonation(organEnum), "attempted to update donor donations");
-                    donorModified();
+                    patientModified();
                 }
             }
         }
@@ -205,7 +207,7 @@ public class Donor {
                 }
                 else {
                     userActions.log(Level.INFO, removeDonation(organEnum), "attempted to remove from donor donations");
-                    donorModified();
+                    patientModified();
                 }
             }
         }
@@ -231,8 +233,9 @@ public class Donor {
      * @exception IllegalArgumentException when the nhi number given is already in use
      */
     public void ensureUniqueNhi() throws IllegalArgumentException {
-        for (Donor d : Database.getDonors()) {
-            if (d.nhiNumber.equals(nhiNumber.toUpperCase())) {
+        for (Patient p : Database.getPatients()) {
+            String nhi = p.getNhiNumber();
+            if (nhi.equals(nhiNumber.toUpperCase())) {
                 throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
             }
         }
@@ -265,7 +268,7 @@ public class Donor {
     public void setDonations(ArrayList<Organ> donations) {
         if (this.donations != donations) {
             this.donations = donations;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -283,7 +286,7 @@ public class Donor {
     public void setFirstName(String firstName) {
         if (this.firstName == null || (!firstName.equals(this.firstName))) {
             this.firstName = firstName;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -296,7 +299,7 @@ public class Donor {
     public void setMiddleNames(ArrayList<String> middleNames) {
         if (this.middleNames == null || (!middleNames.equals(this.middleNames))) {
             this.middleNames = middleNames;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -309,7 +312,7 @@ public class Donor {
     public void setLastName(String lastName) {
         if (this.lastName == null || (!lastName.equals(this.lastName))) {
             this.lastName = lastName;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -322,7 +325,7 @@ public class Donor {
     public void setBirth(LocalDate birth) {
         if (this.birth == null || (!birth.equals(this.birth))) {
             this.birth = birth;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -335,7 +338,7 @@ public class Donor {
     public void setDeath(LocalDate death) {
         if (this.death == null || (!death.equals(this.death))) {
             this.death = death;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -364,7 +367,7 @@ public class Donor {
     public void setGender(Gender gender) {
         if (this.gender != gender) {
             this.gender = gender;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -377,7 +380,7 @@ public class Donor {
     public void setHeight(double height) {
         if (this.height != height) {
             this.height = height;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -390,7 +393,7 @@ public class Donor {
     public void setWeight(double weight) {
         if (this.weight != weight) {
             this.weight = weight;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -415,7 +418,7 @@ public class Donor {
     public void setBloodGroup(BloodGroup bloodGroup) {
         if (this.bloodGroup != bloodGroup) {
             this.bloodGroup = bloodGroup;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -428,7 +431,7 @@ public class Donor {
     public void setStreet1(String street1) {
         if (this.street1 == null || (!street1.equals(this.street1))) {
             this.street1 = street1;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -441,7 +444,7 @@ public class Donor {
     public void setStreet2(String street2) {
         if (this.street2 == null || (!street2.equals(this.street2))) {
             this.street2 = street2;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -454,7 +457,7 @@ public class Donor {
     public void setSuburb(String suburb) {
         if (this.suburb == null || !suburb.equals(this.suburb)) {
             this.suburb = suburb;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -467,7 +470,7 @@ public class Donor {
     public void setRegion(Region region) {
         if (this.region != region) {
             this.region = region;
-            donorModified();
+            patientModified();
         }
     }
 
@@ -480,8 +483,16 @@ public class Donor {
     public void setZip(int zip) {
         if (this.zip != zip) {
             this.zip = zip;
-            donorModified();
+            patientModified();
         }
+    }
+
+    public ArrayList<Organ> getRequiredOrgans() {
+        return this.requiredOrgans;
+    }
+
+    public void setRequiredOrgans(ArrayList requiredOrgans) {
+        this.requiredOrgans = requiredOrgans;
     }
 
 
@@ -507,7 +518,7 @@ public class Donor {
         }
         else {
             donations.add(organ);
-            donorModified();
+            patientModified();
             return "Successfully added " + organ + " to donations";
         }
     }
@@ -522,7 +533,7 @@ public class Donor {
     public String removeDonation(Organ organ) {
         if (donations.contains(organ)) {
             donations.remove(organ);
-            donorModified();
+            patientModified();
             return "Successfully removed " + organ + " from donations";
         }
         else {
@@ -540,7 +551,7 @@ public class Donor {
         ensureValidNhi();
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
             this.nhiNumber = nhiNumber.toUpperCase();
-            donorModified();
+            patientModified();
         }
     }
 
@@ -644,7 +655,7 @@ public class Donor {
     }
 
 
-    private void donorModified() {
+    public void patientModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
 
@@ -659,8 +670,8 @@ public class Donor {
 
 
     public boolean equals(Object obj) {
-        Donor donor = (Donor) obj;
-        return this.nhiNumber.equals(donor.nhiNumber) && obj.getClass() == this.getClass();
+        Patient patient = (Patient) obj;
+        return this.nhiNumber.equals(patient.nhiNumber);
     }
 
 }

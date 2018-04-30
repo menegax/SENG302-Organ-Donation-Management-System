@@ -3,11 +3,10 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import model.Donor;
 import org.apache.commons.lang3.StringUtils;
+import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 
@@ -18,13 +17,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorProfile {
-
-    public Button editDonorButton;
-
-    public Button contactButton;
-
-    public Button donationButton;
+public class GUIPatientProfile {
 
     @FXML
     private Label nhiLbl;
@@ -77,55 +70,57 @@ public class GUIDonorProfile {
 
     public void initialize() {
         try {
-            loadProfile(ScreenControl.getLoggedInDonor()
+            loadProfile(ScreenControl.getLoggedInPatient()
                     .getNhiNumber());
         } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Unable to load donor from database", "Attempted to load donor profile");
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Unable to load donor from database");
+            userActions.log(Level.SEVERE, "Unable to load patient from database", "Attempted to load patient profile");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Unable to load patient from database");
             alert.showAndWait();
         }
     }
 
 
     private void loadProfile(String nhi) throws InvalidObjectException {
-        Donor donor = Database.getDonorByNhi(nhi);
+        Patient patient = Database.getPatientByNhi(nhi);
 
-        nhiLbl.setText(donor.getNhiNumber());
-        nameLbl.setText(donor.getNameConcatenated());
-        genderLbl.setText(donor.getGender() == null ? "Not set" : donor.getGender()
+        nhiLbl.setText(patient.getNhiNumber());
+        nameLbl.setText(patient.getNameConcatenated());
+        genderLbl.setText(patient.getGender() == null ? "Not set" : patient.getGender()
                 .toString());
-        dobLbl.setText(donor.getBirth()
+        dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        dateOfDeath.setText(donor.getDeath() == null ? "Not set" : donor.getDeath().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        age.setText(String.valueOf(donor.getAge()));
-        heightLbl.setText(String.valueOf(donor.getHeight() + " m"));
-        weightLbl.setText(String.valueOf(donor.getWeight() + " kg"));
-        bmi.setText(String.valueOf(donor.getBmi()));
-        bloodGroupLbl.setText(donor.getBloodGroup() == null ? "Not set" : donor.getBloodGroup()
+        dateOfDeath.setText(patient.getDeath() == null ? "Not set" : patient.getDeath().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        age.setText(String.valueOf(patient.getAge()));
+        heightLbl.setText(String.valueOf(patient.getHeight() + " m"));
+        weightLbl.setText(String.valueOf(patient.getWeight() + " kg"));
+        bmi.setText(String.valueOf(patient.getBmi()));
+        bloodGroupLbl.setText(patient.getBloodGroup() == null ? "Not set" : patient.getBloodGroup()
                 .getValue());
-        addLbl1.setText(donor.getStreet1() == null ? "Not set" : donor.getStreet1());
-        addLbl2.setText(donor.getStreet2() == null ? "Not set" : donor.getStreet2());
-        addLbl3.setText(donor.getSuburb() == null ? "Not set" : donor.getSuburb());
-        addLbl4.setText(donor.getRegion() == null ? "Not set" : donor.getRegion()
+        addLbl1.setText(patient.getStreet1() == null ? "Not set" : patient.getStreet1());
+        addLbl2.setText(patient.getStreet2() == null ? "Not set" : patient.getStreet2());
+        addLbl3.setText(patient.getSuburb() == null ? "Not set" : patient.getSuburb());
+        addLbl4.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
                 .getValue());
-        if(donor.getZip() != 0) {
-            addLbl5.setText(String.valueOf(donor.getZip()));
+        if(patient.getZip() != 0) {
+            addLbl5.setText(String.valueOf(patient.getZip()));
             while (addLbl5.getText().length() < 4) {
                 addLbl5.setText("0" + addLbl5.getText());
+
             }
         } else addLbl5.setText("Not set");
-        for (GlobalEnums.Organ organ : donor.getDonations()) {
+        for (GlobalEnums.Organ organ : patient.getDonations()) {
             donationList.setText(donationList.getText() + StringUtils.capitalize(organ.getValue()) + "\n");
         }
     }
 
 
     public void goToEdit() {
-        ScreenControl.removeScreen("donorProfileUpdate");
+        ScreenControl.removeScreen("patientProfileUpdate");
         try {
-            ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorUpdateProfile.fxml")));
-            ScreenControl.activate("donorProfileUpdate");
-        } catch (IOException e) {
+            ScreenControl.addScreen("patientProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/patientUpdateProfile.fxml")));
+            ScreenControl.activate("patientProfileUpdate");
+        }
+        catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading update screen", "attempted to navigate from the profile page to the edit page");
             new Alert(Alert.AlertType.WARNING, "Error loading edit page", ButtonType.OK).showAndWait();
         }
@@ -133,12 +128,12 @@ public class GUIDonorProfile {
 
 
     public void goToDonations() {
-        ScreenControl.removeScreen("donorDonations");
         try {
-            ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorUpdateDonations.fxml")));
-            ScreenControl.activate("donorDonations");
-        } catch (IOException e) {
-
+            ScreenControl.removeScreen("patientDonations");
+            ScreenControl.addScreen("patientDonations", FXMLLoader.load(getClass().getResource("/scene/patientUpdateDonations.fxml")));
+            ScreenControl.activate("patientDonations");
+        }
+        catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading donation screen", "attempted to navigate from the profile page to the donation page");
             new Alert(Alert.AlertType.WARNING, "Error loading donation page", ButtonType.OK).showAndWait();
         }
@@ -146,10 +141,10 @@ public class GUIDonorProfile {
 
 
     public void goToContactDetails() {
-        ScreenControl.removeScreen("donorContactDetails");
+        ScreenControl.removeScreen("patientContactDetails");
         try {
-            ScreenControl.addScreen("donorContactDetails", FXMLLoader.load(getClass().getResource("/scene/donorUpdateContacts.fxml")));
-            ScreenControl.activate("donorContactDetails");
+            ScreenControl.addScreen("patientContactDetails", FXMLLoader.load(getClass().getResource("/scene/patientUpdateContacts.fxml")));
+            ScreenControl.activate("patientContactDetails");
         } catch (IOException e) {
             userActions.log(Level.SEVERE,
                     "Error loading contact details screen",
@@ -160,7 +155,7 @@ public class GUIDonorProfile {
 
 
     public void goToHome() {
-        ScreenControl.activate("donorHome");
+        ScreenControl.activate("patientHome");
     }
 
 }

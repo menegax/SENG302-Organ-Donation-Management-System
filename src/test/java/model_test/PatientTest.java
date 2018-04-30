@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import model.Donor;
+import model.Patient;
+import model.Patient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,9 +17,9 @@ import static utility.UserActionHistory.userActions;
 
 import static org.junit.Assert.*;
 
-public class DonorTest {
+public class PatientTest {
 
-    private static Donor testDonor; //Donor obj not within the database
+    private static Patient testPatient; //Patient obj not within the database
 
     /**
      * Populate database with test donors and disables logging
@@ -28,15 +29,15 @@ public class DonorTest {
 
         userActions.setLevel(Level.OFF);
 
-        testDonor = new Donor("ABC1234", "James", null, "Wallace",
+        testPatient = new Patient("ABC1234", "James", null, "Wallace",
                 LocalDate.of(1970, 2, 12));
 
-        Database.addDonor(new Donor("XYZ9876", "Joe", new ArrayList<String>() {{
+        Database.addPatients(new Patient("XYZ9876", "Joe", new ArrayList<String>() {{
             add("Jane");
         }},
                 "Bloggs", LocalDate.of(1994, 12, 12)));
 
-        Database.addDonor(new Donor("DEF4567", "Bob", null, "Bobby",
+        Database.addPatients(new Patient("DEF4567", "Bob", null, "Bobby",
                 LocalDate.of(1994, 12, 12)));
     }
 
@@ -44,9 +45,9 @@ public class DonorTest {
      * Test donor constructor
      */
     @Test
-    public void testDonorConstructor() {
-        Donor donor = givenDonor();
-        thenDonorHasAttributes(donor);
+    public void testPatientConstructor() {
+        Patient donor = givenPatient();
+        thenPatientHasAttributes(donor);
     }
 
     /**
@@ -59,12 +60,12 @@ public class DonorTest {
             add("liver");
             add("lung");
         }};
-        testDonor.updateDonations(addDonations, null);
+        testPatient.updateDonations(addDonations, null);
         ArrayList<Organ> expected = new ArrayList<Organ>() {{
             add(Organ.LIVER);
             add(Organ.LUNG);
         }};
-        assertEquals(expected, testDonor.getDonations());
+        assertEquals(expected, testPatient.getDonations());
     }
 
 
@@ -78,11 +79,11 @@ public class DonorTest {
             add("liver");
             add("test");
         }};
-        testDonor.updateDonations(addDonations, null);
+        testPatient.updateDonations(addDonations, null);
         ArrayList<Organ> expected = new ArrayList<Organ>() {{
             add(Organ.LIVER);
         }};
-        assertEquals(expected, testDonor.getDonations());
+        assertEquals(expected, testPatient.getDonations());
     }
 
     /**
@@ -91,16 +92,16 @@ public class DonorTest {
      */
     @Test
     public void testUpdateDonationsRmValid() {
-        addDonationsToDonor();
+        addDonationsToPatient();
         ArrayList<String> rmDonations = new ArrayList<String>() {{
             add("liver");
         }};
-        testDonor.updateDonations(null, rmDonations);
+        testPatient.updateDonations(null, rmDonations);
         ArrayList<Organ> expected = new ArrayList<Organ>() {{
             add(Organ.LUNG);
         }};
-        assertEquals(expected, testDonor.getDonations());
-        resetDonationsDonor();
+        assertEquals(expected, testPatient.getDonations());
+        resetDonationsPatient();
     }
 
     /**
@@ -109,15 +110,15 @@ public class DonorTest {
      */
     @Test
     public void testUpdateDonationsRmInvalid() {
-        testDonor.addDonation(Organ.LIVER);
+        testPatient.addDonation(Organ.LIVER);
         ArrayList<String> rmDonations = new ArrayList<String>() {{
             add("liver");
             add("test");
         }};
-        testDonor.updateDonations(null, rmDonations);
+        testPatient.updateDonations(null, rmDonations);
         ArrayList<Organ> expected = new ArrayList<>();
-        assertEquals(expected, testDonor.getDonations());
-        resetDonationsDonor();
+        assertEquals(expected, testPatient.getDonations());
+        resetDonationsPatient();
     }
 
     /**
@@ -126,9 +127,9 @@ public class DonorTest {
      */
     @Test
     public void testUpdateDonationsAddRmNull() {
-        testDonor.updateDonations(null, null);
+        testPatient.updateDonations(null, null);
         ArrayList<Organ> expected = new ArrayList<>();
-        assertEquals(expected, testDonor.getDonations());
+        assertEquals(expected, testPatient.getDonations());
     }
 
 
@@ -137,8 +138,8 @@ public class DonorTest {
      */
     @Test
     public void testGetNameConcatenatedWithMiddles() {
-        setDonorNamesMultipleMiddle();
-        assertEquals("Joe Jane Jarred Bloggs", testDonor.getNameConcatenated());
+        setPatientNamesMultipleMiddle();
+        assertEquals("Joe Jane Jarred Bloggs", testPatient.getNameConcatenated());
     }
 
 
@@ -147,8 +148,8 @@ public class DonorTest {
      */
     @Test
     public void testGetNameConcatenatedWithoutMiddles() {
-        setDonorNamesNoMiddle();
-        assertEquals("Joe Bloggs", testDonor.getNameConcatenated());
+        setPatientNamesNoMiddle();
+        assertEquals("Joe Bloggs", testPatient.getNameConcatenated());
     }
 
     /**
@@ -156,8 +157,8 @@ public class DonorTest {
      */
     @Test
     public void testGetAge() {
-        testDonor.setDeath(LocalDate.of(2005, 5, 12));
-        assertEquals(35, testDonor.getAge());
+        testPatient.setDeath(LocalDate.of(2005, 5, 12));
+        assertEquals(35, testPatient.getAge());
     }
 
     /**
@@ -165,8 +166,8 @@ public class DonorTest {
      */
     @Test
     public void testGetAgeRightBeforeBirthday() {
-        testDonor.setDeath(LocalDate.of(2005, 2, 11));
-        assertEquals(34, testDonor.getAge());
+        testPatient.setDeath(LocalDate.of(2005, 2, 11));
+        assertEquals(34, testPatient.getAge());
     }
 
     /**
@@ -174,9 +175,9 @@ public class DonorTest {
      */
     @Test
     public void testGetBmi() {
-        testDonor.setWeight(70.0);
-        testDonor.setHeight(1.80);
-        assertEquals(21.6, testDonor.getBmi(), 0.2);
+        testPatient.setWeight(70.0);
+        testPatient.setHeight(1.80);
+        assertEquals(21.6, testPatient.getBmi(), 0.2);
     }
 
     /**
@@ -191,15 +192,15 @@ public class DonorTest {
     /**
      * Create donor object
      */
-    private Donor givenDonor() {
-        return new Donor("AAA1111", "Bob", null, "Wallace",
+    private Patient givenPatient() {
+        return new Patient("AAA1111", "Bob", null, "Wallace",
                 LocalDate.of(1995, 12, 31));
     }
 
     /**
      * Check the attributes have been set correctly upon donor obj creation
      */
-    private void thenDonorHasAttributes(Donor donor) {
+    private void thenPatientHasAttributes(Patient donor) {
         assertTrue(donor.getCREATED() != null);
         assertEquals(donor.getFirstName(), "Bob");
         assertEquals(donor.getMiddleNames(), null);
@@ -210,37 +211,37 @@ public class DonorTest {
     /**
      * Helper method for testUpdateDonationsRmValid to populate donations
      */
-    private void addDonationsToDonor() {
-        testDonor.addDonation(Organ.LIVER);
-        testDonor.addDonation(Organ.LUNG);
+    private void addDonationsToPatient() {
+        testPatient.addDonation(Organ.LIVER);
+        testPatient.addDonation(Organ.LUNG);
     }
 
     /**
      * Helper method for testUpdateDonationsRmValid reset donations list
      */
-    private void resetDonationsDonor() {
-        testDonor.setDonations(new ArrayList<>()); //set to empty
+    private void resetDonationsPatient() {
+        testPatient.setDonations(new ArrayList<>()); //set to empty
     }
 
     /**
      * Helper method for setting donor names with multiple middle names
      */
-    private void setDonorNamesMultipleMiddle() {
-        testDonor.setFirstName("Joe");
-        testDonor.setMiddleNames(new ArrayList<String>() {{
+    private void setPatientNamesMultipleMiddle() {
+        testPatient.setFirstName("Joe");
+        testPatient.setMiddleNames(new ArrayList<String>() {{
             add("Jane");
             add("Jarred");
         }});
-        testDonor.setLastName("Bloggs");
+        testPatient.setLastName("Bloggs");
     }
 
     /**
      * Helper method for setting donor names with no middle names
      */
-    private void setDonorNamesNoMiddle() {
-        testDonor.setFirstName("Joe");
-        testDonor.setMiddleNames(new ArrayList<>());
-        testDonor.setLastName("Bloggs");
+    private void setPatientNamesNoMiddle() {
+        testPatient.setFirstName("Joe");
+        testPatient.setMiddleNames(new ArrayList<>());
+        testPatient.setLastName("Bloggs");
     }
 
 }

@@ -5,7 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import model.Donor;
+import model.Patient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -169,9 +169,9 @@ public class GUIRegisterTest extends ApplicationTest {
 
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addDonor(new Donor("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.addPatients(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
 
         interact(() -> {
             lookup("#nhiRegister").queryAs(TextField.class).setText("TFX9999");

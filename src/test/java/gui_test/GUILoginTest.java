@@ -10,7 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import model.Donor;
+import model.Patient;
 import org.junit.After;
 import org.junit.Test;
 import org.testfx.api.FxRobotException;
@@ -36,9 +36,9 @@ public class GUILoginTest extends ApplicationTest {
         // add dummy donor
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addDonor(new Donor("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.addPatients(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
     }
@@ -67,8 +67,8 @@ public class GUILoginTest extends ApplicationTest {
             assertThat(lookup("#nhiLogin").queryAs(TextField.class)).hasText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
         });
-        assertThat(ScreenControl.getLoggedInDonor().getNhiNumber().equals("TFX9999"));
-        verifyThat("#homePane", Node::isVisible);
+        assertThat(ScreenControl.getLoggedInPatient().getNhiNumber().equals("TFX9999"));
+        verifyThat("#patientHomePane", Node::isVisible);
     }
 
     @Test
@@ -78,7 +78,7 @@ public class GUILoginTest extends ApplicationTest {
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(ScreenControl.getLoggedInDonor().getNhiNumber() == null);
+        assertThat(ScreenControl.getLoggedInPatient().getNhiNumber() == null);
         verifyThat("#loginPane", Node::isVisible);
     }
 
@@ -89,7 +89,7 @@ public class GUILoginTest extends ApplicationTest {
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(ScreenControl.getLoggedInDonor().getNhiNumber() == null);
+        assertThat(ScreenControl.getLoggedInPatient().getNhiNumber() == null);
         verifyThat("#loginPane", Node::isVisible);
     }
 
