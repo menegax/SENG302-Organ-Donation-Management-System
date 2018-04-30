@@ -1,11 +1,7 @@
 package controller_test;
 
 import controller.Main;
-import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Donor;
 import org.junit.After;
@@ -15,17 +11,20 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.ListViewMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import service.Database;
-import testfx.TestFxHelper;
+import testfx.FXNavigation;
+import testfx.General;
+import testfx.FXMedication.FXMedicationHelper;
 
 import java.util.ArrayList;
 
 import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.assertions.api.Assertions.assertThat;
 
 public class GUIMedicationTest extends ApplicationTest {
 
     private Main main = new Main();
-    private TestFxHelper testFxHelper = new TestFxHelper();
+    private General general = new General();
+    private FXMedicationHelper medicationScreen = new FXMedicationHelper();
+    private FXNavigation navigation = new FXNavigation();
     private Donor target;
 
     @Override
@@ -40,18 +39,18 @@ public class GUIMedicationTest extends ApplicationTest {
     @Before
     public void LoginAndNavigateToMedicationPanel() {
         // Log in to the app
-        testFxHelper.loginDonor("ABC1238");
+        general.loginDonor("ABC1238");
         target.setCurrentMedications( new ArrayList <>() );
         target.setMedicationHistory( new ArrayList <>() );
         // Navigate to the profile panel (where the medication test button is currently found)
-        testFxHelper.toProfileFromHomeDonor();
+        navigation.toProfileFromHomeDonor();
         // Navigate to the medication panel via the temporary test medication button found in profile panel
-        testFxHelper.toMedicationsFromProfile();
+        navigation.toMedicationsFromProfile();
     }
 
     @After
     public void waitForEvents() {
-        testFxHelper.waitForEvents();
+        general.waitForEvents();
     }
 
     /**
@@ -67,7 +66,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
         // Enter a new medication to textfield for registering to the current medications registry
-        testFxHelper.registerMedication("Steroids");
+        medicationScreen.registerMedication("Steroids");
 
         // Registers the new medication entry in the textfield to the current medications ArrayList and listView
         // Verify that the medication entry text field is empty again after registering the entered medication
@@ -76,7 +75,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#currentMedications", ListViewMatchers.hasListCell( "Steroids" ) );
         // Verify that there is only one medication registered to currentMedications ListView
         verifyThat( "#currentMedications", ListViewMatchers.hasItems( 1 ) );
-        // Verify that the pastMedications listView is still empty as no medication has been registered to it
+        // Verify that the pastMedications listView is still empty  as no medication has been registered to it
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
     }
 
@@ -93,11 +92,11 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
         // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        testFxHelper.registerMedication("");
+        medicationScreen.registerMedication("");
+        // Verify that the medication entry text field is empty again after registering the entered medication
+        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
+        general.clickAlert("OK");
 
-        interact( () -> {
-            lookup("OK").queryAs(Button.class).fire();
-        });
         verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
@@ -114,23 +113,10 @@ public class GUIMedicationTest extends ApplicationTest {
     public void testSelectingMedication() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-
-        // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "Medicine" ); // Enters new medication
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "Medicine" ) ) );
-        // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
-
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        // Enter a new medication to textfield for registering to the current medications registry
+        medicationScreen.registerMedication("Medicine");
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
@@ -140,9 +126,7 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the pastMedications listView is still empty as no medication has been registered to it
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
-        interact( () -> {
-            clickOn( "Medicine" );
-        } );
+        general.clickMatchingText("Medicine");
         // Currently unsure how test other than visual observation - which is passing
     }
 
@@ -153,23 +137,11 @@ public class GUIMedicationTest extends ApplicationTest {
     public void testRemovingMedication() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-
-        // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "Pills" ); // Enters new medication
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "Pills" ) ) );
-        // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        // Enter a new medication to textfield for registering to the current medications registry
+        medicationScreen.registerMedication("Pills");
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
@@ -178,19 +150,11 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#currentMedications", ListViewMatchers.hasItems( 1 ) );
         // Verify that the pastMedications listView is still empty as no medication has been registered to it
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
-
-        interact( () -> {
-            clickOn( "Pills" );
-        } );
-
-        interact( () -> {
-            // Press the remove medication button for moving the selected medication from current to past medications
-            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
+        medicationScreen.removeMedication("Pills");
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
         verifyThat( "#pastMedications", ListViewMatchers.hasListCell( "Pills" ) );
         // Verify that there is only one medication in pastMedications ListView
-        verifyThat( "#pastMedications", ListViewMatchers.hasItems( 1 ) );
+        verifyThat( "#pastMedications", ListViewMatchers.hasItems( 1 ));
         // Verify that the currentMedications listView is now empty again after medication moved to pastMedications
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
     }
@@ -200,25 +164,11 @@ public class GUIMedicationTest extends ApplicationTest {
      */
     @Test
     public void testAddingMedication() {
-        // Verify that the medication entry text field is empty prior to entering a new medication for registration
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
-        // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "Placebo" ); // Enters new medication
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "Placebo" ) ) );
-        // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
-
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        // Enter a new medication to textfield for registering to the current medications registry
+        medicationScreen.registerMedication("Placebo");
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
@@ -228,14 +178,8 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the pastMedications listView is still empty as no medication has been registered to it
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
-        interact( () -> {
-            clickOn( "Placebo" );
-        } );
+        medicationScreen.removeMedication("Placebo");
 
-        interact( () -> {
-            // Press the remove medication button for moving the selected medication from current to past medications
-            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
         verifyThat( "#pastMedications", ListViewMatchers.hasListCell( "Placebo" ) );
         // Verify that there is only one moved to pastMedications ListView
@@ -243,14 +187,7 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the currentMedications listView is now empty as a medication has now been moved from it
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
 
-        interact( () -> {
-            clickOn( "Placebo" );
-        } );
-
-        interact( () -> {
-            // Press the add medication button for moving the selected medication from past to current medications
-            lookup( "#addMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
+        medicationScreen.addMedication("Placebo");
         // Verify that the currentMedications listView is now not empty as a medication has now been moved to it
         verifyThat( "#currentMedications", ListViewMatchers.hasListCell( "Placebo" ) );
         // Verify that there is only one medication moved to currentMedications ListView
@@ -267,25 +204,9 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
-        // Verify that the medication entry text field is empty prior to entering a new medication for registration
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
         // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "duplicate med" ); // Enters new med
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "duplicate med" ) ) );
-        // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
-        verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
-        verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
-
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        medicationScreen.registerMedication("Duplicate med");
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
@@ -295,23 +216,8 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the pastMedications listView is still empty
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
-        // Verify that the medication entry text field is empty prior to entering a new medication for registration
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-
-        // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "duplicate Med" ); // Enters new med
-        } );
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "duplicate Med" ) ) );
-
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        interact( () -> {
-            lookup("OK").queryAs(Button.class).fire();
-        });
+        medicationScreen.registerMedication("duplicate Med");
+        general.clickAlert("OK");
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "duplicate Med" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
@@ -334,21 +240,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
         // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "history med" ); // Enters new med
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "history med" ) ) );
-        // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
-        verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
-        verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
-
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        medicationScreen.registerMedication("History med");
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
@@ -357,15 +249,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#currentMedications", ListViewMatchers.hasItems( 1 ) );
         // Verify that the pastMedications listView is still empty
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
-
-        interact( () -> {
-            clickOn( "History med" );
-        } );
-
-        interact( () -> {
-            // Press the remove medication button for moving the selected medication from current to past medications
-            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
+        medicationScreen.removeMedication("History med");
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
         verifyThat( "#pastMedications", ListViewMatchers.hasListCell( "History med" ) );
@@ -378,16 +262,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
         // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "history med" ); // Enters new med
-        } );
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "history med" ) ) );
-
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
+        medicationScreen.registerMedication("history med");
         // Verify that the medication entry text field is empty again after re-registering the already entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been re-registered to it
@@ -405,23 +280,11 @@ public class GUIMedicationTest extends ApplicationTest {
     public void testValidDeletingMedication() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-
-        // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "Codeine" ); // Enters new medication
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "Codeine" ) ) );
-        // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        // Enter a new medication to textfield for registering to the current medications registry
+        medicationScreen.registerMedication("Codeine");
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
@@ -431,13 +294,7 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the pastMedications listView is still empty
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
-        interact( () -> {
-            clickOn( "Codeine" );
-        } );
-
-        interact( () -> {
-            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
+        medicationScreen.removeMedication("Codeine");
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
         verifyThat( "#pastMedications", ListViewMatchers.hasListCell( "Codeine" ) );
         // Verify that there is only one medication moved to pastMedications ListView
@@ -445,17 +302,8 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the currentMedications listView is now empty as a medication has now been moved from it
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
 
-        interact( () -> {
-            clickOn( "Codeine" );
-        } );
-
-        interact( () -> {
-            // Press the delete medication button for deleting the selected medication
-            lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        interact( () -> {
-            lookup("OK").queryAs(Button.class).fire();
-        });
+        medicationScreen.deleteMedication("Codeine");
+        general.clickAlert("OK");
         // Verify that the pastMedications listView is now empty as a medication has now been deleted from it
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
         // Verify that the currentMedications listView is now empty the only medication was deleted from pastMedications
@@ -469,23 +317,11 @@ public class GUIMedicationTest extends ApplicationTest {
     public void testValidDuplicateRegistrationAfterDeletion() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-
-        // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "valid duplicate" ); // Enters new med
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "valid duplicate" ) ) );
-        // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        // Enter a new medication to textfield for registering to the current medications registry
+        medicationScreen.registerMedication("Valid duplicate");
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
@@ -495,14 +331,7 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the pastMedications listView is still empty
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
-        interact( () -> {
-            clickOn( "Valid duplicate" );
-        } );
-
-        interact( () -> {
-            // Press the remove medication button for moving the selected medication from current to past medications
-            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
+        medicationScreen.removeMedication("Valid duplicate");
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
         verifyThat( "#pastMedications", ListViewMatchers.hasListCell( "Valid duplicate" ) );
         // Verify that there is only one medication moved to pastMedications ListView
@@ -510,18 +339,9 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the currentMedications listView is now empty as a medication has now been moved from it
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
 
-        interact( () -> {
-            clickOn( "Valid duplicate" );
-        } );
+        medicationScreen.deleteMedication("Valid duplicate");
 
-        interact( () -> {
-            // Press the delete medication button for deleting the selected medication
-            lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-
-        interact( () -> {
-            lookup("OK").queryAs(Button.class).fire();
-        });
+        general.clickAlert("OK");
 
         // Verify that the pastMedications listView is now empty as a medication has now been deleted from it
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
@@ -532,21 +352,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
         // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "valid Duplicate" ); // Enters new med
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "valid Duplicate" ) ) );
-        // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
-        verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
-        verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
-
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        medicationScreen.registerMedication("Valid duplicate");
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
@@ -567,11 +373,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "morphine" ); // Enters new medication
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        medicationScreen.registerMedication("Morphine");
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has one entry as a medication has now been registered to it
@@ -579,12 +381,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#currentMedications", ListViewMatchers.hasItems( 1 ) );
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "aspirin" ); // Enters new medication
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        medicationScreen.registerMedication("Aspirin");
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has two medication entries
@@ -594,11 +391,7 @@ public class GUIMedicationTest extends ApplicationTest {
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "panadol" ); // Enters new medication
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        medicationScreen.registerMedication("panadol");
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has three medication entries
@@ -608,12 +401,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#currentMedications", ListViewMatchers.hasItems( 3 ) );
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "panadeine" ); // Enters new med
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        medicationScreen.registerMedication("panadeine");
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has four medication entries
@@ -624,12 +412,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#currentMedications", ListViewMatchers.hasItems( 4 ) );
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "anti-biotic" ); // Enters new med
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        medicationScreen.registerMedication("anti-biotic");
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has five medication entries
@@ -641,12 +424,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#currentMedications", ListViewMatchers.hasItems( 5 ) );
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "anti-psychotics" ); // Enters new med
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        medicationScreen.registerMedication("anti-psychotics");
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has six medication entries
@@ -659,12 +437,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#currentMedications", ListViewMatchers.hasItems( 6 ) );
 
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "Prozac" ); // Enters new med
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        medicationScreen.registerMedication("Prozac");
         // Verify that the medication entry text field is empty prior to entering a new medications for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView now has seven medication entries
@@ -683,26 +456,13 @@ public class GUIMedicationTest extends ApplicationTest {
      */
     @Test
     public void testMedicationSaving() {
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
+        verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
+        verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
         // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "Saved med" ); // Enters new medication
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "Saved med" ) ) );
-        // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
-        verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
-        verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
-
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        medicationScreen.registerMedication("Saved med");
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
@@ -713,21 +473,11 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
         // Saves the Donor data to .json file
-        interact( () -> {
-            lookup( "#saveMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
+        medicationScreen.saveMedication();
 
-        interact( () -> {
-            lookup("OK").queryAs(Button.class).fire();
-        });
+        general.clickAlert("OK");
 
-        interact( () -> {
-            clickOn( "Saved med" );
-        } );
-
-        interact( () -> {
-            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
+        medicationScreen.removeMedication("Saved med");
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
         verifyThat( "#pastMedications", ListViewMatchers.hasListCell( "Saved med" ) );
         // Verify that there is only one medication moved to pastMedications ListView
@@ -735,18 +485,9 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the currentMedications listView is now empty as a medication has now been moved from it
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
 
-        interact( () -> {
-            clickOn( "Saved med" );
-        } );
+        medicationScreen.deleteMedication("Saved med");
 
-        interact( () -> {
-            // Press the delete medication button for deleting the selected medication
-            lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-
-        interact( () -> {
-            lookup("OK").queryAs(Button.class).fire();
-        });
+        general.clickAlert("OK");
         // Verify that both of the medications listViews are now empty as a medication has been deleted from it
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
@@ -760,17 +501,12 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
 
         // Leave the Medication pane and navigates to Profile Pane
-        interact( () -> {
-          lookup( "#goBack" ).queryAs( Hyperlink.class ).getOnAction().handle( new ActionEvent() );
-        });
+        navigation.goBack();
 
         verifyThat( "#profilePane", Node::isVisible ); // Verify that "user" has navigated to profile
 
         // Navigate to the medication panel via the temporary test medication button found in profile panel
-        interact( () -> {
-           lookup( "#testMedication" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
+        navigation.toMedicationsFromProfile();
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
@@ -782,13 +518,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#pastMedications", ListViewMatchers.isEmpty());
 
         // Remove medication save from file
-        interact( () -> {
-          clickOn("Saved med");
-        });
-
-        interact( () -> {
-          lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        });
+        medicationScreen.removeMedication("Saved med");
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
         verifyThat("#pastMedications", ListViewMatchers.hasListCell("Saved med"));
         // Verify that there is only one medication moved to pastMedications ListView
@@ -796,19 +526,9 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the currentMedications listView is now empty as a medication has now been moved from it
         verifyThat("#currentMedications", ListViewMatchers.isEmpty());
 
-        interact( () -> {
-          clickOn("Saved med");
-        });
+        medicationScreen.deleteMedication("Saved med");
 
-        interact( () -> {
-        // Press the delete medication button for deleting the selected medication
-          lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        });
-
-        interact( () -> {
-            lookup("OK").queryAs(Button.class).fire();
-        });
-
+        general.clickAlert("OK");
         // Verify that both of the medications listViews are now empty as a medication has been deleted from it
         verifyThat("#currentMedications", ListViewMatchers.isEmpty());
         verifyThat("#pastMedications", ListViewMatchers.isEmpty());
@@ -817,27 +537,17 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
         // Removes the donor medication save from .json file
-        interact( () -> {
-            lookup( "#saveMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-
-        interact( () -> {
-            lookup("OK").queryAs(Button.class).fire();
-        });
+        medicationScreen.saveMedication();
+        general.clickAlert("OK");
 
         verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
 
         // Leave the Medication pane and navigates to Profile Pane
-        interact( () -> {
-            lookup( "#goBack" ).queryAs( Hyperlink.class ).getOnAction().handle( new ActionEvent() );
-        });
+        navigation.goBack();
         verifyThat( "#profilePane", Node::isVisible ); // Verify that "user" has navigated to profile
 
         // Navigate to the medication panel via the temporary test medication button found in profile panel
-        interact( () -> {
-            lookup( "#testMedication" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
+        navigation.toMedicationsFromProfile();
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
@@ -853,23 +563,11 @@ public class GUIMedicationTest extends ApplicationTest {
     public void testMedicationDeletionInBothListsTogether() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-
-        // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "Medication past" ); // Enters new medication
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "Medication past" ) ) );
-        // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
         verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
+        // Enter a new medication to textfield for registering to the current medications registry
+        medicationScreen.registerMedication("Medication past");
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
@@ -879,13 +577,7 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the pastMedications listView is still empty
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 
-        interact( () -> {
-            clickOn( "Medication past" );
-        } );
-
-        interact( () -> {
-            lookup( "#removeMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
+        medicationScreen.removeMedication("Medication past");
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
         verifyThat( "#pastMedications", ListViewMatchers.hasListCell( "Medication past" ) );
         // Verify that there is only one medication moved to pastMedications ListView
@@ -897,22 +589,7 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
         // Enter a new medication to textfield for registering to the current medications registry
-        interact( () -> {
-            lookup( "#newMedication" ).queryAs( TextField.class ).setText( "Medication current" ); // Enters new medication
-        } );
-        // Verify that the textfield currently has the entered medication prior to registration being initiated
-        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "Medication current" ) ) );
-        // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
-        verifyThat( "#currentMedications", ListViewMatchers.isEmpty() );
-        // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
-        verifyThat( "#pastMedications", ListViewMatchers.hasListCell( "Medication past" ) );
-        // Verify that there is only one medication moved to pastMedications ListView
-        verifyThat( "#pastMedications", ListViewMatchers.hasItems( 1 ) );
-
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
+        medicationScreen.registerMedication("Medication current");
         // Verify that the pastMedications listView is now not empty as a medication has now been moved to it
         verifyThat( "#pastMedications", ListViewMatchers.hasListCell( "Medication past" ) );
         // Verify that there is only one medication moved to pastMedications ListView
@@ -922,25 +599,13 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that there is only one medication moved to pastMedications ListView
         verifyThat( "#currentMedications", ListViewMatchers.hasItems( 1 ) );
 
-        interact( () -> {
-            clickOn( "Medication current" );
-        } );
+        medicationScreen.deleteMedicationMultiSelect(new ArrayList<String>() {{
+            add("Medication past");
+            add("Medication current");
+        }});
 
-        interact( () -> {
-            clickOn( "Medication past" );
-        } );
-
-        // Registers the new medication entry in the textfield to the current medications ArrayList and listView
-        interact( () -> {
-            lookup( "#deleteMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-
-        interact( () -> {
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        interact( () -> {
-            lookup("OK").queryAs(Button.class).fire();
-        });
+        general.clickAlert("OK");
+        general.clickAlert("OK");
         // Verify that the pastMedications listView is now empty as a medication has now been deleted from it
         verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
         // Verify that the currentMedications listView is now empty the only medication was deleted from pastMedications
