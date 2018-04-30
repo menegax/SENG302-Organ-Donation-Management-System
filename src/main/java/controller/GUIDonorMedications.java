@@ -281,7 +281,7 @@ public class GUIDonorMedications implements IPopupable {
                     target.getMedicationHistory().add( new Medication( medication ) );
                     viewPastMedications();
                 }
-                userActions.log(Level.INFO, "Successfully moved a medication " + medication + " to history for donor " + target.getNhiNumber(), "Removed a past medication for a donor");
+                userActions.log(Level.INFO, "Successfully moved medication " + medication + " to history for donor " + target.getNhiNumber(), "Removed a past medication for a donor");
                 viewCurrentMedications();
             }
         }
