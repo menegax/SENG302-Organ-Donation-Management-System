@@ -85,11 +85,6 @@ public class GUIDonorUpdateDonations implements IPopupable {
     private StatesHistoryScreen statesHistoryScreen;
 
 
-    public void setViewedDonor(Donor donor) {
-        viewedDonor = donor;
-        loadProfile(donor.getNhiNumber());
-    }
-
     public void initialize() {
         if (ScreenControl.getLoggedInDonor() != null) {
             loadProfile(ScreenControl.getLoggedInDonor()
@@ -102,6 +97,11 @@ public class GUIDonorUpdateDonations implements IPopupable {
                 saveDonations();
             }
         });
+    }
+
+    public void setViewedDonor(Donor donor) {
+        viewedDonor = donor;
+        loadProfile(donor.getNhiNumber());
     }
 
 

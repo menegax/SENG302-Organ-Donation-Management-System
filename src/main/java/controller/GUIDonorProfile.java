@@ -180,6 +180,7 @@ public class GUIDonorProfile implements IPopupable {
                 ScreenControl.loadPopUpPane(profilePane.getScene(), fxmlLoader, viewedDonor);
             }
             catch (IOException e) {
+                e.printStackTrace(); //todo remove
                 userActions.log(Level.SEVERE,
                         "Error loading update screen in popup",
                         "attempted to navigate from the profile page to the edit page in popup");
