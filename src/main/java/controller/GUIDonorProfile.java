@@ -1,21 +1,26 @@
 package controller;
 
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
+import model.Medication;
+import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import static utility.UserActionHistory.userActions;
 
@@ -66,12 +71,18 @@ public class GUIDonorProfile implements IPopupable {
     private Label addLbl5;
 
     @FXML
-    private Label donationList;
+    private ListView organList;
+
+    @FXML
+    private ListView medList;
 
     @FXML
     private Label back;
 
     private Donor viewedDonor;
+
+    private ListProperty<String> organListProperty = new SimpleListProperty<>();
+    private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
     private void removeBack() {
         back.setDisable(true);
@@ -118,9 +129,16 @@ public class GUIDonorProfile implements IPopupable {
             addLbl4.setText(donor.getRegion() == null ? "Not set" : donor.getRegion()
                     .getValue());
             addLbl5.setText(String.valueOf(donor.getZip()));
-            for (GlobalEnums.Organ organ : donor.getDonations()) {
-                donationList.setText(donationList.getText() + organ.getValue() + "\n");
-            }
+            //Populate organ listview
+            Collection<GlobalEnums.Organ> organs = donor.getDonations();
+            List<String> organsMapped = organs.stream().map(e -> StringUtils.capitalize(e.getValue())).collect(Collectors.toList());
+            organListProperty.setValue(FXCollections.observableArrayList(organsMapped));
+            organList.itemsProperty().bind(organListProperty);
+            //Populate current medication listview
+            Collection<Medication> meds = donor.getCurrentMedications();
+            List<String> medsMapped = meds.stream().map(e -> e.getMedicationName()).collect(Collectors.toList());
+            medListProperty.setValue(FXCollections.observableArrayList(medsMapped));
+            medList.itemsProperty().bind(medListProperty);
         } catch (InvalidObjectException e) {
             e.printStackTrace(); // todo remove
         }
