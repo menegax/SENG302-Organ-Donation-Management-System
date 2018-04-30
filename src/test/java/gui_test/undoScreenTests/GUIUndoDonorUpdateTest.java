@@ -66,7 +66,7 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             lookup("#street1Txt").queryAs(TextField.class).setText("1 Test Street");
             lookup("#street2Txt").queryAs(TextField.class).setText("2 Test Street");
             lookup("#suburbTxt").queryAs(TextField.class).setText("Suburb");
-            lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().select(0);
+            lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
             lookup("#zipTxt").queryAs(TextField.class).setText("0001");
             lookup("#weightTxt").queryAs(TextField.class).setText("50");
             lookup("#heightTxt").queryAs(TextField.class).setText("2");

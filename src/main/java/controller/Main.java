@@ -1,5 +1,7 @@
 package controller;
 
+import static utility.UserActionHistory.userActions;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,6 +16,7 @@ import utility.UserActionHistory;
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 public class Main extends Application {
 
@@ -78,7 +81,7 @@ public class Main extends Application {
                     .setGender(GlobalEnums.Gender.FEMALE);
         }
         catch (Exception e) {
-            System.out.println("Unable to add dummy donors");
+            userActions.log(Level.WARNING, "Unable to add dummy donors", "Attempted to load dummy donors for testing");
         }
 
         try {
@@ -89,7 +92,7 @@ public class Main extends Application {
             Database.addClinician("initial", middles, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY);
         }
         catch (Exception e) {
-            System.out.println("Unable to add dummy clinicians");
+            userActions.log(Level.WARNING, "Unable to add dummy clinicians", "Attempted to load dummy clinicians for testing");
         }
 
     }
