@@ -63,7 +63,7 @@ public class GUIDonorProfileUpdate implements IPopupable {
     private TextField suburbTxt;
 
     @FXML
-    private TextField regionTxt;
+    private ChoiceBox regionDD;
 
     @FXML
     private TextField zipTxt;
