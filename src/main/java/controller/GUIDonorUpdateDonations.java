@@ -80,8 +80,6 @@ public class GUIDonorUpdateDonations implements IPopupable {
 
     private Donor target;
 
-    private Donor viewedDonor;
-
     private StatesHistoryScreen statesHistoryScreen;
 
 
@@ -100,7 +98,7 @@ public class GUIDonorUpdateDonations implements IPopupable {
     }
 
     public void setViewedDonor(Donor donor) {
-        viewedDonor = donor;
+        target = donor;
         loadProfile(donor.getNhiNumber());
     }
 
@@ -265,7 +263,7 @@ public class GUIDonorUpdateDonations implements IPopupable {
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(donorDonationsAnchorPane.getScene(), fxmlLoader, viewedDonor);
+                ScreenControl.loadPopUpPane(donorDonationsAnchorPane.getScene(), fxmlLoader, target);
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
                 new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).showAndWait();

@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorUpdateProfile {
+public class GUIDonorUpdateProfile implements IPopupable{
 
     @FXML
     private AnchorPane donorUpdateAnchorPane;
@@ -86,6 +86,10 @@ public class GUIDonorUpdateProfile {
 
     private StatesHistoryScreen statesHistoryScreen;
 
+    public void setViewedDonor(Donor donor) {
+        target = donor;
+        loadProfile(target.getNhiNumber());
+    }
 
     public void initialize() {
 

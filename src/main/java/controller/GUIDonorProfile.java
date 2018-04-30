@@ -26,7 +26,7 @@ public class GUIDonorProfile implements IPopupable {
     private UUID id = UUID.randomUUID();
 
     @FXML
-    private AnchorPane profilePane;
+    private AnchorPane donorProfilePane;
 
     public Button editDonorButton;
 
@@ -177,7 +177,7 @@ public class GUIDonorProfile implements IPopupable {
         else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorUpdateProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(profilePane.getScene(), fxmlLoader, viewedDonor);
+                ScreenControl.loadPopUpPane(donorProfilePane.getScene(), fxmlLoader, viewedDonor);
             }
             catch (IOException e) {
                 e.printStackTrace(); //todo remove
@@ -205,7 +205,7 @@ public class GUIDonorProfile implements IPopupable {
         else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorUpdateDonations.fxml"));
             try {
-                ScreenControl.loadPopUpPane(profilePane.getScene(), fxmlLoader, viewedDonor);
+                ScreenControl.loadPopUpPane(donorProfilePane.getScene(), fxmlLoader, viewedDonor);
             }
             catch (Exception e) {
                 userActions.log(Level.SEVERE,
@@ -218,17 +218,29 @@ public class GUIDonorProfile implements IPopupable {
 
 
     public void goToContactDetails() {
-        ScreenControl.removeScreen("donorContactDetails");
-        try {
-            ScreenControl.addScreen("donorContactDetails", FXMLLoader.load(getClass().getResource("/scene/donorUpdateContacts.fxml")));
-            ScreenControl.activate("donorContactDetails");
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE,
-                    "Error loading contact details screen",
-                    "attempted to navigate from the profile page to the contact details page");
-            e.printStackTrace(); //todo remove
-            new Alert(Alert.AlertType.ERROR, "Error loading contact details page", ButtonType.OK).showAndWait();
+        if (ScreenControl.getLoggedInDonor() != null) {
+            ScreenControl.removeScreen("donorContactDetails");
+            try {
+                ScreenControl.addScreen("donorContactDetails", FXMLLoader.load(getClass().getResource("/scene/donorUpdateContacts.fxml")));
+                ScreenControl.activate("donorContactDetails");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE,
+                        "Error loading contact details screen",
+                        "attempted to navigate from the profile page to the contact details page");
+                e.printStackTrace(); //todo remove
+                new Alert(Alert.AlertType.ERROR, "Error loading contact details page", ButtonType.OK).showAndWait();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorUpdateContacts.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(donorProfilePane.getScene(), fxmlLoader, viewedDonor);
+            }
+            catch (Exception e) {
+                userActions.log(Level.SEVERE,
+                        "Error loading contacts screen in popup",
+                        "attempted to navigate from the profile page to the contacts page in popup");
+                new Alert(Alert.AlertType.ERROR, "Error loading contacts page", ButtonType.OK).showAndWait();
+            }
         }
     }
 
