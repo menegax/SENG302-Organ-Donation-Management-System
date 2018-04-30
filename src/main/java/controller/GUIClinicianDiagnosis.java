@@ -16,6 +16,7 @@ import utility.GlobalEnums;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -118,10 +119,34 @@ public class GUIClinicianDiagnosis {
     private void addDiagnosis(String diagnosis) {
         if (!diagnosis.equals( "Enter a diagnosis" ) && !diagnosis.equals( "" ) && !diagnosis.substring(0, 1).equals(" ")) {
             diagnosis = diagnosis.substring(0, 1).toUpperCase() + diagnosis.substring(1).toLowerCase();
-            currentDiseases.add( new Disease(diagnosis, null));
-            userActions.log(Level.INFO, "Successfully registered a disease", "Registered a new disease for a donor");
-            loadCurrentDiseases();
-            newDiagnosis.clear();
+            Boolean unique = true;
+
+            for (Disease current : currentDiseases) {
+                if (current.getDiseaseName().equals( diagnosis )) {
+                    Alert err = new Alert(Alert.AlertType.ERROR, "'" + diagnosis + "' is already registered");
+                    err.show();
+                    unique = false;
+                }
+            }
+
+            for (Disease past : pastDiseases) {
+                if (past.getDiseaseName().equals( diagnosis )) {
+                    past.setDiseaseState(null);
+                    currentDiseases.add( past );
+                    pastDiseases.remove( past );
+                    loadCurrentDiseases();
+                    loadPastDiseases();
+                    newDiagnosis.clear();
+                    unique = false;
+                }
+            }
+
+            if (unique) {
+                currentDiseases.add( new Disease( diagnosis, null ) );
+                userActions.log( Level.INFO, "Successfully registered a disease", "Registered a new disease for a donor" );
+                loadCurrentDiseases();
+                newDiagnosis.clear();
+            }
         } else {
             Alert err = new Alert(Alert.AlertType.ERROR, "'" + diagnosis + "' is invalid for registration");
             err.show();
@@ -129,7 +154,11 @@ public class GUIClinicianDiagnosis {
     }
 
     private void loadCurrentDiseases() {
-        if(currentDiseases == null) currentDiseases = new ArrayList<>();
+        if(currentDiseases == null || currentDiseases.isEmpty()) {
+            currentDiseases = new ArrayList<>( Arrays.asList( null, null, null ) );
+        } else if (currentDiseases.get(0).getDateDiagnosed() == null) {
+            currentDiseases.remove( 0 );
+        }
         ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(currentDiseases);
         currentDateCol.setCellValueFactory(new PropertyValueFactory<>("dateDiagnosed"));
         currentDiagnosisCol.setCellValueFactory(new PropertyValueFactory<>("diseaseName"));
@@ -138,8 +167,12 @@ public class GUIClinicianDiagnosis {
     }
 
     private void loadPastDiseases() {
-        if(pastDiseases == null) pastDiseases = new ArrayList<>();
-        ObservableList<Disease> observablePastDiseases = FXCollections.observableArrayList(pastDiseases);
+        if(pastDiseases == null || pastDiseases.isEmpty()) {
+            pastDiseases = new ArrayList<>( Arrays.asList( null, null, null ) );
+        } else if (pastDiseases.get(0).getDateDiagnosed() == null) {
+            pastDiseases.remove( 0 );
+        }
+        ObservableList <Disease> observablePastDiseases = FXCollections.observableArrayList( pastDiseases );
         pastDateCol.setCellValueFactory(new PropertyValueFactory<>("dateDiagnosed"));
         pastDiagnosisCol.setCellValueFactory(new PropertyValueFactory<>("diseaseName"));
         pastTagsCol.setCellValueFactory(new PropertyValueFactory<>("diseaseState"));
