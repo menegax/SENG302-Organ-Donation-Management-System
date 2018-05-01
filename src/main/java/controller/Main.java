@@ -33,6 +33,17 @@ public class Main extends Application {
         Database.importFromDisk("./donor.json");
         addDummyTestObjects();
 
+        try {
+            Database.importFromDiskClinicians("clinician.json");
+        } catch (IOException e) {
+            if (Database.getClinicians().size() == 0) {
+                //Initialise default clinician
+                ArrayList<String> mid = new ArrayList<>();
+                mid.add("Middle");
+                Database.addClinician(new Clinician(Database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
+            }
+        }
+
         SearchDonors.createFullIndex(); // index donors for search, needs to be after importing or adding any donors
 
         // Add scenes
@@ -40,17 +51,6 @@ public class Main extends Application {
         ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
         ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
         ScreenControl.addScreen("donorHome", FXMLLoader.load(getClass().getResource("/scene/donorHome.fxml")));
-
-        try {
-            Database.importFromDiskClinicians("clinician.json");
-        } catch (IOException e) {
-            if (Database.getClinicians().size() == 0) {
-                //Initialise default clinciian
-                ArrayList<String> mid = new ArrayList<>();
-                mid.add("Middle");
-                Database.addClinician(new Clinician(Database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
-            }
-        }
 
         primaryStage.show();
     }
@@ -97,16 +97,7 @@ public class Main extends Application {
             System.out.println("Unable to add dummy donors");
         }
 
-        try {
-            ArrayList<String> middles = new ArrayList<>();
-            middles.add("Jon");
-            middles.add("Periphery");
-            // Add dummy clinician for testing
-            Database.addClinician("initial", middles, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY);
-        }
-        catch (Exception e) {
-            System.out.println("Unable to add dummy clinicians");
-        }
+
 
     }
 }

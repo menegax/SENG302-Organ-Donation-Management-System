@@ -31,10 +31,10 @@ public class ControllerClinicianEdit extends ApplicationTest {
         main.start(stage);
     }
 
-    @Before
     /**
      * Tests logging in as a clinician
      */
+    @Before
     public void Login() {
         staffId = Integer.toString(clinicians.get(0).getStaffID());
         //Check 'I am Clinician" checkbox to login as clinician
@@ -62,6 +62,40 @@ public class ControllerClinicianEdit extends ApplicationTest {
         Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep( 500 );
+    }
+
+    @Test
+    /*
+     * Tests that that the clinician can successfully edit their first name with a valid field
+     */
+    public void successfulUpdateClinicianFirstName() {
+        interact(() -> {
+            lookup("#firstnameTxt").queryAs(TextField.class).setText("James");
+        });
+        verifyThat("#firstnameTxt", TextInputControlMatchers.hasText("James"));
+        interact(() -> {
+            lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
+            lookup("OK").queryAs(Button.class).fire();
+        });
+        assertThat(Database.getClinicians().get(0).getFirstName().equals("James"));
+        verifyThat("#clinicianProfilePane", Node::isVisible);  // Verify that save button has taken the "user to the profile page
+    }
+
+    @Test
+    /*
+     * Tests unsuccessful edit of clinician staff ID with an invalid field
+     */
+    public void unsuccessfulUpdateClinicianId() {
+        interact(() -> {
+            lookup("#staffId").queryAs(TextField.class).setText("A");
+        });
+        verifyThat("#staffId", TextInputControlMatchers.hasText("A"));
+        interact(() -> {
+            lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
+            lookup("OK").queryAs(Button.class).fire();
+        });
+        assertThat(Database.getClinicians().get(0).getStaffID() == 1);
+        verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
     }
 
     @Test
@@ -96,40 +130,6 @@ public class ControllerClinicianEdit extends ApplicationTest {
         });
         assertThat(Database.getClinicians().get(0).getStaffID() == 0);
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that save button has taken the "user to the profile page
-    }
-
-    @Test
-    /*
-     * Tests unsuccessful edit of clinician staff ID with an invalid field
-     */
-    public void unsuccessfulUpdateClinicianId() {
-        interact(() -> {
-            lookup("#staffId").queryAs(TextField.class).setText("A");
-        });
-        verifyThat("#staffId", TextInputControlMatchers.hasText("A"));
-        interact(() -> {
-            lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        assertThat(Database.getClinicians().get(0).getStaffID() == 1);
-        verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
-    }
-
-    @Test
-    /*
-     * Tests that that the clinician can successfully edit their first name with a valid field
-     */
-    public void successfulUpdateClinicianFirstName() {
-        interact(() -> {
-            lookup("#firstnameTxt").queryAs(TextField.class).setText("James");
-        });
-        verifyThat("#firstnameTxt", TextInputControlMatchers.hasText("James"));
-        interact(() -> {
-            lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        assertThat(Database.getClinicians().get(0).getFirstName().equals("James"));
-        verifyThat("#clinicianProfilePane", Node::isVisible);  // Verify that save button has taken the "user to the profile page
     }
 
     @Test
