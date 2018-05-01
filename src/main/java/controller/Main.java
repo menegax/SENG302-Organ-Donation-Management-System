@@ -99,16 +99,5 @@ public class Main extends Application {
             userActions.log(Level.WARNING, "Unable to add dummy donors", "Attempted to load dummy donors for testing");
         }
 
-        try {
-            ArrayList<String> middles = new ArrayList<>();
-            middles.add("Jon");
-            middles.add("Periphery");
-            // Add dummy clinician for testing
-            Database.addClinician("initial", middles, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY);
-        }
-        catch (Exception e) {
-            userActions.log(Level.WARNING, "Unable to add dummy clinicians", "Attempted to load dummy clinicians for testing");
-        }
-
     }
 }

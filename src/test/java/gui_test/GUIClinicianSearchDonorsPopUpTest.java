@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.Clinician;
 import model.Donor;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
@@ -36,11 +37,10 @@ public class GUIClinicianSearchDonorsPopUpTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         main.start( stage );
 
-        ArrayList<String> middles = new ArrayList<>();
-        middles.add("Jon");
-        middles.add("Periphery");
-        // Add dummy clinician for testing
-        Database.addClinician("initial", middles, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY);
+        ArrayList<String> mid = new ArrayList<>();
+        mid.add("Middle");
+        Database.addClinician(new Clinician(Database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
+
 
     }
 
