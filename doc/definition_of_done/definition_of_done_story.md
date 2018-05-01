@@ -2,11 +2,10 @@
 Before a story can be defined as "Done" the following list must be followed. 
 If a story is ready for review, it should be set to "Pending" on Agilefant.
   
-Checklist
+### Checklist
 
 - `development` has been merged into the branch
 - Regression testing done (latest GitLab build passed)
-- Story set to "Ready"
 - All story tasks set to "Done"
 - Ask team members for questions on implementation
 - Acceptance criteria reviewed and met
@@ -17,8 +16,10 @@ Checklist
 - Manual tests documented and performed
 - Design decisions documented
 - Maven deploy and verify working .jar(s)
-
-If it passes:
-
-- Merge to `development`
+- Previous stories that are required to support future implementation are adapted (e.g. Undo/redo should work with this new story (if applicable))
+- GUIs include CSS where applicable
+- Story set to "Pending"
+- Merge request has the "WIP: " prefix removed
+- The code review has been completed and approved
+- Merge into `development` and delete previous branch
 - If build succeeds, set story to "Done"

@@ -19,7 +19,7 @@ public class CLIDonorUpdate implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-s", "--search"}, required = true, description = "Search donor by the NHI number of the donor.")
+    @Option(names = {"-s", "--search"}, required = true, description = "SearchDonors donor by the NHI number of the donor.")
     private String searchNhi;
 
     @Option(names = {"-f", "--firstname"}, description = "The first name of the donor.")
