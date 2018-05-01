@@ -89,19 +89,19 @@ public class GUIDrugInteractionsTest extends ApplicationTest {
     }
 
 
-    @Test
-    public void successfulCompareNoAlert(){
-        //register medications
-        medicationScreen.registerMedication("Aspirin");
-        medicationScreen.registerMedication("Alcohol");
-        //compare
-        medicationScreen.compareDrugs(new ArrayList<String>() {{
-            add("Aspirin");
-            add("Alcohol");
-        }});
-        //no modal stage -> no popup
-        Assert.assertNull(medicationScreen.getTopModalStage());
-    }
+//    @Test
+//    public void successfulCompareNoAlert(){
+//        //register medications
+//        medicationScreen.registerMedication("Aspirin");
+//        medicationScreen.registerMedication("Alcohol");
+//        //compare
+//        medicationScreen.compareDrugs(new ArrayList<String>() {{
+//            add("Aspirin");
+//            add("Alcohol");
+//        }});
+//        //no modal stage -> no popup
+//        Assert.assertNull(medicationScreen.getTopModalStage());
+//    }
 
     @Test
     public void invalidDrugsCompare(){
