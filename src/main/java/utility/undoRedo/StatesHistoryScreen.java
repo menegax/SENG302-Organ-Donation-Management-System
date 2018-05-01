@@ -137,14 +137,7 @@ public class StatesHistoryScreen {
             }
         });
         ((RadioButton) radioButton).setOnKeyPressed(event -> {
-            if (KeyCodeCombination.keyCombination("Ctrl+Z")
-                    .match(event)) {
-                undo();
-            }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y")
-                    .match(event)) {
-                redo();
-            }
+            ((RadioButton) radioButton).getParent().requestFocus();
         });
     }
 
@@ -215,8 +208,7 @@ public class StatesHistoryScreen {
                 });
         // Allows for parent screen to listen for Ctrl z, Ctrl y, undo and redo as DatePicker does not recognise letters
         ((DatePicker) datePicker).setOnKeyPressed(event -> {
-            ((DatePicker) datePicker).getParent()
-                    .requestFocus();
+            ((DatePicker) datePicker).getParent().requestFocus();
         });
     }
 
