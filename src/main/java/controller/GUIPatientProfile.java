@@ -54,18 +54,29 @@ public class GUIPatientProfile {
     @FXML
     private Label addLbl5;
 
+    /**
+     * A list for the organs a patient is donating
+     */
     @FXML
     private Label donatingList;
 
+    /**
+     * A list for the organs a patient is receiving
+     */
     @FXML
     private Label receivingList;
 
-
+    /**
+     * Initializes the patient profile GUI pane
+     */
     public void initialize() {
         loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
     }
 
-
+    /**
+     * Loads all of the profile attribute data for a specified patient by NHI number
+     * @param nhi The NHI number of the donor profile attribute data is being loaded
+     */
     private void loadProfile(String nhi) {
         try {
             Patient patient = Database.getPatientByNhi(nhi);
@@ -100,7 +111,9 @@ public class GUIPatientProfile {
         }
     }
 
-
+    /**
+     * Navigates a user to patient profile edit GUI pane when the 'edit' button is activated
+     */
     public void goToEdit() {
         ScreenControl.removeScreen("patientProfileUpdate");
         try {
@@ -114,7 +127,9 @@ public class GUIPatientProfile {
         }
     }
 
-
+    /**
+     * Navigates a user to the donations GUI pane when the 'Manage donations' button is activated
+     */
     public void goToDonations() {
         try {
             ScreenControl.removeScreen("patientDonations");
@@ -128,7 +143,9 @@ public class GUIPatientProfile {
         }
     }
 
-
+    /**
+     * Navigates a user to the home GUI pane when the '〱back' button is activated
+     */
     public void goToHome() {
         ScreenControl.activate("patientHome");
     }
