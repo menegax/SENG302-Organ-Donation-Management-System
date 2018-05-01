@@ -24,9 +24,7 @@ import static org.testfx.api.FxAssert.verifyThat;
  * TestFX class to test the undo functionality of the donor profile update screen
  */
 public class GUIUndoDonorUpdateTest extends ApplicationTest{
-
-    FxRobot robot = new FxRobot();
-
+    
     private Main main = new Main();
     private double undoX;
     private double undoY;
@@ -70,7 +68,7 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             lookup("#profileButton").queryAs(Button.class).fire();
             lookup("#editButton").queryAs(Button.class).fire();
         });
-        undoX = lookup("#undoButton").queryAs(Button.class).getLayoutX() + 250;
+        undoX = lookup("#undoButton").queryAs(Button.class).getLayoutX() + 240;
         undoY = lookup("#undoButton").queryAs(Button.class).getLayoutY() + 28;
         radioY = lookup("#genderMaleRadio").queryAs(RadioButton.class).getLayoutY() + 150;
         maleRadioX = lookup("#genderMaleRadio").queryAs(RadioButton.class).getLayoutX() + 165;
@@ -79,7 +77,7 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
     }
 
     /**
-     * Sets the widgets on the screen to known values before testing
+     * Gets the values of the widgets on the screen before testing
      */
     @Before
     public void getFields() {
@@ -131,38 +129,38 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         // Check undo button first
         interact(() -> {
             lookup("#nhiTxt").queryAs(TextField.class).setText("BBB2222");
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             lookup("#firstnameTxt").queryAs(TextField.class).setText("FirstName2");
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             lookup("#lastnameTxt").queryAs(TextField.class).setText("LastName2");
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             lookup("#middlenameTxt").queryAs(TextField.class).setText("MiddleName2");
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             lookup("#street1Txt").queryAs(TextField.class).setText("1 Test2 Street");
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             lookup("#street2Txt").queryAs(TextField.class).setText("2 Test2 Street");
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             lookup("#suburbTxt").queryAs(TextField.class).setText("Suburb2");
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             lookup("#regionTxt").queryAs(TextField.class).setText("Region2");
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             lookup("#zipTxt").queryAs(TextField.class).setText("0002");
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             lookup("#weightTxt").queryAs(TextField.class).setText("52");
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             lookup("#heightTxt").queryAs(TextField.class).setText("2.2");
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
 
         assertEquals(nhiTxtDefault, lookup("#nhiTxt").queryAs(TextField.class).getText());
@@ -223,8 +221,8 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         // Check undo button first
         interact(() -> {
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
 
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == bloodGroupDDDefault);
@@ -246,8 +244,8 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         // Check undo button first
         interact(() -> {
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#dobDate").queryAs(DatePicker.class).getValue().equals(dobDateDefault));
 
@@ -267,18 +265,18 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
     public void undoRadioButtons() {
         // Check undo button first
         interact(() -> {
-            robot.moveTo(maleRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-            robot.moveTo(femaleRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-            robot.moveTo(otherRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(maleRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(femaleRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(otherRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
 
         assertTrue(lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected() == genderMaleRadioDefault);
@@ -287,14 +285,14 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
 
         // Check Ctrl Z next
         interact(() -> {
-            robot.moveTo(maleRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(maleRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
-            robot.moveTo(femaleRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(femaleRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
-            robot.moveTo(otherRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(otherRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
 
@@ -313,18 +311,18 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             lookup("#nhiTxt").queryAs(TextField.class).setText("BBB2222");
             lookup("#nhiTxt").queryAs(TextField.class).setText("CCC3333");
             lookup("#nhiTxt").queryAs(TextField.class).setText("DDD4444");
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("CCC3333"));
         interact(() -> {
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("BBB2222"));
         interact(() -> {
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals(nhiTxtDefault));
 
@@ -332,18 +330,18 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(2);
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(3);
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 2);
         interact(() -> {
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 1);
         interact(() -> {
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == bloodGroupDDDefault);
 
@@ -351,40 +349,40 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2003, 3, 3));
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2004, 4, 4));
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#dobDate").queryAs(DatePicker.class).getValue().equals(LocalDate.of(2003, 3, 3)));
         interact(() -> {
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#dobDate").queryAs(DatePicker.class).getValue().equals(LocalDate.of(2002, 2, 2)));
         interact(() -> {
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#dobDate").queryAs(DatePicker.class).getValue().equals(dobDateDefault));
 
         interact(() -> {
-            robot.moveTo(maleRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-            robot.moveTo(femaleRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-            robot.moveTo(maleRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(maleRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(femaleRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(maleRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#genderFemaleRadio").queryAs(RadioButton.class).isSelected());
         interact(() -> {
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected());
         interact(() -> {
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected() == genderMaleRadioDefault);
 
@@ -438,12 +436,12 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         assertTrue(lookup("#dobDate").queryAs(DatePicker.class).getValue().equals(dobDateDefault));
 
         interact(() -> {
-            robot.moveTo(maleRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-            robot.moveTo(femaleRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-            robot.moveTo(maleRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(maleRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(femaleRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(maleRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
         assertTrue(lookup("#genderFemaleRadio").queryAs(RadioButton.class).isSelected());
@@ -467,34 +465,34 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             lookup("#nhiTxt").queryAs(TextField.class).setText("BBB2222");
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
-            robot.moveTo(maleRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(maleRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("BBB2222"));
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 1);
         assertTrue(lookup("#dobDate").queryAs(DatePicker.class).getValue().equals(LocalDate.of(2002, 2, 2)));
         assertTrue(lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected() == genderMaleRadioDefault);
         interact(() -> {
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("BBB2222"));
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 1);
         assertTrue(lookup("#dobDate").queryAs(DatePicker.class).getValue().equals(dobDateDefault));
         assertTrue(lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected() == genderMaleRadioDefault);
         interact(() -> {
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("BBB2222"));
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == bloodGroupDDDefault);
         assertTrue(lookup("#dobDate").queryAs(DatePicker.class).getValue().equals(dobDateDefault));
         assertTrue(lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected() == genderMaleRadioDefault);
         interact(() -> {
-            robot.moveTo(undoX, undoY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(undoX, undoY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals(nhiTxtDefault));
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == bloodGroupDDDefault);
@@ -506,8 +504,8 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             lookup("#nhiTxt").queryAs(TextField.class).setText("BBB2222");
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
-            robot.moveTo(maleRadioX, radioY);
-            robot.press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            moveTo(maleRadioX, radioY);
+            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("BBB2222"));

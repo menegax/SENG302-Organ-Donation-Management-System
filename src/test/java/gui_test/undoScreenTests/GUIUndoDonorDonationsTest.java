@@ -55,12 +55,12 @@ public class GUIUndoDonorDonationsTest extends ApplicationTest{
             lookup("#profileButton").queryAs(Button.class).fire();
             lookup("#donationsButton").queryAs(Button.class).fire();
         });
-        undoX = lookup("#undoButton").queryAs(Button.class).getLayoutX() + 250;
+        undoX = lookup("#undoButton").queryAs(Button.class).getLayoutX() + 240;
         undoY = lookup("#undoButton").queryAs(Button.class).getLayoutY() + 28;
     }
 
     /**
-     * Sets the widgets on the screen to known values before testing
+     * Gets the values of the widgets on the screen before testing
      */
     @Before
     public void getFields() {
