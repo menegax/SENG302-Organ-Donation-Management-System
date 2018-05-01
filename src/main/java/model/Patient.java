@@ -32,9 +32,9 @@ public class Patient {
 
     private Gender gender;
 
-    private double height; //Height in meters
+    private double height; // Height in meters
 
-    private double weight; //Weight in kilograms
+    private double weight; // Weight in kilograms
 
     private BloodGroup bloodGroup;
 

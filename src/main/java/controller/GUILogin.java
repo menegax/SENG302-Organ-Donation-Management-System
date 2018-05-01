@@ -23,8 +23,6 @@ public class GUILogin {
     @FXML
     private TextField nhiLogin;
 
-
-
     @FXML
     private CheckBox clinicianToggle;
 
@@ -37,7 +35,6 @@ public class GUILogin {
         });
     }
 
-
     /**
      * Open the register screen
      */
@@ -45,7 +42,6 @@ public class GUILogin {
     public void goToRegister() {
         ScreenControl.activate("patientRegister");
     }
-
 
     /**
      * Attempt to log the user in using the entered NHI
@@ -76,7 +72,7 @@ public class GUILogin {
                 Clinician newClinician = Database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
                 ScreenControl.setLoggedInClinician(newClinician);
                 ScreenControl.addScreen("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
-//                ScreenControl.addScreen("clinicianSearchDonors", FXMLLoader.load(getClass().getResource("/scene/clinicianSearchDonors.fxml")));
+//              ScreenControl.addScreen("clinicianSearchDonors", FXMLLoader.load(getClass().getResource("/scene/clinicianSearchDonors.fxml")));
                 ScreenControl.activate("clinicianHome");
             }
             catch (Exception e) {
@@ -84,10 +80,8 @@ public class GUILogin {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to log in");
                 alert.show();
             }
-
         }
     }
-
 
     /**
      * Attempt to log the user in using the entered NHI
@@ -105,5 +99,4 @@ public class GUILogin {
             nhiLogin.setPromptText("NHI");
         }
     }
-
 }

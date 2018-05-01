@@ -14,7 +14,7 @@
             <Font size="40.0" />
          </font>
       </Label>
-      <VBox layoutX="96.0" layoutY="100.0" prefHeight="200.0" prefWidth="240.0">
+      <VBox layoutX="24.0" layoutY="100.0" prefHeight="200.0" prefWidth="220.0">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -90,18 +90,28 @@
             </HBox>
          </children>
       </VBox>
-      <VBox layoutX="361.0" layoutY="100.0" prefHeight="200.0" prefWidth="162.0">
+      <VBox layoutX="266.0" layoutY="100.0" prefHeight="200.0" prefWidth="142.0">
          <children>
-            <Label alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Donations">
+            <Label alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Donating">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="donationList" />
+            <Label fx:id="donatingList" />
+         </children>
+      </VBox>
+      <VBox layoutX="433.0" layoutY="100.0" prefHeight="200.0" prefWidth="142.0">
+         <children>
+            <Label alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Receiving">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="receivingList" />
          </children>
       </VBox>
       <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
       <Button fx:id="editButton" layoutX="494.0" layoutY="36.0" mnemonicParsing="false" onAction="#goToEdit" text="Edit" />
-      <Button fx:id="donationsButton" layoutX="241.0" layoutY="314.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
+      <Button fx:id="donationsButton" layoutX="281.0" layoutY="314.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
    </children>
 </AnchorPane>

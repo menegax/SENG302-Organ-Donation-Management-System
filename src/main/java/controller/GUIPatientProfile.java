@@ -55,7 +55,10 @@ public class GUIPatientProfile {
     private Label addLbl5;
 
     @FXML
-    private Label donationList;
+    private Label donatingList;
+
+    @FXML
+    private Label receivingList;
 
 
     public void initialize() {
@@ -83,9 +86,14 @@ public class GUIPatientProfile {
             addLbl4.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
                     .getValue());
             addLbl5.setText(String.valueOf(patient.getZip()));
-            for (GlobalEnums.Organ organ : patient.getDonations()) {
-                donationList.setText(donationList.getText() + organ.getValue() + "\n");
+
+            for (GlobalEnums.Organ donatingOrgan : patient.getDonations()) {
+                donatingList.setText(donatingList.getText() + donatingOrgan.getValue() + "\n");
             }
+
+            //for (GlobalEnums.Organ receivingOrgan : patient.getRequiredOrgans()) {
+              //  receivingList.setText(receivingList.getText() + receivingOrgan.getValue() + "\n");
+            //}
         }
         catch (InvalidObjectException e) {
             e.printStackTrace();
