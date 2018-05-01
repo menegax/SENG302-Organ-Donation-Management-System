@@ -231,7 +231,7 @@ public class GUIDonorMedications {
      * @param medication The selected medication being added to the current ArrayList and listView
      */
     private void addMedication(String medication) {
-        if (!medication.equals( "Enter a medication" ) && !medication.equals( "" ) && !medication.equals( " " )) { // This can be altered after story 19 is completed
+        if (!medication.equals( "Enter a medication" ) && !medication.equals( "" ) && !medication.equals( " " )) {
             if (!(current.contains( medication ) || history.contains( medication ))) {
                 target.getCurrentMedications().add( new Medication( medication ) );
 
