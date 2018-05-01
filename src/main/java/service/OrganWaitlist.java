@@ -28,6 +28,10 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		return requests.add(new OrganRequest(receiver, organ));
 	}
 	
+	public boolean add(String name, Organ organ, LocalDate date, Region region, String nhi) {
+		return requests.add(new OrganRequest(name, organ, date, region, nhi));
+	}
+	
 	public int size() {
 		return requests.size();
 	}
@@ -58,6 +62,14 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 			this.organ = organ;
 			name = receiver.getNameConcatenated();
 			nhi = receiver.getNhiNumber();
+		}
+		
+		public OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi) {
+			this.date = date;
+			this.region = region;
+			this.organ = organ;
+			this.name = name;
+			this.nhi = nhi;
 		}
 		
 		/**
@@ -93,7 +105,10 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		 */
 		@Override
 		public int compareTo(OrganRequest o) {
-			return date.compareTo(o.getRequestDate());
+			if (date.isBefore(o.getRequestDate())) {
+				return -1;
+			}
+			return 1;
 		}
 		
 		/**

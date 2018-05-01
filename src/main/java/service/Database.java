@@ -17,8 +17,12 @@ public class Database {
 
     private static HashSet<Patient> patients = new HashSet<>();
     private static ArrayList<Clinician> clinicians = new ArrayList<>();
+    private static OrganWaitlist organWaitingList = new OrganWaitlist();
 
-
+    public static OrganWaitlist getWaitingList() {
+    	return organWaitingList;
+    }
+    
     public static HashSet<Patient> getPatients() {
         return patients;
     }

@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Patient;
 import service.Database;
+import service.OrganWaitlist;
 import utility.GlobalEnums;
 import utility.UserActionHistory;
 
@@ -37,6 +38,9 @@ public class Main extends Application {
         mid.add("Middle");
         Database.addClinician("initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY);
 
+        setUpDummyPatients();
+        setUpDummyOrganRequests();
+        
         primaryStage.show();
     }
 
@@ -47,12 +51,31 @@ public class Main extends Application {
     }
 
 
+    private void setUpDummyOrganRequests() throws InvalidObjectException {
+    	OrganWaitlist waitlist = Database.getWaitingList();
+    	waitlist.add(Database.getPatientByNhi("ABC1237"), GlobalEnums.Organ.HEART);
+    	waitlist.add(Database.getPatientByNhi("ABC1236"), GlobalEnums.Organ.BONE);
+    	waitlist.add(Database.getPatientByNhi("ABC1239"), GlobalEnums.Organ.LIVER);
+    	waitlist.add(Database.getPatientByNhi("ABC1237"), GlobalEnums.Organ.BONE);
+    	
+    	Patient patient = Database.getPatientByNhi("ABC1236");
+    	waitlist.add(patient.getNameConcatenated(), GlobalEnums.Organ.LIVER, LocalDate.of(2001, 5, 10), patient.getRegion(), patient.getNhiNumber());
+    }
+    
     private void setUpDummyPatients() throws InvalidObjectException {
+    	Database.resetDatabase();
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
         Database.importFromDisk("./patient.json");
-        Database.addPatients(new Patient("ABC1238", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getPatientByNhi("ABC1238").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getPatientByNhi("ABC1238").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.addPatients(new Patient("ABC1237", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getPatientByNhi("ABC1237").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("ABC1237").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.getPatientByNhi("ABC1237").setRegion(GlobalEnums.Region.CANTERBURY);
+        
+        Database.addPatients(new Patient("ABC1239", "Jane", dal,"Bags", LocalDate.of(1990, 5, 27)));
+        Database.getPatientByNhi("ABC1239").setRegion(GlobalEnums.Region.CANTERBURY);
+        
+        Database.addPatients(new Patient("ABC1236", "Bob", dal,"Brain", LocalDate.of(1998, 1, 26)));
+        Database.getPatientByNhi("ABC1236").setRegion(GlobalEnums.Region.CANTERBURY);
     }
 }
