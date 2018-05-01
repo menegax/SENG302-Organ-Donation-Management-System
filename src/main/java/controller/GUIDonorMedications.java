@@ -302,7 +302,8 @@ public class GUIDonorMedications {
      * @param listView The listView of the selected item
      */
     private void onSelect(ListView listView) {
-        if (listView.getSelectionModel().getSelectedItems().size() >= 1) {
+        int numberSelected = listView.getSelectionModel().getSelectedItems().size();
+        if (numberSelected == 1) {
             for (Object item : listView.getSelectionModel().getSelectedItems()) {
                 loadMedicationIngredients( item.toString() );
             }
@@ -392,6 +393,7 @@ public class GUIDonorMedications {
      */
     @FXML
     public void reviewInteractions() {
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Drug interactions not available");
         ArrayList<String> selectedMedications = new ArrayList<String>(){{
             addAll(currentMedications.getSelectionModel().getSelectedItems());
             addAll(pastMedications.getSelectionModel().getSelectedItems());
@@ -401,9 +403,10 @@ public class GUIDonorMedications {
                 DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1));
                 displayInteractions(interaction.getInteractionsWithDurations(), selectedMedications.get(0), selectedMedications.get(1));
             } catch (IOException e ){
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Drug interactions not available");
                 alert.show();
             }
+        } else {
+            alert.show();
         }
     }
 
