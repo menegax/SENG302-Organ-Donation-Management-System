@@ -29,7 +29,7 @@ public class Main extends Application {
 
         // import donors
         Database.importFromDisk("./donor.json");
-//        addDummyTestObjects();
+        addDummyTestObjects();
 
         SearchDonors.createFullIndex(); // index donors for search, needs to be after importing or adding any donors
 
