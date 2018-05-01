@@ -301,8 +301,7 @@ public class GUIDonorMedications {
      * @param listView The listView of the selected item
      */
     private void onSelect(ListView listView) {
-        int numberSelected = listView.getSelectionModel().getSelectedItems().size();
-        if (numberSelected == 1) {
+        if (listView.getSelectionModel().getSelectedItems().size() >= 1) {
             for (Object item : listView.getSelectionModel().getSelectedItems()) {
                 loadMedicationIngredients( item.toString() );
             }
