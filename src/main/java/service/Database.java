@@ -136,12 +136,23 @@ public class Database {
     public static void saveToDisk() {
         try {
             saveToDiskPatients();
+            saveToDiskWaitlist();
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
     }
 
+    private static void saveToDiskWaitlist() throws IOException {
+        Gson gson = new Gson();
+        String json = gson.toJson(organWaitingList);
+
+        String PatientPath = "./";
+        Writer writer = new FileWriter(new File(PatientPath, "waitlist.json"));
+        writer.write(json);
+        writer.close();
+    }
+    
     /**
      * Writes database patients to file on disk
      *
@@ -163,23 +174,36 @@ public class Database {
      *
      * @param fileName the filename of the file to import
      */
-    public static void importFromDisk(String fileName) {
+    public static void importFromDisk(String directory) {
         try {
-            importFromDiskPatients(fileName);
-            userActions.log(Level.INFO, "Imported donors from disk", "Attempted to import from disk");
-
+            importFromDiskPatients(directory);
+            userActions.log(Level.INFO, "Imported donors from disk", "Attempted to import donors from disk");
+            importFromDiskWaitlist(directory);
+            userActions.log(Level.INFO, "Imported waitlist from disk", "Attempted to import waitlist from disk");
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to import from disk");
         }
     }
 
+    private static void importFromDiskWaitlist(String directory) throws FileNotFoundException {
+    	String fileName = directory + "waitlist.json";
+        Gson gson = new Gson();
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        organWaitingList = gson.fromJson(br, OrganWaitlist.class);
+//        Patient[] patients = gson.fromJson(br, Patient[].class);
+//        for (Patient p : patients) {
+//            Database.addPatients(p);
+//        }
+    }
+    
     /**
      * Reads patient data from disk
      *
      * @exception IOException when the file cannot be found
      */
-    private static void importFromDiskPatients(String fileName) throws IOException {
+    private static void importFromDiskPatients(String directory) throws IOException {
+    	String fileName = directory + "patient.json";
         Gson gson = new Gson();
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         Patient[] patients = gson.fromJson(br, Patient[].class);

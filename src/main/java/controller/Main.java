@@ -25,7 +25,7 @@ public class Main extends Application {
         ScreenControl.setRootScene(rootScene); // set this scene in screen controller
 
 //        setUpDummyPatients();
-        Database.importFromDisk("./patient.json");
+        Database.importFromDisk("./");
 
         // Add FXML screens to ScreenControl
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
@@ -38,8 +38,8 @@ public class Main extends Application {
         mid.add("Middle");
         Database.addClinician("initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY);
 
-        setUpDummyPatients();
-        setUpDummyOrganRequests();
+        //setUpDummyPatients();
+        //setUpDummyOrganRequests();
         
         primaryStage.show();
     }
@@ -66,7 +66,7 @@ public class Main extends Application {
     	Database.resetDatabase();
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.importFromDisk("./patient.json");
+        Database.importFromDisk("./");
         Database.addPatients(new Patient("ABC1237", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
         Database.getPatientByNhi("ABC1237").addDonation(GlobalEnums.Organ.LIVER);
         Database.getPatientByNhi("ABC1237").addDonation(GlobalEnums.Organ.CORNEA);
