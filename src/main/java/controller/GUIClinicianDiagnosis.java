@@ -126,6 +126,7 @@ public class GUIClinicianDiagnosis {
 
             for (Disease current : currentDiseases) {
                 if (current.getDiseaseName().equals( diagnosis )) {
+                    userActions.log(Level.WARNING, "Failed to register a disease", diagnosis + " is already registered");
                     Alert err = new Alert(Alert.AlertType.ERROR, "'" + diagnosis + "' is already registered");
                     err.show();
                     unique = false;
@@ -134,20 +135,27 @@ public class GUIClinicianDiagnosis {
 
             for (Disease past : pastDiseases) {
                 if (past.getDiseaseName().equals( diagnosis )) {
-                    moveFromPastToCurrent(past, null);
-                    unique = false;
-                    changed = true;
+                    if (!past.getDiseaseState().toString().equals( "cured" )) {
+                        moveFromPastToCurrent( past, null );
+                        unique = false;
+                        changed = true;
+                    } else {
+                        userActions.log(Level.WARNING, "Failed to register a disease", diagnosis + " is already registered");
+                        Alert err = new Alert(Alert.AlertType.ERROR, "'" + diagnosis + "' is already registered");
+                        err.show();
+                    }
                 }
             }
 
             if (unique) {
                 changed = true;
                 currentDiseases.add( new Disease( diagnosis, null ) );
-                userActions.log( Level.INFO, "Successfully registered a disease", "Registered a new disease for a donor" );
+                userActions.log( Level.FINE, "Successfully registered a disease", "Registered a new disease for a donor" );
                 loadCurrentDiseases();
                 newDiagnosis.clear();
             }
         } else {
+            userActions.log(Level.WARNING, "Failed to register a disease", diagnosis + " is invalid for registration");
             Alert err = new Alert(Alert.AlertType.ERROR, "'" + diagnosis + "' is invalid for registration");
             err.show();
         }
@@ -257,6 +265,7 @@ public class GUIClinicianDiagnosis {
         currentDonor.setCurrentDiseases(currentDiseases);
         currentDonor.setPastDiseases(pastDiseases);
         Database.saveToDisk();
+        userActions.log( Level.FINE, "Successfully saved donor diseases", "Successfully saved donor " + currentDonor.getNhiNumber() + "diseases");
         new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis saved successfully", ButtonType.OK).show();
         changed = false;
         goToProfile();
@@ -271,10 +280,13 @@ public class GUIClinicianDiagnosis {
     private void updateCurrentDate(int index, LocalDate date) throws InvalidObjectException {
         if (date.isBefore(currentDonor.getBirth())) {
             new Alert(Alert.AlertType.WARNING, "Can not set date to before donor's DOB: " + currentDonor.getBirth(), ButtonType.OK).show();
+            userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to before donor's DOB");
         } else if (date.isAfter( LocalDate.now() )) {
             new Alert(Alert.AlertType.WARNING, "Can not set date to after the current date", ButtonType.OK).show();
+            userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to after current date");
         } else {
             currentDonor.getCurrentDiseases().get( index ).setDateDiagnosed( date, currentDonor );
+            userActions.log(Level.FINE, "Updated a current disease date", "Updated a current disease date to " + date);
             changed = true;
         }
     }
@@ -288,10 +300,13 @@ public class GUIClinicianDiagnosis {
     private void updatePastDate(int index, LocalDate date) throws InvalidObjectException {
         if (date.isBefore( currentDonor.getBirth() )) {
             new Alert( Alert.AlertType.WARNING, "Can not set date to before donor's DOB: " + currentDonor.getBirth(), ButtonType.OK ).show();
+            userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to before donor's DOB");
         } else if (date.isAfter( LocalDate.now() )) {
             new Alert( Alert.AlertType.WARNING, "Can not set date to after the current date", ButtonType.OK ).show();
+            userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to after current date");
         } else {
             currentDonor.getPastDiseases().get( index ).setDateDiagnosed( date, currentDonor );
+            userActions.log(Level.FINE, "Updated a past disease date", "Updated a past disease date to " + date);
             changed = true;
         }
     }
@@ -303,6 +318,7 @@ public class GUIClinicianDiagnosis {
      */
     private void updateCurrentName(int index, String name) {
         currentDonor.getCurrentDiseases().get( index ).setDiseaseName(name);
+        userActions.log(Level.FINE, "Updated a current disease name", "Updated a current disease name to " + name);
         changed = true;
     }
 
@@ -313,6 +329,7 @@ public class GUIClinicianDiagnosis {
      */
     private void updatePastName(int index, String name) {
         currentDonor.getPastDiseases().get( index ).setDiseaseName(name);
+        userActions.log(Level.FINE, "Updated a past disease name", "Updated a past disease name to " + name);
         changed = true;
     }
 
@@ -328,8 +345,10 @@ public class GUIClinicianDiagnosis {
             changed = true;
         } else if (!(status.toLowerCase().equals( "cured" ) && currentDonor.getCurrentDiseases().get( index ).getDiseaseState().toString().equals("chronic"))) {
             new Alert(Alert.AlertType.WARNING, "Can not set disease state to 'cured' if the current state is 'chronic'", ButtonType.OK).show();
+            userActions.log(Level.WARNING, "Failed to update a disease state", "Disease state could not be changed to 'cured' when it is 'chronic'");
         } else {
             currentDonor.getCurrentDiseases().get( index ).setDiseaseState( null );
+            userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to " + status);
             changed = true;
         }
     }
@@ -344,6 +363,7 @@ public class GUIClinicianDiagnosis {
             moveFromPastToCurrent(currentDonor.getPastDiseases().get( index ), status);
         } else {
             currentDonor.getPastDiseases().get( index ).setDiseaseState( (GlobalEnums.DiseaseState) GlobalEnums.DiseaseState.getEnumFromString( status ) );
+            userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to " + status);
         }
         changed = true;
     }
@@ -362,6 +382,8 @@ public class GUIClinicianDiagnosis {
             }
             currentDiseases.add( disease );
             pastDiseases.remove( disease );
+            userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to " + state);
+            userActions.log( Level.FINE, "Moved a disease from past to current", "Moved disease " + disease.getDiseaseName() + " from past to current" );
             loadCurrentDiseases();
             loadPastDiseases();
             newDiagnosis.clear();
@@ -382,6 +404,8 @@ public class GUIClinicianDiagnosis {
             }
             pastDiseases.add( disease );
             currentDiseases.remove( disease );
+            userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to " + state);
+            userActions.log( Level.FINE, "Moved a disease from current to past", "Moved disease " + disease.getDiseaseName() + " from current to past" );
             loadPastDiseases();
             loadCurrentDiseases();
         }
@@ -394,14 +418,17 @@ public class GUIClinicianDiagnosis {
             pastDiseases.remove(chosen);
             deletedPast.add(chosen);
             loadPastDiseases();
-            new Alert(Alert.AlertType.CONFIRMATION, "Diagnoses deleted successfully", ButtonType.OK).show();
+            userActions.log(Level.FINE, "Successfully deleted a disease",  chosen + " is successfully deleted");
+            new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis deleted successfully", ButtonType.OK).show();
         } else if (currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
             changed = true;
             currentDiseases.remove(chosen);
             deletedCurrent.add(chosen);
             loadCurrentDiseases();
-            new Alert(Alert.AlertType.CONFIRMATION, "Diagnoses deleted successfully", ButtonType.OK).show();
+            userActions.log(Level.WARNING, "Failed to delete a disease", chosen + " failed to be deleted");
+            new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis deleted successfully", ButtonType.OK).show();
         } else {
+            userActions.log(Level.WARNING, "Failed to delete a disease", chosen + " failed to be deleted");
             new Alert(Alert.AlertType.WARNING, "No Diagnosis selected", ButtonType.OK).show();
         }
     }
