@@ -13,7 +13,7 @@ import org.testfx.matcher.control.TextInputControlMatchers;
 import service.Database;
 import testfx.FXNavigation;
 import testfx.General;
-import testfx.FXMedication.FXMedicationHelper;
+import testfx.FXMedicationHelper;
 
 import java.util.ArrayList;
 

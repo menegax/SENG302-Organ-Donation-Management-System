@@ -1,13 +1,11 @@
 package testfx;
 
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
-import org.testfx.framework.junit.ApplicationTest;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
-public class FXNavigation extends ApplicationTest {
+public class FXNavigation extends General {
 
 
     /**
@@ -24,9 +22,7 @@ public class FXNavigation extends ApplicationTest {
      * Helper method to open the medication scene from the profile
      */
     public void toMedicationsFromProfile(){
-        interact( () -> {
-            lookup( "#testMedication" ).queryAs( Button.class ).fire();
-        } );
+        clickButton("#testMedication");
         verifyThat( "#medicationPane", Node::isVisible );  // Verify "user" has navigated to medications
     }
 
@@ -35,9 +31,7 @@ public class FXNavigation extends ApplicationTest {
      * Helper method to go to donor profile from the home page
      */
     public void toProfileFromHomeDonor(){
-        interact( () -> {
-            lookup( "#goToProfile" ).queryAs( Button.class ).fire();
-        } );
+        clickButton("#goToProfile");
         verifyThat( "#profilePane", Node::isVisible ); // Verify that "user" has navigated to profile
     }
 }

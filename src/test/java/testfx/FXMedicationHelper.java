@@ -1,20 +1,14 @@
-package testfx.FXMedication;
+package testfx;
 
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
-import testfx.General;
 
 import java.util.List;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
-public class FXMedicationHelper extends ApplicationTest {
-
-
-    private General general = new General();
+public class FXMedicationHelper extends General {
 
     /**
      * Helper method to enter a new medication into the medications field
@@ -27,9 +21,7 @@ public class FXMedicationHelper extends ApplicationTest {
         verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel
         // Verify that the textfield currently has the entered medication prior to registration being initiated
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( query ) ) );
-        interact( () -> {
-            lookup( "#registerMed" ).queryAs( Button.class ).fire();
-        } );
+        clickButton("#registerMed");
         verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is still in medication panel after registration
     }
 
@@ -38,8 +30,8 @@ public class FXMedicationHelper extends ApplicationTest {
      * @param medication - medication to remove
      */
     public void removeMedication(String medication){
-        general.clickMatchingText(medication);
-        general.clickButton("#removeMed");
+        clickMatchingText(medication);
+        clickButton("#removeMed");
     }
 
 
@@ -48,8 +40,8 @@ public class FXMedicationHelper extends ApplicationTest {
      * @param medication - medication to add
      */
     public void addMedication(String medication) {
-        general.clickMatchingText(medication);
-        general.clickButton("#addMed");
+        clickMatchingText(medication);
+        clickButton("#addMed");
     }
 
     /**
@@ -57,8 +49,8 @@ public class FXMedicationHelper extends ApplicationTest {
      * @param medication - medication to delete
      */
     public void deleteMedication(String medication){
-        general.clickMatchingText(medication);
-        general.clickButton("#deleteMed");
+        clickMatchingText(medication);
+        clickButton("#deleteMed");
     }
 
 
@@ -67,19 +59,24 @@ public class FXMedicationHelper extends ApplicationTest {
      * @param medications - List containing medication strings to delete
      */
     public void deleteMedicationMultiSelect(List<String> medications){
-        for (String medication : medications) {
-            general.clickMatchingText(medication);
-        }
-        general.clickButton("#deleteMed");
+        multiSelectListView(medications);
+        clickButton("#deleteMed");
     }
 
     /**
      * Save the medications
      */
     public void saveMedication(){
-        interact( () -> {
-            lookup( "#saveMed" ).queryAs( Button.class ).fire();
-        } );
+        clickButton("#saveMed");
+    }
+
+
+    /**
+     *
+     */
+    public void compareDrugs(List<String> drugs){
+        multiSelectListView(drugs);
+        clickButton("#compareMeds");
     }
 
 

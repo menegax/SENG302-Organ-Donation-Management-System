@@ -157,7 +157,6 @@ public class GUIDonorMedications {
             refreshReview();
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the medications for logged in user");
-            e.printStackTrace();
         }
     }
 
