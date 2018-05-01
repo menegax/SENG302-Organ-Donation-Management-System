@@ -8,6 +8,7 @@ import org.junit.Test;
 import service.Database;
 import utility.GlobalEnums;
 
+import javax.xml.crypto.Data;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 
@@ -26,19 +27,20 @@ public class ClinicianTest {
 
     @Test
     public void testIncreasingStaffID() {
-        int id = Database.addClinician("john",  new ArrayList<>(), "Doe", GlobalEnums.Region.AUCKLAND);
-        int idNext = Database.addClinician("Joe", new ArrayList<>(), "Bloggs", GlobalEnums.Region.BAYOFPLENTY);
-        assertEquals(id+1, idNext);
+        Clinician newClinician = new Clinician(Database.getNextStaffID(), "John", new ArrayList<>(), "Doe", GlobalEnums.Region.AUCKLAND);
+        Database.addClinician(newClinician);
+        assertEquals(newClinician.getStaffID() + 1, Database.getNextStaffID());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalFirstName() {
-        Database.addClinician("23-%%d", new ArrayList<>(), "Everyman", GlobalEnums.Region.GISBORNE);
+        Database.addClinician(new Clinician(Database.getNextStaffID(), "23-%%d", new ArrayList<>(), "Everyman", GlobalEnums.Region.GISBORNE));
     }
 
     @Test
     public void testGettingClinicianById() {
-        int id = Database.addClinician("Joeseph", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND);
+        int id = Database.getNextStaffID();
+        Database.addClinician(new Clinician(id, "Joeseph", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND));
         try {
             assertEquals(Database.getClinicianByID(id).getFirstName(), "Joeseph");
         } catch (InvalidObjectException e) {
@@ -48,7 +50,8 @@ public class ClinicianTest {
 
     @Test
     public void testCreationWithAddress() {
-        int id = Database.addClinician("Lorem", new ArrayList<>(), "Ipsum", "123 some street", "This place", "Ilam", GlobalEnums.Region.GISBORNE);
+        int id = Database.getNextStaffID();
+        Database.addClinician(new Clinician(id, "Lorem", new ArrayList<>(), "Ipsum", "123 some street", "This place", "Ilam", GlobalEnums.Region.GISBORNE));
         try {
             assertNotNull(Database.getClinicianByID(id).getStreet1());
         } catch (InvalidObjectException e) {

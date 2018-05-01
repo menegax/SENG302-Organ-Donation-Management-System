@@ -47,12 +47,11 @@ public class GUIClinicianProfile {
     public void goToEdit() {
         ScreenControl.removeScreen("clinicianProfileUpdate");
         try {
-            ScreenControl.addScreen("clinicianProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/ClinicianProfileUpdate.fxml")));
+            ScreenControl.addScreen("clinicianProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/clinicianProfileUpdate.fxml")));
             ScreenControl.activate("clinicianProfileUpdate");
         }catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading clinician update screen", "attempted to navigate from the clinician profile page to the edit page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading clinician edit page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
+            userActions.log(Level.SEVERE, "Error loading clinician update screen", "attempted to navigate from the clinician profile page to the clinician edit page");
+            new Alert(Alert.AlertType.WARNING, "ERROR loading edit page", ButtonType.OK).showAndWait();
         }
     }
 
