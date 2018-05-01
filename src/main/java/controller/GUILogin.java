@@ -2,9 +2,10 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
@@ -20,18 +21,23 @@ import static utility.UserActionHistory.userActions;
 public class GUILogin {
 
     @FXML
-    private AnchorPane pane;
+
+    public AnchorPane loginPane;
+
+    public Button loginButton;
+
+    public Hyperlink registerLabel;
 
     @FXML
     private TextField nhiLogin;
 
+
     @FXML
     private CheckBox clinicianToggle;
 
-
     public void initialize() {
         // Enter key triggers log in
-        pane.setOnKeyPressed(e -> {
+        loginPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 logIn();
             }
@@ -60,10 +66,13 @@ public class GUILogin {
                 Donor newDonor = Database.getDonorByNhi(nhiLogin.getText());
                 ScreenControl.setLoggedInDonor(newDonor);
                 ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-                ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorProfileUpdate.fxml"))); //todo fix
-                ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorDonations.fxml")));
-                ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
+                ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorUpdateProfile.fxml")));
+                ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorUpdateDonations.fxml")));
+                ScreenControl.addScreen("donorContacts", FXMLLoader.load(getClass().getResource("/scene/donorUpdateContacts.fxml")));
                 ScreenControl.activate("donorHome");
+                ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+                ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
+            ScreenControl.activate("donorHome");
             }
             catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
@@ -74,7 +83,6 @@ public class GUILogin {
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
-                e.printStackTrace();
             }
         }
         else {
