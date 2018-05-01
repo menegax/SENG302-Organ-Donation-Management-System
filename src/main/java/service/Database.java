@@ -23,6 +23,7 @@ public class Database {
     }
     public static ArrayList<Clinician> getClinicians() { return clinicians; }
 
+
     /**
      * Adds a donor to the database
      *
@@ -68,7 +69,6 @@ public class Database {
         }
         throw new InvalidObjectException("Donor with NHI number " + nhi + " does not exist.");
     }
-
 
     /**
      * Searches clinicians by staffID
@@ -179,8 +179,8 @@ public class Database {
      */
     public static void importFromDisk(String fileName) {
         try {
-            donors = new HashSet<>();
             importFromDiskDonors(fileName);
+            userActions.log(Level.INFO, "Imported donors from disk", "Attempted to import from disk");
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to import from disk");

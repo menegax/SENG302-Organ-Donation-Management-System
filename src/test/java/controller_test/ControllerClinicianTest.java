@@ -26,6 +26,7 @@ public class ControllerClinicianTest extends ApplicationTest {
 
     @After
     public void waitForEvents() {
+        Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }
@@ -67,10 +68,6 @@ public class ControllerClinicianTest extends ApplicationTest {
         interact(() -> {
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
         });
-        sleep(2000);
-        interact(() -> {
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        verifyThat("#pane", Node::isVisible); // Verify that logout button has taken "user" to the login panel
+        verifyThat( "#loginPane", Node::isVisible ); // Verify that logout button has taken "user" to the login panel
     }
 }

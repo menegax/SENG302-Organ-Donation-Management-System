@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
+import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 
 import java.util.ArrayList;
@@ -58,8 +59,9 @@ public class ControllerClinicianEdit extends ApplicationTest {
 
     @After
     public void waitForEvents() {
-        //WaitForAsyncUtils.waitForFxEvents();
-        //sleep( 500 );
+        Database.resetDatabase();
+        WaitForAsyncUtils.waitForFxEvents();
+        sleep( 500 );
     }
 
     @Test

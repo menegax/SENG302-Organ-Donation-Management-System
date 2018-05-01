@@ -28,7 +28,6 @@ public class Main extends Application {
         primaryStage.setScene(rootScene); //set scene on primary stage
         ScreenControl.setRootScene(rootScene); // set this scene in screen controller
 
-//        setUpDummyDonors();
         Database.importFromDisk("./donor.json");
 
         // Add FXML screens to ScreenControl
