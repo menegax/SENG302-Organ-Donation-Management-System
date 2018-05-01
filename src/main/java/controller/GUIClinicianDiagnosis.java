@@ -14,6 +14,7 @@ import service.Database;
 import utility.GlobalEnums;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -267,8 +268,28 @@ public class GUIClinicianDiagnosis {
     }
 
     /**
+     * Updates the date of a current diagnosis for a donor with a provided date
+     * @param index the index in the currentDiseases ArrayList of the diagnosis being updated
+     * @param date The given date for the update
+     * @throws InvalidObjectException Indicates that one or more deserialized objects failed validation tests
+     */
+    private void updateCurrentDate(int index, LocalDate date) throws InvalidObjectException {
+        currentDonor.getCurrentDiseases().get(index).setDateDiagnosed( date, currentDonor );
+    }
+
+    /**
+     * Updates the date of a past diagnosis for a donor with a provided date
+     * @param index the index in the pastDiseases ArrayList of the diagnosis being updated
+     * @param date The given date for the update
+     * @throws InvalidObjectException Indicates that one or more deserialized objects failed validation tests
+     */
+    private void updatePastDate(int index, LocalDate date) throws InvalidObjectException {
+        currentDonor.getCurrentDiseases().get(index).setDateDiagnosed( date, currentDonor );
+    }
+
+    /**
      * Updates the disease name for a current diagnosis
-     * @param index The index in the list of the diagnosis being updated
+     * @param index the index in the currentDiseases ArrayList of the diagnosis being updated
      * @param name The Disease name update
      */
     private void updateCurrentName(int index, String name) {
