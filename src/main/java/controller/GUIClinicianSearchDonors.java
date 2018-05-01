@@ -83,15 +83,9 @@ public class GUIClinicianSearchDonors implements Initializable {
                     return true;
                 }
 
-//                if (donor.getFirstName().toLowerCase().contains(lowerCaseFilter)) { //todo old code, using only for reference temporarily
-//                    return true; // Filter matches first name.
-//                }
+                return SearchDonors.searchByName(newValue)
+                        .contains(donor);
 
-                if (SearchDonors.searchByName(newValue).contains(donor)) { //todo here is hte new code to call fuzzy
-                    return true;
-                }
-
-                return false; // Does not match.
             });
         });
 
