@@ -34,6 +34,7 @@ public class GUIDonorHome {
 
     @FXML
     public void logOut() {
+        ScreenControl.setLoggedInDonor(null);
         ScreenControl.activate("login");
     }
 
@@ -41,7 +42,7 @@ public class GUIDonorHome {
     @FXML
     public void save() {
         Database.saveToDisk();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Successfully Saved!");
-        alert.showAndWait();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Successfully saved!");
+        alert.show();
     }
 }

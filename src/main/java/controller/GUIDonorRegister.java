@@ -8,6 +8,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import model.Donor;
@@ -68,6 +70,9 @@ public class GUIDonorRegister {
 
 
 
+    /**
+     * Sets up register page GUI elements
+     */
     public void initialize() {
         setDateConverter();
         ArrayList<Control> controls = new ArrayList<Control>() {{
@@ -78,6 +83,7 @@ public class GUIDonorRegister {
             add(nhiRegister);
         }};
         statesHistoryScreen = new StatesHistoryScreen(donorRegisterAnchorPane, controls);
+
         // Enter key
         donorRegisterAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -93,6 +99,19 @@ public class GUIDonorRegister {
     public void goBackToLogin() {
         ScreenControl.activate("login");
     }
+
+
+    /**
+     * Clears the data in the fields of the GUI
+     */
+    private void clearFields(){
+        nhiRegister.clear();
+        firstnameRegister.clear();
+        lastnameRegister.clear();
+        middlenameRegister.clear();
+        birthRegister.getEditor().clear();
+    }
+
 
     /**
      * Checks users have entered all REQUIRED fields
@@ -168,7 +187,8 @@ public class GUIDonorRegister {
         if (!(hasAllRequired())) {
             try {
                 addDonorGui();
-                Alert confirm = new Alert(Alert.AlertType.INFORMATION, "Successfully Registered");
+                clearFields();
+                Alert confirm = new Alert(Alert.AlertType.INFORMATION, "Successfully registered!");
                 confirm.show();
                 Database.saveToDisk();
                 ScreenControl.activate("login");
