@@ -1,21 +1,17 @@
 package controller;
 
 import api.APIHelper;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
-import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.WindowEvent;
 import model.Donor;
 import model.Medication;
 import service.TextWatcher;
@@ -24,11 +20,9 @@ import service.Database;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.sql.Timestamp;
-import java.sql.Timestamp;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -47,6 +41,15 @@ public class GUIDonorMedications {
     public Button goBack;
     public Button clearMed;
     public ContextMenu contextMenu;
+
+    private ListProperty<String> currentListProperty = new SimpleListProperty<>();
+    private ListProperty<String> historyListProperty = new SimpleListProperty<>();
+    private ArrayList<String> current;
+    private ArrayList<String> history;
+    private Timestamp time;
+    private Donor target;
+    private JsonObject suggestions;
+    private boolean itemSelected = false;
 
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
@@ -136,15 +139,6 @@ public class GUIDonorMedications {
         addMedication(newMedication.getText());
     }
 
-    private ListProperty<String> currentListProperty = new SimpleListProperty<>();
-    private ListProperty<String> historyListProperty = new SimpleListProperty<>();
-    private ArrayList<String> current;
-    private ArrayList<String> history;
-    private Timestamp time;
-    private Donor target;
-    private JsonObject suggestions;
-    private boolean itemSelected = false;
-
 
     @FXML
     public void initialize() {
@@ -166,7 +160,6 @@ public class GUIDonorMedications {
             addActionListeners();
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the medications for logged in user");
-            e.printStackTrace();
         }
     }
 
@@ -351,7 +344,6 @@ public class GUIDonorMedications {
         for (String medication : medications) {
             if (history.contains( medication )) {
                 target.getMedicationHistory().remove( history.indexOf( medication ));
-
                 if (!current.contains( medication )) {
                     target.getCurrentMedications().add( new Medication( medication )  );
                     viewCurrentMedications();

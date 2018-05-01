@@ -1,9 +1,5 @@
 package service;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,7 +16,6 @@ import static utility.UserActionHistory.userActions;
 public class TextWatcher {
 
     private Timer timer = new Timer();
-    private Timeline timeLine = new Timeline();
 
     /**
      *  Starts timer with a delay of 300ms, after delay has been exceeded, given method is called
