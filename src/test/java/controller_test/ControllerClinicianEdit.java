@@ -54,7 +54,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
         interact(() -> {
             lookup("#edit").queryAs(Button.class).getOnAction().handle(new ActionEvent());
         });
-        verifyThat("#clinicianUpdate", Node::isVisible); // Verify that edit button has taken "user" to the profile edit panel
+        verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that edit button has taken "user" to the profile edit panel
     }
 
     @After
@@ -85,7 +85,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("#edit").queryAs(Button.class).getOnAction().handle(new ActionEvent());
         });
 
-        verifyThat("#clinicianUpdate", Node::isVisible); // Verify that edit button has taken "user" to the profile edit panel
+        verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that edit button has taken "user" to the profile edit panel
         interact(() -> {
             lookup("#staffId").queryAs(TextField.class).setText("0");
         });
@@ -112,7 +112,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(Database.getClinicians().get(0).getStaffID() == 1);
-        verifyThat("#clinicianUpdate", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
+        verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
     }
 
     @Test
@@ -148,7 +148,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(!Database.getClinicians().get(0).getFirstName().equals("12"));
-        verifyThat("#clinicianUpdate", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
+        verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
     }
 
     @Test
@@ -182,7 +182,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(!Database.getClinicians().get(0).getLastName().equals("12"));
-        verifyThat("#clinicianUpdate", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
+        verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
     }
 
     @Test
@@ -216,7 +216,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(!Database.getClinicians().get(0).getMiddleNames().get(0).equals("12"));
-        verifyThat("#clinicianUpdate", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
+        verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
     }
 
     @Test
@@ -250,7 +250,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(!Database.getClinicians().get(0).getStreet1().equals("12 RD"));
-        verifyThat("#clinicianUpdate", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
+        verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
 
     @Test
@@ -284,7 +284,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(!Database.getClinicians().get(0).getStreet1().equals("12 RD"));
-        verifyThat("#clinicianUpdate", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
+        verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
 
     @Test
@@ -318,7 +318,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("OK").queryAs(Button.class).fire();
         });
         assertThat(!Database.getClinicians().get(0).getStreet1().equals("12 RD"));
-        verifyThat("#clinicianUpdate", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
+        verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
 
     // TODO testing region checkboxes (valid and invalid)
@@ -340,6 +340,6 @@ public class ControllerClinicianEdit extends ApplicationTest {
         interact(() -> {
             lookup("#logoutButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
         });
-        verifyThat("#pane", Node::isVisible); // Verify that logout button has taken "user" to the login panel
+        verifyThat("#loginPane", Node::isVisible); // Verify that logout button has taken "user" to the login panel
     }
 }
