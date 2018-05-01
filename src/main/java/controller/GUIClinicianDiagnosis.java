@@ -16,6 +16,7 @@ import utility.GlobalEnums;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -113,12 +114,13 @@ public class GUIClinicianDiagnosis {
 
     /**
      * Registers a new diagnosis entry for a donor when 'Add diagnosis' is activated
+     *
      * @param diagnosis The entered diagnosis to textField for registration
      */
     private void addDiagnosis(String diagnosis) {
-        if (!diagnosis.equals( "Enter a diagnosis" ) && !diagnosis.equals( "" ) && !diagnosis.substring(0, 1).equals(" ")) {
+        if (!diagnosis.equals("Enter a diagnosis") && !diagnosis.equals("") && !diagnosis.substring(0, 1).equals(" ")) {
             diagnosis = diagnosis.substring(0, 1).toUpperCase() + diagnosis.substring(1).toLowerCase();
-            currentDiseases.add( new Disease(diagnosis, null));
+            currentDiseases.add(new Disease(diagnosis, null));
             userActions.log(Level.INFO, "Successfully registered a disease", "Registered a new disease for a donor");
             loadCurrentDiseases();
             newDiagnosis.clear();
@@ -128,22 +130,68 @@ public class GUIClinicianDiagnosis {
         }
     }
 
+    /**
+     * Loads the current diseases table
+     */
     private void loadCurrentDiseases() {
-        if(currentDiseases == null) currentDiseases = new ArrayList<>();
+        if (currentDiseases == null) currentDiseases = new ArrayList<>();
         ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(currentDiseases);
-        currentDateCol.setCellValueFactory(new PropertyValueFactory<>("dateDiagnosed"));
-        currentDiagnosisCol.setCellValueFactory(new PropertyValueFactory<>("diseaseName"));
-        currentTagsCol.setCellValueFactory(new PropertyValueFactory<>("diseaseState"));
+        setCellValues(currentDateCol, currentDiagnosisCol, currentTagsCol);
         currentDiagnosesView.setItems(observableCurrentDiseases);
+        setUpSortBehaviour(currentDiagnosesView, currentTagsCol);
     }
 
+    /**
+     * Loads the past diseases table
+     */
     private void loadPastDiseases() {
-        if(pastDiseases == null) pastDiseases = new ArrayList<>();
+        if (pastDiseases == null) pastDiseases = new ArrayList<>();
         ObservableList<Disease> observablePastDiseases = FXCollections.observableArrayList(pastDiseases);
-        pastDateCol.setCellValueFactory(new PropertyValueFactory<>("dateDiagnosed"));
-        pastDiagnosisCol.setCellValueFactory(new PropertyValueFactory<>("diseaseName"));
-        pastTagsCol.setCellValueFactory(new PropertyValueFactory<>("diseaseState"));
+        setCellValues(pastDateCol, pastDiagnosisCol, pastTagsCol);
         pastDiagnosesView.setItems(observablePastDiseases);
+        setUpSortBehaviour(pastDiagnosesView, pastTagsCol);
+    }
+
+    /**
+     * Sets the values to fetch for each column based on it's type
+     *
+     * @param dateCol      The date of diagnosis column
+     * @param diagnosisCol The disease name/diagnosis column
+     * @param tagCol       The diseases tag column
+     */
+    private void setCellValues(TableColumn<Disease, LocalDate> dateCol, TableColumn<Disease, String> diagnosisCol, TableColumn<Disease, GlobalEnums.DiseaseState> tagCol) {
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("dateDiagnosed"));
+        diagnosisCol.setCellValueFactory(new PropertyValueFactory<>("diseaseName"));
+        tagCol.setCellValueFactory(new PropertyValueFactory<>("diseaseState"));
+    }
+
+    /**
+     * Sets up sorting so that the diseases with the chronic tag remain at the top of the table no matter what the table
+     * is currently being sorting on. Diseases that both have the chronic tag will still be sorted accordingly
+     *
+     * @param table  The table to apply the sort behaviour to
+     * @param tagCol The column to disable sorting on - This will be the column that displays disease tags
+     */
+    private void setUpSortBehaviour(TableView<Disease> table, TableColumn<Disease, GlobalEnums.DiseaseState> tagCol) {
+        tagCol.setSortable(false); //Disables sorting on the tag column
+        table.sortPolicyProperty().set(param -> {
+            Comparator<Disease> comparator = (o1, o2) -> {
+                if (o1.getDiseaseState() == GlobalEnums.DiseaseState.CHRONIC) {
+                    if (o2.getDiseaseState() == GlobalEnums.DiseaseState.CHRONIC) {
+                        if (param.getComparator() == null) return 0;
+                        return param.getComparator().compare(o1, o2);
+                    }
+                    return -1;
+                } else if (o2.getDiseaseState() == GlobalEnums.DiseaseState.CHRONIC) return 1;
+                if (param.getComparator() == null) {
+                    return 0;
+                } else {
+                    return param.getComparator().compare(o1, o2);
+                }
+            };
+            FXCollections.sort(table.getItems(), comparator);
+            return true;
+        });
     }
 
     @FXML
@@ -162,7 +210,7 @@ public class GUIClinicianDiagnosis {
         } else {
             back = true;
         }
-        if (back){
+        if (back) {
             ScreenControl.removeScreen("donorProfile");
             try {
                 ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
