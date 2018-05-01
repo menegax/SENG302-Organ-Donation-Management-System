@@ -1,8 +1,7 @@
 package api;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
 import org.apache.http.client.fluent.Request;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class APIHelper {
         String response = Request.Get(uri) //using fluent api, as to wrap resource management
                 .execute()
                 .returnContent().asString();
-        return new JsonParser().parse(response).getAsJsonObject();
+        return new JsonParser().parse(response.trim()).getAsJsonObject();
     }
 
     /**
