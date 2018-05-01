@@ -321,7 +321,6 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
 
-    // TODO testing region checkboxes (valid and invalid)
 
     @Test
     /*
