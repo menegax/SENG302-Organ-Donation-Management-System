@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" fx:id="pane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUILogin">
+<AnchorPane fx:id="loginPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUILogin">
    <children>
       <Label layoutX="224.0" layoutY="49.0" styleClass="title" text="Big Pharma">
          <font>
@@ -22,6 +22,6 @@
             <Font size="10.0" />
          </font>
       </Hyperlink>
-      <CheckBox fx:id="clinicianToggle" layoutX="408.0" layoutY="174.0" mnemonicParsing="false" text="I am a clinician" onAction="#toggleClinician" />
+      <CheckBox fx:id="clinicianToggle" layoutX="408.0" layoutY="174.0" mnemonicParsing="false" onAction="#toggleClinician" text="I am a clinician" />
    </children>
 </AnchorPane>

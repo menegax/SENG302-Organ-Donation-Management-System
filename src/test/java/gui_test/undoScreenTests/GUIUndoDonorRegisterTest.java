@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
+import service.Database;
 
 import java.time.LocalDate;
 
@@ -69,6 +70,7 @@ public class GUIUndoDonorRegisterTest extends ApplicationTest{
      */
     @After
     public void waitForEvents() {
+        Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }

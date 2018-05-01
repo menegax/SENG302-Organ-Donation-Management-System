@@ -41,6 +41,15 @@
 
 }
 
+/* For invalid text-fields within forms */
+.invalid {
+    -fx-background-color: #e6b3b3;
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+    -fx-border-radius: 3px;
+}
+
+
 .redo, .undo {
     -fx-scale-x: 0.7;
     -fx-scale-y: 0.7;

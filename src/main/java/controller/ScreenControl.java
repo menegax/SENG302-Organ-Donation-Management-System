@@ -7,7 +7,7 @@ import model.Donor;
 
 import java.util.HashMap;
 
-class ScreenControl {
+public class ScreenControl {
 
     private static HashMap<String, Pane> screenMap = new HashMap<>();
 
@@ -23,7 +23,7 @@ class ScreenControl {
     }
 
 
-    static Donor getLoggedInDonor() {
+    public static Donor getLoggedInDonor() {
         return donor;
     }
 
@@ -47,7 +47,11 @@ class ScreenControl {
 
 
     /**
+<<<<<<< HEAD
+     * Add screen to the hash map of screens
+=======
      * Add screen to the hashmap of screens
+>>>>>>> origin/development
      *
      * @param name - name of screen to add
      * @param pane - Pane object from FXML
@@ -58,7 +62,11 @@ class ScreenControl {
 
 
     /**
+<<<<<<< HEAD
+     * Remove screen from hash map
+=======
      * Remove screen from hashmap
+>>>>>>> origin/development
      *
      * @param name - screen to remove from the hashmap of screens
      */

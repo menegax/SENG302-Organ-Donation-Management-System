@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
+import model.Donor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -13,8 +14,11 @@ import org.junit.Test;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
+import service.Database;
+import utility.GlobalEnums;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static javafx.scene.input.KeyCode.*;
 import static org.junit.Assert.*;
@@ -24,7 +28,7 @@ import static org.testfx.api.FxAssert.verifyThat;
  * TestFX class to test the undo functionality of the donor profile update screen
  */
 public class GUIUndoDonorUpdateTest extends ApplicationTest{
-    
+
     private Main main = new Main();
     private double undoX;
     private double undoY;
@@ -60,13 +64,21 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
      */
     @Override
     public void start(Stage stage) throws Exception {
+
+        // add dummy donor
+        ArrayList<String> dal = new ArrayList<>();
+        dal.add("Middle");
+        Database.addDonor(new Donor("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+
         main.start(stage);
         interact(() -> {
             stage.setFullScreen(true);
-            lookup("#nhiLogin").queryAs(TextField.class).setText("ABC1238");
+            lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).fire();
             lookup("#profileButton").queryAs(Button.class).fire();
-            lookup("#editButton").queryAs(Button.class).fire();
+            lookup("#editDonorButton").queryAs(Button.class).fire();
         });
         undoX = lookup("#undoButton").queryAs(Button.class).getLayoutX() + 240;
         undoY = lookup("#undoButton").queryAs(Button.class).getLayoutY() + 28;
@@ -109,6 +121,7 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
      */
     @After
     public void waitForEvents() {
+        Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }
@@ -191,8 +204,6 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             press(CONTROL).press(Z).release(Z).release(CONTROL);
             lookup("#suburbTxt").queryAs(TextField.class).setText("Suburb3");
             press(CONTROL).press(Z).release(CONTROL).release(Z);
-            lookup("#regionTxt").queryAs(TextField.class).setText("Region3");
-            press(CONTROL).press(Z).release(CONTROL).release(Z);
             lookup("#zipTxt").queryAs(TextField.class).setText("0003");
             press(CONTROL).press(Z).release(CONTROL).release(Z);
             lookup("#weightTxt").queryAs(TextField.class).setText("53");
@@ -230,6 +241,8 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         // Check Ctrl Z next
         interact(() -> {
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(2);
+            lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().select(3);
+            press(CONTROL).press(Z).release(CONTROL).release(Z);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
 

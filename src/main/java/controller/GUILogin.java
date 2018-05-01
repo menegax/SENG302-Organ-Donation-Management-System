@@ -2,9 +2,8 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
@@ -18,7 +17,12 @@ import static utility.UserActionHistory.userActions;
 public class GUILogin {
 
     @FXML
-    private AnchorPane pane;
+
+    public AnchorPane loginPane;
+
+    public Button loginButton;
+
+    public Hyperlink registerLabel;
 
     @FXML
     private TextField nhiLogin;
@@ -30,7 +34,7 @@ public class GUILogin {
 
     public void initialize() {
         // Enter key triggers log in
-        pane.setOnKeyPressed(e -> {
+        loginPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 logIn();
             }
@@ -54,14 +58,14 @@ public class GUILogin {
      */
     @FXML
     public void logIn() {
-        // todo surround with try catch. Try uses database getuserbyNHI, catch will throw a popup with warning alert
         if (!clinicianToggle.isSelected()) {
             try {
                 Donor newDonor = Database.getDonorByNhi(nhiLogin.getText());
                 ScreenControl.setLoggedInDonor(newDonor);
                 ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-                ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorProfileUpdate.fxml")));
-                ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorDonations.fxml")));
+                ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorUpdateProfile.fxml")));
+                ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorUpdateDonations.fxml")));
+                ScreenControl.addScreen("donorContacts", FXMLLoader.load(getClass().getResource("/scene/donorUpdateContacts.fxml")));
                 ScreenControl.activate("donorHome");
                 ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
                 ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
@@ -78,6 +82,7 @@ public class GUILogin {
                 ScreenControl.setLoggedInClinician(newClinician);
                 ScreenControl.addScreen("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
 //                ScreenControl.addScreen("clinicianSearchDonors", FXMLLoader.load(getClass().getResource("/scene/clinicianSearchDonors.fxml")));
+                ScreenControl.addScreen("clinicianProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/clinicianProfileUpdate.fxml")));
                 ScreenControl.activate("clinicianHome");
             }
             catch (Exception e) {

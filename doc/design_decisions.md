@@ -86,6 +86,11 @@ All user actions require an NHI to be logged against the action and the correspo
 ## Sprint 3
 26th of March to the 3rd of May
 
+####Donor Contact Details
+Contact Details for a Donor are updated in a separate update method. This is because as contact details are implemented solely in the GUI application, and so will only need handling there.
+
+For viewing a Donor's contact details, a new window is shown for both editing and viewing contact details. This is to reduce clutter in the profile view screen.
+
 #### Interface classes
 All interface classes must be prefixed with "I". i.e. IEnumberable. This is to be able to distinguish classes from interfaces easily when the repository gets larger.
 

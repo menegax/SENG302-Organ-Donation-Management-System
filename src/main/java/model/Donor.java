@@ -8,6 +8,7 @@ import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.time.LocalDate;
@@ -53,6 +54,26 @@ public class Donor {
     private Timestamp modified;
 
     private String nhiNumber;
+
+    private String homePhone;
+
+    private String mobilePhone;
+
+    private String workPhone;
+
+    private String emailAddress;
+
+    private String contactName;
+
+    private String contactRelationship;
+
+    private String contactHomePhone;
+
+    private String contactMobilePhone;
+
+    private String contactWorkPhone;
+
+    private String contactEmailAddress;
 
 
     public Donor(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
@@ -380,7 +401,9 @@ public class Donor {
      * @return The calculated BMI
      */
     public double getBmi() {
-        return (this.weight / (Math.pow(this.height, 2)));
+        DecimalFormat df = new DecimalFormat("#.0");
+        if(this.height == 0) return 0.0;
+        else return Double.valueOf(df.format(this.weight / (Math.pow(this.height, 2))));
     }
 
 
@@ -521,6 +544,105 @@ public class Donor {
         }
     }
 
+    public String getHomePhone() {
+        return homePhone;
+    }
+
+
+    public void setHomePhone(String homePhone) {
+        this.homePhone = homePhone;
+    }
+
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+
+    public String getWorkPhone() {
+        return workPhone;
+    }
+
+
+    public void setWorkPhone(String workPhone) {
+        this.workPhone = workPhone;
+    }
+
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+
+    public String getContactName() {
+        return contactName;
+    }
+
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+
+    public String getContactRelationship() {
+        return contactRelationship;
+    }
+
+
+    public void setContactRelationship(String contactRelationship) {
+        this.contactRelationship = contactRelationship;
+    }
+
+
+    public String getContactHomePhone() {
+        return contactHomePhone;
+    }
+
+
+    public void setContactHomePhone(String contactHomePhone) {
+        this.contactHomePhone = contactHomePhone;
+    }
+
+
+    public String getContactMobilePhone() {
+        return contactMobilePhone;
+    }
+
+
+    public void setContactMobilePhone(String contactMobilePhone) {
+        this.contactMobilePhone = contactMobilePhone;
+    }
+
+
+    public String getContactWorkPhone() {
+        return contactWorkPhone;
+    }
+
+
+    public void setContactWorkPhone(String contactWorkPhone) {
+        this.contactWorkPhone = contactWorkPhone;
+    }
+
+
+    public String getContactEmailAddress() {
+        return contactEmailAddress;
+    }
+
+
+    public void setContactEmailAddress(String contactEmailAddress) {
+        this.contactEmailAddress = contactEmailAddress;
+    }
+
 
     private void donorModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
@@ -538,7 +660,7 @@ public class Donor {
 
     public boolean equals(Object obj) {
         Donor donor = (Donor) obj;
-        return this.nhiNumber.equals(donor.nhiNumber);
+        return this.nhiNumber.equals(donor.nhiNumber) && obj.getClass() == this.getClass();
     }
 
 }
