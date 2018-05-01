@@ -22,7 +22,7 @@ public class APIHelper {
                 .returnContent().asString();
         JsonReader reader = new JsonReader(new StringReader(response));
         reader.setLenient(true);
-        System.out.println(uri);
+        System.out.println(response);
         return new JsonParser().parse(reader).getAsJsonObject();
     }
 
