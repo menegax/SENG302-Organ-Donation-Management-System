@@ -2,6 +2,7 @@ package model;
 
 import utility.GlobalEnums;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -20,6 +21,7 @@ public class Clinician {
     private String street1;
     private String street2;
     private String suburb;
+    private Timestamp modified;
 
     private GlobalEnums.Region region;
 
@@ -167,5 +169,11 @@ public class Clinician {
 
     public void setRegion(GlobalEnums.Region region) {
         this.region = region;
+    }
+
+    public Timestamp getModified() { return this.modified; }
+
+    public void clinicianModified() {
+        this.modified = new Timestamp(System.currentTimeMillis());
     }
 }

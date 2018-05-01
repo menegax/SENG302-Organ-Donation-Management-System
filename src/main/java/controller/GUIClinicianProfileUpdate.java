@@ -7,9 +7,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import service.Database;
 import utility.GlobalEnums.Region;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -22,6 +24,10 @@ import java.util.regex.Pattern;
 import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianProfileUpdate {
+
+    @FXML
+    public AnchorPane clinicianUpdateAnchorPane;
+
     @FXML
     private Label lastModifiedLbl;
 
@@ -46,6 +52,18 @@ public class GUIClinicianProfileUpdate {
 
     private Clinician target;
 
+    private StatesHistoryScreen screenHistory;
+
+    @FXML
+    public void undo(){
+        screenHistory.undo();
+    }
+
+    @FXML
+    public void redo(){
+        screenHistory.redo();
+    }
+
     public void initialize() {
         // Populate region dropdown with values from the Regions enum
         List<String> regions = new ArrayList<>();
@@ -59,6 +77,7 @@ public class GUIClinicianProfileUpdate {
         regionDD.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> setValid(regionDD));
 
         loadProfile(ScreenControl.getLoggedInClinician().getStaffID());
+        setUpStateHistory();
     }
 
     private void loadProfile(int staffId) {
@@ -72,8 +91,23 @@ public class GUIClinicianProfileUpdate {
         }
     }
 
+    private void setUpStateHistory() {
+        ArrayList<Control> elements = new ArrayList<Control>() {{
+            add(staffId);
+            add(firstnameTxt);
+            add(lastnameTxt);
+            add(middlenameTxt);
+            add(street1Txt);
+            add(street2Txt);
+            add(suburbTxt);
+            add(regionDD);
+        }};
+        screenHistory = new StatesHistoryScreen(clinicianUpdateAnchorPane, elements);
+    }
+
     private void populateForm(Clinician clinician) {
 //        lastModifiedLbl.setText("Last Modified: " + clinician.getModified());
+        if(target.getModified() != null) lastModifiedLbl.setText("Last Updated: " + clinician.getModified().toString());
         staffId.setText(Integer.toString(clinician.getStaffID()));
         firstnameTxt.setText(clinician.getFirstName());
         lastnameTxt.setText(clinician.getLastName());
@@ -136,7 +170,8 @@ public class GUIClinicianProfileUpdate {
             if (street2Txt.getText().length() > 0) target.setStreet2(street2Txt.getText());
             if (suburbTxt.getText().length() > 0) target.setSuburb(suburbTxt.getText());
             target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel().getSelectedItem().toString()));
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Donor successfully updated", ButtonType.OK);
+            target.clinicianModified();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Clinician successfully updated", ButtonType.OK);
             final Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
             dialogOK.addEventFilter(ActionEvent.ACTION, event -> goBackToProfile());
             alert.show();
