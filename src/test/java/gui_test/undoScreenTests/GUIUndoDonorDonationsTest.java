@@ -56,8 +56,6 @@ public class GUIUndoDonorDonationsTest extends ApplicationTest{
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
         Database.addDonor(new Donor("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
         interact(() -> {

@@ -39,14 +39,15 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
     private String street1TxtDefault;
     private String street2TxtDefault;
     private String suburbTxtDefault;
-    private String regionTxtDefault;
     private String zipTxtDefault;
     private String weightTxtDefault;
     private String heightTxtDefault;
 
     private int bloodGroupDDDefault;
+    private int regionDDDefault;
 
     private LocalDate dobDateDefault;
+    private LocalDate dateOfDeathDefault;
 
     private boolean genderMaleRadioDefault;
     private boolean genderFemaleRadioDefault;
@@ -69,8 +70,6 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
         Database.addDonor(new Donor("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
         interact(() -> {
@@ -82,10 +81,10 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         });
         undoX = lookup("#undoButton").queryAs(Button.class).getLayoutX() + 240;
         undoY = lookup("#undoButton").queryAs(Button.class).getLayoutY() + 28;
-        radioY = lookup("#genderMaleRadio").queryAs(RadioButton.class).getLayoutY() + 150;
-        maleRadioX = lookup("#genderMaleRadio").queryAs(RadioButton.class).getLayoutX() + 165;
-        femaleRadioX = lookup("#genderFemaleRadio").queryAs(RadioButton.class).getLayoutX() + 195;
-        otherRadioX = lookup("#genderOtherRadio").queryAs(RadioButton.class).getLayoutX() + 225;
+        radioY = lookup("#genderMaleRadio").queryAs(RadioButton.class).getLayoutY() + 180;
+        maleRadioX = lookup("#genderMaleRadio").queryAs(RadioButton.class).getLayoutX() + 75;
+        femaleRadioX = lookup("#genderFemaleRadio").queryAs(RadioButton.class).getLayoutX() + 110;
+        otherRadioX = lookup("#genderOtherRadio").queryAs(RadioButton.class).getLayoutX() + 140;
     }
 
     /**
@@ -101,14 +100,15 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             street1TxtDefault = lookup("#street1Txt").queryAs(TextField.class).getText();
             street2TxtDefault = lookup("#street2Txt").queryAs(TextField.class).getText();
             suburbTxtDefault = lookup("#suburbTxt").queryAs(TextField.class).getText();
-            regionTxtDefault = lookup("#regionTxt").queryAs(TextField.class).getText();
             zipTxtDefault = lookup("#zipTxt").queryAs(TextField.class).getText();
             weightTxtDefault = lookup("#weightTxt").queryAs(TextField.class).getText();
             heightTxtDefault = lookup("#heightTxt").queryAs(TextField.class).getText();
 
             bloodGroupDDDefault = lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex();
+            regionDDDefault = lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex();
 
             dobDateDefault = lookup("#dobDate").queryAs(DatePicker.class).getValue();
+            dateOfDeathDefault = lookup("#dateOfDeath").queryAs(DatePicker.class).getValue();
 
             genderMaleRadioDefault = lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected();
             genderFemaleRadioDefault = lookup("#genderFemaleRadio").queryAs(RadioButton.class).isSelected();
@@ -162,9 +162,6 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             lookup("#suburbTxt").queryAs(TextField.class).setText("Suburb2");
             moveTo(undoX, undoY);
             press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-            lookup("#regionTxt").queryAs(TextField.class).setText("Region2");
-            moveTo(undoX, undoY);
-            press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
             lookup("#zipTxt").queryAs(TextField.class).setText("0002");
             moveTo(undoX, undoY);
             press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
@@ -183,7 +180,6 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         assertEquals(street1TxtDefault, lookup("#street1Txt").queryAs(TextField.class).getText());
         assertEquals(street2TxtDefault, lookup("#street2Txt").queryAs(TextField.class).getText());
         assertEquals(suburbTxtDefault, lookup("#suburbTxt").queryAs(TextField.class).getText());
-        assertEquals(regionTxtDefault, lookup("#regionTxt").queryAs(TextField.class).getText());
         assertEquals(zipTxtDefault, lookup("#zipTxt").queryAs(TextField.class).getText());
         assertEquals(weightTxtDefault, lookup("#weightTxt").queryAs(TextField.class).getText());
         assertEquals(heightTxtDefault, lookup("#heightTxt").queryAs(TextField.class).getText());
@@ -218,7 +214,6 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         assertEquals(street1TxtDefault, lookup("#street1Txt").queryAs(TextField.class).getText());
         assertEquals(street2TxtDefault, lookup("#street2Txt").queryAs(TextField.class).getText());
         assertEquals(suburbTxtDefault, lookup("#suburbTxt").queryAs(TextField.class).getText());
-        assertEquals(regionTxtDefault, lookup("#regionTxt").queryAs(TextField.class).getText());
         assertEquals(zipTxtDefault, lookup("#zipTxt").queryAs(TextField.class).getText());
         assertEquals(weightTxtDefault, lookup("#weightTxt").queryAs(TextField.class).getText());
         assertEquals(heightTxtDefault, lookup("#heightTxt").queryAs(TextField.class).getText());
@@ -234,9 +229,12 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
             moveTo(undoX, undoY);
             press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
+            clickOn(undoX, undoY);
         });
 
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == bloodGroupDDDefault);
+        assertTrue(lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == regionDDDefault);
 
         // Check Ctrl Z next
         interact(() -> {
@@ -247,6 +245,7 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
         });
 
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == bloodGroupDDDefault);
+        assertTrue(lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == regionDDDefault);
     }
 
     /**
@@ -259,16 +258,22 @@ public class GUIUndoDonorUpdateTest extends ApplicationTest{
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
             moveTo(undoX, undoY);
             press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+            lookup("#dateOfDeath").queryAs(DatePicker.class).setValue(LocalDate.of(2004, 4, 4));
+            clickOn(undoX, undoY);
         });
-        assertTrue(lookup("#dobDate").queryAs(DatePicker.class).getValue().equals(dobDateDefault));
+        assertEquals(dobDateDefault, lookup("#dobDate").queryAs(DatePicker.class).getValue());
+        assertEquals(dateOfDeathDefault, lookup("#dateOfDeath").queryAs(DatePicker.class).getValue());
 
         // Check Ctrl Z next
         interact(() -> {
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2003, 3, 3));
             press(CONTROL).press(Z).release(CONTROL).release(Z);
+            lookup("#dateOfDeath").queryAs(DatePicker.class).setValue(LocalDate.of(2005, 5, 5));
+            press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
 
-        assertTrue(lookup("#dobDate").queryAs(DatePicker.class).getValue().equals(dobDateDefault));
+        assertEquals(dobDateDefault, lookup("#dobDate").queryAs(DatePicker.class).getValue());
+        assertEquals(dateOfDeathDefault, lookup("#dateOfDeath").queryAs(DatePicker.class).getValue());
     }
 
     /**

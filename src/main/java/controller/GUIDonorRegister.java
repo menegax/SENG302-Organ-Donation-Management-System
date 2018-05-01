@@ -3,6 +3,7 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Control;
@@ -82,6 +83,10 @@ public class GUIDonorRegister {
         donorRegisterAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 register();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
+                undo();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
+                redo();
             }
         });
     }

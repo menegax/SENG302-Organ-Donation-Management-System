@@ -6,11 +6,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.Donor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
+import service.Database;
+import utility.GlobalEnums;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static javafx.scene.input.KeyCode.CONTROL;
 import static javafx.scene.input.KeyCode.Y;
@@ -50,10 +56,16 @@ public class GUIRedoDonorDonationsTest extends ApplicationTest{
      */
     @Override
     public void start(Stage stage) throws Exception {
+
+        // add dummy donor
+        ArrayList<String> dal = new ArrayList<>();
+        dal.add("Middle");
+        Database.addDonor(new Donor("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+
         main.start(stage);
         interact(() -> {
             stage.setFullScreen(true);
-            lookup("#nhiLogin").queryAs(TextField.class).setText("ABC1238");
+            lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).fire();
             lookup("#profileButton").queryAs(Button.class).fire();
             lookup("#donationsButton").queryAs(Button.class).fire();
@@ -90,6 +102,7 @@ public class GUIRedoDonorDonationsTest extends ApplicationTest{
      */
     @After
     public void waitForEvents() {
+        Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }
@@ -297,7 +310,7 @@ public class GUIRedoDonorDonationsTest extends ApplicationTest{
         interact(() -> {
             clickOn(redoX, redoY);
         });
-        assertTrue(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertFalse(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
             clickOn(redoX, redoY);
         });
@@ -305,23 +318,23 @@ public class GUIRedoDonorDonationsTest extends ApplicationTest{
 
         // Check Ctrl Y next
         interact(() -> {
-            lookup("#liverCB").queryAs(CheckBox.class).setSelected(true);
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(false);
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(true);
+            lookup("#liverCB").queryAs(CheckBox.class).setSelected(false);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
+            press(CONTROL).press(Y).release(CONTROL).release(Y);
+        });
+        assertFalse(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        interact(() -> {
             press(CONTROL).press(Y).release(CONTROL).release(Y);
         });
         assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
             press(CONTROL).press(Y).release(CONTROL).release(Y);
         });
-        assertTrue(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
-        interact(() -> {
-            press(CONTROL).press(Y).release(CONTROL).release(Y);
-        });
-        assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertFalse(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
     }
 
     /**

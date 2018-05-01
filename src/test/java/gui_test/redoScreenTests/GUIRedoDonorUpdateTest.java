@@ -4,13 +4,17 @@ import controller.Main;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import model.Donor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
+import service.Database;
+import utility.GlobalEnums;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static javafx.scene.input.KeyCode.CONTROL;
 import static javafx.scene.input.KeyCode.Y;
@@ -35,14 +39,15 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
     private String street1TxtDefault;
     private String street2TxtDefault;
     private String suburbTxtDefault;
-    private String regionTxtDefault;
     private String zipTxtDefault;
     private String weightTxtDefault;
     private String heightTxtDefault;
 
     private int bloodGroupDDDefault;
+    private int regionDDDefault;
 
     private LocalDate dobDateDefault;
+    private LocalDate dateOfDeathDefault;
 
     private boolean genderMaleRadioDefault;
     private boolean genderFemaleRadioDefault;
@@ -60,22 +65,28 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
      */
     @Override
     public void start(Stage stage) throws Exception {
+
+        // add dummy donor
+        ArrayList<String> dal = new ArrayList<>();
+        dal.add("Middle");
+        Database.addDonor(new Donor("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+
         main.start(stage);
         interact(() -> {
             stage.setFullScreen(true);
-            lookup("#nhiLogin").queryAs(TextField.class).setText("ABC1238");
+            lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).fire();
             lookup("#profileButton").queryAs(Button.class).fire();
-            lookup("#editButton").queryAs(Button.class).fire();
+            lookup("#editDonorButton").queryAs(Button.class).fire();
         });
         undoX = lookup("#undoButton").queryAs(Button.class).getLayoutX() + 240;
         undoY = lookup("#undoButton").queryAs(Button.class).getLayoutY() + 28;
         redoX = lookup("#redoButton").queryAs(Button.class).getLayoutX() + 330;
         redoY = lookup("#redoButton").queryAs(Button.class).getLayoutY() + 28;
-        radioY = lookup("#genderMaleRadio").queryAs(RadioButton.class).getLayoutY() + 150;
-        maleRadioX = lookup("#genderMaleRadio").queryAs(RadioButton.class).getLayoutX() + 165;
-        femaleRadioX = lookup("#genderFemaleRadio").queryAs(RadioButton.class).getLayoutX() + 195;
-        otherRadioX = lookup("#genderOtherRadio").queryAs(RadioButton.class).getLayoutX() + 225;
+        radioY = lookup("#genderMaleRadio").queryAs(RadioButton.class).getLayoutY() + 180;
+        maleRadioX = lookup("#genderMaleRadio").queryAs(RadioButton.class).getLayoutX() + 75;
+        femaleRadioX = lookup("#genderFemaleRadio").queryAs(RadioButton.class).getLayoutX() + 110;
+        otherRadioX = lookup("#genderOtherRadio").queryAs(RadioButton.class).getLayoutX() + 140;
     }
 
     /**
@@ -91,14 +102,15 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
             street1TxtDefault = lookup("#street1Txt").queryAs(TextField.class).getText();
             street2TxtDefault = lookup("#street2Txt").queryAs(TextField.class).getText();
             suburbTxtDefault = lookup("#suburbTxt").queryAs(TextField.class).getText();
-            regionTxtDefault = lookup("#regionTxt").queryAs(TextField.class).getText();
             zipTxtDefault = lookup("#zipTxt").queryAs(TextField.class).getText();
             weightTxtDefault = lookup("#weightTxt").queryAs(TextField.class).getText();
             heightTxtDefault = lookup("#heightTxt").queryAs(TextField.class).getText();
 
             bloodGroupDDDefault = lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex();
+            regionDDDefault = lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex();
 
             dobDateDefault = lookup("#dobDate").queryAs(DatePicker.class).getValue();
+            dateOfDeathDefault = lookup("#dateOfDeath").queryAs(DatePicker.class).getValue();
 
             genderMaleRadioDefault = lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected();
             genderFemaleRadioDefault = lookup("#genderFemaleRadio").queryAs(RadioButton.class).isSelected();
@@ -111,6 +123,7 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
      */
     @After
     public void waitForEvents() {
+        Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }
@@ -177,13 +190,6 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
             clickOn(redoX, redoY);
         });
         assertTrue(lookup("#suburbTxt").queryAs(TextField.class).getText().equals("Suburb2"));
-
-        interact(() -> {
-            lookup("#regionTxt").queryAs(TextField.class).setText("Region2");
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
-        });
-        assertTrue(lookup("#regionTxt").queryAs(TextField.class).getText().equals("Region2"));
 
         interact(() -> {
             lookup("#zipTxt").queryAs(TextField.class).setText("0002");
@@ -257,13 +263,6 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
         assertTrue(lookup("#suburbTxt").queryAs(TextField.class).getText().equals("Suburb2"));
 
         interact(() -> {
-            lookup("#regionTxt").queryAs(TextField.class).setText("Region2");
-            press(CONTROL).press(Z).release(CONTROL).release(Z);
-            press(CONTROL).press(Y).release(CONTROL).release(Y);
-        });
-        assertTrue(lookup("#regionTxt").queryAs(TextField.class).getText().equals("Region2"));
-
-        interact(() -> {
             lookup("#zipTxt").queryAs(TextField.class).setText("0002");
             press(CONTROL).press(Z).release(CONTROL).release(Z);
             press(CONTROL).press(Y).release(CONTROL).release(Y);
@@ -295,18 +294,26 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
             clickOn(undoX, undoY);
             clickOn(redoX, redoY);
+            lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
+            clickOn(undoX, undoY);
+            clickOn(redoX, redoY);
         });
 
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 1);
+        assertTrue(lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 1);
 
         // Check Ctrl Y next
         interact(() -> {
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(2);
             press(CONTROL).press(Z).release(Z).release(CONTROL);
             press(CONTROL).press(Y).release(CONTROL).release(Y);
+            lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().select(2);
+            press(CONTROL).press(Z).release(Z).release(CONTROL);
+            press(CONTROL).press(Y).release(CONTROL).release(Y);
         });
 
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 2);
+        assertTrue(lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 2);
     }
 
     /**
@@ -319,18 +326,26 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
             clickOn(undoX, undoY);
             clickOn(redoX, redoY);
+            lookup("#dateOfDeath").queryAs(DatePicker.class).setValue(LocalDate.of(2004, 4, 4));
+            clickOn(undoX, undoY);
+            clickOn(redoX, redoY);
         });
 
         assertEquals(LocalDate.of(2002, 2, 2), lookup("#dobDate").queryAs(DatePicker.class).getValue());
+        assertEquals(LocalDate.of(2004, 4, 4), lookup("#dateOfDeath").queryAs(DatePicker.class).getValue());
 
         // Check Ctrl Y next
         interact(() -> {
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2003, 3, 3));
             press(CONTROL).press(Z).release(Z).release(CONTROL);
             press(CONTROL).press(Y).release(CONTROL).release(Y);
+            lookup("#dateOfDeath").queryAs(DatePicker.class).setValue(LocalDate.of(2005, 5, 5));
+            press(CONTROL).press(Z).release(Z).release(CONTROL);
+            press(CONTROL).press(Y).release(CONTROL).release(Y);
         });
 
         assertEquals(LocalDate.of(2003, 3, 3), lookup("#dobDate").queryAs(DatePicker.class).getValue());
+        assertEquals(LocalDate.of(2005, 5, 5), lookup("#dateOfDeath").queryAs(DatePicker.class).getValue());
     }
 
     /**

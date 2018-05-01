@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
@@ -110,6 +111,12 @@ public class GUIDonorUpdateProfile {
         donorUpdateAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveProfile();
+            }
+            else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
+                undo();
+            }
+            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
+                redo();
             }
         });
     }
