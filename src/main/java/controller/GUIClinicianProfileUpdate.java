@@ -106,7 +106,6 @@ public class GUIClinicianProfileUpdate {
             populateForm(clinician);
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
-            e.printStackTrace();
         }
     }
 
