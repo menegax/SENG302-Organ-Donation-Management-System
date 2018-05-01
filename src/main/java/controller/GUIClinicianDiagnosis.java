@@ -218,6 +218,41 @@ public class GUIClinicianDiagnosis {
         goToProfile();
     }
 
+    /**
+     * Updates the disease name for a current diagnosis
+     * @param index The index in the list of the diagnosis being updated
+     * @param name The Disease name update
+     */
+    private void updateCurrentName(int index, String name) {
+        currentDonor.getCurrentDiseases().get( index ).setDiseaseName(name);
+    }
+
+    /**
+     * Updates the disease name for a current diagnosis
+     * @param index The index in the list of the diagnosis being updated
+     * @param name The Disease name update
+     */
+    private void updatePastName(int index, String name) {
+        currentDonor.getCurrentDiseases().get( index ).setDiseaseName(name);
+    }
+
+    /**
+     * Updates the disease state for a current diagnosis
+     * @param index The index in the list of the diagnosis being updated
+     * @param status The Disease status update
+     */
+    private void updateCurrentStatus(int index, String status) {
+        currentDonor.getCurrentDiseases().get( index ).setDiseaseState( (GlobalEnums.DiseaseState) GlobalEnums.DiseaseState.getEnumFromString( status ) );
+    }
+
+    /**
+     * Updates the disease state for a past diagnosis
+     * @param index The index in the list of the diagnosis being updated
+     * @param status The Disease status update
+     */
+    private void updatePastStatus(int index, String status) {
+        currentDonor.getPastDiseases().get( index ).setDiseaseState( (GlobalEnums.DiseaseState) GlobalEnums.DiseaseState.getEnumFromString( status ) );
+    }
 
     @FXML
     public void deleteDiagnoses() {
