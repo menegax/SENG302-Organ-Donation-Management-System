@@ -32,8 +32,7 @@ public class GUIDrugInteractionsTest extends ApplicationTest {
     @Before
     public void LoginAndNavigateToMedicationPanel() {
         // Log in to the app
-        Database.addDonor(new Donor("ABC1237", "Joe", null,"Bloggs", LocalDate.of(1990, 2, 9)));
-        general.loginDonor("ABC1237");
+        general.loginDonor("ABC1238");
 
         // Navigate to the profile panel (where the medication test button is currently found)
         navigation.toProfileFromHomeDonor();

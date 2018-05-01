@@ -15,7 +15,6 @@ import testfx.FXNavigation;
 import testfx.General;
 import testfx.FXMedicationHelper;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static org.testfx.api.FxAssert.verifyThat;
@@ -31,8 +30,7 @@ public class GUIMedicationTest extends ApplicationTest {
     @Override
     public void start( Stage stage ) throws Exception {
         main.start( stage );
-        Database.addDonor(new Donor("ABC1237", "Joe", null,"Bloggs", LocalDate.of(1990, 2, 9)));
-        target = Database.getDonorByNhi("ABC1237");
+        target = Database.getDonorByNhi( "ABC1238" );
     }
 
     /**
