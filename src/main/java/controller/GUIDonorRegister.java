@@ -52,22 +52,10 @@ public class GUIDonorRegister {
     private Pane donorRegisterAnchorPane;
 
 
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
-
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
-
     private StringConverter<LocalDate> dateConverter;
 
-    private StatesHistoryScreen statesHistoryScreen;
 
+    private StatesHistoryScreen statesHistoryScreen;
 
 
     public void initialize() {
@@ -88,18 +76,15 @@ public class GUIDonorRegister {
         });
     }
 
-    /**
-     * Sets up register page GUI elements
-     */
-    public void initialize() {
-        setDateConverter();
+    @FXML
+    private void undo() {
+        statesHistoryScreen.undo();
+    }
 
-        // Enter key triggers log in
-        registerPane.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                register();
-            }
-        });
+
+    @FXML
+    private void redo() {
+        statesHistoryScreen.redo();
     }
 
 
@@ -115,12 +100,13 @@ public class GUIDonorRegister {
     /**
      * Clears the data in the fields of the GUI
      */
-    private void clearFields(){
+    private void clearFields() {
         nhiRegister.clear();
         firstnameRegister.clear();
         lastnameRegister.clear();
         middlenameRegister.clear();
-        birthRegister.getEditor().clear();
+        birthRegister.getEditor()
+                .clear();
     }
 
 
