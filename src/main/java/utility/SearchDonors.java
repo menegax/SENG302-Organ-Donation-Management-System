@@ -37,7 +37,7 @@ public class SearchDonors {
 
     private static IndexSearcher indexSearcher = null;
 
-    private static int NUM_RESULTS = 20;
+    private static int NUM_RESULTS = 30;
 
 
     /**
