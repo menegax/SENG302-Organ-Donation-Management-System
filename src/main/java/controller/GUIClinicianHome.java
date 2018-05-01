@@ -22,6 +22,6 @@ public class GUIClinicianHome {
     public void saveClinician() {
         Database.saveToDisk();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Saved!");
-        alert.showAndWait();
+        alert.show();
     }
 }

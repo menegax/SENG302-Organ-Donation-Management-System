@@ -43,6 +43,6 @@ public class GUIDonorHome {
     public void save() {
         Database.saveToDisk();
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Successfully saved!");
-        alert.showAndWait();
+        alert.show();
     }
 }

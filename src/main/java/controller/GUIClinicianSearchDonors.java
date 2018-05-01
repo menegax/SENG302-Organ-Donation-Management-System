@@ -96,7 +96,7 @@ public class GUIClinicianSearchDonors implements Initializable {
                     userActions.log(Level.SEVERE,
                             "Failed to open donor profile scene from search donors table",
                             "attempted to open donor edit window from search donors table");
-                    new Alert(Alert.AlertType.ERROR, "Unable to open donor edit window", ButtonType.OK).showAndWait();
+                    new Alert(Alert.AlertType.ERROR, "Unable to open donor edit window", ButtonType.OK).show();
                 }
             }
 

@@ -51,8 +51,7 @@ public class GUIClinicianProfile {
             ScreenControl.activate("clinicianProfileUpdate");
         }catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading clinician update screen", "attempted to navigate from the clinician profile page to the edit page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading clinician edit page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
+            new Alert(Alert.AlertType.WARNING, "ERROR loading clinician edit page", ButtonType.OK).show();
         }
     }
 

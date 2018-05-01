@@ -520,7 +520,7 @@ public class GUIDonorUpdateProfile implements IPopupable{
             }
             catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
-                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
+                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).show();
             }
         }
         else {
@@ -532,7 +532,7 @@ public class GUIDonorUpdateProfile implements IPopupable{
                 userActions.log(Level.SEVERE,
                         "Error loading profile screen in popup",
                         "attempted to navigate from the edit page to the profile page in popup");
-                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
+                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).show();
             }
         }
     }

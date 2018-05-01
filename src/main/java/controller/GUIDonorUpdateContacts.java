@@ -312,7 +312,7 @@ public class GUIDonorUpdateContacts implements IPopupable {
                 ScreenControl.activate("donorProfile");
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error returning to profile screen", "attempted to navigate from the donation page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).showAndWait();
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfile.fxml"));
@@ -320,7 +320,7 @@ public class GUIDonorUpdateContacts implements IPopupable {
                 ScreenControl.loadPopUpPane(donorContactsPane.getScene(), fxmlLoader, target);
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error returning to profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).showAndWait();
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
             }
         }
     }

@@ -171,7 +171,7 @@ public class GUIDonorProfile implements IPopupable {
             }
             catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading update screen", "attempted to navigate from the profile page to the edit page");
-                new Alert(Alert.AlertType.ERROR, "Error loading edit page", ButtonType.OK).showAndWait();
+                new Alert(Alert.AlertType.ERROR, "Error loading edit page", ButtonType.OK).show();
             }
         }
         else {
@@ -183,7 +183,7 @@ public class GUIDonorProfile implements IPopupable {
                 userActions.log(Level.SEVERE,
                         "Error loading update screen in popup",
                         "attempted to navigate from the profile page to the edit page in popup");
-                new Alert(Alert.AlertType.ERROR, "Error loading edit page", ButtonType.OK).showAndWait();
+                new Alert(Alert.AlertType.ERROR, "Error loading edit page", ButtonType.OK).show();
             }
         }
     }
@@ -198,7 +198,7 @@ public class GUIDonorProfile implements IPopupable {
             }
             catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading donation screen", "attempted to navigate from the profile page to the donation page");
-                new Alert(Alert.AlertType.ERROR, "Error loading donation page", ButtonType.OK).showAndWait();
+                new Alert(Alert.AlertType.ERROR, "Error loading donation page", ButtonType.OK).show();
             }
         }
         else {
@@ -210,7 +210,7 @@ public class GUIDonorProfile implements IPopupable {
                 userActions.log(Level.SEVERE,
                         "Error loading donation screen in popup",
                         "attempted to navigate from the profile page to the donation page in popup");
-                new Alert(Alert.AlertType.ERROR, "Error loading edit page", ButtonType.OK).showAndWait();
+                new Alert(Alert.AlertType.ERROR, "Error loading edit page", ButtonType.OK).show();
             }
         }
     }
@@ -226,18 +226,18 @@ public class GUIDonorProfile implements IPopupable {
                 userActions.log(Level.SEVERE,
                         "Error loading contact details screen",
                         "attempted to navigate from the profile page to the contact details page");
-                new Alert(Alert.AlertType.ERROR, "Error loading contact details page", ButtonType.OK).showAndWait();
+                new Alert(Alert.AlertType.ERROR, "Error loading contact details page", ButtonType.OK).show();
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorUpdateContacts.fxml"));
             try {
                 ScreenControl.loadPopUpPane(donorProfilePane.getScene(), fxmlLoader, viewedDonor);
             }
-            catch (Exception e) {
+            catch (IOException e) {
                 userActions.log(Level.SEVERE,
                         "Error loading contacts screen in popup",
                         "attempted to navigate from the profile page to the contacts page in popup");
-                new Alert(Alert.AlertType.ERROR, "Error loading contacts page", ButtonType.OK).showAndWait();
+                new Alert(Alert.AlertType.ERROR, "Error loading contacts page", ButtonType.OK).show();
             }
         }
     }
