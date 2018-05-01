@@ -20,7 +20,13 @@ import service.Database;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -166,20 +172,38 @@ public class SearchDonors {
         }
 
         TopDocs docs;
+        Set<ScoreDoc> allDocs = new HashSet<ScoreDoc>();
 		try {
 			String nhi;
 			Donor donor;
 			for (FuzzyQuery query : queries) {
 				docs = searchQuery(query);
-	        
 				for (ScoreDoc doc : docs.scoreDocs) {
-	            	Document thisDoc = indexSearcher.doc(doc.doc);
-	            	nhi = thisDoc.get("nhi");
-	            	donor = Database.getDonorByNhi(nhi);
-	            	if (!results.contains(donor)) {
-	            		results.add(donor);
-	            	}
+					allDocs.add(doc);
 	        	}
+			}
+			SortedSet<ScoreDoc> sortedDocs = new TreeSet<ScoreDoc>(new Comparator<ScoreDoc>() {
+	            @Override
+	            public int compare(ScoreDoc o1, ScoreDoc o2) {
+	                return new Float(o2.score).compareTo(o1.score);
+	            }
+	        });
+	        sortedDocs.addAll(allDocs);
+			
+			for (ScoreDoc doc : sortedDocs) {
+				System.out.println(String.valueOf(doc.score) + " score for " +
+						Database.getDonorByNhi(indexSearcher.doc(doc.doc).get("nhi")).getNameConcatenated() + 
+						"\n-----------------------------------------------");
+				Document thisDoc = indexSearcher.doc(doc.doc);
+				nhi = thisDoc.get("nhi");
+				donor = Database.getDonorByNhi(nhi);
+				if (!results.contains(donor)) {
+					results.add(donor);
+				}
+        	}
+			System.out.println("Final list: ");
+			for (Donor d : results) {
+				System.out.println(d.getNameConcatenated());
 			}
             userActions.log(Level.INFO,"Successfully searched for donors with input " + input, "Attempted to search for donors");
 		} catch (IOException e) {
