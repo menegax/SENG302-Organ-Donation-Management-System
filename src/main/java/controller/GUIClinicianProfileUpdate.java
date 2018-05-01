@@ -23,6 +23,9 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
+/**
+ * Controller class to control GUI Clinician updating screen.
+ */
 public class GUIClinicianProfileUpdate {
 
     @FXML
@@ -54,16 +57,27 @@ public class GUIClinicianProfileUpdate {
 
     private StatesHistoryScreen screenHistory;
 
+    /**
+     * Undoes an action taken when editing a clinician
+     */
     @FXML
     public void undo(){
         screenHistory.undo();
     }
 
+    /**
+     * Redoes an action taken when editing a clinician
+     */
     @FXML
     public void redo(){
         screenHistory.redo();
     }
 
+    /**
+     * Initializes the clinician editing screen.
+     * Populates the Region drop down menu using region enums.
+     * Calls to load the clinician profile and calls to set up undo/redo functionality
+     */
     public void initialize() {
         // Populate region dropdown with values from the Regions enum
         List<String> regions = new ArrayList<>();
@@ -80,6 +94,11 @@ public class GUIClinicianProfileUpdate {
         setUpStateHistory();
     }
 
+    /**
+     * Loads the currently logged in clinician from the Database and populates the tables using the logged
+     * in clinician's attributes.
+     * @param staffId ID of clinician to load
+     */
     private void loadProfile(int staffId) {
         try {
             Clinician clinician = Database.getClinicianByID(staffId);
@@ -91,6 +110,10 @@ public class GUIClinicianProfileUpdate {
         }
     }
 
+    /**
+     * Creates a list of control elements using all editable nodes on the update screen and initializes
+     * the StateHistoryScreen used to undo or redo actions using the control elements
+     */
     private void setUpStateHistory() {
         ArrayList<Control> elements = new ArrayList<Control>() {{
             add(staffId);
@@ -105,9 +128,14 @@ public class GUIClinicianProfileUpdate {
         screenHistory = new StatesHistoryScreen(clinicianUpdateAnchorPane, elements);
     }
 
+    /**
+     * Populates the update screen using the current clinician attributes
+     * @param clinician logged in clinician
+     */
     private void populateForm(Clinician clinician) {
-//        lastModifiedLbl.setText("Last Modified: " + clinician.getModified());
+        //adds last modified date only if clinician has been edited before
         if(target.getModified() != null) lastModifiedLbl.setText("Last Updated: " + clinician.getModified().toString());
+        else lastModifiedLbl.setText("Last Updated: n/a");
         staffId.setText(Integer.toString(clinician.getStaffID()));
         firstnameTxt.setText(clinician.getFirstName());
         lastnameTxt.setText(clinician.getLastName());
@@ -122,6 +150,10 @@ public class GUIClinicianProfileUpdate {
         }
     }
 
+    /**
+     * Checks fields for validity before setting clinician's updated attributes and returning to profile.
+     * Changes are saved for the session, but are only persistently saved by calling save from the home page
+     */
     public void saveProfile() {
         Boolean valid = true;
         if (!Pattern.matches("[0-9]{1,3}", staffId.getText())) {
