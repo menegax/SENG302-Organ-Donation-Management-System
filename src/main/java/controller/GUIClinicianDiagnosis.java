@@ -134,17 +134,14 @@ public class GUIClinicianDiagnosis {
 
             for (Disease past : pastDiseases) {
                 if (past.getDiseaseName().equals( diagnosis )) {
-                    past.setDiseaseState(null);
-                    currentDiseases.add( past );
-                    pastDiseases.remove( past );
-                    loadCurrentDiseases();
-                    loadPastDiseases();
-                    newDiagnosis.clear();
+                    moveFromPastToCurrent(past, null);
                     unique = false;
+                    changed = true;
                 }
             }
 
             if (unique) {
+                changed = true;
                 currentDiseases.add( new Disease( diagnosis, null ) );
                 userActions.log( Level.INFO, "Successfully registered a disease", "Registered a new disease for a donor" );
                 loadCurrentDiseases();
@@ -236,10 +233,8 @@ public class GUIClinicianDiagnosis {
             Optional<ButtonType> confirmation = alert.showAndWait();
             if (confirmation.get() == ButtonType.YES) {
                 back = true;
-                System.out.println(currentDiseases);
                 currentDiseases.addAll(deletedCurrent);
                 pastDiseases.addAll(deletedPast);
-                System.out.println(currentDiseases);
             }
         } else {
             back = true;
@@ -274,7 +269,14 @@ public class GUIClinicianDiagnosis {
      * @throws InvalidObjectException Indicates that one or more deserialized objects failed validation tests
      */
     private void updateCurrentDate(int index, LocalDate date) throws InvalidObjectException {
-        currentDonor.getCurrentDiseases().get(index).setDateDiagnosed( date, currentDonor );
+        if (date.isBefore(currentDonor.getBirth())) {
+            new Alert(Alert.AlertType.WARNING, "Can not set date to before donor's DOB: " + currentDonor.getBirth(), ButtonType.OK).show();
+        } else if (date.isAfter( LocalDate.now() )) {
+            new Alert(Alert.AlertType.WARNING, "Can not set date to after the current date", ButtonType.OK).show();
+        } else {
+            currentDonor.getCurrentDiseases().get( index ).setDateDiagnosed( date, currentDonor );
+            changed = true;
+        }
     }
 
     /**
@@ -284,7 +286,14 @@ public class GUIClinicianDiagnosis {
      * @throws InvalidObjectException Indicates that one or more deserialized objects failed validation tests
      */
     private void updatePastDate(int index, LocalDate date) throws InvalidObjectException {
-        currentDonor.getCurrentDiseases().get(index).setDateDiagnosed( date, currentDonor );
+        if (date.isBefore( currentDonor.getBirth() )) {
+            new Alert( Alert.AlertType.WARNING, "Can not set date to before donor's DOB: " + currentDonor.getBirth(), ButtonType.OK ).show();
+        } else if (date.isAfter( LocalDate.now() )) {
+            new Alert( Alert.AlertType.WARNING, "Can not set date to after the current date", ButtonType.OK ).show();
+        } else {
+            currentDonor.getPastDiseases().get( index ).setDateDiagnosed( date, currentDonor );
+            changed = true;
+        }
     }
 
     /**
@@ -294,6 +303,7 @@ public class GUIClinicianDiagnosis {
      */
     private void updateCurrentName(int index, String name) {
         currentDonor.getCurrentDiseases().get( index ).setDiseaseName(name);
+        changed = true;
     }
 
     /**
@@ -302,16 +312,26 @@ public class GUIClinicianDiagnosis {
      * @param name The Disease name update
      */
     private void updatePastName(int index, String name) {
-        currentDonor.getCurrentDiseases().get( index ).setDiseaseName(name);
+        currentDonor.getPastDiseases().get( index ).setDiseaseName(name);
+        changed = true;
     }
 
     /**
-     * Updates the disease state for a current diagnosis
+     * Updates the disease state for a current diagnosis if the update is not 'cured' when the current state is still 'chronic'
+     * If state is set to cured, the disease will be automatically moved to the past diseases list
      * @param index The index in the list of the diagnosis being updated
      * @param status The Disease status update
      */
     private void updateCurrentStatus(int index, String status) {
-        currentDonor.getCurrentDiseases().get( index ).setDiseaseState( (GlobalEnums.DiseaseState) GlobalEnums.DiseaseState.getEnumFromString( status ) );
+        if (status.toLowerCase().equals( "cured" ) && !currentDonor.getCurrentDiseases().get( index ).getDiseaseState().toString().equals("chronic")) {
+            moveFromCurrentToPast(currentDonor.getCurrentDiseases().get( index ), status);
+            changed = true;
+        } else if (!(status.toLowerCase().equals( "cured" ) && currentDonor.getCurrentDiseases().get( index ).getDiseaseState().toString().equals("chronic"))) {
+            new Alert(Alert.AlertType.WARNING, "Can not set disease state to 'cured' if the current state is 'chronic'", ButtonType.OK).show();
+        } else {
+            currentDonor.getCurrentDiseases().get( index ).setDiseaseState( null );
+            changed = true;
+        }
     }
 
     /**
@@ -320,7 +340,51 @@ public class GUIClinicianDiagnosis {
      * @param status The Disease status update
      */
     private void updatePastStatus(int index, String status) {
-        currentDonor.getPastDiseases().get( index ).setDiseaseState( (GlobalEnums.DiseaseState) GlobalEnums.DiseaseState.getEnumFromString( status ) );
+        if (status.toLowerCase().equals("chronic")) {
+            moveFromPastToCurrent(currentDonor.getPastDiseases().get( index ), status);
+        } else {
+            currentDonor.getPastDiseases().get( index ).setDiseaseState( (GlobalEnums.DiseaseState) GlobalEnums.DiseaseState.getEnumFromString( status ) );
+        }
+        changed = true;
+    }
+
+    /**
+     * Moves a diagnosis from the past diseases list to the current diseases list
+     * @param disease The diseases being moved from past to current diseases list
+     * @param state The state of the disease; chronic or null
+     */
+    private void moveFromPastToCurrent(Disease disease, String state) {
+        if (state == null || state.toLowerCase().equals( "chronic" )) {
+            if (state == null) {
+                disease.setDiseaseState( null );
+            } else {
+                disease.setDiseaseState( (GlobalEnums.DiseaseState) GlobalEnums.DiseaseState.getEnumFromString( state ) );
+            }
+            currentDiseases.add( disease );
+            pastDiseases.remove( disease );
+            loadCurrentDiseases();
+            loadPastDiseases();
+            newDiagnosis.clear();
+        }
+    }
+
+    /**
+     * Moves a diagnosis from the current diseases list to the past diseases list
+     * @param disease The diseases being moved from current to past diseases list
+     * @param state The state of the disease; cured or null
+     */
+    private void moveFromCurrentToPast(Disease disease, String state) {
+        if (state == null || state.toLowerCase().equals( "cured" )) {
+            if (state == null) {
+                disease.setDiseaseState( null );
+            } else {
+                disease.setDiseaseState( (GlobalEnums.DiseaseState) GlobalEnums.DiseaseState.getEnumFromString( state ) );
+            }
+            pastDiseases.add( disease );
+            currentDiseases.remove( disease );
+            loadPastDiseases();
+            loadCurrentDiseases();
+        }
     }
 
     @FXML
