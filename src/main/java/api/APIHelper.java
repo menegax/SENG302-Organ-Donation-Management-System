@@ -20,10 +20,7 @@ public class APIHelper {
         String response = Request.Get(uri) //using fluent api, as to wrap resource management
                 .execute()
                 .returnContent().asString();
-        JsonReader reader = new JsonReader(new StringReader(response));
-        reader.setLenient(true);
-        System.out.println(response);
-        return new JsonParser().parse(reader).getAsJsonObject();
+        return new JsonParser().parse(response).getAsJsonObject();
     }
 
     /**

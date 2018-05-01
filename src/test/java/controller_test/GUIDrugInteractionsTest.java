@@ -2,15 +2,18 @@ package controller_test;
 
 import controller.Main;
 import javafx.stage.Stage;
+import model.Donor;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
+import service.Database;
 import testfx.FXMedicationHelper;
 import testfx.FXNavigation;
 import testfx.General;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +32,9 @@ public class GUIDrugInteractionsTest extends ApplicationTest {
     @Before
     public void LoginAndNavigateToMedicationPanel() {
         // Log in to the app
-        general.loginDonor("ABC1238");
+        Database.addDonor(new Donor("ABC1237", "Joe", null,"Bloggs", LocalDate.of(1990, 2, 9)));
+        general.loginDonor("ABC1237");
+
         // Navigate to the profile panel (where the medication test button is currently found)
         navigation.toProfileFromHomeDonor();
         // Navigate to the medication panel via the temporary test medication button found in profile panel
