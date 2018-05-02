@@ -59,7 +59,7 @@ public class GUIUndoDonorDonationsTest extends ApplicationTest{
             lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).fire();
             lookup("#profileButton").queryAs(Button.class).fire();
-            lookup("#donationsButton").queryAs(Button.class).fire();
+            lookup("#donationButton").queryAs(Button.class).fire();
         });
     }
 
