@@ -25,9 +25,6 @@ public class GUIUndoDonorRegisterTest extends ApplicationTest{
 
     private Main main = new Main();
 
-    private double undoX;
-    private double undoY;
-
     private String firstnameRegisterDefault;
     private String lastnameRegisterDefault;
     private String middlenameRegisterDefault;
@@ -43,11 +40,8 @@ public class GUIUndoDonorRegisterTest extends ApplicationTest{
     public void start(Stage stage) throws Exception {
         main.start(stage);
         interact(() -> {
-            stage.setFullScreen(true);
             lookup("#registerHyperlink").queryAs(Hyperlink.class).fire();
         });
-        undoX = lookup("#undoButton").queryAs(Button.class).getLayoutX() + 240;
-        undoY = lookup("#undoButton").queryAs(Button.class).getLayoutY() + 28;
     }
 
     /**
@@ -91,13 +85,13 @@ public class GUIUndoDonorRegisterTest extends ApplicationTest{
         // Check undo button first
         interact(() -> {
             lookup("#firstnameRegister").queryAs(TextField.class).setText("FirstName2");
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#lastnameRegister").queryAs(TextField.class).setText("LastName2");
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#middlenameRegister").queryAs(TextField.class).setText("MiddleName2");
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#nhiRegister").queryAs(TextField.class).setText("BBB2222");
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
 
         assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals(nhiRegisterDefault));
@@ -131,7 +125,7 @@ public class GUIUndoDonorRegisterTest extends ApplicationTest{
         // Check undo button first
         interact(() -> {
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
 
         assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
@@ -155,15 +149,15 @@ public class GUIUndoDonorRegisterTest extends ApplicationTest{
             lookup("#nhiRegister").queryAs(TextField.class).setText("BBB2222");
             lookup("#nhiRegister").queryAs(TextField.class).setText("CCC3333");
             lookup("#nhiRegister").queryAs(TextField.class).setText("DDD4444");
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("CCC3333"));
         interact(() -> {
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
         interact(() -> {
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals(nhiRegisterDefault));
 
@@ -171,15 +165,15 @@ public class GUIUndoDonorRegisterTest extends ApplicationTest{
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(2003, 3, 3));
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(2004, 4, 4));
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertEquals(LocalDate.of(2003, 3, 3), lookup("#birthRegister").queryAs(DatePicker.class).getValue());
         interact(() -> {
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertEquals(LocalDate.of(2002, 2, 2), lookup("#birthRegister").queryAs(DatePicker.class).getValue());
         interact(() -> {
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
 
@@ -227,19 +221,19 @@ public class GUIUndoDonorRegisterTest extends ApplicationTest{
             lookup("#nhiRegister").queryAs(TextField.class).setText("BBB2222");
             lookup("#firstnameRegister").queryAs(TextField.class).setText("FirstName2");
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
         assertTrue(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("FirstName2"));
         assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
         interact(() -> {
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
         assertTrue(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals(firstnameRegisterDefault));
         assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
         interact(() -> {
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals(nhiRegisterDefault));
         assertTrue(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals(firstnameRegisterDefault));

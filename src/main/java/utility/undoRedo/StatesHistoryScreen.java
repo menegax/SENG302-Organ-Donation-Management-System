@@ -38,12 +38,10 @@ public class StatesHistoryScreen {
      */
     public StatesHistoryScreen(Pane pane, ArrayList<Control> params) {
         pane.setOnKeyPressed(event -> {
-            if (KeyCodeCombination.keyCombination("Ctrl+Z")
-                    .match(event)) {
+            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
                 undo();
             }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y")
-                    .match(event)) {
+            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
                 redo();
             }
         });
@@ -84,12 +82,10 @@ public class StatesHistoryScreen {
                     }
                 });
         ((TextField) entry).setOnKeyPressed(event -> {
-            if (KeyCodeCombination.keyCombination("Ctrl+Z")
-                    .match(event)) {
+            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
                 undo();
             }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y")
-                    .match(event)) {
+            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
                 redo();
             }
         });
@@ -131,11 +127,11 @@ public class StatesHistoryScreen {
     private void createStateHistoriesRadioButton(Object radioButton) {
         StateHistoryRadioButton stateHistoryRadioButton = new StateHistoryRadioButton((RadioButton) radioButton);
         stateHistories.add(stateHistoryRadioButton);
-        ((RadioButton) radioButton).setOnMouseClicked(event -> {
-            if (!(boolean) stateHistoryRadioButton.getStates().get(stateHistoryRadioButton.getIndex())) {
-                store();
-            }
-        });
+        ((RadioButton) radioButton).selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue != oldValue && !undone && !redone && ((RadioButton) radioButton).focusedProperty().getValue()) { //don't want to store state when radioButton has been undone
+                        store();
+                    }
+                });
         ((RadioButton) radioButton).setOnKeyPressed(event -> {
             ((RadioButton) radioButton).getParent().requestFocus();
         });

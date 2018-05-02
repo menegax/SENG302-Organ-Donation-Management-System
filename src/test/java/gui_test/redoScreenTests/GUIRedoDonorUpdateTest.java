@@ -28,10 +28,6 @@ import static org.testfx.api.FxAssert.verifyThat;
 public class GUIRedoDonorUpdateTest extends ApplicationTest{
 
     private Main main = new Main();
-    private double undoX;
-    private double undoY;
-    private double redoX;
-    private double redoY;
     private String nhiTxtDefault;
     private String firstnameTxtDefault;
     private String lastnameTxtDefault;
@@ -53,11 +49,6 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
     private boolean genderFemaleRadioDefault;
     private boolean genderOtherRadioDefault;
 
-    private double radioY;
-    private double maleRadioX;
-    private double femaleRadioX;
-    private double otherRadioX;
-
     /**
      * Launches the main application
      * @param stage the stage to launch the app on
@@ -73,20 +64,11 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
 
         main.start(stage);
         interact(() -> {
-            stage.setFullScreen(true);
             lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).fire();
             lookup("#profileButton").queryAs(Button.class).fire();
             lookup("#editDonorButton").queryAs(Button.class).fire();
         });
-        undoX = lookup("#undoButton").queryAs(Button.class).getLayoutX() + 240;
-        undoY = lookup("#undoButton").queryAs(Button.class).getLayoutY() + 28;
-        redoX = lookup("#redoButton").queryAs(Button.class).getLayoutX() + 330;
-        redoY = lookup("#redoButton").queryAs(Button.class).getLayoutY() + 28;
-        radioY = lookup("#genderMaleRadio").queryAs(RadioButton.class).getLayoutY() + 180;
-        maleRadioX = lookup("#genderMaleRadio").queryAs(RadioButton.class).getLayoutX() + 75;
-        femaleRadioX = lookup("#genderFemaleRadio").queryAs(RadioButton.class).getLayoutX() + 110;
-        otherRadioX = lookup("#genderOtherRadio").queryAs(RadioButton.class).getLayoutX() + 140;
     }
 
     /**
@@ -144,71 +126,71 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
         // Check redo button first
         interact(() -> {
             lookup("#nhiTxt").queryAs(TextField.class).setText("BBB2222");
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("BBB2222"));
 
         interact(() -> {
         lookup("#firstnameTxt").queryAs(TextField.class).setText("FirstName2");
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#firstnameTxt").queryAs(TextField.class).getText().equals("FirstName2"));
 
         interact(() -> {
             lookup("#lastnameTxt").queryAs(TextField.class).setText("LastName2");
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#lastnameTxt").queryAs(TextField.class).getText().equals("LastName2"));
 
         interact(() -> {
             lookup("#middlenameTxt").queryAs(TextField.class).setText("MiddleName2");
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#middlenameTxt").queryAs(TextField.class).getText().equals("MiddleName2"));
 
         interact(() -> {
             lookup("#street1Txt").queryAs(TextField.class).setText("1 Test2 Street");
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#street1Txt").queryAs(TextField.class).getText().equals("1 Test2 Street"));
 
         interact(() -> {
             lookup("#street2Txt").queryAs(TextField.class).setText("2 Test2 Street");
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#street2Txt").queryAs(TextField.class).getText().equals("2 Test2 Street"));
 
         interact(() -> {
             lookup("#suburbTxt").queryAs(TextField.class).setText("Suburb2");
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#suburbTxt").queryAs(TextField.class).getText().equals("Suburb2"));
 
         interact(() -> {
             lookup("#zipTxt").queryAs(TextField.class).setText("0002");
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#zipTxt").queryAs(TextField.class).getText().equals("0002"));
 
         interact(() -> {
             lookup("#weightTxt").queryAs(TextField.class).setText("52");
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#weightTxt").queryAs(TextField.class).getText().equals("52"));
 
         interact(() -> {
             lookup("#heightTxt").queryAs(TextField.class).setText("2.2");
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertEquals("2.2", lookup("#heightTxt").queryAs(TextField.class).getText());
 
@@ -292,11 +274,11 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
         // Check redo button first
         interact(() -> {
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
             lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
 
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 1);
@@ -324,11 +306,11 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
         // Check redo button first
         interact(() -> {
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
             lookup("#dateOfDeath").queryAs(DatePicker.class).setValue(LocalDate.of(2004, 4, 4));
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
 
         assertEquals(LocalDate.of(2002, 2, 2), lookup("#dobDate").queryAs(DatePicker.class).getValue());
@@ -355,40 +337,46 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
     public void redoRadioButtons() {
         // Check redo button first
         interact(() -> {
-            clickOn(maleRadioX, radioY);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected());
         interact(() -> {
-            clickOn(femaleRadioX, radioY);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#genderFemaleRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderFemaleRadio").queryAs(RadioButton.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#genderFemaleRadio").queryAs(RadioButton.class).isSelected());
         interact(() -> {
-            clickOn(otherRadioX, radioY);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#genderOtherRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderOtherRadio").queryAs(RadioButton.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#genderOtherRadio").queryAs(RadioButton.class).isSelected());
 
 
         // Check Ctrl Y next
         interact(() -> {
-            clickOn(maleRadioX, radioY);
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).fire();
             press(CONTROL).press(Z).release(CONTROL).release(Z);;
             press(CONTROL).press(Y).release(CONTROL).release(Y);;
         });
         assertTrue(lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected());
         interact(() -> {
-            clickOn(femaleRadioX, radioY);
+            lookup("#genderFemaleRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderFemaleRadio").queryAs(RadioButton.class).fire();
             press(CONTROL).press(Z).release(CONTROL).release(Z);;
             press(CONTROL).press(Y).release(CONTROL).release(Y);;
         });
         assertTrue(lookup("#genderFemaleRadio").queryAs(RadioButton.class).isSelected());
         interact(() -> {
-            clickOn(otherRadioX, radioY);
+            lookup("#genderOtherRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderOtherRadio").queryAs(RadioButton.class).fire();
             press(CONTROL).press(Z).release(CONTROL).release(Z);;
             press(CONTROL).press(Y).release(CONTROL).release(Y);;
         });
@@ -405,18 +393,18 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
             lookup("#nhiTxt").queryAs(TextField.class).setText("BBB2222");
             lookup("#nhiTxt").queryAs(TextField.class).setText("CCC3333");
             lookup("#nhiTxt").queryAs(TextField.class).setText("DDD4444");
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("BBB2222"));
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("CCC3333"));
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("DDD4444"));
 
@@ -424,18 +412,18 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(2);
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(3);
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 1);
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 2);
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 3);
 
@@ -443,37 +431,40 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2003, 3, 3));
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2004, 4, 4));
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertEquals(LocalDate.of(2002, 2, 2), lookup("#dobDate").queryAs(DatePicker.class).getValue());
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertEquals(LocalDate.of(2003, 3, 3), lookup("#dobDate").queryAs(DatePicker.class).getValue());
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertEquals(LocalDate.of(2004, 4, 4), lookup("#dobDate").queryAs(DatePicker.class).getValue());
 
         interact(() -> {
-            clickOn(maleRadioX, radioY);
-            clickOn(femaleRadioX, radioY);
-            clickOn(maleRadioX, radioY);
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).fire();
+            lookup("#genderFemaleRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderFemaleRadio").queryAs(RadioButton.class).fire();
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected());
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#genderFemaleRadio").queryAs(RadioButton.class).isSelected());
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected());
 
@@ -536,9 +527,12 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
         assertEquals(LocalDate.of(2004, 4, 4), lookup("#dobDate").queryAs(DatePicker.class).getValue());
 
         interact(() -> {
-            clickOn(maleRadioX, radioY);
-            clickOn(femaleRadioX, radioY);
-            clickOn(maleRadioX, radioY);
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).fire();
+            lookup("#genderFemaleRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderFemaleRadio").queryAs(RadioButton.class).fire();
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).fire();
             press(CONTROL).press(Z).release(CONTROL).release(Z);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
@@ -565,33 +559,34 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
             lookup("#nhiTxt").queryAs(TextField.class).setText("BBB2222");
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
-            clickOn(maleRadioX, radioY);
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("BBB2222"));
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == bloodGroupDDDefault);
         assertEquals(dobDateDefault, lookup("#dobDate").queryAs(DatePicker.class).getValue());
         assertEquals(genderMaleRadioDefault, lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected());
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("BBB2222"));
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 1);
         assertEquals(dobDateDefault, lookup("#dobDate").queryAs(DatePicker.class).getValue());
         assertEquals(genderMaleRadioDefault, lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected());
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("BBB2222"));
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 1);
         assertEquals(LocalDate.of(2002, 2, 2), lookup("#dobDate").queryAs(DatePicker.class).getValue());
         assertEquals(genderMaleRadioDefault, lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected());
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("BBB2222"));
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 1);
@@ -603,7 +598,8 @@ public class GUIRedoDonorUpdateTest extends ApplicationTest{
             lookup("#nhiTxt").queryAs(TextField.class).setText("BBB2222");
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
-            clickOn(maleRadioX, radioY);
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).requestFocus();
+            lookup("#genderMaleRadio").queryAs(RadioButton.class).fire();
             press(CONTROL).press(Z).release(CONTROL).release(Z);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
             press(CONTROL).press(Z).release(CONTROL).release(Z);

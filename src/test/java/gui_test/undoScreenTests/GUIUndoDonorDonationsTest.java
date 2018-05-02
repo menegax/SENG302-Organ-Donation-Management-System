@@ -28,9 +28,6 @@ public class GUIUndoDonorDonationsTest extends ApplicationTest{
 
     private Main main = new Main();
 
-    private double undoX;
-    private double undoY;
-
     private boolean liverCBDefault;
     private boolean kidneyCBDefault;
     private boolean pancreasCBDefault;
@@ -59,14 +56,11 @@ public class GUIUndoDonorDonationsTest extends ApplicationTest{
 
         main.start(stage);
         interact(() -> {
-            stage.setFullScreen(true);
             lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).fire();
             lookup("#profileButton").queryAs(Button.class).fire();
             lookup("#donationsButton").queryAs(Button.class).fire();
         });
-        undoX = lookup("#undoButton").queryAs(Button.class).getLayoutX() + 240;
-        undoY = lookup("#undoButton").queryAs(Button.class).getLayoutY() + 28;
     }
 
     /**
@@ -116,29 +110,29 @@ public class GUIUndoDonorDonationsTest extends ApplicationTest{
         // Check undo button first
         interact(() -> {
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#kidneyCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#pancreasCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#heartCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#lungCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#intestineCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#corneaCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#middleearCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#skinCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#boneCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#bonemarrowCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
             lookup("#connectivetissueCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
 
         assertEquals(liverCBDefault, lookup("#liverCB").queryAs(CheckBox.class).isSelected());
@@ -206,15 +200,15 @@ public class GUIUndoDonorDonationsTest extends ApplicationTest{
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(true);
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(false);
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertTrue(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertEquals(liverCBDefault, lookup("#liverCB").queryAs(CheckBox.class).isSelected());
 
@@ -246,19 +240,19 @@ public class GUIUndoDonorDonationsTest extends ApplicationTest{
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(true);
             lookup("#kidneyCB").queryAs(CheckBox.class).setSelected(true);
             lookup("#pancreasCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         assertTrue(lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
         assertEquals(pancreasCBDefault, lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         assertEquals(kidneyCBDefault, lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
         assertEquals(pancreasCBDefault, lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
-            clickOn(undoX, undoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
         });
         assertEquals(liverCBDefault, lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         assertEquals(kidneyCBDefault, lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());

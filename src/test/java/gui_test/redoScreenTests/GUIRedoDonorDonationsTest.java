@@ -31,11 +31,6 @@ public class GUIRedoDonorDonationsTest extends ApplicationTest{
 
     private Main main = new Main();
 
-    private double undoX;
-    private double undoY;
-    private double redoX;
-    private double redoY;
-
     private boolean liverCBDefault;
     private boolean kidneyCBDefault;
     private boolean pancreasCBDefault;
@@ -64,16 +59,11 @@ public class GUIRedoDonorDonationsTest extends ApplicationTest{
 
         main.start(stage);
         interact(() -> {
-            stage.setFullScreen(true);
             lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).fire();
             lookup("#profileButton").queryAs(Button.class).fire();
             lookup("#donationsButton").queryAs(Button.class).fire();
         });
-        undoX = lookup("#undoButton").queryAs(Button.class).getLayoutX() + 240;
-        undoY = lookup("#undoButton").queryAs(Button.class).getLayoutY() + 28;
-        redoX = lookup("#redoButton").queryAs(Button.class).getLayoutX() + 330;
-        redoY = lookup("#redoButton").queryAs(Button.class).getLayoutY() + 28;
     }
 
     /**
@@ -123,85 +113,85 @@ public class GUIRedoDonorDonationsTest extends ApplicationTest{
         // Check redo button first
         interact(() -> {
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
 
         interact(() -> {
             lookup("#kidneyCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
 
         interact(() -> {
             lookup("#pancreasCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
 
         interact(() -> {
             lookup("#heartCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#heartCB").queryAs(CheckBox.class).isSelected());
 
         interact(() -> {
             lookup("#lungCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#lungCB").queryAs(CheckBox.class).isSelected());
 
         interact(() -> {
             lookup("#intestineCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#intestineCB").queryAs(CheckBox.class).isSelected());
 
         interact(() -> {
             lookup("#corneaCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#corneaCB").queryAs(CheckBox.class).isSelected());
 
         interact(() -> {
             lookup("#middleearCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#middleearCB").queryAs(CheckBox.class).isSelected());
 
         interact(() -> {
             lookup("#skinCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#skinCB").queryAs(CheckBox.class).isSelected());
 
         interact(() -> {
             lookup("#boneCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#boneCB").queryAs(CheckBox.class).isSelected());
 
         interact(() -> {
             lookup("#bonemarrowCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#bonemarrowCB").queryAs(CheckBox.class).isSelected());
 
         interact(() -> {
             lookup("#connectivetissueCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#connectivetissueCB").queryAs(CheckBox.class).isSelected());
 
@@ -301,18 +291,18 @@ public class GUIRedoDonorDonationsTest extends ApplicationTest{
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(true);
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(false);
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertFalse(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
 
@@ -347,22 +337,22 @@ public class GUIRedoDonorDonationsTest extends ApplicationTest{
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(true);
             lookup("#kidneyCB").queryAs(CheckBox.class).setSelected(true);
             lookup("#pancreasCB").queryAs(CheckBox.class).setSelected(true);
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(undoX, undoY);
-            clickOn(redoX, redoY);
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#undoButton").queryAs(Button.class).fire();
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         assertEquals(kidneyCBDefault, lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
         assertEquals(pancreasCBDefault, lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         assertTrue(lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
         assertEquals(pancreasCBDefault, lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
-            clickOn(redoX, redoY);
+            lookup("#redoButton").queryAs(Button.class).fire();
         });
         assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         assertTrue(lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
