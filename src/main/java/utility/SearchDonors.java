@@ -191,9 +191,6 @@ public class SearchDonors {
 	        sortedDocs.addAll(allDocs);
 			
 			for (ScoreDoc doc : sortedDocs) {
-				System.out.println(String.valueOf(doc.score) + " score for " +
-						Database.getDonorByNhi(indexSearcher.doc(doc.doc).get("nhi")).getNameConcatenated() + 
-						"\n-----------------------------------------------");
 				Document thisDoc = indexSearcher.doc(doc.doc);
 				nhi = thisDoc.get("nhi");
 				donor = Database.getDonorByNhi(nhi);
@@ -201,10 +198,6 @@ public class SearchDonors {
 					results.add(donor);
 				}
         	}
-			System.out.println("Final list: ");
-			for (Donor d : results) {
-				System.out.println(d.getNameConcatenated());
-			}
             userActions.log(Level.INFO,"Successfully searched for donors with input " + input, "Attempted to search for donors");
 		} catch (IOException e) {
 			userActions.log(Level.SEVERE, "Failure to find or read from index", "Attempted to search for donors");
