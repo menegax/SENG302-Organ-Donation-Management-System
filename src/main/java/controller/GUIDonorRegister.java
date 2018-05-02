@@ -3,6 +3,7 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Control;
@@ -11,6 +12,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.KeyCode;
 import javafx.util.StringConverter;
 import model.Donor;
 import utility.undoRedo.StatesHistoryScreen;
@@ -27,6 +31,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIDonorRegister {
 
     @FXML
+    public AnchorPane pane;
     public AnchorPane registerPane;
 
     public Label backLabel;
@@ -88,6 +93,10 @@ public class GUIDonorRegister {
         donorRegisterAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 register();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
+                undo();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
+                redo();
             }
         });
     }

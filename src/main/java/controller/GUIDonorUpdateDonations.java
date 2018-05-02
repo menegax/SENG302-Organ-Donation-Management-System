@@ -8,6 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import utility.undoRedo.StatesHistoryScreen;
@@ -93,6 +94,12 @@ public class GUIDonorUpdateDonations implements IPopupable {
         donorDonationsAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveDonations();
+            }
+            else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
+                undo();
+            }
+            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
+                redo();
             }
         });
     }
