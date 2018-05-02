@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
@@ -16,10 +17,11 @@
       </Label>
       <Button fx:id="loginButton" layoutX="207.0" layoutY="212.0" mnemonicParsing="false" onAction="#logIn" prefHeight="25.0" prefWidth="186.0" text="Log In" />
       <TextField fx:id="nhiLogin" alignment="CENTER" layoutX="207.0" layoutY="170.0" prefHeight="25.0" prefWidth="186.0" promptText="NHI" />
-      <Hyperlink fx:id="registerLabel" layoutX="278.0" layoutY="237.0" onAction="#goToRegister" text="Register">
+      <Hyperlink fx:id="registerHyperlink" layoutX="278.0" layoutY="237.0" onAction="#goToRegister" text="Register">
          <font>
             <Font size="10.0" />
          </font>
       </Hyperlink>
+      <CheckBox fx:id="clinicianToggle" layoutX="408.0" layoutY="174.0" mnemonicParsing="false" onAction="#toggleClinician" text="I am a clinician" />
    </children>
 </AnchorPane>
