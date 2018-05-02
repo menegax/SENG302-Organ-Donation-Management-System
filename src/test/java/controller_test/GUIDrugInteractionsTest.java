@@ -67,7 +67,7 @@ public class GUIDrugInteractionsTest extends ApplicationTest {
         //compare
         medicationScreen.compareDrugs(drugsToCompare);
         //validate the dialog popup
-        general.validateAlert("Error", "Drug interactions not available");
+        general.validateAlert("Warning", "Drug interactions not available. Please select 2 medications.");
     }
 
 
@@ -85,7 +85,7 @@ public class GUIDrugInteractionsTest extends ApplicationTest {
             add("Codeine");
         }});
         //validate the dialog popup
-        general.validateAlert("Error", "Drug interactions not available");
+        general.validateAlert("Warning", "Drug interactions not available. Please select 2 medications.");
     }
 
 
@@ -115,6 +115,7 @@ public class GUIDrugInteractionsTest extends ApplicationTest {
             add("Notdrug2");
         }});
         //validate the dialog popup
-        general.validateAlert("Error", "Drug interactions not available");
+        general.validateAlert("Warning", "Drug interactions not available, either this study has not been completed or" +
+                " drugs provided don't exist.");
     }
 }
