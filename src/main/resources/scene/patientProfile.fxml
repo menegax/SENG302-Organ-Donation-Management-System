@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.ListView?>
 <AnchorPane fx:id="patientProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProfile">
    <children>
       <Label layoutX="264.0" layoutY="32.0" styleClass="title" text="Profile">
@@ -132,6 +133,6 @@
       <Button fx:id="editPatientButton" layoutX="254.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToEdit" text="Manage Profile" />
       <Button fx:id="donationsButton" layoutX="107.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
       <Button fx:id="contactButton" layoutX="381.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contacts" />
-      <Button fx:id="receivingButton" layoutX="360.0" layoutY="350.0" mnemonicParsing="false" onAction="#goToReceiving" text="Receive" />
+      <Button fx:id="receivingButton" layoutX="360.0" layoutY="350.0" mnemonicParsing="false" onAction="#goToRequirements" text="Receive" />
    </children>
 </AnchorPane>

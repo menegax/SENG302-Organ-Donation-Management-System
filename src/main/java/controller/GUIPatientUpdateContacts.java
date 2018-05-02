@@ -31,6 +31,9 @@ public class GUIPatientUpdateContacts implements IPopupable {
     public AnchorPane patientContactsPane;
 
     @FXML
+    public AnchorPane clinicianViewOfPatientProfile;
+
+    @FXML
     private TextField homePhoneField;
 
     @FXML
@@ -315,7 +318,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
                 new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
             }
         } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianViewOfPatientProfile.fxml"));
             try {
                 ScreenControl.loadPopUpPane(patientContactsPane.getScene(), fxmlLoader, target);
             } catch (IOException e) {

@@ -132,6 +132,6 @@
         <Button fx:id="editPatientButton" layoutX="329.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToEdit" text="Manage Profile" />
         <Button fx:id="donationsButton" layoutX="182.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
         <Button fx:id="contactButton" layoutX="456.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contacts" />
-      <Button fx:id="RequirementsButton" layoutX="32.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Requested" />
+      <Button fx:id="requirementsButton" layoutX="32.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToRequirements" text="Manage Requested" />
     </children>
 </AnchorPane>

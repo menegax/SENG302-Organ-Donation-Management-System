@@ -3,6 +3,7 @@ package service;
 import com.google.gson.Gson;
 import model.Clinician;
 import model.Patient;
+import org.omg.CORBA.DynAnyPackage.Invalid;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 
@@ -103,11 +104,11 @@ public class Database {
 
             if (newClinician.getStreet1() != null && !Pattern.matches("^[- a-zA-Z0-9]+$", newClinician.getStreet1()))
                 throw new IllegalArgumentException("street1");
-
-            if (newClinician.getStaffID() == Database.getNextStaffID()) {
+            try {
                 clinicians.add(newClinician);
+                boolean validStaffId = Database.getClinicianByID(newClinician.getStaffID()) == null;
                 userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "attempted to add a clinician");
-            } else {
+            } catch (Exception e) {
                 throw new IllegalArgumentException("staffID");
             }
         } catch (IllegalArgumentException e) {
@@ -221,7 +222,7 @@ public class Database {
                 try {
                     Database.addClinician(c);
                 } catch (IllegalArgumentException e) {
-                    userActions.log(Level.WARNING, "Error importing clinician from file");
+                    userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinicians");
                 }
             }
         }

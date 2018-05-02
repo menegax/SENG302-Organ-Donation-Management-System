@@ -76,6 +76,7 @@ public class GUILogin {
                 alert.show();
             }
             catch (IOException e) {
+                e.printStackTrace();
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();

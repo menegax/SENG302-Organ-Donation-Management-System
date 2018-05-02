@@ -20,7 +20,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientUpdateDonations implements IPopupable {
+public class GUIPatientUpdateRequirements implements IPopupable {
 
     @FXML
     private CheckBox liverCB;
@@ -60,11 +60,7 @@ public class GUIPatientUpdateDonations implements IPopupable {
 
 
     @FXML
-    private AnchorPane patientDonationsAnchorPane;
-
-    @FXML
-    private AnchorPane clinicianViewOfPatientProfile;
-
+    private AnchorPane patientRequirementsAnchorPane;
 
     @FXML
     private void redo() {
@@ -90,7 +86,7 @@ public class GUIPatientUpdateDonations implements IPopupable {
         }
 
         // Enter key triggers log in
-        patientDonationsAnchorPane.setOnKeyPressed(e -> {
+        patientRequirementsAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveDonations();
             }
@@ -126,13 +122,13 @@ public class GUIPatientUpdateDonations implements IPopupable {
             add(bonemarrowCB);
             add(connectivetissueCB);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(patientDonationsAnchorPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(patientRequirementsAnchorPane, controls);
     }
 
 
 
     private void populateForm(Patient patient) {
-        ArrayList<GlobalEnums.Organ> organs = patient.getDonations();
+        ArrayList<GlobalEnums.Organ> organs = patient.getRequiredOrgans();
         if (organs.contains(GlobalEnums.Organ.LIVER)) {
             liverCB.setSelected(true);
         }
@@ -174,76 +170,76 @@ public class GUIPatientUpdateDonations implements IPopupable {
 
     public void saveDonations() {
         if (liverCB.isSelected()) {
-            target.addDonation(GlobalEnums.Organ.LIVER);
+            target.addRequired(GlobalEnums.Organ.LIVER);
         }
         else {
-            target.removeDonation(GlobalEnums.Organ.LIVER);
+            target.removeRequired(GlobalEnums.Organ.LIVER);
         }
         if (kidneyCB.isSelected()) {
-            target.addDonation(GlobalEnums.Organ.KIDNEY);
+            target.addRequired(GlobalEnums.Organ.KIDNEY);
         }
         else {
-            target.removeDonation(GlobalEnums.Organ.KIDNEY);
+            target.removeRequired(GlobalEnums.Organ.KIDNEY);
         }
         if (pancreasCB.isSelected()) {
-            target.addDonation(GlobalEnums.Organ.PANCREAS);
+            target.addRequired(GlobalEnums.Organ.PANCREAS);
         }
         else {
-            target.removeDonation(GlobalEnums.Organ.PANCREAS);
+            target.removeRequired(GlobalEnums.Organ.PANCREAS);
         }
         if (heartCB.isSelected()) {
-            target.addDonation(GlobalEnums.Organ.HEART);
+            target.addRequired(GlobalEnums.Organ.HEART);
         }
         else {
-            target.removeDonation(GlobalEnums.Organ.HEART);
+            target.removeRequired(GlobalEnums.Organ.HEART);
         }
         if (lungCB.isSelected()) {
-            target.addDonation(GlobalEnums.Organ.LUNG);
+            target.addRequired(GlobalEnums.Organ.LUNG);
         }
         else {
-            target.removeDonation(GlobalEnums.Organ.LUNG);
+            target.removeRequired(GlobalEnums.Organ.LUNG);
         }
         if (intestineCB.isSelected()) {
-            target.addDonation(GlobalEnums.Organ.INTESTINE);
+            target.addRequired(GlobalEnums.Organ.INTESTINE);
         }
         else {
-            target.removeDonation(GlobalEnums.Organ.INTESTINE);
+            target.removeRequired(GlobalEnums.Organ.INTESTINE);
         }
         if (corneaCB.isSelected()) {
-            target.addDonation(GlobalEnums.Organ.CORNEA);
+            target.addRequired(GlobalEnums.Organ.CORNEA);
         }
         else {
-            target.removeDonation(GlobalEnums.Organ.CORNEA);
+            target.removeRequired(GlobalEnums.Organ.CORNEA);
         }
         if (middleearCB.isSelected()) {
-            target.addDonation(GlobalEnums.Organ.MIDDLEEAR);
+            target.addRequired(GlobalEnums.Organ.MIDDLEEAR);
         }
         else {
-            target.removeDonation(GlobalEnums.Organ.MIDDLEEAR);
+            target.removeRequired(GlobalEnums.Organ.MIDDLEEAR);
         }
         if (skinCB.isSelected()) {
-            target.addDonation(GlobalEnums.Organ.SKIN);
+            target.addRequired(GlobalEnums.Organ.SKIN);
         }
         else {
-            target.removeDonation(GlobalEnums.Organ.SKIN);
+            target.removeRequired(GlobalEnums.Organ.SKIN);
         }
         if (boneCB.isSelected()) {
-            target.addDonation(GlobalEnums.Organ.BONE);
+            target.addRequired(GlobalEnums.Organ.BONE);
         }
         else {
-            target.removeDonation(GlobalEnums.Organ.BONE);
+            target.removeRequired(GlobalEnums.Organ.BONE);
         }
         if (bonemarrowCB.isSelected()) {
-            target.addDonation(GlobalEnums.Organ.BONE_MARROW);
+            target.addRequired(GlobalEnums.Organ.BONE_MARROW);
         }
         else {
-            target.removeDonation(GlobalEnums.Organ.BONE_MARROW);
+            target.removeRequired(GlobalEnums.Organ.BONE_MARROW);
         }
         if (connectivetissueCB.isSelected()) {
-            target.addDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
+            target.addRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
         else {
-            target.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
+            target.removeRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
         Database.saveToDisk();
         goToProfile();
@@ -251,23 +247,12 @@ public class GUIPatientUpdateDonations implements IPopupable {
 
 
     public void goToProfile() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            ScreenControl.removeScreen("patientProfile");
-            try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
-            }
-        } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianViewOfPatientProfile.fxml"));
-            try {
-                ScreenControl.loadPopUpPane(patientDonationsAnchorPane.getScene(), fxmlLoader, target);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
-            }
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianViewOfPatientProfile.fxml"));
+        try {
+            ScreenControl.loadPopUpPane(patientRequirementsAnchorPane.getScene(), fxmlLoader, target);
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
+            new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
         }
     }
 }

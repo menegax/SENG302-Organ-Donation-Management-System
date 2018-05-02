@@ -524,6 +524,22 @@ public class Patient {
         }
     }
 
+    /**
+     * Add organs to patient requirements list
+     *
+     * @param organ - organ to add to the patient required organs list
+     * @return string of message
+     */
+    public String addRequired(Organ organ) {
+        if (requiredOrgans.contains(organ)) {
+            return "Organ " + organ + " is already part of the patient's required organs, so was not added.";
+        }
+        else {
+            requiredOrgans.add(organ);
+            patientModified();
+            return "Successfully added " + organ + " to required organs";
+        }
+    }
 
     /**
      * Remove organs from donors donations list
@@ -538,6 +554,22 @@ public class Patient {
             return "Successfully removed " + organ + " from donations";
         } else {
             return "Organ " + organ + " is not part of the donors donations, so could not be removed.";
+        }
+    }
+
+    /**
+     * Remove organs from patients required organs list
+     *
+     * @param organ - organ to remove from the patients required organs list
+     * @return string of message
+     */
+    public String removeRequired(Organ organ) {
+        if (requiredOrgans.contains(organ)) {
+            requiredOrgans.remove(organ);
+            patientModified();
+            return "Successfully removed " + organ + " from required organs";
+        } else {
+            return "Organ " + organ + " is not part of the patient's required organs, so could not be removed.";
         }
     }
 

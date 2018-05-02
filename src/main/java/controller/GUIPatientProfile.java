@@ -30,11 +30,20 @@ public class GUIPatientProfile implements IPopupable {
     @FXML
     private AnchorPane patientProfilePane;
 
+    @FXML
+    private AnchorPane clinicianViewOfPatientProfile;
+
+    @FXML
     public Button editPatientButton;
 
+    @FXML
     public Button contactButton;
 
-    public Button donationButton;
+    @FXML
+    public Button donationsButton;
+
+    @FXML
+    public Button receivingButton;
 
     @FXML
     private Label nhiLbl;
@@ -82,10 +91,7 @@ public class GUIPatientProfile implements IPopupable {
     private Label addLbl5;
 
     @FXML
-    private Button receivingButton;
-
-    @FXML
-    private Button donationsButton;
+    private Label receivingList;
 
     /**
      * A list for the organs a patient is donating
@@ -140,15 +146,13 @@ public class GUIPatientProfile implements IPopupable {
         if (ScreenControl.getLoggedInPatient() != null) {
             receivingButton.setDisable(true);
             receivingButton.setVisible(false);
-            donationsButton.setDisable(true);
-            donationsButton.setVisible(false);
-
             if (ScreenControl.getLoggedInPatient().getRequiredOrgans() == null) {
                 receivingList.setDisable(true);
                 receivingList.setVisible(false);
-                receiveList.setDisable( true );
-                receiveList.setVisible( false );
+                receiveList.setDisable(true);
+                receiveList.setVisible(false);
             }
+        }
     }
 
 
@@ -205,7 +209,7 @@ public class GUIPatientProfile implements IPopupable {
         else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
+                ScreenControl.loadPopUpPane(clinicianViewOfPatientProfile.getScene(), fxmlLoader, viewedPatient);
             }
             catch (IOException e) {
                 userActions.log(Level.SEVERE,
@@ -215,7 +219,6 @@ public class GUIPatientProfile implements IPopupable {
             }
         }
     }
-
 
     public void goToDonations() {
         if (ScreenControl.getLoggedInPatient() != null) {
@@ -232,7 +235,7 @@ public class GUIPatientProfile implements IPopupable {
         else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateDonations.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
+                ScreenControl.loadPopUpPane(clinicianViewOfPatientProfile.getScene(), fxmlLoader, viewedPatient);
             }
             catch (Exception e) {
                 userActions.log(Level.SEVERE,
@@ -243,6 +246,19 @@ public class GUIPatientProfile implements IPopupable {
         }
     }
 
+    public void goToRequirements() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateRequirements.fxml"));
+        try {
+            ScreenControl.loadPopUpPane(clinicianViewOfPatientProfile.getScene(), fxmlLoader, viewedPatient);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            userActions.log(Level.SEVERE,
+                    "Error loading required organs screen in popup",
+                    "attempted to navigate from the profile page to the required organs page in popup");
+            new Alert(Alert.AlertType.ERROR, "Error loading edit page", ButtonType.OK).show();
+        }
+    }
 
     public void goToContactDetails() {
         if (ScreenControl.getLoggedInPatient() != null) {
@@ -259,7 +275,7 @@ public class GUIPatientProfile implements IPopupable {
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateContacts.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
+                ScreenControl.loadPopUpPane(clinicianViewOfPatientProfile.getScene(), fxmlLoader, viewedPatient);
             }
             catch (IOException e) {
                 userActions.log(Level.SEVERE,
@@ -269,15 +285,6 @@ public class GUIPatientProfile implements IPopupable {
             }
         }
     }
-
-    public void goToReceiving() {
-        ;
-    }
-
-    /**
-     * Navigates a user to the home GUI pane when the '〱back' button is activated
-     */
-    public void goToHome() {
 
     public void goToPatientHome() {
         ScreenControl.activate("patientHome");
