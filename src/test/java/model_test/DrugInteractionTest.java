@@ -29,7 +29,7 @@ public class DrugInteractionTest {
     }
     @Before
     public void setLoggedInDonor() {
-        ScreenControl.setLoggedInDonor(new Donor("abc1239", "Bob", null, "Bobby", LocalDate.of(1990,9,11)));
+        DrugInteraction.setViewedDonor(new Donor("abc1239", "Bob", null, "Bobby", LocalDate.of(1990,9,11)));
     }
 
     /**
