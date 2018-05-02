@@ -688,6 +688,8 @@ public class Donor {
 
     private void donorModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
+        SearchDonors.removeIndex(this);
+        SearchDonors.addIndex(this);
     }
 
 

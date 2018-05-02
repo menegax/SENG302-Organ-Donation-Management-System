@@ -38,15 +38,9 @@ public class Main extends Application {
 
         SearchDonors.createFullIndex(); // index donors for search, needs to be after importing or adding any donors
 
-        // Add scenes
-        ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
-        ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
-        ScreenControl.addScreen("donorHome", FXMLLoader.load(getClass().getResource("/scene/donorHome.fxml")));
-
         try {
             Database.importFromDiskClinicians("clinician.json");
-        } catch (IOException e) {
+        } catch (Exception e) {
             if (Database.getClinicians().size() == 0) {
                 //Initialise default clinician
                 ArrayList<String> mid = new ArrayList<>();
@@ -54,6 +48,13 @@ public class Main extends Application {
                 Database.addClinician(new Clinician(Database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
             }
         }
+
+        // Add scenes
+        ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+        ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
+        ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
+        ScreenControl.addScreen("donorHome", FXMLLoader.load(getClass().getResource("/scene/donorHome.fxml")));
+
 
         primaryStage.show();
     }

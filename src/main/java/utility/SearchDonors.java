@@ -16,6 +16,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.RAMDirectory;
 import service.Database;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -160,8 +161,14 @@ public class SearchDonors {
      * @return ArrayList of the donors it found as a result of the search
      */
     public static ArrayList<Donor> searchByName(String input) {
-    	String[] names = input.split(" ");
-        ArrayList<Donor> results = new ArrayList<>();
+
+        if (input.isEmpty()) {
+            return new ArrayList<Donor>(Database.getDonors());
+        }
+
+        String[] names = input.split(" ");
+
+    	ArrayList<Donor> results = new ArrayList<>();
         ArrayList<FuzzyQuery> queries = new ArrayList<>();
         for (String name : names) {
             queries.add(new FuzzyQuery(new Term("fName", name.toUpperCase()), 2));
@@ -197,7 +204,6 @@ public class SearchDonors {
 					results.add(donor);
 				}
         	}
-            userActions.log(Level.INFO,"Successfully searched for donors with input " + input, "Attempted to search for donors");
 		} catch (IOException e) {
 			userActions.log(Level.SEVERE, "Unable to search donors by name", "Attempted to search donors by name");
 		}
