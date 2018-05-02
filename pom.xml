@@ -15,13 +15,13 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.5</version>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.5</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>fluent-hc</artifactId>
-            <version>4.5.5</version>
+            <version>4.5</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -60,6 +60,21 @@
  		   <version>7.3.0</version>
 		</dependency>
         <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-codecs</artifactId>
+            <version>7.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-queries</artifactId>
+            <version>7.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-sandbox</artifactId>
+            <version>7.3.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
             <version>4.0.12-alpha</version>
@@ -77,6 +92,16 @@
             <version>8u76-b04</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+    		<groupId>org.apache.lucene</groupId>
+    		<artifactId>lucene-queryparser</artifactId>
+    		<version>7.3.0</version>
+		</dependency>
+		<dependency>
+ 		   <groupId>org.apache.lucene</groupId>
+ 		   <artifactId>lucene-core</artifactId>
+ 		   <version>7.3.0</version>
+		</dependency>
     </dependencies>
 
     <build>
@@ -102,7 +127,7 @@
                     <transformers>
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                             <manifestEntries>
-                                <Main-Class>controller.Main</Main-Class>
+                                <Main-Class>App</Main-Class>
                                 <X-Compile-Source-JDK>${maven.compiler.source}</X-Compile-Source-JDK>
                                 <X-Compile-Target-JDK>${maven.compiler.target}</X-Compile-Target-JDK>
                             </manifestEntries>
@@ -118,7 +143,7 @@
                     </execution>
                 </executions>
             </plugin>
-        
+
             <plugin>
                <groupId>org.jacoco</groupId>
                <artifactId>jacoco-maven-plugin</artifactId>
@@ -191,4 +216,11 @@
             </plugin>
         </plugins>
     </reporting>
+    <distributionManagement>
+        <repository>
+            <id>internal.repo</id>
+            <name>Internal repo</name>
+            <url>file://${basedir}/target</url>
+        </repository>
+    </distributionManagement>
 </project>

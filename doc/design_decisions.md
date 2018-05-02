@@ -84,12 +84,9 @@ See the GUIDonorRegister class for examples of goToLogin() and register()
 All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new donor would not be logged either.
 
 ## Sprint 3
-
 26th March to the 3rd of May
 
 #### GUI Donor Medications
-
-Adam Ross' decisions and assumptions for story 18:
 
 To reduce error, for in the case that a medication has been selected in each of the history and the current listViews, it has been decided to reserve deletion of a medication from the history listView, only. Otherwise, if not reserve deletion to only one listView, and include both listViews, being that there is currently no found appropriate method to determine which medication is the most recently selected between listViews, and that deciding deletion between listViews can only currently be done by determining if one listView does not have a medication selected before deleting a selected medication from another listView, then a selected medication other than the most previously selected medication could be deleted instead if the most recently selected medication is in the listView that has a selected medication deleted from it only after the other listView is determined to not have any selected medication for deleting, when in the case that each listView has a medication selected.
 
@@ -98,6 +95,7 @@ If a medication is selected in each of the current and history listViews, and a 
 Medication selection is assumed to be possible in each listView simultaneously for the benefit of future stories.
 
 The current option of multiple selection in each listView may not be appropriate for future stories. 
+
 
 ####Donor Contact Details
 Contact Details for a Donor are updated in a separate update method. This is because as contact details are implemented solely in the GUI application, and so will only need handling there.

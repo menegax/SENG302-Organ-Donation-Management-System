@@ -59,9 +59,9 @@ public class Donor {
 
     private String nhiNumber;
 
-    private ArrayList<Medication> currentMedications;
+    private ArrayList<Medication> currentMedications = new ArrayList<>();
 
-    private ArrayList<Medication> medicationHistory;
+    private ArrayList<Medication> medicationHistory = new ArrayList<>();
 
     private String homePhone;
 
@@ -83,8 +83,9 @@ public class Donor {
 
     private String contactEmailAddress;
 
-
-    public Donor(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
+    //private HashMap<String, ArrayList<String>> medicationLog = new HashMap<>();
+    public Donor(String nhiNumber, String firstName,
+                 ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
         this.firstName = firstName;
@@ -233,7 +234,7 @@ public class Donor {
     /**
      * Checks the uniqueness of the nhi number
      *
-     * @exception IllegalArgumentException when the nhi number given is already in use
+     * @throws IllegalArgumentException when the nhi number given is already in use
      */
     public void ensureUniqueNhi() throws IllegalArgumentException {
         for (Donor d : Database.getDonors()) {
@@ -497,11 +498,21 @@ public class Donor {
         return medicationHistory;
     }
 
-    //**
-     //* Gets the medication log with timestamps of each add/removal/swap between current and history
-     //* @return HashMap of medication logging for a donor
-     //*/
-    //public HashMap<String, ArrayList<String>> getMedicationLog() { return medicationLog; }
+    /**
+     * Sets the current medication list for a Donor
+     * @param currentMedications medications to set as current for the Donor
+     */
+    public void setCurrentMedications(ArrayList<Medication> currentMedications) {
+        this.currentMedications = currentMedications;
+    }
+
+    /**
+     * Sets the medication history for a Donor
+     * @param medicationHistory medication list to set as history for a Donor
+     */
+    public void setMedicationHistory(ArrayList<Medication> medicationHistory) {
+        this.medicationHistory = medicationHistory;
+    }
 
     public void setZip(int zip) {
         if (this.zip != zip) {

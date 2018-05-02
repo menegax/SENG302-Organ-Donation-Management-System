@@ -1,8 +1,7 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Alert;
 import service.Database;
 
 public class GUIClinicianHome {

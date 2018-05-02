@@ -43,7 +43,8 @@ public class APIHelper {
      * @throws IOException - if a connection to the API cannot be obtainted
      */
     public JsonObject getMapiDrugSuggestions(String medicationString) throws IOException { // throw to application layer
-        return getApiResponse("http://mapi-us.iterar.co/api/autocomplete?query=" + medicationString);
+        medicationString = medicationString.replaceAll("[^a-zA-Z0-9]", "");
+        return getApiResponse("http://mapi-us.iterar.co/api/autocomplete?query=" + medicationString); //remove spaces from query
     }
 
     /**
@@ -64,6 +65,8 @@ public class APIHelper {
      * @throws IOException -
      */
     public JsonObject getDrugInteractions(String drugOne, String drugTwo) throws IOException{
+        drugOne = drugOne.replaceAll("[^a-zA-Z0-9]", "");
+        drugTwo = drugTwo.replaceAll("[^a-zA-Z0-9]", "");
         try {
             return getApiResponse(String.format("https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/", drugOne, drugTwo));
         } catch (IOException e) { //make a second API call be this is literally the worst API ever (like really)

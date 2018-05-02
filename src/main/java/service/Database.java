@@ -176,16 +176,10 @@ public class Database {
 
     /**
      * Calls importFromDisk and handles any errors
-<<<<<<< HEAD
      * @param fileName The file to import from
-=======
-     *
-     * @param fileName the filename of the file to import
->>>>>>> development
      */
     public static void importFromDisk(String fileName) {
         try {
-            donors = new HashSet<>();
             importFromDiskDonors(fileName);
             userActions.log(Level.INFO, "Imported donors from disk", "Attempted to import from disk");
             SearchDonors.createFullIndex();

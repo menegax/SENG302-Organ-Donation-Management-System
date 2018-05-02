@@ -36,9 +36,6 @@ public class ControllerClinicianTest extends ApplicationTest {
      * Tests logging in as a clinician successfully
      */
     public void successfulLoginTestandGoToProfile() {
-        System.out.println(Database.getClinicians().size());
-        System.out.println(Database.getClinicians().get(0).getFirstName());
-        System.out.println(Database.getClinicians().get(0).getStaffID());
         //Check 'I am Clinician" checkbox to login as clinician
         interact(() -> {
             lookup("#clinicianToggle").queryAs(CheckBox.class).setSelected(true);
@@ -69,5 +66,6 @@ public class ControllerClinicianTest extends ApplicationTest {
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
         });
         verifyThat( "#loginPane", Node::isVisible ); // Verify that logout button has taken "user" to the login panel
+        interact(() -> lookup("OK").queryAs(Button.class).fire());
     }
 }
