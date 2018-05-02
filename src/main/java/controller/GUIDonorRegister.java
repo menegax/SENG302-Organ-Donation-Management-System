@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.KeyCode;
 import javafx.util.StringConverter;
 import model.Donor;
 import utility.undoRedo.StatesHistoryScreen;
@@ -29,6 +30,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIDonorRegister {
 
     @FXML
+    public AnchorPane pane;
     public AnchorPane registerPane;
 
     public Label backLabel;

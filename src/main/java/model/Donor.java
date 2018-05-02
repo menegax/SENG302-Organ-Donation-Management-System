@@ -59,6 +59,10 @@ public class Donor {
 
     private String nhiNumber;
 
+    private ArrayList<Medication> currentMedications = new ArrayList<>();
+
+    private ArrayList<Medication> medicationHistory = new ArrayList<>();
+
     private String homePhone;
 
     private String mobilePhone;
@@ -78,10 +82,6 @@ public class Donor {
     private String contactWorkPhone;
 
     private String contactEmailAddress;
-
-    private ArrayList<Medication> currentMedications;
-
-    private ArrayList<Medication> medicationHistory;
 
     //private HashMap<String, ArrayList<String>> medicationLog = new HashMap<>();
     public Donor(String nhiNumber, String firstName,
@@ -234,7 +234,7 @@ public class Donor {
     /**
      * Checks the uniqueness of the nhi number
      *
-     * @exception IllegalArgumentException when the nhi number given is already in use
+     * @throws IllegalArgumentException when the nhi number given is already in use
      */
     public void ensureUniqueNhi() throws IllegalArgumentException {
         for (Donor d : Database.getDonors()) {
