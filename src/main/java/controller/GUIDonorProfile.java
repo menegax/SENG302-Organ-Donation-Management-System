@@ -5,20 +5,11 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-<<<<<<<<< Temporary merge branch 1
-import javafx.scene.layout.AnchorPane;
-=========
-import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
-import org.apache.commons.lang3.StringUtils;
 import model.Medication;
+import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import utility.GlobalEnums;
 
@@ -287,6 +278,7 @@ public class GUIDonorProfile implements IPopupable {
             try {
                 ScreenControl.loadPopUpPane(donorProfilePane.getScene(), fxmlLoader, viewedDonor);
             } catch (IOException e) {
+                e.printStackTrace();
                 userActions.log(Level.SEVERE, "Error loading medication screen in popup", "attempted to navigate from the profile page to the medication page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading medication page", ButtonType.OK).showAndWait();
             }

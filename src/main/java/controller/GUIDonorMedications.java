@@ -174,14 +174,8 @@ public class GUIDonorMedications implements IPopupable {
         addMedication(newMedication.getText());
     }
 
-    private ListProperty<String> currentListProperty = new SimpleListProperty<>();
-    private ListProperty<String> historyListProperty = new SimpleListProperty<>();
     private ListProperty<String> informationListProperty = new SimpleListProperty<>();
-    private ArrayList<String> current;
-    private ArrayList<String> history;
     private ArrayList<String> ingredients;
-    private Donor target;
-    private JsonObject suggestions;
 
     @FXML
     public void initialize() {
@@ -306,19 +300,6 @@ public class GUIDonorMedications implements IPopupable {
         newMedication.requestFocus();
         newMedication.end(); //place cursor at end of text
         itemSelected = true; //indicate that an API does not need to be made
-    }
-
-    /**
-     * Sets a list of suggestions given a partially matching string
-     * @param query - text to match drugs against
-     */
-    private void getDrugSuggestions(String query){
-        APIHelper apiHelper = new APIHelper();
-        try {
-            suggestions =  apiHelper.getMapiDrugSuggestions(query);
-        } catch (IOException exception) {
-            suggestions = null;
-        }
     }
 
     /**
