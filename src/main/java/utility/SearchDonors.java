@@ -183,9 +183,10 @@ public class SearchDonors {
 			Donor donor;
 			for (FuzzyQuery query : queries) {
 				docs = searchQuery(query);
+				System.out.println("Query: " + query); //todo remove
 				for (ScoreDoc doc : docs.scoreDocs) {
 					allDocs.add(doc);
-//					System.out.println("score for donor " + doc.toString() + ": " + doc.score); //todo remove
+					System.out.println("score for donor " + doc.toString() + ": " + doc.score); //todo remove
 	        	}
 			}
 			SortedSet<ScoreDoc> sortedDocs = new TreeSet<ScoreDoc>(new Comparator<ScoreDoc>() {
@@ -197,6 +198,7 @@ public class SearchDonors {
 	        sortedDocs.addAll(allDocs);
 
 			for (ScoreDoc doc : sortedDocs) {
+			    System.out.println("doc: " + doc); //todo remove
 				Document thisDoc = indexSearcher.doc(doc.doc);
 				nhi = thisDoc.get("nhi");
 				donor = Database.getDonorByNhi(nhi);
