@@ -1,19 +1,22 @@
 package controller_test;
 
 import controller.Main;
+import controller.ScreenControl;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import model.Donor;
+import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.ListViewMatchers;
+import org.testfx.matcher.control.TableViewMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
+import org.testfx.service.query.PointQuery;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 
@@ -28,12 +31,16 @@ public class GUIMedicationTest extends ApplicationTest {
 
     private Main main = new Main();
     private Donor target;
+    private Stage mainStage;
 
     @Override
     public void start( Stage stage ) throws Exception {
         Database.resetDatabase();
         main.start( stage );
-        Database.addDonor(new Donor("TFX9999", "Joe", new ArrayList<>(), "Bloggs", LocalDate.of(1990, 2, 9)));
+        mainStage = stage;
+        ArrayList<String> middle = new ArrayList<>();
+        middle.add("Middle");
+        Database.addDonor(new Donor("TFX9999", "Joe", middle, "Bloggs", LocalDate.of(1990, 2, 9)));
         target = Database.getDonorByNhi("TFX9999");
     }
 
@@ -43,30 +50,44 @@ public class GUIMedicationTest extends ApplicationTest {
     @Before
     public void LoginAndNavigateToMedicationPanel() {
         // Log in to the app
-        interact( () -> {
-            lookup( "#nhiLogin" ).queryAs( TextField.class ).setText( "TFX9999" );
-            assertThat( lookup( "#nhiLogin" ).queryAs( TextField.class ) ).hasText( "TFX9999" );
-            lookup( "#loginButton" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#homePane", Node::isVisible ); // Verify that login has taken "user" to home panel
-        target.setCurrentMedications( new ArrayList <>() );
-        target.setMedicationHistory( new ArrayList <>() );
+        interact(() -> {
+            lookup("#nhiLogin").queryAs(TextField.class).setText("0");
+            assertThat(lookup("#nhiLogin").queryAs(TextField.class)).hasText("0");
+            lookup("#clinicianToggle").queryAs(CheckBox.class).setSelected(true);
+            Assertions.assertThat(lookup("#clinicianToggle").queryAs(CheckBox.class).isSelected());
+            lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
+        });
+        verifyThat("#clinicianHomePane", Node::isVisible); // Verify that login has taken "user" to home panel
+        target.setCurrentMedications(new ArrayList<>());
+        target.setMedicationHistory(new ArrayList<>());
         // Navigate to the profile panel (where the medication test button is currently found)
-        interact( () -> {
-            lookup( "#profileButton" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#donorProfilePane", Node::isVisible ); // Verify that "user" has navigated to profile
-
-        // Navigate to the medication panel via the temporary test medication button found in profile panel
-        interact( () -> {
-            lookup( "#testMedication" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        verifyThat( "#medicationPane", Node::isVisible );  // Verify "user" has navigated to medications
+        interact(() -> {
+            lookup("#searchDonors").queryAs(Button.class).getOnAction().handle(new ActionEvent());
+        });
+        verifyThat("#clinicianSearchDonorsPane", Node::isVisible); // Verify that "user" has navigated to search pane
+        verifyThat("#donorDataTable", TableViewMatchers.hasTableCell("Joe Middle Bloggs"));
+        interact(() -> {
+            lookup( "#donorDataTable" ).queryAs( TableView.class ).getSelectionModel().select(0);
+            doubleClickOn( "Joe Middle Bloggs" );
+        });
+        verifyThat("#donorProfilePane", Node::isVisible);
+        interact(() -> {
+            lookup("#medicationBtn").queryAs(Button.class).fire();
+        });
+        verifyThat("#medicationPane", Node::isVisible);  // Verify "user" has navigated to medications
     }
 
     @After
     public void waitForEvents() {
         Database.resetDatabase();
+        for (Window window : listTargetWindows()) {
+            if (window.getScene().getWindow() != mainStage) {
+                interact(() -> {
+                    ((Stage) window.getScene().getWindow()).close();
+                });
+            }
+        }
+
         WaitForAsyncUtils.waitForFxEvents();
         sleep( 1000 );
     }
@@ -390,7 +411,7 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
-        verifyThat( "#currentMedications", ListViewMatchers.hasListCell( "History med" ) );
+        verifyThat( "#currentMedications", ListViewMatchers.hasListCell( "history med" ) );
         // Verify that there is only one medication registered to currentMedications ListView
         verifyThat( "#currentMedications", ListViewMatchers.hasItems( 1 ) );
         // Verify that the pastMedications listView is still empty
