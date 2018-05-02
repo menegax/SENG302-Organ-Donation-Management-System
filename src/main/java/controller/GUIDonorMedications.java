@@ -141,7 +141,6 @@ public class GUIDonorMedications {
         pastMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(pastMedications));
         pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
         try {
             target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor().getNhiNumber());
 
@@ -391,7 +390,7 @@ public class GUIDonorMedications {
      */
     @FXML
     public void reviewInteractions() {
-        Alert alert = new Alert(Alert.AlertType.ERROR, "Drug interactions not available");
+        Alert alert = new Alert(Alert.AlertType.WARNING, "Drug interactions not available. Please select 2 medications.");
         ArrayList<String> selectedMedications = new ArrayList<String>(){{
             addAll(currentMedications.getSelectionModel().getSelectedItems());
             addAll(pastMedications.getSelectionModel().getSelectedItems());
@@ -401,6 +400,8 @@ public class GUIDonorMedications {
                 DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1));
                 displayInteractions(interaction.getInteractionsWithDurations(), selectedMedications.get(0), selectedMedications.get(1));
             } catch (IOException e ){
+                alert.setContentText("Drug interactions not available, either this study has not been completed or" +
+                        " drugs provided don't exist.");
                 alert.show();
             }
         } else {
