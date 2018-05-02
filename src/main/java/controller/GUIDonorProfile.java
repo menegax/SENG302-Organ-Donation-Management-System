@@ -68,7 +68,7 @@ public class GUIDonorProfile {
     }
 
     private void loadProfile(String nhi) {
-        try { // todo remove this
+        try {
             Donor donor = Database.getDonorByNhi(nhi);
 
             nhiLbl.setText(donor.getNhiNumber());
@@ -87,7 +87,7 @@ public class GUIDonorProfile {
                 donationList.setText(donationList.getText() + organ.getValue() + "\n");
             }
         } catch (InvalidObjectException e) {
-            e.printStackTrace(); // todo remove
+            userActions.log(Level.SEVERE, "Could not load donor profile.");
         }
     }
 
