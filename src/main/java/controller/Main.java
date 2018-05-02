@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Clinician;
 import model.Donor;
+import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
 import utility.SearchDonors;
@@ -18,6 +19,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Main extends Application {
 
