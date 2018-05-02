@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Donor;
+import model.DrugInteraction;
 import service.Database;
 import utility.GlobalEnums;
 import utility.SearchDonors;
@@ -78,6 +79,8 @@ public class GUIClinicianSearchDonors implements Initializable {
                     Scene scene = new Scene(fxmlLoader.load());
                     GUIDonorProfile controller = fxmlLoader.getController();
                     controller.setViewedDonor(donorDataTable.getSelectionModel()
+                            .getSelectedItem());
+                    DrugInteraction.setViewedDonor(donorDataTable.getSelectionModel()
                             .getSelectedItem());
 
                     Stage popUpStage = new Stage();

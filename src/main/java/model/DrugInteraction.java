@@ -15,6 +15,9 @@ import java.util.regex.Pattern;
 public class DrugInteraction {
 
     private JsonObject response;
+    private static Donor viewedDonor;
+
+    public static void setViewedDonor(Donor donor) { viewedDonor = donor; }
 
     /**
      * Makes a call to the API and records the response
@@ -34,7 +37,7 @@ public class DrugInteraction {
      */
     private Set<String> getInteractionsAgeGender(){
         Set<String> allInteractions = new HashSet<>();
-        Donor donor = ScreenControl.getLoggedInDonor();
+        Donor donor = viewedDonor;
         int donorAge = donor.getAge();
         Gender donorGender = donor.getGender() != Gender.FEMALE &&
                              donor.getGender() != Gender.MALE
