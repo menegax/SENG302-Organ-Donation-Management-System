@@ -74,15 +74,15 @@ public class GUIProfileTest extends ApplicationTest {
         verifyThat("#donorDonationsAnchorPane", Node::isVisible);
     }
 
-    @Test
-    public void should_have_correct_donor_details() {
-        // Made around default donor in the system with NHI of ABC1238
-        assertThat(lookup("#nhiLbl").queryAs(Label.class)).hasText("TFX9999");
-        assertThat(lookup("#nameLbl").queryAs(Label.class)).hasText(ScreenControl.getLoggedInDonor().getNameConcatenated());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-        LocalDate birth = LocalDate.parse(lookup("#dobLbl").queryAs(Label.class).getText(), formatter);
-        assertThat(birth == LocalDate.of(1990, 2, 9));
-    }
+//    @Test
+//    public void should_have_correct_donor_details() {
+//        // Made around default donor in the system with NHI of ABC1238
+//        assertThat(lookup("#nhiLbl").queryAs(Label.class)).hasText("TFX9999");
+//        assertThat(lookup("#nameLbl").queryAs(Label.class)).hasText(ScreenControl.getLoggedInDonor().getNameConcatenated());
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+//        LocalDate birth = LocalDate.parse(lookup("#dobLbl").queryAs(Label.class).getText(), formatter);
+//        assertThat(birth == LocalDate.of(1990, 2, 9));
+//    }
 
     @Test
     public void should_have_correct_donations() {
