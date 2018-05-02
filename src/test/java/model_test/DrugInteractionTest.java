@@ -22,6 +22,7 @@ public class DrugInteractionTest {
     //TEST might also be flaky, dependant on 3rd party API
 
     private static DrugInteraction drugInteraction;
+    private Donor donor;
 
     @BeforeClass
     public static void setUp(){
@@ -29,7 +30,8 @@ public class DrugInteractionTest {
     }
     @Before
     public void setLoggedInDonor() {
-        DrugInteraction.setViewedDonor(new Donor("abc1239", "Bob", null, "Bobby", LocalDate.of(1990,9,11)));
+        donor = new Donor("abc1239", "Bob", null, "Bobby", LocalDate.of(1990,9,11));
+        DrugInteraction.setViewedDonor(donor);
     }
 
     /**
@@ -61,7 +63,7 @@ public class DrugInteractionTest {
 
     @Test
     public void testDonorGenderMale(){
-        ScreenControl.getLoggedInDonor().setGender(GlobalEnums.Gender.MALE);
+        donor.setGender(GlobalEnums.Gender.MALE);
         JsonArray maleInteractions = drugInteraction.getGenderInteractionsHelper(GlobalEnums.Gender.MALE);
         HashMap<String, Set<String>> allInteractions = drugInteraction.getInteractionsWithDurations();
         checkInteractions(maleInteractions, allInteractions);
@@ -69,7 +71,7 @@ public class DrugInteractionTest {
 
     @Test
     public void testDonorGenderFemale(){
-        ScreenControl.getLoggedInDonor().setGender(GlobalEnums.Gender.FEMALE);
+        donor.setGender(GlobalEnums.Gender.FEMALE);
         JsonArray femaleInteractions = drugInteraction.getGenderInteractionsHelper(GlobalEnums.Gender.FEMALE);
         HashMap<String, Set<String>> allInteractions = drugInteraction.getInteractionsWithDurations();
         checkInteractions(femaleInteractions, allInteractions);
@@ -77,7 +79,7 @@ public class DrugInteractionTest {
 
     @Test
     public void testDonorGenderOther() {
-        ScreenControl.getLoggedInDonor().setGender(GlobalEnums.Gender.OTHER);
+        donor.setGender(GlobalEnums.Gender.OTHER);
         JsonArray maleInteractions = drugInteraction.getGenderInteractionsHelper(GlobalEnums.Gender.MALE);
         JsonArray femaleInteractions = drugInteraction.getGenderInteractionsHelper(GlobalEnums.Gender.FEMALE);
         HashMap<String, Set<String>> allInteractions = drugInteraction.getInteractionsWithDurations();
@@ -139,9 +141,9 @@ public class DrugInteractionTest {
      */
     private void validateAgeInteractions(int donorAge) {
         int yearOfBirth = LocalDate.now().getYear() - donorAge;
-        ScreenControl.setLoggedInDonor(new Donor("abc1211", "Bob", null, "Bobby",LocalDate.of(yearOfBirth,1,1)));
+        DrugInteraction.setViewedDonor(new Donor("abc1211", "Bob", null, "Bobby",LocalDate.of(yearOfBirth,1,1)));
         HashMap<String, Set<String>> allInteractions = drugInteraction.getInteractionsWithDurations();
-        JsonArray ageInteractions = drugInteraction.getAgeInteractionsHelper(ScreenControl.getLoggedInDonor().getAge());
+        JsonArray ageInteractions = drugInteraction.getAgeInteractionsHelper(donorAge);
         checkInteractions(ageInteractions, allInteractions);
     }
 

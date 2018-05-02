@@ -47,10 +47,11 @@ public class DrugInteraction {
         JsonArray interactionsAgeGroup = getAgeInteractionsHelper(donorAge);
         JsonArray genderInteractions = getGenderInteractionsHelper(donorGender); //if donor gender is null, treat is as other
         if (genderInteractions != null) {
-            genderInteractions.forEach((jsonElement -> allInteractions.add(jsonElement.toString())));
+            genderInteractions.forEach((jsonElement -> allInteractions.add(jsonElement.getAsString())));
         }
         if (interactionsAgeGroup != null) {
-           interactionsAgeGroup.forEach((jsonElement -> allInteractions.add(jsonElement.toString())));
+           interactionsAgeGroup.forEach((
+                   jsonElement -> allInteractions.add(jsonElement.getAsString())));
         }
         return allInteractions;
     }
