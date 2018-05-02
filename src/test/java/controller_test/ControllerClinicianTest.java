@@ -64,8 +64,8 @@ public class ControllerClinicianTest extends ApplicationTest {
         verifyThat("#nhiLogin", TextInputControlMatchers.hasText("111"));
         interact(() -> {
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
+            lookup("OK").queryAs(Button.class).fire();
         });
         verifyThat( "#loginPane", Node::isVisible ); // Verify that logout button has taken "user" to the login panel
-        interact(() -> lookup("OK").queryAs(Button.class).fire());
     }
 }

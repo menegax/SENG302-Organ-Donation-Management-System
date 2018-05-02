@@ -103,6 +103,7 @@ public class GUIDonorUpdateContacts implements IPopupable {
             loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
             setContactFields();
         }
+        setupUndoRedo();
 
         // Enter key triggers log in
         donorContactsPane.setOnKeyPressed(e -> {
@@ -112,6 +113,24 @@ public class GUIDonorUpdateContacts implements IPopupable {
         });
     }
 
+    /**
+     * Sets up the variables needed for undo and redo functionality
+     */
+    private void setupUndoRedo() {
+        ArrayList<Control> controls = new ArrayList<Control>() {{
+            add(homePhoneField);
+            add(mobilePhoneField);
+            add(workPhoneField);
+            add(emailAddressField);
+            add(contactNameField);
+            add(contactRelationshipField);
+            add(contactHomePhoneField);
+            add(contactMobilePhoneField);
+            add(contactWorkPhoneField);
+            add(contactEmailAddressField);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(donorContactsPane, controls);
+    }
 
     /**
      * Sets initial contact text fields to a donor's existing contact details.
@@ -160,20 +179,6 @@ public class GUIDonorUpdateContacts implements IPopupable {
     private void loadProfile(String nhi) {
         try {
             target = Database.getDonorByNhi(nhi);
-
-            ArrayList<Control> controls = new ArrayList<Control>() {{
-                add(homePhoneField);
-                add(mobilePhoneField);
-                add(workPhoneField);
-                add(emailAddressField);
-                add(contactNameField);
-                add(contactRelationshipField);
-                add(contactHomePhoneField);
-                add(contactMobilePhoneField);
-                add(contactWorkPhoneField);
-                add(contactEmailAddressField);
-            }};
-            statesHistoryScreen = new StatesHistoryScreen(donorContactsPane, controls);
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");

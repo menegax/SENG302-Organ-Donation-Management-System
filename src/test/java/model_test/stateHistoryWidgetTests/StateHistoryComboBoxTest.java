@@ -109,4 +109,45 @@ public class StateHistoryComboBoxTest {
         stateHistoryComboBox.undo();
         assertEquals("A", comboBox.getSelectionModel().getSelectedItem());
     }
+
+    /**
+     * Tests the redo method of the StateHistoryComboBox
+     */
+    @Test
+    public void testRedo() {
+        comboBox.getSelectionModel().select(0);
+        StateHistoryComboBox stateHistoryComboBox = new StateHistoryComboBox(comboBox);
+        ArrayList<String> comboList = new ArrayList<>();
+        stateHistoryComboBox.store();
+        stateHistoryComboBox.undo();
+        stateHistoryComboBox.redo();
+        comboList.add("A");
+        comboList.add("A");
+        assertEquals(comboList, stateHistoryComboBox.getStates());
+        assertEquals(1, stateHistoryComboBox.getIndex());
+
+        stateHistoryComboBox.redo();
+        assertEquals(comboList, stateHistoryComboBox.getStates());
+        assertEquals(1, stateHistoryComboBox.getIndex());
+
+        stateHistoryComboBox.undo();
+        comboBox.getSelectionModel().select(1);
+        stateHistoryComboBox.store();
+        comboBox.getSelectionModel().select(2);
+        stateHistoryComboBox.store();
+        stateHistoryComboBox.undo();
+        stateHistoryComboBox.undo();
+        stateHistoryComboBox.redo();
+        stateHistoryComboBox.redo();
+        comboList.remove(1);
+        comboList.add("B");
+        comboList.add("C");
+        assertEquals(comboList, stateHistoryComboBox.getStates());
+        assertEquals(2, stateHistoryComboBox.getIndex());
+        assertEquals("C", comboBox.getSelectionModel().getSelectedItem());
+        stateHistoryComboBox.undo();
+        stateHistoryComboBox.undo();
+        stateHistoryComboBox.redo();
+        assertEquals("B", comboBox.getSelectionModel().getSelectedItem());
+    }
 }

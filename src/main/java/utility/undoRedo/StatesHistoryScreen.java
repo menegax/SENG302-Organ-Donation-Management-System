@@ -38,12 +38,10 @@ public class StatesHistoryScreen {
      */
     public StatesHistoryScreen(Pane pane, ArrayList<Control> params) {
         pane.setOnKeyPressed(event -> {
-            if (KeyCodeCombination.keyCombination("Ctrl+Z")
-                    .match(event)) {
+            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
                 undo();
             }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y")
-                    .match(event)) {
+            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
                 redo();
             }
         });
@@ -84,12 +82,10 @@ public class StatesHistoryScreen {
                     }
                 });
         ((TextField) entry).setOnKeyPressed(event -> {
-            if (KeyCodeCombination.keyCombination("Ctrl+Z")
-                    .match(event)) {
+            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
                 undo();
             }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y")
-                    .match(event)) {
+            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
                 redo();
             }
         });
@@ -129,22 +125,15 @@ public class StatesHistoryScreen {
      */
 
     private void createStateHistoriesRadioButton(Object radioButton) {
-        stateHistories.add(new StateHistoryRadioButton((RadioButton) radioButton));
-        ((RadioButton) radioButton).selectedProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    if (!newValue.equals(oldValue) && !undone && !redone) { //don't want to store state when RadioButton has been undone
+        StateHistoryRadioButton stateHistoryRadioButton = new StateHistoryRadioButton((RadioButton) radioButton);
+        stateHistories.add(stateHistoryRadioButton);
+        ((RadioButton) radioButton).selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue != oldValue && !undone && !redone && ((RadioButton) radioButton).focusedProperty().getValue()) { //don't want to store state when radioButton has been undone
                         store();
                     }
                 });
         ((RadioButton) radioButton).setOnKeyPressed(event -> {
-            if (KeyCodeCombination.keyCombination("Ctrl+Z")
-                    .match(event)) {
-                undo();
-            }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y")
-                    .match(event)) {
-                redo();
-            }
+            ((RadioButton) radioButton).getParent().requestFocus();
         });
     }
 
@@ -215,8 +204,7 @@ public class StatesHistoryScreen {
                 });
         // Allows for parent screen to listen for Ctrl z, Ctrl y, undo and redo as DatePicker does not recognise letters
         ((DatePicker) datePicker).setOnKeyPressed(event -> {
-            ((DatePicker) datePicker).getParent()
-                    .requestFocus();
+            ((DatePicker) datePicker).getParent().requestFocus();
         });
     }
 

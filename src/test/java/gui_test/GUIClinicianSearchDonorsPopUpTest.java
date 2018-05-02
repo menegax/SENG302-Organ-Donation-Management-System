@@ -98,13 +98,6 @@ public class GUIClinicianSearchDonorsPopUpTest extends ApplicationTest {
                     .getOnAction()
                     .handle(new ActionEvent());
         });
-
-        // double-click to get a pop up
-        interact( () -> {
-            lookup( "#donorDataTable" ).queryAs( TableView.class ).getSelectionModel().select(0);
-            doubleClickOn( "#donorDataTable" ).doubleClickOn();
-        });
-        verifyThat("#donorProfilePane", Node::isVisible);
     }
 }
 

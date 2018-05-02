@@ -103,4 +103,45 @@ public class StateHistoryTextEntryTest {
         stateHistoryTextEntry.undo();
         assertEquals("", textField.getText());
     }
+
+    /**
+     * Tests the redo method of the StateHistoryTextEntry
+     */
+    @Test
+    public void testRedo() {
+        textField.setText("");
+        StateHistoryTextEntry stateHistoryTextEntry = new StateHistoryTextEntry(textField);
+        ArrayList<String> checkList = new ArrayList<>();
+        stateHistoryTextEntry.store();
+        stateHistoryTextEntry.undo();
+        stateHistoryTextEntry.redo();
+        checkList.add("");
+        checkList.add("");
+        assertEquals(checkList, stateHistoryTextEntry.getStates());
+        assertEquals(1, stateHistoryTextEntry.getIndex());
+
+        stateHistoryTextEntry.redo();
+        assertEquals(checkList, stateHistoryTextEntry.getStates());
+        assertEquals(1, stateHistoryTextEntry.getIndex());
+
+        stateHistoryTextEntry.undo();
+        textField.setText("A");
+        stateHistoryTextEntry.store();
+        textField.setText("B");
+        stateHistoryTextEntry.store();
+        stateHistoryTextEntry.undo();
+        stateHistoryTextEntry.undo();
+        stateHistoryTextEntry.redo();
+        stateHistoryTextEntry.redo();
+        checkList.remove(1);
+        checkList.add("A");
+        checkList.add("B");
+        assertEquals(checkList, stateHistoryTextEntry.getStates());
+        assertEquals(2, stateHistoryTextEntry.getIndex());
+        assertEquals("B", textField.getText());
+        stateHistoryTextEntry.undo();
+        stateHistoryTextEntry.undo();
+        stateHistoryTextEntry.redo();
+        assertEquals("A", textField.getText());
+    }
 }
