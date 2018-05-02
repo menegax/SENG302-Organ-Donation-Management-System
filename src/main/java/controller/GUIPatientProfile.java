@@ -1,13 +1,10 @@
 package controller;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import model.Patient;
 import service.Database;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import utility.GlobalEnums;
 
 import java.io.IOException;
@@ -73,6 +70,9 @@ public class GUIPatientProfile {
     @FXML
     private Label receivingList;
 
+    @FXML
+    private ListView receiveList;
+
     /**
      * Initializes the patient profile GUI pane
      */
@@ -82,6 +82,13 @@ public class GUIPatientProfile {
             receivingButton.setVisible(false);
             donationsButton.setDisable(true);
             donationsButton.setVisible(false);
+
+            if (ScreenControl.getLoggedInDonor().getRequiredOrgans() == null) {
+                receivingList.setDisable(true);
+                receivingList.setVisible(false);
+                receiveList.setDisable( true );
+                receiveList.setVisible( false );
+            }
             loadProfile(ScreenControl.getLoggedInDonor()
                     .getNhiNumber());
         }
