@@ -27,7 +27,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorMedications {
+public class GUIDonorMedications implements IPopupable {
 
     @FXML
     public AnchorPane medicationPane;
@@ -74,6 +74,13 @@ public class GUIDonorMedications {
      */
     @FXML
     private ListView<String> medicineInformation;
+
+    private Donor viewedDonor;
+
+    public void setViewedDonor(Donor donor) {
+        viewedDonor = donor;
+        loadProfile(viewedDonor.getNhiNumber());
+    }
 
     @FXML
     public void undo() {
@@ -142,11 +149,16 @@ public class GUIDonorMedications {
 
     @FXML
     public void initialize() {
+        pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        if (ScreenControl.getLoggedInDonor() != null) {
+            loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
+        }
+    }
+
+    public void loadProfile(String nhi) {
         try {
-            newMedication.setContextMenu(contextMenu);
-            pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor().getNhiNumber());
+            target = Database.getDonorByNhi(nhi);
 
             if(target.getCurrentMedications() == null) {
                 target.setCurrentMedications(new ArrayList<>());
@@ -289,7 +301,7 @@ public class GUIDonorMedications {
 
             if (!(current.contains(medication) || history.contains(medication))) {
                 target.getCurrentMedications().add( new Medication(medication));
-                userActions.log(Level.INFO, "Successfully registered a medication", "Registered a new medication for a donor");
+                userActions.log(Level.INFO, "Successfully registered medication " + medication + " for donor " + target.getNhiNumber(), "Registered a new medication for a donor");
                 viewCurrentMedications();
                 newMedication.clear();
             } else if (history.contains(medication) && !current.contains(medication)) {
@@ -325,11 +337,11 @@ public class GUIDonorMedications {
     private void performDelete(String medication) {
         if (history.contains( medication )) {
             target.getMedicationHistory().remove( history.indexOf( medication ) );
-            userActions.log( Level.INFO, "Successfully deleted a medication", "Deleted a past medication for a donor" );
+            userActions.log( Level.INFO, "Successfully deleted medication" + medication + " from donor " + target.getNhiNumber(), "Deleted a past medication for a donor" );
             viewPastMedications();
         } else if (current.contains( medication )) {
             target.getCurrentMedications().remove( current.indexOf( medication ) );
-            userActions.log( Level.INFO, "Successfully deleted a medication", "Deleted a current medication for a donor" );
+            userActions.log( Level.INFO, "Successfully deleted a medication" + medication + " from donor " + target.getNhiNumber() , "Deleted a current medication for a donor" );
             viewCurrentMedications();
 
         }
@@ -348,7 +360,7 @@ public class GUIDonorMedications {
                     target.getCurrentMedications().add( new Medication( medication )  );
                     viewCurrentMedications();
                 }
-                userActions.log(Level.INFO, "Successfully moved a medication", "Re-added a current medication for a donor");
+                userActions.log(Level.INFO, "Successfully moved medication " + medication + " to current for donor " + target.getNhiNumber(), "Re-added a current medication for a donor");
                 viewPastMedications();
             }
         }
@@ -368,7 +380,7 @@ public class GUIDonorMedications {
                     target.getMedicationHistory().add( new Medication( medication ) );
                     viewPastMedications();
                 }
-                userActions.log(Level.INFO, "Successfully moved a medication", "Removed a past medication for a donor");
+                userActions.log(Level.INFO, "Successfully moved medication " + medication + " to history for donor " + target.getNhiNumber(), "Removed a past medication for a donor");
                 viewCurrentMedications();
             }
         }
@@ -379,14 +391,24 @@ public class GUIDonorMedications {
      */
     @FXML
     public void goToProfile() {
-        ScreenControl.removeScreen("donorProfile");
-        try {
-            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-            ScreenControl.activate("donorProfile");
-        }catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the medication page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
+        if (ScreenControl.getLoggedInDonor() != null ) {
+            ScreenControl.removeScreen("donorProfile");
+            try {
+                ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+                ScreenControl.activate("donorProfile");
+            }catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the medication page to the profile page");
+                new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+                e.printStackTrace();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfile.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader, viewedDonor);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the edit page to the profile page in popup");
+                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
+            }
         }
     }
 

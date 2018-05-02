@@ -1,5 +1,8 @@
 package controller;
 
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -8,8 +11,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
+import org.apache.commons.lang3.StringUtils;
+import model.Medication;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import utility.GlobalEnums;
@@ -17,8 +23,11 @@ import utility.GlobalEnums;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import static utility.UserActionHistory.userActions;
 
@@ -36,8 +45,7 @@ public class GUIDonorProfile implements IPopupable {
     public Button donationButton;
 
     @FXML
-    public AnchorPane profilePane;
-    public Button testMedication;
+    public Button medicationBtn;
 
     @FXML
     private Label nhiLbl;
@@ -85,12 +93,18 @@ public class GUIDonorProfile implements IPopupable {
     private Label addLbl5;
 
     @FXML
-    private Label donationList;
+    private ListView organList;
+
+    @FXML
+    private ListView medList;
 
     @FXML
     private Label back;
 
     private Donor viewedDonor;
+
+    private ListProperty<String> organListProperty = new SimpleListProperty<>();
+    private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
 
     private void removeBack() {
@@ -118,13 +132,10 @@ public class GUIDonorProfile implements IPopupable {
 
     public void initialize() {
         if (ScreenControl.getLoggedInDonor() != null) {
-            try {
-                loadProfile(ScreenControl.getLoggedInDonor()
-                        .getNhiNumber());
-            }
-            catch (InvalidObjectException e) {
-                userActions.log(Level.SEVERE, "Failed to set the viewed donor", "Attempted to set the viewed donor");
-            }
+            medicationBtn.setDisable(true);
+            medicationBtn.setVisible(false);
+            loadProfile(ScreenControl.getLoggedInDonor()
+                    .getNhiNumber());
         }
     }
 
@@ -161,9 +172,16 @@ public class GUIDonorProfile implements IPopupable {
         else {
             addLbl5.setText("Not set");
         }
-        for (GlobalEnums.Organ organ : donor.getDonations()) {
-            donationList.setText(donationList.getText() + StringUtils.capitalize(organ.getValue()) + "\n");
-        }
+        //Populate organ listview
+        Collection<GlobalEnums.Organ> organs = donor.getDonations();
+        List<String> organsMapped = organs.stream().map(e -> StringUtils.capitalize(e.getValue())).collect(Collectors.toList());
+        organListProperty.setValue(FXCollections.observableArrayList(organsMapped));
+        organList.itemsProperty().bind(organListProperty);
+        //Populate current medication listview
+        Collection<Medication> meds = donor.getCurrentMedications();
+        List<String> medsMapped = meds.stream().map(e -> e.getMedicationName()).collect(Collectors.toList());
+        medListProperty.setValue(FXCollections.observableArrayList(medsMapped));
+        medList.itemsProperty().bind(medListProperty);
     }
 
 
@@ -248,17 +266,26 @@ public class GUIDonorProfile implements IPopupable {
     }
 
     public void openMedication() {
-        ScreenControl.removeScreen("donorMedications");
-        try {
-            ScreenControl.addScreen("donorMedications", FXMLLoader.load(getClass().getResource("/scene/donorMedications.fxml")));
-            ScreenControl.activate("donorMedications");
-        } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading medication screen", "attempted to navigate from the profile page to the medication page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading medication page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
+        if (ScreenControl.getLoggedInDonor() != null) {
+            ScreenControl.removeScreen("donorMedications");
+            try {
+                ScreenControl.addScreen("donorMedications", FXMLLoader.load(getClass().getResource("/scene/donorMedications.fxml")));
+                ScreenControl.activate("donorMedications");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading medication screen", "attempted to navigate from the profile page to the medication page");
+                new Alert(Alert.AlertType.WARNING, "ERROR loading medication page", ButtonType.OK).showAndWait();
+                e.printStackTrace();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorMedications.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(profilePane.getScene(), fxmlLoader, viewedDonor);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading medication screen in popup", "attempted to navigate from the profile page to the medication page in popup");
+                new Alert(Alert.AlertType.ERROR, "Error loading medication page", ButtonType.OK).showAndWait();
+            }
         }
     }
-
 
     public void goToDonorHome() {
         ScreenControl.activate("donorHome");
