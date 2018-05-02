@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import model.Patient;
 import service.Database;
@@ -54,6 +55,12 @@ public class GUIPatientProfile {
     @FXML
     private Label addLbl5;
 
+    @FXML
+    private Button receivingButton;
+
+    @FXML
+    private Button donationsButton;
+
     /**
      * A list for the organs a patient is donating
      */
@@ -70,7 +77,14 @@ public class GUIPatientProfile {
      * Initializes the patient profile GUI pane
      */
     public void initialize() {
-        loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
+        if (ScreenControl.getLoggedInDonor() != null) {
+            receivingButton.setDisable(true);
+            receivingButton.setVisible(false);
+            donationsButton.setDisable(true);
+            donationsButton.setVisible(false);
+            loadProfile(ScreenControl.getLoggedInDonor()
+                    .getNhiNumber());
+        }
     }
 
     /**
@@ -141,6 +155,10 @@ public class GUIPatientProfile {
             new Alert(Alert.AlertType.WARNING, "ERROR loading donation page", ButtonType.OK).showAndWait();
             e.printStackTrace();
         }
+    }
+
+    public void goToReceiving() {
+        ;
     }
 
     /**
