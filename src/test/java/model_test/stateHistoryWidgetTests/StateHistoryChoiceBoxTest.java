@@ -40,9 +40,9 @@ public class StateHistoryChoiceBoxTest {
     public void testConstructor() {
         choiceBox.getSelectionModel().select(0);
         StateHistoryChoiceBox stateHistoryChoiceBox = new StateHistoryChoiceBox(choiceBox);
-        ArrayList<String> checkList = new ArrayList<>();
-        checkList.add("A");
-        assertEquals(checkList, stateHistoryChoiceBox.getStates());
+        ArrayList<String> choiceList = new ArrayList<>();
+        choiceList.add("A");
+        assertEquals(choiceList, stateHistoryChoiceBox.getStates());
         assertEquals(0, stateHistoryChoiceBox.getIndex());
     }
 
@@ -54,25 +54,25 @@ public class StateHistoryChoiceBoxTest {
     public void testStore() {
         choiceBox.getSelectionModel().select(0);
         StateHistoryChoiceBox stateHistoryChoiceBox = new StateHistoryChoiceBox(choiceBox);
-        ArrayList<String> checkList = new ArrayList<>();
+        ArrayList<String> choiceList = new ArrayList<>();
         stateHistoryChoiceBox.store();
         choiceBox.getSelectionModel().select(1);
         stateHistoryChoiceBox.store();
-        checkList.add("A");
-        checkList.add("A");
-        checkList.add("B");
+        choiceList.add("A");
+        choiceList.add("A");
+        choiceList.add("B");
         // Undo will fails if these asserts fail
-        assertEquals(checkList, stateHistoryChoiceBox.getStates());
+        assertEquals(choiceList, stateHistoryChoiceBox.getStates());
         assertEquals(2, stateHistoryChoiceBox.getIndex());
 
         stateHistoryChoiceBox.undo();
         stateHistoryChoiceBox.undo();
         choiceBox.getSelectionModel().select(2);
         stateHistoryChoiceBox.store();
-        checkList = new ArrayList<>(checkList.subList(0, 1));
-        checkList.add("C");
+        choiceList = new ArrayList<>(choiceList.subList(0, 1));
+        choiceList.add("C");
         // These asserts will fail if undo fails
-        assertEquals(checkList, stateHistoryChoiceBox.getStates());
+        assertEquals(choiceList, stateHistoryChoiceBox.getStates());
         assertEquals(1, stateHistoryChoiceBox.getIndex());
     }
 
@@ -83,16 +83,16 @@ public class StateHistoryChoiceBoxTest {
     public void testUndo() {
         choiceBox.getSelectionModel().select(0);
         StateHistoryChoiceBox stateHistoryChoiceBox = new StateHistoryChoiceBox(choiceBox);
-        ArrayList<String> checkList = new ArrayList<>();
+        ArrayList<String> choiceList = new ArrayList<>();
         stateHistoryChoiceBox.store();
         stateHistoryChoiceBox.undo();
-        checkList.add("A");
-        checkList.add("A");
-        assertEquals(checkList, stateHistoryChoiceBox.getStates());
+        choiceList.add("A");
+        choiceList.add("A");
+        assertEquals(choiceList, stateHistoryChoiceBox.getStates());
         assertEquals(0, stateHistoryChoiceBox.getIndex());
 
         stateHistoryChoiceBox.undo();
-        assertEquals(checkList, stateHistoryChoiceBox.getStates());
+        assertEquals(choiceList, stateHistoryChoiceBox.getStates());
         assertEquals(0, stateHistoryChoiceBox.getIndex());
 
         choiceBox.getSelectionModel().select(1);
@@ -100,13 +100,54 @@ public class StateHistoryChoiceBoxTest {
         choiceBox.getSelectionModel().select(2);
         stateHistoryChoiceBox.store();
         stateHistoryChoiceBox.undo();
-        checkList.remove(1);
-        checkList.add("B");
-        checkList.add("C");
-        assertEquals(checkList, stateHistoryChoiceBox.getStates());
+        choiceList.remove(1);
+        choiceList.add("B");
+        choiceList.add("C");
+        assertEquals(choiceList, stateHistoryChoiceBox.getStates());
         assertEquals(1, stateHistoryChoiceBox.getIndex());
         assertEquals("B", choiceBox.getSelectionModel().getSelectedItem());
         stateHistoryChoiceBox.undo();
         assertEquals("A", choiceBox.getSelectionModel().getSelectedItem());
+    }
+
+    /**
+     * Tests the redo method of the StateHistoryChoiceBox
+     */
+    @Test
+    public void testRedo() {
+        choiceBox.getSelectionModel().select(0);
+        StateHistoryChoiceBox stateHistoryChoiceBox = new StateHistoryChoiceBox(choiceBox);
+        ArrayList<String> choiceList = new ArrayList<>();
+        stateHistoryChoiceBox.store();
+        stateHistoryChoiceBox.undo();
+        stateHistoryChoiceBox.redo();
+        choiceList.add("A");
+        choiceList.add("A");
+        assertEquals(choiceList, stateHistoryChoiceBox.getStates());
+        assertEquals(1, stateHistoryChoiceBox.getIndex());
+
+        stateHistoryChoiceBox.redo();
+        assertEquals(choiceList, stateHistoryChoiceBox.getStates());
+        assertEquals(1, stateHistoryChoiceBox.getIndex());
+
+        stateHistoryChoiceBox.undo();
+        choiceBox.getSelectionModel().select(1);
+        stateHistoryChoiceBox.store();
+        choiceBox.getSelectionModel().select(2);
+        stateHistoryChoiceBox.store();
+        stateHistoryChoiceBox.undo();
+        stateHistoryChoiceBox.undo();
+        stateHistoryChoiceBox.redo();
+        stateHistoryChoiceBox.redo();
+        choiceList.remove(1);
+        choiceList.add("B");
+        choiceList.add("C");
+        assertEquals(choiceList, stateHistoryChoiceBox.getStates());
+        assertEquals(2, stateHistoryChoiceBox.getIndex());
+        assertEquals("C", choiceBox.getSelectionModel().getSelectedItem());
+        stateHistoryChoiceBox.undo();
+        stateHistoryChoiceBox.undo();
+        stateHistoryChoiceBox.redo();
+        assertEquals("B", choiceBox.getSelectionModel().getSelectedItem());
     }
 }

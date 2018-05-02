@@ -181,7 +181,6 @@ public class Database {
      */
     public static void importFromDisk(String fileName) {
         try {
-            donors = new HashSet<>();
             importFromDiskDonors(fileName);
             userActions.log(Level.INFO, "Imported donors from disk", "Attempted to import from disk");
             SearchDonors.createFullIndex();

@@ -204,6 +204,65 @@ public class StatesHistoryScreenTest {
     }
 
     /**
+     * Tests the redo method of the StatesHistoryScreen
+     */
+    @Test
+    public void testRedo() {
+        textField1.setText("A");
+        statesHistoryScreen.store();
+        statesHistoryScreen.undo();
+        statesHistoryScreen.redo();
+        checkWidgets();
+        comboBox1.getSelectionModel().select(1);
+        statesHistoryScreen.store();
+        statesHistoryScreen.undo();
+        statesHistoryScreen.redo();
+        checkWidgets();
+        checkBox1.setSelected(true);
+        statesHistoryScreen.store();
+        statesHistoryScreen.undo();
+        statesHistoryScreen.redo();
+        checkWidgets();
+        radioButton1.setSelected(true);
+        statesHistoryScreen.store();
+        statesHistoryScreen.undo();
+        statesHistoryScreen.redo();
+        checkWidgets();
+        choiceBox1.getSelectionModel().select(1);
+        statesHistoryScreen.store();
+        statesHistoryScreen.undo();
+        statesHistoryScreen.redo();
+        checkWidgets();
+        datePicker1.setValue(LocalDate.of(2002, 2, 2));
+        statesHistoryScreen.store();
+        statesHistoryScreen.undo();
+        statesHistoryScreen.redo();
+        checkWidgets();
+
+        statesHistoryScreen.undo();
+        statesHistoryScreen.redo();
+        statesHistoryScreen.redo();
+        checkWidgets();
+
+        statesHistoryScreen.undo();
+        textField2.setText("B");
+        statesHistoryScreen.store();
+        statesHistoryScreen.redo();
+        checkWidgets();
+
+        textField2.setText("C");
+        statesHistoryScreen.store();
+        comboBox2.getSelectionModel().select(2);
+        statesHistoryScreen.store();
+        statesHistoryScreen.undo();
+        statesHistoryScreen.undo();
+        statesHistoryScreen.redo();
+        checkWidgets();
+        statesHistoryScreen.redo();
+        checkWidgets();
+    }
+
+    /**
      * Checks all that the current states stored in the StatesHistoryScreen correspond to the current states of the widgets
      */
     private void checkWidgets() {

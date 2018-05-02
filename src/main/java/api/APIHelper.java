@@ -42,7 +42,8 @@ public class APIHelper {
      * @throws IOException - if a connection to the API cannot be obtained
      */
     public JsonObject getMapiDrugSuggestions(String medicationString) throws IOException { // throw to application layer
-        return getApiResponse("http://mapi-us.iterar.co/api/autocomplete?query=" + medicationString);
+        medicationString = medicationString.replaceAll("[^a-zA-Z0-9]", "");
+        return getApiResponse("http://mapi-us.iterar.co/api/autocomplete?query=" + medicationString); //remove spaces from query
     }
 
     /**
