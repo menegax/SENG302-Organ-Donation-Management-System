@@ -1,17 +1,23 @@
 package controller;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import model.Clinician;
 import model.Donor;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class ScreenControl {
 
     private static HashMap<String, Pane> screenMap = new HashMap<>();
 
+    private static HashMap<String, Stage> popMap = new HashMap<>();
+
     private static Scene main;
+
 
     public static Donor donor;
 
@@ -27,6 +33,9 @@ public class ScreenControl {
         return donor;
     }
 
+    public static Scene getMain() {
+        return main;
+    }
 
     static void setLoggedInClinician(Clinician newClinician) {
         clinician = newClinician;
@@ -47,11 +56,7 @@ public class ScreenControl {
 
 
     /**
-<<<<<<< HEAD
-     * Add screen to the hash map of screens
-=======
      * Add screen to the hashmap of screens
->>>>>>> origin/development
      *
      * @param name - name of screen to add
      * @param pane - Pane object from FXML
@@ -62,11 +67,7 @@ public class ScreenControl {
 
 
     /**
-<<<<<<< HEAD
-     * Remove screen from hash map
-=======
      * Remove screen from hashmap
->>>>>>> origin/development
      *
      * @param name - screen to remove from the hashmap of screens
      */
@@ -83,4 +84,47 @@ public class ScreenControl {
     static void activate(String name) {
         main.setRoot(screenMap.get(name));
     }
+
+    /**
+     * Adds stage, name pair to a hashmap
+     *
+     * @param name  - name of the popup
+     * @param stage - stage to display
+     */
+    static void addPopUp(String name, Stage stage) {
+        popMap.put(name, stage);
+    }
+
+    /**
+     * Switches panes within a popup window, while passing along the current viewed donor
+     *
+     * @param scene      The scene to load the new pane into
+     * @param fxmlLoader The fxmlLoader for the new pane
+     * @param donor      The donor to pass to the next pane
+     * @throws IOException If the pane fails to load
+     */
+    static void loadPopUpPane(Scene scene, FXMLLoader fxmlLoader, Donor donor) throws IOException {
+        scene.setRoot(fxmlLoader.load());
+        IPopupable controller = fxmlLoader.getController();
+        controller.setViewedDonor(donor);
+    }
+
+    /**
+     * Displays a given popup
+     *
+     * @param name - name of the pop up to display
+     */
+    static void displayPopUp(String name) {
+        popMap.get(name).show();
+    }
+
+    /**
+     * Hides a given popup
+     *
+     * @param name - name of the popup to hide
+     */
+    static void hidePopUp(String name) {
+        popMap.get(name).close();
+    }
+
 }

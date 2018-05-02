@@ -9,8 +9,8 @@ public class GUIClinicianHome {
     public void goToClinicianProfile(){ ScreenControl.activate("clinicianProfile"); }
 
     @FXML
-    public void goToSearch(){
-        // implement search functionality
+    public void goToSearchDonors(){
+        ScreenControl.activate("clinicianSearchDonors");
     }
 
     @FXML
@@ -22,6 +22,6 @@ public class GUIClinicianHome {
     public void saveClinician() {
         Database.saveToDisk();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Saved!");
-        alert.showAndWait();
+        alert.show();
     }
 }

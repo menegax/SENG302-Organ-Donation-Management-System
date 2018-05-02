@@ -55,7 +55,7 @@
             </HBox>
          </children>
       </VBox>
-      <Button fx:id="back" layoutX="14.0" layoutY="27.0" onAction="#goToHome" mnemonicParsing="false" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="〱back" />
+      <Button fx:id="back" layoutX="14.0" layoutY="27.0" onAction="#goToClinicianHome" mnemonicParsing="false" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="〱back" />
       <Button fx:id="edit" layoutX="258.0" layoutY="344.0" onAction="#goToEdit" mnemonicParsing="false" text="Edit Profile" />
    </children>
 </AnchorPane>

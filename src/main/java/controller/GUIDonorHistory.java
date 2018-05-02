@@ -27,7 +27,7 @@ public class GUIDonorHistory {
     /**
      * Go to home page action listener for back button
      */
-    public void goToHome() {
+    public void goToDonorHome() {
         ScreenControl.activate("donorHome");
     }
 

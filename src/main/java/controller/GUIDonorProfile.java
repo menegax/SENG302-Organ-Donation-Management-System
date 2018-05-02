@@ -6,6 +6,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Label;
 import model.Donor;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
@@ -14,11 +16,17 @@ import utility.GlobalEnums;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorProfile {
+public class GUIDonorProfile implements IPopupable {
+
+    private UUID id = UUID.randomUUID();
+
+    @FXML
+    private AnchorPane donorProfilePane;
 
     public Button editDonorButton;
 
@@ -74,15 +82,44 @@ public class GUIDonorProfile {
     @FXML
     private Label donationList;
 
+    @FXML
+    private Label back;
+
+    private Donor viewedDonor;
+
+
+    private void removeBack() {
+        back.setDisable(true);
+        back.setVisible(false);
+    }
+
+
+    public UUID getId() {
+        return id;
+    }
+
+
+    public void setViewedDonor(Donor donor) {
+        this.viewedDonor = donor;
+        removeBack();
+        try {
+            loadProfile(this.viewedDonor.getNhiNumber());
+        }
+        catch (InvalidObjectException e) {
+            userActions.log(Level.SEVERE, "Failed to set the viewed donor", "Attempted to set the viewed donor");
+        }
+    }
+
 
     public void initialize() {
-        try {
-            loadProfile(ScreenControl.getLoggedInDonor()
-                    .getNhiNumber());
-        } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Unable to load donor from database", "Attempted to load donor profile");
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Unable to load donor from database");
-            alert.showAndWait();
+        if (ScreenControl.getLoggedInDonor() != null) {
+            try {
+                loadProfile(ScreenControl.getLoggedInDonor()
+                        .getNhiNumber());
+            }
+            catch (InvalidObjectException e) {
+                userActions.log(Level.SEVERE, "Failed to set the viewed donor", "Attempted to set the viewed donor");
+            }
         }
     }
 
@@ -96,7 +133,8 @@ public class GUIDonorProfile {
                 .toString());
         dobLbl.setText(donor.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        dateOfDeath.setText(donor.getDeath() == null ? "Not set" : donor.getDeath().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        dateOfDeath.setText(donor.getDeath() == null ? "Not set" : donor.getDeath()
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         age.setText(String.valueOf(donor.getAge()));
         heightLbl.setText(String.valueOf(donor.getHeight() + " m"));
         weightLbl.setText(String.valueOf(donor.getWeight() + " kg"));
@@ -108,12 +146,16 @@ public class GUIDonorProfile {
         addLbl3.setText(donor.getSuburb() == null ? "Not set" : donor.getSuburb());
         addLbl4.setText(donor.getRegion() == null ? "Not set" : donor.getRegion()
                 .getValue());
-        if(donor.getZip() != 0) {
+        if (donor.getZip() != 0) {
             addLbl5.setText(String.valueOf(donor.getZip()));
-            while (addLbl5.getText().length() < 4) {
+            while (addLbl5.getText()
+                    .length() < 4) {
                 addLbl5.setText("0" + addLbl5.getText());
             }
-        } else addLbl5.setText("Not set");
+        }
+        else {
+            addLbl5.setText("Not set");
+        }
         for (GlobalEnums.Organ organ : donor.getDonations()) {
             donationList.setText(donationList.getText() + StringUtils.capitalize(organ.getValue()) + "\n");
         }
@@ -121,45 +163,87 @@ public class GUIDonorProfile {
 
 
     public void goToEdit() {
-        ScreenControl.removeScreen("donorProfileUpdate");
-        try {
-            ScreenControl.addScreen("donorProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/donorUpdateProfile.fxml")));
-            ScreenControl.activate("donorProfileUpdate");
-        } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading update screen", "attempted to navigate from the profile page to the edit page");
-            new Alert(Alert.AlertType.WARNING, "Error loading edit page", ButtonType.OK).showAndWait();
+        if (ScreenControl.getLoggedInDonor() != null) {
+            ScreenControl.removeScreen("donorProfileUpdate");
+            try {
+                ScreenControl.addScreen("donorUpdateProfile", FXMLLoader.load(getClass().getResource("/scene/donorUpdateProfile.fxml")));
+                ScreenControl.activate("donorUpdateProfile");
+            }
+            catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading update screen", "attempted to navigate from the profile page to the edit page");
+                new Alert(Alert.AlertType.ERROR, "Error loading edit page", ButtonType.OK).show();
+            }
+        }
+        else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorUpdateProfile.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(donorProfilePane.getScene(), fxmlLoader, viewedDonor);
+            }
+            catch (IOException e) {
+                userActions.log(Level.SEVERE,
+                        "Error loading update screen in popup",
+                        "attempted to navigate from the profile page to the edit page in popup");
+                new Alert(Alert.AlertType.ERROR, "Error loading edit page", ButtonType.OK).show();
+            }
         }
     }
 
 
     public void goToDonations() {
-        ScreenControl.removeScreen("donorDonations");
-        try {
-            ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorUpdateDonations.fxml")));
-            ScreenControl.activate("donorDonations");
-        } catch (IOException e) {
-
-            userActions.log(Level.SEVERE, "Error loading donation screen", "attempted to navigate from the profile page to the donation page");
-            new Alert(Alert.AlertType.WARNING, "Error loading donation page", ButtonType.OK).showAndWait();
+        if (ScreenControl.getLoggedInDonor() != null) {
+            ScreenControl.removeScreen("donorDonations");
+            try {
+                ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorUpdateDonations.fxml")));
+                ScreenControl.activate("donorDonations");
+            }
+            catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading donation screen", "attempted to navigate from the profile page to the donation page");
+                new Alert(Alert.AlertType.ERROR, "Error loading donation page", ButtonType.OK).show();
+            }
+        }
+        else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorUpdateDonations.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(donorProfilePane.getScene(), fxmlLoader, viewedDonor);
+            }
+            catch (Exception e) {
+                userActions.log(Level.SEVERE,
+                        "Error loading donation screen in popup",
+                        "attempted to navigate from the profile page to the donation page in popup");
+                new Alert(Alert.AlertType.ERROR, "Error loading edit page", ButtonType.OK).show();
+            }
         }
     }
 
 
     public void goToContactDetails() {
-        ScreenControl.removeScreen("donorContactDetails");
-        try {
-            ScreenControl.addScreen("donorContactDetails", FXMLLoader.load(getClass().getResource("/scene/donorUpdateContacts.fxml")));
-            ScreenControl.activate("donorContactDetails");
-        } catch (IOException e) {
-            userActions.log(Level.SEVERE,
-                    "Error loading contact details screen",
-                    "attempted to navigate from the profile page to the contact details page");
-            new Alert(Alert.AlertType.WARNING, "Error loading contact details page", ButtonType.OK).showAndWait();
+        if (ScreenControl.getLoggedInDonor() != null) {
+            ScreenControl.removeScreen("donorContactDetails");
+            try {
+                ScreenControl.addScreen("donorContactDetails", FXMLLoader.load(getClass().getResource("/scene/donorUpdateContacts.fxml")));
+                ScreenControl.activate("donorContactDetails");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE,
+                        "Error loading contact details screen",
+                        "attempted to navigate from the profile page to the contact details page");
+                new Alert(Alert.AlertType.ERROR, "Error loading contact details page", ButtonType.OK).show();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorUpdateContacts.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(donorProfilePane.getScene(), fxmlLoader, viewedDonor);
+            }
+            catch (IOException e) {
+                userActions.log(Level.SEVERE,
+                        "Error loading contacts screen in popup",
+                        "attempted to navigate from the profile page to the contacts page in popup");
+                new Alert(Alert.AlertType.ERROR, "Error loading contacts page", ButtonType.OK).show();
+            }
         }
     }
 
 
-    public void goToHome() {
+    public void goToDonorHome() {
         ScreenControl.activate("donorHome");
     }
 

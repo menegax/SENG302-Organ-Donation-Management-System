@@ -6,18 +6,22 @@ import utility.GlobalEnums.BloodGroup;
 import utility.GlobalEnums.Gender;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
+import utility.SearchDonors;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.time.LocalDate;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
 public class Donor {
+
+    private UUID uuid = UUID.randomUUID();
 
     private final Timestamp CREATED;
 
@@ -87,7 +91,6 @@ public class Donor {
         this.donations = new ArrayList<>();
     }
 
-
     /**
      * Sets the attributes of the donor
      *
@@ -102,14 +105,15 @@ public class Donor {
      * @param region      region of address
      * @param gender      gender of address
      * @param bloodGroup  blood group
-     * @param height      height
-     * @param weight      weight
+     * @param height      height in meters
+     * @param weight      weight in kilograms
      * @param nhi         nhi
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, LocalDate birth, LocalDate death, String street1,
                                  String street2, String suburb, String region, String gender, String bloodGroup, double height, double weight,
                                  String nhi) throws IllegalArgumentException {
         Enum globalEnum;
+        SearchDonors.removeIndex(this);
         if (firstName != null) {
             setFirstName(firstName);
         }
@@ -173,6 +177,7 @@ public class Donor {
         }
         userActions.log(Level.INFO, "Successfully updated donor " + getNhiNumber(), "attempted to update donor attributes");
         donorModified();
+        SearchDonors.addIndex(this);
     }
 
 
@@ -188,8 +193,7 @@ public class Donor {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ); //null if invalid
                 if (organEnum == null) {
                     userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to donor donations");
-                }
-                else {
+                } else {
                     userActions.log(Level.INFO, addDonation(organEnum), "attempted to update donor donations");
                     donorModified();
                 }
@@ -199,11 +203,8 @@ public class Donor {
             for (String organ : rmDonations) {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ);
                 if (organEnum == null) {
-                    userActions.log(Level.SEVERE,
-                            "Invalid organ \"" + organ + "\" given and not removed",
-                            "attempted to remove from donor donations");
-                }
-                else {
+                    userActions.log(Level.SEVERE,"Invalid organ \"" + organ + "\" given and not removed", "attempted to remove from donor donations");}
+                 else {
                     userActions.log(Level.INFO, removeDonation(organEnum), "attempted to remove from donor donations");
                     donorModified();
                 }
@@ -524,8 +525,7 @@ public class Donor {
             donations.remove(organ);
             donorModified();
             return "Successfully removed " + organ + " from donations";
-        }
-        else {
+        } else {
             return "Organ " + organ + " is not part of the donors donations, so could not be removed.";
         }
     }
@@ -662,5 +662,4 @@ public class Donor {
         Donor donor = (Donor) obj;
         return this.nhiNumber.equals(donor.nhiNumber) && obj.getClass() == this.getClass();
     }
-
 }
