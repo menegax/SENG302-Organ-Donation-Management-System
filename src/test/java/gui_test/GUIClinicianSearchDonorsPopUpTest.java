@@ -78,7 +78,7 @@ public class GUIClinicianSearchDonorsPopUpTest extends ApplicationTest {
      * Tests the pop up for table row double-clicking
      */
     @Test
-    public void successfulPopUpNaviagaion() {
+    public void successfulPopUpNavigation() {
         //Check 'I am Clinician" checkbox to login as clinician
         interact(() -> {
             lookup("#clinicianToggle").queryAs(CheckBox.class)

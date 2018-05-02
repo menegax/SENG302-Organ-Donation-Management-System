@@ -15,12 +15,9 @@ import utility.SearchDonors;
 import utility.UserActionHistory;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
-
-import static utility.UserActionHistory.userActions;
 
 public class Main extends Application {
 
