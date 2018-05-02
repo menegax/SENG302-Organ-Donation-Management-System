@@ -102,8 +102,8 @@ public class GUIDonorUpdateContacts implements IPopupable {
         if (ScreenControl.getLoggedInDonor() != null) {
             loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
             setContactFields();
-            setupUndoRedo();
         }
+        setupUndoRedo();
 
         // Enter key triggers log in
         donorContactsPane.setOnKeyPressed(e -> {
