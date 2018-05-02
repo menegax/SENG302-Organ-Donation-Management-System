@@ -12,10 +12,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import model.Donor;
 import model.Medication;
 import service.TextWatcher;
 import service.Database;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -77,6 +79,8 @@ public class GUIDonorMedications implements IPopupable {
 
     private Donor viewedDonor;
 
+    private StatesHistoryScreen stateHistoryScreen;
+
     public void setViewedDonor(Donor donor) {
         viewedDonor = donor;
         loadProfile(viewedDonor.getNhiNumber());
@@ -84,12 +88,12 @@ public class GUIDonorMedications implements IPopupable {
 
     @FXML
     public void undo() {
-        System.out.print( "undo" );  // To be completed by Story 12 and 13 responsible's
+        stateHistoryScreen.undo();
     }
 
     @FXML
     public void redo() {
-        System.out.print( "redo" );  // To be completed by Story 12 and 13 responsible's
+        stateHistoryScreen.redo();
     }
 
     /**
@@ -149,6 +153,9 @@ public class GUIDonorMedications implements IPopupable {
 
     @FXML
     public void initialize() {
+        stateHistoryScreen = new StatesHistoryScreen(medicationPane, new ArrayList<Control>() {{
+            add(newMedication);
+        }});
         pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         if (ScreenControl.getLoggedInDonor() != null) {
