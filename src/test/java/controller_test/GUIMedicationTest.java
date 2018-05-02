@@ -67,7 +67,6 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#clinicianSearchDonorsPane", Node::isVisible); // Verify that "user" has navigated to search pane
         verifyThat("#donorDataTable", TableViewMatchers.hasTableCell("Joe Middle Bloggs"));
         interact(() -> {
-            lookup( "#donorDataTable" ).queryAs( TableView.class ).getSelectionModel().select(0);
             doubleClickOn( "Joe Middle Bloggs" );
         });
         verifyThat("#donorProfilePane", Node::isVisible);
@@ -411,7 +410,7 @@ public class GUIMedicationTest extends ApplicationTest {
         // Verify that the medication entry text field is empty again after registering the entered medication
         verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         // Verify that the currentMedications listView is now not empty as a medication has now been registered to it
-        verifyThat( "#currentMedications", ListViewMatchers.hasListCell( "history med" ) );
+        verifyThat( "#currentMedications", ListViewMatchers.hasListCell( "History med" ) );
         // Verify that there is only one medication registered to currentMedications ListView
         verifyThat( "#currentMedications", ListViewMatchers.hasItems( 1 ) );
         // Verify that the pastMedications listView is still empty
