@@ -413,7 +413,9 @@ public class GUIDonorMedications implements IPopupable {
     private void onSelect(ListView listView) {
         if (listView.getSelectionModel().getSelectedItems().size() >= 1) {
             for (Object item : listView.getSelectionModel().getSelectedItems()) {
-                loadMedicationIngredients( item.toString() );
+                if (item != null){
+                    loadMedicationIngredients( item.toString() );
+                }
             }
         }
     }
