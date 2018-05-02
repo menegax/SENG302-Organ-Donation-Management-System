@@ -69,5 +69,6 @@ public class ControllerClinicianTest extends ApplicationTest {
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
         });
         verifyThat( "#loginPane", Node::isVisible ); // Verify that logout button has taken "user" to the login panel
+        interact(() -> lookup("OK").queryAs(Button.class).fire());
     }
 }
