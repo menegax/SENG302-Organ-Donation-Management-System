@@ -113,11 +113,14 @@ public class GUIDonorMedications implements IPopupable {
 
     private void saveToDisk() {
         if (target.getMedicationLog() != null) {
-            target.getMedicationLog().addAll( medLog );
+            ObservableList<UserActionRecord> log = target.getMedicationLog();
+            log.addAll(medLog);
+            target.setMedicationLog(log);
         } else {
             target.setMedicationLog( medLog );
         }
         Database.saveToDisk();
+        medLog = FXCollections.observableArrayList();
     }
 
     /**
