@@ -180,6 +180,7 @@ public class SearchDonors {
 				docs = searchQuery(query);
 				for (ScoreDoc doc : docs.scoreDocs) {
 					allDocs.add(doc);
+//					System.out.println("score for donor " + doc.toString() + ": " + doc.score); //todo remove
 	        	}
 			}
 			SortedSet<ScoreDoc> sortedDocs = new TreeSet<ScoreDoc>(new Comparator<ScoreDoc>() {
