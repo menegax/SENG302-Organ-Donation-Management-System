@@ -33,7 +33,7 @@ public class GUIClinicianHome {
     @FXML
     public void saveClinician() {
         Database.saveToDisk();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Successfully Saved!");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Saved!");
         alert.show();
     }
 }

@@ -1,5 +1,7 @@
 package controller;
 
+import static utility.UserActionHistory.userActions;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,18 +9,19 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Clinician;
 import model.Donor;
+import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
 import utility.SearchDonors;
 import utility.UserActionHistory;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import static utility.UserActionHistory.userActions;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Main extends Application {
 
@@ -33,6 +36,14 @@ public class Main extends Application {
         Database.importFromDisk("./donor.json");
         addDummyTestObjects();
 
+        SearchDonors.createFullIndex(); // index donors for search, needs to be after importing or adding any donors
+
+        // Add scenes
+        ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+        ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
+        ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
+        ScreenControl.addScreen("donorHome", FXMLLoader.load(getClass().getResource("/scene/donorHome.fxml")));
+
         try {
             Database.importFromDiskClinicians("clinician.json");
         } catch (IOException e) {
@@ -43,14 +54,6 @@ public class Main extends Application {
                 Database.addClinician(new Clinician(Database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
             }
         }
-
-        SearchDonors.createFullIndex(); // index donors for search, needs to be after importing or adding any donors
-
-        // Add scenes
-        ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
-        ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
-        ScreenControl.addScreen("donorHome", FXMLLoader.load(getClass().getResource("/scene/donorHome.fxml")));
 
         primaryStage.show();
     }
@@ -94,10 +97,8 @@ public class Main extends Application {
                     .setGender(GlobalEnums.Gender.FEMALE);
         }
         catch (Exception e) {
-            System.out.println("Unable to add dummy donors");
+            userActions.log(Level.WARNING, "Unable to add dummy donors", "Attempted to load dummy donors for testing");
         }
-
-
 
     }
 }

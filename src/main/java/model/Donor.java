@@ -2,23 +2,28 @@ package model;
 
 import service.Database;
 import utility.GlobalEnums;
-import utility.SearchDonors;
 import utility.GlobalEnums.BloodGroup;
 import utility.GlobalEnums.Gender;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 
 import java.sql.Timestamp;
+import utility.SearchDonors;
+
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.time.LocalDate;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
 public class Donor {
+
+    private UUID uuid = UUID.randomUUID();
 
     private final Timestamp CREATED;
 
@@ -56,6 +61,10 @@ public class Donor {
 
     private String nhiNumber;
 
+    private ArrayList<Medication> currentMedications = new ArrayList<>();
+
+    private ArrayList<Medication> medicationHistory = new ArrayList<>();
+
     private String homePhone;
 
     private String mobilePhone;
@@ -76,8 +85,9 @@ public class Donor {
 
     private String contactEmailAddress;
 
-
-    public Donor(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
+    //private HashMap<String, ArrayList<String>> medicationLog = new HashMap<>();
+    public Donor(String nhiNumber, String firstName,
+                 ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
         this.firstName = firstName;
@@ -87,7 +97,6 @@ public class Donor {
         this.nhiNumber = nhiNumber.toUpperCase();
         this.donations = new ArrayList<>();
     }
-
 
     /**
      * Sets the attributes of the donor
@@ -175,7 +184,7 @@ public class Donor {
         }
         userActions.log(Level.INFO, "Successfully updated donor " + getNhiNumber(), "attempted to update donor attributes");
         donorModified();
-    	SearchDonors.addIndex(this);
+        SearchDonors.addIndex(this);
     }
 
 
@@ -191,8 +200,7 @@ public class Donor {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ); //null if invalid
                 if (organEnum == null) {
                     userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to donor donations");
-                }
-                else {
+                } else {
                     userActions.log(Level.INFO, addDonation(organEnum), "attempted to update donor donations");
                     donorModified();
                 }
@@ -202,11 +210,8 @@ public class Donor {
             for (String organ : rmDonations) {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ);
                 if (organEnum == null) {
-                    userActions.log(Level.SEVERE,
-                            "Invalid organ \"" + organ + "\" given and not removed",
-                            "attempted to remove from donor donations");
-                }
-                else {
+                    userActions.log(Level.SEVERE,"Invalid organ \"" + organ + "\" given and not removed", "attempted to remove from donor donations");}
+                 else {
                     userActions.log(Level.INFO, removeDonation(organEnum), "attempted to remove from donor donations");
                     donorModified();
                 }
@@ -231,7 +236,7 @@ public class Donor {
     /**
      * Checks the uniqueness of the nhi number
      *
-     * @exception IllegalArgumentException when the nhi number given is already in use
+     * @throws IllegalArgumentException when the nhi number given is already in use
      */
     public void ensureUniqueNhi() throws IllegalArgumentException {
         for (Donor d : Database.getDonors()) {
@@ -480,6 +485,39 @@ public class Donor {
     }
 
 
+    /**
+     * Gets the current medication list for a Donor
+     * @return ArrayList medications the Donor currently uses
+     */
+    public ArrayList<Medication> getCurrentMedications() {
+
+        return currentMedications == null? new ArrayList<>() : currentMedications;
+    }
+
+    /**
+     * Gets the medication history for a Donor
+     * @return ArrayList medications the Donor used to use
+     */
+    public ArrayList<Medication> getMedicationHistory() {
+        return medicationHistory == null? new ArrayList<>(): medicationHistory;
+    }
+
+    /**
+     * Sets the current medication list for a Donor
+     * @param currentMedications medications to set as current for the Donor
+     */
+    public void setCurrentMedications(ArrayList<Medication> currentMedications) {
+        this.currentMedications = currentMedications;
+    }
+
+    /**
+     * Sets the medication history for a Donor
+     * @param medicationHistory medication list to set as history for a Donor
+     */
+    public void setMedicationHistory(ArrayList<Medication> medicationHistory) {
+        this.medicationHistory = medicationHistory;
+    }
+
     public void setZip(int zip) {
         if (this.zip != zip) {
             this.zip = zip;
@@ -527,8 +565,7 @@ public class Donor {
             donations.remove(organ);
             donorModified();
             return "Successfully removed " + organ + " from donations";
-        }
-        else {
+        } else {
             return "Organ " + organ + " is not part of the donors donations, so could not be removed.";
         }
     }

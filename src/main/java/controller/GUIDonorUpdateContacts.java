@@ -25,7 +25,7 @@ import static utility.UserActionHistory.userActions;
  * Details are saved when the Save button is selected, and the user is returned to the donor profile view screen.
  * @author Maree Palmer
  */
-public class GUIDonorUpdateContacts {
+public class GUIDonorUpdateContacts implements IPopupable {
 
     @FXML
     public AnchorPane donorContactsPane;
@@ -79,7 +79,11 @@ public class GUIDonorUpdateContacts {
     }
 
 
-
+    public void setViewedDonor(Donor donor) {
+        target = donor;
+        loadProfile(target.getNhiNumber());
+        setContactFields();
+    }
 
     /**
      * Saves changes to a donor's contact details by calling the Database saving method.
@@ -95,8 +99,11 @@ public class GUIDonorUpdateContacts {
      * display current contact attributes.
      */
     public void initialize() {
-        loadProfile();
-        setContactFields();
+        if (ScreenControl.getLoggedInDonor() != null) {
+            loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
+            setContactFields();
+        }
+        setupUndoRedo();
 
         // Enter key triggers log in
         donorContactsPane.setOnKeyPressed(e -> {
@@ -106,6 +113,24 @@ public class GUIDonorUpdateContacts {
         });
     }
 
+    /**
+     * Sets up the variables needed for undo and redo functionality
+     */
+    private void setupUndoRedo() {
+        ArrayList<Control> controls = new ArrayList<Control>() {{
+            add(homePhoneField);
+            add(mobilePhoneField);
+            add(workPhoneField);
+            add(emailAddressField);
+            add(contactNameField);
+            add(contactRelationshipField);
+            add(contactHomePhoneField);
+            add(contactMobilePhoneField);
+            add(contactWorkPhoneField);
+            add(contactEmailAddressField);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(donorContactsPane, controls);
+    }
 
     /**
      * Sets initial contact text fields to a donor's existing contact details.
@@ -148,25 +173,12 @@ public class GUIDonorUpdateContacts {
     /**
      * Sets the target donor to the currently logged in donor.
      * Throws an InvalidObjectException if the logged in donor can not be retrieved
+     *
+     * @param nhi The nhi of the donor to load
      */
-    private void loadProfile() {
+    private void loadProfile(String nhi) {
         try {
-            target = Database.getDonorByNhi(ScreenControl.getLoggedInDonor()
-                    .getNhiNumber());
-
-            ArrayList<Control> controls = new ArrayList<Control>() {{
-                add(homePhoneField);
-                add(mobilePhoneField);
-                add(workPhoneField);
-                add(emailAddressField);
-                add(contactNameField);
-                add(contactRelationshipField);
-                add(contactHomePhoneField);
-                add(contactMobilePhoneField);
-                add(contactWorkPhoneField);
-                add(contactEmailAddressField);
-            }};
-            statesHistoryScreen = new StatesHistoryScreen(donorContactsPane, controls);
+            target = Database.getDonorByNhi(nhi);
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
@@ -298,14 +310,23 @@ public class GUIDonorUpdateContacts {
      * Closes the contact details screen and returns the user to the profile window without saving changes.
      */
     public void goToProfile() {
-        ScreenControl.removeScreen("donorProfile");
-        try {
-            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-            ScreenControl.activate("donorProfile");
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the contacts page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+        if (ScreenControl.getLoggedInDonor() != null) {
+            ScreenControl.removeScreen("donorProfile");
+            try {
+                ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+                ScreenControl.activate("donorProfile");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error returning to profile screen", "attempted to navigate from the donation page to the profile page");
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfile.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(donorContactsPane.getScene(), fxmlLoader, target);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error returning to profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+            }
         }
     }
 

@@ -35,6 +35,7 @@ public class GUIDonorHome {
 
     @FXML
     public void logOut() {
+        ScreenControl.setLoggedInDonor(null);
         ScreenControl.activate("login");
     }
 

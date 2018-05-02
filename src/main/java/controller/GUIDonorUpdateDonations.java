@@ -4,8 +4,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import utility.undoRedo.StatesHistoryScreen;
@@ -21,7 +24,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIDonorUpdateDonations {
+public class GUIDonorUpdateDonations implements IPopupable {
 
     @FXML
     private CheckBox liverCB;
@@ -81,17 +84,29 @@ public class GUIDonorUpdateDonations {
     private StatesHistoryScreen statesHistoryScreen;
 
 
-
     public void initialize() {
-        loadProfile(ScreenControl.getLoggedInDonor()
-                .getNhiNumber());
+        if (ScreenControl.getLoggedInDonor() != null) {
+            loadProfile(ScreenControl.getLoggedInDonor()
+                    .getNhiNumber());
+        }
 
         // Enter key triggers log in
         donorDonationsAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveDonations();
             }
+            else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
+                undo();
+            }
+            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
+                redo();
+            }
         });
+    }
+
+    public void setViewedDonor(Donor donor) {
+        target = donor;
+        loadProfile(donor.getNhiNumber());
     }
 
 
@@ -100,7 +115,6 @@ public class GUIDonorUpdateDonations {
             Donor donor = Database.getDonorByNhi(nhi);
             target = donor;
             populateForm(donor);
-
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
@@ -244,14 +258,23 @@ public class GUIDonorUpdateDonations {
 
 
     public void goToProfile() {
-        ScreenControl.removeScreen("donorProfile");
-        try {
-            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-            ScreenControl.activate("donorProfile");
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).showAndWait();
+        if (ScreenControl.getLoggedInDonor() != null) {
+            ScreenControl.removeScreen("donorProfile");
+            try {
+                ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
+                ScreenControl.activate("donorProfile");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfile.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(donorDonationsAnchorPane.getScene(), fxmlLoader, target);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+            }
         }
     }
 }

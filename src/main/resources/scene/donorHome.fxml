@@ -14,7 +14,7 @@
       </Label>
       <Button fx:id="profileButton" layoutX="161.0" layoutY="136.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="79.0" prefWidth="111.0" text="Profile" />
       <Button fx:id="historyButton" layoutX="333.0" layoutY="135.0" mnemonicParsing="false" onAction="#goToHistory" prefHeight="79.0" prefWidth="110.0" text="History" />
-      <Button fx:id="saveButton" layoutX="272.0" layoutY="338.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" prefWidth="57.0" text="Save" />
-      <Button fx:id="logOutButton" layoutX="188.0" layoutY="338.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+      <Button fx:id="saveButton" layoutX="360.0" layoutY="338.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" prefWidth="57.0" text="Save" />
+      <Button fx:id="logOutButton" layoutX="184.0" layoutY="338.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
    </children>
 </AnchorPane>

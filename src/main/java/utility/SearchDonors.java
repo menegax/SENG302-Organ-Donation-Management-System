@@ -1,16 +1,14 @@
 package utility;
 
+import static utility.UserActionHistory.userActions;
+
 import model.Donor;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.Term;
+import org.apache.lucene.index.*;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
@@ -101,8 +99,8 @@ public class SearchDonors {
 			indexWriter.deleteDocuments(toDel);
             userActions.log(Level.INFO,"Successfully removed donor: " + donor.getNhiNumber() + " from the search index", "Attempted to remove donor " + donor.getNhiNumber() + " from the search index");
 		} catch (IOException e) {
-			userActions.log(Level.SEVERE, "Failure to delete donor: " + donor.getNhiNumber() + " from the search index", "Attempted to remove donor " + donor.getNhiNumber() + " from the search index");
-		}
+            userActions.log(Level.SEVERE, "Unable to remove donor index", "Attempted to remove donor index");
+        }
     }
     
     /**
@@ -113,7 +111,7 @@ public class SearchDonors {
 			indexWriter.deleteAll();
             userActions.log(Level.INFO,"Successfully cleared donor search index", "Attempted to delete all donors search indices");
 		} catch (IOException e) {
-			userActions.log(Level.SEVERE, "Failure to delete all search indices", "Attempted to delete all donors search indices"); 
+            userActions.log(Level.SEVERE, "Unable to clear donor index", "Attempted to clear donor index");
 		}
     }
     
@@ -190,7 +188,7 @@ public class SearchDonors {
 	            }
 	        });
 	        sortedDocs.addAll(allDocs);
-			
+
 			for (ScoreDoc doc : sortedDocs) {
 				Document thisDoc = indexSearcher.doc(doc.doc);
 				nhi = thisDoc.get("nhi");
@@ -201,8 +199,9 @@ public class SearchDonors {
         	}
             userActions.log(Level.INFO,"Successfully searched for donors with input " + input, "Attempted to search for donors");
 		} catch (IOException e) {
-			userActions.log(Level.SEVERE, "Failure to find or read from index", "Attempted to search for donors");
+			userActions.log(Level.SEVERE, "Unable to search donors by name", "Attempted to search donors by name");
 		}
         return results;
     }
+
 }
