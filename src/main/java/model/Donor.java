@@ -488,7 +488,8 @@ public class Donor {
      * @return ArrayList medications the Donor currently uses
      */
     public ArrayList<Medication> getCurrentMedications() {
-        return currentMedications;
+
+        return currentMedications == null? new ArrayList<>() : currentMedications;
     }
 
     /**
@@ -496,7 +497,7 @@ public class Donor {
      * @return ArrayList medications the Donor used to use
      */
     public ArrayList<Medication> getMedicationHistory() {
-        return medicationHistory;
+        return medicationHistory == null? new ArrayList<>(): medicationHistory;
     }
 
     /**

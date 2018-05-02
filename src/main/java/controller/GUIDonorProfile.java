@@ -180,7 +180,7 @@ public class GUIDonorProfile implements IPopupable {
         organList.itemsProperty().bind(organListProperty);
         //Populate current medication listview
         Collection<Medication> meds = donor.getCurrentMedications();
-        List<String> medsMapped = meds.stream().map(e -> e.getMedicationName()).collect(Collectors.toList());
+        List<String> medsMapped = meds.stream().map(Medication::getMedicationName).collect(Collectors.toList());
         medListProperty.setValue(FXCollections.observableArrayList(medsMapped));
         medList.itemsProperty().bind(medListProperty);
     }
