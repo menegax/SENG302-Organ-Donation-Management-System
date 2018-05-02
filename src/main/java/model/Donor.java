@@ -59,9 +59,9 @@ public class Donor {
 
     private String nhiNumber;
 
-    private ArrayList<Medication> currentMedications;
+    private ArrayList<Medication> currentMedications = new ArrayList<>();
 
-    private ArrayList<Medication> medicationHistory;
+    private ArrayList<Medication> medicationHistory = new ArrayList<>();
 
     private String homePhone;
 

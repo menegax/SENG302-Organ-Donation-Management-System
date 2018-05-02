@@ -121,7 +121,7 @@
       </VBox>
       <Label fx:id="back" layoutX="14.0" layoutY="14.0" onMouseClicked="#goToDonorHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
        <Button fx:id="editDonorButton" layoutX="254.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToEdit" text="Manage Profile" />
-       <Button fx:id="donationsButton" layoutX="107.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
+       <Button fx:id="donationButton" layoutX="107.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
        <Button fx:id="medicationBtn" layoutX="249.0" layoutY="320.0" mnemonicParsing="false" onAction="#openMedication" text="Medication Test" />
        <Button fx:id="contactButton" layoutX="381.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contacts" />
       <VBox layoutX="436.0" layoutY="100.0" prefHeight="200.0" prefWidth="142.0">

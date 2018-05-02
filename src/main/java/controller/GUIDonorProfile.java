@@ -10,13 +10,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.control.Label;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import org.apache.commons.lang3.StringUtils;
 import model.Medication;
-import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import utility.GlobalEnums;
 
@@ -93,10 +90,10 @@ public class GUIDonorProfile implements IPopupable {
     private Label addLbl5;
 
     @FXML
-    private ListView organList;
+    private ListView<String> organList;
 
     @FXML
-    private ListView medList;
+    private ListView<String> medList;
 
     @FXML
     private Label back;
@@ -134,8 +131,12 @@ public class GUIDonorProfile implements IPopupable {
         if (ScreenControl.getLoggedInDonor() != null) {
             medicationBtn.setDisable(true);
             medicationBtn.setVisible(false);
-            loadProfile(ScreenControl.getLoggedInDonor()
-                    .getNhiNumber());
+            try {
+                loadProfile(ScreenControl.getLoggedInDonor()
+                        .getNhiNumber());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -187,7 +188,7 @@ public class GUIDonorProfile implements IPopupable {
 
     public void goToEdit() {
         if (ScreenControl.getLoggedInDonor() != null) {
-            ScreenControl.removeScreen("donorProfileUpdate");
+            ScreenControl.removeScreen("donorUpdateProfile");
             try {
                 ScreenControl.addScreen("donorUpdateProfile", FXMLLoader.load(getClass().getResource("/scene/donorUpdateProfile.fxml")));
                 ScreenControl.activate("donorUpdateProfile");
@@ -279,7 +280,7 @@ public class GUIDonorProfile implements IPopupable {
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorMedications.fxml"));
             try {
-                ScreenControl.loadPopUpPane(profilePane.getScene(), fxmlLoader, viewedDonor);
+                ScreenControl.loadPopUpPane(donorProfilePane.getScene(), fxmlLoader, viewedDonor);
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading medication screen in popup", "attempted to navigate from the profile page to the medication page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading medication page", ButtonType.OK).showAndWait();

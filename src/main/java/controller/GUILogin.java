@@ -88,18 +88,19 @@ public class GUILogin {
                 ScreenControl.addScreen("donorDonations", FXMLLoader.load(getClass().getResource("/scene/donorUpdateDonations.fxml")));
                 ScreenControl.addScreen("donorContacts", FXMLLoader.load(getClass().getResource("/scene/donorUpdateContacts.fxml")));
                 ScreenControl.activate("donorHome");
-                ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
                 ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
             ScreenControl.activate("donorHome");
             } catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
                 alert.show();
+                e.printStackTrace(); //TODO:
             }
             catch (IOException e) {
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
+                e.printStackTrace();//TODO:
             }
         }
         else {
