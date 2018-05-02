@@ -5,7 +5,6 @@ import javafx.scene.control.Alert;
 import service.Database;
 
 public class GUIClinicianHome {
-
     @FXML
     public void goToClinicianProfile(){ ScreenControl.activate("clinicianProfile"); }
 

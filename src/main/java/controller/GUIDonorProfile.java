@@ -135,7 +135,7 @@ public class GUIDonorProfile implements IPopupable {
                 loadProfile(ScreenControl.getLoggedInDonor()
                         .getNhiNumber());
             } catch (IOException e) {
-                e.printStackTrace();
+                userActions.log(Level.SEVERE, "Cannot load donor profile");
             }
         }
     }
@@ -239,7 +239,6 @@ public class GUIDonorProfile implements IPopupable {
         }
     }
 
-
     public void goToContactDetails() {
         if (ScreenControl.getLoggedInDonor() != null) {
             ScreenControl.removeScreen("donorContactDetails");
@@ -275,7 +274,6 @@ public class GUIDonorProfile implements IPopupable {
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading medication screen", "attempted to navigate from the profile page to the medication page");
                 new Alert(Alert.AlertType.WARNING, "ERROR loading medication page", ButtonType.OK).showAndWait();
-                e.printStackTrace();
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorMedications.fxml"));

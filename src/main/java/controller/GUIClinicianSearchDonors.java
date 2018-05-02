@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Donor;
+import model.DrugInteraction;
 import service.Database;
 import utility.GlobalEnums;
 import utility.SearchDonors;
@@ -79,6 +80,8 @@ public class GUIClinicianSearchDonors implements Initializable {
                     GUIDonorProfile controller = fxmlLoader.getController();
                     controller.setViewedDonor(donorDataTable.getSelectionModel()
                             .getSelectedItem());
+                    DrugInteraction.setViewedDonor(donorDataTable.getSelectionModel()
+                            .getSelectedItem());
 
                     Stage popUpStage = new Stage();
                     popUpStage.setX(ScreenControl.getMain()
@@ -97,7 +100,6 @@ public class GUIClinicianSearchDonors implements Initializable {
                             "Failed to open donor profile scene from search donors table",
                             "attempted to open donor edit window from search donors table");
                     new Alert(Alert.AlertType.ERROR, "Unable to open donor edit window", ButtonType.OK).show();
-                    e.printStackTrace();
                 }
             }
 
