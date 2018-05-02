@@ -79,6 +79,9 @@ public class Donor {
 
     private String contactEmailAddress;
 
+    private ArrayList<Medication> currentMedications;
+
+    private ArrayList<Medication> medicationHistory;
 
     //private HashMap<String, ArrayList<String>> medicationLog = new HashMap<>();
     public Donor(String nhiNumber, String firstName,
@@ -480,11 +483,37 @@ public class Donor {
     }
 
 
-    //**
-     //* Gets the medication log with timestamps of each add/removal/swap between current and history
-     //* @return HashMap of medication logging for a donor
-     //*/
-    //public HashMap<String, ArrayList<String>> getMedicationLog() { return medicationLog; }
+    /**
+     * Gets the current medication list for a Donor
+     * @return ArrayList medications the Donor currently uses
+     */
+    public ArrayList<Medication> getCurrentMedications() {
+        return currentMedications;
+    }
+
+    /**
+     * Gets the medication history for a Donor
+     * @return ArrayList medications the Donor used to use
+     */
+    public ArrayList<Medication> getMedicationHistory() {
+        return medicationHistory;
+    }
+
+    /**
+     * Sets the current medication list for a Donor
+     * @param currentMedications medications to set as current for the Donor
+     */
+    public void setCurrentMedications(ArrayList<Medication> currentMedications) {
+        this.currentMedications = currentMedications;
+    }
+
+    /**
+     * Sets the medication history for a Donor
+     * @param medicationHistory medication list to set as history for a Donor
+     */
+    public void setMedicationHistory(ArrayList<Medication> medicationHistory) {
+        this.medicationHistory = medicationHistory;
+    }
 
     public void setZip(int zip) {
         if (this.zip != zip) {
