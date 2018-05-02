@@ -1,14 +1,23 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.util.StringConverter;
 import model.Donor;
+import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 
 import java.time.LocalDate;
@@ -23,7 +32,10 @@ public class GUIDonorRegister {
 
     @FXML
     public AnchorPane pane;
+    public AnchorPane registerPane;
+
     public Label backLabel;
+
     public Button doneButton;
 
     @FXML
@@ -41,7 +53,26 @@ public class GUIDonorRegister {
     @FXML
     private TextField nhiRegister;
 
+    @FXML
+    private Pane donorRegisterAnchorPane;
+
+
+    @FXML
+    private void undo() {
+        statesHistoryScreen.undo();
+    }
+
+
+    @FXML
+    private void redo() {
+        statesHistoryScreen.redo();
+    }
+
+
     private StringConverter<LocalDate> dateConverter;
+
+    private StatesHistoryScreen statesHistoryScreen;
+
 
 
     /**
@@ -49,15 +80,26 @@ public class GUIDonorRegister {
      */
     public void initialize() {
         setDateConverter();
+        ArrayList<Control> controls = new ArrayList<Control>() {{
+            add(firstnameRegister);
+            add(lastnameRegister);
+            add(middlenameRegister);
+            add(birthRegister);
+            add(nhiRegister);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(donorRegisterAnchorPane, controls);
 
-        // Enter key triggers log in
-        pane.setOnKeyPressed(e -> {
+        // Enter key
+        donorRegisterAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 register();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
+                undo();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
+                redo();
             }
         });
     }
-
 
     /**
      * Back button listener to switch to the login screen
@@ -157,10 +199,11 @@ public class GUIDonorRegister {
                 clearFields();
                 Alert confirm = new Alert(Alert.AlertType.INFORMATION, "Successfully registered!");
                 confirm.show();
+                Database.saveToDisk();
                 ScreenControl.activate("login");
             }
             catch (IllegalArgumentException e) {
-                userActions.log(Level.SEVERE, e.getMessage(), "attempted to add donor from gui attributes");
+                userActions.log(Level.SEVERE, e.getMessage(), "attempted to add donor from GUI attributes");
                 alert.setContentText(e.getMessage());
                 alert.show();
             }

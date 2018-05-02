@@ -10,7 +10,7 @@ import model.Donor;
 import java.io.IOException;
 import java.util.HashMap;
 
-class ScreenControl {
+public class ScreenControl {
 
     private static HashMap<String, Pane> screenMap = new HashMap<>();
 
@@ -23,11 +23,13 @@ class ScreenControl {
 
     public static Clinician clinician;
 
+
     static void setLoggedInDonor(Donor newDonor) {
         donor = newDonor;
     }
 
-    static Donor getLoggedInDonor() {
+
+    public static Donor getLoggedInDonor() {
         return donor;
     }
 
@@ -39,7 +41,7 @@ class ScreenControl {
         clinician = newClinician;
     }
 
-    static Clinician getLoggedInClincian() {
+    static Clinician getLoggedInClinician() {
         return clinician;
     }
 
@@ -63,6 +65,7 @@ class ScreenControl {
         screenMap.put(name, pane);
     }
 
+
     /**
      * Remove screen from hashmap
      *
@@ -71,6 +74,7 @@ class ScreenControl {
     static void removeScreen(String name) {
         screenMap.remove(name);
     }
+
 
     /**
      * Displays the given scene to the UI
@@ -119,7 +123,7 @@ class ScreenControl {
      *
      * @param name - name of the popup to hide
      */
-    static void hidePopUp(String name) {
+    public static void hidePopUp(String name) {
         popMap.get(name).close();
     }
 

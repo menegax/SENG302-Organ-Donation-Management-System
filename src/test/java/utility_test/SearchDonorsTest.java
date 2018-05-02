@@ -61,39 +61,20 @@ public class SearchDonorsTest {
         SearchDonors.createFullIndex();
     }
 
-
-    //todo rework
+//    /**
+//     *
+//     */
 //    @Test
-//    public void testSearchByName() throws IOException {
+//    public void testSearchAfterUpdateDonor() throws IOException {
 //
-//        // When index searched for a single specific donor
-//        ArrayList<Donor> results = SearchDonors.searchByName("Pat Bobinton");
+//        // When first name of donor changed
+//        Database.getDonorByNhi("abc1234").setFirstName("Andrew");
 //
-//        // Should contain Pat Laff
-//        assertTrue(results.contains(d1));
-//        // Should contain Patik Laffey
-//        assertTrue(results.contains(d2));
-//        // Shouldn't contain George Romera
-//        assertFalse(results.contains(d3));
-//        // Should contain George Bobington
-//        assertTrue(results.contains(d4));
+//        // Then searching by new first name returns correct results
+//        ArrayList<Donor> results = SearchDonors.searchByName("Ande Lafey");
+//
+//        assertTrue(results.contains(Database.getDonorByNhi("abc1234")));
 //    }
-
-
-    /**
-     *
-     */
-    @Test
-    public void testSearchAfterUpdateDonor() throws IOException {
-
-        // When first name of donor changed
-        Database.getDonorByNhi("abc1234").setFirstName("Andrew");
-
-        // Then searching by new first name returns correct results
-        ArrayList<Donor> results = SearchDonors.searchByName("Ande Lafey");
- 
-        assertTrue(results.contains(Database.getDonorByNhi("abc1234")));
-    }
 
 
     /**

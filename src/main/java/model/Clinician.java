@@ -2,9 +2,14 @@ package model;
 
 import utility.GlobalEnums;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+/**
+ * Defines the class for clinician members. Clinicians have basic identifying information like a donor
+ * However they are identified by their staff ID, and their NHI is not collected.
+ */
 public class Clinician {
 
     private int staffID;
@@ -16,9 +21,19 @@ public class Clinician {
     private String street1;
     private String street2;
     private String suburb;
+    private Timestamp modified;
 
     private GlobalEnums.Region region;
 
+    /**
+     * Creates a clinician instance without providing the workplace address details - as they are optional
+     *
+     * @param staffID     The staffID for the new clinician
+     * @param firstName   Their first name
+     * @param middleNames A list of the clinicians middle names
+     * @param lastName    Their last name
+     * @param region      The region they are located in
+     */
     public Clinician(int staffID, String firstName, ArrayList<String> middleNames, String lastName, GlobalEnums.Region region) {
         this.staffID = staffID;
         this.firstName = firstName;
@@ -27,6 +42,18 @@ public class Clinician {
         this.region = region;
     }
 
+    /**
+     * Creates a clinician instance with full details - including workplace address
+     *
+     * @param staffID     The staffID for the new clinician
+     * @param firstName   Their first name
+     * @param middleNames A list of the clinicians middle names
+     * @param lastName    Their last name
+     * @param street1     Street 1 address of their workplace
+     * @param street2     Street 2 address of their workplace
+     * @param suburb      The suburb of their workplace
+     * @param region      The region they are located in
+     */
     public Clinician(int staffID, String firstName, ArrayList<String> middleNames, String lastName, String street1, String street2, String suburb, GlobalEnums.Region region) {
         this.staffID = staffID;
         this.firstName = firstName;
@@ -88,6 +115,21 @@ public class Clinician {
         }
     }
 
+    /**
+     * Concatenates a clinician's first, middle and last names, and returns the full name as a String
+     * @return String concatenated name
+     */
+    public String getConcatenatedName() {
+        String name = this.firstName;
+        if(this.middleNames != null) {
+            for(String middleName : this.middleNames) {
+                name = name + " " + middleName;
+            }
+        }
+        name = name + " " + this.lastName;
+        return name;
+    }
+
     public String getStreet1() {
         return street1;
     }
@@ -127,5 +169,11 @@ public class Clinician {
 
     public void setRegion(GlobalEnums.Region region) {
         this.region = region;
+    }
+
+    public Timestamp getModified() { return this.modified; }
+
+    public void clinicianModified() {
+        this.modified = new Timestamp(System.currentTimeMillis());
     }
 }

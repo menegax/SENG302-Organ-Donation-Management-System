@@ -1,5 +1,8 @@
 package controller;
 
+import api.APIHelper;
+import com.google.gson.JsonObject;
+import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -7,16 +10,22 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import model.Donor;
 import model.Medication;
+import service.TextWatcher;
 import service.Database;
+import utility.undoRedo.StatesHistoryScreen;
 import utility.UserActionRecord;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.sql.Timestamp;
+import java.sql.Timestamp;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -45,6 +54,16 @@ public class GUIDonorMedications implements IPopupable {
     public Button redoEdit;
     public Button goBack;
     public Button clearMed;
+    public ContextMenu contextMenu;
+
+    private ListProperty<String> currentListProperty = new SimpleListProperty<>();
+    private ListProperty<String> historyListProperty = new SimpleListProperty<>();
+    private ArrayList<String> current;
+    private ArrayList<String> history;
+    private Timestamp time;
+    private Donor target;
+    private JsonObject suggestions;
+    private boolean itemSelected = false;
 
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
@@ -72,6 +91,8 @@ public class GUIDonorMedications implements IPopupable {
 
     private Donor viewedDonor;
 
+    private StatesHistoryScreen stateHistoryScreen;
+
     public void setViewedDonor(Donor donor) {
         viewedDonor = donor;
         loadProfile(viewedDonor.getNhiNumber());
@@ -79,12 +100,12 @@ public class GUIDonorMedications implements IPopupable {
 
     @FXML
     public void undo() {
-        System.out.print( "undo" );  // To be completed by Story 12 and 13 responsible's
+        stateHistoryScreen.undo();
     }
 
     @FXML
     public void redo() {
-        System.out.print( "redo" );  // To be completed by Story 12 and 13 responsible's
+        stateHistoryScreen.redo();
     }
 
     /**
@@ -155,11 +176,12 @@ public class GUIDonorMedications implements IPopupable {
         addMedication(newMedication.getText());
     }
 
-    /**
-     * Initializes the Medication GUI pane, adds any medications stored for donor to current and past listViews
-     */
+
     @FXML
     public void initialize() {
+        stateHistoryScreen = new StatesHistoryScreen(medicationPane, new ArrayList<Control>() {{
+            add(newMedication);
+        }});
         pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         if (ScreenControl.getLoggedInDonor() != null) {
@@ -180,10 +202,101 @@ public class GUIDonorMedications implements IPopupable {
                 target.setMedicationHistory(new ArrayList<>());
             }
             viewPastMedications();
+            addActionListeners();
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the medications for logged in user");
-            e.printStackTrace();
         }
+    }
+
+
+    /**
+     * Adds an actionlistener to the text property of the medication search field and passes text
+     * to getDrugSuggestions
+     */
+    private void addActionListeners(){
+        TextWatcher textWatcher = new TextWatcher();
+        newMedication.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.equals(oldValue)){
+                textWatcher.onTextChange(); //reset timer, user hasn't finished typing yet
+            }
+            if (itemSelected) {
+                itemSelected = false; //reset
+            }
+            if (!newMedication.getText().equals("") && !itemSelected) { //don't make an empty api call. will crash FX thread()) {
+                try {
+                    textWatcher.afterTextChange(GUIDonorMedications.class.getMethod("autoComplete"), this); //start timer
+
+                } catch (NoSuchMethodException e) {
+                    userActions.log(Level.SEVERE, e.getMessage());
+                }
+            }
+        });
+    }
+
+    /**
+     * Runs the updating of UI elements and API call
+     */
+    public void autoComplete(){
+        Platform.runLater(() -> { // run this on the FX thread (next available)
+            getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread
+            displayDrugSuggestions();//UPDATE UI
+        });
+    }
+
+    /**
+     *  Sets a list of suggestions given a partially matching string
+     * @param query - text to match drugs against
+     */
+    private void getDrugSuggestions(String query){
+        APIHelper apiHelper = new APIHelper();
+        try {
+           suggestions =  apiHelper.getMapiDrugSuggestions(query);
+        } catch (IOException exception) {
+            userActions.log(Level.WARNING, "Illegal characters in query");
+        }
+    }
+
+    /**
+     * Display the drug suggestions in the context menu
+     */
+    private void displayDrugSuggestions(){
+        contextMenu.getItems().clear();
+        List<String> suggestionArray = new ArrayList<>();
+        suggestions.get("suggestions").getAsJsonArray().forEach((suggestion) -> suggestionArray.add(suggestion.getAsString()));
+        Collections.shuffle(suggestionArray); //shuffle array so each time results are slightly different (to combat not being able to view all)
+        for (int i=0; i < 10 && i < suggestionArray.size(); i++) {
+            MenuItem item = createMenuItem(suggestionArray.get(i));
+            contextMenu.getItems().add(item);
+        }
+        contextMenu.show(newMedication, Side.BOTTOM, 0, 0);
+    }
+
+    /**
+     * Create menu items to display inside the context menu
+     * @param suggestion - string to display inside the context menu
+     * @return - menu item to be placed into the context menu
+     */
+    private MenuItem createMenuItem(String suggestion){
+        Label menuLabel = new Label(suggestion);//create label with suggestion
+        menuLabel.setPrefWidth(newMedication.getPrefWidth() - 30);
+        menuLabel.setWrapText(true);
+        MenuItem item = new MenuItem();
+        item.setGraphic(menuLabel);
+        item.setOnAction((ae) -> {
+            selectFromAutoComplete(menuLabel.getText());
+        });
+        return item;
+    }
+
+    /**
+     * Sets the text field to the medication selected
+     * @param selectedItem - string of the selected medication
+     */
+    private void selectFromAutoComplete(String selectedItem){
+        newMedication.setText(selectedItem);
+        newMedication.requestFocus();
+        newMedication.end(); //place cursor at end of text
+        itemSelected = true; //indicate that an API does not need to be made
     }
 
     /**
@@ -287,7 +400,6 @@ public class GUIDonorMedications implements IPopupable {
         for (String medication : medications) {
             if (history.contains( medication )) {
                 target.getMedicationHistory().remove( history.indexOf( medication ));
-
                 if (!current.contains( medication )) {
                     target.getCurrentMedications().add( new Medication( medication )  );
                     viewCurrentMedications();

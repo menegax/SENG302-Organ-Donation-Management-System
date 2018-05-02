@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import service.Database;
 
 public class GUIClinicianHome {
+
     @FXML
     public void goToClinicianProfile(){ ScreenControl.activate("clinicianProfile"); }
 
@@ -22,6 +23,6 @@ public class GUIClinicianHome {
     public void saveClinician() {
         Database.saveToDisk();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Saved!");
-        alert.showAndWait();
+        alert.show();
     }
 }

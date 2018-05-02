@@ -1,5 +1,7 @@
 package utility;
 
+import static utility.UserActionHistory.userActions;
+
 import model.Donor;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -17,6 +19,7 @@ import service.Database;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.logging.Level;
 
 public class SearchDonors {
 
@@ -30,8 +33,6 @@ public class SearchDonors {
 
     private static IndexSearcher indexSearcher = null;
 
-    // TODO what is this? it just causes a warning on my machine. Andrew: it stops IntelliJ from giving a warning about a variable that could be localized. Looks like it's either a warning for you or me!
-//    @SuppressWarnings("FieldCanBeLocal")
     private static int NUM_RESULTS = 20;
 
 
@@ -69,14 +70,14 @@ public class SearchDonors {
             try {
 				initializeWriter();
 			} catch (IOException e) {
-				// TODO add error for failure to initialize index writer
-			}
+                userActions.log(Level.SEVERE, "Unable to add donor index", "Attempted to add donor index");
+            }
         }
         try {
 			indexWriter.commit();
 			indexWriter.addDocument(createDocument(donor));
 		} catch (IOException e) {
-			// TODO add error for failure to write to index
+            userActions.log(Level.SEVERE, "Unable to add donor index", "Attempted to add donor index");
 		}
     }
 
@@ -89,8 +90,8 @@ public class SearchDonors {
     	try {
 			indexWriter.deleteDocuments(toDel);
 		} catch (IOException e) {
-			// TODO add error for failure to delete index
-		}
+            userActions.log(Level.SEVERE, "Unable to remove donor index", "Attempted to remove donor index");
+        }
     }
     
     /**
@@ -100,7 +101,7 @@ public class SearchDonors {
     	try {
 			indexWriter.deleteAll();
 		} catch (IOException e) {
-			// TODO add error for failure to delete all indices 
+            userActions.log(Level.SEVERE, "Unable to clear donor index", "Attempted to clear donor index");
 		}
     }
     
@@ -175,32 +176,9 @@ public class SearchDonors {
 	        	}
 			}
 		} catch (IOException e) {
-			// TODO add error for unable to find or read from index
+			userActions.log(Level.SEVERE, "Unable to search donors by name", "Attempted to search donors by name");
 		}
         return results;
     }
-    
-//    public static void main(String[] argv) {
-//    	Database.resetDatabase();
-//    	
-//    	Donor d1 = new Donor("abc1234", "Pat", null, "Laff", LocalDate.now());
-//        Donor d2 = new Donor("def1234", "Patik", null, "Laffey", LocalDate.now());
-//        Donor d3 = new Donor("ghi1234", "George", null, "Romera", LocalDate.now());
-//        Database.addDonor(d3);
-//        Database.addDonor(d2);
-//        Database.addDonor(d1);
-//        
-//        SearchDonors.clearIndex();
-//        // Given an index
-//        SearchDonors.createFullIndex();
-//
-//        // When index searched for a single specific donor
-//        ArrayList<Donor> results = SearchDonors.searchByName("Pati");
-//        System.out.println("Number of results: " + String.valueOf(results.size()));
-//        for (Donor donor : results) {
-//        	System.out.println(
-//        			donor.getNhiNumber() + " " +
-//        			donor.getNameConcatenated());
-//        }
-//    }
+
 }
