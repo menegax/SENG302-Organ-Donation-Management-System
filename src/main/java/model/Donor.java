@@ -1,5 +1,7 @@
 package model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.BloodGroup;
@@ -7,13 +9,13 @@ import utility.GlobalEnums.Gender;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 import utility.SearchDonors;
+import utility.UserActionRecord;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -83,7 +85,10 @@ public class Donor {
 
     private String contactEmailAddress;
 
-    //private HashMap<String, ArrayList<String>> medicationLog = new HashMap<>();
+    //private HashMap<Timestamp, ArrayList<String>> medicationLog;
+
+    private ArrayList<String> medicationLog;
+
     public Donor(String nhiNumber, String firstName,
                  ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
@@ -681,6 +686,49 @@ public class Donor {
         this.contactEmailAddress = contactEmailAddress;
     }
 
+
+    /**
+     * Returns a converted medication log ArrayList to a UserActionRecord OberservableList
+     * @return The medication log as a UserActionRecord ObservableList
+     */
+    public ObservableList<UserActionRecord> getMedicationLog() {
+        ObservableList<UserActionRecord> currentLog = FXCollections.observableArrayList();
+        String time = null, level = null, message = null, action;
+
+        if (this.medicationLog != null) {
+            for (int i = 0; i < medicationLog.size(); i++) {
+                if (i % 4 == 0) {
+                    time = medicationLog.get(i);
+                } else if (i % 4 == 1) {
+                    level = medicationLog.get(i);
+                } else if (i % 4 == 2) {
+                    message = medicationLog.get(i);
+                } else {
+                    action = medicationLog.get(i);
+                    currentLog.add(new UserActionRecord( time, level, message, action ) );
+                }
+            }
+        } else {
+            return null;
+        }
+        return currentLog;
+    }
+
+    /**
+     * Sets the medicationLog as a HashMap converted from a UserActionRecord ObservableList
+     * @param log The UserActionRecord ObservableList
+     */
+    public void setMedicationLog(ObservableList<UserActionRecord> log) {
+        ArrayList<String> newLog = new ArrayList<>();
+
+        for (UserActionRecord record : log) {
+            newLog.add(record.getTimestamp());
+            newLog.add(record.getLevel());
+            newLog.add(record.getMessage());
+            newLog.add(record.getAction());
+        }
+        this.medicationLog = newLog;
+    }
 
     private void donorModified() {
         this.modified = new Timestamp(System.currentTimeMillis());

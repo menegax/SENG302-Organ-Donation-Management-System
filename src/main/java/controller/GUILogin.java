@@ -14,8 +14,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import model.Clinician;
 import javafx.scene.control.Alert;
@@ -31,6 +32,7 @@ import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
+import static utility.UserActionRecord.logHistory;
 
 public class GUILogin {
 
@@ -89,8 +91,12 @@ public class GUILogin {
                 ScreenControl.addScreen("donorContacts", FXMLLoader.load(getClass().getResource("/scene/donorUpdateContacts.fxml")));
                 ScreenControl.activate("donorHome");
                 ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
-            ScreenControl.activate("donorHome");
-            } catch (InvalidObjectException e) {
+                ScreenControl.activate("donorHome");
+                if (newDonor.getMedicationLog() != null) {
+                    logHistory.addAll( newDonor.getMedicationLog() ); // adds medication log from previous log-ins for user
+                }
+            }
+            catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
                 alert.show();
