@@ -36,7 +36,7 @@ public class StateHistoryRadioButton implements IUndoRedo {
 
 
     /**
-     * Sets the RadioButtons to the state before the current state
+     * Sets the RadioButton to the state before the current state
      */
     public void undo() {
         if (index != 0) {
@@ -48,7 +48,7 @@ public class StateHistoryRadioButton implements IUndoRedo {
 
 
     /**
-     * Resets the RadioButtons to the state immediately prior to an undo
+     * Resets the RadioButton to the state immediately prior to an undo
      */
     public void redo() {
         if (undone && index + 1 < states.size()) {
@@ -59,10 +59,8 @@ public class StateHistoryRadioButton implements IUndoRedo {
 
 
     /**
-     * Gets the states of the RadioButtons Box
-     * Currently only used in testing
-     *
-     * @return the states of the RadioButtons box
+     * Gets the states of the RadioButton
+     * @return the states of the RadioButton
      */
     public ArrayList<Object> getStates() {
         return new ArrayList<>(states);
@@ -70,8 +68,7 @@ public class StateHistoryRadioButton implements IUndoRedo {
 
 
     /**
-     * Gets the index of the current state of the RadioButtons
-     * currently only used in testing
+     * Gets the index of the current state of the RadioButton
      *
      * @return the index of the current state
      */
