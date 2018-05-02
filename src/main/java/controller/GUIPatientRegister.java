@@ -1,10 +1,15 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import model.Patient;
@@ -22,6 +27,13 @@ import static utility.UserActionHistory.userActions;
 public class GUIPatientRegister {
 
     @FXML
+    public AnchorPane registerPane;
+
+    public Label backLabel;
+
+    public Button doneButton;
+
+    @FXML
     private TextField firstnameRegister;
 
     @FXML
@@ -37,7 +49,7 @@ public class GUIPatientRegister {
     private TextField nhiRegister;
 
     @FXML
-    private Pane donorRegisterAnchorPane;
+    private Pane patientRegisterAnchorPane;
 
 
     @FXML
@@ -57,14 +69,6 @@ public class GUIPatientRegister {
     private StatesHistoryScreen statesHistoryScreen;
 
 
-    /**
-     * Back button listener to switch to the login screen
-     */
-    @FXML
-    public void goBackToLogin() {
-        ScreenControl.activate("login");
-    }
-
 
     /**
      * Sets up register page GUI elements
@@ -78,7 +82,34 @@ public class GUIPatientRegister {
             add(birthRegister);
             add(nhiRegister);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(donorRegisterAnchorPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(patientRegisterAnchorPane, controls);
+
+        // Enter key
+        patientRegisterAnchorPane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                register();
+            }
+        });
+    }
+
+    /**
+     * Back button listener to switch to the login screen
+     */
+    @FXML
+    public void goBackToLogin() {
+        ScreenControl.activate("login");
+    }
+
+
+    /**
+     * Clears the data in the fields of the GUI
+     */
+    private void clearFields(){
+        nhiRegister.clear();
+        firstnameRegister.clear();
+        lastnameRegister.clear();
+        middlenameRegister.clear();
+        birthRegister.getEditor().clear();
     }
 
 
@@ -148,7 +179,7 @@ public class GUIPatientRegister {
 
 
     /**
-     * Check users inputs and registers the user donor profile
+     * Check users inputs and registers the user patient profile
      */
     @FXML
     public void register() {
@@ -156,12 +187,14 @@ public class GUIPatientRegister {
         if (!(hasAllRequired())) {
             try {
                 addPatientGui();
-                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Registered");
-                confirm.showAndWait();
+                clearFields();
+                Alert confirm = new Alert(Alert.AlertType.INFORMATION, "Successfully registered!");
+                confirm.show();
+                Database.saveToDisk();
                 ScreenControl.activate("login");
             }
             catch (IllegalArgumentException e) {
-                userActions.log(Level.SEVERE, e.getMessage(), "attempted to add donor from gui attributes");
+                userActions.log(Level.SEVERE, e.getMessage(), "attempted to add patient from GUI attributes");
                 alert.setContentText(e.getMessage());
                 alert.show();
             }

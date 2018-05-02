@@ -1,15 +1,20 @@
 package controller;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
 
+import java.io.IOException;
 import java.util.HashMap;
 
-class ScreenControl {
+public class ScreenControl {
 
     private static HashMap<String, Pane> screenMap = new HashMap<>();
+
+    private static HashMap<String, Stage> popMap = new HashMap<>();
 
     private static Scene main;
 
@@ -18,12 +23,16 @@ class ScreenControl {
     public static Clinician clinician;
 
 
-    static void setLoggedInDonor(Patient newPatient) {
+    static void setLoggedInPatient(Patient newPatient) {
         patient = newPatient;
     }
 
-    static Patient getLoggedInDonor() {
+    public static Patient getLoggedInPatient() {
         return patient;
+    }
+
+    public static Scene getMain() {
+        return main;
     }
 
     static void setLoggedInClinician(Clinician newClinician) {
@@ -73,4 +82,47 @@ class ScreenControl {
     static void activate(String name) {
         main.setRoot(screenMap.get(name));
     }
+
+    /**
+     * Adds stage, name pair to a hashmap
+     *
+     * @param name  - name of the popup
+     * @param stage - stage to display
+     */
+    static void addPopUp(String name, Stage stage) {
+        popMap.put(name, stage);
+    }
+
+    /**
+     * Switches panes within a popup window, while passing along the current viewed donor
+     *
+     * @param scene      The scene to load the new pane into
+     * @param fxmlLoader The fxmlLoader for the new pane
+     * @param patient      The patient to pass to the next pane
+     * @throws IOException If the pane fails to load
+     */
+    static void loadPopUpPane(Scene scene, FXMLLoader fxmlLoader, Patient patient) throws IOException {
+        scene.setRoot(fxmlLoader.load());
+        IPopupable controller = fxmlLoader.getController();
+        controller.setViewedPatient(patient);
+    }
+
+    /**
+     * Displays a given popup
+     *
+     * @param name - name of the pop up to display
+     */
+    static void displayPopUp(String name) {
+        popMap.get(name).show();
+    }
+
+    /**
+     * Hides a given popup
+     *
+     * @param name - name of the popup to hide
+     */
+    static void hidePopUp(String name) {
+        popMap.get(name).close();
+    }
+
 }

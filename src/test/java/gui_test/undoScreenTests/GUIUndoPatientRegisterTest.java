@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
+import service.Database;
 
 import java.time.LocalDate;
 
@@ -20,7 +21,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 /**
  * TestFX class to test the undo functionality of the donor register screen
  */
-public class GUIUndoDonorRegisterTest extends ApplicationTest{
+public class GUIUndoPatientRegisterTest extends ApplicationTest{
 
     private Main main = new Main();
 
@@ -57,6 +58,7 @@ public class GUIUndoDonorRegisterTest extends ApplicationTest{
      */
     @After
     public void waitForEvents() {
+        Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }

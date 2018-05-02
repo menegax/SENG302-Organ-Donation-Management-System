@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientProfileUpdate {
+public class GUIPatientProfileUpdate1 {
 
     @FXML
     private Label lastModifiedLbl;
@@ -100,7 +100,7 @@ public class GUIPatientProfileUpdate {
                 Arrays.asList("a positive", "a negative", "b positive", "b negative", "ab positive", "ab negative", "o positive", "o negative");
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
-        loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
+        loadProfile(ScreenControl.getLoggedInPatient().getNhiNumber());
         setUpStateHistory();
     }
 

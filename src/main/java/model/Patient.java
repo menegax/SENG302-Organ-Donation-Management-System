@@ -6,17 +6,22 @@ import utility.GlobalEnums.BloodGroup;
 import utility.GlobalEnums.Gender;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
+import utility.SearchPatients;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.time.LocalDate;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
 public class Patient {
+
+    private UUID uuid = UUID.randomUUID();
 
     private final Timestamp CREATED;
 
@@ -56,6 +61,26 @@ public class Patient {
 
     private String nhiNumber;
 
+    private String homePhone;
+
+    private String mobilePhone;
+
+    private String workPhone;
+
+    private String emailAddress;
+
+    private String contactName;
+
+    private String contactRelationship;
+
+    private String contactHomePhone;
+
+    private String contactMobilePhone;
+
+    private String contactWorkPhone;
+
+    private String contactEmailAddress;
+
 
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
@@ -67,7 +92,6 @@ public class Patient {
         this.nhiNumber = nhiNumber.toUpperCase();
         this.donations = new ArrayList<>();
     }
-
 
     /**
      * Sets the attributes of the donor
@@ -83,14 +107,15 @@ public class Patient {
      * @param region      region of address
      * @param gender      gender of address
      * @param bloodGroup  blood group
-     * @param height      height
-     * @param weight      weight
+     * @param height      height in meters
+     * @param weight      weight in kilograms
      * @param nhi         nhi
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, LocalDate birth, LocalDate death, String street1,
                                  String street2, String suburb, String region, String gender, String bloodGroup, double height, double weight,
                                  String nhi) throws IllegalArgumentException {
         Enum globalEnum;
+        SearchPatients.removeIndex(this);
         if (firstName != null) {
             setFirstName(firstName);
         }
@@ -154,6 +179,7 @@ public class Patient {
         }
         userActions.log(Level.INFO, "Successfully updated donor " + getNhiNumber(), "attempted to update donor attributes");
         patientModified();
+        SearchPatients.addIndex(this);
     }
 
 
@@ -169,8 +195,7 @@ public class Patient {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ); //null if invalid
                 if (organEnum == null) {
                     userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to donor donations");
-                }
-                else {
+                } else {
                     userActions.log(Level.INFO, addDonation(organEnum), "attempted to update donor donations");
                     patientModified();
                 }
@@ -180,11 +205,8 @@ public class Patient {
             for (String organ : rmDonations) {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ);
                 if (organEnum == null) {
-                    userActions.log(Level.SEVERE,
-                            "Invalid organ \"" + organ + "\" given and not removed",
-                            "attempted to remove from donor donations");
-                }
-                else {
+                    userActions.log(Level.SEVERE,"Invalid organ \"" + organ + "\" given and not removed", "attempted to remove from donor donations");}
+                 else {
                     userActions.log(Level.INFO, removeDonation(organEnum), "attempted to remove from donor donations");
                     patientModified();
                 }
@@ -383,7 +405,9 @@ public class Patient {
      * @return The calculated BMI
      */
     public double getBmi() {
-        return (this.weight / (Math.pow(this.height, 2)));
+        DecimalFormat df = new DecimalFormat("#.0");
+        if(this.height == 0) return 0.0;
+        else return Double.valueOf(df.format(this.weight / (Math.pow(this.height, 2))));
     }
 
 
@@ -512,8 +536,7 @@ public class Patient {
             donations.remove(organ);
             patientModified();
             return "Successfully removed " + organ + " from donations";
-        }
-        else {
+        } else {
             return "Organ " + organ + " is not part of the donors donations, so could not be removed.";
         }
     }
@@ -530,6 +553,105 @@ public class Patient {
             this.nhiNumber = nhiNumber.toUpperCase();
             patientModified();
         }
+    }
+
+    public String getHomePhone() {
+        return homePhone;
+    }
+
+
+    public void setHomePhone(String homePhone) {
+        this.homePhone = homePhone;
+    }
+
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+
+    public String getWorkPhone() {
+        return workPhone;
+    }
+
+
+    public void setWorkPhone(String workPhone) {
+        this.workPhone = workPhone;
+    }
+
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+
+    public String getContactName() {
+        return contactName;
+    }
+
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+
+    public String getContactRelationship() {
+        return contactRelationship;
+    }
+
+
+    public void setContactRelationship(String contactRelationship) {
+        this.contactRelationship = contactRelationship;
+    }
+
+
+    public String getContactHomePhone() {
+        return contactHomePhone;
+    }
+
+
+    public void setContactHomePhone(String contactHomePhone) {
+        this.contactHomePhone = contactHomePhone;
+    }
+
+
+    public String getContactMobilePhone() {
+        return contactMobilePhone;
+    }
+
+
+    public void setContactMobilePhone(String contactMobilePhone) {
+        this.contactMobilePhone = contactMobilePhone;
+    }
+
+
+    public String getContactWorkPhone() {
+        return contactWorkPhone;
+    }
+
+
+    public void setContactWorkPhone(String contactWorkPhone) {
+        this.contactWorkPhone = contactWorkPhone;
+    }
+
+
+    public String getContactEmailAddress() {
+        return contactEmailAddress;
+    }
+
+
+    public void setContactEmailAddress(String contactEmailAddress) {
+        this.contactEmailAddress = contactEmailAddress;
     }
 
 
@@ -549,7 +671,6 @@ public class Patient {
 
     public boolean equals(Object obj) {
         Patient patient = (Patient) obj;
-        return this.nhiNumber.equals(patient.nhiNumber);
+        return this.nhiNumber.equals(patient.nhiNumber) && obj.getClass() == this.getClass();
     }
-
 }

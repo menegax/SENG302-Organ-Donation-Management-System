@@ -1,0 +1,3881 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T14:35:47</date>
+  <millis>1525228547472</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:35:47</date>
+  <millis>1525228547486</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T14:35:47</date>
+  <millis>1525228547726</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:35:47</date>
+  <millis>1525228547729</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:35:47</date>
+  <millis>1525228547790</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T14:35:54</date>
+  <millis>1525228554181</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<record>
+  <date>2018-05-02T14:36:00</date>
+  <millis>1525228560810</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<record>
+  <date>2018-05-02T14:36:11</date>
+  <millis>1525228571534</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T14:41:22</date>
+  <millis>1525228882704</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:41:22</date>
+  <millis>1525228882716</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T14:41:22</date>
+  <millis>1525228882945</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:41:22</date>
+  <millis>1525228882950</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:41:23</date>
+  <millis>1525228883017</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T14:41:29</date>
+  <millis>1525228889016</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<record>
+  <date>2018-05-02T14:41:34</date>
+  <millis>1525228894829</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T14:43:08</date>
+  <millis>1525228988768</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:43:08</date>
+  <millis>1525228988778</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T14:43:09</date>
+  <millis>1525228989093</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:43:09</date>
+  <millis>1525228989097</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:43:09</date>
+  <millis>1525228989161</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T14:43:12</date>
+  <millis>1525228992851</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T14:43:49</date>
+  <millis>1525229029034</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:43:49</date>
+  <millis>1525229029048</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T14:43:49</date>
+  <millis>1525229029276</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:43:49</date>
+  <millis>1525229029281</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:43:49</date>
+  <millis>1525229029349</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T14:43:54</date>
+  <millis>1525229034492</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T14:47:11</date>
+  <millis>1525229231256</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:47:11</date>
+  <millis>1525229231269</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T14:47:11</date>
+  <millis>1525229231511</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:47:11</date>
+  <millis>1525229231516</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:47:11</date>
+  <millis>1525229231590</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T14:47:40</date>
+  <millis>1525229260453</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:47:40</date>
+  <millis>1525229260464</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T14:47:40</date>
+  <millis>1525229260708</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:47:40</date>
+  <millis>1525229260713</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:47:40</date>
+  <millis>1525229260772</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T14:47:47</date>
+  <millis>1525229267153</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T14:48:05</date>
+  <millis>1525229285382</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:48:05</date>
+  <millis>1525229285395</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T14:48:05</date>
+  <millis>1525229285642</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:48:05</date>
+  <millis>1525229285645</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:48:05</date>
+  <millis>1525229285715</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T14:48:10</date>
+  <millis>1525229290212</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T14:48:26</date>
+  <millis>1525229306035</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:48:26</date>
+  <millis>1525229306046</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T14:48:26</date>
+  <millis>1525229306275</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:48:26</date>
+  <millis>1525229306278</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:48:26</date>
+  <millis>1525229306344</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T14:48:43</date>
+  <millis>1525229323183</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T14:49:48</date>
+  <millis>1525229388039</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:49:48</date>
+  <millis>1525229388052</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T14:49:48</date>
+  <millis>1525229388300</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:49:48</date>
+  <millis>1525229388303</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:49:48</date>
+  <millis>1525229388366</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T14:49:51</date>
+  <millis>1525229391982</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T14:51:21</date>
+  <millis>1525229481734</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:51:21</date>
+  <millis>1525229481745</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T14:51:21</date>
+  <millis>1525229481995</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:51:21</date>
+  <millis>1525229481999</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T14:51:22</date>
+  <millis>1525229482058</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T14:51:25</date>
+  <millis>1525229485481</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:06:07</date>
+  <millis>1525230367968</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:06:07</date>
+  <millis>1525230367983</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:06:08</date>
+  <millis>1525230368259</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:06:08</date>
+  <millis>1525230368262</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:06:08</date>
+  <millis>1525230368338</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:06:13</date>
+  <millis>1525230373254</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:09:25</date>
+  <millis>1525230565195</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:09:25</date>
+  <millis>1525230565210</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:09:25</date>
+  <millis>1525230565474</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:09:25</date>
+  <millis>1525230565478</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:09:25</date>
+  <millis>1525230565540</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:09:29</date>
+  <millis>1525230569996</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:12:56</date>
+  <millis>1525230776667</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:12:56</date>
+  <millis>1525230776690</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:12:56</date>
+  <millis>1525230776920</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:12:56</date>
+  <millis>1525230776922</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:12:56</date>
+  <millis>1525230776980</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:13:00</date>
+  <millis>1525230780989</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:13:19</date>
+  <millis>1525230799212</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:13:19</date>
+  <millis>1525230799226</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:13:19</date>
+  <millis>1525230799459</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:13:19</date>
+  <millis>1525230799463</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:13:19</date>
+  <millis>1525230799529</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:13:23</date>
+  <millis>1525230803639</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<record>
+  <date>2018-05-02T15:13:31</date>
+  <millis>1525230811212</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<record>
+  <date>2018-05-02T15:13:43</date>
+  <millis>1525230823661</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:14:09</date>
+  <millis>1525230849019</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:14:09</date>
+  <millis>1525230849033</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:14:09</date>
+  <millis>1525230849250</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:14:09</date>
+  <millis>1525230849253</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:14:09</date>
+  <millis>1525230849316</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:14:13</date>
+  <millis>1525230853554</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:16:55</date>
+  <millis>1525231015333</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:16:55</date>
+  <millis>1525231015345</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:16:55</date>
+  <millis>1525231015579</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:16:55</date>
+  <millis>1525231015581</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:16:55</date>
+  <millis>1525231015651</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:16:59</date>
+  <millis>1525231019684</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:17:26</date>
+  <millis>1525231046274</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:17:26</date>
+  <millis>1525231046287</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:17:26</date>
+  <millis>1525231046538</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:17:26</date>
+  <millis>1525231046541</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:17:26</date>
+  <millis>1525231046607</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:17:55</date>
+  <millis>1525231075333</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:17:55</date>
+  <millis>1525231075346</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:17:55</date>
+  <millis>1525231075569</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:17:55</date>
+  <millis>1525231075572</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:17:55</date>
+  <millis>1525231075647</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:18:03</date>
+  <millis>1525231083791</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:19:08</date>
+  <millis>1525231148341</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:19:08</date>
+  <millis>1525231148354</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:19:08</date>
+  <millis>1525231148606</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:19:08</date>
+  <millis>1525231148610</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:19:08</date>
+  <millis>1525231148695</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:19:13</date>
+  <millis>1525231153558</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:22:16</date>
+  <millis>1525231336429</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:22:16</date>
+  <millis>1525231336443</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:22:16</date>
+  <millis>1525231336686</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:22:16</date>
+  <millis>1525231336690</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:22:16</date>
+  <millis>1525231336752</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:22:22</date>
+  <millis>1525231342363</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:23:28</date>
+  <millis>1525231408335</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:23:28</date>
+  <millis>1525231408346</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:23:28</date>
+  <millis>1525231408559</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:23:28</date>
+  <millis>1525231408565</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:23:28</date>
+  <millis>1525231408622</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:23:33</date>
+  <millis>1525231413702</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:26:22</date>
+  <millis>1525231582968</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:26:22</date>
+  <millis>1525231582977</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:26:23</date>
+  <millis>1525231583188</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:26:23</date>
+  <millis>1525231583191</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:26:23</date>
+  <millis>1525231583255</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:26:54</date>
+  <millis>1525231614792</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateProfile</class>
+  <method>saveProfile</method>
+  <thread>12</thread>
+  <message>Successfully updated patient profile</message>
+  <param>Attempted to update patient profile</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:27:29</date>
+  <millis>1525231649426</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:27:29</date>
+  <millis>1525231649510</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:27:29</date>
+  <millis>1525231649513</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:27:29</date>
+  <millis>1525231649513</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:27:29</date>
+  <millis>1525231649663</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:27:29</date>
+  <millis>1525231649663</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-02T15:27:29</date>
+  <millis>1525231649727</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:27:43</date>
+  <millis>1525231663881</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateProfile</class>
+  <method>saveProfile</method>
+  <thread>12</thread>
+  <message>Successfully updated patient profile</message>
+  <param>Attempted to update patient profile</param>
+</record>
+<record>
+  <date>2018-05-02T15:27:44</date>
+  <millis>1525231664717</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProfile</class>
+  <method>goToDonations</method>
+  <thread>12</thread>
+  <message>Error loading donation screen</message>
+  <param>attempted to navigate from the profile page to the donation page</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:29:59</date>
+  <millis>1525231799035</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:29:59</date>
+  <millis>1525231799122</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:29:59</date>
+  <millis>1525231799124</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:29:59</date>
+  <millis>1525231799126</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1235</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:29:59</date>
+  <millis>1525231799127</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:29:59</date>
+  <millis>1525231799287</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:29:59</date>
+  <millis>1525231799289</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-02T15:29:59</date>
+  <millis>1525231799364</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:30:15</date>
+  <millis>1525231815277</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProfile</class>
+  <method>goToDonations</method>
+  <thread>12</thread>
+  <message>Error loading donation screen</message>
+  <param>attempted to navigate from the profile page to the donation page</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:30:29</date>
+  <millis>1525231829301</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:30:29</date>
+  <millis>1525231829385</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:30:29</date>
+  <millis>1525231829389</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:30:29</date>
+  <millis>1525231829392</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1235</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:30:29</date>
+  <millis>1525231829392</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:30:29</date>
+  <millis>1525231829541</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:30:29</date>
+  <millis>1525231829541</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-02T15:30:29</date>
+  <millis>1525231829615</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:30:37</date>
+  <millis>1525231837417</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProfile</class>
+  <method>goToDonations</method>
+  <thread>12</thread>
+  <message>Error loading donation screen</message>
+  <param>attempted to navigate from the profile page to the donation page</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:31:12</date>
+  <millis>1525231872036</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:31:12</date>
+  <millis>1525231872121</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:31:12</date>
+  <millis>1525231872124</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:31:12</date>
+  <millis>1525231872127</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1235</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:31:12</date>
+  <millis>1525231872128</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:31:12</date>
+  <millis>1525231872298</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:31:12</date>
+  <millis>1525231872298</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-02T15:31:12</date>
+  <millis>1525231872384</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:31:19</date>
+  <millis>1525231879297</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProfile</class>
+  <method>goToDonations</method>
+  <thread>12</thread>
+  <message>Error loading donation screen</message>
+  <param>attempted to navigate from the profile page to the donation page</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:33:42</date>
+  <millis>1525232022041</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:33:42</date>
+  <millis>1525232022130</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:33:42</date>
+  <millis>1525232022133</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:33:42</date>
+  <millis>1525232022135</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1235</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:33:42</date>
+  <millis>1525232022135</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:33:42</date>
+  <millis>1525232022301</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:33:42</date>
+  <millis>1525232022301</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:34:18</date>
+  <millis>1525232058042</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:34:18</date>
+  <millis>1525232058126</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:34:18</date>
+  <millis>1525232058130</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:34:18</date>
+  <millis>1525232058133</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1235</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:34:18</date>
+  <millis>1525232058133</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:34:18</date>
+  <millis>1525232058289</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:34:18</date>
+  <millis>1525232058289</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-02T15:34:18</date>
+  <millis>1525232058365</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:34:22</date>
+  <millis>1525232062629</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:35:40</date>
+  <millis>1525232140070</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:40</date>
+  <millis>1525232140155</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:40</date>
+  <millis>1525232140158</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:40</date>
+  <millis>1525232140160</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1235</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:40</date>
+  <millis>1525232140161</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:40</date>
+  <millis>1525232140348</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:40</date>
+  <millis>1525232140348</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:40</date>
+  <millis>1525232140422</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:35:56</date>
+  <millis>1525232156286</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:56</date>
+  <millis>1525232156371</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:56</date>
+  <millis>1525232156374</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:56</date>
+  <millis>1525232156376</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1235</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:56</date>
+  <millis>1525232156376</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:56</date>
+  <millis>1525232156529</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:56</date>
+  <millis>1525232156530</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-02T15:35:56</date>
+  <millis>1525232156600</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:36:00</date>
+  <millis>1525232160692</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:37:24</date>
+  <millis>1525232244614</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:37:24</date>
+  <millis>1525232244688</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:37:24</date>
+  <millis>1525232244692</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:37:24</date>
+  <millis>1525232244695</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1235</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:37:24</date>
+  <millis>1525232244695</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:37:24</date>
+  <millis>1525232244847</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:37:24</date>
+  <millis>1525232244848</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-02T15:37:24</date>
+  <millis>1525232244925</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:37:28</date>
+  <millis>1525232248868</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<record>
+  <date>2018-05-02T15:37:43</date>
+  <millis>1525232263330</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:38:33</date>
+  <millis>1525232313182</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:38:33</date>
+  <millis>1525232313284</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:38:33</date>
+  <millis>1525232313288</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:38:33</date>
+  <millis>1525232313291</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1235</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:38:33</date>
+  <millis>1525232313291</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:38:33</date>
+  <millis>1525232313470</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:38:33</date>
+  <millis>1525232313470</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-02T15:38:33</date>
+  <millis>1525232313542</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:38:47</date>
+  <millis>1525232327276</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProfile</class>
+  <method>goToContactDetails</method>
+  <thread>12</thread>
+  <message>Error loading contact details screen</message>
+  <param>attempted to navigate from the profile page to the contact details page</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:39:11</date>
+  <millis>1525232351081</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:11</date>
+  <millis>1525232351162</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1235</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:11</date>
+  <millis>1525232351165</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:11</date>
+  <millis>1525232351169</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:11</date>
+  <millis>1525232351171</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:11</date>
+  <millis>1525232351172</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:11</date>
+  <millis>1525232351328</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:11</date>
+  <millis>1525232351402</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:37</date>
+  <millis>1525232377034</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateProfile</class>
+  <method>saveProfile</method>
+  <thread>12</thread>
+  <message>Successfully updated patient profile</message>
+  <param>Attempted to update patient profile</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:45</date>
+  <millis>1525232385621</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:45</date>
+  <millis>1525232385624</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:45</date>
+  <millis>1525232385628</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:45</date>
+  <millis>1525232385631</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:45</date>
+  <millis>1525232385635</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:46</date>
+  <millis>1525232386313</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:46</date>
+  <millis>1525232386318</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:46</date>
+  <millis>1525232386326</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:46</date>
+  <millis>1525232386329</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:46</date>
+  <millis>1525232386331</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:47</date>
+  <millis>1525232387123</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:47</date>
+  <millis>1525232387128</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:47</date>
+  <millis>1525232387133</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:47</date>
+  <millis>1525232387136</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:47</date>
+  <millis>1525232387138</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:50</date>
+  <millis>1525232390381</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:50</date>
+  <millis>1525232390389</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:50</date>
+  <millis>1525232390393</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:50</date>
+  <millis>1525232390400</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:39:50</date>
+  <millis>1525232390402</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:40</date>
+  <millis>1525232440466</millis>
+  <sequence>29</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:40</date>
+  <millis>1525232440471</millis>
+  <sequence>30</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:40</date>
+  <millis>1525232440475</millis>
+  <sequence>31</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:40</date>
+  <millis>1525232440478</millis>
+  <sequence>32</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:40</date>
+  <millis>1525232440482</millis>
+  <sequence>33</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:40</date>
+  <millis>1525232440574</millis>
+  <sequence>34</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:40</date>
+  <millis>1525232440577</millis>
+  <sequence>35</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:40</date>
+  <millis>1525232440581</millis>
+  <sequence>36</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:40</date>
+  <millis>1525232440583</millis>
+  <sequence>37</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:40</date>
+  <millis>1525232440586</millis>
+  <sequence>38</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:41</date>
+  <millis>1525232441272</millis>
+  <sequence>39</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:41</date>
+  <millis>1525232441280</millis>
+  <sequence>40</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:41</date>
+  <millis>1525232441284</millis>
+  <sequence>41</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:41</date>
+  <millis>1525232441287</millis>
+  <sequence>42</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:41</date>
+  <millis>1525232441290</millis>
+  <sequence>43</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:43</date>
+  <millis>1525232443158</millis>
+  <sequence>44</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:43</date>
+  <millis>1525232443164</millis>
+  <sequence>45</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:43</date>
+  <millis>1525232443168</millis>
+  <sequence>46</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:43</date>
+  <millis>1525232443172</millis>
+  <sequence>47</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:43</date>
+  <millis>1525232443176</millis>
+  <sequence>48</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>utility.SearchPatients</class>
+  <method>searchByName</method>
+  <thread>12</thread>
+  <message>Unable to search donors by name</message>
+  <param>Attempted to search donors by name</param>
+</record>
+<record>
+  <date>2018-05-02T15:40:53</date>
+  <millis>1525232453601</millis>
+  <sequence>49</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProfile</class>
+  <method>goToDonations</method>
+  <thread>12</thread>
+  <message>Error loading donation screen in popup</message>
+  <param>attempted to navigate from the profile page to the donation page in popup</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:42:51</date>
+  <millis>1525232571871</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:42:51</date>
+  <millis>1525232571955</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:42:51</date>
+  <millis>1525232571958</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:43:08</date>
+  <millis>1525232588022</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:43:08</date>
+  <millis>1525232588107</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:43:08</date>
+  <millis>1525232588110</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:43:31</date>
+  <millis>1525232611017</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:43:31</date>
+  <millis>1525232611092</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:43:31</date>
+  <millis>1525232611094</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T15:46:47</date>
+  <millis>1525232807060</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:46:47</date>
+  <millis>1525232807153</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor BBB9782</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:46:47</date>
+  <millis>1525232807156</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1237</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:46:47</date>
+  <millis>1525232807159</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:46:47</date>
+  <millis>1525232807162</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1235</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T15:46:47</date>
+  <millis>1525232807162</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T15:46:47</date>
+  <millis>1525232807325</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-02T15:46:47</date>
+  <millis>1525232807397</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T15:47:11</date>
+  <millis>1525232831080</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProfile</class>
+  <method>goToDonations</method>
+  <thread>12</thread>
+  <message>Error loading donation screen in popup</message>
+  <param>attempted to navigate from the profile page to the donation page in popup</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T16:10:33</date>
+  <millis>1525234233698</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>.\patient.json (The system cannot find the file specified)</message>
+  <param>attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T16:10:33</date>
+  <millis>1525234233716</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>12</thread>
+  <message>Failed to import clinicians</message>
+  <param>Attempted to import clinicians</param>
+</record>
+<record>
+  <date>2018-05-02T16:10:34</date>
+  <millis>1525234234138</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T16:10:34</date>
+  <millis>1525234234208</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T16:10:34</date>
+  <millis>1525234234210</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T16:10:48</date>
+  <millis>1525234248637</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateProfile</class>
+  <method>saveProfile</method>
+  <thread>12</thread>
+  <message>Successfully updated patient profile</message>
+  <param>Attempted to update patient profile</param>
+</record>
+<record>
+  <date>2018-05-02T16:11:02</date>
+  <millis>1525234262097</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateProfile</class>
+  <method>saveProfile</method>
+  <thread>12</thread>
+  <message>Successfully updated patient profile</message>
+  <param>Attempted to update patient profile</param>
+</record>
+<record>
+  <date>2018-05-02T16:11:18</date>
+  <millis>1525234278776</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateProfile</class>
+  <method>saveProfile</method>
+  <thread>12</thread>
+  <message>Successfully updated patient profile</message>
+  <param>Attempted to update patient profile</param>
+</record>
+<record>
+  <date>2018-05-02T16:11:39</date>
+  <millis>1525234299336</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<record>
+  <date>2018-05-02T16:11:57</date>
+  <millis>1525234317428</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateProfile</class>
+  <method>saveProfile</method>
+  <thread>12</thread>
+  <message>Successfully updated patient profile</message>
+  <param>Attempted to update patient profile</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T16:13:34</date>
+  <millis>1525234414201</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T16:13:34</date>
+  <millis>1525234414291</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T16:13:34</date>
+  <millis>1525234414292</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T16:13:34</date>
+  <millis>1525234414298</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T16:13:34</date>
+  <millis>1525234414453</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-02T19:43:32</date>
+  <millis>1525247012919</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T19:43:33</date>
+  <millis>1525247013077</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-02T19:43:33</date>
+  <millis>1525247013077</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-02T19:43:33</date>
+  <millis>1525247013090</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-02T19:43:33</date>
+  <millis>1525247013368</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+</log>

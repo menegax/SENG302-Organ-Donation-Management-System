@@ -4,14 +4,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Control;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.control.Control;
 import model.Patient;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
-
-import javafx.scene.control.CheckBox;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -20,7 +20,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientDonations {
+public class GUIPatientUpdateDonations implements IPopupable {
 
     @FXML
     private CheckBox liverCB;
@@ -58,6 +58,7 @@ public class GUIPatientDonations {
     @FXML
     private CheckBox connectivetissueCB;
 
+
     @FXML
     private AnchorPane patientDonationsAnchorPane;
 
@@ -80,7 +81,22 @@ public class GUIPatientDonations {
 
 
     public void initialize() {
-        loadProfile(ScreenControl.getLoggedInPatient().getNhiNumber());
+        if (ScreenControl.getLoggedInPatient() != null) {
+            loadProfile(ScreenControl.getLoggedInPatient()
+                    .getNhiNumber());
+        }
+
+        // Enter key triggers log in
+        patientDonationsAnchorPane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                saveDonations();
+            }
+        });
+    }
+
+    public void setViewedPatient(Patient patient) {
+        target = patient;
+        loadProfile(patient.getNhiNumber());
     }
 
 
@@ -89,10 +105,9 @@ public class GUIPatientDonations {
             Patient patient = Database.getPatientByNhi(nhi);
             target = patient;
             populateForm(patient);
-
         }
         catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the organs for logged in user");
+            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
         }
         ArrayList<Control> controls = new ArrayList<Control>() {{
             add(liverCB);
@@ -110,6 +125,7 @@ public class GUIPatientDonations {
         }};
         statesHistoryScreen = new StatesHistoryScreen(patientDonationsAnchorPane, controls);
     }
+
 
 
     private void populateForm(Patient patient) {
@@ -226,20 +242,29 @@ public class GUIPatientDonations {
         else {
             target.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
-        new Alert(Alert.AlertType.CONFIRMATION, "Organ management saved successfully", ButtonType.OK).showAndWait();
+        Database.saveToDisk();
         goToProfile();
     }
 
 
     public void goToProfile() {
-        ScreenControl.removeScreen("patientProfile");
-        try {
-            ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-            ScreenControl.activate("patientProfile");
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).showAndWait();
+        if (ScreenControl.getLoggedInPatient() != null) {
+            ScreenControl.removeScreen("patientProfile");
+            try {
+                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                ScreenControl.activate("patientProfile");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(patientDonationsAnchorPane.getScene(), fxmlLoader, target);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+            }
         }
     }
 }

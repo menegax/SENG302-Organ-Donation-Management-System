@@ -2,15 +2,17 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import model.Clinician;
 import model.Patient;
 import service.Database;
 
+import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -18,7 +20,11 @@ import static utility.UserActionHistory.userActions;
 public class GUILogin {
 
     @FXML
-    private AnchorPane pane;
+    public AnchorPane loginPane;
+
+    public Button loginButton;
+
+    public Hyperlink registerLabel;
 
     @FXML
     private TextField nhiLogin;
@@ -26,9 +32,10 @@ public class GUILogin {
     @FXML
     private CheckBox clinicianToggle;
 
+
     public void initialize() {
         // Enter key triggers log in
-        pane.setOnKeyPressed(e -> {
+        loginPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 logIn();
             }
@@ -50,20 +57,27 @@ public class GUILogin {
      */
     @FXML
     public void logIn() {
-        // todo surround with try catch. Try uses database getuserbyNHI, catch will throw a popup with warning alert
         if (!clinicianToggle.isSelected()) {
-        try {
+            try {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
-                ScreenControl.setLoggedInDonor(newPatient);
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                ScreenControl.setLoggedInPatient(newPatient);
                 ScreenControl.addScreen("patientDonations", FXMLLoader.load(getClass().getResource("/scene/patientDonations.fxml")));
-                ScreenControl.addScreen("patientProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/patientProfileUpdate.fxml")));
+                ScreenControl.addScreen("patientProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/patientUpdateProfile.fxml")));
                 ScreenControl.activate("patientHome");
+                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
                 ScreenControl.addScreen("patientHistory", FXMLLoader.load(getClass().getResource("/scene/patientHistory.fxml")));
-            }
-            catch (Exception e) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene/patientUpdateProfile.fxml"));
+                Pane pane = loader.load();
+                GUIPatientUpdateProfile controller = loader.getController();
+                loader.setController(controller);
+            } catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to log in");
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
+                alert.show();
+            }
+            catch (IOException e) {
+                userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
             }
         }
@@ -72,7 +86,8 @@ public class GUILogin {
                 Clinician newClinician = Database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
                 ScreenControl.setLoggedInClinician(newClinician);
                 ScreenControl.addScreen("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
-//              ScreenControl.addScreen("clinicianSearchDonors", FXMLLoader.load(getClass().getResource("/scene/clinicianSearchDonors.fxml")));
+                ScreenControl.addScreen("clinicianSearchPatients", FXMLLoader.load(getClass().getResource("/scene/clinicianSearchPatients.fxml")));
+                ScreenControl.addScreen("clinicianProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/clinicianProfileUpdate.fxml")));
                 ScreenControl.activate("clinicianHome");
             }
             catch (Exception e) {

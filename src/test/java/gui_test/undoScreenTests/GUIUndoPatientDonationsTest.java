@@ -4,13 +4,17 @@ import controller.Main;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import model.Patient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
+import service.Database;
+import utility.GlobalEnums;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static javafx.scene.input.KeyCode.CONTROL;
 import static javafx.scene.input.KeyCode.Z;
@@ -20,7 +24,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 /**
  * TestFX class to test the undo functionality of the donor donations update screen
  */
-public class GUIUndoDonorDonationsTest extends ApplicationTest{
+public class GUIUndoPatientDonationsTest extends ApplicationTest{
 
     private Main main = new Main();
 
@@ -31,9 +35,17 @@ public class GUIUndoDonorDonationsTest extends ApplicationTest{
      */
     @Override
     public void start(Stage stage) throws Exception {
+
+        // add dummy donor
+        ArrayList<String> dal = new ArrayList<>();
+        dal.add("Middle");
+        Database.addPatients(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+
         main.start(stage);
         interact(() -> {
-            lookup("#nhiLogin").queryAs(TextField.class).setText("ABC1238");
+            lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).fire();
             lookup("#profileButton").queryAs(Button.class).fire();
             lookup("#donationsButton").queryAs(Button.class).fire();
@@ -66,6 +78,7 @@ public class GUIUndoDonorDonationsTest extends ApplicationTest{
      */
     @After
     public void waitForEvents() {
+        Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }
