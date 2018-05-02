@@ -179,39 +179,6 @@ public class SearchDonorsTest {
     	assertTrue(results.contains(d4));
     }
 
-    @Test
-    public void testSearchUnusualNameResults2() throws InvalidObjectException {
-        Database.resetDatabase();
-
-        // Given donors in a db
-        d1 = new Donor("abc9876", "Joe", null, "Plaffer", LocalDate.now());
-        d2 = new Donor("def9876", "Jane", null, "Gregor", LocalDate.now());
-        d3 = new Donor("ghi9876", "John", null, "Romera", LocalDate.now());
-        d4 = new Donor("jkl9876", "Samantha", null, "Done", LocalDate.now());
-        Database.addDonor(d4);
-        Database.addDonor(d3);
-        Database.addDonor(d2);
-        Database.addDonor(d1);
-
-        SearchDonors.clearIndex();
-
-        // Given an index
-        SearchDonors.createFullIndex();
-
-    	ArrayList<Donor> results = SearchDonors.searchByName("Joe");
-
-    	// Should contain Joe Plaffer
-    	assertTrue(results.contains(Database.getDonorByNhi("abc9876")));
-
-    	// Should contain Jane Gregor, insert 'n' before 'e' and replace 'o' with 'a' for Jane
-//    	assertTrue(results.contains(Database.getDonorByNhi("def9876")));
-
-    	// Should contain John Romera, replace 'e' with 'n' and insert 'h' before 'n' for John
-    	assertTrue(results.contains(Database.getDonorByNhi("ghi9876")));
-
-    	// Should contain Samantha Done, insert 'n' before 'e' and replace 'J' with 'D' for Done
-    	assertTrue(results.contains(Database.getDonorByNhi("jkl9876")));
-    }
 
     /**
      * Reset the logging level
