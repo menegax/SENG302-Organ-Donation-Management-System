@@ -8,9 +8,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
+import javafx.fxml.FXML;
 import utility.GlobalEnums;
 
 import java.io.IOException;
@@ -80,6 +82,15 @@ public class GUIPatientProfile implements IPopupable {
     private Label addLbl5;
 
     @FXML
+    private Button receivingButton;
+
+    @FXML
+    private Button donationsButton;
+
+    /**
+     * A list for the organs a patient is donating
+     */
+    @FXML
     private Label donationList;
 
     @FXML
@@ -110,7 +121,12 @@ public class GUIPatientProfile implements IPopupable {
         }
     }
 
+    @FXML
+    private ListView receiveList;
 
+    /**
+     * Initializes the patient profile GUI pane
+     */
     public void initialize() {
         if (ScreenControl.getLoggedInPatient() != null) {
             try {
@@ -121,6 +137,18 @@ public class GUIPatientProfile implements IPopupable {
                 userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
             }
         }
+        if (ScreenControl.getLoggedInPatient() != null) {
+            receivingButton.setDisable(true);
+            receivingButton.setVisible(false);
+            donationsButton.setDisable(true);
+            donationsButton.setVisible(false);
+
+            if (ScreenControl.getLoggedInPatient().getRequiredOrgans() == null) {
+                receivingList.setDisable(true);
+                receivingList.setVisible(false);
+                receiveList.setDisable( true );
+                receiveList.setVisible( false );
+            }
     }
 
 
@@ -242,6 +270,14 @@ public class GUIPatientProfile implements IPopupable {
         }
     }
 
+    public void goToReceiving() {
+        ;
+    }
+
+    /**
+     * Navigates a user to the home GUI pane when the '〱back' button is activated
+     */
+    public void goToHome() {
 
     public void goToPatientHome() {
         ScreenControl.activate("patientHome");

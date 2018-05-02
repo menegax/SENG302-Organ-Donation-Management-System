@@ -120,17 +120,18 @@
       </VBox>
       <VBox layoutX="282.0" layoutY="205.0" prefHeight="125.0" prefWidth="142.0">
          <children>
-            <Label alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Receiving">
+            <Label fx:id="receivingList" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Receiving">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="receivingList" />
+            <ListView fx:id="receiveList" prefHeight="125.0" prefWidth="142.0" />
          </children>
       </VBox>
       <Label fx:id="back" layoutX="14.0" layoutY="14.0" onMouseClicked="#goToPatientHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
       <Button fx:id="editPatientButton" layoutX="254.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToEdit" text="Manage Profile" />
       <Button fx:id="donationsButton" layoutX="107.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
       <Button fx:id="contactButton" layoutX="381.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contacts" />
+      <Button fx:id="receivingButton" layoutX="360.0" layoutY="350.0" mnemonicParsing="false" onAction="#goToReceiving" text="Receive" />
    </children>
 </AnchorPane>
