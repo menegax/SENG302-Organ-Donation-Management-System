@@ -3,6 +3,7 @@ package controller;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,21 +12,26 @@ import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import model.Medication;
 import service.Database;
+import utility.UserActionRecord;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
+import static utility.UserActionRecord.logHistory;
 
 public class GUIDonorMedications implements IPopupable {
 
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
+    private ObservableList<UserActionRecord> medLog = FXCollections.observableArrayList();
     private ArrayList<String> current;
     private ArrayList<String> history;
+    private Timestamp time;
     private Donor target;
 
     @FXML
@@ -96,11 +102,22 @@ public class GUIDonorMedications implements IPopupable {
      */
     @FXML
     public void saveMedication() {
+        medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), "Medications are now saved", "Medications has been saved"));
+        logHistory.add(medLog.get(medLog.size() - 1));
         Alert save = new Alert(Alert.AlertType.CONFIRMATION, "Medication(s) have been successfully saved");
         final Button dialogOK = (Button) save.getDialogPane().lookupButton(ButtonType.OK);
-        dialogOK.addEventFilter(ActionEvent.ACTION, event -> Database.saveToDisk());// Save to .json the changes made to medications
+        dialogOK.addEventFilter(ActionEvent.ACTION, event -> saveToDisk());// Save to .json the changes made to medications
         save.show();
         clearSelections();
+    }
+
+    private void saveToDisk() {
+        if (target.getMedicationLog() != null) {
+            target.getMedicationLog().addAll( medLog );
+        } else {
+            target.setMedicationLog( medLog );
+        }
+        Database.saveToDisk();
     }
 
     /**
@@ -201,17 +218,25 @@ public class GUIDonorMedications implements IPopupable {
 
             if (!(current.contains(medication) || history.contains(medication))) {
                 target.getCurrentMedications().add( new Medication(medication));
-                userActions.log(Level.INFO, "Successfully registered medication " + medication + " for donor " + target.getNhiNumber(), "Registered a new medication for a donor");
+                time = new Timestamp(System.currentTimeMillis());
+                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now registered as current", medication + " has successfully been registered"));
+                logHistory.add(medLog.get(medLog.size() - 1));
                 viewCurrentMedications();
                 newMedication.clear();
             } else if (history.contains(medication) && !current.contains(medication)) {
                 moveToCurrent(new ArrayList<>(Collections.singleton( medication ) ));
                 newMedication.clear();
             } else {
+                time = new Timestamp(System.currentTimeMillis());
+                medLog.add(new UserActionRecord(String.valueOf(time), Level.WARNING.toString(), medication + " is already registered", medication + " has failed registration"));
+                logHistory.add(medLog.get(medLog.size() - 1));
                 Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is already registered");
                 err.show();
             }
         } else {
+            time = new Timestamp(System.currentTimeMillis());
+            medLog.add(new UserActionRecord(String.valueOf(time), Level.WARNING.toString(), medication + " is invalid for registration", medication + " has failed registration"));
+            logHistory.add(medLog.get(medLog.size() - 1));
             Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is invalid for registration");
             err.show();
         }
@@ -237,13 +262,16 @@ public class GUIDonorMedications implements IPopupable {
     private void performDelete(String medication) {
         if (history.contains( medication )) {
             target.getMedicationHistory().remove( history.indexOf( medication ) );
-            userActions.log( Level.INFO, "Successfully deleted medication" + medication + " from donor " + target.getNhiNumber(), "Deleted a past medication for a donor" );
+            time = new Timestamp(System.currentTimeMillis());
+            medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from history list"));
+            logHistory.add(medLog.get(medLog.size() - 1));
             viewPastMedications();
         } else if (current.contains( medication )) {
             target.getCurrentMedications().remove( current.indexOf( medication ) );
-            userActions.log( Level.INFO, "Successfully deleted a medication" + medication + " from donor " + target.getNhiNumber() , "Deleted a current medication for a donor" );
+            time = new Timestamp(System.currentTimeMillis());
+            medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from current list"));
+            logHistory.add(medLog.get(medLog.size() - 1));
             viewCurrentMedications();
-
         }
     }
 
@@ -261,7 +289,9 @@ public class GUIDonorMedications implements IPopupable {
                     target.getCurrentMedications().add( new Medication( medication )  );
                     viewCurrentMedications();
                 }
-                userActions.log(Level.INFO, "Successfully moved medication " + medication + " to current for donor " + target.getNhiNumber(), "Re-added a current medication for a donor");
+                time = new Timestamp(System.currentTimeMillis());
+                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now current", medication + " moved from history to current list"));
+                logHistory.add(medLog.get(medLog.size() - 1));
                 viewPastMedications();
             }
         }
@@ -281,7 +311,9 @@ public class GUIDonorMedications implements IPopupable {
                     target.getMedicationHistory().add( new Medication( medication ) );
                     viewPastMedications();
                 }
-                userActions.log(Level.INFO, "Successfully moved medication " + medication + " to history for donor " + target.getNhiNumber(), "Removed a past medication for a donor");
+                time = new Timestamp(System.currentTimeMillis());
+                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now history", medication + " moved from current to history list"));
+                logHistory.add(medLog.get(medLog.size() - 1));
                 viewCurrentMedications();
             }
         }
