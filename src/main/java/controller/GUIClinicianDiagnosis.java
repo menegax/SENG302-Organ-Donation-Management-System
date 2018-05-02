@@ -135,7 +135,7 @@ public class GUIClinicianDiagnosis {
 
             for (Disease past : pastDiseases) {
                 if (past.getDiseaseName().equals( diagnosis )) {
-                    if (!past.getDiseaseState().toString().equals( "cured" )) {
+                    if (!past.getDiseaseState().toString().toLowerCase().equals( "cured" )) {
                         moveFromPastToCurrent( past, null );
                         unique = false;
                         changed = true;
@@ -143,6 +143,7 @@ public class GUIClinicianDiagnosis {
                         userActions.log(Level.WARNING, "Failed to register a disease", diagnosis + " is already registered");
                         Alert err = new Alert(Alert.AlertType.ERROR, "'" + diagnosis + "' is already registered");
                         err.show();
+                        unique = false;
                     }
                 }
             }
@@ -340,10 +341,10 @@ public class GUIClinicianDiagnosis {
      * @param status The Disease status update
      */
     private void updateCurrentStatus(int index, String status) {
-        if (status.toLowerCase().equals( "cured" ) && !currentDonor.getCurrentDiseases().get( index ).getDiseaseState().toString().equals("chronic")) {
+        if (status.toLowerCase().equals( "cured" ) && !currentDonor.getCurrentDiseases().get( index ).getDiseaseState().toString().toLowerCase().equals("chronic")) {
             moveFromCurrentToPast(currentDonor.getCurrentDiseases().get( index ), status);
             changed = true;
-        } else if (!(status.toLowerCase().equals( "cured" ) && currentDonor.getCurrentDiseases().get( index ).getDiseaseState().toString().equals("chronic"))) {
+        } else if (!(status.toLowerCase().equals( "cured" ) && currentDonor.getCurrentDiseases().get( index ).getDiseaseState().toString().toLowerCase().equals("chronic"))) {
             new Alert(Alert.AlertType.WARNING, "Can not set disease state to 'cured' if the current state is 'chronic'", ButtonType.OK).show();
             userActions.log(Level.WARNING, "Failed to update a disease state", "Disease state could not be changed to 'cured' when it is 'chronic'");
         } else {
