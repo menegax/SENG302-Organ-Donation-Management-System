@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -17,6 +18,7 @@ import utility.SearchDonors;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 public class GUIClinicianSearchDonors implements Initializable {
 
@@ -73,20 +75,24 @@ public class GUIClinicianSearchDonors implements Initializable {
                 .toString()) : new SimpleStringProperty(""));
 
         // wrap ObservableList in a FilteredList
-        FilteredList<Donor> filteredData = new FilteredList<>(masterData, d -> true);
+        FilteredList<Donor> filteredData = new FilteredList<>(masterData, new Predicate<Donor>() {
+            @Override
+            public boolean test(Donor d) {
+                return true;
+            }
+        });
 
         // 2. Set the filter Predicate whenever the filter changes.
-        searchEntry.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(donor -> {
-                // If filter text is empty, display all persons.
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
+        searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            masterData.clear();
+            masterData.addAll(SearchDonors.searchByName(newValue));
 
-                return SearchDonors.searchByName(newValue)
-                        .contains(donor);
-
-            });
+            filteredData.setPredicate(new Predicate<Donor>() {
+                                          @Override
+                                          public boolean test(Donor donor) {
+                                              return true;
+                                          }
+                                      });
         });
 
         // wrap the FilteredList in a SortedList.
