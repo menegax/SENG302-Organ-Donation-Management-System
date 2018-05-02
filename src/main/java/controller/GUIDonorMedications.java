@@ -56,12 +56,6 @@ public class GUIDonorMedications implements IPopupable {
     public Button clearMed;
     public ContextMenu contextMenu;
 
-    private ListProperty<String> currentListProperty = new SimpleListProperty<>();
-    private ListProperty<String> historyListProperty = new SimpleListProperty<>();
-    private ArrayList<String> current;
-    private ArrayList<String> history;
-    private Timestamp time;
-    private Donor target;
     private JsonObject suggestions;
     private boolean itemSelected = false;
 

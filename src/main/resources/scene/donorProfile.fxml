@@ -8,14 +8,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="donorProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIDonorProfile">
+<AnchorPane fx:id="donorProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIDonorProfile">
    <children>
       <Label layoutX="264.0" layoutY="32.0" styleClass="title" text="Profile">
          <font>
             <Font size="40.0" />
          </font>
       </Label>
-      <VBox layoutX="86.0" layoutY="81.0" prefHeight="213.0" prefWidth="240.0">
+      <VBox layoutX="86.0" layoutY="81.0" prefHeight="213.0" prefWidth="202.0">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -109,22 +109,22 @@
             </HBox>
          </children>
       </VBox>
-      <VBox layoutX="363.0" layoutY="81.0" prefHeight="200.0" prefWidth="162.0">
+      <VBox layoutX="283.0" layoutY="100.0" prefHeight="200.0" prefWidth="142.0">
          <children>
             <Label alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Donations">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <ListView fx:id="organList" prefHeight="200.0" prefWidth="146.0" />
+            <ListView fx:id="organList" prefHeight="200.0" prefWidth="147.0" />
          </children>
       </VBox>
       <Label fx:id="back" layoutX="14.0" layoutY="14.0" onMouseClicked="#goToDonorHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
        <Button fx:id="editDonorButton" layoutX="254.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToEdit" text="Manage Profile" />
        <Button fx:id="donationButton" layoutX="107.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
-       <Button fx:id="medicationBtn" layoutX="249.0" layoutY="320.0" mnemonicParsing="false" onAction="#openMedication" text="Medication Test" />
+       <Button fx:id="medicationBtn" layoutX="263.0" layoutY="316.0" mnemonicParsing="false" onAction="#openMedication" text="Medications" />
        <Button fx:id="contactButton" layoutX="381.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contacts" />
-      <VBox layoutX="436.0" layoutY="100.0" prefHeight="200.0" prefWidth="142.0">
+      <VBox layoutX="445.0" layoutY="100.0" prefHeight="200.0" prefWidth="142.0">
          <children>
             <Label alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Medications">
                <font>
