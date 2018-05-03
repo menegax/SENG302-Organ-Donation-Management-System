@@ -88,7 +88,7 @@ public class GUIPatientUpdateRequirements implements IPopupable {
         // Enter key triggers log in
         patientRequirementsAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
-                saveDonations();
+                saveRequirements();
             }
         });
     }
@@ -129,46 +129,48 @@ public class GUIPatientUpdateRequirements implements IPopupable {
 
     private void populateForm(Patient patient) {
         ArrayList<GlobalEnums.Organ> organs = patient.getRequiredOrgans();
-        if (organs.contains(GlobalEnums.Organ.LIVER)) {
-            liverCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.KIDNEY)) {
-            kidneyCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.PANCREAS)) {
-            pancreasCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.HEART)) {
-            heartCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.LUNG)) {
-            lungCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.INTESTINE)) {
-            intestineCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.CORNEA)) {
-            corneaCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.MIDDLEEAR)) {
-            middleearCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.SKIN)) {
-            skinCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.BONE)) {
-            boneCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.BONE_MARROW)) {
-            bonemarrowCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) {
-            connectivetissueCB.setSelected(true);
+        if (organs != null) {
+            if (organs.contains(GlobalEnums.Organ.LIVER)) {
+                liverCB.setSelected(true);
+            }
+            if (organs.contains(GlobalEnums.Organ.KIDNEY)) {
+                kidneyCB.setSelected(true);
+            }
+            if (organs.contains(GlobalEnums.Organ.PANCREAS)) {
+                pancreasCB.setSelected(true);
+            }
+            if (organs.contains(GlobalEnums.Organ.HEART)) {
+                heartCB.setSelected(true);
+            }
+            if (organs.contains(GlobalEnums.Organ.LUNG)) {
+                lungCB.setSelected(true);
+            }
+            if (organs.contains(GlobalEnums.Organ.INTESTINE)) {
+                intestineCB.setSelected(true);
+            }
+            if (organs.contains(GlobalEnums.Organ.CORNEA)) {
+                corneaCB.setSelected(true);
+            }
+            if (organs.contains(GlobalEnums.Organ.MIDDLEEAR)) {
+                middleearCB.setSelected(true);
+            }
+            if (organs.contains(GlobalEnums.Organ.SKIN)) {
+                skinCB.setSelected(true);
+            }
+            if (organs.contains(GlobalEnums.Organ.BONE)) {
+                boneCB.setSelected(true);
+            }
+            if (organs.contains(GlobalEnums.Organ.BONE_MARROW)) {
+                bonemarrowCB.setSelected(true);
+            }
+            if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) {
+                connectivetissueCB.setSelected(true);
+            }
         }
     }
 
 
-    public void saveDonations() {
+    public void saveRequirements() {
         if (liverCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.LIVER);
         }

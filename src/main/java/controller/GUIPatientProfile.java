@@ -1,5 +1,9 @@
 package controller;
 
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -18,8 +22,12 @@ import utility.GlobalEnums;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import static utility.UserActionHistory.userActions;
 
@@ -91,13 +99,23 @@ public class GUIPatientProfile implements IPopupable {
     private Label addLbl5;
 
     @FXML
-    private Label receivingList;
+    private ListView receivingList;
+
+    @FXML
+    private Label receivingTitle;
+
+    @FXML
+    private Label donatingTitle;
+
+    private ListProperty<String> donatingListProperty = new SimpleListProperty<>();
+
+    private ListProperty<String> receivingListProperty = new SimpleListProperty<>();
 
     /**
      * A list for the organs a patient is donating
      */
     @FXML
-    private Label donationList;
+    private ListView donationList;
 
     @FXML
     private Label back;
@@ -146,11 +164,18 @@ public class GUIPatientProfile implements IPopupable {
         if (ScreenControl.getLoggedInPatient() != null) {
             receivingButton.setDisable(true);
             receivingButton.setVisible(false);
-            if (ScreenControl.getLoggedInPatient().getRequiredOrgans() == null) {
+            if (ScreenControl.getLoggedInPatient().getRequiredOrgans().size() == 0) {
                 receivingList.setDisable(true);
                 receivingList.setVisible(false);
-                receiveList.setDisable(true);
-                receiveList.setVisible(false);
+                receivingTitle.setDisable(true);
+                receivingTitle.setVisible(false);
+//                receiveList.setDisable(true);
+//                receiveList.setVisible(false);
+            } else if (ScreenControl.getLoggedInPatient().getDonations().size() == 0) {
+                donatingTitle.setDisable(true);
+                donatingTitle.setVisible(false);
+                donationList.setDisable(true);
+                donationList.setVisible(false);
             }
         }
     }
@@ -188,9 +213,32 @@ public class GUIPatientProfile implements IPopupable {
         else {
             addLbl5.setText("Not set");
         }
-        for (GlobalEnums.Organ organ : patient.getDonations()) {
-            donationList.setText(donationList.getText() + StringUtils.capitalize(organ.getValue()) + "\n");
-        }
+
+        Collection<GlobalEnums.Organ> organsD = patient.getDonations();
+        if (patient.getRequiredOrgans() == null) { patient.setRequiredOrgans(new ArrayList<>()); }
+        Collection<GlobalEnums.Organ> organsR = patient.getRequiredOrgans();
+        List<String> organsMappedD = organsD.stream().map(e -> StringUtils.capitalize(e.getValue())).collect(Collectors.toList());
+        List<String> organsMappedR = organsR.stream().map(e -> StringUtils.capitalize(e.getValue())).collect(Collectors.toList());
+        donatingListProperty.setValue(FXCollections.observableArrayList(organsMappedD));
+        receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
+        donationList.itemsProperty().bind(donatingListProperty);
+        receivingList.itemsProperty().bind(receivingListProperty);
+//        Object lists = receivingList.getItems().get(1);
+//        System.out.println(lists);
+//        ((TableCell) lists.get(0)).setStyle("-fx-text-fill:red;");
+//
+//        for (GlobalEnums.Organ organ : patient.getDonations()) {
+//            if (patient.getRequiredOrgans().contains(organ)) {
+//                donationList.setStyle("-fx-background-color: #42e5f4");
+//            }
+//        }
+//        for (GlobalEnums.Organ organ : patient.getRequiredOrgans()) {
+//            if (patient.getDonations().contains(organ)) {
+//                System.out.println(StringUtils.capitalize(organ.toString()));
+//                receivingList.get(StringUtils.capitalize(organ.toString()));
+//                receivingList.setStyle("-fx-text-fill:red;");
+//            }
+//        }
     }
 
 

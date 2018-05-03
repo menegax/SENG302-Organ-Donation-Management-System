@@ -91,6 +91,7 @@ public class Patient {
         this.birth = date;
         this.nhiNumber = nhiNumber.toUpperCase();
         this.donations = new ArrayList<>();
+        this.requiredOrgans = new ArrayList<>();
     }
 
     /**
@@ -531,14 +532,19 @@ public class Patient {
      * @return string of message
      */
     public String addRequired(Organ organ) {
-        if (requiredOrgans.contains(organ)) {
-            return "Organ " + organ + " is already part of the patient's required organs, so was not added.";
+        if (requiredOrgans != null) {
+            if (requiredOrgans.contains(organ)) {
+                return "Organ " + organ + " is already part of the patient's required organs, so was not added.";
+            }
         }
-        else {
-            requiredOrgans.add(organ);
-            patientModified();
-            return "Successfully added " + organ + " to required organs";
+        if (requiredOrgans == null) {
+            requiredOrgans = new ArrayList<>();
         }
+        System.out.println(organ);
+        System.out.println(requiredOrgans);
+        requiredOrgans.add(organ);
+        patientModified();
+        return "Successfully added " + organ + " to required organs";
     }
 
     /**
