@@ -20,9 +20,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-
 public class Main extends Application {
 
     @Override
@@ -54,7 +51,7 @@ public class Main extends Application {
                 Database.addClinician(new Clinician(Database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
             }
         }
-
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

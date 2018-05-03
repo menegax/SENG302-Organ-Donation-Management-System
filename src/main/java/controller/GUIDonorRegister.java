@@ -12,9 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.input.KeyCode;
 import javafx.util.StringConverter;
 import model.Donor;
 import utility.undoRedo.StatesHistoryScreen;
@@ -197,8 +194,8 @@ public class GUIDonorRegister {
             try {
                 addDonorGui();
                 clearFields();
-                Alert confirm = new Alert(Alert.AlertType.INFORMATION, "Successfully registered!");
-                confirm.show();
+                Alert info = new Alert(Alert.AlertType.INFORMATION, "Successfully registered!");
+                info.show();
                 Database.saveToDisk();
                 ScreenControl.activate("login");
             }

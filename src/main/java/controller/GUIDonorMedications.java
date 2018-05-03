@@ -1,6 +1,7 @@
 package controller;
 
 import api.APIHelper;
+import com.google.gson.*;
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
@@ -10,13 +11,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import model.Donor;
+import model.DrugInteraction;
 import model.Medication;
-import service.TextWatcher;
 import service.Database;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.UserActionRecord;
@@ -26,6 +25,11 @@ import java.io.InvalidObjectException;
 import java.sql.Timestamp;
 import java.sql.Timestamp;
 import java.util.*;
+import javafx.geometry.Side;
+import service.TextWatcher;
+import utility.undoRedo.StatesHistoryScreen;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -52,6 +56,7 @@ public class GUIDonorMedications implements IPopupable {
     public Button saveMed;
     public Button undoEdit;
     public Button redoEdit;
+    public Button compareMeds;
     public Button goBack;
     public Button clearMed;
     public ContextMenu contextMenu;
@@ -119,7 +124,7 @@ public class GUIDonorMedications implements IPopupable {
     public void saveMedication() {
         medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), "Medications are now saved", "Medications has been saved"));
         logHistory.add(medLog.get(medLog.size() - 1));
-        Alert save = new Alert(Alert.AlertType.CONFIRMATION, "Medication(s) have been successfully saved");
+        Alert save = new Alert(Alert.AlertType.INFORMATION, "Medication(s) have been successfully saved");
         final Button dialogOK = (Button) save.getDialogPane().lookupButton(ButtonType.OK);
         dialogOK.addEventFilter(ActionEvent.ACTION, event -> saveToDisk());// Save to .json the changes made to medications
         save.show();
@@ -170,14 +175,19 @@ public class GUIDonorMedications implements IPopupable {
         addMedication(newMedication.getText());
     }
 
+    private ListProperty<String> informationListProperty = new SimpleListProperty<>();
+    private ArrayList<String> ingredients;
 
     @FXML
     public void initialize() {
+        //Register events for when an item is selected from a listView and set selection mode to multiple
+        currentMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(currentMedications));
+        pastMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(pastMedications));
+        pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         stateHistoryScreen = new StatesHistoryScreen(medicationPane, new ArrayList<Control>() {{
             add(newMedication);
         }});
-        pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         if (ScreenControl.getLoggedInDonor() != null) {
             loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
         }
@@ -196,6 +206,7 @@ public class GUIDonorMedications implements IPopupable {
                 target.setMedicationHistory(new ArrayList<>());
             }
             viewPastMedications();
+            refreshReview();
             addActionListeners();
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the medications for logged in user");
@@ -204,6 +215,7 @@ public class GUIDonorMedications implements IPopupable {
 
 
     /**
+     * Sets a list of suggestions given a partially matching string
      * Adds an actionlistener to the text property of the medication search field and passes text
      * to getDrugSuggestions
      */
@@ -246,6 +258,7 @@ public class GUIDonorMedications implements IPopupable {
         try {
            suggestions =  apiHelper.getMapiDrugSuggestions(query);
         } catch (IOException exception) {
+            suggestions = null;
             userActions.log(Level.WARNING, "Illegal characters in query");
         }
     }
@@ -394,6 +407,7 @@ public class GUIDonorMedications implements IPopupable {
         for (String medication : medications) {
             if (history.contains( medication )) {
                 target.getMedicationHistory().remove( history.indexOf( medication ));
+
                 if (!current.contains( medication )) {
                     target.getCurrentMedications().add( new Medication( medication )  );
                     viewCurrentMedications();
@@ -429,6 +443,136 @@ public class GUIDonorMedications implements IPopupable {
     }
 
     /**
+     * Runs when an item is selected within a listView
+     * If there is only one item, the function to load the ingredients for the selected medication is called
+     * @param listView The listView of the selected item
+     */
+    private void onSelect(ListView listView) {
+        if (listView.getSelectionModel().getSelectedItems().size() >= 1) {
+            for (Object item : listView.getSelectionModel().getSelectedItems()) {
+                if (item != null){
+                    loadMedicationIngredients( item.toString() );
+                }
+            }
+        }
+    }
+
+    /**
+     * Shifts an already existing ingredient/interaction listing entry to the top of the list
+     * @param index The current index in the list of the already existing entry
+     */
+    private void moveToTopInformationList(int index) {
+        String entry;
+
+        for (int i = index; index < ingredients.size(); i++) {
+            entry = ingredients.get(i);
+            ingredients.remove(i);
+            ingredients.add(i - index, entry);
+
+            if (entry.equals("")) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Fetches the ingredients from the APIHelper, then converts the results into a temporary list.
+     * The list, after having a header included, is then added to existing listing of other medicine
+     * ingredients and medicine interactions and passed to be bound to the listView
+     * @param medication The medication to fetch the ingredients for
+     */
+    private void loadMedicationIngredients(String medication) {
+        APIHelper helper = new APIHelper();
+        ArrayList <String> newIngredients = new ArrayList <>();
+        Boolean hasIngredients = false;
+
+        if (!ingredients.contains( "Ingredients for '" + medication + "': " )) {
+            newIngredients.add( "Ingredients for '" + medication + "': " );
+            try {
+                if (medication.length() == 1) {
+                    getDrugSuggestions( medication );
+                } else {
+                    getDrugSuggestions(Collections.max(new ArrayList <>(Arrays.asList( medication.split(" ")))));
+                }
+
+                if (suggestions.get( "suggestions" ).toString().contains( medication )) {
+                    JsonArray response = helper.getMapiDrugIngredients( medication );
+                    response.forEach( ( element ) -> newIngredients.add( element.getAsString() ) );
+                    hasIngredients = true;
+                }
+            } catch (IOException e) {
+                hasIngredients = false;
+            }
+
+            if (!hasIngredients) {
+                newIngredients.add( "There are no recorded ingredients for '" + medication + "'");
+            }
+            newIngredients.add( "" );
+            ingredients.addAll( 0, newIngredients );
+        } else {
+            int index = ingredients.indexOf("Ingredients for '" + medication + "': ");
+            moveToTopInformationList(index);
+        }
+        displayIngredients( ingredients );
+    }
+
+
+
+
+    /**
+     * When activated displays the interactions between the two most recently selected medications
+     */
+    private void displayInteractions(HashMap<String, Set<String>> interactions, String drugOne, String drugTwo) {
+        Set<String> keys = interactions.keySet();
+        ingredients.clear();
+        ingredients.add("Interactions for " + drugOne + " & " + drugTwo);
+        ingredients.add("");
+        for (String key : keys ){
+            interactions.get(key).forEach( (interaction) ->
+                    ingredients.add(interaction.replace("\"", "") + "  (" + key + ")"));
+        }
+        displayIngredients(ingredients);
+    }
+
+
+    /**
+     * When activated displays the interactions between the two most recently selected medications
+     */
+    @FXML
+    public void reviewInteractions() {
+        Alert alert = new Alert(Alert.AlertType.WARNING, "Drug interactions not available. Please select 2 medications.");
+        ArrayList<String> selectedMedications = new ArrayList<String>(){{
+            addAll(currentMedications.getSelectionModel().getSelectedItems());
+            addAll(pastMedications.getSelectionModel().getSelectedItems());
+        }};
+        if ( selectedMedications.size()  == 2){ //if two are selected
+            try {
+                DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1));
+                displayInteractions(interaction.getInteractionsWithDurations(), selectedMedications.get(0), selectedMedications.get(1));
+            } catch (IOException e ){
+                alert.setContentText("Drug interactions not available, either this study has not been completed or" +
+                        " drugs provided don't exist.");
+                alert.show();
+            }
+        } else {
+            alert.show();
+        }
+    }
+
+
+
+
+    /**
+     * Takes a string list of ingredients, and binds it to the medicineInformation listView to be displayed
+     * @param ingredients The List of ingredients
+     */
+    private void displayIngredients(List<String> ingredients) {
+        informationListProperty.set(FXCollections.observableList(ingredients));
+        medicineInformation.itemsProperty().bind(informationListProperty);
+    }
+
+    /**
+     * Button for clearing each currently selected medication from being selected on activation
      * Navigates from the Medication panel to the home panel after 'back' is selected, saves medication log
      */
     @FXML
@@ -441,7 +585,6 @@ public class GUIDonorMedications implements IPopupable {
             }catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the medication page to the profile page");
                 new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-                e.printStackTrace();
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/donorProfile.fxml"));
@@ -461,5 +604,15 @@ public class GUIDonorMedications implements IPopupable {
     public void clearSelections() {
         pastMedications.getSelectionModel().clearSelection();
         currentMedications.getSelectionModel().clearSelection();
+        medicineInformation.getSelectionModel().clearSelection();
+    }
+
+    /**
+     * Button for clearing the information being currently displayed on the medicine information ListView on activation
+     */
+    @FXML
+    public void refreshReview() {
+        ingredients = new ArrayList<>();
+        displayIngredients( ingredients );
     }
 }
