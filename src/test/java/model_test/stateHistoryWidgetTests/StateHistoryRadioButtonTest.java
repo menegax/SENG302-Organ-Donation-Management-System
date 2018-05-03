@@ -18,7 +18,7 @@ public class StateHistoryRadioButtonTest {
     private static RadioButton radioButton;
 
     /**
-     * Creates the checkbox to be used and sets up the JavaFX environment so JavaFX objects can be created
+     * Creates the radioButton to be used and sets up the JavaFX environment so JavaFX objects can be created
      * @throws InterruptedException if the JavaFX environment is interrupted
      */
     @BeforeClass
@@ -103,5 +103,46 @@ public class StateHistoryRadioButtonTest {
         assertTrue(radioButton.isSelected());
         stateHistoryRadioButton.undo();
         assertFalse(radioButton.isSelected());
+    }
+
+    /**
+     * Tests the redo method of the StateHistoryRadioButton
+     */
+    @Test
+    public void testRedo() {
+        radioButton.setSelected(false);
+        StateHistoryRadioButton stateHistoryRadioButton = new StateHistoryRadioButton(radioButton);
+        ArrayList<Boolean> checkList = new ArrayList<>();
+        stateHistoryRadioButton.store();
+        stateHistoryRadioButton.undo();
+        stateHistoryRadioButton.redo();
+        checkList.add(false);
+        checkList.add(false);
+        assertEquals(checkList, stateHistoryRadioButton.getStates());
+        assertEquals(1, stateHistoryRadioButton.getIndex());
+
+        stateHistoryRadioButton.redo();
+        assertEquals(checkList, stateHistoryRadioButton.getStates());
+        assertEquals(1, stateHistoryRadioButton.getIndex());
+
+        stateHistoryRadioButton.undo();
+        radioButton.setSelected(true);
+        stateHistoryRadioButton.store();
+        radioButton.setSelected(false);
+        stateHistoryRadioButton.store();
+        stateHistoryRadioButton.undo();
+        stateHistoryRadioButton.undo();
+        stateHistoryRadioButton.redo();
+        stateHistoryRadioButton.redo();
+        checkList.remove(1);
+        checkList.add(true);
+        checkList.add(false);
+        assertEquals(checkList, stateHistoryRadioButton.getStates());
+        assertEquals(2, stateHistoryRadioButton.getIndex());
+        assertFalse(radioButton.isSelected());
+        stateHistoryRadioButton.undo();
+        stateHistoryRadioButton.undo();
+        stateHistoryRadioButton.redo();
+        assertTrue(radioButton.isSelected());
     }
 }

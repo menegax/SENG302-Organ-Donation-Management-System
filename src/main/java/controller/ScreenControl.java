@@ -21,13 +21,13 @@ public class ScreenControl {
 
     public static Donor donor;
 
+
     public static Clinician clinician;
 
 
-    static void setLoggedInDonor(Donor newDonor) {
+    public static void setLoggedInDonor(Donor newDonor) {
         donor = newDonor;
     }
-
 
     public static Donor getLoggedInDonor() {
         return donor;
@@ -123,7 +123,7 @@ public class ScreenControl {
      *
      * @param name - name of the popup to hide
      */
-    static void hidePopUp(String name) {
+    public static void hidePopUp(String name) {
         popMap.get(name).close();
     }
 

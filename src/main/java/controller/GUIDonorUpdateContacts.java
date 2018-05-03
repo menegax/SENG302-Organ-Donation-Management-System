@@ -103,6 +103,7 @@ public class GUIDonorUpdateContacts implements IPopupable {
             loadProfile(ScreenControl.getLoggedInDonor().getNhiNumber());
             setContactFields();
         }
+        setupUndoRedo();
 
         // Enter key triggers log in
         donorContactsPane.setOnKeyPressed(e -> {
@@ -112,6 +113,24 @@ public class GUIDonorUpdateContacts implements IPopupable {
         });
     }
 
+    /**
+     * Sets up the variables needed for undo and redo functionality
+     */
+    private void setupUndoRedo() {
+        ArrayList<Control> controls = new ArrayList<Control>() {{
+            add(homePhoneField);
+            add(mobilePhoneField);
+            add(workPhoneField);
+            add(emailAddressField);
+            add(contactNameField);
+            add(contactRelationshipField);
+            add(contactHomePhoneField);
+            add(contactMobilePhoneField);
+            add(contactWorkPhoneField);
+            add(contactEmailAddressField);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(donorContactsPane, controls);
+    }
 
     /**
      * Sets initial contact text fields to a donor's existing contact details.
@@ -160,20 +179,6 @@ public class GUIDonorUpdateContacts implements IPopupable {
     private void loadProfile(String nhi) {
         try {
             target = Database.getDonorByNhi(nhi);
-
-            ArrayList<Control> controls = new ArrayList<Control>() {{
-                add(homePhoneField);
-                add(mobilePhoneField);
-                add(workPhoneField);
-                add(emailAddressField);
-                add(contactNameField);
-                add(contactRelationshipField);
-                add(contactHomePhoneField);
-                add(contactMobilePhoneField);
-                add(contactWorkPhoneField);
-                add(contactEmailAddressField);
-            }};
-            statesHistoryScreen = new StatesHistoryScreen(donorContactsPane, controls);
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
@@ -214,7 +219,7 @@ public class GUIDonorUpdateContacts implements IPopupable {
         } else {
             valid = setInvalid(workPhoneField);
         }
-        if (!(emailAddressField.getText().equals("")) && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
+        if (emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
             target.setEmailAddress(emailAddressField.getText());
             setValid(emailAddressField);
         } else if(emailAddressField.getText().equals("")) {
@@ -223,7 +228,7 @@ public class GUIDonorUpdateContacts implements IPopupable {
         } else {
             valid = setInvalid(emailAddressField);
         }
-        if (!(contactRelationshipField.getText().equals(""))) {
+        if (contactRelationshipField.getText().matches("([A-Za-z]+[\\s]*)*")) {
             target.setContactRelationship(contactRelationshipField.getText());
             setValid(contactRelationshipField);
         } else if(contactRelationshipField.getText().equals("")) {
@@ -232,7 +237,7 @@ public class GUIDonorUpdateContacts implements IPopupable {
         } else {
             valid = setInvalid(contactRelationshipField);
         }
-        if (!(contactNameField.getText().equals(""))) {
+        if (contactNameField.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
             target.setContactName(contactNameField.getText());
             setValid(contactNameField);
         } else if(contactNameField.getText().equals("")) {
@@ -268,7 +273,7 @@ public class GUIDonorUpdateContacts implements IPopupable {
         } else {
             valid = setInvalid(contactWorkPhoneField);
         }
-        if (!(contactEmailAddressField.getText().equals("") && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+"))) {
+        if (contactEmailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
             target.setContactEmailAddress(contactEmailAddressField.getText());
             setValid(contactEmailAddressField);
         } else if(contactEmailAddressField.getText().equals("")) {

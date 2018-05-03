@@ -70,7 +70,7 @@ public class GUIProfileTest extends ApplicationTest {
 
     @Test
     public void should_go_to_donations() {
-        interact(() -> lookup("#donationsButton").queryAs(Button.class).fire());
+        interact(() -> lookup("#donationButton").queryAs(Button.class).fire());
         verifyThat("#donorDonationsAnchorPane", Node::isVisible);
     }
 
@@ -86,7 +86,7 @@ public class GUIProfileTest extends ApplicationTest {
 
     @Test
     public void should_have_correct_donations() {
-        interact(() -> lookup("#donationsButton").queryAs(Button.class).fire());
+        interact(() -> lookup("#donationButton").queryAs(Button.class).fire());
         assertThat(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         assertThat(lookup("#corneaCB").queryAs(CheckBox.class).isSelected());
     }

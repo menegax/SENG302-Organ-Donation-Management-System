@@ -104,4 +104,45 @@ public class StateHistoryDatePickerTest {
         stateHistoryDatePicker.undo();
         assertEquals(LocalDate.of(2001, 1, 1), datePicker.getValue());
     }
+
+    /**
+     * Tests the redo method of the StateHistoryDatePicker
+     */
+    @Test
+    public void testRedo() {
+        datePicker.setValue(LocalDate.of(2001, 1, 1));
+        StateHistoryDatePicker stateHistoryDatePicker = new StateHistoryDatePicker(datePicker);
+        ArrayList<String> checkList = new ArrayList<>();
+        stateHistoryDatePicker.store();
+        stateHistoryDatePicker.undo();
+        stateHistoryDatePicker.redo();
+        checkList.add(LocalDate.of(2001, 1, 1).toString());
+        checkList.add(LocalDate.of(2001, 1, 1).toString());
+        assertEquals(checkList, stateHistoryDatePicker.getStates());
+        assertEquals(1, stateHistoryDatePicker.getIndex());
+
+        stateHistoryDatePicker.redo();
+        assertEquals(checkList, stateHistoryDatePicker.getStates());
+        assertEquals(1, stateHistoryDatePicker.getIndex());
+
+        stateHistoryDatePicker.undo();
+        datePicker.setValue(LocalDate.of(2002, 2, 2));
+        stateHistoryDatePicker.store();
+        datePicker.setValue(LocalDate.of(2003, 3, 3));
+        stateHistoryDatePicker.store();
+        stateHistoryDatePicker.undo();
+        stateHistoryDatePicker.undo();
+        stateHistoryDatePicker.redo();
+        stateHistoryDatePicker.redo();
+        checkList.remove(1);
+        checkList.add(LocalDate.of(2002, 2, 2).toString());
+        checkList.add(LocalDate.of(2003, 3, 3).toString());
+        assertEquals(checkList, stateHistoryDatePicker.getStates());
+        assertEquals(2, stateHistoryDatePicker.getIndex());
+        assertEquals(LocalDate.of(2003, 3, 3), datePicker.getValue());
+        stateHistoryDatePicker.undo();
+        stateHistoryDatePicker.undo();
+        stateHistoryDatePicker.redo();
+        assertEquals(LocalDate.of(2002, 2, 2), datePicker.getValue());
+    }
 }

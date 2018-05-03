@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Clinician;
 import model.Donor;
+import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
 import utility.SearchDonors;
