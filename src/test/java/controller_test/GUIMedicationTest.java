@@ -3,13 +3,15 @@ package controller_test;
 import controller.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import model.Donor;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
@@ -19,7 +21,6 @@ import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 
-import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -37,14 +38,6 @@ public class GUIMedicationTest extends ApplicationTest {
         Database.resetDatabase();
         main.start(stage);
         mainStage = stage;
-        ArrayList<String> middle = new ArrayList<>();
-        middle.add("Middle");
-        Database.addDonor(new Donor("TFX9999", "Joe", middle, "Bloggs", LocalDate.of(1990, 2, 9)));
-        target = Database.getDonorByNhi("TFX9999");
-    }
-
-    private void addTestDonor() throws Exception {
-        Database.resetDatabase();
         ArrayList<String> middle = new ArrayList<>();
         middle.add("Middle");
         Database.addDonor(new Donor("TFX9999", "Joe", middle, "Bloggs", LocalDate.of(1990, 2, 9)));

@@ -107,9 +107,9 @@ public class GUIDonorMedications implements IPopupable {
      */
     @FXML
     public void deleteMedication() {
-        ArrayList<String> selections = new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems());
-        selections.addAll(currentMedications.getSelectionModel().getSelectedItems() );
-        removeMedication( selections );
+        ArrayList<String> selections = new ArrayList<>(pastMedications.getSelectionModel().getSelectedItems());
+        selections.addAll(currentMedications.getSelectionModel().getSelectedItems());
+        removeMedication(selections);
     }
 
     /**
@@ -132,7 +132,7 @@ public class GUIDonorMedications implements IPopupable {
             log.addAll(medLog);
             target.setMedicationLog(log);
         } else {
-            target.setMedicationLog( medLog );
+            target.setMedicationLog(medLog);
         }
         Database.saveToDisk();
         medLog = FXCollections.observableArrayList();
@@ -146,7 +146,7 @@ public class GUIDonorMedications implements IPopupable {
         if (pastMedications.getFocusModel().getFocusedItem() == null) {
             currentMedications.getSelectionModel().clearSelection();
         } else {
-            moveToCurrent( new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems() ) );
+            moveToCurrent(new ArrayList<>(pastMedications.getSelectionModel().getSelectedItems()));
         }
     }
 
@@ -158,7 +158,7 @@ public class GUIDonorMedications implements IPopupable {
         if (currentMedications.getFocusModel().getFocusedItem() == null) {
             pastMedications.getSelectionModel().clearSelection();
         } else {
-            moveToHistory( new ArrayList <>( currentMedications.getSelectionModel().getSelectedItems() ) );
+            moveToHistory(new ArrayList<>(currentMedications.getSelectionModel().getSelectedItems()));
         }
     }
 
@@ -192,12 +192,12 @@ public class GUIDonorMedications implements IPopupable {
         try {
             target = Database.getDonorByNhi(nhi);
 
-            if(target.getCurrentMedications() == null) {
+            if (target.getCurrentMedications() == null) {
                 target.setCurrentMedications(new ArrayList<>());
             }
             viewCurrentMedications();
 
-            if(target.getMedicationHistory() == null) {
+            if (target.getMedicationHistory() == null) {
                 target.setMedicationHistory(new ArrayList<>());
             }
             viewPastMedications();
@@ -215,10 +215,10 @@ public class GUIDonorMedications implements IPopupable {
      * Adds an actionlistener to the text property of the medication search field and passes text
      * to getDrugSuggestions
      */
-    private void addActionListeners(){
+    private void addActionListeners() {
         TextWatcher textWatcher = new TextWatcher();
         newMedication.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.equals(oldValue)){
+            if (!newValue.equals(oldValue)) {
                 textWatcher.onTextChange(); //reset timer, user hasn't finished typing yet
             }
             if (itemSelected) {
@@ -238,7 +238,7 @@ public class GUIDonorMedications implements IPopupable {
     /**
      * Runs the updating of UI elements and API call
      */
-    public void autoComplete(){
+    public void autoComplete() {
         Platform.runLater(() -> { // run this on the FX thread (next available)
             getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread
             displayDrugSuggestions();//UPDATE UI
@@ -246,13 +246,14 @@ public class GUIDonorMedications implements IPopupable {
     }
 
     /**
-     *  Sets a list of suggestions given a partially matching string
+     * Sets a list of suggestions given a partially matching string
+     *
      * @param query - text to match drugs against
      */
-    private void getDrugSuggestions(String query){
+    private void getDrugSuggestions(String query) {
         APIHelper apiHelper = new APIHelper();
         try {
-           suggestions =  apiHelper.getMapiDrugSuggestions(query);
+            suggestions = apiHelper.getMapiDrugSuggestions(query);
         } catch (IOException exception) {
             suggestions = null;
             userActions.log(Level.WARNING, "Illegal characters in query");
@@ -262,12 +263,12 @@ public class GUIDonorMedications implements IPopupable {
     /**
      * Display the drug suggestions in the context menu
      */
-    private void displayDrugSuggestions(){
+    private void displayDrugSuggestions() {
         contextMenu.getItems().clear();
         List<String> suggestionArray = new ArrayList<>();
         suggestions.get("suggestions").getAsJsonArray().forEach((suggestion) -> suggestionArray.add(suggestion.getAsString()));
         Collections.shuffle(suggestionArray); //shuffle array so each time results are slightly different (to combat not being able to view all)
-        for (int i=0; i < 10 && i < suggestionArray.size(); i++) {
+        for (int i = 0; i < 10 && i < suggestionArray.size(); i++) {
             MenuItem item = createMenuItem(suggestionArray.get(i));
             contextMenu.getItems().add(item);
         }
@@ -276,10 +277,11 @@ public class GUIDonorMedications implements IPopupable {
 
     /**
      * Create menu items to display inside the context menu
+     *
      * @param suggestion - string to display inside the context menu
      * @return - menu item to be placed into the context menu
      */
-    private MenuItem createMenuItem(String suggestion){
+    private MenuItem createMenuItem(String suggestion) {
         Label menuLabel = new Label(suggestion);//create label with suggestion
         menuLabel.setPrefWidth(newMedication.getPrefWidth() - 30);
         menuLabel.setWrapText(true);
@@ -293,9 +295,10 @@ public class GUIDonorMedications implements IPopupable {
 
     /**
      * Sets the text field to the medication selected
+     *
      * @param selectedItem - string of the selected medication
      */
-    private void selectFromAutoComplete(String selectedItem){
+    private void selectFromAutoComplete(String selectedItem) {
         newMedication.setText(selectedItem);
         newMedication.requestFocus();
         newMedication.end(); //place cursor at end of text
@@ -310,7 +313,7 @@ public class GUIDonorMedications implements IPopupable {
         clearSelections();
         current = new ArrayList<>();
         target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
-        currentListProperty.set( FXCollections.observableArrayList(current));
+        currentListProperty.set(FXCollections.observableArrayList(current));
         currentMedications.itemsProperty().bind(currentListProperty);
     }
 
@@ -322,28 +325,29 @@ public class GUIDonorMedications implements IPopupable {
         clearSelections();
         history = new ArrayList<>();
         target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
-        historyListProperty.set( FXCollections.observableArrayList(history));
+        historyListProperty.set(FXCollections.observableArrayList(history));
         pastMedications.itemsProperty().bind(historyListProperty);
     }
 
     /**
      * Adds a new medication to the currentMedications ArrayList
      * Resets the currentMedications ListView to display the new medication
+     *
      * @param medication The selected medication being added to the current ArrayList and listView
      */
     private void addMedication(String medication) {
-        if (!medication.equals( "Enter medicine" ) && !medication.equals( "" ) && !medication.substring(0, 1).equals(" ")) {
+        if (!medication.equals("Enter medicine") && !medication.equals("") && !medication.substring(0, 1).equals(" ")) {
             medication = medication.substring(0, 1).toUpperCase() + medication.substring(1).toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
-                target.getCurrentMedications().add( new Medication(medication));
+                target.getCurrentMedications().add(new Medication(medication));
                 time = new Timestamp(System.currentTimeMillis());
                 medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now registered as current", medication + " has successfully been registered"));
                 logHistory.add(medLog.get(medLog.size() - 1));
                 viewCurrentMedications();
                 newMedication.clear();
             } else if (history.contains(medication) && !current.contains(medication)) {
-                moveToCurrent(new ArrayList<>(Collections.singleton( medication ) ));
+                moveToCurrent(new ArrayList<>(Collections.singleton(medication)));
                 newMedication.clear();
             } else {
                 time = new Timestamp(System.currentTimeMillis());
@@ -364,6 +368,7 @@ public class GUIDonorMedications implements IPopupable {
     /**
      * Removes a selected medication from the medicationHistory ArrayList
      * Resets the pastMedications ListView to display medicationHistory after the medication is removed
+     *
      * @param medications The selected medications being removed from the history ArrayList and listView
      */
     private void removeMedication(ArrayList<String> medications) {
@@ -379,14 +384,14 @@ public class GUIDonorMedications implements IPopupable {
      * Called when the user confirms the deletion of the selected medication(s) in the alert window.
      */
     private void performDelete(String medication) {
-        if (history.contains( medication )) {
-            target.getMedicationHistory().remove( history.indexOf( medication ) );
+        if (history.contains(medication)) {
+            target.getMedicationHistory().remove(history.indexOf(medication));
             time = new Timestamp(System.currentTimeMillis());
             medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from history list"));
             logHistory.add(medLog.get(medLog.size() - 1));
             viewPastMedications();
-        } else if (current.contains( medication )) {
-            target.getCurrentMedications().remove( current.indexOf( medication ) );
+        } else if (current.contains(medication)) {
+            target.getCurrentMedications().remove(current.indexOf(medication));
             time = new Timestamp(System.currentTimeMillis());
             medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from current list"));
             logHistory.add(medLog.get(medLog.size() - 1));
@@ -398,15 +403,16 @@ public class GUIDonorMedications implements IPopupable {
     /**
      * Removes a selected medication from currentMedications ArrayList and adds the medication to medicationHistory ArrayList
      * Updates the listViews for each of current and past medications to match the changes in the respective ArrayLists
+     *
      * @param medications The selected medications being moved from history to current ArrayLists and listViews
      */
     private void moveToCurrent(ArrayList<String> medications) {
         for (String medication : medications) {
-            if (history.contains( medication )) {
-                target.getMedicationHistory().remove( history.indexOf( medication ));
+            if (history.contains(medication)) {
+                target.getMedicationHistory().remove(history.indexOf(medication));
 
-                if (!current.contains( medication )) {
-                    target.getCurrentMedications().add( new Medication( medication )  );
+                if (!current.contains(medication)) {
+                    target.getCurrentMedications().add(new Medication(medication));
                     viewCurrentMedications();
                 }
                 time = new Timestamp(System.currentTimeMillis());
@@ -420,15 +426,16 @@ public class GUIDonorMedications implements IPopupable {
     /**
      * Removes a selected medication from medicationHistory ArrayList and adds the medication to currentMedications ArrayList
      * Updates the listViews for each of past and current medications to match the changes in the respective ArrayLists
+     *
      * @param medications The selected medications being moved from current to history ArrayLists and listViews
      */
     private void moveToHistory(ArrayList<String> medications) {
         for (String medication : medications) {
-            if (current.contains( medication )) {
-                target.getCurrentMedications().remove( current.indexOf( medication ));
+            if (current.contains(medication)) {
+                target.getCurrentMedications().remove(current.indexOf(medication));
 
-                if (!history.contains( medication )) {
-                    target.getMedicationHistory().add( new Medication( medication ) );
+                if (!history.contains(medication)) {
+                    target.getMedicationHistory().add(new Medication(medication));
                     viewPastMedications();
                 }
                 time = new Timestamp(System.currentTimeMillis());
@@ -442,18 +449,22 @@ public class GUIDonorMedications implements IPopupable {
     /**
      * Runs when an item is selected within a listView
      * If there is only one item, the function to load the ingredients for the selected medication is called
+     *
      * @param listView The listView of the selected item
      */
     private void onSelect(ListView listView) {
         if (listView.getSelectionModel().getSelectedItems().size() >= 1) {
             for (Object item : listView.getSelectionModel().getSelectedItems()) {
-                loadMedicationIngredients( item.toString() );
+                if (item != null) {
+                    loadMedicationIngredients(item.toString());
+                }
             }
         }
     }
 
     /**
      * Shifts an already existing ingredient/interaction listing entry to the top of the list
+     *
      * @param index The current index in the list of the already existing entry
      */
     private void moveToTopInformationList(int index) {
@@ -474,26 +485,26 @@ public class GUIDonorMedications implements IPopupable {
      * Fetches the ingredients from the APIHelper, then converts the results into a temporary list.
      * The list, after having a header included, is then added to existing listing of other medicine
      * ingredients and medicine interactions and passed to be bound to the listView
+     *
      * @param medication The medication to fetch the ingredients for
      */
     private void loadMedicationIngredients(String medication) {
         APIHelper helper = new APIHelper();
-        ArrayList <String> newIngredients = new ArrayList <>();
+        ArrayList<String> newIngredients = new ArrayList<>();
         Boolean hasIngredients = false;
 
-        if (!ingredients.contains( "Ingredients for '" + medication + "': " )) {
-            newIngredients.add( "Ingredients for '" + medication + "': " );
-
+        if (!ingredients.contains("Ingredients for '" + medication + "': ")) {
+            newIngredients.add("Ingredients for '" + medication + "': ");
             try {
                 if (medication.length() == 1) {
-                    getDrugSuggestions( medication );
+                    getDrugSuggestions(medication);
                 } else {
-                    getDrugSuggestions(Collections.max(new ArrayList <>(Arrays.asList( medication.split(" ")))));
+                    getDrugSuggestions(Collections.max(new ArrayList<>(Arrays.asList(medication.split(" ")))));
                 }
 
-                if (suggestions.get( "suggestions" ).toString().contains( medication )) {
-                    JsonArray response = helper.getMapiDrugIngredients( medication );
-                    response.forEach( ( element ) -> newIngredients.add( element.getAsString() ) );
+                if (suggestions.get("suggestions").toString().contains(medication)) {
+                    JsonArray response = helper.getMapiDrugIngredients(medication);
+                    response.forEach((element) -> newIngredients.add(element.getAsString()));
                     hasIngredients = true;
                 }
             } catch (IOException e) {
@@ -501,101 +512,16 @@ public class GUIDonorMedications implements IPopupable {
             }
 
             if (!hasIngredients) {
-                newIngredients.add( "There are no recorded ingredients for '" + medication + "'");
+                newIngredients.add("There are no recorded ingredients for '" + medication + "'");
             }
-            newIngredients.add( "" );
-            ingredients.addAll( 0, newIngredients );
+            newIngredients.add("");
+            ingredients.addAll(0, newIngredients);
         } else {
             int index = ingredients.indexOf("Ingredients for '" + medication + "': ");
             moveToTopInformationList(index);
         }
-        displayIngredients( ingredients );
+        displayIngredients(ingredients);
     }
-
-    /**
-     * Takes a string list of ingredients, and binds it to the medicineInformation listView to be displayed
-     * @param ingredients The List of ingredients
-     */
-    private void displayIngredients(List<String> ingredients) {
-        informationListProperty.set(FXCollections.observableList(ingredients));
-        medicineInformation.itemsProperty().bind(informationListProperty);
-    }
-
-    /**
-     * Runs when an item is selected within a listView
-     * If there is only one item, the function to load the ingredients for the selected medication is called
-     * @param listView The listView of the selected item
-     */
-    private void onSelect(ListView listView) {
-        if (listView.getSelectionModel().getSelectedItems().size() >= 1) {
-            for (Object item : listView.getSelectionModel().getSelectedItems()) {
-                if (item != null){
-                    loadMedicationIngredients( item.toString() );
-                }
-            }
-        }
-    }
-
-    /**
-     * Shifts an already existing ingredient/interaction listing entry to the top of the list
-     * @param index The current index in the list of the already existing entry
-     */
-    private void moveToTopInformationList(int index) {
-        String entry;
-
-        for (int i = index; index < ingredients.size(); i++) {
-            entry = ingredients.get(i);
-            ingredients.remove(i);
-            ingredients.add(i - index, entry);
-
-            if (entry.equals("")) {
-                break;
-            }
-        }
-    }
-
-    /**
-     * Fetches the ingredients from the APIHelper, then converts the results into a temporary list.
-     * The list, after having a header included, is then added to existing listing of other medicine
-     * ingredients and medicine interactions and passed to be bound to the listView
-     * @param medication The medication to fetch the ingredients for
-     */
-    private void loadMedicationIngredients(String medication) {
-        APIHelper helper = new APIHelper();
-        ArrayList <String> newIngredients = new ArrayList <>();
-        Boolean hasIngredients = false;
-
-        if (!ingredients.contains( "Ingredients for '" + medication + "': " )) {
-            newIngredients.add( "Ingredients for '" + medication + "': " );
-            try {
-                if (medication.length() == 1) {
-                    getDrugSuggestions( medication );
-                } else {
-                    getDrugSuggestions(Collections.max(new ArrayList <>(Arrays.asList( medication.split(" ")))));
-                }
-
-                if (suggestions.get( "suggestions" ).toString().contains( medication )) {
-                    JsonArray response = helper.getMapiDrugIngredients( medication );
-                    response.forEach( ( element ) -> newIngredients.add( element.getAsString() ) );
-                    hasIngredients = true;
-                }
-            } catch (IOException e) {
-                hasIngredients = false;
-            }
-
-            if (!hasIngredients) {
-                newIngredients.add( "There are no recorded ingredients for '" + medication + "'");
-            }
-            newIngredients.add( "" );
-            ingredients.addAll( 0, newIngredients );
-        } else {
-            int index = ingredients.indexOf("Ingredients for '" + medication + "': ");
-            moveToTopInformationList(index);
-        }
-        displayIngredients( ingredients );
-    }
-
-
 
 
     /**
@@ -606,8 +532,8 @@ public class GUIDonorMedications implements IPopupable {
         ingredients.clear();
         ingredients.add("Interactions for " + drugOne + " & " + drugTwo);
         ingredients.add("");
-        for (String key : keys ){
-            interactions.get(key).forEach( (interaction) ->
+        for (String key : keys) {
+            interactions.get(key).forEach((interaction) ->
                     ingredients.add(interaction.replace("\"", "") + "  (" + key + ")"));
         }
         displayIngredients(ingredients);
@@ -620,15 +546,15 @@ public class GUIDonorMedications implements IPopupable {
     @FXML
     public void reviewInteractions() {
         Alert alert = new Alert(Alert.AlertType.WARNING, "Drug interactions not available. Please select 2 medications.");
-        ArrayList<String> selectedMedications = new ArrayList<String>(){{
+        ArrayList<String> selectedMedications = new ArrayList<String>() {{
             addAll(currentMedications.getSelectionModel().getSelectedItems());
             addAll(pastMedications.getSelectionModel().getSelectedItems());
         }};
-        if ( selectedMedications.size()  == 2){ //if two are selected
+        if (selectedMedications.size() == 2) { //if two are selected
             try {
                 DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1));
                 displayInteractions(interaction.getInteractionsWithDurations(), selectedMedications.get(0), selectedMedications.get(1));
-            } catch (IOException e ){
+            } catch (IOException e) {
                 alert.setContentText("Drug interactions not available, either this study has not been completed or" +
                         " drugs provided don't exist.");
                 alert.show();
@@ -639,10 +565,9 @@ public class GUIDonorMedications implements IPopupable {
     }
 
 
-
-
     /**
      * Takes a string list of ingredients, and binds it to the medicineInformation listView to be displayed
+     *
      * @param ingredients The List of ingredients
      */
     private void displayIngredients(List<String> ingredients) {
@@ -656,12 +581,12 @@ public class GUIDonorMedications implements IPopupable {
      */
     @FXML
     public void goToProfile() {
-        if (ScreenControl.getLoggedInDonor() != null ) {
+        if (ScreenControl.getLoggedInDonor() != null) {
             ScreenControl.removeScreen("donorProfile");
             try {
                 ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
                 ScreenControl.activate("donorProfile");
-            }catch (IOException e) {
+            } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the medication page to the profile page");
                 new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
             }
@@ -692,6 +617,6 @@ public class GUIDonorMedications implements IPopupable {
     @FXML
     public void refreshReview() {
         ingredients = new ArrayList<>();
-        displayIngredients( ingredients );
+        displayIngredients(ingredients);
     }
 }
