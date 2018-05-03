@@ -124,7 +124,7 @@ public class GUIDonorMedications implements IPopupable {
     public void saveMedication() {
         medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), "Medications are now saved", "Medications has been saved"));
         logHistory.add(medLog.get(medLog.size() - 1));
-        Alert save = new Alert(Alert.AlertType.CONFIRMATION, "Medication(s) have been successfully saved");
+        Alert save = new Alert(Alert.AlertType.INFORMATION, "Medication(s) have been successfully saved");
         final Button dialogOK = (Button) save.getDialogPane().lookupButton(ButtonType.OK);
         dialogOK.addEventFilter(ActionEvent.ACTION, event -> saveToDisk());// Save to .json the changes made to medications
         save.show();
