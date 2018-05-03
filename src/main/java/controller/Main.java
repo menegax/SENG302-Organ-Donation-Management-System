@@ -20,9 +20,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-
 public class Main extends Application {
 
     @Override

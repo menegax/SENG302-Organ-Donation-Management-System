@@ -21,13 +21,13 @@ public class ScreenControl {
 
     public static Donor donor;
 
+
     public static Clinician clinician;
 
 
-    static void setLoggedInDonor(Donor newDonor) {
+    public static void setLoggedInDonor(Donor newDonor) {
         donor = newDonor;
     }
-
 
     public static Donor getLoggedInDonor() {
         return donor;

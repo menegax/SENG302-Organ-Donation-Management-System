@@ -41,6 +41,7 @@
 }
 
 .listViewTitles {
+    -fx-font-style: italic;
     -fx-font-size: 16px;
 }
 
@@ -82,6 +83,5 @@
     -fx-scale-x: 0.65;
     -fx-scale-y: 0.65;
 }
-
 
 
