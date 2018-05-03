@@ -130,6 +130,9 @@ public class GUIDonorMedications implements IPopupable {
         clearSelections();
     }
 
+    /**
+     * Saves medication log to disk
+     */
     private void saveToDisk() {
         if (target.getMedicationLog() != null) {
             ObservableList<UserActionRecord> log = target.getMedicationLog();
@@ -191,6 +194,10 @@ public class GUIDonorMedications implements IPopupable {
         }
     }
 
+    /**
+     * Loads the current medications and history medications of the patient
+     * @param nhi of the patient
+     */
     public void loadProfile(String nhi) {
         try {
             target = Database.getDonorByNhi(nhi);
