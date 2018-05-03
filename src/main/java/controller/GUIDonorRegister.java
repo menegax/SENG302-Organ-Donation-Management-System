@@ -188,8 +188,8 @@ public class GUIDonorRegister {
             try {
                 addDonorGui();
                 clearFields();
-                Alert confirm = new Alert(Alert.AlertType.INFORMATION, "Successfully registered!");
-                confirm.show();
+                Alert info = new Alert(Alert.AlertType.INFORMATION, "Successfully registered!");
+                info.show();
                 Database.saveToDisk();
                 ScreenControl.activate("login");
             }

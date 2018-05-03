@@ -337,7 +337,7 @@ public class GUIDonorUpdateContacts implements IPopupable {
             Database.saveToDisk();
             goToProfile();
         } else {
-            new Alert(Alert.AlertType.CONFIRMATION, "Invalid fields", ButtonType.OK).show();
+            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }
     }
 }
