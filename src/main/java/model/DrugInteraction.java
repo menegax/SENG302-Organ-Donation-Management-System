@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 public class DrugInteraction {
 
     private JsonObject response;
+
     private static Donor viewedDonor;
 
     public static void setViewedDonor(Donor donor) { viewedDonor = donor; }

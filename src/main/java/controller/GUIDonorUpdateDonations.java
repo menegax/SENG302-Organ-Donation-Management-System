@@ -182,75 +182,122 @@ public class GUIDonorUpdateDonations implements IPopupable {
     public void saveDonations() {
         if (liverCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.LIVER);
+            userActions.log(Level.INFO, "Added liver to donor donations", "Attempted to add donation to a donor");
         }
         else {
             target.removeDonation(GlobalEnums.Organ.LIVER);
+            userActions.log(Level.INFO, "Removed liver from donor donations", "Attempted to remove donation from a donor");
+
         }
         if (kidneyCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.KIDNEY);
+            userActions.log(Level.INFO, "Added kidney to donor donations", "Attempted to add donation to a donor");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.KIDNEY);
+            userActions.log(Level.INFO, "Removed kidney from donor donations", "Attempted to remove donation from a donor");
+
         }
         if (pancreasCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.PANCREAS);
+            userActions.log(Level.INFO, "Added pancreas to donor donations", "Attempted to add donation to a donor");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.PANCREAS);
+            userActions.log(Level.INFO, "Removed pancreas from donor donations", "Attempted to remove donation from a donor");
+
         }
         if (heartCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.HEART);
+            userActions.log(Level.INFO, "Added heart to donor donations", "Attempted to add donation to a donor");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.HEART);
+            userActions.log(Level.INFO, "Removed heart from donor donations", "Attempted to remove donation from a donor");
+
         }
         if (lungCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.LUNG);
+            userActions.log(Level.INFO, "Added lung to donor donations", "Attempted to add donation to a donor");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.LUNG);
+            userActions.log(Level.INFO, "Removed lung from donor donations", "Attempted to remove donation from a donor");
+
         }
         if (intestineCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.INTESTINE);
+            userActions.log(Level.INFO, "Added intestine to donor donations", "Attempted to add donation to a donor");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.INTESTINE);
+            userActions.log(Level.INFO, "Removed intestine from donor donations", "Attempted to remove donation from a donor");
+
         }
         if (corneaCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.CORNEA);
+            userActions.log(Level.INFO, "Added cornea to donor donations", "Attempted to add donation to a donor");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.CORNEA);
+            userActions.log(Level.INFO, "Removed cornea from donor donations", "Attempted to remove donation from a donor");
+
         }
         if (middleearCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.MIDDLEEAR);
+            userActions.log(Level.INFO, "Added middle ear to donor donations", "Attempted to add donation to a donor");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.MIDDLEEAR);
+            userActions.log(Level.INFO, "Removed middle ear from donor donations", "Attempted to remove donation from a donor");
+
         }
         if (skinCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.SKIN);
+            userActions.log(Level.INFO, "Added skin to donor donations", "Attempted to add donation to a donor");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.SKIN);
+            userActions.log(Level.INFO, "Removed skin from donor donations", "Attempted to remove donation from a donor");
+
         }
         if (boneCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.BONE);
+            userActions.log(Level.INFO, "Added bone to donor donations", "Attempted to add donation to a donor");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.BONE);
+            userActions.log(Level.INFO, "Removed bone from donor donations", "Attempted to remove donation from a donor");
+
         }
         if (bonemarrowCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.BONE_MARROW);
+            userActions.log(Level.INFO, "Added bone marrow to donor donations", "Attempted to add donation to a donor");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.BONE_MARROW);
+            userActions.log(Level.INFO, "Removed bone marrow from donor donations", "Attempted to remove donation from a donor");
+
         }
         if (connectivetissueCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
+            userActions.log(Level.INFO, "Added connective tissue to donor donations", "Attempted to add donation to a donor");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
+            userActions.log(Level.INFO, "Removed connective tissue from donor donations", "Attempted to remove donation from a donor");
+
         }
         Database.saveToDisk();
         goToProfile();

@@ -202,10 +202,11 @@ public class GUIClinicianProfileUpdate {
             if (suburbTxt.getText().length() > 0) target.setSuburb(suburbTxt.getText());
             target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel().getSelectedItem().toString()));
             target.clinicianModified();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Clinician successfully updated", ButtonType.OK);
-            final Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
-            dialogOK.addEventFilter(ActionEvent.ACTION, event -> goBackToProfile());
-            alert.show();
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Clinician successfully updated", ButtonType.OK);
+//            final Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+//            dialogOK.addEventFilter(ActionEvent.ACTION, event -> goBackToProfile());
+//            alert.show();
+            goBackToProfile();
         } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }
