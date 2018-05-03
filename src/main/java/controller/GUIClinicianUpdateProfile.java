@@ -26,7 +26,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller class to control GUI Clinician updating screen.
  */
-public class GUIClinicianProfileUpdate {
+public class GUIClinicianUpdateProfile {
 
     @FXML
     public AnchorPane clinicianUpdateAnchorPane;
