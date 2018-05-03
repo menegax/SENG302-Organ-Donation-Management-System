@@ -2,6 +2,12 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.layout.AnchorPane;
+
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 
@@ -20,11 +26,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import model.Clinician;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.layout.AnchorPane;
 import model.Donor;
 import service.Database;
 
@@ -101,13 +102,11 @@ public class GUILogin {
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
                 alert.show();
-                e.printStackTrace(); //TODO:
             }
             catch (IOException e) {
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
-                e.printStackTrace();//TODO:
             }
         }
         else {

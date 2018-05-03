@@ -1,11 +1,12 @@
 package api;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
 import org.apache.http.client.fluent.Request;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 
 public class APIHelper {
 
@@ -55,4 +56,23 @@ public class APIHelper {
     public JsonArray getMapiDrugIngredients(String medicationString) throws IOException {
         return getApiResponseAsArray("http://mapi-us.iterar.co/api/" + medicationString + "/substances.json");
     }
+
+    /**
+     * Builds API query and gets the response as a json object
+     * @param drugOne - Drug to be compared with when getting interactions
+     * @param drugTwo - Drug to be compared with when getting interactions
+     * @return - JsonObject
+     * @throws IOException -
+     */
+    public JsonObject getDrugInteractions(String drugOne, String drugTwo) throws IOException{
+        drugOne = drugOne.replaceAll("[^a-zA-Z0-9]", "");
+        drugTwo = drugTwo.replaceAll("[^a-zA-Z0-9]", "");
+        try {
+            return getApiResponse(String.format("https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/", drugOne, drugTwo));
+        } catch (IOException e) { //make a second API call be this is literally the worst API ever (like really)
+            return getApiResponse(String.format("https://www.ehealthme.com/api/v1/drug-interaction/%s/%s/", drugTwo, drugOne));
+        }
+
+    }
+
 }

@@ -5,22 +5,11 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Control;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import model.Donor;
-import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,12 +20,6 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 public class GUIDonorRegister {
-
-    @FXML
-    public AnchorPane pane;
-    public AnchorPane registerPane;
-
-    public Label backLabel;
 
     public Button doneButton;
 
@@ -199,8 +182,8 @@ public class GUIDonorRegister {
             try {
                 addDonorGui();
                 clearFields();
-                Alert confirm = new Alert(Alert.AlertType.INFORMATION, "Successfully registered!");
-                confirm.show();
+                Alert info = new Alert(Alert.AlertType.INFORMATION, "Successfully registered!");
+                info.show();
                 Database.saveToDisk();
                 ScreenControl.activate("login");
             }
