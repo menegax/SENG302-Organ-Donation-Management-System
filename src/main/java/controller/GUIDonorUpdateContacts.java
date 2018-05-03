@@ -219,7 +219,7 @@ public class GUIDonorUpdateContacts implements IPopupable {
         } else {
             valid = setInvalid(workPhoneField);
         }
-        if (!(emailAddressField.getText().equals("")) && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
+        if (emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
             target.setEmailAddress(emailAddressField.getText());
             setValid(emailAddressField);
         } else if(emailAddressField.getText().equals("")) {
@@ -228,7 +228,7 @@ public class GUIDonorUpdateContacts implements IPopupable {
         } else {
             valid = setInvalid(emailAddressField);
         }
-        if (!(contactRelationshipField.getText().equals(""))) {
+        if (contactRelationshipField.getText().matches("([A-Za-z]+[\\s]*)*")) {
             target.setContactRelationship(contactRelationshipField.getText());
             setValid(contactRelationshipField);
         } else if(contactRelationshipField.getText().equals("")) {
@@ -237,7 +237,7 @@ public class GUIDonorUpdateContacts implements IPopupable {
         } else {
             valid = setInvalid(contactRelationshipField);
         }
-        if (!(contactNameField.getText().equals(""))) {
+        if (contactNameField.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
             target.setContactName(contactNameField.getText());
             setValid(contactNameField);
         } else if(contactNameField.getText().equals("")) {
@@ -273,7 +273,7 @@ public class GUIDonorUpdateContacts implements IPopupable {
         } else {
             valid = setInvalid(contactWorkPhoneField);
         }
-        if (!(contactEmailAddressField.getText().equals("") && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+"))) {
+        if (contactEmailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
             target.setContactEmailAddress(contactEmailAddressField.getText());
             setValid(contactEmailAddressField);
         } else if(contactEmailAddressField.getText().equals("")) {
