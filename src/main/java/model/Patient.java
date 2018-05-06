@@ -85,9 +85,7 @@ public class Patient {
 
     private String contactEmailAddress;
 
-    //private HashMap<Timestamp, ArrayList<String>> medicationLog;
-
-    private ArrayList<String> medicationLog;
+    private ArrayList<String> patientLog;
 
     public Patient(String nhiNumber, String firstName,
                    ArrayList<String> middleNames, String lastName, LocalDate date) {
@@ -689,22 +687,17 @@ public class Patient {
      * Returns a converted medication log ArrayList to a UserActionRecord OberservableList
      * @return The medication log as a UserActionRecord ObservableList
      */
-    public ObservableList<UserActionRecord> getMedicationLog() {
+    public ObservableList<UserActionRecord> getPatientLog() {
         ObservableList<UserActionRecord> currentLog = FXCollections.observableArrayList();
         String time = null, level = null, message = null, action;
 
-        if (this.medicationLog != null) {
-            for (int i = 0; i < medicationLog.size(); i++) {
-                if (i % 4 == 0) {
-                    time = medicationLog.get(i);
-                } else if (i % 4 == 1) {
-                    level = medicationLog.get(i);
-                } else if (i % 4 == 2) {
-                    message = medicationLog.get(i);
-                } else {
-                    action = medicationLog.get(i);
-                    currentLog.add(new UserActionRecord( time, level, message, action ) );
-                }
+        if (this.patientLog != null) {
+            for (int i = 0; i < patientLog.size(); i++) {
+                time = patientLog.get(i++);
+                level = patientLog.get(i++);
+                message = patientLog.get(i++);
+                action = patientLog.get(i);
+                currentLog.add(0, new UserActionRecord( time, level, message, action ) );
             }
         } else {
             return null;
@@ -725,7 +718,7 @@ public class Patient {
             newLog.add(record.getMessage());
             newLog.add(record.getAction());
         }
-        this.medicationLog = newLog;
+        this.patientLog = newLog;
     }
 
     private void patientModified() {
