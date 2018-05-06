@@ -23,13 +23,10 @@ import utility.UserActionRecord;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.sql.Timestamp;
-import java.sql.Timestamp;
 import java.util.*;
 import javafx.geometry.Side;
 import service.TextWatcher;
-import utility.undoRedo.StatesHistoryScreen;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -42,9 +39,13 @@ public class GUIDonorMedications implements IPopupable {
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
     private ObservableList<UserActionRecord> medLog = FXCollections.observableArrayList();
+    private ListProperty<String> informationListProperty = new SimpleListProperty<>();
+    private StatesHistoryScreen stateHistoryScreen;
+    private ArrayList<String> ingredients;
     private ArrayList<String> current;
     private ArrayList<String> history;
     private Timestamp time;
+    private Donor viewedDonor;
     private Donor target;
 
     @FXML
@@ -88,20 +89,26 @@ public class GUIDonorMedications implements IPopupable {
     @FXML
     private ListView<String> medicineInformation;
 
-    private Donor viewedDonor;
-
-    private StatesHistoryScreen stateHistoryScreen;
-
+    /**
+     * Gets the NHI number for the patient being reviewed by a clinician and loads patient data
+     * @param donor The patient beig reviewed by the clinician
+     */
     public void setViewedDonor(Donor donor) {
         viewedDonor = donor;
         loadProfile(viewedDonor.getNhiNumber());
     }
 
+    /**
+     * Goes back one edit if any editing has been conducted
+     */
     @FXML
     public void undo() {
         stateHistoryScreen.undo();
     }
 
+    /**
+     * Goes forward one edit if editing had been undone at least once
+     */
     @FXML
     public void redo() {
         stateHistoryScreen.redo();
@@ -122,6 +129,7 @@ public class GUIDonorMedications implements IPopupable {
      */
     @FXML
     public void saveMedication() {
+        time = new Timestamp(System.currentTimeMillis());
         medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), "Medications are now saved", "Medications has been saved"));
         logHistory.add(medLog.get(medLog.size() - 1));
         Alert save = new Alert(Alert.AlertType.INFORMATION, "Medication(s) have been successfully saved");
@@ -131,9 +139,12 @@ public class GUIDonorMedications implements IPopupable {
         clearSelections();
     }
 
+    /**
+     * Saves the current state of the logged-in patient data to the patient.json file
+     */
     private void saveToDisk() {
-        if (target.getMedicationLog() != null) {
-            ObservableList<UserActionRecord> log = target.getMedicationLog();
+        if (target.getPatientLog() != null) {
+            ObservableList<UserActionRecord> log = target.getPatientLog();
             log.addAll(medLog);
             target.setMedicationLog(log);
         } else {
@@ -175,9 +186,9 @@ public class GUIDonorMedications implements IPopupable {
         addMedication(newMedication.getText());
     }
 
-    private ListProperty<String> informationListProperty = new SimpleListProperty<>();
-    private ArrayList<String> ingredients;
-
+    /**
+     * Initializes the Medication GUI pane, adds any medications stored for donor to current and past listViews
+     */
     @FXML
     public void initialize() {
         //Register events for when an item is selected from a listView and set selection mode to multiple
@@ -193,7 +204,11 @@ public class GUIDonorMedications implements IPopupable {
         }
     }
 
-    public void loadProfile(String nhi) {
+    /**
+     * Loads the donor medication GUI pane with all logged-in patient medication data listed in listViews
+     * @param nhi The NHI number of the logged-in patient
+     */
+    private void loadProfile(String nhi) {
         try {
             target = Database.getDonorByNhi(nhi);
 
@@ -213,10 +228,9 @@ public class GUIDonorMedications implements IPopupable {
         }
     }
 
-
     /**
      * Sets a list of suggestions given a partially matching string
-     * Adds an actionlistener to the text property of the medication search field and passes text
+     * Adds an action listener to the text property of the medication search field and passes text
      * to getDrugSuggestions
      */
     private void addActionListeners(){
@@ -233,7 +247,7 @@ public class GUIDonorMedications implements IPopupable {
                     textWatcher.afterTextChange(GUIDonorMedications.class.getMethod("autoComplete"), this); //start timer
 
                 } catch (NoSuchMethodException e) {
-                    userActions.log(Level.SEVERE, e.getMessage());
+                    userActions.log(Level.SEVERE, e.getMessage()); // MAJOR ISSUE HERE!
                 }
             }
         });
@@ -242,7 +256,7 @@ public class GUIDonorMedications implements IPopupable {
     /**
      * Runs the updating of UI elements and API call
      */
-    public void autoComplete(){
+    private void autoComplete(){
         Platform.runLater(() -> { // run this on the FX thread (next available)
             getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread
             displayDrugSuggestions();//UPDATE UI
@@ -250,7 +264,7 @@ public class GUIDonorMedications implements IPopupable {
     }
 
     /**
-     *  Sets a list of suggestions given a partially matching string
+     * Sets a list of suggestions given a partially matching string
      * @param query - text to match drugs against
      */
     private void getDrugSuggestions(String query){
@@ -516,9 +530,6 @@ public class GUIDonorMedications implements IPopupable {
         displayIngredients( ingredients );
     }
 
-
-
-
     /**
      * When activated displays the interactions between the two most recently selected medications
      */
@@ -533,7 +544,6 @@ public class GUIDonorMedications implements IPopupable {
         }
         displayIngredients(ingredients);
     }
-
 
     /**
      * When activated displays the interactions between the two most recently selected medications
@@ -558,9 +568,6 @@ public class GUIDonorMedications implements IPopupable {
             alert.show();
         }
     }
-
-
-
 
     /**
      * Takes a string list of ingredients, and binds it to the medicineInformation listView to be displayed
@@ -611,7 +618,7 @@ public class GUIDonorMedications implements IPopupable {
      * Button for clearing the information being currently displayed on the medicine information ListView on activation
      */
     @FXML
-    public void refreshReview() {
+    private void refreshReview() {
         ingredients = new ArrayList<>();
         displayIngredients( ingredients );
     }

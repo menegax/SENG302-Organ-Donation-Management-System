@@ -93,8 +93,8 @@ public class GUILogin {
                 ScreenControl.activate("donorHome");
                 ScreenControl.addScreen("donorHistory", FXMLLoader.load(getClass().getResource("/scene/donorHistory.fxml")));
                 ScreenControl.activate("donorHome");
-                if (newDonor.getMedicationLog() != null) {
-                    logHistory.addAll( newDonor.getMedicationLog() ); // adds medication log from previous log-ins for user
+                if (newDonor.getPatientLog() != null) {
+                    logHistory.addAll( newDonor.getPatientLog() ); // adds medication log from previous log-ins for user
                 }
             }
             catch (InvalidObjectException e) {
