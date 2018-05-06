@@ -5,7 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Clinician;
-import model.Donor;
+import model.Patient;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,18 +19,18 @@ public class ScreenControl {
     private static Scene main;
 
 
-    public static Donor donor;
+    public static Patient patient;
 
 
     public static Clinician clinician;
 
 
-    public static void setLoggedInDonor(Donor newDonor) {
-        donor = newDonor;
+    public static void setLoggedInPatient(Patient newPatient) {
+        patient = newPatient;
     }
 
-    public static Donor getLoggedInDonor() {
-        return donor;
+    public static Patient getLoggedInPatient() {
+        return patient;
     }
 
     public static Scene getMain() {
@@ -96,17 +96,17 @@ public class ScreenControl {
     }
 
     /**
-     * Switches panes within a popup window, while passing along the current viewed donor
+     * Switches panes within a popup window, while passing along the current viewed patient
      *
      * @param scene      The scene to load the new pane into
      * @param fxmlLoader The fxmlLoader for the new pane
-     * @param donor      The donor to pass to the next pane
+     * @param patient      The patient to pass to the next pane
      * @throws IOException If the pane fails to load
      */
-    static void loadPopUpPane(Scene scene, FXMLLoader fxmlLoader, Donor donor) throws IOException {
+    static void loadPopUpPane(Scene scene, FXMLLoader fxmlLoader, Patient patient) throws IOException {
         scene.setRoot(fxmlLoader.load());
         IPopupable controller = fxmlLoader.getController();
-        controller.setViewedDonor(donor);
+        controller.setViewedPatient(patient);
     }
 
     /**

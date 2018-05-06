@@ -23,15 +23,15 @@ The decision was made to maintain one large global enumerations class in a separ
 JodaTime will be used for dates and times (i.e. DateTime and LocalDate), not the native Java Date class from utils.
 
 #### Donor Unique ID
-In order to satisfy story number 43, the user must be able to search for a particular donor and receive one search result. 
+In order to satisfy story number 43, the user must be able to search for a particular patient and receive one search result. 
 This requires a unique search term to be entered such that duplicates are not returned. 
 
-* we have decided to use a donor's IRD number to distinguish one donor from another, whom have colliding names.
-* we will check for uniqueness within our application by checking if a donor with the IRD already exists. If it already exists an exception is thrown to tell the user this.
-* if there an IRD is entered but there is a collision (i.e another donor has the incorrect IRD) then the incorrect IRD will need to updated before adding the new donor
+* we have decided to use a patient's IRD number to distinguish one patient from another, whom have colliding names.
+* we will check for uniqueness within our application by checking if a patient with the IRD already exists. If it already exists an exception is thrown to tell the user this.
+* if there an IRD is entered but there is a collision (i.e another patient has the incorrect IRD) then the incorrect IRD will need to updated before adding the new patient
 
 #### CLI Subcommand Limit
-We have decided that the maximum level of subcommands is three i.e. `donor update donations --option`
+We have decided that the maximum level of subcommands is three i.e. `patient update donations --option`
 
 #### Gson Library
 We've decided to use Gson library for parsing json files. This will be used for saving data to .json and importing data from .json.
@@ -63,7 +63,7 @@ JNativeHook captured keypress events on a global level (Even if the terminal did
 creating functionality in which the keypress events would 'navigate' through that list and fill out the terminal command line. 
 
 #### IRD -> NHI Transition
-We decided to change form using IRD as the identifier of a donor to the NHI number. The IRD number is thus no longer used. The reason behind this is that it makes
+We decided to change form using IRD as the identifier of a patient to the NHI number. The IRD number is thus no longer used. The reason behind this is that it makes
 more sense in the context of a health app, and users may feel more comfortable provided a NHI number instead of an IRD number due to NHI's association with health rather than tax and finance.
 
 #### Logging and System Print Messages
@@ -81,7 +81,7 @@ goToScreen() can be used as a method name only if the only code inside the metho
 See the GUIDonorRegister class for examples of goToLogin() and register()
 
 #### User Action History
-All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new donor would not be logged either.
+All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new patient would not be logged either.
 
 ## Sprint 3
 26th March to the 3rd of May

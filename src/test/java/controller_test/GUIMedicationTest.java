@@ -7,7 +7,7 @@
 //import javafx.scene.control.*;
 //import javafx.stage.Stage;
 //import javafx.stage.Window;
-//import model.Donor;
+//import model.Patient;
 //import org.assertj.core.api.Assertions;
 //import org.junit.After;
 //import org.junit.Before;
@@ -30,7 +30,7 @@
 //public class GUIMedicationTest extends ApplicationTest {
 //
 //    private Main main = new Main();
-//    private Donor target;
+//    private Patient target;
 //    private Stage mainStage;
 //
 //    @Override
@@ -40,7 +40,7 @@
 //        mainStage = stage;
 //        ArrayList<String> middle = new ArrayList<>();
 //        middle.add("Middle");
-//        Database.addDonor(new Donor("TFX9999", "Joe", middle, "Bloggs", LocalDate.of(1990, 2, 9)));
+//        Database.addDonor(new Patient("TFX9999", "Joe", middle, "Bloggs", LocalDate.of(1990, 2, 9)));
 //        target = Database.getDonorByNhi("TFX9999");
 //    }
 //
@@ -742,7 +742,7 @@
 //    }
 //
 ////    /**
-////     * Tests that medications save when Donor data is saved - does not test exact implementation just yet
+////     * Tests that medications save when Patient data is saved - does not test exact implementation just yet
 ////     */
 ////    @Test
 ////    public void testMedicationSaving() {
@@ -775,7 +775,7 @@
 ////        // Verify that the pastMedications listView is still empty as no medication has been registered to it
 ////        verifyThat( "#pastMedications", ListViewMatchers.isEmpty() );
 ////
-////        // Saves the Donor data to .json file
+////        // Saves the Patient data to .json file
 ////        interact( () -> {
 ////            lookup( "#saveMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
 ////        } );
@@ -820,7 +820,7 @@
 ////        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 ////
 ////        // Load the saved data from the .json file
-////        Database.importFromDisk( "./donor.json" );
+////        Database.importFromDisk( "./patient.json" );
 ////
 ////        verifyThat( "#medicationPane", Node::isVisible ); // Verify "user" is in medication panel
 ////
@@ -883,7 +883,7 @@
 ////        // Verify that the medication entry text field is empty prior to entering a new medication for registration
 ////        verifyThat( "#newMedication", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 ////
-////        // Removes the donor medication save from .json file
+////        // Removes the patient medication save from .json file
 ////        interact( () -> {
 ////            lookup( "#saveMed" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
 ////        } );
