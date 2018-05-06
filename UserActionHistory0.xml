@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-07T10:40:02</date>
+  <millis>1525646402391</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-07T10:40:02</date>
+  <millis>1525646402599</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-07T10:40:02</date>
+  <millis>1525646402601</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-07T10:40:02</date>
+  <millis>1525646402997</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-07T10:40:03</date>
+  <millis>1525646403288</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>

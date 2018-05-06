@@ -4,7 +4,6 @@ import api.APIHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import controller.ScreenControl;
 import utility.GlobalEnums.Gender;
 
 import java.io.IOException;
@@ -16,9 +15,9 @@ public class DrugInteraction {
 
     private JsonObject response;
 
-    private static Donor viewedDonor;
+    private static Patient viewedPatient;
 
-    public static void setViewedDonor(Donor donor) { viewedDonor = donor; }
+    public static void setViewedPatient(Patient patient) { viewedPatient = patient; }
 
     /**
      * Makes a call to the API and records the response
@@ -33,20 +32,20 @@ public class DrugInteraction {
 
 
     /**
-     *  Get interactions based on age and gender of the donor
+     *  Get interactions based on age and gender of the patient
      * @return - set of interactions between the two drugs
      */
     private Set<String> getInteractionsAgeGender(){
         Set<String> allInteractions = new HashSet<>();
-        Donor donor = viewedDonor;
-        int donorAge = donor.getAge();
-        Gender donorGender = donor.getGender() != Gender.FEMALE &&
-                             donor.getGender() != Gender.MALE
-                             && donor.getGender() != Gender.OTHER
-                             ? Gender.OTHER : donor.getGender();
+        Patient patient = viewedPatient;
+        int donorAge = patient.getAge();
+        Gender donorGender = patient.getGender() != Gender.FEMALE &&
+                             patient.getGender() != Gender.MALE
+                             && patient.getGender() != Gender.OTHER
+                             ? Gender.OTHER : patient.getGender();
 
         JsonArray interactionsAgeGroup = getAgeInteractionsHelper(donorAge);
-        JsonArray genderInteractions = getGenderInteractionsHelper(donorGender); //if donor gender is null, treat is as other
+        JsonArray genderInteractions = getGenderInteractionsHelper(donorGender); //if patient gender is null, treat is as other
         if (genderInteractions != null) {
             genderInteractions.forEach((jsonElement -> allInteractions.add(jsonElement.getAsString())));
         }
@@ -60,7 +59,7 @@ public class DrugInteraction {
 
     /**
      * Helper method to get the interactions based on the donors age
-     * @param donorAge - age of the donor
+     * @param donorAge - age of the patient
      * @return - JSONArray of the interactions for the given age
      */
     public JsonArray getAgeInteractionsHelper(int donorAge){
@@ -68,8 +67,8 @@ public class DrugInteraction {
         Set<String> ageSets = ageInteraction.getAsJsonObject().keySet(); //get age sets
         JsonArray interactionsAgeGroup = new JsonArray();
         for (String ageSet: ageSets) {
-            if (inAgeGroup(donorAge, ageSet)){ //check what age group the donor is in
-                interactionsAgeGroup = ageInteraction.getAsJsonObject().get(ageSet).getAsJsonArray(); //find which age group the current donor is in
+            if (inAgeGroup(donorAge, ageSet)){ //check what age group the patient is in
+                interactionsAgeGroup = ageInteraction.getAsJsonObject().get(ageSet).getAsJsonArray(); //find which age group the current patient is in
                 break;
             }
         }
@@ -78,9 +77,9 @@ public class DrugInteraction {
 
 
     /**
-     *  Helper method to determine the gender interaction of the donor
-     * @param donorGender - Gender of the donor
-     * @return - interactions based on the gender of the donor
+     *  Helper method to determine the gender interaction of the patient
+     * @param donorGender - Gender of the patient
+     * @return - interactions based on the gender of the patient
      */
     public JsonArray getGenderInteractionsHelper(Gender donorGender) {
         JsonElement genderInteractions = donorGender != Gender.OTHER ?
@@ -99,8 +98,8 @@ public class DrugInteraction {
     }
 
     /**
-     * Checks if the donor is within a given age group
-     * @param donorAge - Age of the donor
+     * Checks if the patient is within a given age group
+     * @param donorAge - Age of the patient
      * @param ageSet - Age set e.g. "10-19"
      * @return - boolean
      */
@@ -114,7 +113,7 @@ public class DrugInteraction {
         if (matches.size() == 1 && donorAge >= matches.get(0)) { //60+
             return true;
         }
-        if (matches.size() == 0) { // no match found for the donor age
+        if (matches.size() == 0) { // no match found for the patient age
             return false;
         } else {
             return (donorAge >= matches.get(0) && donorAge <= matches.get(1)); //all other age groups
