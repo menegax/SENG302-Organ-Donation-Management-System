@@ -90,8 +90,6 @@ public class GUIPatientMedications implements IPopupable {
 
     private Patient viewedPatient;
 
-    private StatesHistoryScreen stateHistoryScreen;
-
     public void setViewedPatient(Patient patient) {
         viewedPatient = patient;
         loadProfile(viewedPatient.getNhiNumber());
