@@ -29,14 +29,15 @@ public class Database {
      *
      * @param newPatient the new patient to add
      */
-    public static void addPatient(Patient newPatient) {
+    public static void addPatient(Patient newPatient) throws IllegalArgumentException {
         try {
             newPatient.ensureValidNhi();
             newPatient.ensureUniqueNhi();
             patients.add(newPatient);
             SearchPatients.addIndex(newPatient);
-            userActions.log(Level.INFO,"Successfully added patient " + newPatient.getNhiNumber(), "attempted to add a patient");
+            userActions.log(Level.INFO,"Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
         } catch (IllegalArgumentException o) {
+            userActions.log(Level.WARNING, "Failed to add patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
             throw new IllegalArgumentException(o.getMessage());
         }
     }
@@ -69,6 +70,22 @@ public class Database {
             }
         }
         throw new InvalidObjectException("Patient with NHI number " + nhi + " does not exist.");
+    }
+
+
+    /**
+     * Checks if a patient with the given nhi exists in the database
+     * @param nhi the nhi of the patient to search
+     * @return true if exists else false
+     */
+    public static boolean isPatientInDb(String nhi) {
+        for (Patient d : getPatients()) {
+            if (d.getNhiNumber()
+                    .equals(nhi.toUpperCase())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -199,7 +216,11 @@ public class Database {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         Patient[] patient = gson.fromJson(br, Patient[].class);
         for (Patient d : patient) {
-            Database.addPatient(d);
+            try {
+                Database.addPatient(d);
+            } catch (IllegalArgumentException e) {
+                userActions.log(Level.WARNING, "Error importing donor from file");
+            }
         }
     }
 
