@@ -15,6 +15,7 @@ If a story is ready for review, it should be set to "Pending" on Agilefant.
 - All **todo**'s are removed
 - **JavaDoc** added to appropriate methods and attributes
 - **Design decisions** documented
+- A demo has been created and posted for the story, if applicable
 
 ##### Testing
 - **Unit tests** implemented where necessary
