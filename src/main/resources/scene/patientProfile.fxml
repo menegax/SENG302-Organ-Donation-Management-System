@@ -44,7 +44,7 @@
             <HBox layoutX="10.0" layoutY="61.0" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Label prefHeight="16.0" prefWidth="112.0" text="Date of Death: " />
-                  <Label fx:id="dateOfDeath" text="Label" />
+                  <Label fx:id="dateOfDeathLabel" text="Label" />
                </children>
             </HBox>
             <HBox layoutX="10.0" layoutY="62.0" prefHeight="100.0" prefWidth="200.0">
