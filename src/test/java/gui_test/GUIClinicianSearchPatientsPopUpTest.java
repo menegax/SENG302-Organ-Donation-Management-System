@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Clinician;
@@ -91,6 +92,14 @@ public class GUIClinicianSearchPatientsPopUpTest extends ApplicationTest {
                     .getOnAction()
                     .handle(new ActionEvent());
         });
+
+        // double-click to get a pop up
+        interact( () -> {
+            lookup( "#patientDataTable" ).queryAs(TableView.class ).getSelectionModel().select(0);
+            doubleClickOn( "#patientDataTable" ).doubleClickOn();
+        });
+        verifyThat("#patientProfilePane", Node::isVisible);
+
     }
 }
 
