@@ -61,10 +61,10 @@ public class GUIClinicianSearchPatientsPopUpTest extends ApplicationTest {
         });
         verifyThat( "#clinicianHomePane", Node::isVisible ); // Verify that login has taken "user" to the clinician home panel
         interact( () -> {
-            lookup( "#searchDonors" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+            lookup( "#searchPatients" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
-        verifyThat( "#clinicianSearchDonorsPane", Node::isVisible ); // Verify that login has taken "user" to the clinician profile panel
+        verifyThat( "#clinicianSearchPatientsPane", Node::isVisible ); // Verify that login has taken "user" to the clinician profile panel
     }
 
     /**
@@ -87,7 +87,7 @@ public class GUIClinicianSearchPatientsPopUpTest extends ApplicationTest {
         });
         verifyThat("#clinicianHomePane", Node::isVisible); // Verify that login has taken "user" to the clinician home panel
         interact(() -> {
-            lookup("#searchDonors").queryAs(Button.class)
+            lookup("#searchPatients").queryAs(Button.class)
                     .getOnAction()
                     .handle(new ActionEvent());
         });
