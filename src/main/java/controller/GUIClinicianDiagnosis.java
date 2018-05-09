@@ -59,8 +59,7 @@ public class GUIClinicianDiagnosis {
     private ArrayList<Disease> currentDiseases;
     private ArrayList<Disease> pastDiseases;
     private Disease chosen;
-    private boolean changed = false;
-
+    private boolean changed = false; // Boolean for if there are any un-saved edits when leaving pane
 
     @FXML
     public void initialize() {
@@ -71,46 +70,52 @@ public class GUIClinicianDiagnosis {
         loadPastDiseases();
         pastDiagnosesView.setOnMouseClicked(click -> {
             if (click.getButton() == MouseButton.SECONDARY && pastDiagnosesView.getSelectionModel().getSelectedItem() != null) {
-                Disease selected = pastDiagnosesView.getSelectionModel().getSelectedItem();
+                Disease selected = pastDiseases.get( pastDiseases.indexOf( pastDiagnosesView.getSelectionModel().getSelectedItem() ) );
                 ContextMenu rightClickPast = new ContextMenu();
-                MenuItem makeChronicAction = new MenuItem("Mark as Chronic");
-                makeChronicAction.setOnAction(event -> {
-                    selected.setDiseaseState(GlobalEnums.DiseaseState.CHRONIC);
-                    pastDiseases.remove(selected);
-                    currentDiseases.add(selected);
-                    loadCurrentDiseases();
-                    loadPastDiseases();
-                });
-                rightClickPast.getItems().addAll(makeChronicAction);
-                rightClickPast.show(pastDiagnosesView.getSelectionModel().getTableView(), click.getScreenX(), click.getScreenY());
+                MenuItem makeChronicAction = new MenuItem( "Mark as chronic" );
+                MenuItem makeCuredAction = new MenuItem( "Mark as cured" );
+                MenuItem makeNullAction = new MenuItem( "Mark as null" );
+                makeChronicAction.setOnAction( event -> {
+                    updatePastStatus( selected, "chronic" );
+                } );
+                makeCuredAction.setOnAction( event -> {
+                    updatePastStatus( selected, "cured" );
+                } );
+                makeNullAction.setOnAction( event -> {
+                    updatePastStatus( selected, "" );
+                } );
+                rightClickPast.getItems().addAll( makeChronicAction, makeCuredAction, makeNullAction );
+                rightClickPast.show( pastDiagnosesView.getSelectionModel().getTableView(), click.getScreenX(), click.getScreenY() );
             } else if (click.getButton() == MouseButton.PRIMARY && pastDiagnosesView.getSelectionModel().getSelectedItem() != null) {
                 chosen = pastDiagnosesView.getSelectionModel().getSelectedItem();
             }
+            loadCurrentDiseases();
+            loadPastDiseases();
         });
 
         currentDiagnosesView.setOnMouseClicked(click -> {
             if (click.getButton() == MouseButton.SECONDARY && currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
-                Disease selected = currentDiagnosesView.getSelectionModel().getSelectedItem();
+                Disease selected = currentDiseases.get( currentDiseases.indexOf( currentDiagnosesView.getSelectionModel().getSelectedItem() ) );
                 ContextMenu rightClickCurrent = new ContextMenu();
-                MenuItem makeCuredAction = new MenuItem("Mark as Cured");
-                MenuItem makeChronicAction = new MenuItem("Mark as Chronic");
-                makeCuredAction.setOnAction(event -> {
-                    selected.setDiseaseState(GlobalEnums.DiseaseState.CURED);
-                    currentDiseases.remove(selected);
-                    pastDiseases.add(selected);
-                    loadCurrentDiseases();
-                    loadPastDiseases();
-                });
-                makeChronicAction.setOnAction(event -> {
-                    selected.setDiseaseState(GlobalEnums.DiseaseState.CHRONIC);
-                    loadCurrentDiseases();
-                    loadPastDiseases();
-                });
-                rightClickCurrent.getItems().addAll(makeChronicAction, makeCuredAction);
-                rightClickCurrent.show(currentDiagnosesView.getSelectionModel().getTableView(), click.getScreenX(), click.getScreenY());
+                MenuItem makeChronicAction = new MenuItem( "Mark as chronic" );
+                MenuItem makeCuredAction = new MenuItem( "Mark as cured" );
+                MenuItem makeNullAction = new MenuItem( "Mark as null" );
+                makeChronicAction.setOnAction( event -> {
+                    updateCurrentStatus( selected, "chronic" );
+                } );
+                makeCuredAction.setOnAction( event -> {
+                    updateCurrentStatus( selected, "cured" );
+                } );
+                makeNullAction.setOnAction( event -> {
+                    updateCurrentStatus( selected, "" );
+                } );
+                rightClickCurrent.getItems().addAll( makeChronicAction, makeCuredAction, makeNullAction );
+                rightClickCurrent.show( currentDiagnosesView.getSelectionModel().getTableView(), click.getScreenX(), click.getScreenY() );
             } else if (click.getButton() == MouseButton.PRIMARY && currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
                 chosen = currentDiagnosesView.getSelectionModel().getSelectedItem();
             }
+            loadCurrentDiseases();
+            loadPastDiseases();
         });
     }
 
@@ -126,8 +131,8 @@ public class GUIClinicianDiagnosis {
 
             for (Disease current : currentDiseases) {
                 if (current.getDiseaseName().equals( diagnosis )) {
-                    userActions.log(Level.WARNING, "Failed to register a disease", diagnosis + " is already registered");
-                    Alert err = new Alert(Alert.AlertType.ERROR, "'" + diagnosis + "' is already registered");
+                    userActions.log( Level.WARNING, "Failed to register a disease", diagnosis + " is already registered" );
+                    Alert err = new Alert( Alert.AlertType.ERROR, "'" + diagnosis + "' is already registered" );
                     err.show();
                     unique = false;
                 }
@@ -135,13 +140,14 @@ public class GUIClinicianDiagnosis {
 
             for (Disease past : pastDiseases) {
                 if (past.getDiseaseName().equals( diagnosis )) {
-                    if (!past.getDiseaseState().toString().toLowerCase().equals( "cured" )) {
+                    if (past.getDiseaseState() == null) {
                         moveFromPastToCurrent( past, null );
                         unique = false;
                         changed = true;
+                        break;
                     } else {
-                        userActions.log(Level.WARNING, "Failed to register a disease", diagnosis + " is already registered");
-                        Alert err = new Alert(Alert.AlertType.ERROR, "'" + diagnosis + "' is already registered");
+                        userActions.log( Level.WARNING, "Failed to register a disease", diagnosis + " is already registered" );
+                        Alert err = new Alert( Alert.AlertType.ERROR, "'" + diagnosis + "' is already registered" );
                         err.show();
                         unique = false;
                     }
@@ -166,11 +172,6 @@ public class GUIClinicianDiagnosis {
      * Loads the current diseases table
      */
     private void loadCurrentDiseases() {
-        if(currentDiseases == null || currentDiseases.isEmpty()) {
-            currentDiseases = new ArrayList<>( Arrays.asList( null, null, null ) );
-        } else if (currentDiseases.get(0).getDateDiagnosed() == null) {
-            currentDiseases.remove( 0 );
-        }
         ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(currentDiseases);
         setCellValues(currentDateCol, currentDiagnosisCol, currentTagsCol);
         currentDiagnosesView.setItems(observableCurrentDiseases);
@@ -181,11 +182,6 @@ public class GUIClinicianDiagnosis {
      * Loads the past diseases table
      */
     private void loadPastDiseases() {
-        if(pastDiseases == null || pastDiseases.isEmpty()) {
-            pastDiseases = new ArrayList<>( Arrays.asList( null, null, null ) );
-        } else if (pastDiseases.get(0).getDateDiagnosed() == null) {
-            pastDiseases.remove( 0 );
-        }
         ObservableList <Disease> observablePastDiseases = FXCollections.observableArrayList( pastDiseases );
         setCellValues(pastDateCol, pastDiagnosisCol, pastTagsCol);
         pastDiagnosesView.setItems(observablePastDiseases);
@@ -274,11 +270,11 @@ public class GUIClinicianDiagnosis {
 
     /**
      * Updates the date of a current diagnosis for a donor with a provided date
-     * @param index the index in the currentDiseases ArrayList of the diagnosis being updated
+     * @param disease the disease in the currentDiseases ArrayList of the diagnosis being updated
      * @param date The given date for the update
      * @throws InvalidObjectException Indicates that one or more deserialized objects failed validation tests
      */
-    private void updateCurrentDate(int index, LocalDate date) throws InvalidObjectException {
+    private void updateCurrentDate(Disease disease, LocalDate date) throws InvalidObjectException {
         if (date.isBefore(currentDonor.getBirth())) {
             new Alert(Alert.AlertType.WARNING, "Can not set date to before donor's DOB: " + currentDonor.getBirth(), ButtonType.OK).show();
             userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to before donor's DOB");
@@ -286,7 +282,7 @@ public class GUIClinicianDiagnosis {
             new Alert(Alert.AlertType.WARNING, "Can not set date to after the current date", ButtonType.OK).show();
             userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to after current date");
         } else {
-            currentDonor.getCurrentDiseases().get( index ).setDateDiagnosed( date, currentDonor );
+            disease.setDateDiagnosed( date, currentDonor );
             userActions.log(Level.FINE, "Updated a current disease date", "Updated a current disease date to " + date);
             changed = true;
         }
@@ -294,11 +290,11 @@ public class GUIClinicianDiagnosis {
 
     /**
      * Updates the date of a past diagnosis for a donor with a provided date
-     * @param index the index in the pastDiseases ArrayList of the diagnosis being updated
+     * @param disease the disease in the pastDiseases ArrayList of the diagnosis being updated
      * @param date The given date for the update
      * @throws InvalidObjectException Indicates that one or more deserialized objects failed validation tests
      */
-    private void updatePastDate(int index, LocalDate date) throws InvalidObjectException {
+    private void updatePastDate(Disease disease, LocalDate date) throws InvalidObjectException {
         if (date.isBefore( currentDonor.getBirth() )) {
             new Alert( Alert.AlertType.WARNING, "Can not set date to before donor's DOB: " + currentDonor.getBirth(), ButtonType.OK ).show();
             userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to before donor's DOB");
@@ -306,7 +302,7 @@ public class GUIClinicianDiagnosis {
             new Alert( Alert.AlertType.WARNING, "Can not set date to after the current date", ButtonType.OK ).show();
             userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to after current date");
         } else {
-            currentDonor.getPastDiseases().get( index ).setDateDiagnosed( date, currentDonor );
+            disease.setDateDiagnosed( date, currentDonor );
             userActions.log(Level.FINE, "Updated a past disease date", "Updated a past disease date to " + date);
             changed = true;
         }
@@ -314,22 +310,22 @@ public class GUIClinicianDiagnosis {
 
     /**
      * Updates the disease name for a current diagnosis
-     * @param index the index in the currentDiseases ArrayList of the diagnosis being updated
+     * @param disease the disease in the currentDiseases ArrayList of the diagnosis being updated
      * @param name The Disease name update
      */
-    private void updateCurrentName(int index, String name) {
-        currentDonor.getCurrentDiseases().get( index ).setDiseaseName(name);
+    private void updateCurrentName(Disease disease, String name) {
+        disease.setDiseaseName(name);
         userActions.log(Level.FINE, "Updated a current disease name", "Updated a current disease name to " + name);
         changed = true;
     }
 
     /**
      * Updates the disease name for a current diagnosis
-     * @param index The index in the list of the diagnosis being updated
+     * @param disease The disease in the list of the diagnosis being updated
      * @param name The Disease name update
      */
-    private void updatePastName(int index, String name) {
-        currentDonor.getPastDiseases().get( index ).setDiseaseName(name);
+    private void updatePastName(Disease disease, String name) {
+        disease.setDiseaseName(name);
         userActions.log(Level.FINE, "Updated a past disease name", "Updated a past disease name to " + name);
         changed = true;
     }
@@ -337,18 +333,24 @@ public class GUIClinicianDiagnosis {
     /**
      * Updates the disease state for a current diagnosis if the update is not 'cured' when the current state is still 'chronic'
      * If state is set to cured, the disease will be automatically moved to the past diseases list
-     * @param index The index in the list of the diagnosis being updated
+     * @param disease The disease in the list of the diagnosis being updated
      * @param status The Disease status update
      */
-    private void updateCurrentStatus(int index, String status) {
-        if (status.toLowerCase().equals( "cured" ) && !currentDonor.getCurrentDiseases().get( index ).getDiseaseState().toString().toLowerCase().equals("chronic")) {
-            moveFromCurrentToPast(currentDonor.getCurrentDiseases().get( index ), status);
+    private void updateCurrentStatus(Disease disease, String status) {
+        if (status.toLowerCase().equals( "cured" ) && disease.getDiseaseState() == null) {
+            moveFromCurrentToPast( disease, status );
             changed = true;
-        } else if (!(status.toLowerCase().equals( "cured" ) && currentDonor.getCurrentDiseases().get( index ).getDiseaseState().toString().toLowerCase().equals("chronic"))) {
+        } else if (status.toLowerCase().equals( "cured" ) && disease.getDiseaseState().toString().toLowerCase().equals( "chronic" )) {
             new Alert(Alert.AlertType.WARNING, "Can not set disease state to 'cured' if the current state is 'chronic'", ButtonType.OK).show();
             userActions.log(Level.WARNING, "Failed to update a disease state", "Disease state could not be changed to 'cured' when it is 'chronic'");
+        } else if (status.toLowerCase().equals( "chronic" )) {
+            disease.setDiseaseState( GlobalEnums.DiseaseState.CHRONIC );
+            loadCurrentDiseases();
+            userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to chronic");
+            changed = true;
         } else {
-            currentDonor.getCurrentDiseases().get( index ).setDiseaseState( null );
+            disease.setDiseaseState( null );
+            loadCurrentDiseases();
             userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to " + status);
             changed = true;
         }
@@ -356,15 +358,21 @@ public class GUIClinicianDiagnosis {
 
     /**
      * Updates the disease state for a past diagnosis
-     * @param index The index in the list of the diagnosis being updated
+     * @param disease The disease in the list of the diagnosis being updated
      * @param status The Disease status update
      */
-    private void updatePastStatus(int index, String status) {
-        if (status.toLowerCase().equals("chronic")) {
-            moveFromPastToCurrent(currentDonor.getPastDiseases().get( index ), status);
-        } else {
-            currentDonor.getPastDiseases().get( index ).setDiseaseState( (GlobalEnums.DiseaseState) GlobalEnums.DiseaseState.getEnumFromString( status ) );
-            userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to " + status);
+    private void updatePastStatus(Disease disease, String status) {
+        switch (status.toLowerCase()) {
+            case "chronic": moveFromPastToCurrent(disease, status); break;
+            case "cured":
+                disease.setDiseaseState( GlobalEnums.DiseaseState.CURED );
+                loadPastDiseases();
+                userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to cured");
+                break;
+            default:
+                disease.setDiseaseState( null );
+                loadPastDiseases();
+                userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to " + status);
         }
         changed = true;
     }
@@ -379,7 +387,7 @@ public class GUIClinicianDiagnosis {
             if (state == null) {
                 disease.setDiseaseState( null );
             } else {
-                disease.setDiseaseState( (GlobalEnums.DiseaseState) GlobalEnums.DiseaseState.getEnumFromString( state ) );
+                disease.setDiseaseState( GlobalEnums.DiseaseState.CHRONIC );
             }
             currentDiseases.add( disease );
             pastDiseases.remove( disease );
@@ -401,7 +409,7 @@ public class GUIClinicianDiagnosis {
             if (state == null) {
                 disease.setDiseaseState( null );
             } else {
-                disease.setDiseaseState( (GlobalEnums.DiseaseState) GlobalEnums.DiseaseState.getEnumFromString( state ) );
+                disease.setDiseaseState( GlobalEnums.DiseaseState.CURED );
             }
             pastDiseases.add( disease );
             currentDiseases.remove( disease );
