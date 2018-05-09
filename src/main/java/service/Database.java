@@ -237,22 +237,23 @@ public class Database {
      */
     public static void importFromDiskPatients(String fileName) {
         Gson gson = new Gson();
-        BufferedReader br = null;
+        BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(fileName));
+            Patient[] patient = gson.fromJson(br, Patient[].class);
+            for (Patient d : patient) {
+                try {
+                    Database.addPatient(d);
+                }
+                catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Error importing donor from file", "Attempted to import donor from file");
+                }
+            }
         }
         catch (FileNotFoundException e) {
-            userActions.log(Level.WARNING, "Error reading file", "Attempted to read patient file");
+            userActions.log(Level.WARNING, "Patient import file not found", "Attempted to read patient file");
         }
-        Patient[] patient = gson.fromJson(br, Patient[].class);
-        for (Patient d : patient) {
-            try {
-                Database.addPatient(d);
-            }
-            catch (IllegalArgumentException e) {
-                userActions.log(Level.WARNING, "Error importing donor from file", "Attempted to import donor from file");
-            }
-        }
+
     }
 
 
@@ -261,22 +262,23 @@ public class Database {
      */
     public static void importFromDiskClinicians(String fileName) {
         Gson gson = new Gson();
-        BufferedReader br = null;
+        BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(fileName));
+            Clinician[] clinician = gson.fromJson(br, Clinician[].class);
+            for (Clinician c : clinician) {
+                try {
+                    Database.addClinician(c);
+                }
+                catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
+                }
+            }
         }
         catch (FileNotFoundException e) {
-            userActions.log(Level.WARNING, "Error reading file", "Attempted to read clinician file");
+            userActions.log(Level.WARNING, "Clinician import file not found", "Attempted to read clinician file");
         }
-        Clinician[] clinician = gson.fromJson(br, Clinician[].class);
-        for (Clinician c : clinician) {
-            try {
-                Database.addClinician(c);
-            }
-            catch (IllegalArgumentException e) {
-                userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
-            }
-        }
+
     }
 
 
