@@ -1,5 +1,6 @@
 package controller;
 
+import com.sun.glass.ui.View;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -13,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
@@ -214,8 +216,8 @@ public class GUIPatientProfile implements IPopupable {
             addLbl5.setText("Not set");
         }
 
-        Collection<GlobalEnums.Organ> organsD = patient.getDonations();
         if (patient.getRequiredOrgans() == null) { patient.setRequiredOrgans(new ArrayList<>()); }
+        Collection<GlobalEnums.Organ> organsD = patient.getDonations();
         Collection<GlobalEnums.Organ> organsR = patient.getRequiredOrgans();
         List<String> organsMappedD = organsD.stream().map(e -> StringUtils.capitalize(e.getValue())).collect(Collectors.toList());
         List<String> organsMappedR = organsR.stream().map(e -> StringUtils.capitalize(e.getValue())).collect(Collectors.toList());
@@ -223,6 +225,29 @@ public class GUIPatientProfile implements IPopupable {
         receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
         donationList.itemsProperty().bind(donatingListProperty);
         receivingList.itemsProperty().bind(receivingListProperty);
+
+        donationList.setCellFactory(column -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    if (receivingListProperty.contains(item)) {
+                        this.setStyle("-fx-background-color: RED");
+                    }
+                }
+            }
+        });
+
+//        donationList.getItems()setStyle("-fx-background-color: #f41112");
+
+
+//        Object cell = donationList.getItems().get(0);
+//        cell.
+
 //        Object lists = receivingList.getItems().get(1);
 //        System.out.println(lists);
 //        ((TableCell) lists.get(0)).setStyle("-fx-text-fill:red;");
@@ -240,7 +265,6 @@ public class GUIPatientProfile implements IPopupable {
 //            }
 //        }
     }
-
 
     public void goToEdit() {
         if (ScreenControl.getLoggedInPatient() != null) {

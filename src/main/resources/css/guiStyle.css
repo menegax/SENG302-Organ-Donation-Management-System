@@ -76,5 +76,9 @@
     -fx-scale-y: 0.65;
 }
 
-
-
+.list-view .list-cell:even {
+    -fx-text-fill: black;
+}
+.list-view .list-cell:odd {
+    -fx-text-fill: black;
+}
