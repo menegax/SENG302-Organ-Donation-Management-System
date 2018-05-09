@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
-@Command(name = "remove", description = "used to remove existing patient")
+@Command(name = "remove", description = "used to remove existing patients")
 class CLIPatientRemove implements Runnable {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")

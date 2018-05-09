@@ -33,10 +33,10 @@ public class GUILoginTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
 
-        // add dummy donor
+        // add dummy patient
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addPatients(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.addPatient(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
         Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
         Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
 
@@ -68,7 +68,7 @@ public class GUILoginTest extends ApplicationTest {
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
         });
         assertThat(ScreenControl.getLoggedInPatient().getNhiNumber().equals("TFX9999"));
-        verifyThat("#patientHomePane", Node::isVisible);
+        verifyThat("#homePane", Node::isVisible);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class GUILoginTest extends ApplicationTest {
     @Test
     public void should_open_register_form() {
         interact(() -> lookup("#registerHyperlink").queryAs(Hyperlink.class).fire());
-        verifyThat("#donorRegisterAnchorPane", Node::isVisible);
+        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
 

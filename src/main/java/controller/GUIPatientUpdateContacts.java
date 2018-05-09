@@ -25,7 +25,7 @@ import static utility.UserActionHistory.userActions;
  * Details are saved when the Save button is selected, and the user is returned to the patient profile view screen.
  * @author Maree Palmer
  */
-public class GUIPatientUpdateContacts {
+public class GUIPatientUpdateContacts implements IPopupable {
 
     @FXML
     public AnchorPane patientContactsPane;
@@ -79,14 +79,24 @@ public class GUIPatientUpdateContacts {
     }
 
 
-
+    public void setViewedPatient(Patient patient) {
+        target = patient;
+        loadProfile(target.getNhiNumber());
+        setContactFields();
+    }
 
     /**
      * Saves changes to a patient's contact details by calling the Database saving method.
      */
     @FXML
     public void saveContactDetails() {
-        saveToDisk();
+        boolean valid = setPatientContactDetails();
+        if(valid) {
+            Database.saveToDisk();
+            goToProfile();
+        } else {
+            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
+        }
     }
 
 
@@ -95,8 +105,11 @@ public class GUIPatientUpdateContacts {
      * display current contact attributes.
      */
     public void initialize() {
-        loadProfile();
-        setContactFields();
+        if (ScreenControl.getLoggedInPatient() != null) {
+            loadProfile(ScreenControl.getLoggedInPatient().getNhiNumber());
+            setContactFields();
+        }
+        setupUndoRedo();
 
         // Enter key triggers log in
         patientContactsPane.setOnKeyPressed(e -> {
@@ -106,6 +119,24 @@ public class GUIPatientUpdateContacts {
         });
     }
 
+    /**
+     * Sets up the variables needed for undo and redo functionality
+     */
+    private void setupUndoRedo() {
+        ArrayList<Control> controls = new ArrayList<Control>() {{
+            add(homePhoneField);
+            add(mobilePhoneField);
+            add(workPhoneField);
+            add(emailAddressField);
+            add(contactNameField);
+            add(contactRelationshipField);
+            add(contactHomePhoneField);
+            add(contactMobilePhoneField);
+            add(contactWorkPhoneField);
+            add(contactEmailAddressField);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(patientContactsPane, controls);
+    }
 
     /**
      * Sets initial contact text fields to a patient's existing contact details.
@@ -148,11 +179,12 @@ public class GUIPatientUpdateContacts {
     /**
      * Sets the target patient to the currently logged in patient.
      * Throws an InvalidObjectException if the logged in patient can not be retrieved
+     *
+     * @param nhi The nhi of the patient to load
      */
-    private void loadProfile() {
+    private void loadProfile(String nhi) {
         try {
-            target = Database.getPatientByNhi(ScreenControl.getLoggedInPatient()
-                    .getNhiNumber());
+            target = Database.getPatientByNhi(nhi);
 
             ArrayList<Control> controls = new ArrayList<Control>() {{
                 add(homePhoneField);
@@ -207,7 +239,7 @@ public class GUIPatientUpdateContacts {
         } else {
             valid = setInvalid(workPhoneField);
         }
-        if (!(emailAddressField.getText().equals("")) && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
+        if (emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
             target.setEmailAddress(emailAddressField.getText());
             setValid(emailAddressField);
         } else if(emailAddressField.getText().equals("")) {
@@ -216,7 +248,7 @@ public class GUIPatientUpdateContacts {
         } else {
             valid = setInvalid(emailAddressField);
         }
-        if (!(contactRelationshipField.getText().equals(""))) {
+        if (contactRelationshipField.getText().matches("([A-Za-z]+[\\s]*)*")) {
             target.setContactRelationship(contactRelationshipField.getText());
             setValid(contactRelationshipField);
         } else if(contactRelationshipField.getText().equals("")) {
@@ -225,7 +257,7 @@ public class GUIPatientUpdateContacts {
         } else {
             valid = setInvalid(contactRelationshipField);
         }
-        if (!(contactNameField.getText().equals(""))) {
+        if (contactNameField.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
             target.setContactName(contactNameField.getText());
             setValid(contactNameField);
         } else if(contactNameField.getText().equals("")) {
@@ -261,7 +293,7 @@ public class GUIPatientUpdateContacts {
         } else {
             valid = setInvalid(contactWorkPhoneField);
         }
-        if (!(contactEmailAddressField.getText().equals("") && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+"))) {
+        if (contactEmailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
             target.setContactEmailAddress(contactEmailAddressField.getText());
             setValid(contactEmailAddressField);
         } else if(contactEmailAddressField.getText().equals("")) {
@@ -298,30 +330,24 @@ public class GUIPatientUpdateContacts {
      * Closes the contact details screen and returns the user to the profile window without saving changes.
      */
     public void goToProfile() {
-        ScreenControl.removeScreen("patientProfile");
-        try {
-            ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-            ScreenControl.activate("patientProfile");
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the contacts page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-        }
-    }
-
-
-    /**
-     * Sets the patient's contact details to the values specified in the GUI, and runs the save operation from
-     * the application database. An alert is then shown to inform the user of a successful save, and the patient
-     * profile window is shown.
-     */
-    private void saveToDisk() {
-        boolean valid = setPatientContactDetails();
-        if(valid) {
-            Database.saveToDisk();
-            goToProfile();
+        if (ScreenControl.getLoggedInPatient() != null) {
+            ScreenControl.removeScreen("patientProfile");
+            try {
+                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                ScreenControl.activate("patientProfile");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error returning to profile screen", "attempted to navigate from the donation page to the profile page");
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+            }
         } else {
-            new Alert(Alert.AlertType.CONFIRMATION, "Invalid fields", ButtonType.OK).show();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(patientContactsPane.getScene(), fxmlLoader, target);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error returning to profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+            }
         }
     }
+    
 }

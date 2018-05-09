@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import model.Patient;
 import service.Database;
@@ -23,7 +24,7 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientUpdateProfile {
+public class GUIPatientUpdateProfile implements IPopupable{
 
     @FXML
     private AnchorPane patientUpdateAnchorPane;
@@ -86,6 +87,34 @@ public class GUIPatientUpdateProfile {
 
     private StatesHistoryScreen statesHistoryScreen;
 
+    public void setViewedPatient(Patient patient) {
+        target = patient;
+        loadProfile(target.getNhiNumber());
+    }
+
+    public void initialize() {
+
+        populateDropdowns();
+
+        if (ScreenControl.getLoggedInPatient() != null) {
+            loadProfile(ScreenControl.getLoggedInPatient()
+                    .getNhiNumber());
+        }
+
+        // Enter key
+        patientUpdateAnchorPane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                saveProfile();
+            }
+            else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
+                undo();
+            }
+            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
+                redo();
+            }
+        });
+    }
+
 
     @FXML
     private void redo() {
@@ -98,21 +127,6 @@ public class GUIPatientUpdateProfile {
         statesHistoryScreen.undo();
     }
 
-
-    public void initialize() {
-
-        populateDropdowns();
-
-        loadProfile(ScreenControl.getLoggedInPatient()
-                .getNhiNumber());
-
-        // Enter key
-        patientUpdateAnchorPane.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                saveProfile();
-            }
-        });
-    }
 
     /**
      * Populates drop down menus that represent enum data
@@ -139,6 +153,7 @@ public class GUIPatientUpdateProfile {
 
     /**
      * Loads the patient's profile into the gui
+     *
      * @param nhi the NHI of the patient to load
      */
     private void loadProfile(String nhi) {
@@ -168,7 +183,8 @@ public class GUIPatientUpdateProfile {
             }};
             statesHistoryScreen = new StatesHistoryScreen(patientUpdateAnchorPane, controls);
 
-        } catch (InvalidObjectException e) {
+        }
+        catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }
@@ -176,6 +192,10 @@ public class GUIPatientUpdateProfile {
 
     /**
      * Populates the scene controls with values from the patient object
+<<<<<<< HEAD:src/main/java/controller/GUIPatientUpdateProfile.java
+=======
+     *
+>>>>>>> development:src/main/java/controller/GUIPatientUpdateProfile.java
      * @param patient the patient object whose attributes are used to load into the form
      */
     private void populateForm(Patient patient) {
@@ -229,9 +249,11 @@ public class GUIPatientUpdateProfile {
         }
     }
 
+
     /**
      * Checks for invalidity of a double used for height or weight.
      * Returns true if input is not a valid double or the input is a valid double with a value of less than 0.
+     *
      * @param input String input from text field
      * @return boolean is invalid
      */
@@ -245,6 +267,7 @@ public class GUIPatientUpdateProfile {
         }
     }
 
+
     /**
      * Saves profile changes after checking each field for validity
      */
@@ -256,38 +279,64 @@ public class GUIPatientUpdateProfile {
                 nhiTxt.getText()
                         .toUpperCase())) {
             valid = setInvalid(nhiTxt);
-        } else setValid(nhiTxt);
+        }
+        else {
+            setValid(nhiTxt);
+        }
 
         // first name
-        if (!firstnameTxt.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
+        if (!firstnameTxt.getText()
+                .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
             valid = setInvalid(firstnameTxt);
-        } else setValid(firstnameTxt);
+        }
+        else {
+            setValid(firstnameTxt);
+        }
 
         // last name
-        if (!lastnameTxt.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
+        if (!lastnameTxt.getText()
+                .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
             valid = setInvalid(lastnameTxt);
-        } else setValid(lastnameTxt);
+        }
+        else {
+            setValid(lastnameTxt);
+        }
 
         //middle names
-        if (!middlenameTxt.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
+        if (!middlenameTxt.getText()
+                .matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
             valid = setInvalid(middlenameTxt);
-        } else setValid(middlenameTxt);
+        }
+        else {
+            setValid(middlenameTxt);
+        }
 
         // region
-        if (regionDD.getSelectionModel().getSelectedIndex() != -1) {
-            Enum region = GlobalEnums.Region.getEnumFromString(regionDD
-                    .getSelectionModel().getSelectedItem());
+        if (regionDD.getSelectionModel()
+                .getSelectedIndex() != -1) {
+            Enum region = GlobalEnums.Region.getEnumFromString(regionDD.getSelectionModel()
+                    .getSelectedItem());
             if (region == null) {
                 valid = setInvalid(regionDD);
-            } else setValid(regionDD);
-        } else setValid(regionDD);
+            }
+            else {
+                setValid(regionDD);
+            }
+        }
+        else {
+            setValid(regionDD);
+        }
 
         // zip
-        if (!zipTxt.getText().equals("")) {
+        if (!zipTxt.getText()
+                .equals("")) {
             try {
-                if (zipTxt.getText().length() != 4 && !(zipTxt.getText().equals(""))) {
+                if (zipTxt.getText()
+                        .length() != 4 && !(zipTxt.getText()
+                        .equals(""))) {
                     valid = setInvalid(zipTxt);
-                } else {
+                }
+                else {
                     Integer.parseInt(zipTxt.getText());
                     setValid(zipTxt);
                 }
@@ -295,21 +344,36 @@ public class GUIPatientUpdateProfile {
             catch (NumberFormatException e) {
                 valid = setInvalid(zipTxt);
             }
-        } else setValid(zipTxt);
+        }
+        else {
+            setValid(zipTxt);
+        }
 
         // weight
         if (weightTxt.getText() != null) {
-            if(isInvalidDouble(weightTxt.getText())) {
+            if (isInvalidDouble(weightTxt.getText())) {
                 valid = setInvalid(weightTxt);
-            } else setValid(weightTxt);
-        } else setValid(weightTxt);
+            }
+            else {
+                setValid(weightTxt);
+            }
+        }
+        else {
+            setValid(weightTxt);
+        }
 
         // height
         if (heightTxt.getText() != null) {
-            if(isInvalidDouble(heightTxt.getText())) {
+            if (isInvalidDouble(heightTxt.getText())) {
                 valid = setInvalid(heightTxt);
-            } else setValid(heightTxt);
-        } else setValid(heightTxt);
+            }
+            else {
+                setValid(heightTxt);
+            }
+        }
+        else {
+            setValid(heightTxt);
+        }
 
         // blood group
         if (bloodGroupDD.getValue() != null) {
@@ -318,32 +382,53 @@ public class GUIPatientUpdateProfile {
             Enum bloodgroup = GlobalEnums.BloodGroup.getEnumFromString(bgStr);
             if (bloodgroup == null) {
                 valid = setInvalid(bloodGroupDD);
-            } else setValid(bloodGroupDD);
-        } else setValid(bloodGroupDD);
+            }
+            else {
+                setValid(bloodGroupDD);
+            }
+        }
+        else {
+            setValid(bloodGroupDD);
+        }
 
         // date of birth
-        if(dobDate.getValue() != null) {
-            if(dobDate.getValue().isAfter(LocalDate.now())) {
+        if (dobDate.getValue() != null) {
+            if (dobDate.getValue()
+                    .isAfter(LocalDate.now())) {
                 valid = setInvalid(dobDate);
-            } else setValid(dobDate);
-        } else {
+            }
+            else {
+                setValid(dobDate);
+            }
+        }
+        else {
             valid = setInvalid(dobDate);
         }
 
         // date of death
-        if(dateOfDeath.getValue() != null) {
-            if((dobDate.getValue() != null && dateOfDeath.getValue().isBefore(dobDate.getValue())) ||
-                    dateOfDeath.getValue().isAfter(LocalDate.now())) {
+        if (dateOfDeath.getValue() != null) {
+            if ((dobDate.getValue() != null && dateOfDeath.getValue()
+                    .isBefore(dobDate.getValue())) || dateOfDeath.getValue()
+                    .isAfter(LocalDate.now())) {
                 valid = setInvalid(dateOfDeath);
-            } else setValid(dateOfDeath);
-        } else setValid(dateOfDeath);
+            }
+            else {
+                setValid(dateOfDeath);
+            }
+        }
+        else {
+            setValid(dateOfDeath);
+        }
 
         // if all are valid
         if (valid) {
             target.setNhiNumber(nhiTxt.getText());
             target.setFirstName(firstnameTxt.getText());
             target.setLastName(lastnameTxt.getText());
-            if(middlenameTxt.getText().equals("")) target.setMiddleNames(new ArrayList<>());
+            if (middlenameTxt.getText()
+                    .equals("")) {
+                target.setMiddleNames(new ArrayList<>());
+            }
             else {
                 List<String> middlenames = Arrays.asList(middlenameTxt.getText()
                         .split(" "));
@@ -382,7 +467,8 @@ public class GUIPatientUpdateProfile {
                         .getSelectedItem()));
             }
             if (zipTxt.getText() != null) {
-                target.setZip(zipTxt.getText().equals("") ? 0 : Integer.parseInt(zipTxt.getText()));
+                target.setZip(zipTxt.getText()
+                        .equals("") ? 0 : Integer.parseInt(zipTxt.getText()));
             }
             if (weightTxt.getText() != null) {
                 target.setWeight(Double.parseDouble(weightTxt.getText()));
@@ -391,17 +477,19 @@ public class GUIPatientUpdateProfile {
                 target.setHeight(Double.parseDouble(heightTxt.getText()));
             }
             if (bloodGroupDD.getValue() != null) {
-                target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD
-                        .getSelectionModel().getSelectedItem()));
+                target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
+                        .getSelectedItem()));
             }
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
             Database.saveToDisk();
             goBackToProfile();
-        } else {
+        }
+        else {
             userActions.log(Level.WARNING, "Failed to update patient profile", "Attempted to update patient profile");
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }
     }
+
 
     /***
      * Applies the invalid class to the target control
@@ -409,9 +497,11 @@ public class GUIPatientUpdateProfile {
      */
     private boolean setInvalid(Control target) {
 
-        target.getStyleClass().add("invalid");
+        target.getStyleClass()
+                .add("invalid");
         return false;
     }
+
 
     /**
      * Removes the invalid class from the target control if it has it
@@ -419,22 +509,40 @@ public class GUIPatientUpdateProfile {
      * @param target The target to remove the class from
      */
     private void setValid(Control target) {
-        if (target.getStyleClass().contains("invalid")) {
-            target.getStyleClass().remove("invalid");
+        if (target.getStyleClass()
+                .contains("invalid")) {
+            target.getStyleClass()
+                    .remove("invalid");
         }
     }
+
 
     /**
      * Returns to patient profile screen
      */
     public void goBackToProfile() {
-        ScreenControl.removeScreen("patientProfile");
-        try {
-            ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-            ScreenControl.activate("patientProfile");
-        } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "Attempted to navigate from the edit page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+        if (ScreenControl.getLoggedInPatient() != null) {
+            ScreenControl.removeScreen("patientProfile");
+            try {
+                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                ScreenControl.activate("patientProfile");
+            }
+            catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
+                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).show();
+            }
+        }
+        else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(patientUpdateAnchorPane.getScene(), fxmlLoader, target);
+            }
+            catch (IOException e) {
+                userActions.log(Level.SEVERE,
+                        "Error loading profile screen in popup",
+                        "attempted to navigate from the edit page to the profile page in popup");
+                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).show();
+            }
         }
     }
 

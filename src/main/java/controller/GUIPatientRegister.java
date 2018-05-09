@@ -3,6 +3,8 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
@@ -24,6 +26,11 @@ import static utility.UserActionHistory.userActions;
 public class GUIPatientRegister {
 
     @FXML
+    public AnchorPane pane;
+    public AnchorPane registerPane;
+
+    public Label backLabel;
+
     public Button doneButton;
 
     @FXML
@@ -42,7 +49,7 @@ public class GUIPatientRegister {
     private TextField nhiRegister;
 
     @FXML
-    private Pane donorRegisterAnchorPane;
+    private Pane patientRegisterAnchorPane;
 
 
     @FXML
@@ -63,6 +70,9 @@ public class GUIPatientRegister {
 
 
 
+    /**
+     * Sets up register page GUI elements
+     */
     public void initialize() {
         setDateConverter();
         ArrayList<Control> controls = new ArrayList<Control>() {{
@@ -72,11 +82,16 @@ public class GUIPatientRegister {
             add(birthRegister);
             add(nhiRegister);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(donorRegisterAnchorPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(patientRegisterAnchorPane, controls);
+
         // Enter key
-        donorRegisterAnchorPane.setOnKeyPressed(e -> {
+        patientRegisterAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 register();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
+                undo();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
+                redo();
             }
         });
     }
@@ -88,6 +103,19 @@ public class GUIPatientRegister {
     public void goBackToLogin() {
         ScreenControl.activate("login");
     }
+
+
+    /**
+     * Clears the data in the fields of the GUI
+     */
+    private void clearFields(){
+        nhiRegister.clear();
+        firstnameRegister.clear();
+        lastnameRegister.clear();
+        middlenameRegister.clear();
+        birthRegister.getEditor().clear();
+    }
+
 
     /**
      * Checks users have entered all REQUIRED fields
@@ -110,7 +138,7 @@ public class GUIPatientRegister {
      */
 
     private void addPatientGui() throws IllegalArgumentException {
-        Database.addPatients(new Patient(nhiRegister.getText(),
+        Database.addPatient(new Patient(nhiRegister.getText(),
                 firstnameRegister.getText(),
                 middlenameRegister.getText()
                         .isEmpty() ? new ArrayList<>() : new ArrayList<>(Arrays.asList(middlenameRegister.getText()
@@ -155,21 +183,22 @@ public class GUIPatientRegister {
 
 
     /**
-     * Check users inputs and registers the user donor profile
+     * Check users inputs and registers the user patient profile
      */
     @FXML
     public void register() {
         Alert alert = new Alert(Alert.AlertType.WARNING, "");
         if (!(hasAllRequired())) {
             try {
-
                 addPatientGui();
-                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Registered");
-                confirm.show();
+                clearFields();
+                Alert info = new Alert(Alert.AlertType.INFORMATION, "Successfully registered!");
+                info.show();
+                Database.saveToDisk();
                 ScreenControl.activate("login");
             }
             catch (IllegalArgumentException e) {
-                userActions.log(Level.SEVERE, e.getMessage(), "attempted to add donor from GUI attributes");
+                userActions.log(Level.SEVERE, e.getMessage(), "attempted to add patient from GUI attributes");
                 alert.setContentText(e.getMessage());
                 alert.show();
             }

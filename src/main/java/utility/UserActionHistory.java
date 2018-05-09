@@ -2,7 +2,6 @@ package utility;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.logging.*;
 
 public class UserActionHistory {
@@ -25,12 +24,12 @@ public class UserActionHistory {
         // File history handler
         userActions.addHandler(new Handler() {
             public void publish(LogRecord logRecord) {
-                Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
-                UserActionRecord.logHistory.add(new UserActionRecord(String.valueOf(currentTimeStamp),
-                        logRecord.getLevel()
-                                .toString(),
-                        logRecord.getParameters()[0].toString(),
-                        logRecord.getMessage()));
+//                Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
+//                UserActionRecord.logHistory.add(new UserActionRecord(String.valueOf(currentTimeStamp),
+//                        logRecord.getLevel()
+//                                .toString(),
+//                        logRecord.getParameters()[0].toString(),
+//                        logRecord.getMessage()));
             }
 
 

@@ -1,23 +1,29 @@
 package model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.BloodGroup;
 import utility.GlobalEnums.Gender;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
+import utility.SearchPatients;
+import utility.UserActionRecord;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.time.LocalDate;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
 public class Patient {
+
+    private UUID uuid = UUID.randomUUID();
 
     private final Timestamp CREATED;
 
@@ -57,6 +63,10 @@ public class Patient {
 
     private String nhiNumber;
 
+    private ArrayList<Medication> currentMedications = new ArrayList<>();
+
+    private ArrayList<Medication> medicationHistory = new ArrayList<>();
+
     private String homePhone;
 
     private String mobilePhone;
@@ -77,8 +87,10 @@ public class Patient {
 
     private String contactEmailAddress;
 
+    private ArrayList<String> patientLog;
 
-    public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
+    public Patient(String nhiNumber, String firstName,
+                   ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
         this.firstName = firstName;
@@ -89,9 +101,8 @@ public class Patient {
         this.donations = new ArrayList<>();
     }
 
-
     /**
-     * Sets the attributes of the donor
+     * Sets the attributes of the patient
      *
      * @param firstName   first name
      * @param lastName    last name
@@ -104,14 +115,15 @@ public class Patient {
      * @param region      region of address
      * @param gender      gender of address
      * @param bloodGroup  blood group
-     * @param height      height
-     * @param weight      weight
+     * @param height      height in meters
+     * @param weight      weight in kilograms
      * @param nhi         nhi
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, LocalDate birth, LocalDate death, String street1,
                                  String street2, String suburb, String region, String gender, String bloodGroup, double height, double weight,
                                  String nhi) throws IllegalArgumentException {
         Enum globalEnum;
+        SearchPatients.removeIndex(this);
         if (firstName != null) {
             setFirstName(firstName);
         }
@@ -142,7 +154,7 @@ public class Patient {
                 setRegion((GlobalEnums.Region) globalEnum);
             }
             else {
-                userActions.log(Level.WARNING, "Invalid region", "attempted to update donor attributes");
+                userActions.log(Level.WARNING, "Invalid region", "attempted to update patient attributes");
             }
         }
         if (gender != null) {
@@ -151,7 +163,7 @@ public class Patient {
                 setGender((GlobalEnums.Gender) globalEnum);
             }
             else {
-                userActions.log(Level.WARNING, "Invalid gender", "attempted to update donor attributes");
+                userActions.log(Level.WARNING, "Invalid gender", "attempted to update patient attributes");
             }
         }
         if (bloodGroup != null) {
@@ -160,7 +172,7 @@ public class Patient {
                 setBloodGroup((GlobalEnums.BloodGroup) globalEnum);
             }
             else {
-                userActions.log(Level.WARNING, "Invalid blood group", "attempted to update donor attributes");
+                userActions.log(Level.WARNING, "Invalid blood group", "attempted to update patient attributes");
             }
 
         }
@@ -173,13 +185,14 @@ public class Patient {
         if (nhi != null) {
             setNhiNumber(nhi);
         }
-        userActions.log(Level.INFO, "Successfully updated donor " + getNhiNumber(), "attempted to update donor attributes");
+        userActions.log(Level.INFO, "Successfully updated patient " + getNhiNumber(), "attempted to update patient attributes");
         patientModified();
+        SearchPatients.addIndex(this);
     }
 
 
     /**
-     * Update the organ donations list of the donor
+     * Update the organ donations list of the patient
      *
      * @param newDonations - list of organs to add
      * @param rmDonations  - list of organs to remove
@@ -189,10 +202,9 @@ public class Patient {
             for (String organ : newDonations) {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ); //null if invalid
                 if (organEnum == null) {
-                    userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to donor donations");
-                }
-                else {
-                    userActions.log(Level.INFO, addDonation(organEnum), "attempted to update donor donations");
+                    userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to patient donations");
+                } else {
+                    userActions.log(Level.INFO, addDonation(organEnum), "attempted to update patient donations");
                     patientModified();
                 }
             }
@@ -201,12 +213,9 @@ public class Patient {
             for (String organ : rmDonations) {
                 Organ organEnum = (Organ) Organ.getEnumFromString(organ);
                 if (organEnum == null) {
-                    userActions.log(Level.SEVERE,
-                            "Invalid organ \"" + organ + "\" given and not removed",
-                            "attempted to remove from donor donations");
-                }
-                else {
-                    userActions.log(Level.INFO, removeDonation(organEnum), "attempted to remove from donor donations");
+                    userActions.log(Level.SEVERE,"Invalid organ \"" + organ + "\" given and not removed", "attempted to remove from patient donations");}
+                 else {
+                    userActions.log(Level.INFO, removeDonation(organEnum), "attempted to remove from patient donations");
                     patientModified();
                 }
             }
@@ -230,12 +239,11 @@ public class Patient {
     /**
      * Checks the uniqueness of the nhi number
      *
-     * @exception IllegalArgumentException when the nhi number given is already in use
+     * @throws IllegalArgumentException when the nhi number given is already in use
      */
     public void ensureUniqueNhi() throws IllegalArgumentException {
-        for (Patient p : Database.getPatients()) {
-            String nhi = p.getNhiNumber();
-            if (nhi.equals(nhiNumber.toUpperCase())) {
+        for (Patient d : Database.getPatients()) {
+            if (d.nhiNumber.equals(nhiNumber.toUpperCase())) {
                 throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
             }
         }
@@ -243,7 +251,7 @@ public class Patient {
 
 
     /**
-     * Returns the name of the donor as a formatted concatenated string
+     * Returns the name of the patient as a formatted concatenated string
      *
      * @return string named
      */
@@ -344,7 +352,7 @@ public class Patient {
 
 
     /**
-     * Calculates the donors current age. If the patient is living, it is the difference between the current datetime
+     * Calculates the patients current age. If the patient is living, it is the difference between the current datetime
      * and their date of birth, else if they are dead it is the difference between their date of death and date of birth
      *
      * @return Their calculated age
@@ -399,7 +407,7 @@ public class Patient {
 
 
     /**
-     * Calculates the Body Mass Index of the donor
+     * Calculates the Body Mass Index of the patient
      *
      * @return The calculated BMI
      */
@@ -479,6 +487,37 @@ public class Patient {
         return zip;
     }
 
+    /**
+     * Gets the current medication list for a Patient
+     * @return ArrayList medications the Patient currently uses
+     */
+    public ArrayList<Medication> getCurrentMedications() {
+        return currentMedications;
+    }
+
+    /**
+     * Gets the medication history for a Patient
+     * @return ArrayList medications the Patient used to use
+     */
+    public ArrayList<Medication> getMedicationHistory() {
+        return medicationHistory;
+    }
+
+    /**
+     * Sets the current medication list for a Patient
+     * @param currentMedications medications to set as current for the Patient
+     */
+    public void setCurrentMedications(ArrayList<Medication> currentMedications) {
+        this.currentMedications = currentMedications;
+    }
+
+    /**
+     * Sets the medication history for a Patient
+     * @param medicationHistory medication list to set as history for a Patient
+     */
+    public void setMedicationHistory(ArrayList<Medication> medicationHistory) {
+        this.medicationHistory = medicationHistory;
+    }
 
     public void setZip(int zip) {
         if (this.zip != zip) {
@@ -507,14 +546,14 @@ public class Patient {
 
 
     /**
-     * Add organs to donor donations list
+     * Add organs to patient donations list
      *
-     * @param organ - organ to add to the donors donation list
+     * @param organ - organ to add to the patients donation list
      * @return string of message
      */
     public String addDonation(Organ organ) {
         if (donations.contains(organ)) {
-            return "Organ " + organ + " is already part of the donor's donations, so was not added.";
+            return "Organ " + organ + " is already part of the patient's donations, so was not added.";
         }
         else {
             donations.add(organ);
@@ -525,9 +564,9 @@ public class Patient {
 
 
     /**
-     * Remove organs from donors donations list
+     * Remove organs from patients donations list
      *
-     * @param organ - organ to remove from the donors donations list
+     * @param organ - organ to remove from the patients donations list
      * @return string of message
      */
     public String removeDonation(Organ organ) {
@@ -535,9 +574,8 @@ public class Patient {
             donations.remove(organ);
             patientModified();
             return "Successfully removed " + organ + " from donations";
-        }
-        else {
-            return "Organ " + organ + " is not part of the donors donations, so could not be removed.";
+        } else {
+            return "Organ " + organ + " is not part of the patients donations, so could not be removed.";
         }
     }
 
@@ -655,13 +693,51 @@ public class Patient {
     }
 
 
-    public void patientModified() {
+    /**
+     * Returns a converted medication log ArrayList to a UserActionRecord OberservableList
+     * @return The medication log as a UserActionRecord ObservableList
+     */
+    public ObservableList<UserActionRecord> getPatientLog() {
+        ObservableList<UserActionRecord> currentLog = FXCollections.observableArrayList();
+        String time = null, level = null, message = null, action;
+
+        if (this.patientLog != null) {
+            for (int i = 0; i < patientLog.size(); i++) {
+                time = patientLog.get(i++);
+                level = patientLog.get(i++);
+                message = patientLog.get(i++);
+                action = patientLog.get(i);
+                currentLog.add(0, new UserActionRecord( time, level, message, action ) );
+            }
+        } else {
+            return null;
+        }
+        return currentLog;
+    }
+
+    /**
+     * Sets the medicationLog as a HashMap converted from a UserActionRecord ObservableList
+     * @param log The UserActionRecord ObservableList
+     */
+    public void setMedicationLog(ObservableList<UserActionRecord> log) {
+        ArrayList<String> newLog = new ArrayList<>();
+
+        for (UserActionRecord record : log) {
+            newLog.add(record.getTimestamp());
+            newLog.add(record.getLevel());
+            newLog.add(record.getMessage());
+            newLog.add(record.getAction());
+        }
+        this.patientLog = newLog;
+    }
+
+    private void patientModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
 
 
     public String toString() {
-        return "Donor: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
+        return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
                 + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Gender: " + gender + "\n"
                 + "Date of birth: " + birth + "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + street1 + "\n" + "Street2: " + street2
                 + "\n" + "Suburb:" + suburb + "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: "
@@ -671,7 +747,6 @@ public class Patient {
 
     public boolean equals(Object obj) {
         Patient patient = (Patient) obj;
-        return this.nhiNumber.equals(patient.nhiNumber);
+        return this.nhiNumber.equals(patient.nhiNumber) && obj.getClass() == this.getClass();
     }
-
 }

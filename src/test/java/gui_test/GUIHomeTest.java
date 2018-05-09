@@ -16,7 +16,6 @@ import utility.GlobalEnums;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -24,23 +23,29 @@ public class GUIHomeTest extends ApplicationTest {
 
     private Main main = new Main();
 
+
     @Override
     public void start(Stage stage) throws Exception {
         Database.resetDatabase();
 
-        // add dummy donor
+        // add dummy patient
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addPatients(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.addPatient(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getPatientByNhi("TFX9999")
+                .addDonation(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("TFX9999")
+                .addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
-        interact(() ->  {
-            lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
-            lookup("#loginButton").queryAs(Button.class).fire();
+        interact(() -> {
+            lookup("#nhiLogin").queryAs(TextField.class)
+                    .setText("TFX9999");
+            lookup("#loginButton").queryAs(Button.class)
+                    .fire();
         });
     }
+
 
     @After
     public void waitForEvents() {
@@ -49,31 +54,37 @@ public class GUIHomeTest extends ApplicationTest {
         sleep(1000);
     }
 
+
     @Test
     public void should_be_on_home_screen() {
-        verifyThat("#patientHomePane", Node::isVisible);
+        verifyThat("#homePane", Node::isVisible);
     }
+
 
     @Test
     public void should_logout() {
         interact(() -> {
-            lookup("#logOutButton").queryAs(Button.class).fire();
+            lookup("#logOutButton").queryAs(Button.class)
+                    .fire();
         });
         assertThat(ScreenControl.getLoggedInPatient() == null);
         verifyThat("#loginPane", Node::isVisible);
     }
 
+
     @Test
     public void should_go_to_profile() {
-        interact(() -> lookup("#profileButton").queryAs(Button.class).fire());
-        verifyThat("#patientProfileAnchorPane", Node::isVisible);
+        interact(() -> lookup("#profileButton").queryAs(Button.class)
+                .fire());
+        verifyThat("#patientProfilePane", Node::isVisible);
     }
+
 
     @Test
     public void should_go_to_log() {
-        interact(() -> lookup("#historyButton").queryAs(Button.class).fire());
+        interact(() -> lookup("#historyButton").queryAs(Button.class)
+                .fire());
         verifyThat("#patientLogPane", Node::isVisible);
     }
-
 
 }

@@ -13,13 +13,13 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings({"unused"})
-@Command(name = "donations", description = "used to update the donations on a particular donor")
+@Command(name = "donations", description = "used to update the donations on a particular patient")
 public class CLIPatientDonations implements Runnable {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-n", "--nhi"}, required = true, description = "Search donor by the NHI number.")
+    @Option(names = {"-n", "--nhi"}, required = true, description = "SearchPatients patient by the NHI number.")
     private String searchNhi;
 
     @Option(names = {"-l", "--list"}, description = "Lists current organ donations.")
@@ -43,27 +43,27 @@ public class CLIPatientDonations implements Runnable {
     @Option(names = {"-rm", "--remove"}, split = ",", description = "Takes a comma-separated list of organs to remove from donations.")
     private ArrayList<String> rmDonations;
 
-    private void displayDonorDonations(Patient patient) {
+    private void displayPatientDonations(Patient patient) {
         ArrayList<Organ> donations = patient.getDonations();
         if (donations == null) {
-            userActions.log(Level.WARNING, "No donations registered for donor: " + patient.getNameConcatenated(), "attempted to display donor donations");
+            userActions.log(Level.WARNING, "No donations registered for patient: " + patient.getNameConcatenated(), "attempted to display patient donations");
         }
         else {
-            userActions.log(Level.INFO, donations.toString(), "attempted to display donor donations");
+            userActions.log(Level.INFO, donations.toString(), "attempted to display patient donations");
         }
     }
 
     public void run() {
         try {
-            Patient donor = Database.getPatientByNhi(searchNhi);
+            Patient patient = Database.getPatientByNhi(searchNhi);
             if (donationsRequested) {
-                displayDonorDonations(donor);
+                displayPatientDonations(patient);
             }
             else {
-               donor.updateDonations(newDonations, rmDonations);
+               patient.updateDonations(newDonations, rmDonations);
             }
         } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, e.getMessage(), "attempted to view or update donor donations");
+            userActions.log(Level.SEVERE, e.getMessage(), "attempted to view or update patient donations");
         }
     }
 

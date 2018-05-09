@@ -32,7 +32,7 @@ public class CLIOdms implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-d", "--dev"}, hidden = true, description = "Auto adds a donor for your convenience.")
+    @Option(names = {"-d", "--dev"}, hidden = true, description = "Auto adds a patient for your convenience.")
     private boolean devMode;
 
     @Override
@@ -44,11 +44,11 @@ public class CLIOdms implements Runnable {
 
     private void prepTheApp() {
         try{
-            Database.addPatients(new Patient("aaa1111", "David", new ArrayList<String>() {{
+            Database.addPatient(new Patient("aaa1111", "David", new ArrayList<String>() {{
                 add("John");
             }}, "Dennison", LocalDate.of(1994, 12, 12)));
 
-            Database.addPatients(new Patient("bbb2222", "Peggy", new ArrayList<String>() {{
+            Database.addPatient(new Patient("bbb2222", "Peggy", new ArrayList<String>() {{
                 add("Jane");
             }}, "Peterson", LocalDate.of(1994, 12, 12)));
         } catch (IllegalArgumentException i){

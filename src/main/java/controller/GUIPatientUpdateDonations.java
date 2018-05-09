@@ -6,12 +6,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.CheckBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.control.Control;
+import javafx.scene.input.KeyCodeCombination;
 import model.Patient;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
-
-import javafx.scene.control.CheckBox;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -20,7 +22,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientUpdateDonations {
+public class GUIPatientUpdateDonations implements IPopupable {
 
     @FXML
     private CheckBox liverCB;
@@ -59,7 +61,7 @@ public class GUIPatientUpdateDonations {
     private CheckBox connectivetissueCB;
 
     @FXML
-    private AnchorPane donorDonationsAnchorPane;
+    private AnchorPane patientDonationsAnchorPane;
 
 
     @FXML
@@ -80,7 +82,28 @@ public class GUIPatientUpdateDonations {
 
 
     public void initialize() {
-        loadProfile(ScreenControl.getLoggedInPatient().getNhiNumber());
+        if (ScreenControl.getLoggedInPatient() != null) {
+            loadProfile(ScreenControl.getLoggedInPatient()
+                    .getNhiNumber());
+        }
+
+        // Enter key triggers log in
+        patientDonationsAnchorPane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                saveDonations();
+            }
+            else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
+                undo();
+            }
+            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
+                redo();
+            }
+        });
+    }
+
+    public void setViewedPatient(Patient patient) {
+        target = patient;
+        loadProfile(patient.getNhiNumber());
     }
 
 
@@ -89,7 +112,6 @@ public class GUIPatientUpdateDonations {
             Patient patient = Database.getPatientByNhi(nhi);
             target = patient;
             populateForm(patient);
-
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the organs for logged in user");
@@ -108,7 +130,7 @@ public class GUIPatientUpdateDonations {
             add(bonemarrowCB);
             add(connectivetissueCB);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(donorDonationsAnchorPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(patientDonationsAnchorPane, controls);
     }
 
 
@@ -156,75 +178,122 @@ public class GUIPatientUpdateDonations {
     public void saveDonations() {
         if (liverCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.LIVER);
+            userActions.log(Level.INFO, "Added liver to patient donations", "Attempted to add donation to a patient");
         }
         else {
             target.removeDonation(GlobalEnums.Organ.LIVER);
+            userActions.log(Level.INFO, "Removed liver from patient donations", "Attempted to remove donation from a patient");
+
         }
         if (kidneyCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.KIDNEY);
+            userActions.log(Level.INFO, "Added kidney to patient donations", "Attempted to add donation to a patient");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.KIDNEY);
+            userActions.log(Level.INFO, "Removed kidney from patient donations", "Attempted to remove donation from a patient");
+
         }
         if (pancreasCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.PANCREAS);
+            userActions.log(Level.INFO, "Added pancreas to patient donations", "Attempted to add donation to a patient");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.PANCREAS);
+            userActions.log(Level.INFO, "Removed pancreas from patient donations", "Attempted to remove donation from a patient");
+
         }
         if (heartCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.HEART);
+            userActions.log(Level.INFO, "Added heart to patient donations", "Attempted to add donation to a patient");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.HEART);
+            userActions.log(Level.INFO, "Removed heart from patient donations", "Attempted to remove donation from a patient");
+
         }
         if (lungCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.LUNG);
+            userActions.log(Level.INFO, "Added lung to patient donations", "Attempted to add donation to a patient");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.LUNG);
+            userActions.log(Level.INFO, "Removed lung from patient donations", "Attempted to remove donation from a patient");
+
         }
         if (intestineCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.INTESTINE);
+            userActions.log(Level.INFO, "Added intestine to patient donations", "Attempted to add donation to a patient");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.INTESTINE);
+            userActions.log(Level.INFO, "Removed intestine from patient donations", "Attempted to remove donation from a patient");
+
         }
         if (corneaCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.CORNEA);
+            userActions.log(Level.INFO, "Added cornea to patient donations", "Attempted to add donation to a patient");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.CORNEA);
+            userActions.log(Level.INFO, "Removed cornea from patient donations", "Attempted to remove donation from a patient");
+
         }
         if (middleearCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.MIDDLEEAR);
+            userActions.log(Level.INFO, "Added middle ear to patient donations", "Attempted to add donation to a patient");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.MIDDLEEAR);
+            userActions.log(Level.INFO, "Removed middle ear from patient donations", "Attempted to remove donation from a patient");
+
         }
         if (skinCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.SKIN);
+            userActions.log(Level.INFO, "Added skin to patient donations", "Attempted to add donation to a patient");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.SKIN);
+            userActions.log(Level.INFO, "Removed skin from patient donations", "Attempted to remove donation from a patient");
+
         }
         if (boneCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.BONE);
+            userActions.log(Level.INFO, "Added bone to patient donations", "Attempted to add donation to a patient");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.BONE);
+            userActions.log(Level.INFO, "Removed bone from patient donations", "Attempted to remove donation from a patient");
+
         }
         if (bonemarrowCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.BONE_MARROW);
+            userActions.log(Level.INFO, "Added bone marrow to patient donations", "Attempted to add donation to a patient");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.BONE_MARROW);
+            userActions.log(Level.INFO, "Removed bone marrow from patient donations", "Attempted to remove donation from a patient");
+
         }
         if (connectivetissueCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
+            userActions.log(Level.INFO, "Added connective tissue to patient donations", "Attempted to add donation to a patient");
+
         }
         else {
             target.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
+            userActions.log(Level.INFO, "Removed connective tissue from patient donations", "Attempted to remove donation from a patient");
+
         }
         new Alert(Alert.AlertType.CONFIRMATION, "Organ management saved successfully", ButtonType.OK).showAndWait();
         goToProfile();
@@ -232,14 +301,23 @@ public class GUIPatientUpdateDonations {
 
 
     public void goToProfile() {
-        ScreenControl.removeScreen("donorProfile");
-        try {
-            ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-            ScreenControl.activate("donorProfile");
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).showAndWait();
+        if (ScreenControl.getLoggedInPatient() != null) {
+            ScreenControl.removeScreen("patientProfile");
+            try {
+                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                ScreenControl.activate("patientProfile");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(patientDonationsAnchorPane.getScene(), fxmlLoader, target);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+            }
         }
     }
 }

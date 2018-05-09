@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import service.Database;
 
 import java.io.IOException;
@@ -13,12 +15,24 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianHome {
+
+    public Button searchPatients;
+
+    public AnchorPane clinicianHomePane;
+
+    public Button profileButton;
+
+    public Button saveButton;
+
+    public Button logoutButton;
+
+
     @FXML
     public void goToClinicianProfile(){ ScreenControl.activate("clinicianProfile"); }
 
     @FXML
-    public void goToSearch(){
-        // implement search functionality
+    public void goToSearchPatients(){
+        ScreenControl.activate("clinicianSearchPatients");
     }
 
     @FXML
@@ -29,8 +43,8 @@ public class GUIClinicianHome {
     @FXML
     public void saveClinician() {
         Database.saveToDisk();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Saved!");
-        alert.showAndWait();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Successfully Saved!");
+        alert.show();
     }
 
     public void goToClinicianWaitingList(ActionEvent event) {

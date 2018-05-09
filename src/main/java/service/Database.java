@@ -4,10 +4,13 @@ import com.google.gson.Gson;
 import model.Clinician;
 import model.Patient;
 import utility.GlobalEnums;
+import utility.SearchPatients;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -15,19 +18,19 @@ import static utility.UserActionHistory.userActions;
 
 public class Database {
 
-    private static HashSet<Patient> patients = new HashSet<>();
-    private static ArrayList<Clinician> clinicians = new ArrayList<>();
     private static OrganWaitlist organWaitingList = new OrganWaitlist();
 
     public static OrganWaitlist getWaitingList() {
     	return organWaitingList;
     }
     
-    public static HashSet<Patient> getPatients() {
+    private static Set<Patient> patients = new HashSet<>();
+    private static Set<Clinician> clinicians = new HashSet<>();
+
+    public static Set<Patient> getPatients() {
         return patients;
     }
-    private static ArrayList<Clinician> getClinicians() { return clinicians; }
-
+    public static Set<Clinician> getClinicians() { return clinicians; }
 
 
     /**
@@ -35,18 +38,17 @@ public class Database {
      *
      * @param newPatient the new patient to add
      */
-    public static void addPatients(Patient newPatient) {
+    public static void addPatient(Patient newPatient) {
         try {
             newPatient.ensureValidNhi();
             newPatient.ensureUniqueNhi();
             patients.add(newPatient);
-            userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "attempted to add a patient");
-        }
-        catch (IllegalArgumentException o) {
+            SearchPatients.addIndex(newPatient);
+            userActions.log(Level.INFO,"Successfully added patient " + newPatient.getNhiNumber(), "attempted to add a patient");
+        } catch (IllegalArgumentException o) {
             throw new IllegalArgumentException(o.getMessage());
         }
     }
-
 
     /**
      * Removes a patient from the database
@@ -94,38 +96,43 @@ public class Database {
         throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
     }
 
-    public static int addClinician(String firstName, ArrayList<String> middleNames, String lastName, GlobalEnums.Region region) throws IllegalArgumentException {
-        return Database.addClinician(firstName, middleNames, lastName, null, null, null, region);
+    /**
+     * Adds a clinician to the database
+     *
+     * @param newClinician the new clinician to add
+     */
+    public static void addClinician(Clinician newClinician) throws IllegalArgumentException {
+        try {
+            if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getFirstName()))
+                throw new IllegalArgumentException("firstname");
+            if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getLastName()))
+                throw new IllegalArgumentException("lastname");
+
+            if (newClinician.getStreet1() != null && !Pattern.matches("^[- a-zA-Z0-9]+$", newClinician.getStreet1()))
+                throw new IllegalArgumentException("street1");
+
+            if (newClinician.getStaffID() == Database.getNextStaffID()) {
+                clinicians.add(newClinician);
+                userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "attempted to add a clinician");
+            } else {
+                throw new IllegalArgumentException("staffID");
+            }
+        } catch (IllegalArgumentException e) {
+            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: " + e.getMessage(), "attempted to add a clinician");
+            throw new IllegalArgumentException(e.getMessage());
+        }
     }
 
     /**
-     * Adds a new clinician to the database. Staff IDs are in increasing integer order
-     * @param firstName     Clinicians first name
-     * @param middleNames   Clinicians middle names - an arraylist of names
-     * @param lastName      Clinicians last name
-     * @param street1       Clinicians street1 address
-     * @param street2       Clinicians street2 address
-     * @param suburb        Clinicians suburb
-     * @param region        Clinicians region - using the GlobalEnums.Region enum
-     * @return  The staff id of the new clinician
-     * @throws IllegalArgumentException If the first name, last name, or street address does not match its required regex
+     * Returns the next valid staffID based on IDs in the clinician list
+     *
+     * @return the valid id
      */
-    public static int addClinician(String firstName, ArrayList<String> middleNames, String lastName, String street1, String street2, String suburb, GlobalEnums.Region region) throws IllegalArgumentException {
-        int staffID = getNextStaffID();
-        if (!Pattern.matches("^[-a-zA-Z]+$", firstName)) throw new IllegalArgumentException("Invalid first name");
-        if (!Pattern.matches("^[-a-zA-Z]+$", lastName)) throw new IllegalArgumentException("Invalid last name");
-        if (street1 != null && !Pattern.matches("^[- a-zA-Z0-9]+$", street1)) throw new IllegalArgumentException("Invalid street address");
-
-        clinicians.add(new Clinician(staffID, firstName, middleNames, lastName, street1, street2, suburb, region));
-        userActions.log(Level.INFO,"Successfully added clinician with id " + staffID, "attempted to add a clinician");
-        return staffID;
-    }
-
-    private static int getNextStaffID() {
+    public static int getNextStaffID() {
         if (clinicians.size() == 0) {
             return 0;
         } else {
-            int currentID = clinicians.get(clinicians.size() - 1).getStaffID();
+            int currentID = clinicians.stream().max(Comparator.comparing(Clinician::getStaffID)).get().getStaffID();
             return currentID + 1;
         }
     }
@@ -137,6 +144,7 @@ public class Database {
         try {
             saveToDiskPatients();
             saveToDiskWaitlist();
+            saveToDiskClinicians();
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
@@ -162,8 +170,23 @@ public class Database {
         Gson gson = new Gson();
         String json = gson.toJson(patients);
 
-        String PatientPath = "./";
-        Writer writer = new FileWriter(new File(PatientPath, "patient.json"));
+        String patientPath = "./";
+        Writer writer = new FileWriter(new File(patientPath, "patient.json"));
+        writer.write(json);
+        writer.close();
+    }
+
+    /**
+     * Writes database clinicians to file on disk
+     *
+     * @throws IOException when the file cannot be found nor created
+     */
+    private static void saveToDiskClinicians() throws IOException {
+        Gson gson = new Gson();
+        String json = gson.toJson(clinicians);
+
+        String clinicianPath = "./";
+        Writer writer = new FileWriter(new File(clinicianPath, "clinician.json"));
         writer.write(json);
         writer.close();
     }
@@ -171,18 +194,18 @@ public class Database {
 
     /**
      * Calls importFromDisk and handles any errors
-     *
-     * @param fileName the filename of the file to import
+     * @param directory The directory to import from
      */
     public static void importFromDisk(String directory) {
         try {
             importFromDiskPatients(directory);
-            userActions.log(Level.INFO, "Imported donors from disk", "Attempted to import donors from disk");
+            userActions.log(Level.INFO, "Imported patients from disk", "Attempted to import from disk");
+            SearchPatients.createFullIndex();
             importFromDiskWaitlist(directory);
             userActions.log(Level.INFO, "Imported waitlist from disk", "Attempted to import waitlist from disk");
         }
         catch (IOException e) {
-            userActions.log(Level.SEVERE, e.getMessage(), "attempted to import from disk");
+            userActions.log(Level.WARNING, e.getMessage(), "attempted to import from disk");
         }
     }
 
@@ -202,16 +225,33 @@ public class Database {
      *
      * @exception IOException when the file cannot be found
      */
-    private static void importFromDiskPatients(String directory) throws IOException {
-    	String fileName = directory + "patient.json";
+    private static void importFromDiskPatients(String fileName) throws IOException {
         Gson gson = new Gson();
         BufferedReader br = new BufferedReader(new FileReader(fileName));
-        Patient[] patients = gson.fromJson(br, Patient[].class);
-        for (Patient p : patients) {
-            Database.addPatients(p);
+        Patient[] patient = gson.fromJson(br, Patient[].class);
+        for (Patient d : patient) {
+            Database.addPatient(d);
         }
     }
 
+
+    /**
+     * Reads clinician data from disk
+     *
+     * @throws IOException when the file cannot be found
+     */
+    public static void importFromDiskClinicians(String fileName) throws IOException {
+        Gson gson = new Gson();
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        Clinician[] clinician = gson.fromJson(br, Clinician[].class);
+        for (Clinician c : clinician) {
+            try {
+                Database.addClinician(c);
+            } catch (IllegalArgumentException e) {
+                userActions.log(Level.WARNING, "Error importing clinician from file");
+            }
+        }
+    }
 
     /**
      *

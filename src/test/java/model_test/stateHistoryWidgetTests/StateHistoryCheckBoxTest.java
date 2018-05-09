@@ -104,4 +104,45 @@ public class StateHistoryCheckBoxTest {
         stateHistoryCheckBox.undo();
         assertFalse(checkBox.isSelected());
     }
+
+    /**
+     * Tests the redo method of the StateHistoryCheckBox
+     */
+    @Test
+    public void testRedo() {
+        checkBox.setSelected(false);
+        StateHistoryCheckBox stateHistoryCheckBox = new StateHistoryCheckBox(checkBox);
+        ArrayList<Boolean> checkList = new ArrayList<>();
+        stateHistoryCheckBox.store();
+        stateHistoryCheckBox.undo();
+        stateHistoryCheckBox.redo();
+        checkList.add(false);
+        checkList.add(false);
+        assertEquals(checkList, stateHistoryCheckBox.getStates());
+        assertEquals(1, stateHistoryCheckBox.getIndex());
+
+        stateHistoryCheckBox.redo();
+        assertEquals(checkList, stateHistoryCheckBox.getStates());
+        assertEquals(1, stateHistoryCheckBox.getIndex());
+
+        stateHistoryCheckBox.undo();
+        checkBox.setSelected(true);
+        stateHistoryCheckBox.store();
+        checkBox.setSelected(false);
+        stateHistoryCheckBox.store();
+        stateHistoryCheckBox.undo();
+        stateHistoryCheckBox.undo();
+        stateHistoryCheckBox.redo();
+        stateHistoryCheckBox.redo();
+        checkList.remove(1);
+        checkList.add(true);
+        checkList.add(false);
+        assertEquals(checkList, stateHistoryCheckBox.getStates());
+        assertEquals(2, stateHistoryCheckBox.getIndex());
+        assertFalse(checkBox.isSelected());
+        stateHistoryCheckBox.undo();
+        stateHistoryCheckBox.undo();
+        stateHistoryCheckBox.redo();
+        assertTrue(checkBox.isSelected());
+    }
 }

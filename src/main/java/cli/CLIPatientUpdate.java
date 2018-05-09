@@ -19,7 +19,7 @@ public class CLIPatientUpdate implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-s", "--search"}, required = true, description = "Search patient by the NHI number of the patient.")
+    @Option(names = {"-s", "--search"}, required = true, description = "SearchPatients patient by the NHI number of the patient.")
     private String searchNhi;
 
     @Option(names = {"-f", "--firstname"}, description = "The first name of the patient.")

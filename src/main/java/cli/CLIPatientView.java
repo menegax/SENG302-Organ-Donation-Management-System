@@ -15,7 +15,7 @@ public class CLIPatientView implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-n", "--nhi"}, description = "Search patient by the NHI number of the patient.")
+    @Option(names = {"-n", "--nhi"}, description = "SearchPatients patient by the NHI number of the patient.")
     private String searchNhi;
 
     @Option(names = {"-a", "--all"}, description = "View all patients")
@@ -31,7 +31,7 @@ public class CLIPatientView implements Runnable {
         }
         if (searchAll) {
             if (Database.getPatients().size() == 0) {
-                userActions.log(Level.INFO, "No patient in the database", "attempted to view all patients");
+                userActions.log(Level.INFO, "No patients in the database", "attempted to view all patients");
             } else {
                 userActions.log(Level.WARNING, Database.getPatients().toString(), "attempted to view all patients");
             }
