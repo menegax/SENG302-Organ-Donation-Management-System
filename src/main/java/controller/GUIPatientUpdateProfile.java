@@ -284,8 +284,10 @@ public class GUIPatientUpdateProfile implements IPopupable{
             valid = setInvalid(nhiTxt);
             invalidContent.append("NHI must be three letters followed by four numbers\n");
         }
-        if (Database.isPatientInDb(nhiTxt.getText())) {
-            // checks to see if nhi already in use
+        if (Database.isPatientInDb(nhiTxt.getText()) && !ScreenControl.getLoggedInPatient()
+                .getNhiNumber()
+                .equals(nhiTxt.getText())) {
+            // checks to see if nhi already in use and not already being used by that patient
             valid = setInvalid(nhiTxt);
             invalidContent.append("NHI is already in use\n");
         }
