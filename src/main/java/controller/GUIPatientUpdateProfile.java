@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Screen;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
@@ -284,15 +285,19 @@ public class GUIPatientUpdateProfile implements IPopupable{
             valid = setInvalid(nhiTxt);
             invalidContent.append("NHI must be three letters followed by four numbers\n");
         }
-        if (Database.isPatientInDb(nhiTxt.getText()) && !ScreenControl.getLoggedInPatient()
-                .getNhiNumber()
-                .equals(nhiTxt.getText())) {
-            // checks to see if nhi already in use and not already being used by that patient
-            valid = setInvalid(nhiTxt);
-            invalidContent.append("NHI is already in use\n");
+
+        try {
+            // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
+            if (Database.getPatientByNhi(nhiTxt.getText()).getUuid() != target.getUuid()) {
+                valid = setInvalid(nhiTxt);
+                invalidContent.append("NHI is already in use\n");
+            }
+            else {
+                setValid(nhiTxt);
+            }
         }
-        else {
-            setValid(nhiTxt);
+        catch (InvalidObjectException e) {
+            setInvalid(nhiTxt);
         }
 
         // first name
@@ -508,6 +513,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
         }
         else {
             userActions.log(Level.WARNING, "Failed to update patient profile due to invalid fields", "Attempted to update patient profile");
+            invalidContent.append("\nYour changes have not been saved.");
             invalidInfo.setContentText(invalidContent.toString());
             invalidInfo.show();
         }
