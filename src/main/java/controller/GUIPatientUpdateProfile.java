@@ -192,10 +192,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
 
     /**
      * Populates the scene controls with values from the patient object
-<<<<<<< HEAD:src/main/java/controller/GUIPatientUpdateProfile.java
-=======
      *
->>>>>>> development:src/main/java/controller/GUIPatientUpdateProfile.java
      * @param patient the patient object whose attributes are used to load into the form
      */
     private void populateForm(Patient patient) {

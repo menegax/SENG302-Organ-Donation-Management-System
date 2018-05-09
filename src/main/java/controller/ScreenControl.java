@@ -56,10 +56,7 @@ public class ScreenControl {
 
     /**
      * Add screen to the hashmap of screens
-<<<<<<< HEAD
-=======
      *
->>>>>>> development
      * @param name - name of screen to add
      * @param pane - Pane object from FXML
      */
