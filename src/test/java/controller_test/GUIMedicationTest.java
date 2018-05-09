@@ -91,9 +91,9 @@ public class GUIMedicationTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
     }*/
 
-    /**
-     * Tests entering a valid medication to textfield and registering that medication to currentMedications listView
-     */
+    ///**
+    // * Tests entering a valid medication to textfield and registering that medication to currentMedications listView
+    // */
     /*@Test
     public void testValidMedicationRegistration() {
         verifyThat("#medicationPane", Node::isVisible); // Verify "user" is in medication panel
@@ -126,9 +126,9 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#pastMedications", ListViewMatchers.isEmpty());
     }*/
 
-    /**
-     * Tests entering an invalid medication to textfield and registering that medication to currentMedications listView
-     */
+    ///**
+    // * Tests entering an invalid medication to textfield and registering that medication to currentMedications listView
+    // */
     /*@Test
     public void testInvalidMedicationRegistration() {
         verifyThat("#medicationPane", Node::isVisible); // Verify "user" is in medication panel
@@ -162,9 +162,9 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#pastMedications", ListViewMatchers.isEmpty());
     }*/
 
-    /**
-     * Tests the selecting of a single medication in the currentMedications listView
-     */
+    ///**
+    // * Tests the selecting of a single medication in the currentMedications listView
+    // */
     /*@Test
     public void testSelectingMedication() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
@@ -203,9 +203,9 @@ public class GUIMedicationTest extends ApplicationTest {
         // Currently unsure how test other than visual observation - which is passing
     }*/
 
-    /**
-     * Tests moving a single medication from the currentMedications listView to the pastMedications listView
-     */
+    ///**
+    // * Tests moving a single medication from the currentMedications listView to the pastMedications listView
+    // */
     /*@Test
     public void testRemovingMedication() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
@@ -253,9 +253,9 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#currentMedications", ListViewMatchers.isEmpty());
     }*/
 
-    /**
-     * Tests moving a single medication from the pastMedications listView to the currentMedications listView
-     */
+    ///**
+    // * Tests moving a single medication from the pastMedications listView to the currentMedications listView
+    // */
     /*@Test
     public void testAddingMedication() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
@@ -319,9 +319,9 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#pastMedications", ListViewMatchers.isEmpty());
     }*/
 
-    /**
-     * Tests can't register medication if duplicate medication already registered to either current or past medications
-     */
+    ///**
+    // * Tests can't register medication if duplicate medication already registered to either current or past medications
+    // */
     /*@Test
     public void testInvalidDuplicateRegistration() {
         // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
@@ -382,9 +382,9 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#pastMedications", ListViewMatchers.isEmpty());
     }*/
 
-    /**
-     * Tests that any already registered medication in history will be moved to current if registered again
-     */
+    ///**
+    // * Tests that any already registered medication in history will be moved to current if registered again
+    // */
     /*@Test
     public void testRegisterMedicationAlreadyInHistory() {
         // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
@@ -459,9 +459,9 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#pastMedications", ListViewMatchers.isEmpty());
     }*/
 
-    /**
-     * Tests deleting a single medication from the pastMedications listView and from the medicationHistory ArrayList
-     */
+    ///**
+    // * Tests deleting a single medication from the pastMedications listView and from the medicationHistory ArrayList
+    // */
     /*@Test
     public void testValidDeletingMedication() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
@@ -525,9 +525,9 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#currentMedications", ListViewMatchers.isEmpty());
     }*/
 
-    /**
-     * Tests that a duplicate medication CAN be registered ONLY AFTER the already registered duplicate is DELETED
-     */
+    ///**
+    // * Tests that a duplicate medication CAN be registered ONLY AFTER the already registered duplicate is DELETED
+    // */
     /*@Test
     public void testValidDuplicateRegistrationAfterDeletion() {
         // Verify that the medication entry text field is empty prior to entering a new medication for registration
@@ -622,9 +622,9 @@ public class GUIMedicationTest extends ApplicationTest {
         verifyThat("#pastMedications", ListViewMatchers.isEmpty());
     }*/
 
-    /**
-     * Enter seven more new medications to textfield and register them to current ArrayList and listView
-     */
+    ///**
+    // * Enter seven more new medications to textfield and register them to current ArrayList and listView
+    // */
     /*@Test
     public void testValidMultipleMedicationRegistrations() {
         // Verify that both of the listViews are empty as no medication has yet been registered to any of them yet
