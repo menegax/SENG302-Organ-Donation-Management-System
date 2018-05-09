@@ -21,9 +21,7 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class Patient {
-
-    private UUID uuid = UUID.randomUUID();
+public class Patient extends User {
 
     private final Timestamp CREATED;
 

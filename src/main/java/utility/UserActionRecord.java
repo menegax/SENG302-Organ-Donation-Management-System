@@ -1,5 +1,6 @@
 package utility;
 
+import controller.ScreenControl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -20,6 +21,7 @@ public class UserActionRecord {
         this.level = level;
         this.message = message;
         this.action = action;
+
     }
 
 
