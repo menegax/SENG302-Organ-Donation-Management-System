@@ -65,6 +65,8 @@ public class Patient {
 
     private ArrayList<Medication> medicationHistory = new ArrayList<>();
 
+    private List<Procedure> procedures = new ArrayList<>();
+
     private String homePhone;
 
     private String mobilePhone;
@@ -682,6 +684,9 @@ public class Patient {
         this.contactEmailAddress = contactEmailAddress;
     }
 
+    public List<Procedure> getProcedures() {
+        return procedures;
+    }
 
     /**
      * Returns a converted medication log ArrayList to a UserActionRecord OberservableList
@@ -725,6 +730,9 @@ public class Patient {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
 
+    public void addProcedure(Procedure procedure) {
+        procedures.add(procedure);
+    }
 
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
