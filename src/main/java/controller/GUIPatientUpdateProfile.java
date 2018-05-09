@@ -12,6 +12,7 @@ import javafx.stage.Screen;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
+import utility.CacheHelper;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -25,9 +26,7 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-import javax.xml.crypto.Data;
-
-public class GUIPatientUpdateProfile implements IPopupable{
+public class GUIPatientUpdateProfile {
 
     @FXML
     private AnchorPane patientUpdateAnchorPane;
@@ -90,20 +89,19 @@ public class GUIPatientUpdateProfile implements IPopupable{
 
     private StatesHistoryScreen statesHistoryScreen;
 
-    public void setViewedPatient(Patient patient) {
-        target = patient;
-        loadProfile(target.getNhiNumber());
-    }
+    private CacheHelper cacheHelper;
+
 
     public void initialize() {
-
         populateDropdowns();
-
-        if (ScreenControl.getLoggedInPatient() != null) {
-            loadProfile(ScreenControl.getLoggedInPatient()
-                    .getNhiNumber());
+        cacheHelper = new CacheHelper();
+        Object user = cacheHelper.getLoggedInUser();
+        if (user instanceof Patient) {
+            loadProfile(((Patient) user).getNhiNumber());
         }
-
+        if (cacheHelper.getTargetPatient() != null) {
+            loadProfile((cacheHelper.getTargetPatient()).getNhiNumber());
+        }
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -550,7 +548,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
      * Returns to patient profile screen
      */
     public void goBackToProfile() {
-        if (ScreenControl.getLoggedInPatient() != null) {
+        if (cacheHelper.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientProfile");
             try {
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
@@ -564,7 +562,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
         else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientUpdateAnchorPane.getScene(), fxmlLoader, target);
+                ScreenControl.loadPopUpPane(patientUpdateAnchorPane.getScene(), fxmlLoader);
             }
             catch (IOException e) {
                 userActions.log(Level.SEVERE,

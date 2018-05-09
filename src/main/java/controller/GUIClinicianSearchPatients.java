@@ -15,10 +15,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Patient;
-import model.DrugInteraction;
 import service.Database;
 import utility.GlobalEnums;
 import utility.SearchPatients;
+import utility.CacheHelper;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -69,23 +69,17 @@ public class GUIClinicianSearchPatients implements Initializable {
      * Sets up double-click functionality for each row to open a patient profile update
      */
     private void setupDoubleClickToPatientEdit() {
-
+        CacheHelper cacheHelper = new CacheHelper();
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
                     .getSelectedItem() != null) {
                 try {
+                    cacheHelper.setTargetPatient(patientDataTable.getSelectionModel().getSelectedItem());
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
-                    GUIPatientProfile controller = fxmlLoader.getController();
-                    controller.setViewedPatient(patientDataTable.getSelectionModel()
-                            .getSelectedItem());
-                    DrugInteraction.setViewedPatient(patientDataTable.getSelectionModel()
-                            .getSelectedItem());
-
                     Stage popUpStage = new Stage();
-                    popUpStage.setX(ScreenControl.getMain()
-                            .getX()); //offset popup
+                    popUpStage.setX(ScreenControl.getMain().getX()); //offset popup
                     popUpStage.setScene(scene);
 
                     // When pop up is closed, refresh the table

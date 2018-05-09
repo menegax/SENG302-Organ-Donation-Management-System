@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import model.Clinician;
 import model.Patient;
 import service.Database;
+import utility.CacheHelper;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -64,14 +65,14 @@ public class GUILogin {
      */
     @FXML
     public void logIn() {
+        CacheHelper login = new CacheHelper();
         if (!clinicianToggle.isSelected()) {
             try {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
-                ScreenControl.setLoggedInPatient(newPatient); // THIS SHOULD BE CAHCED
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene/patientUpdateProfile.fxml"));
                 Pane pane = loader.load();
                 GUIPatientUpdateProfile controller = loader.getController();
-                ScreenControl.setLoggedInPatient(newPatient);
+                login.addLoggedInUserToCache(newPatient);
                 loader.setController(controller);
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
                 ScreenControl.addScreen("patientProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/patientUpdateProfile.fxml")));
@@ -98,7 +99,7 @@ public class GUILogin {
         else {
             try {
                 Clinician newClinician = Database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
-                ScreenControl.setLoggedInClinician(newClinician);
+                login.addLoggedInUserToCache(newClinician);
                 ScreenControl.addScreen("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
                 ScreenControl.addScreen("clinicianSearchPatients", FXMLLoader.load(getClass().getResource("/scene/clinicianSearchPatients.fxml")));
                 ScreenControl.addScreen("clinicianProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/clinicianProfileUpdate.fxml")));

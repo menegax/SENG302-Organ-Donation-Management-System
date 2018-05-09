@@ -13,10 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import model.Clinician;
 import model.Patient;
 import model.DrugInteraction;
 import model.Medication;
 import service.Database;
+import utility.CacheHelper;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.UserActionRecord;
 
@@ -34,7 +36,7 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 import static utility.UserActionRecord.logHistory;
 
-public class GUIPatientMedications implements IPopupable {
+public class GUIPatientMedications {
 
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
@@ -183,11 +185,15 @@ public class GUIPatientMedications implements IPopupable {
         addMedication(newMedication.getText());
     }
 
+    private CacheHelper cacheHelper;
+
     /**
      * Initializes the Medication GUI pane, adds any medications stored for donor to current and past listViews
      */
     @FXML
     public void initialize() {
+        cacheHelper = new CacheHelper();
+        Object user = cacheHelper.getLoggedInUser();
         //Register events for when an item is selected from a listView and set selection mode to multiple
         currentMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(currentMedications));
         pastMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(pastMedications));
@@ -196,8 +202,11 @@ public class GUIPatientMedications implements IPopupable {
         stateHistoryScreen = new StatesHistoryScreen(medicationPane, new ArrayList<Control>() {{
             add(newMedication);
         }});
-        if (ScreenControl.getLoggedInPatient() != null) {
-            loadProfile(ScreenControl.getLoggedInPatient().getNhiNumber());
+        if (user instanceof Patient) {
+            loadProfile(((Patient) user).getNhiNumber());
+        } else if (user instanceof Clinician) {
+            viewedPatient = cacheHelper.getTargetPatient();
+            loadProfile(viewedPatient.getNhiNumber());
         }
     }
 
@@ -554,7 +563,7 @@ public class GUIPatientMedications implements IPopupable {
         }};
         if ( selectedMedications.size()  == 2){ //if two are selected
             try {
-                DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1));
+                DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1), viewedPatient);
                 displayInteractions(interaction.getInteractionsWithDurations(), selectedMedications.get(0), selectedMedications.get(1));
             } catch (IOException e ){
                 alert.setContentText("Drug interactions not available, either this study has not been completed or" +
@@ -581,7 +590,7 @@ public class GUIPatientMedications implements IPopupable {
      */
     @FXML
     public void goToProfile() {
-        if (ScreenControl.getLoggedInPatient() != null ) {
+        if (cacheHelper.getLoggedInUser() instanceof Patient ) {
             ScreenControl.removeScreen("patientProfile");
             try {
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
@@ -593,7 +602,7 @@ public class GUIPatientMedications implements IPopupable {
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader, viewedPatient);
+                ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader);
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the edit page to the profile page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();

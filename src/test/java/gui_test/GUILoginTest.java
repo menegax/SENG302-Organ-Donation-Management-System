@@ -3,7 +3,6 @@ package gui_test;
 
 
 import controller.Main;
-import controller.ScreenControl;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -18,6 +17,7 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 import utility.GlobalEnums;
+import utility.CacheHelper;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -29,6 +29,7 @@ public class GUILoginTest extends ApplicationTest {
 
 
     private Main main = new Main();
+    private CacheHelper loginHelper = new CacheHelper();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -67,7 +68,7 @@ public class GUILoginTest extends ApplicationTest {
             assertThat(lookup("#nhiLogin").queryAs(TextField.class)).hasText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
         });
-        assertThat(ScreenControl.getLoggedInPatient().getNhiNumber().equals("TFX9999"));
+        assertThat(((Patient)loginHelper.getLoggedInUser()).getNhiNumber().equals("TFX9999"));
         verifyThat("#homePane", Node::isVisible);
     }
 
@@ -78,7 +79,7 @@ public class GUILoginTest extends ApplicationTest {
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(ScreenControl.getLoggedInPatient().getNhiNumber() == null);
+        assertThat(((Patient)loginHelper.getLoggedInUser()).getNhiNumber() == null);
         verifyThat("#loginPane", Node::isVisible);
     }
 
@@ -89,7 +90,7 @@ public class GUILoginTest extends ApplicationTest {
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(ScreenControl.getLoggedInPatient().getNhiNumber() == null);
+        assertThat(((Patient)loginHelper.getLoggedInUser()).getNhiNumber() == null);
         verifyThat("#loginPane", Node::isVisible);
     }
 

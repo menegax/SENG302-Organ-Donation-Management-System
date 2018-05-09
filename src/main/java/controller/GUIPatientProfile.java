@@ -11,24 +11,25 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.*;
+import model.Clinician;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import model.Medication;
 import service.Database;
 import utility.GlobalEnums;
+import utility.CacheHelper;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientProfile implements IPopupable {
+public class GUIPatientProfile {
 
     @FXML
     private AnchorPane patientProfilePane;
@@ -99,26 +100,11 @@ public class GUIPatientProfile implements IPopupable {
     @FXML
     private Label back;
 
-    private Patient viewedPatient;
+    private CacheHelper cacheHelper;
 
     private ListProperty<String> organListProperty = new SimpleListProperty<>();
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
-
-
-    public void initialize() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            medicationBtn.setDisable(true);
-            medicationBtn.setVisible(false);
-            try {
-                loadProfile(ScreenControl.getLoggedInPatient()
-                        .getNhiNumber());
-            }
-            catch (IOException e) {
-                userActions.log(Level.SEVERE, "Cannot load patient profile");
-            }
-        }
-    }
 
 
     private void removeBack() {
@@ -127,21 +113,31 @@ public class GUIPatientProfile implements IPopupable {
     }
 
 
-    public void setViewedPatient(Patient patient) {
-        this.viewedPatient = patient;
-        removeBack();
-        try {
-            loadProfile(this.viewedPatient.getNhiNumber());
+    public void initialize() {
+        cacheHelper = new CacheHelper();
+        Object user = null;
+        if (cacheHelper.getLoggedInUser() instanceof  Patient ) {
+            medicationBtn.setDisable(true); //hide medications btn
+            medicationBtn.setVisible(false);
+            user = cacheHelper.getLoggedInUser();
         }
-        catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
+        if (cacheHelper.getLoggedInUser() instanceof Clinician) {
+            removeBack();
+            user = cacheHelper.getTargetPatient();
+        }
+
+        try {
+            assert user != null;
+            loadProfile(((Patient)user).getNhiNumber());
+        }
+        catch (IOException e) {
+            userActions.log(Level.SEVERE, "Cannot load patient profile");
         }
     }
 
 
     private void loadProfile(String nhi) throws InvalidObjectException {
         Patient patient = Database.getPatientByNhi(nhi);
-
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
         genderLbl.setText(patient.getGender() == null ? "Not set" : patient.getGender()
@@ -192,7 +188,7 @@ public class GUIPatientProfile implements IPopupable {
 
 
     public void goToEdit() {
-        if (ScreenControl.getLoggedInPatient() != null) {
+        if (cacheHelper.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientUpdateProfile");
             try {
                 ScreenControl.addScreen("patientUpdateProfile", FXMLLoader.load(getClass().getResource("/scene/patientUpdateProfile.fxml")));
@@ -206,7 +202,7 @@ public class GUIPatientProfile implements IPopupable {
         else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
+                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
             }
             catch (IOException e) {
                 userActions.log(Level.SEVERE,
@@ -219,7 +215,7 @@ public class GUIPatientProfile implements IPopupable {
 
 
     public void goToDonations() {
-        if (ScreenControl.getLoggedInPatient() != null) {
+        if (cacheHelper.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientDonations");
             try {
                 ScreenControl.addScreen("patientDonations", FXMLLoader.load(getClass().getResource("/scene/patientUpdateDonations.fxml")));
@@ -233,7 +229,7 @@ public class GUIPatientProfile implements IPopupable {
         else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateDonations.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
+                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
             }
             catch (Exception e) {
                 userActions.log(Level.SEVERE,
@@ -246,7 +242,7 @@ public class GUIPatientProfile implements IPopupable {
 
 
     public void goToContactDetails() {
-        if (ScreenControl.getLoggedInPatient() != null) {
+        if (cacheHelper.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientContactDetails");
             try {
                 ScreenControl.addScreen("patientContactDetails", FXMLLoader.load(getClass().getResource("/scene/patientUpdateContacts.fxml")));
@@ -262,7 +258,7 @@ public class GUIPatientProfile implements IPopupable {
         else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateContacts.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
+                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
             }
             catch (IOException e) {
                 userActions.log(Level.SEVERE,
@@ -275,7 +271,7 @@ public class GUIPatientProfile implements IPopupable {
 
 
     public void openMedication() {
-        if (ScreenControl.getLoggedInPatient() != null) {
+        if (cacheHelper.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientMedications");
             try {
                 ScreenControl.addScreen("patientMedications", FXMLLoader.load(getClass().getResource("/scene/patientMedications.fxml")));
@@ -291,12 +287,9 @@ public class GUIPatientProfile implements IPopupable {
         else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientMedications.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
-            }
-            catch (IOException e) {
-                userActions.log(Level.SEVERE,
-                        "Error loading medication screen in popup",
-                        "attempted to navigate from the profile page to the medication page in popup");
+                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading medication screen in popup", "attempted to navigate from the profile page to the medication page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading medication page", ButtonType.OK).showAndWait();
             }
         }

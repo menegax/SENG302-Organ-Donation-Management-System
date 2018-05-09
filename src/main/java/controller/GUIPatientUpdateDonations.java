@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import javafx.scene.input.KeyCodeCombination;
 import model.Patient;
+import utility.CacheHelper;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
@@ -21,7 +22,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientUpdateDonations implements IPopupable {
+public class GUIPatientUpdateDonations {
 
     @FXML
     private CheckBox liverCB;
@@ -80,11 +81,17 @@ public class GUIPatientUpdateDonations implements IPopupable {
 
     private StatesHistoryScreen statesHistoryScreen;
 
+    private CacheHelper cacheHelper;
+
 
     public void initialize() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            loadProfile(ScreenControl.getLoggedInPatient()
-                    .getNhiNumber());
+        cacheHelper = new CacheHelper();
+        Object user = cacheHelper.getLoggedInUser();
+        if (user instanceof Patient) {
+            loadProfile(((Patient) user).getNhiNumber());
+        }
+        if (cacheHelper.getTargetPatient() != null) {
+            loadProfile((cacheHelper.getTargetPatient()).getNhiNumber());
         }
 
         // Enter key triggers log in
@@ -100,12 +107,6 @@ public class GUIPatientUpdateDonations implements IPopupable {
             }
         });
     }
-
-    public void setViewedPatient(Patient patient) {
-        target = patient;
-        loadProfile(patient.getNhiNumber());
-    }
-
 
     private void loadProfile(String nhi) {
         try {
@@ -302,7 +303,7 @@ public class GUIPatientUpdateDonations implements IPopupable {
 
 
     public void goToProfile() {
-        if (ScreenControl.getLoggedInPatient() != null) {
+        if (cacheHelper.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientProfile");
             try {
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
@@ -314,7 +315,7 @@ public class GUIPatientUpdateDonations implements IPopupable {
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientDonationsAnchorPane.getScene(), fxmlLoader, target);
+                ScreenControl.loadPopUpPane(patientDonationsAnchorPane.getScene(), fxmlLoader);
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
                 new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();

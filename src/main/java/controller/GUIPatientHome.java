@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import service.Database;
+import utility.CacheHelper;
 
 public class GUIPatientHome {
 
@@ -34,7 +35,8 @@ public class GUIPatientHome {
 
     @FXML
     public void logOut() {
-        ScreenControl.setLoggedInPatient(null);
+        CacheHelper cacheHelper = new CacheHelper();
+        cacheHelper.clearCahce();
         ScreenControl.activate("login");
     }
 
