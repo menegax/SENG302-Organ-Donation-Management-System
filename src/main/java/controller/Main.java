@@ -2,7 +2,6 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,7 +15,6 @@ import utility.SearchPatients;
 import utility.UserActionHistory;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
