@@ -57,7 +57,7 @@ public class GUIPatientProfile implements IPopupable {
     private Label dobLbl;
 
     @FXML
-    private Label dateOfDeath;
+    private Label dateOfDeathLabel;
 
     @FXML
     private Label age;
@@ -150,7 +150,7 @@ public class GUIPatientProfile implements IPopupable {
                 .toString());
         dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        dateOfDeath.setText(patient.getDeath() == null ? "Not set" : patient.getDeath()
+        dateOfDeathLabel.setText(patient.getDeath() == null ? "Not set" : patient.getDeath()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         age.setText(String.valueOf(patient.getAge()));
         heightLbl.setText(String.valueOf(patient.getHeight() + " m"));

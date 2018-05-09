@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Clinician;
@@ -61,10 +62,10 @@ public class GUIClinicianSearchPatientsPopUpTest extends ApplicationTest {
         });
         verifyThat( "#clinicianHomePane", Node::isVisible ); // Verify that login has taken "user" to the clinician home panel
         interact( () -> {
-            lookup( "#searchDonors" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
+            lookup( "#searchPatients" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
         });
 
-        verifyThat( "#clinicianSearchDonorsPane", Node::isVisible ); // Verify that login has taken "user" to the clinician profile panel
+        verifyThat( "#clinicianSearchPatientsPane", Node::isVisible ); // Verify that login has taken "user" to the clinician profile panel
     }
 
     /**
@@ -87,10 +88,18 @@ public class GUIClinicianSearchPatientsPopUpTest extends ApplicationTest {
         });
         verifyThat("#clinicianHomePane", Node::isVisible); // Verify that login has taken "user" to the clinician home panel
         interact(() -> {
-            lookup("#searchDonors").queryAs(Button.class)
+            lookup("#searchPatients").queryAs(Button.class)
                     .getOnAction()
                     .handle(new ActionEvent());
         });
+
+        // double-click to get a pop up
+        interact( () -> {
+            lookup( "#patientDataTable" ).queryAs(TableView.class ).getSelectionModel().select(0);
+            doubleClickOn( "#patientDataTable" ).doubleClickOn();
+        });
+        verifyThat("#patientProfilePane", Node::isVisible);
+
     }
 }
 

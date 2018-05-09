@@ -7,7 +7,9 @@ import utility.SearchPatients;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -15,13 +17,13 @@ import static utility.UserActionHistory.userActions;
 
 public class Database {
 
-    private static HashSet<Patient> patients = new HashSet<>();
-    private static ArrayList<Clinician> clinicians = new ArrayList<>();
+    private static Set<Patient> patients = new HashSet<>();
+    private static Set<Clinician> clinicians = new HashSet<>();
 
-    public static HashSet<Patient> getPatients() {
+    public static Set<Patient> getPatients() {
         return patients;
     }
-    public static ArrayList<Clinician> getClinicians() { return clinicians; }
+    public static Set<Clinician> getClinicians() { return clinicians; }
 
 
     /**
@@ -140,7 +142,7 @@ public class Database {
         if (clinicians.size() == 0) {
             return 0;
         } else {
-            int currentID = clinicians.get(clinicians.size() - 1).getStaffID();
+            int currentID = clinicians.stream().max(Comparator.comparing(Clinician::getStaffID)).get().getStaffID();
             return currentID + 1;
         }
     }

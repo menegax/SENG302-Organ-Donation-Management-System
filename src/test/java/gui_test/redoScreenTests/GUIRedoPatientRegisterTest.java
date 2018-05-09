@@ -79,7 +79,7 @@ public class GUIRedoPatientRegisterTest extends ApplicationTest{
      */
     @Test
     public void verifyScreen() {
-        verifyThat("#donorRegisterAnchorPane", Node::isVisible);
+        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
     /**

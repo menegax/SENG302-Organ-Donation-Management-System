@@ -19,6 +19,7 @@ import service.Database;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 
 public class SearchPatients {
@@ -54,7 +55,7 @@ public class SearchPatients {
     	if (indexWriter != null) {
     		SearchPatients.clearIndex();
     	}
-        HashSet<Patient> patients = Database.getPatients();
+        Set<Patient> patients = Database.getPatients();
         for (Patient patient : patients) {
         	addIndex(patient);
         }
