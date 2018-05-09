@@ -41,6 +41,7 @@ public class Main extends Application {
         ensureDefaultClinician();
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
 
+
         primaryStage.setResizable(false);
         primaryStage.show();
     }
