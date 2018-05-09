@@ -2,6 +2,7 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +16,7 @@ import utility.SearchPatients;
 import utility.UserActionHistory;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -22,17 +24,11 @@ import java.util.logging.Level;
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
         Scene rootScene = new Scene(root, 600, 400);
         primaryStage.setScene(rootScene); //set scene on primary stage
         ScreenControl.setRootScene(rootScene); // set this scene in screen controller
-
-        // import patients
-        Database.importFromDisk("./patient.json");
-        addDummyTestObjects();
-
-        SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
 
         // Add scenes
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
@@ -40,16 +36,12 @@ public class Main extends Application {
         ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
         ScreenControl.addScreen("patientHome", FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml")));
 
-        try {
-            Database.importFromDiskClinicians("clinician.json");
-        } catch (IOException e) {
-            if (Database.getClinicians().size() == 0) {
-                //Initialise default clinciian
-                ArrayList<String> mid = new ArrayList<>();
-                mid.add("Middle");
-                Database.addClinician(new Clinician(Database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
-            }
-        }
+        // add objects
+        Database.importFromDiskPatients("./patient.json");
+        Database.importFromDiskClinicians("./clinician.json");
+        addDummyTestObjects();
+        ensureDefaultClinician();
+        SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
 
         primaryStage.setResizable(false);
         primaryStage.show();
@@ -95,6 +87,15 @@ public class Main extends Application {
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
+        }
+
+    }
+
+    private void ensureDefaultClinician() {
+
+        // if default clinician 0 not in db, add it
+        if (!Database.isClinicianInDb(0)) {
+            Database.addClinician(new Clinician(0, "initial", new ArrayList<String>() {{ add("Middle"); }}, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
         }
 
     }
