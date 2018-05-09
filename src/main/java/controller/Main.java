@@ -50,6 +50,7 @@ public class Main extends Application {
                 Database.addClinician(new Clinician(Database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
             }
         }
+
         primaryStage.setResizable(false);
         primaryStage.show();
     }
