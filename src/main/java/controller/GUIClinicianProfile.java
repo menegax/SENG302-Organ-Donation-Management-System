@@ -6,7 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import model.Clinician;
-import service.UserControl;
+import utility.UserControl;
 
 import java.io.IOException;
 import java.util.logging.Level;

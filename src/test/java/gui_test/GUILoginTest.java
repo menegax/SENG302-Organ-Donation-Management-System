@@ -16,7 +16,7 @@ import org.testfx.api.FxRobotException;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
-import service.UserControl;
+import utility.UserControl;
 import utility.GlobalEnums;
 
 import static org.testfx.api.FxAssert.verifyThat;

@@ -18,7 +18,7 @@ import model.Patient;
 import model.DrugInteraction;
 import model.Medication;
 import service.Database;
-import service.UserControl;
+import utility.UserControl;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.UserActionRecord;
 

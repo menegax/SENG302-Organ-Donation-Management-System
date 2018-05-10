@@ -10,7 +10,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import service.Database;
-import service.UserControl;
+import utility.UserControl;
 import utility.GlobalEnums.Region;
 import utility.undoRedo.StatesHistoryScreen;
 

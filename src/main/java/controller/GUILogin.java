@@ -14,7 +14,7 @@ import javafx.scene.layout.Pane;
 import model.Clinician;
 import model.Patient;
 import service.Database;
-import service.UserControl;
+import utility.UserControl;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
