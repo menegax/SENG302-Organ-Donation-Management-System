@@ -85,6 +85,8 @@ public class Patient extends User {
 
     private ArrayList<String> patientLog;
 
+
+
     public Patient(String nhiNumber, String firstName,
                    ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());

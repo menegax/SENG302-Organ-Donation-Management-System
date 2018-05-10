@@ -1,11 +1,72 @@
 package service;
 
+import model.Patient;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Cache {
 
     private static final Map<String, Object> cache = new HashMap<>();
+
+    /**
+     * Adds a user to the cache
+     *
+     * @param user - user to be added
+     */
+    public void addLoggedInUserToCache(Object user) {
+        add("user_logged_in", user);
+    }
+
+
+    /**
+     * Removes the logged in user from the cache
+     */
+    public void rmLoggedInUserCache() {
+        remove("user_logged_in");
+    }
+
+
+    /**
+     * Gets the logged in user
+     *
+     * @return - user object
+     */
+    public Object getLoggedInUser() {
+        return get("user_logged_in");
+    }
+
+
+    /**
+     * Gets the target patient that is currently being viewed
+     *
+     * @return - Patient that is being viewed
+     */
+    public Patient getTargetPatient() {
+        Object value = get("target_patient");
+        if (value instanceof Patient) {
+            return (Patient) value;
+        }
+        return null;
+    }
+
+
+    /**
+     * Sets the patient to be viewed
+     *
+     * @param patient - Patient object to view
+     */
+    public void setTargetPatient(Patient patient) {
+        Cache.add("target_patient", patient);
+    }
+
+
+    /**
+     * Clears cache, removes all key value pairs
+     */
+    public void clearCache() {
+        Cache.clear();
+    }
 
     /**
      * Adds entries to the map

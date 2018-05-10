@@ -99,6 +99,7 @@ public class GUIPatientRegister {
      */
     @FXML
     public void goBackToLogin() {
+        clearFields();
         ScreenControl.activate("login");
     }
 
@@ -112,6 +113,12 @@ public class GUIPatientRegister {
         lastnameRegister.clear();
         middlenameRegister.clear();
         birthRegister.getEditor().clear();
+
+        setValid(nhiRegister);
+        setValid(firstnameRegister);
+        setValid(lastnameRegister);
+        setValid(middlenameRegister);
+        setValid(birthRegister);
     }
 
     /**

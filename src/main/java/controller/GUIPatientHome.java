@@ -36,7 +36,7 @@ public class GUIPatientHome {
     @FXML
     public void logOut() {
         CacheHelper cacheHelper = new CacheHelper();
-        cacheHelper.clearCahce();
+        cacheHelper.clearCache();
         ScreenControl.activate("login");
     }
 

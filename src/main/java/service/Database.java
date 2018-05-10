@@ -22,16 +22,6 @@ public class Database {
     private static Set<Clinician> clinicians = new HashSet<>();
 
 
-    public static Set<Patient> getPatients() {
-        return patients;
-    }
-
-
-    public static Set<Clinician> getClinicians() {
-        return clinicians;
-    }
-
-
     /**
      * Adds a patient to the database
      *
@@ -290,4 +280,14 @@ public class Database {
         clinicians = new HashSet<>();
     }
 
+
+
+    public static Set<Patient> getPatients() {
+        return patients;
+    }
+
+
+    public static Set<Clinician> getClinicians() {
+        return clinicians;
+    }
 }
