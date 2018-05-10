@@ -160,6 +160,15 @@ public class Patient {
                 userActions.log(Level.WARNING, "Invalid region", "attempted to update patient attributes");
             }
         }
+        if (birthGender != null) {
+            globalEnum = BirthGender.getEnumFromString(birthGender);
+            if (globalEnum != null) {
+                setBirthGender((BirthGender) globalEnum);
+            }
+            else {
+                userActions.log(Level.WARNING, "Invalid birth gender", "attempted to update patient attributes");
+            }
+        }
         if (preferredGender != null) {
             globalEnum = PreferredGender.getEnumFromString(preferredGender);
             if (globalEnum != null) {
