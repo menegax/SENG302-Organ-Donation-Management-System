@@ -26,6 +26,9 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
+/**
+ * Controller class to manage organ waiting list for patients who require an organ.
+ */
 public class GUIClinicianWaitingList {
 
     public AnchorPane clinicianWaitingListAnchorPane;
