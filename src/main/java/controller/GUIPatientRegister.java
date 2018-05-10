@@ -166,13 +166,11 @@ public class GUIPatientRegister {
         StringBuilder invalidContent = new StringBuilder("Please fix the following errors:\n");
 
         // nhi
-        if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}",
-                nhiRegister.getText()
-                        .toUpperCase())) {
+        if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", nhiRegister.getText().toUpperCase())) {
             valid = setInvalid(nhiRegister);
             invalidContent.append("NHI must be three letters followed by four numbers\n");
         }
-        if (Database.isPatientInDb(nhiRegister.getText())) {
+        else if (Database.isPatientInDb(nhiRegister.getText())) {
             // checks to see if nhi already in use
             valid = setInvalid(nhiRegister);
             invalidContent.append("NHI is already in use\n");
@@ -224,6 +222,7 @@ public class GUIPatientRegister {
         }
         else {
             valid = setInvalid(birthRegister);
+            invalidContent.append("Date of birth must be set.\n");
         }
 
         // if all are valid
