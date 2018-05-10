@@ -1,22 +1,34 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 import model.Patient;
 import model.Procedure;
 import utility.GlobalEnums.Organ;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
+import static utility.UserActionHistory.userActions;
 
-public class GUIPatientProcedures {
+/**
+ * Controller class for the Patient procedures screen
+ */
+public class GUIPatientProcedures implements IPopupable{
 
     @FXML
     public TableView<Procedure> previousProceduresView;
@@ -50,8 +62,19 @@ public class GUIPatientProcedures {
 
     private Patient patient;
 
+    /**
+     * Sets the TableViews to the appropriate procedures for the current patient
+     */
     public void initialize() {
-//        patient = ???
+        if (ScreenControl.getLoggedInPatient() != null) {
+            this.patient = ScreenControl.getLoggedInPatient();
+            setupTables();
+            //todo disable functionality
+        }
+
+    }
+
+    private void setupTables() {
         ObservableList<Procedure> previousProcedures = FXCollections.observableArrayList();
         ObservableList<Procedure> pendingProcedures = FXCollections.observableArrayList();
         for (Procedure procedure : patient.getProcedures()) {
@@ -73,4 +96,43 @@ public class GUIPatientProcedures {
         pendingAffectedCol.setCellValueFactory(d -> new SimpleObjectProperty<>(d.getValue().getAffectedDonations()));
     }
 
+    /**
+     * Brings up the add procedure pop-up that enables the user to add a procedure to the patient
+     */
+    @FXML
+    public void addProcedure() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/addProcedure.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            GUIAddProcedure controller = fxmlLoader.getController();
+            controller.setViewedPatient(patient);
+            Stage popUpStage = new Stage();
+            popUpStage.setScene(scene);
+
+            // When pop up is closed, refresh the table
+            popUpStage.setOnHiding(event -> Platform.runLater(this::refreshTables));
+
+            //Add and show the popup
+            ScreenControl.addPopUp("addProcedurePopup", popUpStage); //ADD to screen control
+            ScreenControl.displayPopUp("addProcedurePopup"); //display the popup
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE,
+                    "Failed to open add procedure popup from patient procedures",
+                    "Attempted to open add procedure popup from patient procedures");
+            new Alert(Alert.AlertType.ERROR, "Unable to open add procedure window", ButtonType.OK).show();
+        }
+    }
+
+    /**
+     * Refreshes the procedure tables
+     */
+    private void refreshTables() {
+        previousProceduresView.refresh();
+        pendingProceduresView.refresh();
+    }
+
+    public void setViewedPatient(Patient patient) {
+        this.patient = patient;
+        setupTables();
+    }
 }
