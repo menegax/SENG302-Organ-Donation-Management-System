@@ -8,10 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Patient;
 import model.Procedure;
@@ -60,6 +57,12 @@ public class GUIPatientProcedures implements IPopupable{
     @FXML
     public TableColumn<Procedure, Set<Organ>> pendingAffectedCol;
 
+    @FXML
+    public Button addProcedureButton;
+
+    @FXML
+    public Button deleteProcedureButton;
+
     private Patient patient;
 
     /**
@@ -69,7 +72,8 @@ public class GUIPatientProcedures implements IPopupable{
         if (ScreenControl.getLoggedInPatient() != null) {
             this.patient = ScreenControl.getLoggedInPatient();
             setupTables();
-            //todo disable functionality
+            addProcedureButton.setVisible(false);
+            deleteProcedureButton.setVisible(false);
         }
 
     }
@@ -96,6 +100,11 @@ public class GUIPatientProcedures implements IPopupable{
         pendingAffectedCol.setCellValueFactory(d -> new SimpleObjectProperty<>(d.getValue().getAffectedDonations()));
     }
 
+    private void enableEditing() {
+        addProcedureButton.setVisible(true);
+        deleteProcedureButton.setVisible(true);
+    }
+
     /**
      * Brings up the add procedure pop-up that enables the user to add a procedure to the patient
      */
@@ -116,11 +125,17 @@ public class GUIPatientProcedures implements IPopupable{
             ScreenControl.addPopUp("addProcedurePopup", popUpStage); //ADD to screen control
             ScreenControl.displayPopUp("addProcedurePopup"); //display the popup
         } catch (IOException e) {
+            e.printStackTrace();
             userActions.log(Level.SEVERE,
                     "Failed to open add procedure popup from patient procedures",
                     "Attempted to open add procedure popup from patient procedures");
             new Alert(Alert.AlertType.ERROR, "Unable to open add procedure window", ButtonType.OK).show();
         }
+    }
+
+    @FXML
+    public void deleteProcedure() {
+
     }
 
     /**
@@ -134,5 +149,11 @@ public class GUIPatientProcedures implements IPopupable{
     public void setViewedPatient(Patient patient) {
         this.patient = patient;
         setupTables();
+        enableEditing();
+    }
+
+    @FXML
+    public void goToProfile() {
+
     }
 }

@@ -286,6 +286,28 @@ public class GUIPatientProfile implements IPopupable {
         }
     }
 
+    @FXML
+    public void goToPatientProcedures() {
+        if (ScreenControl.getLoggedInPatient() != null) {
+            ScreenControl.removeScreen("patientProcedures");
+            try {
+                ScreenControl.addScreen("patientProcedures", FXMLLoader.load(getClass().getResource("/scene/patientProcedures.fxml")));
+                ScreenControl.activate("patientProcedures");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading procedures screen", "attempted to navigate from the profile page to the procedures page");
+                new Alert(Alert.AlertType.WARNING, "ERROR loading procedures page", ButtonType.OK).showAndWait();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedures.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading procedures screen in popup", "attempted to navigate from the profile page to the procedures page in popup");
+                new Alert(Alert.AlertType.ERROR, "Error loading procedures page", ButtonType.OK).showAndWait();
+            }
+        }
+    }
+
     public void goToPatientHome() {
         ScreenControl.activate("patientHome");
     }

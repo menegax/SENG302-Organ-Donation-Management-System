@@ -190,3 +190,5147 @@
   <param>attempted to add a clinician</param>
 </record>
 </log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:21:32</date>
+  <millis>1525922492105</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:32</date>
+  <millis>1525922492117</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:32</date>
+  <millis>1525922492367</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:32</date>
+  <millis>1525922492379</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:32</date>
+  <millis>1525922492528</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:21:48</date>
+  <millis>1525922508593</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:48</date>
+  <millis>1525922508636</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:48</date>
+  <millis>1525922508940</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:48</date>
+  <millis>1525922508950</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509053</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509053</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509053</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509054</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509054</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509054</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509055</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509055</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509056</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509056</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509056</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509056</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509057</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509058</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509058</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509058</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509058</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509059</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509059</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509070</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509070</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509070</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509071</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509071</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:21:49</date>
+  <millis>1525922509071</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:22:00</date>
+  <millis>1525922520320</millis>
+  <sequence>31</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProfile</class>
+  <method>goToPatientProcedures</method>
+  <thread>14</thread>
+  <message>Error loading procedures screen</message>
+  <param>attempted to navigate from the profile page to the procedures page</param>
+</record>
+<record>
+  <date>2018-05-10T15:22:09</date>
+  <millis>1525922529083</millis>
+  <sequence>33</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProfile</class>
+  <method>goToPatientProcedures</method>
+  <thread>14</thread>
+  <message>Error loading procedures screen</message>
+  <param>attempted to navigate from the profile page to the procedures page</param>
+</record>
+<record>
+  <date>2018-05-10T15:22:28</date>
+  <millis>1525922548317</millis>
+  <sequence>37</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProfile</class>
+  <method>goToPatientProcedures</method>
+  <thread>14</thread>
+  <message>Error loading procedures screen in popup</message>
+  <param>attempted to navigate from the profile page to the procedures page in popup</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660078</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660125</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660411</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660421</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660498</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660498</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660498</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660499</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660499</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660499</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660499</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660499</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660500</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660500</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660500</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660500</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660500</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660501</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660501</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660501</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660501</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660501</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660502</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660509</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660509</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660509</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660509</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660510</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:24:20</date>
+  <millis>1525922660510</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:24:30</date>
+  <millis>1525922670647</millis>
+  <sequence>31</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProfile</class>
+  <method>goToPatientProcedures</method>
+  <thread>14</thread>
+  <message>Error loading procedures screen</message>
+  <param>attempted to navigate from the profile page to the procedures page</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855379</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855413</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855734</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855751</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855874</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855874</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855874</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855875</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855875</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855875</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855879</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855879</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855879</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855880</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855880</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855880</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855887</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855887</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855888</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855888</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855889</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855889</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855889</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855904</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855904</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855905</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855905</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855905</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:27:35</date>
+  <millis>1525922855906</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:28:35</date>
+  <millis>1525922915701</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:35</date>
+  <millis>1525922915732</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916040</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916048</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916124</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916125</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916125</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916125</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916125</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916126</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916126</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916126</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916126</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916127</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916127</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916127</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916132</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916132</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916132</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916133</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916133</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916133</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916133</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916140</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916140</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916141</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916141</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916141</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:28:36</date>
+  <millis>1525922916141</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:28:46</date>
+  <millis>1525922926702</millis>
+  <sequence>33</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProcedures</class>
+  <method>addProcedure</method>
+  <thread>14</thread>
+  <message>Failed to open add procedure popup from patient procedures</message>
+  <param>Attempted to open add procedure popup from patient procedures</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138288</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138355</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138652</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138662</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138770</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138771</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138771</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138771</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138771</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138772</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138772</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138773</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138773</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138773</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138774</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138774</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138780</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138780</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138780</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138781</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138781</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138782</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138782</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138793</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138793</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138794</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138794</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138794</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:32:18</date>
+  <millis>1525923138794</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:32:38</date>
+  <millis>1525923158802</millis>
+  <sequence>34</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProcedures</class>
+  <method>addProcedure</method>
+  <thread>14</thread>
+  <message>Failed to open add procedure popup from patient procedures</message>
+  <param>Attempted to open add procedure popup from patient procedures</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:34:21</date>
+  <millis>1525923261636</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:21</date>
+  <millis>1525923261667</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:21</date>
+  <millis>1525923261932</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:21</date>
+  <millis>1525923261943</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262047</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262047</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262048</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262048</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262048</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262048</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262049</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262049</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262049</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262050</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262051</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262051</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262057</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262057</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262057</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262058</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262058</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262058</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262058</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262068</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262068</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262069</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262069</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262069</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:34:22</date>
+  <millis>1525923262070</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:36:44</date>
+  <millis>1525923404203</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:44</date>
+  <millis>1525923404861</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:44</date>
+  <millis>1525923404971</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405090</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405090</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405091</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405091</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405091</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405092</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405092</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405092</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405093</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405093</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405093</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405094</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405094</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405094</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405095</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405095</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405095</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405096</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405096</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405106</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405107</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405107</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405108</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405108</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:36:45</date>
+  <millis>1525923405108</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param></param>
+</record>
+<record>
+  <date>2018-05-10T15:37:05</date>
+  <millis>1525923425576</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientRegister</class>
+  <method>register</method>
+  <thread>14</thread>
+  <message>NHI number ABC1238 is not unique</message>
+  <param>attempted to add patient from GUI attributes</param>
+</record>
+<record>
+  <date>2018-05-10T15:37:25</date>
+  <millis>1525923445963</millis>
+  <sequence>29</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:37:43</date>
+  <millis>1525923463640</millis>
+  <sequence>34</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProcedures</class>
+  <method>addProcedure</method>
+  <thread>14</thread>
+  <message>Failed to open add procedure popup from patient procedures</message>
+  <param>Attempted to open add procedure popup from patient procedures</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:41:53</date>
+  <millis>1525923713320</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:41:53</date>
+  <millis>1525923713498</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:41:53</date>
+  <millis>1525923713509</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:41:53</date>
+  <millis>1525923713510</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:41:53</date>
+  <millis>1525923713712</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T15:41:53</date>
+  <millis>1525923713803</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:42:15</date>
+  <millis>1525923735568</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProcedures</class>
+  <method>addProcedure</method>
+  <thread>14</thread>
+  <message>Failed to open add procedure popup from patient procedures</message>
+  <param>Attempted to open add procedure popup from patient procedures</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:43:13</date>
+  <millis>1525923793235</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:43:13</date>
+  <millis>1525923793407</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:43:13</date>
+  <millis>1525923793417</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:43:13</date>
+  <millis>1525923793417</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:43:13</date>
+  <millis>1525923793622</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T15:43:13</date>
+  <millis>1525923793749</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:43:52</date>
+  <millis>1525923832898</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProcedures</class>
+  <method>addProcedure</method>
+  <thread>14</thread>
+  <message>Failed to open add procedure popup from patient procedures</message>
+  <param>Attempted to open add procedure popup from patient procedures</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:44:41</date>
+  <millis>1525923881549</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:44:41</date>
+  <millis>1525923881699</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:44:41</date>
+  <millis>1525923881713</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:44:41</date>
+  <millis>1525923881713</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:44:41</date>
+  <millis>1525923881926</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T15:44:42</date>
+  <millis>1525923882020</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:44:55</date>
+  <millis>1525923895586</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProcedures</class>
+  <method>addProcedure</method>
+  <thread>14</thread>
+  <message>Failed to open add procedure popup from patient procedures</message>
+  <param>Attempted to open add procedure popup from patient procedures</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:47:55</date>
+  <millis>1525924075374</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:47:55</date>
+  <millis>1525924075517</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:47:55</date>
+  <millis>1525924075526</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:47:55</date>
+  <millis>1525924075526</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:47:55</date>
+  <millis>1525924075709</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T15:47:55</date>
+  <millis>1525924075784</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:48:06</date>
+  <millis>1525924086477</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProcedures</class>
+  <method>addProcedure</method>
+  <thread>14</thread>
+  <message>Failed to open add procedure popup from patient procedures</message>
+  <param>Attempted to open add procedure popup from patient procedures</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:55:10</date>
+  <millis>1525924510159</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:55:10</date>
+  <millis>1525924510323</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:55:10</date>
+  <millis>1525924510332</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:55:10</date>
+  <millis>1525924510333</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:55:10</date>
+  <millis>1525924510516</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T15:55:10</date>
+  <millis>1525924510610</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:55:34</date>
+  <millis>1525924534345</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProcedures</class>
+  <method>addProcedure</method>
+  <thread>14</thread>
+  <message>Failed to open add procedure popup from patient procedures</message>
+  <param>Attempted to open add procedure popup from patient procedures</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:56:37</date>
+  <millis>1525924597099</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:56:37</date>
+  <millis>1525924597256</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:56:37</date>
+  <millis>1525924597266</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:56:37</date>
+  <millis>1525924597266</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:56:37</date>
+  <millis>1525924597445</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T15:56:37</date>
+  <millis>1525924597552</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:56:46</date>
+  <millis>1525924606916</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProcedures</class>
+  <method>addProcedure</method>
+  <thread>14</thread>
+  <message>Failed to open add procedure popup from patient procedures</message>
+  <param>Attempted to open add procedure popup from patient procedures</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T15:58:46</date>
+  <millis>1525924726871</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:58:47</date>
+  <millis>1525924727050</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:58:47</date>
+  <millis>1525924727073</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T15:58:47</date>
+  <millis>1525924727073</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T15:58:47</date>
+  <millis>1525924727266</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T15:58:47</date>
+  <millis>1525924727369</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T15:59:00</date>
+  <millis>1525924740246</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProcedures</class>
+  <method>addProcedure</method>
+  <thread>14</thread>
+  <message>Failed to open add procedure popup from patient procedures</message>
+  <param>Attempted to open add procedure popup from patient procedures</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T16:01:01</date>
+  <millis>1525924861543</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:01:01</date>
+  <millis>1525924861702</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:01:01</date>
+  <millis>1525924861712</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:01:01</date>
+  <millis>1525924861713</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T16:01:01</date>
+  <millis>1525924861910</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T16:01:01</date>
+  <millis>1525924861988</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T16:01:11</date>
+  <millis>1525924871198</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProcedures</class>
+  <method>addProcedure</method>
+  <thread>14</thread>
+  <message>Failed to open add procedure popup from patient procedures</message>
+  <param>Attempted to open add procedure popup from patient procedures</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T16:02:14</date>
+  <millis>1525924934572</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:02:14</date>
+  <millis>1525924934742</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:02:14</date>
+  <millis>1525924934760</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:02:14</date>
+  <millis>1525924934762</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T16:02:14</date>
+  <millis>1525924934946</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T16:02:15</date>
+  <millis>1525924935036</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T16:03:10</date>
+  <millis>1525924990226</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Added liver to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:03:10</date>
+  <millis>1525924990226</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Added kidney to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:03:10</date>
+  <millis>1525924990226</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed pancreas from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:03:10</date>
+  <millis>1525924990227</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed heart from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:03:10</date>
+  <millis>1525924990227</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed lung from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:03:10</date>
+  <millis>1525924990227</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed intestine from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:03:10</date>
+  <millis>1525924990227</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed cornea from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:03:10</date>
+  <millis>1525924990228</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed middle ear from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:03:10</date>
+  <millis>1525924990228</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed skin from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:03:10</date>
+  <millis>1525924990228</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed bone from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:03:10</date>
+  <millis>1525924990228</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed bone marrow from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:03:10</date>
+  <millis>1525924990228</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed connective tissue from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T16:07:02</date>
+  <millis>1525925222794</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:07:02</date>
+  <millis>1525925222955</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:07:02</date>
+  <millis>1525925222964</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:07:02</date>
+  <millis>1525925222964</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T16:07:03</date>
+  <millis>1525925223141</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T16:07:03</date>
+  <millis>1525925223245</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T16:08:58</date>
+  <millis>1525925338016</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:08:58</date>
+  <millis>1525925338177</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:08:58</date>
+  <millis>1525925338184</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:08:58</date>
+  <millis>1525925338184</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T16:08:58</date>
+  <millis>1525925338383</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T16:08:58</date>
+  <millis>1525925338479</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T16:12:05</date>
+  <millis>1525925525541</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:12:05</date>
+  <millis>1525925525700</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:12:05</date>
+  <millis>1525925525708</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:12:05</date>
+  <millis>1525925525709</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T16:12:05</date>
+  <millis>1525925525887</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T16:12:05</date>
+  <millis>1525925525970</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T16:12:19</date>
+  <millis>1525925539895</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProcedures</class>
+  <method>addProcedure</method>
+  <thread>14</thread>
+  <message>Failed to open add procedure popup from patient procedures</message>
+  <param>Attempted to open add procedure popup from patient procedures</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T16:12:59</date>
+  <millis>1525925579309</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:12:59</date>
+  <millis>1525925579473</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:12:59</date>
+  <millis>1525925579490</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:12:59</date>
+  <millis>1525925579490</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T16:12:59</date>
+  <millis>1525925579695</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T16:12:59</date>
+  <millis>1525925579785</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T16:13:13</date>
+  <millis>1525925593267</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIPatientProcedures</class>
+  <method>addProcedure</method>
+  <thread>14</thread>
+  <message>Failed to open add procedure popup from patient procedures</message>
+  <param>Attempted to open add procedure popup from patient procedures</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T16:15:13</date>
+  <millis>1525925713704</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:15:13</date>
+  <millis>1525925713879</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:15:13</date>
+  <millis>1525925713892</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:15:13</date>
+  <millis>1525925713893</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T16:15:14</date>
+  <millis>1525925714080</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T16:15:14</date>
+  <millis>1525925714177</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T16:26:17</date>
+  <millis>1525926377601</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:26:17</date>
+  <millis>1525926377761</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:26:17</date>
+  <millis>1525926377770</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:26:17</date>
+  <millis>1525926377771</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T16:26:17</date>
+  <millis>1525926377952</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T16:26:18</date>
+  <millis>1525926378042</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T16:29:33</date>
+  <millis>1525926573584</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:29:33</date>
+  <millis>1525926573738</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:29:33</date>
+  <millis>1525926573752</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:29:33</date>
+  <millis>1525926573753</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T16:29:33</date>
+  <millis>1525926573938</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T16:29:34</date>
+  <millis>1525926574033</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T16:34:04</date>
+  <millis>1525926844880</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:34:05</date>
+  <millis>1525926845050</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:34:05</date>
+  <millis>1525926845060</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:34:05</date>
+  <millis>1525926845060</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T16:34:05</date>
+  <millis>1525926845297</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T16:34:05</date>
+  <millis>1525926845406</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T16:37:20</date>
+  <millis>1525927040553</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:37:20</date>
+  <millis>1525927040708</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:37:20</date>
+  <millis>1525927040718</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:37:20</date>
+  <millis>1525927040719</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T16:37:20</date>
+  <millis>1525927040902</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T16:37:20</date>
+  <millis>1525927040992</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T16:38:54</date>
+  <millis>1525927134551</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:38:54</date>
+  <millis>1525927134696</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:38:54</date>
+  <millis>1525927134708</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:38:54</date>
+  <millis>1525927134708</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T16:38:54</date>
+  <millis>1525927134918</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T16:38:55</date>
+  <millis>1525927135044</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T16:42:15</date>
+  <millis>1525927335888</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:42:16</date>
+  <millis>1525927336033</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:42:16</date>
+  <millis>1525927336045</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T16:42:16</date>
+  <millis>1525927336046</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T16:42:16</date>
+  <millis>1525927336226</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T16:42:16</date>
+  <millis>1525927336316</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T18:30:58</date>
+  <millis>1525933858203</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T18:30:58</date>
+  <millis>1525933858353</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T18:30:58</date>
+  <millis>1525933858365</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T18:30:58</date>
+  <millis>1525933858365</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T18:30:58</date>
+  <millis>1525933858628</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T18:30:58</date>
+  <millis>1525933858889</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T18:38:50</date>
+  <millis>1525934330977</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T18:38:51</date>
+  <millis>1525934331196</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T18:38:51</date>
+  <millis>1525934331211</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T18:38:51</date>
+  <millis>1525934331212</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T18:38:51</date>
+  <millis>1525934331426</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T18:38:51</date>
+  <millis>1525934331543</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T18:51:52</date>
+  <millis>1525935112861</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T18:51:53</date>
+  <millis>1525935113014</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T18:51:53</date>
+  <millis>1525935113039</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T18:51:53</date>
+  <millis>1525935113040</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T18:51:53</date>
+  <millis>1525935113250</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T18:51:53</date>
+  <millis>1525935113368</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T18:59:50</date>
+  <millis>1525935590276</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T18:59:50</date>
+  <millis>1525935590491</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T18:59:50</date>
+  <millis>1525935590506</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T18:59:50</date>
+  <millis>1525935590507</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T18:59:50</date>
+  <millis>1525935590743</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T18:59:50</date>
+  <millis>1525935590877</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T19:07:46</date>
+  <millis>1525936066665</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:07:46</date>
+  <millis>1525936066880</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:07:46</date>
+  <millis>1525936066890</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:07:46</date>
+  <millis>1525936066891</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T19:07:47</date>
+  <millis>1525936067085</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T19:07:47</date>
+  <millis>1525936067194</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T19:10:12</date>
+  <millis>1525936212244</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:10:12</date>
+  <millis>1525936212447</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:10:12</date>
+  <millis>1525936212465</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:10:12</date>
+  <millis>1525936212465</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T19:10:12</date>
+  <millis>1525936212652</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T19:10:12</date>
+  <millis>1525936212751</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T19:18:33</date>
+  <millis>1525936713438</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:18:33</date>
+  <millis>1525936713594</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:18:33</date>
+  <millis>1525936713604</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:18:33</date>
+  <millis>1525936713604</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T19:18:33</date>
+  <millis>1525936713788</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T19:18:33</date>
+  <millis>1525936713899</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T19:19:36</date>
+  <millis>1525936776465</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:19:36</date>
+  <millis>1525936776633</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1239</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:19:36</date>
+  <millis>1525936776649</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:19:36</date>
+  <millis>1525936776649</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T19:19:36</date>
+  <millis>1525936776828</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>14</thread>
+  <message>Unable to add dummy patients</message>
+  <param>Attempted to load dummy patients for testing</param>
+</record>
+<record>
+  <date>2018-05-10T19:19:36</date>
+  <millis>1525936776947</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T19:20:28</date>
+  <millis>1525936828024</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed liver from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:20:28</date>
+  <millis>1525936828024</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed kidney from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:20:28</date>
+  <millis>1525936828024</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed pancreas from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:20:28</date>
+  <millis>1525936828025</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed heart from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:20:28</date>
+  <millis>1525936828025</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed lung from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:20:28</date>
+  <millis>1525936828025</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed intestine from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:20:28</date>
+  <millis>1525936828025</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed cornea from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:20:28</date>
+  <millis>1525936828025</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed middle ear from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:20:28</date>
+  <millis>1525936828025</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed skin from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:20:28</date>
+  <millis>1525936828026</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed bone from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:20:28</date>
+  <millis>1525936828026</millis>
+  <sequence>29</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed bone marrow from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-10T19:20:28</date>
+  <millis>1525936828026</millis>
+  <sequence>30</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>14</thread>
+  <message>Removed connective tissue from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+</log>
