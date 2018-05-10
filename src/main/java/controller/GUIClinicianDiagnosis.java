@@ -16,10 +16,7 @@ import utility.GlobalEnums;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -89,8 +86,6 @@ public class GUIClinicianDiagnosis {
             } else if (click.getButton() == MouseButton.PRIMARY && pastDiagnosesView.getSelectionModel().getSelectedItem() != null) {
                 chosen = pastDiagnosesView.getSelectionModel().getSelectedItem();
             }
-            loadCurrentDiseases();
-            loadPastDiseases();
         });
 
         currentDiagnosesView.setOnMouseClicked(click -> {
@@ -114,8 +109,6 @@ public class GUIClinicianDiagnosis {
             } else if (click.getButton() == MouseButton.PRIMARY && currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
                 chosen = currentDiagnosesView.getSelectionModel().getSelectedItem();
             }
-            loadCurrentDiseases();
-            loadPastDiseases();
         });
     }
 
@@ -175,6 +168,7 @@ public class GUIClinicianDiagnosis {
         ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(currentDiseases);
         setCellValues(currentDateCol, currentDiagnosisCol, currentTagsCol);
         currentDiagnosesView.setItems(observableCurrentDiseases);
+        currentDiagnosesView.refresh();
         setUpSortBehaviour(currentDiagnosesView, currentTagsCol);
     }
 
@@ -185,6 +179,7 @@ public class GUIClinicianDiagnosis {
         ObservableList <Disease> observablePastDiseases = FXCollections.observableArrayList( pastDiseases );
         setCellValues(pastDateCol, pastDiagnosisCol, pastTagsCol);
         pastDiagnosesView.setItems(observablePastDiseases);
+        pastDiagnosesView.refresh();
         setUpSortBehaviour(pastDiagnosesView, pastTagsCol);
     }
 
