@@ -23,15 +23,15 @@ The decision was made to maintain one large global enumerations class in a separ
 JodaTime will be used for dates and times (i.e. DateTime and LocalDate), not the native Java Date class from utils.
 
 #### Donor Unique ID
-In order to satisfy story number 43, the user must be able to search for a particular donor and receive one search result. 
+In order to satisfy story number 43, the user must be able to search for a particular patient and receive one search result. 
 This requires a unique search term to be entered such that duplicates are not returned. 
 
-* we have decided to use a donor's IRD number to distinguish one donor from another, whom have colliding names.
-* we will check for uniqueness within our application by checking if a donor with the IRD already exists. If it already exists an exception is thrown to tell the user this.
-* if there an IRD is entered but there is a collision (i.e another donor has the incorrect IRD) then the incorrect IRD will need to updated before adding the new donor
+* we have decided to use a patient's IRD number to distinguish one patient from another, whom have colliding names.
+* we will check for uniqueness within our application by checking if a patient with the IRD already exists. If it already exists an exception is thrown to tell the user this.
+* if there an IRD is entered but there is a collision (i.e another patient has the incorrect IRD) then the incorrect IRD will need to updated before adding the new patient
 
 #### CLI Subcommand Limit
-We have decided that the maximum level of subcommands is three i.e. `donor update donations --option`
+We have decided that the maximum level of subcommands is three i.e. `patient update donations --option`
 
 #### Gson Library
 We've decided to use Gson library for parsing json files. This will be used for saving data to .json and importing data from .json.
@@ -63,7 +63,7 @@ JNativeHook captured keypress events on a global level (Even if the terminal did
 creating functionality in which the keypress events would 'navigate' through that list and fill out the terminal command line. 
 
 #### IRD -> NHI Transition
-We decided to change form using IRD as the identifier of a donor to the NHI number. The IRD number is thus no longer used. The reason behind this is that it makes
+We decided to change form using IRD as the identifier of a patient to the NHI number. The IRD number is thus no longer used. The reason behind this is that it makes
 more sense in the context of a health app, and users may feel more comfortable provided a NHI number instead of an IRD number due to NHI's association with health rather than tax and finance.
 
 #### Logging and System Print Messages
@@ -81,10 +81,21 @@ goToScreen() can be used as a method name only if the only code inside the metho
 See the GUIDonorRegister class for examples of goToLogin() and register()
 
 #### User Action History
-All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new donor would not be logged either.
+All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new patient would not be logged either.
 
 ## Sprint 3
-26th of March to the 3rd of May
+26th March to the 3rd of May
+
+#### GUI Donor Medications
+
+To reduce error, for in the case that a medication has been selected in each of the history and the current listViews, it has been decided to reserve deletion of a medication from the history listView, only. Otherwise, if not reserve deletion to only one listView, and include both listViews, being that there is currently no found appropriate method to determine which medication is the most recently selected between listViews, and that deciding deletion between listViews can only currently be done by determining if one listView does not have a medication selected before deleting a selected medication from another listView, then a selected medication other than the most previously selected medication could be deleted instead if the most recently selected medication is in the listView that has a selected medication deleted from it only after the other listView is determined to not have any selected medication for deleting, when in the case that each listView has a medication selected.
+
+If a medication is selected in each of the current and history listViews, and a user selects either a remove or add button unintentionally, then a medication will be swapped from one listView to the other, depending on which button is selected, even if this medication is not the most recently selected between the two listViews. If this is not the intention of the user, then this has been assumed to be determined as user error, and not the fault of the program.
+
+Medication selection is assumed to be possible in each listView simultaneously for the benefit of future stories.
+
+The current option of multiple selection in each listView may not be appropriate for future stories. 
+
 
 ####Donor Contact Details
 Contact Details for a Donor are updated in a separate update method. This is because as contact details are implemented solely in the GUI application, and so will only need handling there.

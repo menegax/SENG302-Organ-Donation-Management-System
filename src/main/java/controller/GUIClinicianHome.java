@@ -8,6 +8,17 @@ import service.Database;
 
 public class GUIClinicianHome {
 
+    public Button searchPatients;
+
+    public AnchorPane clinicianHomePane;
+
+    public Button profileButton;
+
+    public Button saveButton;
+
+    public Button logoutButton;
+
+
     public AnchorPane clinicianHomePane;
 
     public Button profileButton;
@@ -21,8 +32,8 @@ public class GUIClinicianHome {
     public void goToClinicianProfile(){ ScreenControl.activate("clinicianProfile"); }
 
     @FXML
-    public void goToSearchDonors(){
-        ScreenControl.activate("clinicianSearchDonors");
+    public void goToSearchPatients(){
+        ScreenControl.activate("clinicianSearchPatients");
     }
 
     @FXML
@@ -33,7 +44,7 @@ public class GUIClinicianHome {
     @FXML
     public void saveClinician() {
         Database.saveToDisk();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Successfully Saved!");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Successfully Saved!");
         alert.show();
     }
 }

@@ -1,14 +1,12 @@
 package gui_test;
 
 import controller.Main;
-import controller.ScreenControl;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import model.Donor;
+import model.Patient;
 import org.junit.After;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
@@ -17,7 +15,6 @@ import service.Database;
 import utility.GlobalEnums;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import static org.testfx.api.FxAssert.verifyThat;
@@ -29,12 +26,12 @@ public class GUIProfileTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
 
-        // add dummy donor
+        // add dummy patient
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addDonor(new Donor("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getDonorByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.addPatient(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
         interact(() ->  {
@@ -53,32 +50,32 @@ public class GUIProfileTest extends ApplicationTest {
 
     @Test
     public void should_be_on_profile_screen() {
-        verifyThat("#donorProfilePane", Node::isVisible);
+        verifyThat("#patientProfilePane", Node::isVisible);
     }
 
     @Test
     public void should_enter_edit_pane() {
-        interact(() -> lookup("#editDonorButton").queryAs(Button.class).fire());
-        verifyThat("#donorUpdateAnchorPane", Node::isVisible);
+        interact(() -> lookup("#editPatientButton").queryAs(Button.class).fire());
+        verifyThat("#patientUpdateAnchorPane", Node::isVisible);
     }
 
     @Test
     public void should_enter_contact_details_pane() {
         interact(() -> lookup("#contactButton").queryAs(Button.class).fire());
-        verifyThat("#donorContactsPane", Node::isVisible);
+        verifyThat("#patientContactsPane", Node::isVisible);
     }
 
     @Test
     public void should_go_to_donations() {
         interact(() -> lookup("#donationButton").queryAs(Button.class).fire());
-        verifyThat("#donorDonationsAnchorPane", Node::isVisible);
+        verifyThat("#patientDonationsAnchorPane", Node::isVisible);
     }
 
 //    @Test
-//    public void should_have_correct_donor_details() {
-//        // Made around default donor in the system with NHI of ABC1238
+//    public void should_have_correct_patient_details() {
+//        // Made around default patient in the system with NHI of ABC1238
 //        assertThat(lookup("#nhiLbl").queryAs(Label.class)).hasText("TFX9999");
-//        assertThat(lookup("#nameLbl").queryAs(Label.class)).hasText(ScreenControl.getLoggedInDonor().getNameConcatenated());
+//        assertThat(lookup("#nameLbl").queryAs(Label.class)).hasText(ScreenControl.getLoggedInPatient().getNameConcatenated());
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
 //        LocalDate birth = LocalDate.parse(lookup("#dobLbl").queryAs(Label.class).getText(), formatter);
 //        assertThat(birth == LocalDate.of(1990, 2, 9));

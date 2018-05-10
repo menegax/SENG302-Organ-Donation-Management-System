@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 /**
- * Defines the class for clinician members. Clinicians have basic identifying information like a donor
+ * Defines the class for clinician members. Clinicians have basic identifying information like a patient
  * However they are identified by their staff ID, and their NHI is not collected.
  */
 public class Clinician {
