@@ -65,13 +65,29 @@ public class GUIClinicianDiagnosis {
         pastDiseases = currentDonor.getPastDiseases();
         loadCurrentDiseases();
         loadPastDiseases();
+        setUpRightClickTags();
+        setUpDoubleClickEdit();
+
+    }
+
+    /**
+     * Sets up double click action of opening full disease edit window
+     */
+    private void setUpDoubleClickEdit() {
+        
+    }
+
+    /**
+     * Sets up right click tags to change disease tag, and mark a disease as chronic, cured or remove tags
+     */
+    private void setUpRightClickTags() {
         pastDiagnosesView.setOnMouseClicked(click -> {
             if (click.getButton() == MouseButton.SECONDARY && pastDiagnosesView.getSelectionModel().getSelectedItem() != null) {
                 Disease selected = pastDiseases.get( pastDiseases.indexOf( pastDiagnosesView.getSelectionModel().getSelectedItem() ) );
                 ContextMenu rightClickPast = new ContextMenu();
-                MenuItem makeChronicAction = new MenuItem( "Mark as chronic" );
-                MenuItem makeCuredAction = new MenuItem( "Mark as cured" );
-                MenuItem makeNullAction = new MenuItem( "Mark as null" );
+                MenuItem makeChronicAction = new MenuItem( "Tag chronic" );
+                MenuItem makeCuredAction = new MenuItem( "Tag cured" );
+                MenuItem makeNullAction = new MenuItem( "Remove tags" );
                 makeChronicAction.setOnAction( event -> {
                     updatePastStatus( selected, "chronic" );
                 } );
