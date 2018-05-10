@@ -81,12 +81,6 @@ public class Main extends Application {
                     .setRegion(GlobalEnums.Region.CANTERBURY);
             Database.getPatientByNhi("ABC1234")
                     .setGender(GlobalEnums.Gender.FEMALE);
-
-            // add clinicians
-            ArrayList<String> mid = new ArrayList<>();
-            mid.add("Middle");
-            Database.addClinician(new Clinician(Database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
-
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Unable to add dummy objects", "Attempted to load dummy objects for testing");

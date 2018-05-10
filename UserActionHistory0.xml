@@ -2513,3 +2513,1270 @@
   <param>Attempted to update patient profile</param>
 </record>
 </log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959482</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959587</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959587</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959607</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959607</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959608</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959608</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959608</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959608</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959609</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959609</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959610</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959610</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959610</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959611</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959611</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959611</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959611</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959612</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959612</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959612</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959612</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959613</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959613</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959613</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959613</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959614</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959614</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959614</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959614</millis>
+  <sequence>29</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:29:19</date>
+  <millis>1525940959779</millis>
+  <sequence>30</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035407</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035493</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035493</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035512</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035512</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035513</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035513</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035513</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035513</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035514</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035514</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035514</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035514</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035514</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035515</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035515</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035515</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035516</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035516</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035516</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035516</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035517</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035517</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035517</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035518</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035518</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035518</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035518</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035519</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035519</millis>
+  <sequence>29</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:30:35</date>
+  <millis>1525941035678</millis>
+  <sequence>30</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070191</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070280</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070281</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070300</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070301</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070301</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070302</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070302</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070302</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070302</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070303</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070303</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070303</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070304</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070304</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070304</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070305</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070305</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070305</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070306</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070306</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070306</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070306</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070307</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070307</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070307</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070308</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070308</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070308</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070308</millis>
+  <sequence>29</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:31:10</date>
+  <millis>1525941070495</millis>
+  <sequence>30</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T20:33:30</date>
+  <millis>1525941210299</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-10T20:33:30</date>
+  <millis>1525941210424</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-10T20:33:30</date>
+  <millis>1525941210425</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T20:33:30</date>
+  <millis>1525941210434</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:33:30</date>
+  <millis>1525941210440</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:33:30</date>
+  <millis>1525941210609</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-10T20:33:48</date>
+  <millis>1525941228041</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1238</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-10T20:33:48</date>
+  <millis>1525941228131</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatients</method>
+  <thread>12</thread>
+  <message>Successfully added donor ABC1234</message>
+  <param>attempted to add a donor</param>
+</record>
+<record>
+  <date>2018-05-10T20:33:48</date>
+  <millis>1525941228131</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-10T20:33:48</date>
+  <millis>1525941228138</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-10T20:33:48</date>
+  <millis>1525941228280</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>

@@ -1,7 +1,7 @@
 # Receiving and Donating organs views from clinician testing
 
 ### Navigate to clinician view of a patient
-1. Log in as a clinician (default is 1)
+1. Log in as a clinician (default is 0)
 2. Once Logged in, click on the `Search Patients` button to navigate to the patient search
 3. Double click on any of the patients listed
 4. Verify that the patient profile is now displayed and you can see both receiving organs and donating organs listviews
