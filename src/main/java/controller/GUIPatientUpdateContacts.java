@@ -20,8 +20,8 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 /**
- * Controller class for handling GUI application contact detail viewing and editing for a Donor.
- * Contact fields are editable and are pre-filled with the Donor's existing contact details.
+ * Controller class for handling GUI application contact detail viewing and editing for a Patient.
+ * Contact fields are editable and are pre-filled with the Patient's existing contact details.
  * Details are saved when the Save button is selected, and the user is returned to the patient profile view screen.
  * @author Maree Palmer
  */
@@ -64,7 +64,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
     private TextField contactNameField;
 
     /**
-     * Donor that is currently logged in
+     * Patient that is currently logged in
      */
     private Patient target;
 
@@ -106,6 +106,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
             loadProfile(ScreenControl.getLoggedInPatient().getNhiNumber());
             setContactFields();
         }
+        setupUndoRedo();
 
         // Enter key triggers log in
         patientContactsPane.setOnKeyPressed(e -> {
@@ -115,6 +116,24 @@ public class GUIPatientUpdateContacts implements IPopupable {
         });
     }
 
+    /**
+     * Sets up the variables needed for undo and redo functionality
+     */
+    private void setupUndoRedo() {
+        ArrayList<Control> controls = new ArrayList<Control>() {{
+            add(homePhoneField);
+            add(mobilePhoneField);
+            add(workPhoneField);
+            add(emailAddressField);
+            add(contactNameField);
+            add(contactRelationshipField);
+            add(contactHomePhoneField);
+            add(contactMobilePhoneField);
+            add(contactWorkPhoneField);
+            add(contactEmailAddressField);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(patientContactsPane, controls);
+    }
 
     /**
      * Sets initial contact text fields to a patient's existing contact details.
@@ -188,7 +207,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
      * Sets a patient's contact details to the text entered in the text fields for each individual
      * attribute. If the text field for an attribute is empty, the contact detail is not updated.
      */
-    private boolean setDonorContactDetails() {
+    private boolean setPatientContactDetails() {
         boolean valid = true;
         if (!(homePhoneField.getText().equals("")) && homePhoneField.getText().matches("[0-9]+")) {
             target.setHomePhone(homePhoneField.getText());
@@ -217,7 +236,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
         } else {
             valid = setInvalid(workPhoneField);
         }
-        if (!(emailAddressField.getText().equals("")) && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
+        if (emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
             target.setEmailAddress(emailAddressField.getText());
             setValid(emailAddressField);
         } else if(emailAddressField.getText().equals("")) {
@@ -226,7 +245,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
         } else {
             valid = setInvalid(emailAddressField);
         }
-        if (!(contactRelationshipField.getText().equals(""))) {
+        if (contactRelationshipField.getText().matches("([A-Za-z]+[\\s]*)*")) {
             target.setContactRelationship(contactRelationshipField.getText());
             setValid(contactRelationshipField);
         } else if(contactRelationshipField.getText().equals("")) {
@@ -235,7 +254,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
         } else {
             valid = setInvalid(contactRelationshipField);
         }
-        if (!(contactNameField.getText().equals(""))) {
+        if (contactNameField.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
             target.setContactName(contactNameField.getText());
             setValid(contactNameField);
         } else if(contactNameField.getText().equals("")) {
@@ -271,7 +290,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
         } else {
             valid = setInvalid(contactWorkPhoneField);
         }
-        if (!(contactEmailAddressField.getText().equals("") && emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+"))) {
+        if (contactEmailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
             target.setContactEmailAddress(contactEmailAddressField.getText());
             setValid(contactEmailAddressField);
         } else if(contactEmailAddressField.getText().equals("")) {
@@ -335,12 +354,12 @@ public class GUIPatientUpdateContacts implements IPopupable {
      * profile window is shown.
      */
     private void saveToDisk() {
-        boolean valid = setDonorContactDetails();
+        boolean valid = setPatientContactDetails();
         if(valid) {
             Database.saveToDisk();
             goToProfile();
         } else {
-            new Alert(Alert.AlertType.CONFIRMATION, "Invalid fields", ButtonType.OK).show();
+            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }
     }
 }

@@ -23,7 +23,7 @@ public class ScreenControl {
     public static Clinician clinician;
 
 
-    static void setLoggedInPatient(Patient newPatient) {
+    public static void setLoggedInPatient(Patient newPatient) {
         patient = newPatient;
     }
 
@@ -94,7 +94,7 @@ public class ScreenControl {
     }
 
     /**
-     * Switches panes within a popup window, while passing along the current viewed donor
+     * Switches panes within a popup window, while passing along the current viewed patient
      *
      * @param scene      The scene to load the new pane into
      * @param fxmlLoader The fxmlLoader for the new pane
@@ -121,7 +121,7 @@ public class ScreenControl {
      *
      * @param name - name of the popup to hide
      */
-    static void hidePopUp(String name) {
+    public static void hidePopUp(String name) {
         popMap.get(name).close();
     }
 

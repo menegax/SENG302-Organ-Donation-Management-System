@@ -11,22 +11,34 @@ import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
-import utility.GlobalEnums;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static javafx.scene.input.KeyCode.CONTROL;
 import static javafx.scene.input.KeyCode.Z;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 import static org.testfx.api.FxAssert.verifyThat;
 
 /**
- * TestFX class to test the undo functionality of the donor donations update screen
+ * TestFX class to test the undo functionality of the patient donations update screen
  */
 public class GUIUndoPatientDonationsTest extends ApplicationTest{
 
     private Main main = new Main();
+
+    private boolean liverCBDefault;
+    private boolean kidneyCBDefault;
+    private boolean pancreasCBDefault;
+    private boolean heartCBDefault;
+    private boolean lungCBDefault;
+    private boolean intestineCBDefault;
+    private boolean corneaCBDefault;
+    private boolean middleearCBDefault;
+    private boolean skinCBDefault;
+    private boolean boneCBDefault;
+    private boolean bonemarrowCBDefault;
+    private boolean connectivetissueCBDefault;
 
     /**
      * Launches the main application
@@ -36,10 +48,10 @@ public class GUIUndoPatientDonationsTest extends ApplicationTest{
     @Override
     public void start(Stage stage) throws Exception {
 
-        // add dummy donor
+        // add dummy patient
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addPatients(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.addPatient(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
         Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
         Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
 
@@ -48,28 +60,28 @@ public class GUIUndoPatientDonationsTest extends ApplicationTest{
             lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).fire();
             lookup("#profileButton").queryAs(Button.class).fire();
-            lookup("#donationsButton").queryAs(Button.class).fire();
+            lookup("#donationButton").queryAs(Button.class).fire();
         });
     }
 
     /**
-     * Sets the widgets on the screen to known values before testing
+     * Gets the values of the widgets on the screen before testing
      */
     @Before
-    public void setFields() {
+    public void getFields() {
         interact(() -> {
-            lookup("#liverCB").queryAs(CheckBox.class).setSelected(false);
-            lookup("#kidneyCB").queryAs(CheckBox.class).setSelected(false);
-            lookup("#pancreasCB").queryAs(CheckBox.class).setSelected(false);
-            lookup("#heartCB").queryAs(CheckBox.class).setSelected(false);
-            lookup("#lungCB").queryAs(CheckBox.class).setSelected(false);
-            lookup("#intestineCB").queryAs(CheckBox.class).setSelected(false);
-            lookup("#corneaCB").queryAs(CheckBox.class).setSelected(false);
-            lookup("#middleearCB").queryAs(CheckBox.class).setSelected(false);
-            lookup("#skinCB").queryAs(CheckBox.class).setSelected(false);
-            lookup("#boneCB").queryAs(CheckBox.class).setSelected(false);
-            lookup("#bonemarrowCB").queryAs(CheckBox.class).setSelected(false);
-            lookup("#connectivetissueCB").queryAs(CheckBox.class).setSelected(false);
+            liverCBDefault = lookup("#liverCB").queryAs(CheckBox.class).isSelected();
+            kidneyCBDefault = lookup("#kidneyCB").queryAs(CheckBox.class).isSelected();
+            pancreasCBDefault = lookup("#pancreasCB").queryAs(CheckBox.class).isSelected();
+            heartCBDefault = lookup("#heartCB").queryAs(CheckBox.class).isSelected();
+            lungCBDefault = lookup("#lungCB").queryAs(CheckBox.class).isSelected();
+            intestineCBDefault = lookup("#intestineCB").queryAs(CheckBox.class).isSelected();
+            corneaCBDefault = lookup("#corneaCB").queryAs(CheckBox.class).isSelected();
+            middleearCBDefault = lookup("#middleearCB").queryAs(CheckBox.class).isSelected();
+            skinCBDefault = lookup("#skinCB").queryAs(CheckBox.class).isSelected();
+            boneCBDefault = lookup("#boneCB").queryAs(CheckBox.class).isSelected();
+            bonemarrowCBDefault = lookup("#bonemarrowCB").queryAs(CheckBox.class).isSelected();
+            connectivetissueCBDefault = lookup("#connectivetissueCB").queryAs(CheckBox.class).isSelected();
         });
     }
 
@@ -88,7 +100,7 @@ public class GUIUndoPatientDonationsTest extends ApplicationTest{
      */
     @Test
     public void verifyScreen() {
-        verifyThat("#donorDonationsAnchorPane", Node::isVisible);
+        verifyThat("#patientDonationsAnchorPane", Node::isVisible);
     }
 
     /**
@@ -124,18 +136,18 @@ public class GUIUndoPatientDonationsTest extends ApplicationTest{
             lookup("#undoButton").queryAs(Button.class).fire();
         });
 
-        assertThat(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#heartCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#lungCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#intestineCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#corneaCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#middleearCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#skinCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#boneCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#bonemarrowCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#connectivetissueCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(liverCBDefault, lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(kidneyCBDefault, lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(pancreasCBDefault, lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(heartCBDefault, lookup("#heartCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(lungCBDefault, lookup("#lungCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(intestineCBDefault, lookup("#intestineCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(corneaCBDefault, lookup("#corneaCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(middleearCBDefault, lookup("#middleearCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(skinCBDefault, lookup("#skinCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(boneCBDefault, lookup("#boneCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(bonemarrowCBDefault, lookup("#bonemarrowCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(connectivetissueCBDefault, lookup("#connectivetissueCB").queryAs(CheckBox.class).isSelected());
 
         // Check Ctrl Z next
         interact(() -> {
@@ -165,18 +177,18 @@ public class GUIUndoPatientDonationsTest extends ApplicationTest{
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
 
-        assertThat(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#heartCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#lungCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#intestineCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#corneaCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#middleearCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#skinCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#boneCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#bonemarrowCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#connectivetissueCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(liverCBDefault, lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(kidneyCBDefault, lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(pancreasCBDefault, lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(heartCBDefault, lookup("#heartCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(lungCBDefault, lookup("#lungCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(intestineCBDefault, lookup("#intestineCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(corneaCBDefault, lookup("#corneaCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(middleearCBDefault, lookup("#middleearCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(skinCBDefault, lookup("#skinCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(boneCBDefault, lookup("#boneCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(bonemarrowCBDefault, lookup("#bonemarrowCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(connectivetissueCBDefault, lookup("#connectivetissueCB").queryAs(CheckBox.class).isSelected());
     }
 
     /**
@@ -191,15 +203,15 @@ public class GUIUndoPatientDonationsTest extends ApplicationTest{
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(true);
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertTrue(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(liverCBDefault, lookup("#liverCB").queryAs(CheckBox.class).isSelected());
 
         // Check Ctrl Z next
         interact(() -> {
@@ -208,15 +220,15 @@ public class GUIUndoPatientDonationsTest extends ApplicationTest{
             lookup("#liverCB").queryAs(CheckBox.class).setSelected(true);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertTrue(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(liverCBDefault, lookup("#liverCB").queryAs(CheckBox.class).isSelected());
     }
 
     /**
@@ -231,21 +243,21 @@ public class GUIUndoPatientDonationsTest extends ApplicationTest{
             lookup("#pancreasCB").queryAs(CheckBox.class).setSelected(true);
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
-        assertThat(lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
-        assertThat(lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
+        assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertTrue(lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(pancreasCBDefault, lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
-        assertThat(lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
+        assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(kidneyCBDefault, lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(pancreasCBDefault, lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(liverCBDefault, lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(kidneyCBDefault, lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(pancreasCBDefault, lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
 
         // Check Ctrl Z next
         interact(() -> {
@@ -254,20 +266,20 @@ public class GUIUndoPatientDonationsTest extends ApplicationTest{
             lookup("#pancreasCB").queryAs(CheckBox.class).setSelected(true);
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
-        assertThat(lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
-        assertThat(lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
+        assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertTrue(lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(pancreasCBDefault, lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
-        assertThat(lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
+        assertTrue(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(kidneyCBDefault, lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(pancreasCBDefault, lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
         interact(() -> {
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(!lookup("#liverCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
-        assertThat(!lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(liverCBDefault, lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(kidneyCBDefault, lookup("#kidneyCB").queryAs(CheckBox.class).isSelected());
+        assertEquals(pancreasCBDefault, lookup("#pancreasCB").queryAs(CheckBox.class).isSelected());
     }
 }

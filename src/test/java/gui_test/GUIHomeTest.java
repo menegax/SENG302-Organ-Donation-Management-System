@@ -7,7 +7,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Patient;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
@@ -17,7 +16,6 @@ import utility.GlobalEnums;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -30,10 +28,10 @@ public class GUIHomeTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         Database.resetDatabase();
 
-        // add dummy donor
+        // add dummy patient
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addPatients(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.addPatient(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
         Database.getPatientByNhi("TFX9999")
                 .addDonation(GlobalEnums.Organ.LIVER);
         Database.getPatientByNhi("TFX9999")
@@ -78,7 +76,7 @@ public class GUIHomeTest extends ApplicationTest {
     public void should_go_to_profile() {
         interact(() -> lookup("#profileButton").queryAs(Button.class)
                 .fire());
-        verifyThat("#donorProfilePane", Node::isVisible);
+        verifyThat("#patientProfilePane", Node::isVisible);
     }
 
 
@@ -86,7 +84,7 @@ public class GUIHomeTest extends ApplicationTest {
     public void should_go_to_log() {
         interact(() -> lookup("#historyButton").queryAs(Button.class)
                 .fire());
-        verifyThat("#donorLogPane", Node::isVisible);
+        verifyThat("#patientLogPane", Node::isVisible);
     }
 
 }

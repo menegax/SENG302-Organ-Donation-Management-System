@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import model.Patient;
-import model.Patient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,7 +21,7 @@ public class PatientTest {
     private static Patient testPatient; //Patient obj not within the database
 
     /**
-     * Populate database with test donors and disables logging
+     * Populate database with test patients and disables logging
      */
     @BeforeClass
     public static void setUp() {
@@ -32,22 +31,22 @@ public class PatientTest {
         testPatient = new Patient("ABC1234", "James", null, "Wallace",
                 LocalDate.of(1970, 2, 12));
 
-        Database.addPatients(new Patient("XYZ9876", "Joe", new ArrayList<String>() {{
+        Database.addPatient(new Patient("XYZ9876", "Joe", new ArrayList<String>() {{
             add("Jane");
         }},
                 "Bloggs", LocalDate.of(1994, 12, 12)));
 
-        Database.addPatients(new Patient("DEF4567", "Bob", null, "Bobby",
+        Database.addPatient(new Patient("DEF4567", "Bob", null, "Bobby",
                 LocalDate.of(1994, 12, 12)));
     }
 
     /**
-     * Test donor constructor
+     * Test patient constructor
      */
     @Test
     public void testPatientConstructor() {
-        Patient donor = givenPatient();
-        thenPatientHasAttributes(donor);
+        Patient patient = givenPatient();
+        thenPatientHasAttributes(patient);
     }
 
     /**
@@ -153,7 +152,7 @@ public class PatientTest {
     }
 
     /**
-     * Checks correct age of deceased donor
+     * Checks correct age of deceased patient
      */
     @Test
     public void testGetAge() {
@@ -162,7 +161,7 @@ public class PatientTest {
     }
 
     /**
-     * Checks correct age of deceased donor who is just about to have a birthday
+     * Checks correct age of deceased patient who is just about to have a birthday
      */
     @Test
     public void testGetAgeRightBeforeBirthday() {
@@ -190,7 +189,7 @@ public class PatientTest {
     }
 
     /**
-     * Create donor object
+     * Create patient object
      */
     private Patient givenPatient() {
         return new Patient("AAA1111", "Bob", null, "Wallace",
@@ -198,14 +197,14 @@ public class PatientTest {
     }
 
     /**
-     * Check the attributes have been set correctly upon donor obj creation
+     * Check the attributes have been set correctly upon patient obj creation
      */
-    private void thenPatientHasAttributes(Patient donor) {
-        assertTrue(donor.getCREATED() != null);
-        assertEquals(donor.getFirstName(), "Bob");
-        assertEquals(donor.getMiddleNames(), null);
-        assertEquals(donor.getLastName(), "Wallace");
-        assertEquals(donor.getBirth(), LocalDate.of(1995, 12, 31));
+    private void thenPatientHasAttributes(Patient patient) {
+        assertTrue(patient.getCREATED() != null);
+        assertEquals(patient.getFirstName(), "Bob");
+        assertEquals(patient.getMiddleNames(), null);
+        assertEquals(patient.getLastName(), "Wallace");
+        assertEquals(patient.getBirth(), LocalDate.of(1995, 12, 31));
     }
 
     /**
@@ -224,7 +223,7 @@ public class PatientTest {
     }
 
     /**
-     * Helper method for setting donor names with multiple middle names
+     * Helper method for setting patient names with multiple middle names
      */
     private void setPatientNamesMultipleMiddle() {
         testPatient.setFirstName("Joe");
@@ -236,7 +235,7 @@ public class PatientTest {
     }
 
     /**
-     * Helper method for setting donor names with no middle names
+     * Helper method for setting patient names with no middle names
      */
     private void setPatientNamesNoMiddle() {
         testPatient.setFirstName("Joe");

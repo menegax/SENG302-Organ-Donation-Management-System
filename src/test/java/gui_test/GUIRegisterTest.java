@@ -47,7 +47,7 @@ public class GUIRegisterTest extends ApplicationTest {
 
     @Test
     public void verify_screen() {
-        verifyThat("#donorRegisterAnchorPane", Node::isVisible);
+        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class GUIRegisterTest extends ApplicationTest {
             lookup("#doneButton").queryAs(Button.class).fire();
             lookup("OK").queryAs(Button.class).fire();
         });
-        verifyThat(lookup("#donorRegisterAnchorPane"), Node::isVisible);
+        verifyThat(lookup("#patientRegisterAnchorPane"), Node::isVisible);
     }
 
     @Test
@@ -112,7 +112,7 @@ public class GUIRegisterTest extends ApplicationTest {
             lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        verifyThat("#donorRegisterAnchorPane", Node::isVisible);
+        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
     @Test
@@ -125,7 +125,7 @@ public class GUIRegisterTest extends ApplicationTest {
             lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        verifyThat("#donorRegisterAnchorPane", Node::isVisible);
+        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class GUIRegisterTest extends ApplicationTest {
             lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        verifyThat("#donorRegisterAnchorPane", Node::isVisible);
+        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
     @Test
@@ -149,7 +149,7 @@ public class GUIRegisterTest extends ApplicationTest {
             lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        verifyThat("#donorRegisterAnchorPane", Node::isVisible);
+        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
     @Test
@@ -161,7 +161,7 @@ public class GUIRegisterTest extends ApplicationTest {
             lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        verifyThat("#donorRegisterAnchorPane", Node::isVisible);
+        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
     @Test
@@ -169,7 +169,7 @@ public class GUIRegisterTest extends ApplicationTest {
 
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addPatients(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.addPatient(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
         Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
         Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
 
@@ -181,7 +181,7 @@ public class GUIRegisterTest extends ApplicationTest {
             lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        verifyThat("#donorRegisterAnchorPane", Node::isVisible);
+        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
 }

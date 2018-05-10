@@ -15,16 +15,22 @@ import java.time.LocalDate;
 
 import static javafx.scene.input.KeyCode.CONTROL;
 import static javafx.scene.input.KeyCode.Z;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 import static org.testfx.api.FxAssert.verifyThat;
 
 /**
- * TestFX class to test the undo functionality of the donor register screen
+ * TestFX class to test the undo functionality of the patient register screen
  */
 public class GUIUndoPatientRegisterTest extends ApplicationTest{
 
     private Main main = new Main();
 
+    private String firstnameRegisterDefault;
+    private String lastnameRegisterDefault;
+    private String middlenameRegisterDefault;
+    private String nhiRegisterDefault;
+
+    private LocalDate birthRegisterDefault;
     /**
      * Launches the main application
      * @param stage the stage to launch the app on
@@ -39,17 +45,17 @@ public class GUIUndoPatientRegisterTest extends ApplicationTest{
     }
 
     /**
-     * Sets the widgets on the screen to known values before testing
+     * Gets the values of the widgets on the screen before testing
      */
     @Before
-    public void setFields() {
+    public void getFields() {
         interact(() -> {
-            lookup("#firstnameRegister").queryAs(TextField.class).setText("FirstName");
-            lookup("#lastnameRegister").queryAs(TextField.class).setText("LastName");
-            lookup("#middlenameRegister").queryAs(TextField.class).setText("MiddleName");
-            lookup("#nhiRegister").queryAs(TextField.class).setText("AAA1111");
+            firstnameRegisterDefault = lookup("#firstnameRegister").queryAs(TextField.class).getText();
+            lastnameRegisterDefault = lookup("#lastnameRegister").queryAs(TextField.class).getText();
+            middlenameRegisterDefault = lookup("#middlenameRegister").queryAs(TextField.class).getText();
+            nhiRegisterDefault = lookup("#nhiRegister").queryAs(TextField.class).getText();
 
-            lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(2001, 1, 1));
+            birthRegisterDefault = lookup("#birthRegister").queryAs(DatePicker.class).getValue();
         });
     }
 
@@ -88,10 +94,10 @@ public class GUIUndoPatientRegisterTest extends ApplicationTest{
             lookup("#undoButton").queryAs(Button.class).fire();
         });
 
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("AAA1111"));
-        assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("FirstName"));
-        assertThat(lookup("#lastnameRegister").queryAs(TextField.class).getText().equals("LastName"));
-        assertThat(lookup("#middlenameRegister").queryAs(TextField.class).getText().equals("MiddleName"));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals(nhiRegisterDefault));
+        assertTrue(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals(firstnameRegisterDefault));
+        assertTrue(lookup("#lastnameRegister").queryAs(TextField.class).getText().equals(lastnameRegisterDefault));
+        assertTrue(lookup("#middlenameRegister").queryAs(TextField.class).getText().equals(middlenameRegisterDefault));
 
         // Check Ctrl Z next (with both ways of release)
         interact(() -> {
@@ -105,10 +111,10 @@ public class GUIUndoPatientRegisterTest extends ApplicationTest{
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
 
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("AAA1111"));
-        assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("FirstName"));
-        assertThat(lookup("#lastnameRegister").queryAs(TextField.class).getText().equals("LastName"));
-        assertThat(lookup("#middlenameRegister").queryAs(TextField.class).getText().equals("MiddleName"));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals(nhiRegisterDefault));
+        assertTrue(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals(firstnameRegisterDefault));
+        assertTrue(lookup("#lastnameRegister").queryAs(TextField.class).getText().equals(lastnameRegisterDefault));
+        assertTrue(lookup("#middlenameRegister").queryAs(TextField.class).getText().equals(middlenameRegisterDefault));
     }
 
     /**
@@ -122,7 +128,7 @@ public class GUIUndoPatientRegisterTest extends ApplicationTest{
             lookup("#undoButton").queryAs(Button.class).fire();
         });
 
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2001, 1, 1));
+        assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
 
         // Check Ctrl Z next
         interact(() -> {
@@ -130,7 +136,7 @@ public class GUIUndoPatientRegisterTest extends ApplicationTest{
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
 
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2001, 1, 1));
+        assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
     }
     
     /**
@@ -145,15 +151,15 @@ public class GUIUndoPatientRegisterTest extends ApplicationTest{
             lookup("#nhiRegister").queryAs(TextField.class).setText("DDD4444");
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("CCC3333"));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("CCC3333"));
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("AAA1111"));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals(nhiRegisterDefault));
 
         interact(() -> {
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
@@ -161,15 +167,15 @@ public class GUIUndoPatientRegisterTest extends ApplicationTest{
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(2004, 4, 4));
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2003, 3, 3));
+        assertEquals(LocalDate.of(2003, 3, 3), lookup("#birthRegister").queryAs(DatePicker.class).getValue());
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2002, 2, 2));
+        assertEquals(LocalDate.of(2002, 2, 2), lookup("#birthRegister").queryAs(DatePicker.class).getValue());
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2001, 1, 1));
+        assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
 
         // Check Ctrl Z next
         interact(() -> {
@@ -178,15 +184,15 @@ public class GUIUndoPatientRegisterTest extends ApplicationTest{
             lookup("#nhiRegister").queryAs(TextField.class).setText("DDD4444");
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("CCC3333"));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("CCC3333"));
         interact(() -> {
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
         interact(() -> {
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("AAA1111"));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals(nhiRegisterDefault));
 
         interact(() -> {
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
@@ -194,15 +200,15 @@ public class GUIUndoPatientRegisterTest extends ApplicationTest{
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(2004, 4, 4));
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2003, 3, 3));
+        assertEquals(LocalDate.of(2003, 3, 3), lookup("#birthRegister").queryAs(DatePicker.class).getValue());
         interact(() -> {
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2002, 2, 2));
+        assertEquals(LocalDate.of(2002, 2, 2), lookup("#birthRegister").queryAs(DatePicker.class).getValue());
         interact(() -> {
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2001, 1, 1));
+        assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
     }
 
     /**
@@ -217,21 +223,21 @@ public class GUIUndoPatientRegisterTest extends ApplicationTest{
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
-        assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("FirstName2"));
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2001, 1, 1));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
+        assertTrue(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("FirstName2"));
+        assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
-        assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("FirstName"));
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2001, 1, 1));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
+        assertTrue(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals(firstnameRegisterDefault));
+        assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("AAA1111"));
-        assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("FirstName"));
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2001, 1, 1));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals(nhiRegisterDefault));
+        assertTrue(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals(firstnameRegisterDefault));
+        assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
 
         // Check Ctrl Z next
         interact(() -> {
@@ -240,20 +246,20 @@ public class GUIUndoPatientRegisterTest extends ApplicationTest{
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
-        assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("FirstName2"));
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2001, 1, 1));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
+        assertTrue(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("FirstName2"));
+        assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
         interact(() -> {
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
-        assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("FirstName"));
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2001, 1, 1));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB2222"));
+        assertTrue(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals(firstnameRegisterDefault));
+        assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
         interact(() -> {
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("AAA1111"));
-        assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("FirstName"));
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == LocalDate.of(2001, 1, 1));
+        assertTrue(lookup("#nhiRegister").queryAs(TextField.class).getText().equals(nhiRegisterDefault));
+        assertTrue(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals(firstnameRegisterDefault));
+        assertEquals(birthRegisterDefault, lookup("#birthRegister").queryAs(DatePicker.class).getValue());
     }
 }

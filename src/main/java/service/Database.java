@@ -20,7 +20,6 @@ public class Database {
     private static HashSet<Patient> patients = new HashSet<>();
     private static ArrayList<Clinician> clinicians = new ArrayList<>();
 
-
     public static HashSet<Patient> getPatients() {
         return patients;
     }
@@ -32,13 +31,13 @@ public class Database {
      *
      * @param newPatient the new patient to add
      */
-    public static void addPatients(Patient newPatient) {
+    public static void addPatient(Patient newPatient) {
         try {
             newPatient.ensureValidNhi();
             newPatient.ensureUniqueNhi();
             patients.add(newPatient);
             SearchPatients.addIndex(newPatient);
-            userActions.log(Level.INFO,"Successfully added donor " + newPatient.getNhiNumber(), "attempted to add a donor");
+            userActions.log(Level.INFO,"Successfully added patient " + newPatient.getNhiNumber(), "attempted to add a patient");
         } catch (IllegalArgumentException o) {
             throw new IllegalArgumentException(o.getMessage());
         }
@@ -153,8 +152,8 @@ public class Database {
         Gson gson = new Gson();
         String json = gson.toJson(patients);
 
-        String PatientPath = "./";
-        Writer writer = new FileWriter(new File(PatientPath, "patient.json"));
+        String patientPath = "./";
+        Writer writer = new FileWriter(new File(patientPath, "patient.json"));
         writer.write(json);
         writer.close();
     }
@@ -177,15 +176,13 @@ public class Database {
 
     /**
      * Calls importFromDisk and handles any errors
-     *
-     * @param fileName the filename of the file to import
+     * @param fileName The file to import from
      */
     public static void importFromDisk(String fileName) {
         try {
-                patients = new HashSet<>();
-                importFromDiskPatients(fileName);
-                userActions.log(Level.INFO, "Imported patients from disk", "Attempted to import from disk");
-                SearchPatients.createFullIndex();
+            importFromDiskPatients(fileName);
+            userActions.log(Level.INFO, "Imported patients from disk", "Attempted to import from disk");
+            SearchPatients.createFullIndex();
         }
         catch (IOException e) {
             userActions.log(Level.WARNING, e.getMessage(), "attempted to import from disk");
@@ -200,9 +197,9 @@ public class Database {
     private static void importFromDiskPatients(String fileName) throws IOException {
         Gson gson = new Gson();
         BufferedReader br = new BufferedReader(new FileReader(fileName));
-        Patient[] patients = gson.fromJson(br, Patient[].class);
-        for (Patient p : patients) {
-            Database.addPatients(p);
+        Patient[] patient = gson.fromJson(br, Patient[].class);
+        for (Patient p : patient) {
+            Database.addPatient(p);
         }
     }
 

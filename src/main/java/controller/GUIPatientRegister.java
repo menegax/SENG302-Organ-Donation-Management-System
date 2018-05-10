@@ -3,13 +3,12 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import model.Patient;
@@ -27,6 +26,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIPatientRegister {
 
     @FXML
+    public AnchorPane pane;
     public AnchorPane registerPane;
 
     public Label backLabel;
@@ -88,6 +88,10 @@ public class GUIPatientRegister {
         patientRegisterAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 register();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
+                undo();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
+                redo();
             }
         });
     }
@@ -134,7 +138,7 @@ public class GUIPatientRegister {
      */
 
     private void addPatientGui() throws IllegalArgumentException {
-        Database.addPatients(new Patient(nhiRegister.getText(),
+        Database.addPatient(new Patient(nhiRegister.getText(),
                 firstnameRegister.getText(),
                 middlenameRegister.getText()
                         .isEmpty() ? new ArrayList<>() : new ArrayList<>(Arrays.asList(middlenameRegister.getText()
@@ -188,8 +192,8 @@ public class GUIPatientRegister {
             try {
                 addPatientGui();
                 clearFields();
-                Alert confirm = new Alert(Alert.AlertType.INFORMATION, "Successfully registered!");
-                confirm.show();
+                Alert info = new Alert(Alert.AlertType.INFORMATION, "Successfully registered!");
+                info.show();
                 Database.saveToDisk();
                 ScreenControl.activate("login");
             }

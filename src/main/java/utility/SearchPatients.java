@@ -47,78 +47,78 @@ public class SearchPatients {
 
 
     /**
-     * Creates a full index of all donors currently loaded into the app.
+     * Creates a full index of all patients currently loaded into the app.
      *
      */
     public static void createFullIndex() {
     	if (indexWriter != null) {
     		SearchPatients.clearIndex();
     	}
-        HashSet<Patient> donors = Database.getPatients();
-        for (Patient donor : donors) {
-        	addIndex(donor);
+        HashSet<Patient> patients = Database.getPatients();
+        for (Patient patient : patients) {
+        	addIndex(patient);
         }
     }
 
 
     /**
-     * Add indices of donors via the index writer
-     * @param donor donor to be indexed
+     * Add indices of patients via the index writer
+     * @param patient patient to be indexed
      */
-    public static void addIndex(Patient donor) {
+    public static void addIndex(Patient patient) {
         if (indexWriter == null) {
             try {
 				initializeWriter();
 			} catch (IOException e) {
-                userActions.log(Level.SEVERE, "Unable to add donor index", "Attempted to add donor index");
+                userActions.log(Level.SEVERE, "Unable to add patient index", "Attempted to add patient index");
             }
         }
         try {
 			indexWriter.commit();
-			indexWriter.addDocument(createDocument(donor));
+			indexWriter.addDocument(createDocument(patient));
 		} catch (IOException e) {
-            userActions.log(Level.SEVERE, "Unable to add donor index", "Attempted to add donor index");
+            userActions.log(Level.SEVERE, "Unable to add patient index", "Attempted to add patient index");
 		}
     }
 
     /**
-     * Removes indices of donors via the index writer
-     * @param donor donor to remove index for
+     * Removes indices of patients via the index writer
+     * @param patient patient to remove index for
      */
-    public static void removeIndex(Patient donor) {
-    	Term toDel = new Term("nhi", donor.getNhiNumber().toUpperCase());
+    public static void removeIndex(Patient patient) {
+    	Term toDel = new Term("nhi", patient.getNhiNumber().toUpperCase());
     	try {
 			indexWriter.deleteDocuments(toDel);
 		} catch (IOException e) {
-            userActions.log(Level.SEVERE, "Unable to remove donor index", "Attempted to remove donor index");
+            userActions.log(Level.SEVERE, "Unable to remove patient index", "Attempted to remove patient index");
         }
     }
     
     /**
-     * Removes all indices of all donors via the index writer
+     * Removes all indices of all patients via the index writer
      */
     public static void clearIndex() {
     	try {
 			indexWriter.deleteAll();
 		} catch (IOException e) {
-            userActions.log(Level.SEVERE, "Unable to clear donor index", "Attempted to clear donor index");
+            userActions.log(Level.SEVERE, "Unable to clear patient index", "Attempted to clear patient index");
 		}
     }
     
     /**
-     * Creates the index document for a donor
+     * Creates the index document for a patient
      */
-    private static Document createDocument(Patient donor) {
-        Document donorDoc = new Document();
-        donorDoc.add(new StringField("nhi", donor.getNhiNumber().toUpperCase(), Field.Store.YES));
-        donorDoc.add(new StringField("fName", donor.getFirstName().toUpperCase(), Field.Store.YES));
-        if (donor.getMiddleNames() != null) {
-        	for (String mName : donor.getMiddleNames()) {
-        		donorDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.YES));
+    private static Document createDocument(Patient patient) {
+        Document patientDoc = new Document();
+        patientDoc.add(new StringField("nhi", patient.getNhiNumber().toUpperCase(), Field.Store.YES));
+        patientDoc.add(new StringField("fName", patient.getFirstName().toUpperCase(), Field.Store.YES));
+        if (patient.getMiddleNames() != null) {
+        	for (String mName : patient.getMiddleNames()) {
+        		patientDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.YES));
         	}
         }
-        donorDoc.add(new StringField("lName", donor.getLastName().toUpperCase(), Field.Store.YES));
-        return donorDoc;
+        patientDoc.add(new StringField("lName", patient.getLastName().toUpperCase(), Field.Store.YES));
+        return patientDoc;
     }
 
 
@@ -145,9 +145,9 @@ public class SearchPatients {
     }
 
     /**
-     * Searches through the index for donors by full name
+     * Searches through the index for patients by full name
      * @param input The name you want to search for
-     * @return ArrayList of the donors it found as a result of the search
+     * @return ArrayList of the patients it found as a result of the search
      */
     public static ArrayList<Patient> searchByName(String input) {
     	String[] names = input.split(" ");
@@ -162,21 +162,21 @@ public class SearchPatients {
         TopDocs docs;
 		try {
 			String nhi;
-			Patient donor;
+			Patient patient;
 			for (FuzzyQuery query : queries) {
 				docs = searchQuery(query);
 	        
 				for (ScoreDoc doc : docs.scoreDocs) {
 	            	Document thisDoc = indexSearcher.doc(doc.doc);
 	            	nhi = thisDoc.get("nhi");
-	            	donor = Database.getPatientByNhi(nhi);
-	            	if (!results.contains(donor)) {
-	            		results.add(donor);
+	            	patient = Database.getPatientByNhi(nhi);
+	            	if (!results.contains(patient)) {
+	            		results.add(patient);
 	            	}
 	        	}
 			}
 		} catch (IOException e) {
-			userActions.log(Level.SEVERE, "Unable to search donors by name", "Attempted to search donors by name");
+			userActions.log(Level.SEVERE, "Unable to search patients by name", "Attempted to search patients by name");
 		}
         return results;
     }

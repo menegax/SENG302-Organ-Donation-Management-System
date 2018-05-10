@@ -4,13 +4,10 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 
 import controller.Main;
-import controller.ScreenControl;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Clinician;
@@ -24,8 +21,6 @@ import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 import utility.GlobalEnums;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 
@@ -98,13 +93,6 @@ public class GUIClinicianSearchPatientsPopUpTest extends ApplicationTest {
                     .getOnAction()
                     .handle(new ActionEvent());
         });
-
-        // double-click to get a pop up
-        interact( () -> {
-            lookup( "#donorDataTable" ).queryAs( TableView.class ).getSelectionModel().select(0);
-            doubleClickOn( "#donorDataTable" ).doubleClickOn();
-        });
-        verifyThat("#donorProfilePane", Node::isVisible);
     }
 }
 

@@ -16,7 +16,7 @@
       <TextField fx:id="middlenameRegister" focusTraversable="false" layoutX="226.0" layoutY="240.0" promptText="Middle name(s)" />
       <Button fx:id="doneButton" layoutX="463.0" layoutY="341.0" mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Done" />
       <DatePicker fx:id="birthRegister" editable="false" focusTraversable="false" layoutX="226.0" layoutY="282.0" prefHeight="25.0" prefWidth="149.0" promptText="Date of birth" />
-      <Button fx:id="undoButton" layoutX="557.0" layoutY="13.0" mnemonicParsing="false" onAction="#redo" prefHeight="36.0" prefWidth="31.0" styleClass="redo" stylesheets="@../css/guiStyle.css" />
-      <Button fx:id="redoButton" layoutX="524.0" layoutY="13.0" mnemonicParsing="false" onAction="#undo" prefHeight="36.0" prefWidth="31.0" styleClass="undo" stylesheets="@../css/guiStyle.css" />
+      <Button fx:id="redoButton" layoutX="557.0" layoutY="13.0" mnemonicParsing="false" onAction="#redo" prefHeight="36.0" prefWidth="31.0" styleClass="redo" stylesheets="@../css/guiStyle.css" />
+      <Button fx:id="undoButton" layoutX="524.0" layoutY="13.0" mnemonicParsing="false" onAction="#undo" prefHeight="36.0" prefWidth="31.0" styleClass="undo" stylesheets="@../css/guiStyle.css" />
    </children>
 </AnchorPane>

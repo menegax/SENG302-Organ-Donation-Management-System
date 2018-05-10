@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Patient;
+import model.DrugInteraction;
 import service.Database;
 import utility.GlobalEnums;
 import utility.SearchPatients;
@@ -78,6 +79,8 @@ public class GUIClinicianSearchPatients implements Initializable {
                     Scene scene = new Scene(fxmlLoader.load());
                     GUIPatientProfile controller = fxmlLoader.getController();
                     controller.setViewedPatient(patientDataTable.getSelectionModel()
+                            .getSelectedItem());
+                    DrugInteraction.setViewedPatient(patientDataTable.getSelectionModel()
                             .getSelectedItem());
 
                     Stage popUpStage = new Stage();

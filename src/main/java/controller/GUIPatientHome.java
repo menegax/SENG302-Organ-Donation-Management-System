@@ -21,10 +21,16 @@ public class GUIPatientHome {
 
 
     @FXML
-    public void goToProfile() { ScreenControl.activate("patientProfile"); }
+    public void goToProfile() {
+        ScreenControl.activate("patientProfile");
+    }
+
 
     @FXML
-    public void goToHistory() { ScreenControl.activate("patientHistory"); }
+    public void goToHistory() {
+        ScreenControl.activate("patientHistory");
+    }
+
 
     @FXML
     public void logOut() {

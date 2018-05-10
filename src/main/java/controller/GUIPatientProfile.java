@@ -19,6 +19,11 @@ import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import model.Patient;
+import org.apache.commons.lang3.StringUtils;
+import model.Medication;
+import service.Database;
 import utility.GlobalEnums;
 
 import java.io.IOException;
@@ -46,14 +51,16 @@ public class GUIPatientProfile implements IPopupable {
     @FXML
     private AnchorPane patientProfilePane;
 
-    @FXML
-    private AnchorPane clinicianViewOfPatientProfile;
-
-    @FXML
     public Button editPatientButton;
 
-    @FXML
     public Button contactButton;
+
+    public Button donationButton;
+
+    @FXML
+    public Button medicationBtn;
+    @FXML
+    private AnchorPane clinicianViewOfPatientProfile;
 
     @FXML
     public Button donationsButton;
@@ -126,9 +133,15 @@ public class GUIPatientProfile implements IPopupable {
     private ListView donationList;
 
     @FXML
+    private ListView<String> medList;
+
+    @FXML
     private Label back;
 
     private Patient viewedPatient;
+
+    private ListProperty<String> medListProperty = new SimpleListProperty<>();
+
 
     /**
      * removes/disables/hides the back button
@@ -191,6 +204,14 @@ public class GUIPatientProfile implements IPopupable {
                 donationList.setDisable(true);
                 donationList.setVisible(false);
             }
+            medicationBtn.setDisable(true);
+            medicationBtn.setVisible(false);
+            try {
+                loadProfile(ScreenControl.getLoggedInPatient()
+                        .getNhiNumber());
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Cannot load patient profile");
+            }
         }
     }
 
@@ -241,6 +262,11 @@ public class GUIPatientProfile implements IPopupable {
         receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
         donationList.itemsProperty().bind(donatingListProperty);
         receivingList.itemsProperty().bind(receivingListProperty);
+        //Populate current medication listview
+        Collection<Medication> meds = patient.getCurrentMedications();
+        List<String> medsMapped = meds.stream().map(Medication::getMedicationName).collect(Collectors.toList());
+        medListProperty.setValue(FXCollections.observableArrayList(medsMapped));
+        medList.itemsProperty().bind(medListProperty);
         // list view styling/highlighting
         highlightListCell(donationList, true);
         highlightListCell(receivingList, false);
@@ -383,6 +409,27 @@ public class GUIPatientProfile implements IPopupable {
                         "Error loading contacts screen in popup",
                         "attempted to navigate from the profile page to the contacts page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading contacts page", ButtonType.OK).show();
+            }
+        }
+    }
+
+    public void openMedication() {
+        if (ScreenControl.getLoggedInPatient() != null) {
+            ScreenControl.removeScreen("patientMedications");
+            try {
+                ScreenControl.addScreen("patientMedications", FXMLLoader.load(getClass().getResource("/scene/patientMedications.fxml")));
+                ScreenControl.activate("patientMedications");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading medication screen", "attempted to navigate from the profile page to the medication page");
+                new Alert(Alert.AlertType.WARNING, "ERROR loading medication page", ButtonType.OK).showAndWait();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientMedications.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading medication screen in popup", "attempted to navigate from the profile page to the medication page in popup");
+                new Alert(Alert.AlertType.ERROR, "Error loading medication page", ButtonType.OK).showAndWait();
             }
         }
     }

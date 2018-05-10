@@ -13,13 +13,13 @@
         <Button layoutX="463.0" layoutY="341.0" mnemonicParsing="false" onAction="#saveContactDetails" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Save" />
         <VBox layoutX="60.0" layoutY="100.0" prefHeight="230.0" prefWidth="230.0" spacing="1.0" stylesheets="@../css/guiStyle.css">
          <children>
-            <Label alignment="CENTER" text="Donor Home Phone:" />
+            <Label alignment="CENTER" text="Patient Home Phone:" />
             <TextField fx:id="homePhoneField" />
-            <Label text="Donor Mobile Phone:" />
+            <Label text="Patient Mobile Phone:" />
             <TextField fx:id="mobilePhoneField" />
-            <Label text="Donor Work Phone:" />
+            <Label text="Patient Work Phone:" />
             <TextField fx:id="workPhoneField" />
-            <Label text="Donor Email Address:" />
+            <Label text="Patient Email Address:" />
             <TextField fx:id="emailAddressField" />
             <Label text="Emergency Contact Relationship:" />
             <TextField fx:id="contactRelationshipField" layoutX="10.0" layoutY="191.0" />
@@ -39,7 +39,7 @@
             <TextField fx:id="contactNameField" />
          </children>
         </VBox>
-        <Button fx:id="undoButton" layoutX="556.0" layoutY="14.0" mnemonicParsing="false" onAction="#redo" prefHeight="36.0" prefWidth="31.0" styleClass="redo" stylesheets="@../css/guiStyle.css" />
-        <Button fx:id="redoButton" layoutX="520.0" layoutY="14.0" mnemonicParsing="false" onAction="#undo" prefHeight="36.0" prefWidth="31.0" styleClass="undo" stylesheets="@../css/guiStyle.css" />
+        <Button fx:id="redoButton" layoutX="556.0" layoutY="14.0" mnemonicParsing="false" onAction="#redo" prefHeight="36.0" prefWidth="31.0" styleClass="redo" stylesheets="@../css/guiStyle.css" />
+        <Button fx:id="undoButton" layoutX="520.0" layoutY="14.0" mnemonicParsing="false" onAction="#undo" prefHeight="36.0" prefWidth="31.0" styleClass="undo" stylesheets="@../css/guiStyle.css" />
     </children>
 </AnchorPane>
