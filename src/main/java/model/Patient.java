@@ -3,11 +3,7 @@ package model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import service.Database;
-import utility.GlobalEnums;
-import utility.GlobalEnums.BloodGroup;
-import utility.GlobalEnums.Gender;
-import utility.GlobalEnums.Organ;
-import utility.GlobalEnums.Region;
+import utility.GlobalEnums.*;
 import utility.SearchPatients;
 import utility.UserActionRecord;
 
@@ -33,11 +29,15 @@ public class Patient {
 
     private String lastName;
 
+    private String preferredName;
+
     private LocalDate birth;
 
     private LocalDate death;
 
-    private Gender gender;
+    private BirthGender birthGender;
+
+    private PreferredGender preferredGender;
 
     private double height; //Height in meters
 
@@ -102,24 +102,26 @@ public class Patient {
     /**
      * Sets the attributes of the patient
      *
-     * @param firstName   first name
-     * @param lastName    last name
-     * @param middleNames middle names
-     * @param birth       birth date
-     * @param death       death date
-     * @param street1     street 1 of address
-     * @param street2     street2 of address
-     * @param suburb      suburb of address
-     * @param region      region of address
-     * @param gender      gender of address
-     * @param bloodGroup  blood group
-     * @param height      height in meters
-     * @param weight      weight in kilograms
-     * @param nhi         nhi
+     * @param firstName         first name
+     * @param lastName          last name
+     * @param middleNames       middle names
+     * @param birth             birth date
+     * @param death             death date
+     * @param street1           street 1 of address
+     * @param street2           street2 of address
+     * @param suburb            suburb of address
+     * @param region            region of address
+     * @param birthGender       gender of patient at birth
+     * @param preferredGender   chosen gender of patient
+     * @param bloodGroup        blood group
+     * @param height            height in meters
+     * @param weight            weight in kilograms
+     * @param nhi               NHI
      */
-    public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, LocalDate birth, LocalDate death, String street1,
-                                 String street2, String suburb, String region, String gender, String bloodGroup, double height, double weight,
-                                 String nhi) throws IllegalArgumentException {
+    public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
+                                 LocalDate birth, LocalDate death, String street1, String street2, String suburb,
+                                 String region, String birthGender, String preferredGender, String bloodGroup,
+                                 double height, double weight, String nhi) throws IllegalArgumentException {
         Enum globalEnum;
         SearchPatients.removeIndex(this);
         if (firstName != null) {
@@ -130,6 +132,9 @@ public class Patient {
         }
         if (middleNames != null) {
             setMiddleNames(middleNames);
+        }
+        if (preferredName != null) {
+            setPreferredName(preferredName);
         }
         if (birth != null) {
             setBirth(birth);
@@ -147,32 +152,31 @@ public class Patient {
             setSuburb(suburb);
         }
         if (region != null) {
-            globalEnum = GlobalEnums.Region.getEnumFromString(region);
+            globalEnum = Region.getEnumFromString(region);
             if (globalEnum != null) {
-                setRegion((GlobalEnums.Region) globalEnum);
+                setRegion((Region) globalEnum);
             }
             else {
                 userActions.log(Level.WARNING, "Invalid region", "attempted to update patient attributes");
             }
         }
-        if (gender != null) {
-            globalEnum = GlobalEnums.Gender.getEnumFromString(gender);
+        if (preferredGender != null) {
+            globalEnum = PreferredGender.getEnumFromString(preferredGender);
             if (globalEnum != null) {
-                setGender((GlobalEnums.Gender) globalEnum);
+                setPreferredGender((PreferredGender) globalEnum);
             }
             else {
-                userActions.log(Level.WARNING, "Invalid gender", "attempted to update patient attributes");
+                userActions.log(Level.WARNING, "Invalid preferred gender", "attempted to update patient attributes");
             }
         }
         if (bloodGroup != null) {
-            globalEnum = GlobalEnums.BloodGroup.getEnumFromString(bloodGroup);
+            globalEnum = BloodGroup.getEnumFromString(bloodGroup);
             if (globalEnum != null) {
-                setBloodGroup((GlobalEnums.BloodGroup) globalEnum);
+                setBloodGroup((BloodGroup) globalEnum);
             }
             else {
                 userActions.log(Level.WARNING, "Invalid blood group", "attempted to update patient attributes");
             }
-
         }
         if (height > 0) {
             setHeight(height);
@@ -187,7 +191,6 @@ public class Patient {
         patientModified();
         SearchPatients.addIndex(this);
     }
-
 
     /**
      * Update the organ donations list of the patient
@@ -220,7 +223,6 @@ public class Patient {
         }
     }
 
-
     /**
      * Checks that the nhi number consists (only) of 3 letters then 4 numbers
      *
@@ -232,7 +234,6 @@ public class Patient {
                     "NHI number " + nhiNumber.toUpperCase() + " is not in the correct format (3 letters followed by 4 numbers)");
         }
     }
-
 
     /**
      * Checks the uniqueness of the nhi number
@@ -246,7 +247,6 @@ public class Patient {
             }
         }
     }
-
 
     /**
      * Returns the name of the patient as a formatted concatenated string
@@ -265,11 +265,9 @@ public class Patient {
         return concatName.toString();
     }
 
-
     public ArrayList<Organ> getDonations() {
         return donations == null ? new ArrayList<>() : donations;
     }
-
 
     public void setDonations(ArrayList<Organ> donations) {
         if (this.donations != donations) {
@@ -278,16 +276,13 @@ public class Patient {
         }
     }
 
-
     public Timestamp getCREATED() {
         return CREATED;
     }
 
-
     public String getFirstName() {
         return firstName;
     }
-
 
     public void setFirstName(String firstName) {
         if (this.firstName == null || (!firstName.equals(this.firstName))) {
@@ -296,11 +291,9 @@ public class Patient {
         }
     }
 
-
     public ArrayList<String> getMiddleNames() {
         return middleNames;
     }
-
 
     public void setMiddleNames(ArrayList<String> middleNames) {
         if (this.middleNames == null || (!middleNames.equals(this.middleNames))) {
@@ -309,11 +302,9 @@ public class Patient {
         }
     }
 
-
     public String getLastName() {
         return lastName;
     }
-
 
     public void setLastName(String lastName) {
         if (this.lastName == null || (!lastName.equals(this.lastName))) {
@@ -322,11 +313,17 @@ public class Patient {
         }
     }
 
+    public String getPreferredName() { return preferredName; }
 
+    public void setPreferredName(String preferredName) {
+        if (!preferredName.equals(this.preferredName)) {
+            this.preferredName = preferredName;
+            patientModified();
+        }
+    }
     public LocalDate getBirth() {
         return birth;
     }
-
 
     public void setBirth(LocalDate birth) {
         if (this.birth == null || (!birth.equals(this.birth))) {
@@ -335,11 +332,9 @@ public class Patient {
         }
     }
 
-
     public LocalDate getDeath() {
         return death;
     }
-
 
     public void setDeath(LocalDate death) {
         if (this.death == null || (!death.equals(this.death))) {
@@ -347,7 +342,6 @@ public class Patient {
             patientModified();
         }
     }
-
 
     /**
      * Calculates the patients current age. If the patient is living, it is the difference between the current datetime
@@ -364,24 +358,39 @@ public class Patient {
         }
     }
 
-
-    public Gender getGender() {
-        return gender;
+    public PreferredGender getPreferredGender() {
+        return preferredGender;
     }
 
-
-    public void setGender(Gender gender) {
-        if (this.gender != gender) {
-            this.gender = gender;
+    public void setPreferredGender(PreferredGender gender) {
+        if (this.preferredGender != gender) {
+            this.preferredGender = gender;
             patientModified();
         }
     }
 
+    public BirthGender getBirthGender() {
+        return birthGender;
+    }
+
+    public void setBirthGender(BirthGender gender) {
+        if (this.birthGender != gender) {
+            this.birthGender = gender;
+
+            if (getPreferredGender() == null) {
+                if (gender.toString().equals("male")) {
+                    setPreferredGender( PreferredGender.MAN );
+                } else {
+                    setPreferredGender( PreferredGender.WOMAN );
+                }
+            }
+            patientModified();
+        }
+    }
 
     public double getHeight() {
         return height;
     }
-
 
     public void setHeight(double height) {
         if (this.height != height) {
@@ -390,11 +399,9 @@ public class Patient {
         }
     }
 
-
     public double getWeight() {
         return weight;
     }
-
 
     public void setWeight(double weight) {
         if (this.weight != weight) {
@@ -402,7 +409,6 @@ public class Patient {
             patientModified();
         }
     }
-
 
     /**
      * Calculates the Body Mass Index of the patient
@@ -415,11 +421,9 @@ public class Patient {
         else return Double.valueOf(df.format(this.weight / (Math.pow(this.height, 2))));
     }
 
-
     public BloodGroup getBloodGroup() {
         return bloodGroup;
     }
-
 
     public void setBloodGroup(BloodGroup bloodGroup) {
         if (this.bloodGroup != bloodGroup) {
@@ -428,11 +432,9 @@ public class Patient {
         }
     }
 
-
     public String getStreet1() {
         return street1;
     }
-
 
     public void setStreet1(String street1) {
         if (this.street1 == null || (!street1.equals(this.street1))) {
@@ -441,11 +443,9 @@ public class Patient {
         }
     }
 
-
     public String getStreet2() {
         return street2;
     }
-
 
     public void setStreet2(String street2) {
         if (this.street2 == null || (!street2.equals(this.street2))) {
@@ -454,11 +454,9 @@ public class Patient {
         }
     }
 
-
     public String getSuburb() {
         return suburb;
     }
-
 
     public void setSuburb(String suburb) {
         if (this.suburb == null || !suburb.equals(this.suburb)) {
@@ -467,11 +465,9 @@ public class Patient {
         }
     }
 
-
     public Region getRegion() {
         return region;
     }
-
 
     public void setRegion(Region region) {
         if (this.region != region) {
@@ -479,7 +475,6 @@ public class Patient {
             patientModified();
         }
     }
-
 
     public int getZip() {
         return zip;
@@ -524,16 +519,13 @@ public class Patient {
         }
     }
 
-
     public String getFormattedAddress() {
         return street1 + " " + street2 + " " + suburb + " " + region + " " + zip;
     }
 
-
     public Timestamp getModified() {
         return modified;
     }
-
 
     /**
      * Add organs to patient donations list
@@ -552,7 +544,6 @@ public class Patient {
         }
     }
 
-
     /**
      * Remove organs from patients donations list
      *
@@ -569,11 +560,9 @@ public class Patient {
         }
     }
 
-
     public String getNhiNumber() {
         return nhiNumber;
     }
-
 
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
         ensureValidNhi();
@@ -587,101 +576,81 @@ public class Patient {
         return homePhone;
     }
 
-
     public void setHomePhone(String homePhone) {
         this.homePhone = homePhone;
     }
-
 
     public String getMobilePhone() {
         return mobilePhone;
     }
 
-
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
     }
-
 
     public String getWorkPhone() {
         return workPhone;
     }
 
-
     public void setWorkPhone(String workPhone) {
         this.workPhone = workPhone;
     }
-
 
     public String getEmailAddress() {
         return emailAddress;
     }
 
-
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
-
 
     public String getContactName() {
         return contactName;
     }
 
-
     public void setContactName(String contactName) {
         this.contactName = contactName;
     }
-
 
     public String getContactRelationship() {
         return contactRelationship;
     }
 
-
     public void setContactRelationship(String contactRelationship) {
         this.contactRelationship = contactRelationship;
     }
-
 
     public String getContactHomePhone() {
         return contactHomePhone;
     }
 
-
     public void setContactHomePhone(String contactHomePhone) {
         this.contactHomePhone = contactHomePhone;
     }
-
 
     public String getContactMobilePhone() {
         return contactMobilePhone;
     }
 
-
     public void setContactMobilePhone(String contactMobilePhone) {
         this.contactMobilePhone = contactMobilePhone;
     }
-
 
     public String getContactWorkPhone() {
         return contactWorkPhone;
     }
 
-
     public void setContactWorkPhone(String contactWorkPhone) {
         this.contactWorkPhone = contactWorkPhone;
     }
-
 
     public String getContactEmailAddress() {
         return contactEmailAddress;
     }
 
-
     public void setContactEmailAddress(String contactEmailAddress) {
         this.contactEmailAddress = contactEmailAddress;
     }
-
 
     /**
      * Returns a converted medication log ArrayList to a UserActionRecord OberservableList
@@ -725,7 +694,6 @@ public class Patient {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
 
-
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
                 + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Gender: " + gender + "\n"
@@ -733,7 +701,6 @@ public class Patient {
                 + "\n" + "Suburb:" + suburb + "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: "
                 + height + "\n" + "Weight: " + weight + "\n" + "Blood group: " + bloodGroup + "\n";
     }
-
 
     public boolean equals(Object obj) {
         Patient patient = (Patient) obj;
