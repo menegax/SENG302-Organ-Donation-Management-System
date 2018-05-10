@@ -15,7 +15,8 @@ public class UserActionRecord {
 
     public static ObservableList<UserActionRecord> logHistory = FXCollections.observableArrayList();
 
-    public UserActionRecord( String timestamp, String level, String message, String action ){
+
+    UserActionRecord(String timestamp, String level, String message, String action) {
         this.timestamp = timestamp;
         this.level = level;
         this.message = message;

@@ -8,16 +8,20 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Clinician;
-import model.Patient;
+import model.Donor;
+import model.Donor;
 import service.Database;
 import utility.GlobalEnums;
-import utility.SearchPatients;
+import utility.SearchDonors;
 import utility.UserActionHistory;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Main extends Application {
 
@@ -28,11 +32,11 @@ public class Main extends Application {
         primaryStage.setScene(rootScene); //set scene on primary stage
         ScreenControl.setRootScene(rootScene); // set this scene in screen controller
 
-        // import patients
-        Database.importFromDisk("./patient.json");
+        // import donors
+        Database.importFromDisk("./donor.json");
         addDummyTestObjects();
 
-        SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
+        SearchDonors.createFullIndex(); // index donors for search, needs to be after importing or adding any donors
 
         try {
             Database.importFromDiskClinicians("clinician.json");
@@ -47,25 +51,11 @@ public class Main extends Application {
 
         // Add scenes
         ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        ScreenControl.addScreen("patientRegister", FXMLLoader.load(getClass().getResource("/scene/patientRegister.fxml")));
+        ScreenControl.addScreen("donorRegister", FXMLLoader.load(getClass().getResource("/scene/donorRegister.fxml")));
         ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
-        ScreenControl.addScreen("patientHome", FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml")));
+        ScreenControl.addScreen("donorHome", FXMLLoader.load(getClass().getResource("/scene/donorHome.fxml")));
 
-<<<<<<< HEAD
 
-=======
-        try {
-            Database.importFromDiskClinicians("clinician.json");
-        } catch (IOException e) {
-            if (Database.getClinicians().size() == 0) {
-                //Initialise default clinciian
-                ArrayList<String> mid = new ArrayList<>();
-                mid.add("Middle");
-                Database.addClinician(new Clinician(Database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
-            }
-        }
-        primaryStage.setResizable(false);
->>>>>>> refs/heads/development
         primaryStage.show();
     }
 
@@ -83,32 +73,32 @@ public class Main extends Application {
 
         try {
 
-            // Add dummy patients for testing
+            // Add dummy donors for testing
             ArrayList<String> middles = new ArrayList<>();
             middles.add("Middle");
             middles.add("Xavier");
-            Database.addPatient(new Patient("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
-            Database.getPatientByNhi("ABC1238")
+            Database.addDonor(new Donor("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
+            Database.getDonorByNhi("ABC1238")
                     .addDonation(GlobalEnums.Organ.LIVER);
-            Database.getPatientByNhi("ABC1238")
+            Database.getDonorByNhi("ABC1238")
                     .addDonation(GlobalEnums.Organ.CORNEA);
-            Database.getPatientByNhi("ABC1238")
+            Database.getDonorByNhi("ABC1238")
                     .setRegion(GlobalEnums.Region.AUCKLAND);
-            Database.getPatientByNhi("ABC1238")
+            Database.getDonorByNhi("ABC1238")
                     .setGender(GlobalEnums.Gender.OTHER);
 
-            Database.addPatient(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
-            Database.getPatientByNhi("ABC1234")
+            Database.addDonor(new Donor("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
+            Database.getDonorByNhi("ABC1234")
                     .addDonation(GlobalEnums.Organ.LIVER);
-            Database.getPatientByNhi("ABC1234")
+            Database.getDonorByNhi("ABC1234")
                     .addDonation(GlobalEnums.Organ.CORNEA);
-            Database.getPatientByNhi("ABC1234")
+            Database.getDonorByNhi("ABC1234")
                     .setRegion(GlobalEnums.Region.CANTERBURY);
-            Database.getPatientByNhi("ABC1234")
+            Database.getDonorByNhi("ABC1234")
                     .setGender(GlobalEnums.Gender.FEMALE);
         }
         catch (Exception e) {
-            userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
+            userActions.log(Level.WARNING, "Unable to add dummy donors", "Attempted to load dummy donors for testing");
         }
 
     }

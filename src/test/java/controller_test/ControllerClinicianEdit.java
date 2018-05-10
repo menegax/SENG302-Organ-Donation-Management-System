@@ -17,15 +17,13 @@ import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Set;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 
 public class ControllerClinicianEdit extends ApplicationTest {
     private Main main = new Main();
-    private Set<Clinician> clinicians = Database.getClinicians();
+    private ArrayList<Clinician> clinicians = Database.getClinicians();
     private String staffId;
 
     @Override
@@ -38,7 +36,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
      */
     @Before
     public void Login() {
-        staffId = Integer.toString(clinicians.stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStaffID());
+        staffId = Integer.toString(clinicians.get(0).getStaffID());
         //Check 'I am Clinician" checkbox to login as clinician
         interact(() -> {
             lookup("#clinicianToggle").queryAs(CheckBox.class).setSelected(true);
@@ -113,7 +111,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStaffID() == 1);
+        assertThat(Database.getClinicians().get(0).getStaffID() == 1);
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that save button has taken the "user to the profile page
 
         //Set id back to 0
@@ -130,45 +128,8 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStaffID() == 0);
+        assertThat(Database.getClinicians().get(0).getStaffID() == 0);
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that save button has taken the "user to the profile page
-<<<<<<< HEAD
-=======
-    }
-
-    @Test
-    /*
-     * Tests unsuccessful edit of clinician staff ID with an invalid field
-     */
-    public void unsuccessfulUpdateClinicianId() {
-        interact(() -> {
-            lookup("#staffId").queryAs(TextField.class).setText("A");
-        });
-        verifyThat("#staffId", TextInputControlMatchers.hasText("A"));
-        interact(() -> {
-            lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        assertThat(Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStaffID() == 1);
-        verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
-    }
-
-    @Test
-    /*
-     * Tests that that the clinician can successfully edit their first name with a valid field
-     */
-    public void successfulUpdateClinicianFirstName() {
-        interact(() -> {
-            lookup("#firstnameTxt").queryAs(TextField.class).setText("James");
-        });
-        verifyThat("#firstnameTxt", TextInputControlMatchers.hasText("James"));
-        interact(() -> {
-            lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        assertThat(Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getFirstName().equals("James"));
-        verifyThat("#clinicianProfilePane", Node::isVisible);  // Verify that save button has taken the "user to the profile page
->>>>>>> refs/heads/development
     }
 
     @Test
@@ -186,7 +147,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
         interact(() -> {
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(!Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getFirstName().equals("12"));
+        assertThat(!Database.getClinicians().get(0).getFirstName().equals("12"));
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
     }
 
@@ -203,7 +164,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getLastName().equals("Bond"));
+        assertThat(Database.getClinicians().get(0).getLastName().equals("Bond"));
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that profile button has taken "user" to the clinician profile panel
     }
 
@@ -220,7 +181,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(!Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getLastName().equals("12"));
+        assertThat(!Database.getClinicians().get(0).getLastName().equals("12"));
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
     }
 
@@ -237,7 +198,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getMiddleNames().get(0).equals("Andre"));
+        assertThat(Database.getClinicians().get(0).getMiddleNames().get(0).equals("Andre"));
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that profile button has taken "user" to the clinician profile panel
     }
 
@@ -254,7 +215,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(!Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getMiddleNames().get(0).equals("12"));
+        assertThat(!Database.getClinicians().get(0).getMiddleNames().get(0).equals("12"));
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
     }
 
@@ -271,7 +232,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStreet1().equals("Riccarton RD"));
+        assertThat(Database.getClinicians().get(0).getStreet1().equals("Riccarton RD"));
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that the save button has taken "user" to the profile panel
     }
 
@@ -288,7 +249,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(!Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStreet1().equals("12 RD"));
+        assertThat(!Database.getClinicians().get(0).getStreet1().equals("12 RD"));
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
 
@@ -305,7 +266,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStreet2().equals("Hanrahan RD"));
+        assertThat(Database.getClinicians().get(0).getStreet2().equals("Hanrahan RD"));
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that profile button has taken "user" to the clinician profile panel
     }
 
@@ -322,7 +283,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(!Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStreet1().equals("12 RD"));
+        assertThat(!Database.getClinicians().get(0).getStreet1().equals("12 RD"));
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
 
@@ -339,7 +300,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getSuburb().equals("Fendalton"));
+        assertThat(Database.getClinicians().get(0).getSuburb().equals("Fendalton"));
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that profile button has taken "user" to the clinician profile panel
     }
 
@@ -356,7 +317,7 @@ public class ControllerClinicianEdit extends ApplicationTest {
             lookup("#saveProfile").queryAs(Button.class).getOnAction().handle(new ActionEvent());
             lookup("OK").queryAs(Button.class).fire();
         });
-        assertThat(!Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStreet1().equals("12 RD"));
+        assertThat(!Database.getClinicians().get(0).getStreet1().equals("12 RD"));
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
 

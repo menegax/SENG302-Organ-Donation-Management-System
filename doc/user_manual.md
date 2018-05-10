@@ -1,5 +1,5 @@
 # User Manual
-last update 03/05/2018
+last update 03/08/2018
 
 ### CLI Usage
 
@@ -14,7 +14,7 @@ The best way to manage some organs!
 Options:<br>
   -h, --help                  Displays this help message and quits.<br>
 Commands:<br>
-  * patient   Manages patient objects in the database<br>
+  * donor   Manages donor objects in the database<br>
   * save    Saves data<br>
   * import  Reads and loads data into the application<br>
   

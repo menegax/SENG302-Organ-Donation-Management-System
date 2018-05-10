@@ -1,6 +1,6 @@
 package cli;
 
-import model.Patient;
+import model.Donor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
-@Command(name = "odms", subcommands = {CLIPatient.class, CLISave.class, CLIImport.class},
+@Command(name = "odms", subcommands = {CLIDonor.class, CLISave.class, CLIImport.class},
         sortOptions = false,
         headerHeading = "+  @|yellow xxxxx|@   @|red xxxxxxx|@  @|green xx       xx|@    @|blue xxxxxxxxxx|@" + "\n" +
                 "| @|yellow x     x|@  @|red x     xx|@ @|green xxx     xxx|@    @|blue x|@" + "\n" +
@@ -32,7 +32,7 @@ public class CLIOdms implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-d", "--dev"}, hidden = true, description = "Auto adds a patient for your convenience.")
+    @Option(names = {"-d", "--dev"}, hidden = true, description = "Auto adds a donor for your convenience.")
     private boolean devMode;
 
     @Override
@@ -44,11 +44,11 @@ public class CLIOdms implements Runnable {
 
     private void prepTheApp() {
         try{
-            Database.addPatient(new Patient("aaa1111", "David", new ArrayList<String>() {{
+            Database.addDonor(new Donor("aaa1111", "David", new ArrayList<String>() {{
                 add("John");
             }}, "Dennison", LocalDate.of(1994, 12, 12)));
 
-            Database.addPatient(new Patient("bbb2222", "Peggy", new ArrayList<String>() {{
+            Database.addDonor(new Donor("bbb2222", "Peggy", new ArrayList<String>() {{
                 add("Jane");
             }}, "Peterson", LocalDate.of(1994, 12, 12)));
         } catch (IllegalArgumentException i){
