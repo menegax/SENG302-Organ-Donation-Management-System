@@ -10,7 +10,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import model.Patient;
 import service.Database;
-import utility.GlobalEnums;
+import utility.GlobalEnums.*;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -45,13 +45,22 @@ public class GUIPatientUpdateProfile implements IPopupable{
     private TextField middlenameTxt;
 
     @FXML
-    private RadioButton genderMaleRadio;
+    private TextField preferrednameTxt;
 
     @FXML
-    private RadioButton genderFemaleRadio;
+    private RadioButton birthGenderMaleRadio;
 
     @FXML
-    private RadioButton genderOtherRadio;
+    private RadioButton birthGenderFemaleRadio;
+
+    @FXML
+    private RadioButton preferredGenderManRadio;
+
+    @FXML
+    private RadioButton preferredGenderWomanRadio;
+
+    @FXML
+    private RadioButton preferredGenderNonBinaryRadio;
 
     @FXML
     private DatePicker dobDate;
@@ -69,9 +78,6 @@ public class GUIPatientUpdateProfile implements IPopupable{
     private TextField suburbTxt;
 
     @FXML
-    private ChoiceBox<String> regionDD;
-
-    @FXML
     private TextField zipTxt;
 
     @FXML
@@ -79,6 +85,9 @@ public class GUIPatientUpdateProfile implements IPopupable{
 
     @FXML
     private TextField heightTxt;
+
+    @FXML
+    private TextField regionTxt;
 
     @FXML
     private ChoiceBox<String> bloodGroupDD;
@@ -115,18 +124,15 @@ public class GUIPatientUpdateProfile implements IPopupable{
         });
     }
 
-
     @FXML
     private void redo() {
         statesHistoryScreen.redo();
     }
 
-
     @FXML
     private void undo() {
         statesHistoryScreen.undo();
     }
-
 
     /**
      * Populates drop down menus that represent enum data
@@ -134,22 +140,12 @@ public class GUIPatientUpdateProfile implements IPopupable{
     private void populateDropdowns() {
         // Populate blood group drop down with values from the Blood groups enum
         List<String> bloodGroups = new ArrayList<>();
-        for (GlobalEnums.BloodGroup bloodgroup : GlobalEnums.BloodGroup.values()) {
+        for (BloodGroup bloodgroup : BloodGroup.values()) {
             bloodGroups.add(bloodgroup.getValue());
         }
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
-
-        // Populate region drop down with values from the Regions enum
-        List<String> regions = new ArrayList<>();
-        for (GlobalEnums.Region region : GlobalEnums.Region.values()) {
-            regions.add(region.getValue());
-        }
-        ObservableList<String> regionsOL = FXCollections.observableList(regions);
-        regionDD.setItems(regionsOL);
-
     }
-
 
     /**
      * Loads the patient's profile into the gui
@@ -167,13 +163,16 @@ public class GUIPatientUpdateProfile implements IPopupable{
                 add(firstnameTxt);
                 add(lastnameTxt);
                 add(middlenameTxt);
+                add(preferrednameTxt);
                 add(bloodGroupDD);
-                add(regionDD);
+                add(regionTxt);
                 add(dobDate);
                 add(dateOfDeath);
-                add(genderMaleRadio);
-                add(genderFemaleRadio);
-                add(genderOtherRadio);
+                add(birthGenderMaleRadio);
+                add(birthGenderFemaleRadio);
+                add(preferredGenderManRadio);
+                add(preferredGenderWomanRadio);
+                add(preferredGenderNonBinaryRadio);
                 add(street1Txt);
                 add(street2Txt);
                 add(suburbTxt);
@@ -182,13 +181,11 @@ public class GUIPatientUpdateProfile implements IPopupable{
                 add(zipTxt);
             }};
             statesHistoryScreen = new StatesHistoryScreen(patientUpdateAnchorPane, controls);
-
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }
-
 
     /**
      * Populates the scene controls with values from the patient object
@@ -203,18 +200,25 @@ public class GUIPatientUpdateProfile implements IPopupable{
         for (String name : patient.getMiddleNames()) {
             middlenameTxt.setText(middlenameTxt.getText() + name + " ");
         }
-        if (patient.getGender() != null) {
-            switch (patient.getGender()
-                    .getValue()) {
+        preferrednameTxt.setText(patient.getPreferredName());
+        if (patient.getBirthGender() != null) {
+            switch (patient.getBirthGender().getValue()) {
                 case "male":
-                    genderMaleRadio.setSelected(true);
+                    birthGenderMaleRadio.setSelected(true);
                     break;
                 case "female":
-                    genderFemaleRadio.setSelected(true);
+                    birthGenderFemaleRadio.setSelected(true);
                     break;
-                case "other":
-                    genderOtherRadio.setSelected(true);
-                    break;
+            }
+        }
+        if (patient.getPreferredGender() != null) {
+            switch (patient.getPreferredGender().getValue()) {
+                case "man":
+                    preferredGenderManRadio.setSelected(true); break;
+                case "woman":
+                    preferredGenderWomanRadio.setSelected(true); break;
+                case "non-binary":
+                    preferredGenderNonBinaryRadio.setSelected(true); break;
             }
         }
         dobDate.setValue(patient.getBirth());
@@ -229,8 +233,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
             suburbTxt.setText(patient.getSuburb());
         }
         if (patient.getRegion() != null) {
-            regionDD.setValue(patient.getRegion()
-                    .getValue());
+            regionTxt.setText(patient.getRegion().getValue());
         }
         if (patient.getZip() != 0) {
             zipTxt.setText(String.valueOf(patient.getZip()));
@@ -246,7 +249,6 @@ public class GUIPatientUpdateProfile implements IPopupable{
                     .getValue());
         }
     }
-
 
     /**
      * Checks for invalidity of a double used for height or weight.
@@ -264,7 +266,6 @@ public class GUIPatientUpdateProfile implements IPopupable{
             return true;
         }
     }
-
 
     /**
      * Saves profile changes after checking each field for validity
@@ -309,20 +310,27 @@ public class GUIPatientUpdateProfile implements IPopupable{
             setValid(middlenameTxt);
         }
 
+        // preferred name
+        if (!preferrednameTxt.getText()
+                .matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
+            valid = setInvalid(preferrednameTxt);
+        }
+        else {
+            setValid(preferrednameTxt);
+        }
+
         // region
-        if (regionDD.getSelectionModel()
-                .getSelectedIndex() != -1) {
-            Enum region = GlobalEnums.Region.getEnumFromString(regionDD.getSelectionModel()
-                    .getSelectedItem());
+        if (regionTxt.getText() != null) {
+            Enum region = Region.getEnumFromString(regionTxt.getText());
             if (region == null) {
-                valid = setInvalid(regionDD);
+                valid = setInvalid(regionTxt);
             }
             else {
-                setValid(regionDD);
+                setValid(regionTxt);
             }
         }
         else {
-            setValid(regionDD);
+            setValid(regionTxt);
         }
 
         // zip
@@ -377,7 +385,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
         if (bloodGroupDD.getValue() != null) {
             String bgStr = bloodGroupDD.getValue()
                     .replace(' ', '_');
-            Enum bloodgroup = GlobalEnums.BloodGroup.getEnumFromString(bgStr);
+            Enum bloodgroup = BloodGroup.getEnumFromString(bgStr);
             if (bloodgroup == null) {
                 valid = setInvalid(bloodGroupDD);
             }
@@ -433,14 +441,20 @@ public class GUIPatientUpdateProfile implements IPopupable{
                 ArrayList<String> middles = new ArrayList<>(middlenames);
                 target.setMiddleNames(middles);
             }
-            if (genderMaleRadio.isSelected()) {
-                target.setGender((GlobalEnums.Gender) GlobalEnums.Gender.getEnumFromString("male"));
+            if (birthGenderMaleRadio.isSelected()) {
+                target.setBirthGender((BirthGender) BirthGender.getEnumFromString("male"));
             }
-            if (genderFemaleRadio.isSelected()) {
-                target.setGender((GlobalEnums.Gender) GlobalEnums.Gender.getEnumFromString("female"));
+            if (birthGenderFemaleRadio.isSelected()) {
+                target.setBirthGender((BirthGender) BirthGender.getEnumFromString("female"));
             }
-            if (genderOtherRadio.isSelected()) {
-                target.setGender((GlobalEnums.Gender) GlobalEnums.Gender.getEnumFromString("other"));
+            if (preferredGenderManRadio.isSelected()) {
+                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( ("man") ) );
+            }
+            if (preferredGenderWomanRadio.isSelected()) {
+                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( ("woman") ) );
+            }
+            if (preferredGenderNonBinaryRadio.isSelected()) {
+                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( ("non-binary") ) );
             }
             if (dobDate.getValue() != null) {
                 target.setBirth(dobDate.getValue());
@@ -460,9 +474,8 @@ public class GUIPatientUpdateProfile implements IPopupable{
                     .length() > 0) {
                 target.setSuburb(suburbTxt.getText());
             }
-            if (regionDD.getValue() != null) {
-                target.setRegion((GlobalEnums.Region) GlobalEnums.Region.getEnumFromString(regionDD.getSelectionModel()
-                        .getSelectedItem()));
+            if (regionTxt.getText() != null) {
+                target.setRegion((Region) Region.getEnumFromString(regionTxt.getText()));
             }
             if (zipTxt.getText() != null) {
                 target.setZip(zipTxt.getText()
@@ -475,7 +488,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
                 target.setHeight(Double.parseDouble(heightTxt.getText()));
             }
             if (bloodGroupDD.getValue() != null) {
-                target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
+                target.setBloodGroup((BloodGroup) BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
                         .getSelectedItem()));
             }
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
@@ -488,7 +501,6 @@ public class GUIPatientUpdateProfile implements IPopupable{
         }
     }
 
-
     /***
      * Applies the invalid class to the target control
      * @param target The target to add the class to
@@ -499,7 +511,6 @@ public class GUIPatientUpdateProfile implements IPopupable{
                 .add("invalid");
         return false;
     }
-
 
     /**
      * Removes the invalid class from the target control if it has it
@@ -513,7 +524,6 @@ public class GUIPatientUpdateProfile implements IPopupable{
                     .remove("invalid");
         }
     }
-
 
     /**
      * Returns to patient profile screen
@@ -543,5 +553,4 @@ public class GUIPatientUpdateProfile implements IPopupable{
             }
         }
     }
-
 }

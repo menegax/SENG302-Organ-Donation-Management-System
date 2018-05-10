@@ -31,15 +31,22 @@ public class CLIPatientUpdate implements Runnable {
     @Option(names = {"-l", "--lastname"}, description = "The last name of the patient.")
     private String lastName;
 
+    @Option(names = {"-p", "--preferredname"}, description = "The preferred name of the patient.")
+    private String preferredName;
+
     @Option(names = {"-b", "--dateofbirth"}, description = "The date of birth of the patient (yyyy-mm-dd).")
     private LocalDate birth;
 
     @Option(names = {"-d", "--dateofdeath"}, description = "The date of death of the patient (yyyy-mm-dd).")
     private LocalDate death;
 
-    @Option(names = {"--gender"}, description = "The gender of the patient. Choose one from: \n" +
-            "FEMALE, MALE, OTHER")
-    private String gender;
+    @Option(names = {"--birthGender"}, description = "The birth gender of the patient. Choose one from: \n" +
+            "FEMALE, MALE")
+    private String birthGender;
+
+    @Option(names = {"--preferredGender"}, description = "The preferred gender of the patient. Choose one from: \n" +
+            "MAN, WOMAN, NON-BINARY")
+    private String preferredGender;
 
     @Option(names = {"--height"}, description = "The height of the patient (cm).")
     private double height;
@@ -78,8 +85,8 @@ public class CLIPatientUpdate implements Runnable {
     public void run() {
         try {
             Patient patient = Database.getPatientByNhi(searchNhi);
-            patient.updateAttributes(firstName, lastName, middleNames, birth, death, street1,
-                    street2, suburb, region, gender, bloodGroup, height, weight, nhi);
+            patient.updateAttributes(firstName, lastName, middleNames, preferredName, birth, death, street1,
+                    street2, suburb, region, birthGender, preferredGender, bloodGroup, height, weight, nhi);
         } catch (InvalidObjectException | IllegalArgumentException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to update patient attributes");
         }
