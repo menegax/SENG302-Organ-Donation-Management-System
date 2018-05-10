@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.sql.Timestamp;
 import java.util.*;
+
 import javafx.geometry.Side;
 import service.TextWatcher;
 
@@ -58,7 +59,7 @@ public class GUIPatientMedications implements IPopupable {
     public Button saveMed;
     public Button undoEdit;
     public Button redoEdit;
-    public Hyperlink goBack;
+    public Button goBack;
     public Button wipeReview;
     public Button compareMeds;
     public Button clearMed;
@@ -206,6 +207,7 @@ public class GUIPatientMedications implements IPopupable {
 
     /**
      * Loads the donor medication GUI pane with all logged-in patient medication data listed in listViews
+     *
      * @param nhi The NHI number of the logged-in patient
      */
     private void loadProfile(String nhi) {
@@ -257,7 +259,7 @@ public class GUIPatientMedications implements IPopupable {
     /**
      * Runs the updating of UI elements and API call
      */
-    private void autoComplete(){
+    private void autoComplete() {
         Platform.runLater(() -> { // run this on the FX thread (next available)
             getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread
             displayDrugSuggestions();//UPDATE UI
@@ -266,6 +268,7 @@ public class GUIPatientMedications implements IPopupable {
 
     /**
      * Sets a list of suggestions given a partially matching string
+     *
      * @param query - text to match drugs against
      */
     private void getDrugSuggestions(String query) {
@@ -596,12 +599,12 @@ public class GUIPatientMedications implements IPopupable {
      */
     @FXML
     public void goToProfile() {
-        if (ScreenControl.getLoggedInPatient() != null ) {
+        if (ScreenControl.getLoggedInPatient() != null) {
             ScreenControl.removeScreen("patientProfile");
             try {
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
                 ScreenControl.activate("patientProfile");
-            }catch (IOException e) {
+            } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the medication page to the profile page");
                 new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
             }

@@ -23,7 +23,10 @@ public class Database {
     public static Set<Patient> getPatients() {
         return patients;
     }
-    public static Set<Clinician> getClinicians() { return clinicians; }
+
+    public static Set<Clinician> getClinicians() {
+        return clinicians;
+    }
 
 
     /**
@@ -37,7 +40,7 @@ public class Database {
             newPatient.ensureUniqueNhi();
             patients.add(newPatient);
             SearchPatients.addIndex(newPatient);
-            userActions.log(Level.INFO,"Successfully added patient " + newPatient.getNhiNumber(), "attempted to add a patient");
+            userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "attempted to add a patient");
         } catch (IllegalArgumentException o) {
             throw new IllegalArgumentException(o.getMessage());
         }
@@ -47,7 +50,7 @@ public class Database {
      * Removes a patient from the database
      *
      * @param nhi the nhi to search patients by
-     * @exception InvalidObjectException when the object cannot be found
+     * @throws InvalidObjectException when the object cannot be found
      */
     public static void removePatient(String nhi) throws InvalidObjectException {
         patients.remove(Database.getPatientByNhi(nhi));
@@ -60,8 +63,7 @@ public class Database {
      *
      * @param nhi the nhi to search patients by
      * @return Patient object
-     *
-     * @exception InvalidObjectException when the object cannot be found
+     * @throws InvalidObjectException when the object cannot be found
      */
     public static Patient getPatientByNhi(String nhi) throws InvalidObjectException {
         for (Patient d : getPatients()) {
@@ -137,8 +139,7 @@ public class Database {
         try {
             saveToDiskPatients();
             saveToDiskClinicians();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
     }
@@ -147,7 +148,7 @@ public class Database {
     /**
      * Writes database patients to file on disk
      *
-     * @exception IOException when the file cannot be found nor created
+     * @throws IOException when the file cannot be found nor created
      */
     private static void saveToDiskPatients() throws IOException {
         Gson gson = new Gson();
@@ -177,6 +178,7 @@ public class Database {
 
     /**
      * Calls importFromDisk and handles any errors
+     *
      * @param fileName The file to import from
      */
     public static void importFromDisk(String fileName) {
@@ -184,8 +186,7 @@ public class Database {
             importFromDiskPatients(fileName);
             userActions.log(Level.INFO, "Imported patients from disk", "Attempted to import from disk");
             SearchPatients.createFullIndex();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             userActions.log(Level.WARNING, e.getMessage(), "attempted to import from disk");
         }
     }
@@ -194,7 +195,7 @@ public class Database {
     /**
      * Reads patient data from disk
      *
-     * @exception IOException when the file cannot be found
+     * @throws IOException when the file cannot be found
      */
     private static void importFromDiskPatients(String fileName) throws IOException {
         Gson gson = new Gson();
@@ -219,7 +220,7 @@ public class Database {
             try {
                 Database.addClinician(c);
             } catch (IllegalArgumentException e) {
-                userActions.log(Level.WARNING, "Error importing clinician from file");
+                userActions.log(Level.WARNING, e.getMessage(), "Error importing clinician from file");
             }
         }
     }
