@@ -28,7 +28,7 @@ public class FXNavigation extends General {
 
 
     /**
-     * Helper method to go to donor profile from the home page
+     * Helper method to go to patient profile from the home page
      */
     public void toProfileFromHomeDonor(){
         clickButton("#goToProfile");

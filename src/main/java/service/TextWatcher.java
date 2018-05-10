@@ -11,7 +11,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Class to watch the text fields, the usage for this class is to know when a method can be called,
  * once a user has finished typing. Rather than making an API call for every letter entered, we would rather make one call
- * everytime the user has finished typing. Look to GUIDonorMedications for an example.
+ * everytime the user has finished typing. Look to GUIPatientMedications for an example.
  */
 public class TextWatcher {
 

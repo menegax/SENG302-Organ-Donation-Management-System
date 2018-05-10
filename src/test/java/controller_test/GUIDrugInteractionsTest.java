@@ -2,7 +2,7 @@
 //
 //import controller.Main;
 //import javafx.stage.Stage;
-//import model.Donor;
+//import model.Patient;
 //import org.junit.After;
 //import org.junit.Assert;
 //import org.junit.Before;
