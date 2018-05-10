@@ -8,8 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import utility.GlobalEnums;
-
+import utility.GlobalEnums.BirthGender;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -52,37 +51,18 @@ public class DrugInteractionTest {
     }
 
     @Test
-    public void testDonorGenderNull(){
-        JsonArray maleInteractions = drugInteraction.getGenderInteractionsHelper(GlobalEnums.Gender.MALE);
-        JsonArray femaleInteractions = drugInteraction.getGenderInteractionsHelper(GlobalEnums.Gender.FEMALE);
-        HashMap<String, Set<String>> allInteractions = drugInteraction.getInteractionsWithDurations();
-        checkInteractions(maleInteractions, allInteractions);
-        checkInteractions(femaleInteractions, allInteractions);
-    }
-
-    @Test
     public void testDonorGenderMale(){
-        patient.setGender(GlobalEnums.Gender.MALE);
-        JsonArray maleInteractions = drugInteraction.getGenderInteractionsHelper(GlobalEnums.Gender.MALE);
+        patient.setBirthGender(BirthGender.MALE);
+        JsonArray maleInteractions = drugInteraction.getGenderInteractionsHelper(BirthGender.MALE);
         HashMap<String, Set<String>> allInteractions = drugInteraction.getInteractionsWithDurations();
         checkInteractions(maleInteractions, allInteractions);
     }
 
     @Test
     public void testDonorGenderFemale(){
-        patient.setGender(GlobalEnums.Gender.FEMALE);
-        JsonArray femaleInteractions = drugInteraction.getGenderInteractionsHelper(GlobalEnums.Gender.FEMALE);
+        patient.setBirthGender(BirthGender.FEMALE);
+        JsonArray femaleInteractions = drugInteraction.getGenderInteractionsHelper(BirthGender.FEMALE);
         HashMap<String, Set<String>> allInteractions = drugInteraction.getInteractionsWithDurations();
-        checkInteractions(femaleInteractions, allInteractions);
-    }
-
-    @Test
-    public void testDonorGenderOther() {
-        patient.setGender(GlobalEnums.Gender.OTHER);
-        JsonArray maleInteractions = drugInteraction.getGenderInteractionsHelper(GlobalEnums.Gender.MALE);
-        JsonArray femaleInteractions = drugInteraction.getGenderInteractionsHelper(GlobalEnums.Gender.FEMALE);
-        HashMap<String, Set<String>> allInteractions = drugInteraction.getInteractionsWithDurations();
-        checkInteractions(maleInteractions, allInteractions);
         checkInteractions(femaleInteractions, allInteractions);
     }
 
