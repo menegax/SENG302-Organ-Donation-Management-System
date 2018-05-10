@@ -8,11 +8,10 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Screen;
 import model.Patient;
 import service.Database;
+import service.UserControl;
 import utility.GlobalEnums;
-import utility.CacheHelper;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -89,18 +88,18 @@ public class GUIPatientUpdateProfile {
 
     private StatesHistoryScreen statesHistoryScreen;
 
-    private CacheHelper cacheHelper;
+    private UserControl userControl;
 
 
     public void initialize() {
         populateDropdowns();
-        cacheHelper = new CacheHelper();
-        Object user = cacheHelper.getLoggedInUser();
+        userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         }
-        if (cacheHelper.getTargetPatient() != null) {
-            loadProfile((cacheHelper.getTargetPatient()).getNhiNumber());
+        if (userControl.getTargetPatient() != null) {
+            loadProfile((userControl.getTargetPatient()).getNhiNumber());
         }
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
@@ -548,7 +547,7 @@ public class GUIPatientUpdateProfile {
      * Returns to patient profile screen
      */
     public void goBackToProfile() {
-        if (cacheHelper.getLoggedInUser() instanceof Patient) {
+        if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientProfile");
             try {
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));

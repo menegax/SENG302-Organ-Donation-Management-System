@@ -16,8 +16,8 @@ import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import model.Medication;
 import service.Database;
+import service.UserControl;
 import utility.GlobalEnums;
-import utility.CacheHelper;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -100,7 +100,7 @@ public class GUIPatientProfile {
     @FXML
     private Label back;
 
-    private CacheHelper cacheHelper;
+    private UserControl userControl;
 
     private ListProperty<String> organListProperty = new SimpleListProperty<>();
 
@@ -114,16 +114,16 @@ public class GUIPatientProfile {
 
 
     public void initialize() {
-        cacheHelper = new CacheHelper();
+        userControl = new UserControl();
         Object user = null;
-        if (cacheHelper.getLoggedInUser() instanceof  Patient ) {
+        if (userControl.getLoggedInUser() instanceof  Patient ) {
             medicationBtn.setDisable(true); //hide medications btn
             medicationBtn.setVisible(false);
-            user = cacheHelper.getLoggedInUser();
+            user = userControl.getLoggedInUser();
         }
-        if (cacheHelper.getLoggedInUser() instanceof Clinician) {
+        if (userControl.getLoggedInUser() instanceof Clinician) {
             removeBack();
-            user = cacheHelper.getTargetPatient();
+            user = userControl.getTargetPatient();
         }
 
         try {
@@ -188,7 +188,7 @@ public class GUIPatientProfile {
 
 
     public void goToEdit() {
-        if (cacheHelper.getLoggedInUser() instanceof Patient) {
+        if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientUpdateProfile");
             try {
                 ScreenControl.addScreen("patientUpdateProfile", FXMLLoader.load(getClass().getResource("/scene/patientUpdateProfile.fxml")));
@@ -215,7 +215,7 @@ public class GUIPatientProfile {
 
 
     public void goToDonations() {
-        if (cacheHelper.getLoggedInUser() instanceof Patient) {
+        if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientDonations");
             try {
                 ScreenControl.addScreen("patientDonations", FXMLLoader.load(getClass().getResource("/scene/patientUpdateDonations.fxml")));
@@ -242,7 +242,7 @@ public class GUIPatientProfile {
 
 
     public void goToContactDetails() {
-        if (cacheHelper.getLoggedInUser() instanceof Patient) {
+        if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientContactDetails");
             try {
                 ScreenControl.addScreen("patientContactDetails", FXMLLoader.load(getClass().getResource("/scene/patientUpdateContacts.fxml")));
@@ -271,7 +271,7 @@ public class GUIPatientProfile {
 
 
     public void openMedication() {
-        if (cacheHelper.getLoggedInUser() instanceof Patient) {
+        if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientMedications");
             try {
                 ScreenControl.addScreen("patientMedications", FXMLLoader.load(getClass().getResource("/scene/patientMedications.fxml")));

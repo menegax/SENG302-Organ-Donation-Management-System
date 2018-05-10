@@ -18,7 +18,7 @@ import model.Patient;
 import model.DrugInteraction;
 import model.Medication;
 import service.Database;
-import utility.CacheHelper;
+import service.UserControl;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.UserActionRecord;
 
@@ -185,15 +185,15 @@ public class GUIPatientMedications {
         addMedication(newMedication.getText());
     }
 
-    private CacheHelper cacheHelper;
+    private UserControl userControl;
 
     /**
      * Initializes the Medication GUI pane, adds any medications stored for donor to current and past listViews
      */
     @FXML
     public void initialize() {
-        cacheHelper = new CacheHelper();
-        Object user = cacheHelper.getLoggedInUser();
+        userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
         //Register events for when an item is selected from a listView and set selection mode to multiple
         currentMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(currentMedications));
         pastMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(pastMedications));
@@ -205,7 +205,7 @@ public class GUIPatientMedications {
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         } else if (user instanceof Clinician) {
-            viewedPatient = cacheHelper.getTargetPatient();
+            viewedPatient = userControl.getTargetPatient();
             loadProfile(viewedPatient.getNhiNumber());
         }
     }
@@ -590,7 +590,7 @@ public class GUIPatientMedications {
      */
     @FXML
     public void goToProfile() {
-        if (cacheHelper.getLoggedInUser() instanceof Patient ) {
+        if (userControl.getLoggedInUser() instanceof Patient ) {
             ScreenControl.removeScreen("patientProfile");
             try {
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));

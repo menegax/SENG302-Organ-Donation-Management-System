@@ -6,7 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import model.Clinician;
-import utility.CacheHelper;
+import service.UserControl;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -33,8 +33,8 @@ public class GUIClinicianProfile {
     private Label regionTxt;
 
     public void initialize() {
-        CacheHelper cacheHelper = new CacheHelper();
-        Object user = cacheHelper.getLoggedInUser();
+        UserControl userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
         if (user instanceof Clinician){
             loadProfile(((Clinician) user));
         }

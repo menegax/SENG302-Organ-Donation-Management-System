@@ -14,7 +14,7 @@ import javafx.scene.layout.Pane;
 import model.Clinician;
 import model.Patient;
 import service.Database;
-import utility.CacheHelper;
+import service.UserControl;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -65,7 +65,7 @@ public class GUILogin {
      */
     @FXML
     public void logIn() {
-        CacheHelper login = new CacheHelper();
+        UserControl login = new UserControl();
         if (!clinicianToggle.isSelected()) {
             try {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
