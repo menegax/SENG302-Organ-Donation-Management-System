@@ -41,6 +41,7 @@ public class Main extends Application {
         // add objects
         Database.importFromDiskPatients("./patient.json");
         Database.importFromDiskClinicians("./clinician.json");
+        // todo importFromDiskAllUserActions
         addDummyTestObjects();
         ensureDefaultClinician();
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients

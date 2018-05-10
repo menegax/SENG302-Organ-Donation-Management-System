@@ -16,7 +16,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Patient;
 import service.Database;
-import utility.UserControl;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 

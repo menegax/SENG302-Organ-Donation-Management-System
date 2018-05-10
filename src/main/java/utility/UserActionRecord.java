@@ -4,24 +4,38 @@ import controller.ScreenControl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.UUID;
+import java.util.logging.Level;
+
 public class UserActionRecord {
 
-    private String timestamp;
+    private Timestamp timestamp;
 
-    private String level;
+    private Level level;
+
+    private UUID uuid;
 
     private String message;
 
     private String action;
 
-    public static ObservableList<UserActionRecord> logHistory = FXCollections.observableArrayList();
+    public static ObservableList<UserActionRecord> logHistory = FXCollections.observableArrayList(); //todo move to db class
 
-    public UserActionRecord( String timestamp, String level, String message, String action ){
+
+    public UserActionRecord(Timestamp timestamp, Level level, UUID uuid, String action, String message){
         this.timestamp = timestamp;
         this.level = level;
-        this.message = message;
+        this.uuid = uuid;
         this.action = action;
+        this.message = message;
 
+    }
+
+
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
 
@@ -30,38 +44,17 @@ public class UserActionRecord {
     }
 
 
-    public void setAction(String action) {
-        this.action = action;
-    }
-
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-
-    public String getLevel() {
-        return level;
-    }
-
-
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
-
     public String getMessage() {
         return message;
     }
 
 
-    public void setMessage(String message) {
-        this.message = message;
+    public UUID getUuid() {
+        return uuid;
     }
 
+
+    public Level getLevel() {
+        return level;
+    }
 }

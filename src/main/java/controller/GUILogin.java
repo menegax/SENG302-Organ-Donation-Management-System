@@ -14,7 +14,6 @@ import javafx.scene.layout.Pane;
 import model.Clinician;
 import model.Patient;
 import service.Database;
-import utility.UserControl;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -81,9 +80,9 @@ public class GUILogin {
                 ScreenControl.activate("patientHome");
                 ScreenControl.addScreen("patientHistory", FXMLLoader.load(getClass().getResource("/scene/patientHistory.fxml")));
                 ScreenControl.activate("patientHome");
-                if (newPatient.getPatientLog() != null) {
-                    logHistory.addAll( newPatient.getPatientLog() ); // adds medication log from previous log-ins for user
-                }
+//                if (newPatient.getPatientLog() != null) {
+//                    logHistory.addAll( newPatient.getPatientLog() ); // adds medication log from previous log-ins for user
+//                }
             }
             catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");

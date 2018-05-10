@@ -249,7 +249,6 @@ public class GUIPatientRegister {
             invalidInfo.setContentText(invalidContent.toString());
             invalidInfo.show();
         }
-
     }
 
     /***
@@ -270,11 +269,8 @@ public class GUIPatientRegister {
      * @param target The target to remove the class from
      */
     private void setValid(Control target) {
-        if (target.getStyleClass()
-                .contains("invalid")) {
-            target.getStyleClass()
-                    .remove("invalid");
-        }
+        target.getStyleClass()
+                .remove("invalid");
     }
 
 }

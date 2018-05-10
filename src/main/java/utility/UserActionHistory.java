@@ -11,6 +11,8 @@ public class UserActionHistory {
      */
     public static final Logger userActions = Logger.getLogger(UserActionHistory.class.getName());
 
+
+
     private static FormatterLog logFormat = new FormatterLog();
 
 
@@ -21,27 +23,26 @@ public class UserActionHistory {
     static public void setup() {
         userActions.setUseParentHandlers(false); // disables default console userActions in parent
 
-        // File history handler
-        userActions.addHandler(new Handler() {
-            public void publish(LogRecord logRecord) {
-                Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
-                UserActionRecord.logHistory.add(new UserActionRecord(String.valueOf(currentTimeStamp),
-                        logRecord.getLevel()
-                                .toString(),
-                        logRecord.getParameters()[0].toString(),
-                        logRecord.getMessage()));
-            }
-
-
-            @Override
-            public void flush() {
-            }
-
-
-            @Override
-            public void close() throws SecurityException {
-            }
-        });
+        // Db handler
+//        userActions.addHandler(new Handler() {
+//            public void publish(LogRecord logRecord) {
+//                Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
+//                LoggedInUser.add(new UserActionRecord(String.valueOf(currentTimeStamp),
+//                        logRecord.getLevel().toString(),
+//                        logRecord.getParameters()[0].toString(),
+//                        logRecord.getMessage()));
+//            }
+//
+//
+//            @Override
+//            public void flush() {
+//            }
+//
+//
+//            @Override
+//            public void close() throws SecurityException {
+//            }
+//        });
 
         // Console handler
         Handler console = new ConsoleHandler();
@@ -51,12 +52,17 @@ public class UserActionHistory {
 
         // File handler
         try {
-            Handler file = new FileHandler("UserActionHistory%u.xml", true);
+            Handler file = new FileHandler(".xml", true);
             userActions.addHandler(file);
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Unable to write log to file");
         }
+
+
+
+
+
 
     }
 }

@@ -22,6 +22,8 @@ public class Database {
     private static Set<Clinician> clinicians = new HashSet<>();
 
 
+
+
     /**
      * Adds a patient to the database
      *

@@ -18,7 +18,6 @@ import model.Patient;
 import model.DrugInteraction;
 import model.Medication;
 import service.Database;
-import utility.UserControl;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.UserActionRecord;
 
@@ -129,29 +128,29 @@ public class GUIPatientMedications {
     @FXML
     public void saveMedication() {
         time = new Timestamp(System.currentTimeMillis());
-        medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), "Medications are now saved", "Medications has been saved"));
+//        medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), "Medications are now saved", "Medications has been saved"));
         logHistory.add(medLog.get(medLog.size() - 1));
         Alert save = new Alert(Alert.AlertType.INFORMATION, "Medication(s) have been successfully saved");
         final Button dialogOK = (Button) save.getDialogPane().lookupButton(ButtonType.OK);
-        dialogOK.addEventFilter(ActionEvent.ACTION, event -> saveToDisk());// Save to .json the changes made to medications
+//        dialogOK.addEventFilter(ActionEvent.ACTION, event -> saveToDisk());// Save to .json the changes made to medications
         save.show();
         clearSelections();
     }
 
-    /**
-     * Saves the current state of the logged-in patient data to the patient.json file
-     */
-    private void saveToDisk() {
-        if (target.getPatientLog() != null) {
-            ObservableList<UserActionRecord> log = target.getPatientLog();
-            log.addAll(medLog);
-            target.setMedicationLog(log);
-        } else {
-            target.setMedicationLog( medLog );
-        }
-        Database.saveToDisk();
-        medLog = FXCollections.observableArrayList();
-    }
+//    /**
+//     * Saves the current state of the logged-in patient data to the patient.json file
+//     */
+//    private void saveToDisk() {
+//        if (target.getPatientLog() != null) {
+//            ObservableList<UserActionRecord> log = target.getPatientLog();
+//            log.addAll(medLog);
+//            target.setMedicationLog(log);
+//        } else {
+//            target.setMedicationLog( medLog );
+//        }
+//        Database.saveToDisk();
+//        medLog = FXCollections.observableArrayList();
+//    }
 
     /**
      * Swaps a medication in history to current ArrayList and listView
@@ -362,7 +361,7 @@ public class GUIPatientMedications {
             if (!(current.contains(medication) || history.contains(medication))) {
                 target.getCurrentMedications().add( new Medication(medication));
                 time = new Timestamp(System.currentTimeMillis());
-                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now registered as current", medication + " has successfully been registered"));
+//                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now registered as current", medication + " has successfully been registered"));
                 logHistory.add(medLog.get(medLog.size() - 1));
                 viewCurrentMedications();
                 newMedication.clear();
@@ -371,14 +370,14 @@ public class GUIPatientMedications {
                 newMedication.clear();
             } else {
                 time = new Timestamp(System.currentTimeMillis());
-                medLog.add(new UserActionRecord(String.valueOf(time), Level.WARNING.toString(), medication + " is already registered", medication + " has failed registration"));
+//                medLog.add(new UserActionRecord(String.valueOf(time), Level.WARNING.toString(), medication + " is already registered", medication + " has failed registration"));
                 logHistory.add(medLog.get(medLog.size() - 1));
                 Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is already registered");
                 err.show();
             }
         } else {
             time = new Timestamp(System.currentTimeMillis());
-            medLog.add(new UserActionRecord(String.valueOf(time), Level.WARNING.toString(), medication + " is invalid for registration", medication + " has failed registration"));
+//            medLog.add(new UserActionRecord(String.valueOf(time), Level.WARNING.toString(), medication + " is invalid for registration", medication + " has failed registration"));
             logHistory.add(medLog.get(medLog.size() - 1));
             Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is invalid for registration");
             err.show();
@@ -406,13 +405,13 @@ public class GUIPatientMedications {
         if (history.contains( medication )) {
             target.getMedicationHistory().remove( history.indexOf( medication ) );
             time = new Timestamp(System.currentTimeMillis());
-            medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from history list"));
+//            medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from history list"));
             logHistory.add(medLog.get(medLog.size() - 1));
             viewPastMedications();
         } else if (current.contains( medication )) {
             target.getCurrentMedications().remove( current.indexOf( medication ) );
             time = new Timestamp(System.currentTimeMillis());
-            medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from current list"));
+//            medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from current list"));
             logHistory.add(medLog.get(medLog.size() - 1));
             viewCurrentMedications();
         }
@@ -433,7 +432,7 @@ public class GUIPatientMedications {
                     viewCurrentMedications();
                 }
                 time = new Timestamp(System.currentTimeMillis());
-                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now current", medication + " moved from history to current list"));
+//                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now current", medication + " moved from history to current list"));
                 logHistory.add(medLog.get(medLog.size() - 1));
                 viewPastMedications();
             }
@@ -455,7 +454,7 @@ public class GUIPatientMedications {
                     viewPastMedications();
                 }
                 time = new Timestamp(System.currentTimeMillis());
-                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now history", medication + " moved from current to history list"));
+//                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now history", medication + " moved from current to history list"));
                 logHistory.add(medLog.get(medLog.size() - 1));
                 viewCurrentMedications();
             }

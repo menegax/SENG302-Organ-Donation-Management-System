@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
-import utility.UserControl;
+import controller.UserControl;
 import utility.GlobalEnums;
 
 import static org.testfx.api.FxAssert.verifyThat;

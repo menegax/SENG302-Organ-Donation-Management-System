@@ -5,7 +5,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import service.Database;
-import utility.UserControl;
 
 public class GUIPatientHome {
 

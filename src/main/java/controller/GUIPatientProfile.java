@@ -16,7 +16,6 @@ import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import model.Medication;
 import service.Database;
-import utility.UserControl;
 import utility.GlobalEnums;
 
 import java.io.IOException;

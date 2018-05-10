@@ -10,7 +10,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import javafx.scene.input.KeyCodeCombination;
 import model.Patient;
-import utility.UserControl;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;

@@ -24,6 +24,11 @@ public class GUIPatientHistory {
     private TableView<UserActionRecord> logHistoryTable;
 
 
+    public void initialize() {
+        populateTable();
+    }
+
+
     /**
      * Go to home page action listener for back button
      */
@@ -32,15 +37,10 @@ public class GUIPatientHistory {
     }
 
 
-    public void initialize() {
-        populateTable();
-    }
-
-
     /**
-     * Populate
+     * Populate the table with records
      */
-    public void populateTable() {
+    private void populateTable() {
         timeStampColumn.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
         levelColumn.setCellValueFactory(new PropertyValueFactory<>("level"));
         messageColumn.setCellValueFactory(new PropertyValueFactory<>("message"));
