@@ -31,8 +31,8 @@
             </HBox>
             <HBox prefHeight="30.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Gender: " />
-                  <Label fx:id="genderLbl" text="Label" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Gender Identity: " />
+                  <Label fx:id="genderIdentityLbl" text="Label" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">

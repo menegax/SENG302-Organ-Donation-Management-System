@@ -263,7 +263,7 @@ public class Patient {
      * @return string named
      */
     public String getNameConcatenated() {
-        StringBuilder concatName = new StringBuilder(firstName + " ");
+        StringBuilder concatName = new StringBuilder(preferredName + " ");
         if (middleNames != null && middleNames.size() > 0) {
             for (String middleName : middleNames) {
                 concatName.append(middleName)
@@ -296,6 +296,9 @@ public class Patient {
     public void setFirstName(String firstName) {
         if (this.firstName == null || (!firstName.equals(this.firstName))) {
             this.firstName = firstName;
+            if (getPreferredName() == null) {
+                setPreferredName( firstName );
+            }
             patientModified();
         }
     }
@@ -325,11 +328,12 @@ public class Patient {
     public String getPreferredName() { return preferredName; }
 
     public void setPreferredName(String preferredName) {
-        if (!preferredName.equals(this.preferredName)) {
+        if (!preferredName.equals(this.preferredName) && preferredName != null) {
             this.preferredName = preferredName;
             patientModified();
         }
     }
+
     public LocalDate getBirth() {
         return birth;
     }
@@ -705,10 +709,11 @@ public class Patient {
 
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
-                + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Gender: " + gender + "\n"
-                + "Date of birth: " + birth + "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + street1 + "\n" + "Street2: " + street2
-                + "\n" + "Suburb:" + suburb + "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: "
-                + height + "\n" + "Weight: " + weight + "\n" + "Blood group: " + bloodGroup + "\n";
+                + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Preferred name: " + preferredName +
+                "\n" + "Gender Assigned at Birth: " + birthGender + "\n" + "Gender Identity: " + preferredGender + "\n" + "Date of birth: " + birth +
+                "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + street1 + "\n" + "Street2: " + street2 + "\n" + "Suburb:" + suburb +
+                "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: " + height + "\n" + "Weight: "
+                + weight + "\n" + "Blood group: " + bloodGroup + "\n";
     }
 
     public boolean equals(Object obj) {

@@ -51,7 +51,7 @@ public class GUIPatientProfile implements IPopupable {
     private Label nameLbl;
 
     @FXML
-    private Label genderLbl;
+    private Label genderIdentityLbl;
 
     @FXML
     private Label dobLbl;
@@ -102,18 +102,15 @@ public class GUIPatientProfile implements IPopupable {
 
     private ListProperty<String> organListProperty = new SimpleListProperty<>();
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
-
-
+    
     private void removeBack() {
         back.setDisable(true);
         back.setVisible(false);
     }
 
-
     public UUID getId() {
         return id;
     }
-
 
     public void setViewedPatient(Patient patient) {
         this.viewedPatient = patient;
@@ -125,7 +122,6 @@ public class GUIPatientProfile implements IPopupable {
             userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
         }
     }
-
 
     public void initialize() {
         if (ScreenControl.getLoggedInPatient() != null) {
@@ -140,13 +136,12 @@ public class GUIPatientProfile implements IPopupable {
         }
     }
 
-
     private void loadProfile(String nhi) throws InvalidObjectException {
         Patient patient = Database.getPatientByNhi(nhi);
 
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
-        genderLbl.setText(patient.getGender() == null ? "Not set" : patient.getGender()
+        genderIdentityLbl.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender()
                 .toString());
         dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
@@ -185,7 +180,6 @@ public class GUIPatientProfile implements IPopupable {
         medList.itemsProperty().bind(medListProperty);
     }
 
-
     public void goToEdit() {
         if (ScreenControl.getLoggedInPatient() != null) {
             ScreenControl.removeScreen("patientUpdateProfile");
@@ -211,7 +205,6 @@ public class GUIPatientProfile implements IPopupable {
             }
         }
     }
-
 
     public void goToDonations() {
         if (ScreenControl.getLoggedInPatient() != null) {
