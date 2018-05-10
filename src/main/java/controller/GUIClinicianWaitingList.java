@@ -43,9 +43,14 @@ public class GUIClinicianWaitingList {
      */
     public void initialize() throws InvalidObjectException {
     	OrganWaitlist waitingList = Database.getWaitingList();
-//    	waitingList.add(Database.getPatientByNhi("ABC1238"), Organ.LIVER);
-//        waitingList.add(Database.getPatientByNhi("ABC1238"), Organ.KIDNEY);
-    	for (OrganWaitlist.OrganRequest request: waitingList) {
+
+        // TODO: 10/05/2018 remove test data after story 23 merged to development
+    	waitingList.add(Database.getPatientByNhi("ABC1238"), Organ.LIVER);
+        waitingList.add(Database.getPatientByNhi("ABC1238"), Organ.KIDNEY);
+        waitingList.add(Database.getPatientByNhi("ABC1234"), Organ.CORNEA);
+        waitingList.add(Database.getPatientByNhi("ABC1234"), Organ.KIDNEY);
+
+        for (OrganWaitlist.OrganRequest request: waitingList) {
     		masterData.add(request);
     	}
         populateTable();
