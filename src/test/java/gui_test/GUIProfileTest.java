@@ -2,6 +2,7 @@ package gui_test;
 
 import controller.Main;
 import controller.ScreenControl;
+import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -30,17 +31,17 @@ public class GUIProfileTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
 
         // add dummy donor
-        ArrayList<String> dal = new ArrayList<>();
-        dal.add("Middle");
-        Database.addPatients(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+//        ArrayList<String> dal = new ArrayList<>();
+//        dal.add("Middle");
+//        Database.addPatients(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+//        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+//        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
         interact(() ->  {
-            lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
-            lookup("#loginButton").queryAs(Button.class).fire();
-            lookup("#profileButton").queryAs(Button.class).fire();
+            lookup("#nhiLogin").queryAs(TextField.class).setText("ABC1238");
+            lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
+            lookup("#profileButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
         });
     }
 
@@ -53,25 +54,25 @@ public class GUIProfileTest extends ApplicationTest {
 
     @Test
     public void should_be_on_profile_screen() {
-        verifyThat("#donorProfilePane", Node::isVisible);
+        verifyThat("#patientProfilePane", Node::isVisible);
     }
 
     @Test
     public void should_enter_edit_pane() {
-        interact(() -> lookup("#editPatientButton").queryAs(Button.class).fire());
-        verifyThat("#donorUpdateAnchorPane", Node::isVisible);
+        interact(() -> { lookup("#editPatientButton").queryAs(Button.class).fire();});
+        verifyThat("#patientUpdateAnchorPane", Node::isVisible);
     }
 
     @Test
     public void should_enter_contact_details_pane() {
-        interact(() -> lookup("#contactButton").queryAs(Button.class).fire());
-        verifyThat("#donorContactsPane", Node::isVisible);
+        interact(() -> { lookup("#contactButton").queryAs(Button.class).fire();});
+        verifyThat("#patientContactsPane", Node::isVisible);
     }
 
     @Test
     public void should_go_to_donations() {
-        interact(() -> lookup("#donationsButton").queryAs(Button.class).fire());
-        verifyThat("#donorDonationsAnchorPane", Node::isVisible);
+        interact(() -> { lookup("#donationsButton").queryAs(Button.class).fire();});
+        verifyThat("#patientDonationsAnchorPane", Node::isVisible);
     }
 
 //    @Test
@@ -86,9 +87,32 @@ public class GUIProfileTest extends ApplicationTest {
 
     @Test
     public void should_have_correct_donations() {
-        interact(() -> lookup("#donationsButton").queryAs(Button.class).fire());
+        interact(() -> { lookup("#donationsButton").queryAs(Button.class).fire();});
+        verifyThat("#patientDonationsAnchorPane", Node::isVisible);
         assertThat(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         assertThat(lookup("#corneaCB").queryAs(CheckBox.class).isSelected());
+    }
+
+    @Test
+    public void check_receiver_donor_segregation() {
+        Patient patient = ScreenControl.getLoggedInPatient();
+        patient.setDonations(new ArrayList<GlobalEnums.Organ>());
+        interact(() -> {
+            lookup("#donationsButton").queryAs(Button.class).fire();
+            lookup("#save").queryAs(Button.class).fire();
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+        sleep(1000);
+        verifyThat("#receivingList", Node::isVisible);
+        verifyThat("#donationList", Node::isDisabled);
+        patient.setRequiredOrgans(new ArrayList<GlobalEnums.Organ>());
+        interact(() -> {
+            lookup("#donationsButton").queryAs(Button.class).fire();
+            lookup("#liverCB").queryAs(CheckBox.class).setSelected(true);
+            lookup("#save").queryAs(Button.class).fire();
+        });
+        verifyThat("#receivingList", Node::isDisabled);
+        verifyThat("#donationList", Node::isVisible);
     }
 
 }

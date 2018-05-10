@@ -260,7 +260,7 @@ public class GUIPatientProfile implements IPopupable {
                 if (ScreenControl.getLoggedInPatient() == null) {
                     if (isDonorList) {
                         if (receivingListProperty.contains(item)) {
-                            this.setStyle("-fx-background-color: RED");
+                            this.setStyle("-fx-background-color: #e6b3b3");
                             this.setText(item);
                         } else {
                             this.setStyle("-fx-background-color: WHITE");
@@ -268,7 +268,7 @@ public class GUIPatientProfile implements IPopupable {
                         }
                     } else {
                         if (donatingListProperty.contains(item)) {
-                            this.setStyle("-fx-background-color: RED");
+                            this.setStyle("-fx-background-color: #e6b3b3");
                             this.setText(item);
                         } else {
                             this.setStyle("-fx-background-color: WHITE");
