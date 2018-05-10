@@ -14,9 +14,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import model.Patient;
 import model.DrugInteraction;
 import model.Medication;
+import model.Patient;
 import service.Database;
 import service.TextWatcher;
 import utility.UserActionRecord;
@@ -26,12 +26,6 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.sql.Timestamp;
 import java.util.*;
-
-import javafx.geometry.Side;
-import service.TextWatcher;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -193,8 +187,8 @@ public class GUIPatientMedications implements IPopupable {
     @FXML
     public void initialize() {
         //Register events for when an item is selected from a listView and set selection mode to multiple
-        currentMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(currentMedications));
-        pastMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(pastMedications));
+        currentMedications.setOnMouseClicked(event -> onSelect(currentMedications));
+        pastMedications.setOnMouseClicked(event -> onSelect(pastMedications));
         pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         stateHistoryScreen = new StatesHistoryScreen(medicationPane, new ArrayList<Control>() {{

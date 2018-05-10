@@ -5,7 +5,7 @@
 1. Log in as a clinician (default is id 0)
 2. Once logged in, click on the `Search Patients` button to navigate to the patient search
 3. Double click on any of the patients listed
-4. Click on the `Medications` button
+4. Click on the `Manage Medications` button
 5. Verify that the medications page is now displayed
 
 ### GUI ingredients show on select test

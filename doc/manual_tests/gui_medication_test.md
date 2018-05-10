@@ -5,7 +5,7 @@
 1. Log in as a clinician (default is id 0)
 2. Once logged in, click on the `Search Patients` button to navigate to the patient search
 3. Double click on any of the patients listed
-4. Click on the `Medications` button
+4. Click on the `Manage Medications` button
 5. Verify that the medications page is now displayed
 
 ### GUI Medication adding with valid input test
@@ -45,7 +45,7 @@
 6. Verify that the medication is now in the past medications list, and no longer in the current medications list
 7. Click on that same medication in the past medications list
 8. Verify that it is selected
-9. Click on the `Re-add` button to move it back to the current medications list
+9. Click on the `Add` button to move it back to the current medications list
 10. Verify that the medication is now in the current medications list, and no longer in the past medications list
 
 
