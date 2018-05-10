@@ -24,7 +24,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
-
 public class GUIClinicianSearchPatients implements Initializable {
 
     @FXML
@@ -37,7 +36,7 @@ public class GUIClinicianSearchPatients implements Initializable {
     private TableColumn<Patient, String> columnAge;
 
     @FXML
-    private TableColumn<Patient, String> columnGender;
+    private TableColumn<Patient, String> columnBirthGender;
 
     @FXML
     private TableColumn<Patient, String> columnRegion;
@@ -46,7 +45,6 @@ public class GUIClinicianSearchPatients implements Initializable {
     private TextField searchEntry;
 
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
-
 
     /**
      * Initialises the data within the table to all patients
@@ -57,19 +55,15 @@ public class GUIClinicianSearchPatients implements Initializable {
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
         FilteredList<Patient> filteredData = setupTableColumnsAndData();
-
         setupSearchingListener(filteredData);
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
-
     }
-
 
     /**
      * Sets up double-click functionality for each row to open a patient profile update
      */
     private void setupDoubleClickToPatientEdit() {
-
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
@@ -102,10 +96,8 @@ public class GUIClinicianSearchPatients implements Initializable {
                     new Alert(Alert.AlertType.ERROR, "Unable to open patient edit window", ButtonType.OK).show();
                 }
             }
-
         });
     }
-
 
     /**
      * Sets the table columns to pull the correct data from the patient objects
@@ -119,9 +111,9 @@ public class GUIClinicianSearchPatients implements Initializable {
                 .getNameConcatenated()) : new SimpleStringProperty(""));
         columnAge.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue()
                 .getAge())));
-        columnGender.setCellValueFactory(d -> d.getValue()
-                .getGender() != null ? new SimpleStringProperty(d.getValue()
-                .getGender()
+        columnBirthGender.setCellValueFactory(d -> d.getValue()
+                .getBirthGender() != null ? new SimpleStringProperty(d.getValue()
+                .getBirthGender()
                 .toString()) : new SimpleStringProperty(""));
         columnRegion.setCellValueFactory(d -> d.getValue()
                 .getRegion() != null ? new SimpleStringProperty(d.getValue()
@@ -143,7 +135,6 @@ public class GUIClinicianSearchPatients implements Initializable {
         return filteredData;
     }
 
-
     /**
      * Sets the search textfield to listen for any changes and search for the entry on change
      *
@@ -157,13 +148,10 @@ public class GUIClinicianSearchPatients implements Initializable {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
-
                     return SearchPatients.searchByName(newValue)
                             .contains(patient);
-
                 }));
     }
-
 
     /**
      * Adds custom hover-over text to each row in the table
@@ -171,7 +159,6 @@ public class GUIClinicianSearchPatients implements Initializable {
     private void setupRowHoverOverText() {
         patientDataTable.setRowFactory(tv -> new TableRow<Patient>() {
             private Tooltip tooltip = new Tooltip();
-
 
             @Override
             public void updateItem(Patient patient, boolean empty) {
@@ -198,7 +185,6 @@ public class GUIClinicianSearchPatients implements Initializable {
         });
     }
 
-
     /**
      * Adds all db data via constructor
      */
@@ -206,11 +192,9 @@ public class GUIClinicianSearchPatients implements Initializable {
         masterData.addAll(Database.getPatients());
     }
 
-
     public void goToClinicianHome() {
         ScreenControl.activate("clinicianHome");
     }
-
 
     /**
      * Refreshes the table data
