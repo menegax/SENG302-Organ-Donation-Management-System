@@ -16,8 +16,8 @@ import org.testfx.api.FxRobotException;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import utility.UserControl;
 import utility.GlobalEnums;
-import utility.CacheHelper;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -29,7 +29,7 @@ public class GUILoginTest extends ApplicationTest {
 
 
     private Main main = new Main();
-    private CacheHelper loginHelper = new CacheHelper();
+    private UserControl loginHelper = new UserControl();
 
     @Override
     public void start(Stage stage) throws Exception {

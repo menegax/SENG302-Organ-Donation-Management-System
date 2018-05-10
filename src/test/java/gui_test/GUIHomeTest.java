@@ -10,8 +10,8 @@ import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import utility.UserControl;
 import utility.GlobalEnums;
-import utility.CacheHelper;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class GUIHomeTest extends ApplicationTest {
 
     private Main main = new Main();
-    CacheHelper loginHelper = new CacheHelper();
+    UserControl loginHelper = new UserControl();
 
     @Override
     public void start(Stage stage) throws Exception {

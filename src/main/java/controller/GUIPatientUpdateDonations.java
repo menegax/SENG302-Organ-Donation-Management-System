@@ -10,7 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import javafx.scene.input.KeyCodeCombination;
 import model.Patient;
-import utility.CacheHelper;
+import utility.UserControl;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
@@ -81,17 +81,17 @@ public class GUIPatientUpdateDonations {
 
     private StatesHistoryScreen statesHistoryScreen;
 
-    private CacheHelper cacheHelper;
+    private UserControl userControl;
 
 
     public void initialize() {
-        cacheHelper = new CacheHelper();
-        Object user = cacheHelper.getLoggedInUser();
+        userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         }
-        if (cacheHelper.getTargetPatient() != null) {
-            loadProfile((cacheHelper.getTargetPatient()).getNhiNumber());
+        if (userControl.getTargetPatient() != null) {
+            loadProfile((userControl.getTargetPatient()).getNhiNumber());
         }
 
         // Enter key triggers log in
@@ -303,7 +303,7 @@ public class GUIPatientUpdateDonations {
 
 
     public void goToProfile() {
-        if (cacheHelper.getLoggedInUser() instanceof Patient) {
+        if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientProfile");
             try {
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));

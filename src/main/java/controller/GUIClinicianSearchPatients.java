@@ -16,9 +16,9 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Patient;
 import service.Database;
+import utility.UserControl;
 import utility.GlobalEnums;
 import utility.SearchPatients;
-import utility.CacheHelper;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -69,13 +69,13 @@ public class GUIClinicianSearchPatients implements Initializable {
      * Sets up double-click functionality for each row to open a patient profile update
      */
     private void setupDoubleClickToPatientEdit() {
-        CacheHelper cacheHelper = new CacheHelper();
+        UserControl userControl = new UserControl();
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
                     .getSelectedItem() != null) {
                 try {
-                    cacheHelper.setTargetPatient(patientDataTable.getSelectionModel().getSelectedItem());
+                    userControl.setTargetPatient(patientDataTable.getSelectionModel().getSelectedItem());
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
                     Stage popUpStage = new Stage();

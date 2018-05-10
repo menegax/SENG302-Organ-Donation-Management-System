@@ -10,7 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Patient;
 import service.Database;
-import utility.CacheHelper;
+import utility.UserControl;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -66,7 +66,7 @@ public class GUIPatientUpdateContacts  {
      */
     private Patient target;
 
-    private CacheHelper cacheHelper;
+    private UserControl userControl;
 
     private StatesHistoryScreen statesHistoryScreen;
 
@@ -96,14 +96,14 @@ public class GUIPatientUpdateContacts  {
      * display current contact attributes.
      */
     public void initialize() {
-        cacheHelper = new CacheHelper();
-        Object user = cacheHelper.getLoggedInUser();
+        userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
             setContactFields();
         }
-        if (cacheHelper.getTargetPatient() != null) {
-            loadProfile((cacheHelper.getTargetPatient()).getNhiNumber());
+        if (userControl.getTargetPatient() != null) {
+            loadProfile((userControl.getTargetPatient()).getNhiNumber());
             setContactFields();
         }
         setupUndoRedo();
@@ -313,7 +313,7 @@ public class GUIPatientUpdateContacts  {
      * Closes the contact details screen and returns the user to the profile window without saving changes.
      */
     public void goToProfile() {
-        if (cacheHelper.getLoggedInUser() instanceof Patient) {
+        if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientProfile");
             try {
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
