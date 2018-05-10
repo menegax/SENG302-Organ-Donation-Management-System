@@ -4,8 +4,7 @@ import api.APIHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import utility.GlobalEnums.Gender;
-
+import utility.GlobalEnums.BirthGender;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -30,22 +29,17 @@ public class DrugInteraction {
         response = apiHelper.getDrugInteractions(drugOne, drugTwo);
     }
 
-
     /**
-     *  Get interactions based on age and gender of the patient
+     * Get interactions based on age and gender of the patient
      * @return - set of interactions between the two drugs
      */
     private Set<String> getInteractionsAgeGender(){
         Set<String> allInteractions = new HashSet<>();
         Patient patient = viewedPatient;
         int donorAge = patient.getAge();
-        Gender donorGender = patient.getGender() != Gender.FEMALE &&
-                             patient.getGender() != Gender.MALE
-                             && patient.getGender() != Gender.OTHER
-                             ? Gender.OTHER : patient.getGender();
-
+        BirthGender donorGender = patient.getBirthGender();
         JsonArray interactionsAgeGroup = getAgeInteractionsHelper(donorAge);
-        JsonArray genderInteractions = getGenderInteractionsHelper(donorGender); //if patient gender is null, treat is as other
+        JsonArray genderInteractions = getGenderInteractionsHelper(donorGender);
         if (genderInteractions != null) {
             genderInteractions.forEach((jsonElement -> allInteractions.add(jsonElement.getAsString())));
         }
@@ -55,7 +49,6 @@ public class DrugInteraction {
         }
         return allInteractions;
     }
-
 
     /**
      * Helper method to get the interactions based on the donors age
@@ -75,26 +68,16 @@ public class DrugInteraction {
         return interactionsAgeGroup;
     }
 
-
     /**
      *  Helper method to determine the gender interaction of the patient
      * @param donorGender - Gender of the patient
      * @return - interactions based on the gender of the patient
      */
-    public JsonArray getGenderInteractionsHelper(Gender donorGender) {
-        JsonElement genderInteractions = donorGender != Gender.OTHER ?
-                response.get("gender_interaction").getAsJsonObject().get(donorGender.name().toLowerCase()):
-                response.get("gender_interaction");
-
+    public JsonArray getGenderInteractionsHelper( BirthGender donorGender) {
+        JsonElement genderInteractions = response.get("gender_interaction").getAsJsonObject().get(donorGender.name().toLowerCase());
         JsonArray gender = new JsonArray();
-        if (donorGender == Gender.OTHER) {
-            gender.addAll(genderInteractions.getAsJsonObject().get("female").getAsJsonArray());
-            gender.addAll(genderInteractions.getAsJsonObject().get("male").getAsJsonArray());
-        } else {
-            gender.addAll(genderInteractions.getAsJsonArray());
-        }
+        gender.addAll(genderInteractions.getAsJsonArray());
         return gender;
-
     }
 
     /**
@@ -151,7 +134,6 @@ public class DrugInteraction {
         }
         return interactionWithDuration;
     }
-
 
     /**
      * Places given interaction under not specified duration if it does not fall under any other duration

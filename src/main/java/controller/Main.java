@@ -1,7 +1,6 @@
 package controller;
 
 import static utility.UserActionHistory.userActions;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,7 +12,6 @@ import service.Database;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 import utility.UserActionHistory;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -54,12 +52,10 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-
     public static void main(String[] args) {
         UserActionHistory.setup(); // start user action logs
         launch(args);
     }
-
 
     /**
      * Adds dummy test objects for testing purposes
@@ -80,7 +76,7 @@ public class Main extends Application {
             Database.getPatientByNhi("ABC1238")
                     .setRegion(GlobalEnums.Region.AUCKLAND);
             Database.getPatientByNhi("ABC1238")
-                    .setGender(GlobalEnums.Gender.OTHER);
+                    .setBirthGender(GlobalEnums.BirthGender.MALE);
 
             Database.addPatient(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
             Database.getPatientByNhi("ABC1234")
@@ -90,11 +86,10 @@ public class Main extends Application {
             Database.getPatientByNhi("ABC1234")
                     .setRegion(GlobalEnums.Region.CANTERBURY);
             Database.getPatientByNhi("ABC1234")
-                    .setGender(GlobalEnums.Gender.FEMALE);
+                    .setBirthGender(GlobalEnums.BirthGender.FEMALE);
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
         }
-
     }
 }
