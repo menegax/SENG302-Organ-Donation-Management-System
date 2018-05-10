@@ -33,6 +33,12 @@ import java.util.stream.Collectors;
 
 import static utility.UserActionHistory.userActions;
 
+/**
+ * Patient profile page where in patient view, they may view their attributes, donating organs and required organs.
+ * In clinician view, they can see the highlighted cell if the donating organ is also required by the patient.
+ * This class loads and controls this view.
+ */
+
 public class GUIPatientProfile implements IPopupable {
 
     private UUID id = UUID.randomUUID();
@@ -124,18 +130,26 @@ public class GUIPatientProfile implements IPopupable {
 
     private Patient viewedPatient;
 
-
+    /**
+     * removes/disables/hides the back button
+     */
     private void removeBack() {
         back.setDisable(true);
         back.setVisible(false);
     }
 
-
+    /**
+     * Gets the unique user identification of the clinician
+     * @return UUID of the clinician
+     */
     public UUID getId() {
         return id;
     }
 
-
+    /**
+     *
+     * @param patient current patient logged in or being viewed by the clinician
+     */
     public void setViewedPatient(Patient patient) {
         this.viewedPatient = patient;
         removeBack();
@@ -171,8 +185,6 @@ public class GUIPatientProfile implements IPopupable {
                 receivingList.setVisible(false);
                 receivingTitle.setDisable(true);
                 receivingTitle.setVisible(false);
-//                receiveList.setDisable(true);
-//                receiveList.setVisible(false);
             } else if (ScreenControl.getLoggedInPatient().getDonations().size() == 0) {
                 donatingTitle.setDisable(true);
                 donatingTitle.setVisible(false);
@@ -182,7 +194,11 @@ public class GUIPatientProfile implements IPopupable {
         }
     }
 
-
+    /**
+     * Loads the attributes and organs for the patient to be able to be viewed
+     * @param nhi of the patient
+     * @throws InvalidObjectException
+     */
     private void loadProfile(String nhi) throws InvalidObjectException {
         Patient patient = Database.getPatientByNhi(nhi);
 
@@ -225,47 +241,51 @@ public class GUIPatientProfile implements IPopupable {
         receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
         donationList.itemsProperty().bind(donatingListProperty);
         receivingList.itemsProperty().bind(receivingListProperty);
+        // list view styling/highlighting
+        highlightListCell(donationList, true);
+        highlightListCell(receivingList, false);
+    }
 
-        donationList.setCellFactory(column -> new ListCell<String>() {
+    /**
+     * Highlights the listview cell if the organ donating is also required by the patient in clinician view. If in
+     * patient view, the listview cells are just styled.
+     * @param listView
+     * @param isDonorList
+     */
+    public void highlightListCell(ListView<String> listView, boolean isDonorList) {
+        listView.setCellFactory(column -> new ListCell<String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-
-                if (empty || item == null) {
-                    setText(null);
-                    setStyle("");
-                } else {
-                    if (receivingListProperty.contains(item)) {
-                        this.setStyle("-fx-background-color: RED");
+                if (ScreenControl.getLoggedInPatient() == null) {
+                    if (isDonorList) {
+                        if (receivingListProperty.contains(item)) {
+                            this.setStyle("-fx-background-color: RED");
+                            this.setText(item);
+                        } else {
+                            this.setStyle("-fx-background-color: WHITE");
+                            this.setText(item);
+                        }
+                    } else {
+                        if (donatingListProperty.contains(item)) {
+                            this.setStyle("-fx-background-color: RED");
+                            this.setText(item);
+                        } else {
+                            this.setStyle("-fx-background-color: WHITE");
+                            this.setText(item);
+                        }
                     }
+                } else {
+                        this.setStyle("-fx-background-color: WHITE");
+                        this.setText(item);
                 }
             }
         });
-
-//        donationList.getItems()setStyle("-fx-background-color: #f41112");
-
-
-//        Object cell = donationList.getItems().get(0);
-//        cell.
-
-//        Object lists = receivingList.getItems().get(1);
-//        System.out.println(lists);
-//        ((TableCell) lists.get(0)).setStyle("-fx-text-fill:red;");
-//
-//        for (GlobalEnums.Organ organ : patient.getDonations()) {
-//            if (patient.getRequiredOrgans().contains(organ)) {
-//                donationList.setStyle("-fx-background-color: #42e5f4");
-//            }
-//        }
-//        for (GlobalEnums.Organ organ : patient.getRequiredOrgans()) {
-//            if (patient.getDonations().contains(organ)) {
-//                System.out.println(StringUtils.capitalize(organ.toString()));
-//                receivingList.get(StringUtils.capitalize(organ.toString()));
-//                receivingList.setStyle("-fx-text-fill:red;");
-//            }
-//        }
     }
 
+    /**
+     * Takes the user to the edit patient profile scene and controller
+     */
     public void goToEdit() {
         if (ScreenControl.getLoggedInPatient() != null) {
             ScreenControl.removeScreen("patientProfileUpdate");
@@ -292,6 +312,9 @@ public class GUIPatientProfile implements IPopupable {
         }
     }
 
+    /**
+     * Takes the user to the edit donations scene and controller
+     */
     public void goToDonations() {
         if (ScreenControl.getLoggedInPatient() != null) {
             ScreenControl.removeScreen("patientDonations");
@@ -318,6 +341,9 @@ public class GUIPatientProfile implements IPopupable {
         }
     }
 
+    /**
+     * Takes the user to the edit required organs scene and controller
+     */
     public void goToRequirements() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateRequirements.fxml"));
         try {
@@ -332,6 +358,9 @@ public class GUIPatientProfile implements IPopupable {
         }
     }
 
+    /**
+     * Takes the user to edit the patients contact details
+     */
     public void goToContactDetails() {
         if (ScreenControl.getLoggedInPatient() != null) {
             ScreenControl.removeScreen("patientContactDetails");
@@ -358,6 +387,9 @@ public class GUIPatientProfile implements IPopupable {
         }
     }
 
+    /**
+     * Takes the user back to the home screen
+     */
     public void goToPatientHome() {
         ScreenControl.activate("patientHome");
     }

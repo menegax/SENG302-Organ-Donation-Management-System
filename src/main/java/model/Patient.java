@@ -19,6 +19,9 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
+/**
+ * Patient class that holds all attributes and methods for a donor or receiver
+ */
 public class Patient {
 
     private UUID uuid = UUID.randomUUID();
@@ -81,7 +84,14 @@ public class Patient {
 
     private String contactEmailAddress;
 
-
+    /**
+     * Constructor for the patient class. Initializes basic attributes
+     * @param nhiNumber unique number to identify the patient by
+     * @param firstName first name of the patient
+     * @param middleNames middle names of the patient
+     * @param lastName last name of the patient
+     * @param date date of birth of patient
+     */
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
@@ -260,7 +270,6 @@ public class Patient {
         concatName.append(lastName);
         return concatName.toString();
     }
-
 
     public ArrayList<Organ> getDonations() {
         return donations == null ? new ArrayList<>() : donations;
@@ -692,7 +701,9 @@ public class Patient {
         this.contactEmailAddress = contactEmailAddress;
     }
 
-
+    /**
+     * Updates the last modification time of the patient profile
+     */
     public void patientModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
@@ -705,8 +716,7 @@ public class Patient {
                 + "\n" + "Suburb:" + suburb + "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: "
                 + height + "\n" + "Weight: " + weight + "\n" + "Blood group: " + bloodGroup + "\n";
     }
-
-
+    
     public boolean equals(Object obj) {
         Patient patient = (Patient) obj;
         return this.nhiNumber.equals(patient.nhiNumber) && obj.getClass() == this.getClass();

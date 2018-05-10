@@ -77,8 +77,8 @@
 }
 
 .list-view .list-cell:even {
-    -fx-text-fill: black;
+    -fx-control-inner-background: WHITE;
 }
 .list-view .list-cell:odd {
-    -fx-text-fill: black;
+    -fx-control-inner-background: WHITE;
 }

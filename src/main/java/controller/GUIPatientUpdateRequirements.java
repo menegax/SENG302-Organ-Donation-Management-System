@@ -20,6 +20,9 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
+/**
+ * This class is the controller for editing a patients required organs only accessible by the clinician
+ */
 public class GUIPatientUpdateRequirements implements IPopupable {
 
     @FXML
@@ -78,7 +81,9 @@ public class GUIPatientUpdateRequirements implements IPopupable {
 
     private StatesHistoryScreen statesHistoryScreen;
 
-
+    /**
+     * initailizes the edit scene
+     */
     public void initialize() {
         if (ScreenControl.getLoggedInPatient() != null) {
             loadProfile(ScreenControl.getLoggedInPatient()
@@ -93,12 +98,19 @@ public class GUIPatientUpdateRequirements implements IPopupable {
         });
     }
 
+    /**
+     * Loads the required organs that the patient currently already has
+     * @param patient current patient being viewed
+     */
     public void setViewedPatient(Patient patient) {
         target = patient;
         loadProfile(patient.getNhiNumber());
     }
 
-
+    /**
+     * Load the patients details
+     * @param nhi of the current patient being viewed
+     */
     private void loadProfile(String nhi) {
         try {
             Patient patient = Database.getPatientByNhi(nhi);
@@ -125,8 +137,10 @@ public class GUIPatientUpdateRequirements implements IPopupable {
         statesHistoryScreen = new StatesHistoryScreen(patientRequirementsAnchorPane, controls);
     }
 
-
-
+    /**
+     * Loads the checkboxes with a tick if they already require them and the rest unchecked
+     * @param patient currently being viewed
+     */
     private void populateForm(Patient patient) {
         ArrayList<GlobalEnums.Organ> organs = patient.getRequiredOrgans();
         if (organs != null) {
@@ -169,7 +183,9 @@ public class GUIPatientUpdateRequirements implements IPopupable {
         }
     }
 
-
+    /**
+     * Save button makes sure that the current session is saved with the changes made
+     */
     public void saveRequirements() {
         if (liverCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.LIVER);
@@ -247,7 +263,9 @@ public class GUIPatientUpdateRequirements implements IPopupable {
         goToProfile();
     }
 
-
+    /**
+     * Goes back to the profile view
+     */
     public void goToProfile() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianViewOfPatientProfile.fxml"));
         try {
