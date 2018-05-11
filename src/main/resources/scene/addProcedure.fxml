@@ -14,7 +14,7 @@
       <TextField fx:id="summaryInput" focusTraversable="false" layoutX="145.0" layoutY="101.0" prefHeight="25.0" prefWidth="311.0" promptText="Summary" />
       <Button fx:id="doneButton" layoutX="463.0" layoutY="341.0" mnemonicParsing="false" onAction="#addProcedure" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Done" AnchorPane.rightAnchor="50.0" />
       <DatePicker fx:id="dateInput" editable="false" focusTraversable="false" layoutX="227.0" layoutY="316.0" prefHeight="25.0" prefWidth="149.0" promptText="Date of procedure" />
-      <TextArea fx:id="descriptionInput" layoutX="145.0" layoutY="136.0" prefHeight="129.0" prefWidth="311.0" promptText="Description" />
+      <TextArea fx:id="descriptionInput" layoutX="145.0" layoutY="136.0" prefHeight="129.0" prefWidth="311.0" promptText="Description" wrapText="true" />
       <MenuButton fx:id="affectedInput" layoutX="233.0" layoutY="279.0" mnemonicParsing="false" text="Affected Donations" />
       <Button layoutX="55.0" layoutY="341.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="27.0" prefWidth="90.0" text="Cancel" AnchorPane.leftAnchor="50.0" />
    </children>
