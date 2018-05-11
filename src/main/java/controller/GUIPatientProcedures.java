@@ -1,6 +1,5 @@
 package controller;
 
-import com.sun.javafx.robot.FXRobot;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,12 +10,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Patient;
 import model.Procedure;
 import utility.GlobalEnums.Organ;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Set;
@@ -27,7 +26,10 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller class for the Patient procedures screen
  */
-public class GUIPatientProcedures implements IPopupable{
+public class GUIPatientProcedures implements IPopupable {
+
+    @FXML
+    public AnchorPane patientProceduresPane;
 
     @FXML
     public TableView<Procedure> previousProceduresView;
@@ -121,6 +123,24 @@ public class GUIPatientProcedures implements IPopupable{
                 previousProceduresView.getSelectionModel().clearSelection();
             }
         }));
+
+        //Registers event for when an item is selected in either table
+        previousProceduresView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> onItemSelect());
+        pendingProceduresView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> onItemSelect());
+    }
+
+    /**
+     * Called when an item is selected in either the previous or pending procedures table.
+     * Checks if there are no selected items in both tables, and if so disables the delete procedure button,
+     * else the delete procedure button is enabled
+     */
+    private void onItemSelect() {
+        if (previousProceduresView.getSelectionModel().getSelectedItems().size() == 0 &&
+                pendingProceduresView.getSelectionModel().getSelectedItems().size() == 0) {
+            deleteProcedureButton.setDisable(true);
+        } else {
+            deleteProcedureButton.setDisable(false);
+        }
     }
 
     /**
@@ -204,6 +224,23 @@ public class GUIPatientProcedures implements IPopupable{
 
     @FXML
     public void goToProfile() {
-
+        if (ScreenControl.getLoggedInPatient() != null) {
+            ScreenControl.removeScreen("patientProfile");
+            try {
+                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                ScreenControl.activate("patientProfile");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the procedures page to the profile page");
+                new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader, patient);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the procedures page to the profile page in popup");
+                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
+            }
+        }
     }
 }
