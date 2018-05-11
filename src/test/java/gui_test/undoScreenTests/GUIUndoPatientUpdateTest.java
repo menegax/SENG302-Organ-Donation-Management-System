@@ -74,7 +74,7 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest{
     @Before
     public void getFields() {
         interact(() -> {
-            while(lookup("OK").queryAs(Button.class) != null) {
+            while (lookup("OK").queryAs(Button.class) != null) {
                 lookup("OK").queryAs(Button.class).fire();
             }
             nhiTxtDefault = lookup("#nhiTxt").queryAs(TextField.class).getText();

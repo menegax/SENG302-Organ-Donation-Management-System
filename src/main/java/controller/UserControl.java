@@ -9,6 +9,7 @@ public class UserControl {
 
     private static final Map<String, Object> cache = new HashMap<>();
 
+
     /**
      * Adds entries to the map
      * @param key - key to identify the value by

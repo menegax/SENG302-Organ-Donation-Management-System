@@ -68,7 +68,7 @@ public class GUIUndoPatientDonationsTest extends ApplicationTest{
     @Before
     public void getFields() {
         interact(() -> {
-            while(lookup("OK").queryAs(Button.class) != null) {
+            while (lookup("OK").queryAs(Button.class) != null) {
                 lookup("OK").queryAs(Button.class).fire();
             }
             liverCBDefault = lookup("#liverCB").queryAs(CheckBox.class).isSelected();
@@ -84,6 +84,7 @@ public class GUIUndoPatientDonationsTest extends ApplicationTest{
             bonemarrowCBDefault = lookup("#bonemarrowCB").queryAs(CheckBox.class).isSelected();
             connectivetissueCBDefault = lookup("#connectivetissueCB").queryAs(CheckBox.class).isSelected();
         });
+
     }
 
     /**

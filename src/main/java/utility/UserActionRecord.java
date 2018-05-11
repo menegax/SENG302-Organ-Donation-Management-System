@@ -15,28 +15,22 @@ public class UserActionRecord {
 
     private Level level;
 
-    private UUID uuid;
-
     private String message;
 
     private String action;
 
-    public static ObservableList<UserActionRecord> logHistory = FXCollections.observableArrayList(); //todo move to db class
+    @Deprecated
+    private static ObservableList<UserActionRecord> logHistory = FXCollections.observableArrayList(); //todo move to db class
 
 
-    public UserActionRecord(Timestamp timestamp, Level level, UUID uuid, String action, String message){
+    UserActionRecord(Timestamp timestamp, Level level, String action, String message){
         this.timestamp = timestamp;
         this.level = level;
-        this.uuid = uuid;
         this.action = action;
         this.message = message;
 
     }
 
-
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
 
 
     public String getAction() {
@@ -49,12 +43,13 @@ public class UserActionRecord {
     }
 
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
 
     public Level getLevel() {
         return level;
+    }
+
+
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 }

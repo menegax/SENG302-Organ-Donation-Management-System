@@ -20,7 +20,7 @@ import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
-import static utility.UserActionRecord.logHistory;
+
 
 public class GUILogin {
 
@@ -68,29 +68,23 @@ public class GUILogin {
         if (!clinicianToggle.isSelected()) {
             try {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/scene/patientUpdateProfile.fxml"));
-                Pane pane = loader.load();
-                GUIPatientUpdateProfile controller = loader.getController();
                 login.addLoggedInUserToCache(newPatient);
-                loader.setController(controller);
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
                 ScreenControl.addScreen("patientProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/patientUpdateProfile.fxml")));
                 ScreenControl.addScreen("patientDonations", FXMLLoader.load(getClass().getResource("/scene/patientUpdateDonations.fxml")));
                 ScreenControl.addScreen("patientContacts", FXMLLoader.load(getClass().getResource("/scene/patientUpdateContacts.fxml")));
-                ScreenControl.activate("patientHome");
-                ScreenControl.addScreen("patientHistory", FXMLLoader.load(getClass().getResource("/scene/patientHistory.fxml")));
                 ScreenControl.activate("patientHome");
 //                if (newPatient.getPatientLog() != null) {
 //                    logHistory.addAll( newPatient.getPatientLog() ); // adds medication log from previous log-ins for user
 //                }
             }
             catch (InvalidObjectException e) {
-                userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
+                userActions.log(Level.WARNING, "Failed to log in", "Attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
                 alert.show();
             }
             catch (IOException e) {
-                userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
+                userActions.log(Level.WARNING, "Failed to log in", "Attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
             }
