@@ -568,6 +568,7 @@ public class Patient {
         else {
             donations.add(organ);
             patientModified();
+            userActions.log(Level.INFO, "Added organ " + organ + " to patient donations", "Attempted to add organ " + organ + " to patient donations");
             return "Successfully added " + organ + " to donations";
         }
     }
@@ -589,6 +590,7 @@ public class Patient {
         }
         requiredOrgans.add(organ);
         patientModified();
+        userActions.log(Level.INFO, "Added organ " + organ + " to patient required organs", "Attempted to add organ " + organ + " to patient required organs");
         return "Successfully added " + organ + " to required organs";
     }
 
@@ -602,6 +604,7 @@ public class Patient {
         if (donations.contains(organ)) {
             donations.remove(organ);
             patientModified();
+            userActions.log(Level.INFO, "Removed " + organ + " from patient donations", "Attempted to remove donation from a patient");
             return "Successfully removed " + organ + " from donations";
         } else {
             return "Organ " + organ + " is not part of the patients donations, so could not be removed.";
