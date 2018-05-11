@@ -74,6 +74,8 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
         interact(() -> {
             lookup("#nhiTxt").queryAs(TextField.class).setText("999abcd");
             lookup("#saveButton").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire(); // closes alert
+
         });
 
         verifyThat("#patientUpdateAnchorPane", Node::isVisible);
@@ -87,6 +89,8 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
         interact(() -> {
             lookup("#nhiTxt").queryAs(TextField.class).setText("TFX9998"); // nhi already in use
             lookup("#saveButton").queryAs(Button.class).fire();
+            lookup("OK").queryAs(Button.class).fire(); // closes alert
+
         });
 
         verifyThat("#patientUpdateAnchorPane", Node::isVisible);
