@@ -2,8 +2,6 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -15,7 +13,7 @@ import utility.GlobalEnums.Organ;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GUIAddProcedure implements IPopupable{
+public class GUIAddProcedure implements IPopupable {
 
     @FXML
     public TextField summaryInput;
@@ -70,7 +68,7 @@ public class GUIAddProcedure implements IPopupable{
         setupDonations();
     }
 
-    public void goBackToProcedures() {
-
+    public void closeWindow() {
+        ((Stage) addProcedureAnchorPane.getScene().getWindow()).close();
     }
 }
