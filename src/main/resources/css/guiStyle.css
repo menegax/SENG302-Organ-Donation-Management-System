@@ -37,13 +37,27 @@
     /*for custom title styles in the home scene*/
 }
 
+.listViewTitles {
+    -fx-font-style: italic;
+    -fx-font-size: 16px;
+}
+
 .customButton {
 
 }
 
+/* For invalid text-fields within forms */
+.invalid {
+    -fx-background-color: #e6b3b3;
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+    -fx-border-radius: 3px;
+}
+
+
 .redo, .undo {
-    -fx-scale-x: 0.9;
-    -fx-scale-y: 0.9;
+    -fx-scale-x: 0.7;
+    -fx-scale-y: 0.7;
     -fx-background-color: transparent;
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30,30;
@@ -58,12 +72,13 @@
 }
 
 .redo:hover, .undo:hover {
-    -fx-scale-x: 1.1;
-    -fx-scale-y: 1.1;
+    -fx-scale-x: 0.8;
+    -fx-scale-y: 0.8;
 }
 
 .redo:pressed, .undo:pressed {
-    -fx-scale-x: 0.85;
-    -fx-scale-y: 0.85;
+    -fx-scale-x: 0.65;
+    -fx-scale-y: 0.65;
 }
+
 

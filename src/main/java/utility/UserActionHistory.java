@@ -1,9 +1,7 @@
 package utility;
 
-
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.logging.*;
 
 public class UserActionHistory {
@@ -14,6 +12,7 @@ public class UserActionHistory {
     public static final Logger userActions = Logger.getLogger(UserActionHistory.class.getName());
 
     private static FormatterLog logFormat = new FormatterLog();
+
 
     /**
      * Sets up custom logger class.
@@ -27,11 +26,18 @@ public class UserActionHistory {
             public void publish(LogRecord logRecord) {
                 Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
                 UserActionRecord.logHistory.add(new UserActionRecord(String.valueOf(currentTimeStamp),
-                        logRecord.getLevel().toString(),logRecord.getParameters()[0].toString(),logRecord.getMessage()));
+                        logRecord.getLevel()
+                                .toString(),
+                        logRecord.getParameters()[0].toString(),
+                        logRecord.getMessage()));
             }
+
+
             @Override
             public void flush() {
             }
+
+
             @Override
             public void close() throws SecurityException {
             }
@@ -47,7 +53,8 @@ public class UserActionHistory {
         try {
             Handler file = new FileHandler("UserActionHistory%u.xml", true);
             userActions.addHandler(file);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             userActions.log(Level.SEVERE, "Unable to write log to file");
         }
 

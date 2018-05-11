@@ -1,7 +1,7 @@
 package model_test;
 
 import model.Disease;
-import model.Donor;
+import model.Patient;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,12 +13,12 @@ import java.time.LocalDate;
 public class DiseaseTest {
 
     private Disease disease;
-    private Donor diseaseCarrier;
+    private Patient diseaseCarrier;
 
     @Before
     public void setUp(){
         disease = new Disease("Aids", GlobalEnums.DiseaseState.CHRONIC);
-        diseaseCarrier = new Donor("ABC1239", "Joe",null,"Bloggs",LocalDate.of(2018,01,01));
+        diseaseCarrier = new Patient("ABC1239", "Joe",null,"Bloggs",LocalDate.of(2018,01,01));
     }
 
 
@@ -45,7 +45,7 @@ public class DiseaseTest {
      * @throws InvalidObjectException - Invalid date object supplied
      */
     @Test(expected = InvalidObjectException.class)
-    public void setDateDiagnosedBeforeDonorBirthTest() throws InvalidObjectException{
+    public void setDateDiagnosedBeforePatientBirthTest() throws InvalidObjectException{
         disease.setDateDiagnosed(LocalDate.of(2000,12,12), diseaseCarrier);
     }
 

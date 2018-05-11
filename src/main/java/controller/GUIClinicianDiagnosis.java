@@ -9,7 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import model.Disease;
-import model.Donor;
+import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 
@@ -21,7 +21,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIClinicianDiagnosis {
+public class GUIClinicianDiagnosis implements IPopupable {
 
     public AnchorPane clinicianDiagnosesPane;
     public TableView<Disease> pastDiagnosesView;
@@ -35,22 +35,9 @@ public class GUIClinicianDiagnosis {
     public Button saveButton;
     public Button deleteButton;
     public Button addDiagnosisButton;
-
-    /*
-     * Textfield for entering diagnosis for adding to the current diagnosis ArrayList and table
-     */
     @FXML
     private TextField newDiagnosis;
-
-    /**
-     * Adds a newly entered diagnosis as a String to the current disease class and updates the table
-     */
-    @FXML
-    public void registerDiagnosis() {
-        addDiagnosis(newDiagnosis.getText());
-    }
-
-    private Donor currentDonor;
+    private static Patient target;
     private ArrayList<Disease> deletedPast = new ArrayList<Disease>();
     private ArrayList<Disease> deletedCurrent = new ArrayList<Disease>();
     private ArrayList<Disease> currentDiseases;
@@ -58,16 +45,47 @@ public class GUIClinicianDiagnosis {
     private Disease chosen;
     private boolean changed = false; // Boolean for if there are any un-saved edits when leaving pane
 
+    public void setViewedPatient(Patient patient) {
+        target = patient;
+    }
+
+    public static void staticSetPatient(Patient patient) {
+        target = patient;
+        try {
+            Patient p = Database.getPatientByNhi(target.getNhiNumber());
+            target = p;
+        } catch(InvalidObjectException e) {
+            userActions.log(Level.SEVERE, "Error loading user",
+                    "attempted to manage the diagnoses for logged in user");
+        }
+    }
+
+
     @FXML
     public void initialize() {
-        currentDonor = ScreenControl.getLoggedInDonor();
-        currentDiseases = currentDonor.getCurrentDiseases();
-        pastDiseases = currentDonor.getPastDiseases();
+        if(ScreenControl.getLoggedInPatient() != null) {
+            target = ScreenControl.getLoggedInPatient();
+        }
+        if(target.getCurrentDiseases() == null) {
+            target.setCurrentDiseases(new ArrayList<>());
+        }
+        if(target.getPastDiseases() == null) {
+            target.setPastDiseases(new ArrayList<>());
+        }
+        currentDiseases = target.getCurrentDiseases();
+        pastDiseases = target.getPastDiseases();
         loadCurrentDiseases();
         loadPastDiseases();
         setUpRightClickTags();
         setUpDoubleClickEdit();
+    }
 
+    /**
+     * Adds a newly entered diagnosis as a String to the current disease class and updates the table
+     */
+    @FXML
+    public void registerDiagnosis() {
+        addDiagnosis(newDiagnosis.getText());
     }
 
     /**
@@ -129,7 +147,7 @@ public class GUIClinicianDiagnosis {
     }
 
     /**
-     * Registers a new diagnosis entry for a donor when 'Add diagnosis' is activated
+     * Registers a new diagnosis entry for a patient when 'Add diagnosis' is activated
      *
      * @param diagnosis The entered diagnosis to textField for registration
      */
@@ -166,7 +184,7 @@ public class GUIClinicianDiagnosis {
             if (unique) {
                 changed = true;
                 currentDiseases.add( new Disease( diagnosis, null ) );
-                userActions.log( Level.FINE, "Successfully registered a disease", "Registered a new disease for a donor" );
+                userActions.log( Level.FINE, "Successfully registered a disease", "Registered a new disease for a patient" );
                 loadCurrentDiseases();
                 newDiagnosis.clear();
             }
@@ -256,64 +274,74 @@ public class GUIClinicianDiagnosis {
             back = true;
         }
         if (back) {
-            ScreenControl.removeScreen("donorProfile");
-            try {
-                ScreenControl.addScreen("donorProfile", FXMLLoader.load(getClass().getResource("/scene/donorProfile.fxml")));
-                ScreenControl.activate("donorProfile");
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the clinician diagnoses page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-                e.printStackTrace();
+            if(ScreenControl.getLoggedInPatient() != null) {
+                ScreenControl.removeScreen("patientProfile");
+                try {
+                    ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                    ScreenControl.activate("patientProfile");
+                } catch (IOException e) {
+                    userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the clinician diagnoses page to the profile page");
+                    new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+                    e.printStackTrace();
+                }
+            } else {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+                try {
+                    ScreenControl.loadPopUpPane(clinicianDiagnosesPane.getScene(), fxmlLoader, target);
+                } catch (IOException e) {
+                    userActions.log(Level.SEVERE, "Error returning to profile screen in popup", "attempted to navigate from the diagnoses page to the profile page in popup");
+                    new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+                }
             }
         }
     }
 
     @FXML
     public void saveDiagnoses() {
-        currentDonor.setCurrentDiseases(currentDiseases);
-        currentDonor.setPastDiseases(pastDiseases);
+        target.setCurrentDiseases(currentDiseases);
+        target.setPastDiseases(pastDiseases);
         Database.saveToDisk();
-        userActions.log( Level.FINE, "Successfully saved donor diseases", "Successfully saved donor " + currentDonor.getNhiNumber() + "diseases");
+        userActions.log( Level.FINE, "Successfully saved patient diseases", "Successfully saved patient " + target.getNhiNumber() + "diseases");
         new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis saved successfully", ButtonType.OK).show();
         changed = false;
         goToProfile();
     }
 
     /**
-     * Updates the date of a current diagnosis for a donor with a provided date
+     * Updates the date of a current diagnosis for a patient with a provided date
      * @param disease the disease in the currentDiseases ArrayList of the diagnosis being updated
      * @param date The given date for the update
      * @throws InvalidObjectException Indicates that one or more deserialized objects failed validation tests
      */
     private void updateCurrentDate(Disease disease, LocalDate date) throws InvalidObjectException {
-        if (date.isBefore(currentDonor.getBirth())) {
-            new Alert(Alert.AlertType.WARNING, "Can not set date to before donor's DOB: " + currentDonor.getBirth(), ButtonType.OK).show();
-            userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to before donor's DOB");
+        if (date.isBefore(target.getBirth())) {
+            new Alert(Alert.AlertType.WARNING, "Can not set date to before patient's DOB: " + target.getBirth(), ButtonType.OK).show();
+            userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to before patient's DOB");
         } else if (date.isAfter( LocalDate.now() )) {
             new Alert(Alert.AlertType.WARNING, "Can not set date to after the current date", ButtonType.OK).show();
             userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to after current date");
         } else {
-            disease.setDateDiagnosed( date, currentDonor );
+            disease.setDateDiagnosed( date, target );
             userActions.log(Level.FINE, "Updated a current disease date", "Updated a current disease date to " + date);
             changed = true;
         }
     }
 
     /**
-     * Updates the date of a past diagnosis for a donor with a provided date
+     * Updates the date of a past diagnosis for a patient with a provided date
      * @param disease the disease in the pastDiseases ArrayList of the diagnosis being updated
      * @param date The given date for the update
      * @throws InvalidObjectException Indicates that one or more deserialized objects failed validation tests
      */
     private void updatePastDate(Disease disease, LocalDate date) throws InvalidObjectException {
-        if (date.isBefore( currentDonor.getBirth() )) {
-            new Alert( Alert.AlertType.WARNING, "Can not set date to before donor's DOB: " + currentDonor.getBirth(), ButtonType.OK ).show();
-            userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to before donor's DOB");
+        if (date.isBefore( target.getBirth() )) {
+            new Alert( Alert.AlertType.WARNING, "Can not set date to before patient's DOB: " + target.getBirth(), ButtonType.OK ).show();
+            userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to before patient's DOB");
         } else if (date.isAfter( LocalDate.now() )) {
             new Alert( Alert.AlertType.WARNING, "Can not set date to after the current date", ButtonType.OK ).show();
             userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to after current date");
         } else {
-            disease.setDateDiagnosed( date, currentDonor );
+            disease.setDateDiagnosed( date, target );
             userActions.log(Level.FINE, "Updated a past disease date", "Updated a past disease date to " + date);
             changed = true;
         }

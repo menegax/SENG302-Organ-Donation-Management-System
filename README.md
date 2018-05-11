@@ -8,20 +8,22 @@ last update 03/08/2018
  - `doc/uml/` UML diagrams
  - `doc/manual_tests/` Contains written instructions to perform manual tests
  
- # Requirements
+# Requirements
  
  * JDK 1.8
  
- ### Setup
+## Starting the Application
  
+### CLI
  1. Deploy the .jar file(s) using Maven
- 2. Run the terminal command `java -jar <pathtojar>` to begin the application
+ 2. Open a terminal application and navigate to the directory with the .jar file
+ 3. Run the command `java -jar <jarfilename> cli` to begin the application.
  
  If you are running the CLI app:
  * Type "quit" at any time into the command line to quit the application
  * Use `-h` for help for any command or sub-command
- 
- ### Available CLI Commands
+
+#### Available CLI Commands
  
  * Donor
     * Add
@@ -32,10 +34,19 @@ last update 03/08/2018
  * Import
  * Save
  
- ### Dependencies
+### GUI
+ 1. Deploy the .jar file(s) using Maven
+ 2. Run the terminal command `java -jar <pathtojar>` to begin the application
+ 
+### Dependencies
  
  * JUnit
  * JLine
  * Picocli
  * Gson
  * StringUtils
+ * Lucene
+ * HTTPClient
+ * FluentAPI
+ * TestFX
+ 

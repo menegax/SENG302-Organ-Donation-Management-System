@@ -15,7 +15,7 @@
                 <Font size="27.0" />
             </font>
         </Label>
-      <Button fx:id="saveButton" layoutX="345.0" layoutY="208.0" mnemonicParsing="false" text="Save" />
+      <Button fx:id="doneButton" layoutX="345.0" layoutY="208.0" mnemonicParsing="false" text="Done" />
       <Button fx:id="cancelButton" layoutX="14.0" layoutY="208.0" mnemonicParsing="false" text="Cancel" />
       <Label layoutX="70.0" layoutY="77.0" text="Disease Name" />
       <Label layoutX="70.0" layoutY="119.0" text="Date Diagnosed" />

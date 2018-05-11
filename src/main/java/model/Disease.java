@@ -52,9 +52,10 @@ public class Disease {
     /**
      *  Sets the diagnosed date of the disease
      * @param date - date to set as the diagnosed date
+     * @param patient
      */
-    public void setDateDiagnosed(LocalDate date, Donor donor) throws InvalidObjectException {
-        if ((date.isAfter(LocalDate.now()) || date.isBefore(donor.getBirth()))){
+    public void setDateDiagnosed(LocalDate date, Patient patient) throws InvalidObjectException {
+        if ((date.isAfter(LocalDate.now()) || date.isBefore(patient.getBirth()))){
             throw new InvalidObjectException("Invalid date provided");
         }
         dateDiagnosed = date;
@@ -62,17 +63,17 @@ public class Disease {
 
 //    /**
 //     *  Gets the disease carrier
-//     * @return - Donor object of the carrier
+//     * @return - Patient object of the carrier
 //     */
-//    public Donor getDiseaseCarrier() {
+//    public Patient getDiseaseCarrier() {
 //        return diseaseCarrier;
 //    }
 //
 //    /**
 //     *  Sets the carrier of the disease
-//     * @param diseaseCarrier - Donor object to set as the disease carrier
+//     * @param diseaseCarrier - Patient object to set as the disease carrier
 //     */
-//    public void setDiseaseCarrier(Donor diseaseCarrier) {
+//    public void setDiseaseCarrier(Patient diseaseCarrier) {
 //        this.diseaseCarrier = diseaseCarrier;
 //    }
 
