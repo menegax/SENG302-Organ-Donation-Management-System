@@ -19,6 +19,7 @@ import service.Database;
 
 import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -178,28 +179,25 @@ public class SearchPatients {
         }
 
         TopDocs docs;
-        Set<ScoreDoc> allDocs = new HashSet<ScoreDoc>();
+        ArrayList<ScoreDoc> allDocs = new ArrayList<ScoreDoc>();
 		try {
 			String nhi;
 			Patient patient;
 			for (FuzzyQuery query : queries) {
 				docs = searchQuery(query);
-				System.out.println("Query: " + query); //todo remove
 				for (ScoreDoc doc : docs.scoreDocs) {
 					allDocs.add(doc);
-					System.out.println("score for patient " + doc.toString() + ": " + doc.score); //todo remove
 	        	}
 			}
-			SortedSet<ScoreDoc> sortedDocs = new TreeSet<ScoreDoc>(new Comparator<ScoreDoc>() {
+			
+			Collections.sort(allDocs, new Comparator<ScoreDoc>() {
 	            @Override
 	            public int compare(ScoreDoc o1, ScoreDoc o2) {
 	                return new Float(o2.score).compareTo(o1.score);
 	            }
 	        });
-	        sortedDocs.addAll(allDocs);
-
-			for (ScoreDoc doc : sortedDocs) {
-			    System.out.println("doc: " + doc); //todo remove
+			
+			for (ScoreDoc doc : allDocs) {
 				Document thisDoc = indexSearcher.doc(doc.doc);
 				nhi = thisDoc.get("nhi");
 				patient = Database.getPatientByNhi(nhi);
@@ -212,5 +210,4 @@ public class SearchPatients {
 		}
         return results;
     }
-
 }
