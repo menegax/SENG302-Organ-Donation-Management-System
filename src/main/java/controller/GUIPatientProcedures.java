@@ -16,7 +16,6 @@ import utility.GlobalEnums.Organ;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -98,6 +97,19 @@ public class GUIPatientProcedures implements IPopupable{
         pendingDescriptionCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getDescription()));
         pendingDateCol.setCellValueFactory(d -> new SimpleObjectProperty<>(d.getValue().getDate()));
         pendingAffectedCol.setCellValueFactory(d -> new SimpleObjectProperty<>(d.getValue().getAffectedDonations()));
+
+        //Clear the selection in the pending procedures table when an item in the previous procedures table is selected
+        previousProceduresView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
+            if (previousProceduresView.getSelectionModel().getSelectedItems().size() > 0) {
+                pendingProceduresView.getSelectionModel().clearSelection();
+            }
+        }));
+        //Clear the selection in the previous procedures table when an item in the pending procedures table is selected
+        pendingProceduresView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
+            if (pendingProceduresView.getSelectionModel().getSelectedItems().size() > 0) {
+                previousProceduresView.getSelectionModel().clearSelection();
+            }
+        }));
         //Setting previous procedures to initially sort by date descending (most recent first)
         previousDateCol.setSortType(TableColumn.SortType.DESCENDING);
         //Setting the tables to sort by the date column when loaded
@@ -138,6 +150,9 @@ public class GUIPatientProcedures implements IPopupable{
         }
     }
 
+    /**
+     * Deletes the procedure that is currently selected. A confirmation dialog displays for each selected procedure
+     */
     @FXML
     public void deleteProcedure() {
 
