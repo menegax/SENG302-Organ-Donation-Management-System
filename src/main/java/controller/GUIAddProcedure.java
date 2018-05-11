@@ -35,6 +35,9 @@ public class GUIAddProcedure implements IPopupable {
 
     private Patient patient;
 
+    /**
+     * Adds the procedure to the patient's list of procedures and closes the pop-up
+     */
     @FXML
     public void addProcedure() {
         Set <Organ> affectedDonations = new HashSet <>();
@@ -74,6 +77,9 @@ public class GUIAddProcedure implements IPopupable {
                 Pattern.matches("[A-Za-z0-9- ]+", description);
     }
 
+    /**
+     * Sets the items in the affected donations dropdown to all the donations registered to the patient
+     */
     private void setupDonations() {
         ObservableList<CustomMenuItem> donations = FXCollections.observableArrayList();
         for (Organ organ : patient.getDonations()) {
@@ -89,6 +95,10 @@ public class GUIAddProcedure implements IPopupable {
         affectedInput.getItems().setAll(donations);
     }
 
+    /**
+     * Sets the viewed patient to the patient provided and sets up the screen accordingly
+     * @param patient the patient to add a procedure to
+     */
     public void setViewedPatient(Patient patient) {
         this.patient = patient;
         setupDonations();
