@@ -98,6 +98,11 @@ public class GUIPatientProcedures implements IPopupable{
         pendingDescriptionCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getDescription()));
         pendingDateCol.setCellValueFactory(d -> new SimpleObjectProperty<>(d.getValue().getDate()));
         pendingAffectedCol.setCellValueFactory(d -> new SimpleObjectProperty<>(d.getValue().getAffectedDonations()));
+        //Setting previous procedures to initially sort by date descending (most recent first)
+        previousDateCol.setSortType(TableColumn.SortType.DESCENDING);
+        //Setting the tables to sort by the date column when loaded
+        previousProceduresView.getSortOrder().add(previousDateCol);
+        pendingProceduresView.getSortOrder().add(pendingDateCol);
     }
 
     private void enableEditing() {
