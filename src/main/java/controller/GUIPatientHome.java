@@ -1,10 +1,13 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import service.Database;
+
+import java.io.IOException;
 
 public class GUIPatientHome {
 
@@ -28,6 +31,12 @@ public class GUIPatientHome {
 
     @FXML
     public void goToHistory() {
+        try {
+            ScreenControl.addScreen("patientHistory", FXMLLoader.load(getClass().getResource("/scene/patientHistory.fxml")));
+        }
+        catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, "Unable load patient history").show();
+        }
         ScreenControl.activate("patientHistory");
     }
 

@@ -11,6 +11,7 @@ import utility.GlobalEnums.Region;
 import utility.SearchPatients;
 import utility.UserActionRecord;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
@@ -83,8 +84,7 @@ public class Patient extends User {
 
     private String contactEmailAddress;
 
-    private ArrayList<String> patientLog;
-
+//    private ArrayList<String> patientLog; //todo remove
 
     private ArrayList<UserActionRecord> userActionsList;
 
@@ -99,6 +99,7 @@ public class Patient extends User {
         this.birth = date;
         this.nhiNumber = nhiNumber.toUpperCase();
         this.donations = new ArrayList<>();
+        this.userActionsList = new ArrayList<>();
     }
 
 
@@ -711,11 +712,13 @@ public class Patient extends User {
     //todo implement
     /**
      * Gets the list of user action history logs
+     * DO NOT USE UNLESS LOGGER //todo think about
      * @return the list of user records
      */
-    public List<UserActionRecord> getUserActionsList() {
-        return Collections.unmodifiableList(userActionsList);
+    public ArrayList<UserActionRecord> getUserActionsList() {
+        return userActionsList; //this is modifiable on purpose!
     }
+
 
 //    /**
 //     * Sets the medicationLog as a HashMap converted from a UserActionRecord ObservableList
@@ -733,6 +736,10 @@ public class Patient extends User {
 //        this.patientLog = newLog;
 //    }
 
+
+    /**
+     * Updates the modified timestamp of the patient
+     */
     private void patientModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
