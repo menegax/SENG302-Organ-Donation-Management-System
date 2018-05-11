@@ -1,6 +1,5 @@
 package controller;
 
-import com.sun.javafx.robot.FXRobot;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,7 +15,6 @@ import model.Patient;
 import model.Procedure;
 import utility.GlobalEnums.Organ;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Set;
@@ -27,7 +25,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller class for the Patient procedures screen
  */
-public class GUIPatientProcedures implements IPopupable{
+public class GUIPatientProcedures implements IPopupable {
 
     @FXML
     public TableView<Procedure> previousProceduresView;
@@ -118,6 +116,24 @@ public class GUIPatientProcedures implements IPopupable{
                 previousProceduresView.getSelectionModel().clearSelection();
             }
         }));
+
+        //Registers event for when an item is selected in either table
+        previousProceduresView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> onItemSelect());
+        pendingProceduresView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> onItemSelect());
+    }
+
+    /**
+     * Called when an item is selected in either the previous or pending procedures table.
+     * Checks if there are no selected items in both tables, and if so disables the delete procedure button,
+     * else the delete procedure button is enabled
+     */
+    private void onItemSelect() {
+        if (previousProceduresView.getSelectionModel().getSelectedItems().size() == 0 &&
+                pendingProceduresView.getSelectionModel().getSelectedItems().size() == 0) {
+            deleteProcedureButton.setDisable(true);
+        } else {
+            deleteProcedureButton.setDisable(false);
+        }
     }
 
     private void enableEditing() {

@@ -21,7 +21,7 @@
       <Label alignment="CENTER" layoutX="110.0" layoutY="120.0" styleClass="back" text="Previous Procedures" />
       <Label alignment="CENTER" layoutX="386.0" layoutY="120.0" styleClass="back" text="Pending Procedures" />
       <Button fx:id="addProcedureButton" layoutX="262.0" layoutY="54.0" mnemonicParsing="false" onAction="#addProcedure" text="Add Procedure" />
-      <Button fx:id="deleteProcedureButton" layoutX="233.0" layoutY="88.0" mnemonicParsing="false" onAction="#deleteProcedure" text="Delete Selected Procedure" />
+      <Button fx:id="deleteProcedureButton" disable="true" layoutX="233.0" layoutY="88.0" mnemonicParsing="false" onAction="#deleteProcedure" text="Delete Selected Procedure" />
       <TableView fx:id="pendingProceduresView" layoutX="321.0" layoutY="141.0" prefHeight="245.0" prefWidth="254.0">
          <columns>
             <TableColumn fx:id="pendingProcedureCol" prefWidth="67.6666259765625" text="Procedure" />
