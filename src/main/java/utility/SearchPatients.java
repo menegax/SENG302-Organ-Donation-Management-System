@@ -49,7 +49,6 @@ public class SearchPatients {
 
     /**
      * Initializes the index writer in RAM.
-     *
      * @exception IOException Error creating a new index writer.
      */
     private static void initializeWriter() throws IOException {
@@ -59,7 +58,6 @@ public class SearchPatients {
 
     /**
      * Creates a full index of all patients currently loaded into the app.
-     *
      */
     public static void createFullIndex() {
     	if (indexWriter != null) {
@@ -73,8 +71,8 @@ public class SearchPatients {
 
 
     /**
-     * Add indices of patients via the index writer
-     * @param patient patient to be indexed
+     * Add indices of patients via the index writer.
+     * @param patient patient to be indexed.
      */
     public static void addIndex(Patient patient) {
         if (indexWriter == null) {
@@ -93,8 +91,8 @@ public class SearchPatients {
     }
 
     /**
-     * Removes indices of patients via the index writer
-     * @param patient patient to remove index for
+     * Removes indices of patients via the index writer.
+     * @param patient patient to remove index for.
      */
     public static void removeIndex(Patient patient) {
     	Term toDel = new Term("nhi", patient.getNhiNumber().toUpperCase());
@@ -107,7 +105,7 @@ public class SearchPatients {
     }
     
     /**
-     * Removes all indices of all patients via the index writer
+     * Removes all indices of all patients via the index writer.
      */
     public static void clearIndex() {
     	try {
@@ -119,7 +117,7 @@ public class SearchPatients {
     }
     
     /**
-     * Creates the index document for a patient
+     * Creates the index document for a patient.
      */
     private static Document createDocument(Patient patient) {
         Document patientDoc = new Document();
@@ -137,8 +135,8 @@ public class SearchPatients {
 
     /**
      * Closes the index writer and ram directory freeing up the 
-     * memory back to the operating system
-     * @throws IOException when the index or RAM memory cannot be accessed
+     * memory back to the operating system.
+     * @throws IOException when the index or RAM memory cannot be accessed.
      */
     public static void closeIndex() throws IOException {
         ramDirectory.close();
@@ -146,10 +144,10 @@ public class SearchPatients {
     }
 
     /**
-     * Searches through the index for any results of the given query
-     * @param query FuzzyQuery object of the query to search for
-     * @return The top 20/value of NUM_RESULTS documents in the index 
-     * @throws IOException If there is an error reading from the index
+     * Searches through the index for any results of the given query.
+     * @param query FuzzyQuery object of the query to search for.
+     * @return The top 20/value of NUM_RESULTS documents in the index.
+     * @throws IOException If there is an error reading from the index.
      */
     private static TopDocs searchQuery(FuzzyQuery query) throws IOException {
         IndexReader indexReader = DirectoryReader.open(ramDirectory);
@@ -158,9 +156,9 @@ public class SearchPatients {
     }
 
     /**
-     * Searches through the index for patients by full name
-     * @param input The name you want to search for
-     * @return ArrayList of the patients it found as a result of the search
+     * Searches through the index for patients by full name.
+     * @param input The name you want to search for.
+     * @return ArrayList of the patients it found as a result of the search.
      */
     public static ArrayList<Patient> searchByName(String input) {
 
