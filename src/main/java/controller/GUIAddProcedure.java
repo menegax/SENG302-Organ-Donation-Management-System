@@ -58,7 +58,7 @@ public class GUIAddProcedure implements IPopupable {
             System.out.println( affectedDonations.size() );
             Alert alert = new Alert(Alert.AlertType.ERROR, "Field input(s) are invalid. " +
                     "Date must not be before patients DOB, there must be an affected organ, summary and description " +
-                    "must be at least one char/int");
+                    "must each contain at least one of only alphabetic or numerical characters, hyphens or spaces");
             alert.show();
         }
     }
@@ -73,8 +73,9 @@ public class GUIAddProcedure implements IPopupable {
      */
     private Boolean validateInputs(String summary, String description, LocalDate date, Set <Organ> organs) {
         return !date.isBefore( patient.getBirth() ) && summary.length() >= 1 && description.length() >= 1 &&
-                organs.size() != 0 && Pattern.matches("[A-Za-z0-9- ]+", summary) &&
-                Pattern.matches("[A-Za-z0-9- ]+", description);
+                Pattern.matches("[A-Za-z0-9- ]+", summary) && !summary.substring(0,1).equals(" ") &&
+                Pattern.matches("[A-Za-z0-9- ]+", description) && !description.substring( 0 ,1).equals(" ") &&
+                organs.size() != 0;
     }
 
     /**
