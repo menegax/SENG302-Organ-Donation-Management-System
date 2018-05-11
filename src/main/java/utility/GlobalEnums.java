@@ -3,7 +3,7 @@ package utility;
 public class GlobalEnums {
 
     public enum PreferredGender {
-        MAN("man"), WOMAN("woman"), NON_BINARY("non-binary");
+        MAN("Man"), WOMAN("Woman"), NONBINARY("Non-binary");
 
         private String value;
 
@@ -29,7 +29,7 @@ public class GlobalEnums {
     }
 
     public enum BirthGender {
-        MALE("male"), FEMALE("female");
+        MALE("Male"), FEMALE("Female");
 
         private String value;
 

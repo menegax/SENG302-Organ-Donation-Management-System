@@ -142,7 +142,7 @@ public class GUIPatientProfile implements IPopupable {
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
         genderIdentityLbl.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender()
-                .toString());
+                .getValue());
         dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         dateOfDeathLabel.setText(patient.getDeath() == null ? "Not set" : patient.getDeath()

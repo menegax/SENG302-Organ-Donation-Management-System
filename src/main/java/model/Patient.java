@@ -263,7 +263,13 @@ public class Patient {
      * @return string named
      */
     public String getNameConcatenated() {
-        StringBuilder concatName = new StringBuilder(preferredName + " ");
+        StringBuilder concatName;
+
+        if (preferredName != null) {
+            concatName = new StringBuilder( preferredName + " " );
+        } else {
+            concatName = new StringBuilder( firstName + " " );
+        }
         if (middleNames != null && middleNames.size() > 0) {
             for (String middleName : middleNames) {
                 concatName.append(middleName)
@@ -329,7 +335,7 @@ public class Patient {
 
     public void setPreferredName(String preferredName) {
         if (!preferredName.equals(this.preferredName) && preferredName != null) {
-            this.preferredName = preferredName;
+            this.preferredName = preferredName.substring(0, 1).toUpperCase() + preferredName.substring(1);
             patientModified();
         }
     }
@@ -391,7 +397,7 @@ public class Patient {
             this.birthGender = gender;
 
             if (getPreferredGender() == null) {
-                if (gender.toString().equals("male")) {
+                if (gender.getValue().equals("Male")) {
                     setPreferredGender( PreferredGender.MAN );
                 } else {
                     setPreferredGender( PreferredGender.WOMAN );
