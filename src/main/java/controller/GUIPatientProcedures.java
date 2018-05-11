@@ -79,6 +79,9 @@ public class GUIPatientProcedures implements IPopupable{
         }
     }
 
+    /**
+     * Sets up the tables to display the patient's procedures
+     */
     private void setupTables() {
         ObservableList<Procedure> previousProcedures = FXCollections.observableArrayList();
         ObservableList<Procedure> pendingProcedures = FXCollections.observableArrayList();
@@ -120,6 +123,9 @@ public class GUIPatientProcedures implements IPopupable{
         }));
     }
 
+    /**
+     * Lets the current user edit the procedures of the viewed patient
+     */
     private void enableEditing() {
         addProcedureButton.setVisible(true);
         deleteProcedureButton.setVisible(true);
@@ -185,6 +191,11 @@ public class GUIPatientProcedures implements IPopupable{
         pendingProceduresView.refresh();
     }
 
+    /**
+     * Sets the patient viewed by this scene and resets the display
+     * Only called from a clinicians user
+     * @param patient the patient which the screen represents
+     */
     public void setViewedPatient(Patient patient) {
         this.patient = patient;
         setupTables();
