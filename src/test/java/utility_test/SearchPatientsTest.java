@@ -170,7 +170,7 @@ public class SearchPatientsTest {
     	assertTrue(results.contains(d1));
 
     	// Should contain Johnothan Doe, remove 'n' and replace 'J' with 'D' for Doe
-//    	assertTrue(results.contains(d2)); //todo re-implement
+    	assertTrue(results.contains(d2));
 
     	// Should contain John Romera, remove 'e' and insert 'h' before 'n' for John
     	assertTrue(results.contains(d3));

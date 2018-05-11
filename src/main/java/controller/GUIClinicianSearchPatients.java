@@ -137,7 +137,6 @@ public class GUIClinicianSearchPatients implements Initializable {
 
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            System.out.println("key change"); //todo remove
             masterData.clear();
             masterData.addAll(SearchPatients.searchByName(newValue));
 
