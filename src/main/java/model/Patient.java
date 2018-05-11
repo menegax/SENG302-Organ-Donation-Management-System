@@ -734,6 +734,8 @@ public class Patient {
         procedures.add(procedure);
     }
 
+    public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
+
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
                 + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Gender: " + gender + "\n"

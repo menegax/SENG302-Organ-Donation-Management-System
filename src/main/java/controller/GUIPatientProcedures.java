@@ -1,10 +1,12 @@
 package controller;
 
+import com.sun.javafx.robot.FXRobot;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,6 +16,7 @@ import model.Patient;
 import model.Procedure;
 import utility.GlobalEnums.Organ;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Set;
@@ -74,7 +77,6 @@ public class GUIPatientProcedures implements IPopupable{
             addProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
         }
-
     }
 
     private void setupTables() {
@@ -98,6 +100,12 @@ public class GUIPatientProcedures implements IPopupable{
         pendingDateCol.setCellValueFactory(d -> new SimpleObjectProperty<>(d.getValue().getDate()));
         pendingAffectedCol.setCellValueFactory(d -> new SimpleObjectProperty<>(d.getValue().getAffectedDonations()));
 
+        //Setting previous procedures to initially sort by date descending (most recent first)
+        previousDateCol.setSortType(TableColumn.SortType.DESCENDING);
+        //Setting the tables to sort by the date column when loaded
+        previousProceduresView.getSortOrder().add(previousDateCol);
+        pendingProceduresView.getSortOrder().add(pendingDateCol);
+
         //Clear the selection in the pending procedures table when an item in the previous procedures table is selected
         previousProceduresView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
             if (previousProceduresView.getSelectionModel().getSelectedItems().size() > 0) {
@@ -110,11 +118,6 @@ public class GUIPatientProcedures implements IPopupable{
                 previousProceduresView.getSelectionModel().clearSelection();
             }
         }));
-        //Setting previous procedures to initially sort by date descending (most recent first)
-        previousDateCol.setSortType(TableColumn.SortType.DESCENDING);
-        //Setting the tables to sort by the date column when loaded
-        previousProceduresView.getSortOrder().add(previousDateCol);
-        pendingProceduresView.getSortOrder().add(pendingDateCol);
     }
 
     private void enableEditing() {
@@ -155,7 +158,23 @@ public class GUIPatientProcedures implements IPopupable{
      */
     @FXML
     public void deleteProcedure() {
-
+        Procedure selectedProcedure = null;
+        if (previousProceduresView.getSelectionModel().getSelectedItem() != null) {
+            selectedProcedure = previousProceduresView.getSelectionModel().getSelectedItem();
+        }
+        if (pendingProceduresView.getSelectionModel().getSelectedItem() != null) {
+            selectedProcedure = pendingProceduresView.getSelectionModel().getSelectedItem();
+        }
+        if (selectedProcedure != null) {
+            final Procedure finalProcedure = selectedProcedure;
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to remove: " + selectedProcedure.getSummary() + "?");
+            Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+            dialogOK.addEventFilter(ActionEvent.ACTION, event -> {
+                patient.removeProcedure(finalProcedure);
+                setupTables();
+            });
+            alert.show();
+        }
     }
 
     /**
