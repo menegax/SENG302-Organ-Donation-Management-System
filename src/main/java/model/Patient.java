@@ -587,8 +587,6 @@ public class Patient {
         if (requiredOrgans == null) {
             requiredOrgans = new ArrayList<>();
         }
-        System.out.println(organ);
-        System.out.println(requiredOrgans);
         requiredOrgans.add(organ);
         patientModified();
         return "Successfully added " + organ + " to required organs";

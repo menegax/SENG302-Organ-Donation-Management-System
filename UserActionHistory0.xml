@@ -607,3 +607,430 @@
   <param>attempted to log in</param>
 </record>
 </log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-11T14:12:07</date>
+  <millis>1526004727386</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:12:07</date>
+  <millis>1526004727558</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:12:07</date>
+  <millis>1526004727558</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-11T14:12:07</date>
+  <millis>1526004727569</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-11T14:12:07</date>
+  <millis>1526004727861</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-11T14:12:16</date>
+  <millis>1526004736801</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-11T14:15:08</date>
+  <millis>1526004908893</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:09</date>
+  <millis>1526004909013</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:09</date>
+  <millis>1526004909013</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:09</date>
+  <millis>1526004909021</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:09</date>
+  <millis>1526004909272</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:21</date>
+  <millis>1526004921969</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Added liver to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:21</date>
+  <millis>1526004921970</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed kidney from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:21</date>
+  <millis>1526004921970</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed pancreas from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:21</date>
+  <millis>1526004921970</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed heart from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:21</date>
+  <millis>1526004921970</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Added lung to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:21</date>
+  <millis>1526004921971</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed intestine from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:21</date>
+  <millis>1526004921971</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Added cornea to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:21</date>
+  <millis>1526004921971</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed middle ear from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:21</date>
+  <millis>1526004921971</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed skin from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:21</date>
+  <millis>1526004921971</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed bone from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:21</date>
+  <millis>1526004921971</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed bone marrow from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:21</date>
+  <millis>1526004921972</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed connective tissue from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:46</date>
+  <millis>1526004946259</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Added liver to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:46</date>
+  <millis>1526004946259</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Added kidney to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:46</date>
+  <millis>1526004946260</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Added pancreas to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:46</date>
+  <millis>1526004946260</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed heart from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:46</date>
+  <millis>1526004946260</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed lung from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:46</date>
+  <millis>1526004946260</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed intestine from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:46</date>
+  <millis>1526004946260</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Added cornea to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:46</date>
+  <millis>1526004946261</millis>
+  <sequence>29</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Added middle ear to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:46</date>
+  <millis>1526004946261</millis>
+  <sequence>30</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed skin from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:46</date>
+  <millis>1526004946262</millis>
+  <sequence>31</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed bone from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:46</date>
+  <millis>1526004946262</millis>
+  <sequence>32</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed bone marrow from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T14:15:46</date>
+  <millis>1526004946262</millis>
+  <sequence>33</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed connective tissue from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+</log>
