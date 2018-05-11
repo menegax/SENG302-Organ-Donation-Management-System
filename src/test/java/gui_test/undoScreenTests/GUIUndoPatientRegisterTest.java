@@ -50,6 +50,9 @@ public class GUIUndoPatientRegisterTest extends ApplicationTest{
     @Before
     public void getFields() {
         interact(() -> {
+            while (lookup("OK").queryAs(Button.class) != null) {
+                lookup("OK").queryAs(Button.class).fire();
+            }
             firstnameRegisterDefault = lookup("#firstnameRegister").queryAs(TextField.class).getText();
             lastnameRegisterDefault = lookup("#lastnameRegister").queryAs(TextField.class).getText();
             middlenameRegisterDefault = lookup("#middlenameRegister").queryAs(TextField.class).getText();
