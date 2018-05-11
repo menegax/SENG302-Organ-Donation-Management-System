@@ -59,14 +59,12 @@ public class GUIPatientProfile implements IPopupable {
 
     @FXML
     public Button medicationBtn;
-    @FXML
-    private AnchorPane clinicianViewOfPatientProfile;
 
     @FXML
     public Button donationsButton;
 
     @FXML
-    public Button receivingButton;
+    public Button requirementsButton;
 
     @FXML
     private Label nhiLbl;
@@ -191,8 +189,8 @@ public class GUIPatientProfile implements IPopupable {
             }
         }
         if (ScreenControl.getLoggedInPatient() != null) {
-            receivingButton.setDisable(true);
-            receivingButton.setVisible(false);
+            requirementsButton.setDisable(true);
+            requirementsButton.setVisible(false);
             if (ScreenControl.getLoggedInPatient().getRequiredOrgans().size() == 0) {
                 receivingList.setDisable(true);
                 receivingList.setVisible(false);
@@ -263,10 +261,10 @@ public class GUIPatientProfile implements IPopupable {
         donationList.itemsProperty().bind(donatingListProperty);
         receivingList.itemsProperty().bind(receivingListProperty);
         //Populate current medication listview
-        Collection<Medication> meds = patient.getCurrentMedications();
-        List<String> medsMapped = meds.stream().map(Medication::getMedicationName).collect(Collectors.toList());
-        medListProperty.setValue(FXCollections.observableArrayList(medsMapped));
-        medList.itemsProperty().bind(medListProperty);
+//        Collection<Medication> meds = patient.getCurrentMedications();
+//        List<String> medsMapped = meds.stream().map(Medication::getMedicationName).collect(Collectors.toList());
+//        medListProperty.setValue(FXCollections.observableArrayList(medsMapped));
+//        medList.itemsProperty().bind(medListProperty);
         // list view styling/highlighting
         highlightListCell(donationList, true);
         highlightListCell(receivingList, false);
@@ -327,7 +325,7 @@ public class GUIPatientProfile implements IPopupable {
         else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(clinicianViewOfPatientProfile.getScene(), fxmlLoader, viewedPatient);
+                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
             }
             catch (IOException e) {
                 userActions.log(Level.SEVERE,
@@ -356,7 +354,7 @@ public class GUIPatientProfile implements IPopupable {
         else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateDonations.fxml"));
             try {
-                ScreenControl.loadPopUpPane(clinicianViewOfPatientProfile.getScene(), fxmlLoader, viewedPatient);
+                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
             }
             catch (Exception e) {
                 userActions.log(Level.SEVERE,
@@ -373,7 +371,7 @@ public class GUIPatientProfile implements IPopupable {
     public void goToRequirements() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateRequirements.fxml"));
         try {
-            ScreenControl.loadPopUpPane(clinicianViewOfPatientProfile.getScene(), fxmlLoader, viewedPatient);
+            ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -402,10 +400,9 @@ public class GUIPatientProfile implements IPopupable {
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateContacts.fxml"));
             try {
-                ScreenControl.loadPopUpPane(clinicianViewOfPatientProfile.getScene(), fxmlLoader, viewedPatient);
+                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
             }
-            catch (IOException e) {
-                userActions.log(Level.SEVERE,
+            catch (IOException e) {                userActions.log(Level.SEVERE,
                         "Error loading contacts screen in popup",
                         "attempted to navigate from the profile page to the contacts page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading contacts page", ButtonType.OK).show();

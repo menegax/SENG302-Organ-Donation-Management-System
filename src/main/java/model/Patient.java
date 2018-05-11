@@ -90,6 +90,8 @@ public class Patient {
 
     private String contactEmailAddress;
 
+    private ArrayList<String> patientLog;
+
     /**
      * Constructor for the patient class. Initializes basic attributes
      * @param nhiNumber unique number to identify the patient by
@@ -98,9 +100,6 @@ public class Patient {
      * @param lastName last name of the patient
      * @param date date of birth of patient
      */
-    public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
-    private ArrayList<String> patientLog;
-
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;

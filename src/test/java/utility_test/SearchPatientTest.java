@@ -52,10 +52,10 @@ public class SearchPatientTest {
         d2 = new Patient("def1234", "Patik", null, "Laffey", LocalDate.now());
         d3 = new Patient("ghi1234", "George", null, "Romera", LocalDate.now());
         d4 = new Patient("jkl1234", "George", null, "Bobington", LocalDate.now());
-        Database.addPatients(d4);
-        Database.addPatients(d3);
-        Database.addPatients(d2);
-        Database.addPatients(d1);
+        Database.addPatient(d4);
+        Database.addPatient(d3);
+        Database.addPatient(d2);
+        Database.addPatient(d1);
 
         // Given an index
         SearchPatients.createFullIndex();

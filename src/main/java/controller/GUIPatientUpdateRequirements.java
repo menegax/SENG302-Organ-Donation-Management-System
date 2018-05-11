@@ -267,7 +267,7 @@ public class GUIPatientUpdateRequirements implements IPopupable {
      * Goes back to the profile view
      */
     public void goToProfile() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianViewOfPatientProfile.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
         try {
             ScreenControl.loadPopUpPane(patientRequirementsAnchorPane.getScene(), fxmlLoader, target);
         } catch (IOException e) {

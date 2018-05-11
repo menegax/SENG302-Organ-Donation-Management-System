@@ -41,16 +41,6 @@ public class Main extends Application {
         ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
         ScreenControl.addScreen("patientHome", FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml")));
 
-        try {
-            Database.importFromDiskClinicians("clinician.json");
-        } catch (IOException e) {
-            if (Database.getClinicians().size() == 0) {
-                //Initialise default clinciian
-                ArrayList<String> mid = new ArrayList<>();
-                mid.add("Middle");
-                Database.addClinician(new Clinician(Database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
-            }
-        }
         primaryStage.setResizable(false);
         primaryStage.show();
     }

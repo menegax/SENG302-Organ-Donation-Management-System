@@ -62,3 +62,548 @@
   <param>attempted to add a clinician</param>
 </record>
 </log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-11T13:17:25</date>
+  <millis>1526001445461</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:17:25</date>
+  <millis>1526001445591</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:17:25</date>
+  <millis>1526001445591</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-11T13:17:25</date>
+  <millis>1526001445606</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-11T13:17:25</date>
+  <millis>1526001445884</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-11T13:17:32</date>
+  <millis>1526001452274</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-11T13:19:22</date>
+  <millis>1526001562067</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:22</date>
+  <millis>1526001562202</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:22</date>
+  <millis>1526001562203</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:22</date>
+  <millis>1526001562243</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:22</date>
+  <millis>1526001562567</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:39</date>
+  <millis>1526001579347</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Added liver to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:39</date>
+  <millis>1526001579347</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Added kidney to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:39</date>
+  <millis>1526001579348</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Added pancreas to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:39</date>
+  <millis>1526001579348</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed heart from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:39</date>
+  <millis>1526001579349</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed lung from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:39</date>
+  <millis>1526001579349</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed intestine from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:39</date>
+  <millis>1526001579349</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Added cornea to patient donations</message>
+  <param>Attempted to add donation to a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:39</date>
+  <millis>1526001579349</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed middle ear from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:39</date>
+  <millis>1526001579349</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed skin from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:39</date>
+  <millis>1526001579349</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed bone from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:39</date>
+  <millis>1526001579350</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed bone marrow from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:19:39</date>
+  <millis>1526001579350</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateDonations</class>
+  <method>saveDonations</method>
+  <thread>12</thread>
+  <message>Removed connective tissue from patient donations</message>
+  <param>Attempted to remove donation from a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:20:02</date>
+  <millis>1526001602738</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>controller.GUIPatientUpdateProfile</class>
+  <method>saveProfile</method>
+  <thread>12</thread>
+  <message>Successfully updated patient profile</message>
+  <param>Attempted to update patient profile</param>
+</record>
+<record>
+  <date>2018-05-11T13:20:19</date>
+  <millis>1526001619887</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUIPatientUpdateProfile</class>
+  <method>saveProfile</method>
+  <thread>12</thread>
+  <message>Failed to update patient profile</message>
+  <param>Attempted to update patient profile</param>
+</record>
+<record>
+  <date>2018-05-11T13:20:46</date>
+  <millis>1526001646973</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIClinicianSearchPatients</class>
+  <method>lambda$setupDoubleClickToPatientEdit$1</method>
+  <thread>12</thread>
+  <message>Failed to open patient profile scene from search patients table</message>
+  <param>attempted to open patient edit window from search patients table</param>
+</record>
+<record>
+  <date>2018-05-11T13:20:49</date>
+  <millis>1526001649364</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIClinicianSearchPatients</class>
+  <method>lambda$setupDoubleClickToPatientEdit$1</method>
+  <thread>12</thread>
+  <message>Failed to open patient profile scene from search patients table</message>
+  <param>attempted to open patient edit window from search patients table</param>
+</record>
+<record>
+  <date>2018-05-11T13:20:58</date>
+  <millis>1526001658264</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>controller.GUIClinicianSearchPatients</class>
+  <method>lambda$setupDoubleClickToPatientEdit$1</method>
+  <thread>12</thread>
+  <message>Failed to open patient profile scene from search patients table</message>
+  <param>attempted to open patient edit window from search patients table</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-11T13:21:58</date>
+  <millis>1526001718553</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:21:58</date>
+  <millis>1526001718667</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:21:58</date>
+  <millis>1526001718667</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-11T13:21:58</date>
+  <millis>1526001718674</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-11T13:21:58</date>
+  <millis>1526001718915</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-11T13:46:40</date>
+  <millis>1526003200782</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:46:40</date>
+  <millis>1526003200935</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:46:40</date>
+  <millis>1526003200936</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-11T13:46:40</date>
+  <millis>1526003200945</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-11T13:46:41</date>
+  <millis>1526003201185</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-11T13:48:33</date>
+  <millis>1526003313120</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:48:33</date>
+  <millis>1526003313302</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-11T13:48:33</date>
+  <millis>1526003313304</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>12</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-11T13:48:33</date>
+  <millis>1526003313322</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-11T13:48:33</date>
+  <millis>1526003313663</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-11T13:48:37</date>
+  <millis>1526003317703</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>failed to log in</message>
+  <param>attempted to log in</param>
+</record>
+</log>

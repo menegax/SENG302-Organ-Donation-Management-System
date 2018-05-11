@@ -42,7 +42,7 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest {
         // add dummy donor
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addPatients(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.addPatient(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
         Database.getPatientByNhi("TFX9999")
                 .addDonation(GlobalEnums.Organ.LIVER);
         Database.getPatientByNhi("TFX9999")

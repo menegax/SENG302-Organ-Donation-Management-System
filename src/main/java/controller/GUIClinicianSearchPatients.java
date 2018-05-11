@@ -75,7 +75,7 @@ public class GUIClinicianSearchPatients implements Initializable {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
                     .getSelectedItem() != null) {
                 try {
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianViewOfPatientProfile.fxml"));
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
                     GUIPatientProfile controller = fxmlLoader.getController();
                     controller.setViewedPatient(patientDataTable.getSelectionModel()

@@ -30,9 +30,6 @@ public class GUIPatientUpdateProfile implements IPopupable{
     private AnchorPane patientUpdateAnchorPane;
 
     @FXML
-    private AnchorPane clinicianViewOfPatientProfile;
-
-    @FXML
     private Label lastModifiedLbl;
 
     @FXML
@@ -534,7 +531,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
             }
         }
         else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianViewOfPatientProfile.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
                 ScreenControl.loadPopUpPane(patientUpdateAnchorPane.getScene(), fxmlLoader, target);
             }

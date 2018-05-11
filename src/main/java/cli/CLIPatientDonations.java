@@ -43,8 +43,8 @@ public class CLIPatientDonations implements Runnable {
     @Option(names = {"-rm", "--remove"}, split = ",", description = "Takes a comma-separated list of organs to remove from donations.")
     private ArrayList<String> rmDonations;
 
-    private void displayDonorDonations(Donor donor) {
-        ArrayList<Organ> donations = donor.getDonations();
+    private void displayPatientDonations(Patient patient) {
+        ArrayList<Organ> donations = patient.getDonations();
         if (donations == null) {
             userActions.log(Level.WARNING, "No donations registered for patient: " + patient.getNameConcatenated(), "attempted to display patient donations");
         }

@@ -63,9 +63,6 @@ public class GUIPatientUpdateDonations implements IPopupable {
     @FXML
     private AnchorPane patientDonationsAnchorPane;
 
-    @FXML
-    private AnchorPane clinicianViewOfPatientProfile;
-
 
     @FXML
     private void redo() {
@@ -315,7 +312,7 @@ public class GUIPatientUpdateDonations implements IPopupable {
                 new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
             }
         } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianViewOfPatientProfile.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
                 ScreenControl.loadPopUpPane(patientDonationsAnchorPane.getScene(), fxmlLoader, target);
             } catch (IOException e) {

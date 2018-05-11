@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import utility.GlobalEnums;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
