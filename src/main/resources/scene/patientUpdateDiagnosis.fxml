@@ -8,15 +8,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="diagnosisUpdatePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="400.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientUpdateDiagnosis">
+<AnchorPane fx:id="diagnosisUpdatePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="400.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientUpdateDiagnosis">
     <children>
         <Label layoutX="84.0" layoutY="22.0" styleClass="title" text="Update Diagnosis">
             <font>
                 <Font size="27.0" />
             </font>
         </Label>
-      <Button fx:id="doneButton" layoutX="345.0" layoutY="208.0" mnemonicParsing="false" text="Done" />
-      <Button fx:id="cancelButton" layoutX="14.0" layoutY="208.0" mnemonicParsing="false" text="Cancel" />
+      <Button fx:id="doneButton" layoutX="345.0" layoutY="208.0" mnemonicParsing="false" text="Done" onAction="#completeUpdate" />
+      <Button fx:id="cancelButton" layoutX="14.0" layoutY="208.0" mnemonicParsing="false" text="Cancel" onAction="#cancelUpdate"/>
       <Label layoutX="70.0" layoutY="77.0" text="Disease Name" />
       <Label layoutX="70.0" layoutY="119.0" text="Date Diagnosed" />
       <Label layoutX="70.0" layoutY="160.0" text="Tags" />

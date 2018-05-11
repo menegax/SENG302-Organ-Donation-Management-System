@@ -1,14 +1,18 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.Disease;
+import model.DrugInteraction;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
@@ -77,7 +81,8 @@ public class GUIClinicianDiagnosis implements IPopupable {
         loadCurrentDiseases();
         loadPastDiseases();
         setUpRightClickTags();
-        setUpDoubleClickEdit();
+        setUpDoubleClickEdit(pastDiagnosesView);
+        setUpDoubleClickEdit(currentDiagnosesView);
     }
 
     /**
@@ -91,8 +96,36 @@ public class GUIClinicianDiagnosis implements IPopupable {
     /**
      * Sets up double click action of opening full disease edit window
      */
-    private void setUpDoubleClickEdit() {
-        
+    private void setUpDoubleClickEdit(TableView<Disease> tableView) {
+        tableView.setOnMouseClicked(click -> {
+            if (click.getClickCount() == 2 && tableView.getSelectionModel()
+                    .getSelectedItem() != null) {
+                try {
+                    GUIPatientUpdateDiagnosis.setDisease(tableView.getSelectionModel().getSelectedItem());
+                    GUIPatientUpdateDiagnosis.setPatient(target);
+
+                    Stage popUpStage = new Stage();
+
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateDiagnosis.fxml"));
+                    Scene scene = new Scene(fxmlLoader.load());
+                    popUpStage.setHeight(285);
+                    popUpStage.setWidth(420);
+                    popUpStage.setScene(scene);
+
+                    // When pop up is closed, refresh the table
+                    popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
+
+                    popUpStage.showAndWait();
+                }
+                catch (Exception e) {
+                    userActions.log(Level.SEVERE,
+                            "Failed to open diagnosis update window from the diagnoses page",
+                            "attempted to open diagnosis update window from the diagnoses page");
+                    new Alert(Alert.AlertType.ERROR, "Unable to open diagnosis update window", ButtonType.OK).show();
+                }
+            }
+
+        });
     }
 
     /**
@@ -328,48 +361,6 @@ public class GUIClinicianDiagnosis implements IPopupable {
     }
 
     /**
-     * Updates the date of a past diagnosis for a patient with a provided date
-     * @param disease the disease in the pastDiseases ArrayList of the diagnosis being updated
-     * @param date The given date for the update
-     * @throws InvalidObjectException Indicates that one or more deserialized objects failed validation tests
-     */
-    private void updatePastDate(Disease disease, LocalDate date) throws InvalidObjectException {
-        if (date.isBefore( target.getBirth() )) {
-            new Alert( Alert.AlertType.WARNING, "Can not set date to before patient's DOB: " + target.getBirth(), ButtonType.OK ).show();
-            userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to before patient's DOB");
-        } else if (date.isAfter( LocalDate.now() )) {
-            new Alert( Alert.AlertType.WARNING, "Can not set date to after the current date", ButtonType.OK ).show();
-            userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to after current date");
-        } else {
-            disease.setDateDiagnosed( date, target );
-            userActions.log(Level.FINE, "Updated a past disease date", "Updated a past disease date to " + date);
-            changed = true;
-        }
-    }
-
-    /**
-     * Updates the disease name for a current diagnosis
-     * @param disease the disease in the currentDiseases ArrayList of the diagnosis being updated
-     * @param name The Disease name update
-     */
-    private void updateCurrentName(Disease disease, String name) {
-        disease.setDiseaseName(name);
-        userActions.log(Level.FINE, "Updated a current disease name", "Updated a current disease name to " + name);
-        changed = true;
-    }
-
-    /**
-     * Updates the disease name for a current diagnosis
-     * @param disease The disease in the list of the diagnosis being updated
-     * @param name The Disease name update
-     */
-    private void updatePastName(Disease disease, String name) {
-        disease.setDiseaseName(name);
-        userActions.log(Level.FINE, "Updated a past disease name", "Updated a past disease name to " + name);
-        changed = true;
-    }
-
-    /**
      * Updates the disease state for a current diagnosis if the update is not 'cured' when the current state is still 'chronic'
      * If state is set to cured, the disease will be automatically moved to the past diseases list
      * @param disease The disease in the list of the diagnosis being updated
@@ -479,5 +470,13 @@ public class GUIClinicianDiagnosis implements IPopupable {
             userActions.log(Level.WARNING, "Failed to delete a disease", chosen + " failed to be deleted");
             new Alert(Alert.AlertType.WARNING, "No Diagnosis selected", ButtonType.OK).show();
         }
+    }
+
+    /**
+     * Refreshes the table data
+     */
+    private void tableRefresh() {
+        currentDiagnosesView.refresh();
+        pastDiagnosesView.refresh();
     }
 }
