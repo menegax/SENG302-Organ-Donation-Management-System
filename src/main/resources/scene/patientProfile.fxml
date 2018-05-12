@@ -131,7 +131,7 @@
       </VBox>
         <VBox layoutX="300.0" layoutY="81.0" prefHeight="200.0" prefWidth="129.0">
            <children>
-            <Label fx:id="receivingTitle1" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Medications">
+            <Label fx:id="medicationTitle" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Medications">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>

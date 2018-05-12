@@ -191,19 +191,20 @@ public class GUIPatientProfile implements IPopupable {
         if (ScreenControl.getLoggedInPatient() != null) {
             requirementsButton.setDisable(true);
             requirementsButton.setVisible(false);
+            medicationBtn.setDisable(true);
+            medicationBtn.setVisible(false);
             if (ScreenControl.getLoggedInPatient().getRequiredOrgans().size() == 0) {
                 receivingList.setDisable(true);
                 receivingList.setVisible(false);
                 receivingTitle.setDisable(true);
                 receivingTitle.setVisible(false);
-            } else if (ScreenControl.getLoggedInPatient().getDonations().size() == 0) {
+            } if (ScreenControl.getLoggedInPatient().getDonations().size() == 0) {
                 donatingTitle.setDisable(true);
                 donatingTitle.setVisible(false);
                 donationList.setDisable(true);
                 donationList.setVisible(false);
             }
-            medicationBtn.setDisable(true);
-            medicationBtn.setVisible(false);
+
             try {
                 loadProfile(ScreenControl.getLoggedInPatient()
                         .getNhiNumber());
