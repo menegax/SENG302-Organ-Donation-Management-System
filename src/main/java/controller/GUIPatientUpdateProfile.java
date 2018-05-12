@@ -203,21 +203,21 @@ public class GUIPatientUpdateProfile implements IPopupable{
         preferrednameTxt.setText(patient.getPreferredName());
         if (patient.getBirthGender() != null) {
             switch (patient.getBirthGender().getValue()) {
-                case "male":
+                case "Male":
                     birthGenderMaleRadio.setSelected(true);
                     break;
-                case "female":
+                case "Female":
                     birthGenderFemaleRadio.setSelected(true);
                     break;
             }
         }
         if (patient.getPreferredGender() != null) {
             switch (patient.getPreferredGender().getValue()) {
-                case "man":
+                case "Man":
                     preferredGenderManRadio.setSelected(true); break;
-                case "woman":
+                case "Woman":
                     preferredGenderWomanRadio.setSelected(true); break;
-                case "non-binary":
+                case "Non-binary":
                     preferredGenderNonBinaryRadio.setSelected(true); break;
             }
         }
