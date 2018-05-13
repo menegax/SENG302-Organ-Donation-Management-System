@@ -230,10 +230,12 @@ public class SearchPatients {
 	        });
 			
 			int docCount = 0;
-			while (docCount < allDocs.size() && docCount <= NUM_RESULTS) {
+			int patientCount = 0;
+			while (docCount < allDocs.size() && patientCount <= NUM_RESULTS) {
 				patient = fetchPatient(allDocs.get(docCount));
 				if (!results.contains(patient)) {
 					results.add(patient);
+					patientCount += 1;
 				}
 				docCount += 1;
 			}
