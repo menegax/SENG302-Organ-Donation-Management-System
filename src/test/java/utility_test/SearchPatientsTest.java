@@ -50,6 +50,30 @@ public class SearchPatientsTest {
         SearchPatients.createFullIndex();
     }
 
+	/**
+	 * Tests alphabetical ordering on equally close names from search after a patients name has been chnaged.
+	 */
+	@Test
+	public void testEqualSearchOrderingAfterNameUpdate() throws IOException {
+		
+		// Change last name of George Romero to come before George Bobington
+		d3.setLastName("Addington");
+		
+		// For a name search of George
+    	ArrayList<Patient> results = SearchPatients.searchByName("George");
+
+    	// Get indices of the two Georges
+    	int d3index = results.indexOf(d3); 
+    	int d4index = results.indexOf(d4);
+
+    	// Ensure both Georges are in the results
+    	assertTrue(d3index != -1);
+    	assertTrue(d4index != -1);
+
+    	// Ensure George Addington comes before George Bobington
+    	assertTrue(d4index > d3index);
+	}
+	
     /**
      * Tests the alphabetical ordering of patients that are equal close to the search result.
      * @throws IOException
