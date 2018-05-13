@@ -89,7 +89,6 @@ public class GUIPatientUpdateDiagnosis {
      * @param target The target to add the class to
      */
     private boolean setInvalid(Control target) {
-
         target.getStyleClass()
                 .add("invalid");
         return false;
@@ -121,14 +120,15 @@ public class GUIPatientUpdateDiagnosis {
             setInvalid(diseaseNameTextField);
         } else {
             setValid(diseaseNameTextField);
+            diseaseNameTextField.setText(diseaseNameTextField.getText());
         }
-
         try {
             if (target.isInvalidDiagnosisDate(diagnosisDate.getValue(), currentPatient)) {
                 valid = false;
                 setInvalid(diagnosisDate);
             } else {
                 setValid(diagnosisDate);
+                diagnosisDate.setValue(diagnosisDate.getValue());
             }
         } catch(NullPointerException e) {
             valid = false;
@@ -141,6 +141,7 @@ public class GUIPatientUpdateDiagnosis {
             setInvalid(tagsDD);
         } else {
             setValid(tagsDD);
+            tagsDD.setValue(tagsDD.getSelectionModel().getSelectedItem());
         }
 
         return valid;
