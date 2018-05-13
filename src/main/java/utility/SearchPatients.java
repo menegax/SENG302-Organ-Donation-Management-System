@@ -17,17 +17,12 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.RAMDirectory;
 import service.Database;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -156,6 +151,37 @@ public class SearchPatients {
     }
 
     /**
+     * Returns the first 30 patients in alphabetical order.
+     * @return First 30 patients from a alphabetical ordering.
+     */
+    public static ArrayList<Patient> getDefaultResults() {   	
+    	ArrayList<Patient> array = new ArrayList<Patient>();
+    	array.addAll(Database.getPatients());
+		Collections.sort(array, new Comparator<Patient>() {
+            @Override
+            public int compare(Patient o1, Patient o2) {
+            	int comparison = 0;
+                comparison = o1.getNameConcatenated().compareTo(o2.getNameConcatenated());
+                return comparison;
+            }
+        });
+    	array = new ArrayList<Patient>(array.subList(0, NUM_RESULTS));
+    	return array;
+    }
+    
+    /**
+     * Fetches a patient from the database from its respective score document and returns it.
+     * @param doc The patients score document.
+     * @return The patient who the score document belongs to.
+     * @throws IOException Occurs when index searcher cannot be found.
+     */
+    private static Patient fetchPatient(ScoreDoc doc) throws IOException {
+		Document thisDoc = indexSearcher.doc(doc.doc);
+		String nhi = thisDoc.get("nhi");
+		return Database.getPatientByNhi(nhi);
+    }
+    
+    /**
      * Searches through the index for patients by full name.
      * @param input The name you want to search for.
      * @return ArrayList of the patients it found as a result of the search.
@@ -163,7 +189,7 @@ public class SearchPatients {
     public static ArrayList<Patient> searchByName(String input) {
 
         if (input.isEmpty()) {
-            return new ArrayList<Patient>(Database.getPatients());
+            return getDefaultResults();
         }
 
         String[] names = input.split(" ");
@@ -179,7 +205,6 @@ public class SearchPatients {
         TopDocs docs;
         ArrayList<ScoreDoc> allDocs = new ArrayList<ScoreDoc>();
 		try {
-			String nhi;
 			Patient patient;
 			for (FuzzyQuery query : queries) {
 				docs = searchQuery(query);
@@ -191,18 +216,36 @@ public class SearchPatients {
 			Collections.sort(allDocs, new Comparator<ScoreDoc>() {
 	            @Override
 	            public int compare(ScoreDoc o1, ScoreDoc o2) {
-	                return new Float(o2.score).compareTo(o1.score);
+	                int comparison = new Float(o2.score).compareTo(o1.score);
+	                if (comparison == 0) {
+	                	try {
+							comparison = fetchPatient(o1).getNameConcatenated()
+									.compareTo(fetchPatient(o2).getNameConcatenated());
+						} catch (IOException e) {
+				            userActions.log(Level.SEVERE, "Unable to get patient from database", "Attempted to get patient from database");
+						}
+	                }
+	                return comparison;
 	            }
 	        });
 			
-			for (ScoreDoc doc : allDocs) {
-				Document thisDoc = indexSearcher.doc(doc.doc);
-				nhi = thisDoc.get("nhi");
-				patient = Database.getPatientByNhi(nhi);
+			int docCount = 0;
+			while (docCount < allDocs.size() && docCount <= NUM_RESULTS) {
+				patient = fetchPatient(allDocs.get(docCount));
 				if (!results.contains(patient)) {
 					results.add(patient);
 				}
-        	}
+				docCount += 1;
+			}
+			
+//			for (ScoreDoc doc : allDocs) {
+//				Document thisDoc = indexSearcher.doc(doc.doc);
+//				nhi = thisDoc.get("nhi");
+//				patient = Database.getPatientByNhi(nhi);
+//				if (!results.contains(patient)) {
+//					results.add(patient);
+//				}
+//        	}
 		} catch (IOException e) {
 			userActions.log(Level.SEVERE, "Unable to search patients by name", "Attempted to search patients by name");
 		}

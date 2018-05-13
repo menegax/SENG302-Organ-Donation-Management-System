@@ -47,7 +47,7 @@ public class GUIClinicianSearchPatients implements Initializable {
     private TextField searchEntry;
 
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
-    private static int rowDisplayCount = 0;
+
 
     /**
      * Initialises the data within the table to all patients
@@ -57,14 +57,12 @@ public class GUIClinicianSearchPatients implements Initializable {
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
-        //patientDataTable.setFixedCellSize( 25 );
-        //patientDataTable.setMaxHeight( patientDataTable.getFixedCellSize() * 10 );
-        //patientDataTable.scrollTo( 30 );
-        //patientDataTable.setPrefHeight( 30 * patientDataTable.getFixedCellSize() );
         FilteredList<Patient> filteredData = setupTableColumnsAndData();
+
         setupSearchingListener(filteredData);
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
+
     }
 
 
@@ -81,10 +79,12 @@ public class GUIClinicianSearchPatients implements Initializable {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
                     GUIPatientProfile controller = fxmlLoader.getController();
-                    controller.setViewedPatient(patientDataTable.getSelectionModel().getSelectedItem());
+                    controller.setViewedPatient(patientDataTable.getSelectionModel()
+                            .getSelectedItem());
 
                     Stage popUpStage = new Stage();
-                    popUpStage.setX(ScreenControl.getMain().getX()); //offset popup
+                    popUpStage.setX(ScreenControl.getMain()
+                            .getX()); //offset popup
                     popUpStage.setScene(scene);
 
                     // When pop up is closed, refresh the table
@@ -101,6 +101,7 @@ public class GUIClinicianSearchPatients implements Initializable {
                     new Alert(Alert.AlertType.ERROR, "Unable to open patient edit window", ButtonType.OK).show();
                 }
             }
+
         });
     }
 
@@ -115,7 +116,8 @@ public class GUIClinicianSearchPatients implements Initializable {
         columnName.setCellValueFactory(d -> d.getValue()
                 .getNameConcatenated() != null ? new SimpleStringProperty(d.getValue()
                 .getNameConcatenated()) : new SimpleStringProperty(""));
-        columnAge.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().getAge())));
+        columnAge.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue()
+                .getAge())));
         columnGender.setCellValueFactory(d -> d.getValue()
                 .getGender() != null ? new SimpleStringProperty(d.getValue()
                 .getGender()
@@ -135,21 +137,16 @@ public class GUIClinicianSearchPatients implements Initializable {
 
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            rowDisplayCount += 1;
-            if (rowDisplayCount < 30) {
-                masterData.clear();
-                masterData.addAll( SearchPatients.searchByName( newValue ) );
+            masterData.clear();
+            masterData.addAll(SearchPatients.searchByName(newValue));
 
-                filteredData.setPredicate( new Predicate <Patient>() {
-                    @Override
-                    public boolean test( Patient patient ) {
-                        return true;
-                    }
-                } );
-            }
+            filteredData.setPredicate(new Predicate<Patient>() {
+                                          @Override
+                                          public boolean test(Patient patient) {
+                                              return true;
+                                          }
+                                      });
         });
-
-        rowDisplayCount = 0;
 
         // wrap the FilteredList in a SortedList.
         SortedList<Patient> sortedData = new SortedList<>(filteredData);
@@ -223,7 +220,7 @@ public class GUIClinicianSearchPatients implements Initializable {
      * Adds all db data via constructor
      */
     public GUIClinicianSearchPatients() {
-        masterData.addAll(Database.getPatients());
+        masterData.addAll(SearchPatients.getDefaultResults());
     }
 
 
@@ -239,4 +236,3 @@ public class GUIClinicianSearchPatients implements Initializable {
         patientDataTable.refresh();
     }
 }
-
