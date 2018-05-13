@@ -87,7 +87,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
     private TextField heightTxt;
 
     @FXML
-    private TextField regionTxt;
+    private ChoiceBox<String> regionDD;
 
     @FXML
     private ChoiceBox<String> bloodGroupDD;
@@ -145,6 +145,14 @@ public class GUIPatientUpdateProfile implements IPopupable{
         }
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
         bloodGroupDD.setItems(bloodGroupsOL);
+
+        // Populate region drop down with values from the Regions enum
+        List<String> regions = new ArrayList<>();
+        for (Region region : Region.values()) {
+            regions.add(region.getValue());
+        }
+        ObservableList<String> regionsOL = FXCollections.observableList(regions);
+        regionDD.setItems(regionsOL);
     }
 
     /**
@@ -165,7 +173,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
                 add(middlenameTxt);
                 add(preferrednameTxt);
                 add(bloodGroupDD);
-                add(regionTxt);
+                add(regionDD);
                 add(dobDate);
                 add(dateOfDeath);
                 add(birthGenderMaleRadio);
@@ -233,7 +241,8 @@ public class GUIPatientUpdateProfile implements IPopupable{
             suburbTxt.setText(patient.getSuburb());
         }
         if (patient.getRegion() != null) {
-            regionTxt.setText(patient.getRegion().getValue());
+            regionDD.setValue(patient.getRegion()
+                    .getValue());
         }
         if (patient.getZip() != 0) {
             zipTxt.setText(String.valueOf(patient.getZip()));
@@ -320,18 +329,21 @@ public class GUIPatientUpdateProfile implements IPopupable{
         }
 
         // region
-        if (regionTxt.getText() != null) {
-            Enum region = Region.getEnumFromString(regionTxt.getText());
+        if (regionDD.getSelectionModel()
+                .getSelectedIndex() != -1) {
+            Enum region = Region.getEnumFromString(regionDD.getSelectionModel()
+                    .getSelectedItem());
             if (region == null) {
-                valid = setInvalid(regionTxt);
+                valid = setInvalid(regionDD);
             }
             else {
-                setValid(regionTxt);
+                setValid(regionDD);
             }
         }
         else {
-            setValid(regionTxt);
+            setValid(regionDD);
         }
+
 
         // zip
         if (!zipTxt.getText()
@@ -474,8 +486,9 @@ public class GUIPatientUpdateProfile implements IPopupable{
                     .length() > 0) {
                 target.setSuburb(suburbTxt.getText());
             }
-            if (regionTxt.getText() != null) {
-                target.setRegion((Region) Region.getEnumFromString(regionTxt.getText()));
+            if (regionDD.getValue() != null) {
+                target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
+                        .getSelectedItem()));
             }
             if (zipTxt.getText() != null) {
                 target.setZip(zipTxt.getText()
