@@ -105,7 +105,7 @@ public class GUIAddProcedureTest extends ApplicationTest {
             lookup( "#addProcedureButton" ).queryAs( Button.class ).fire();
         } );
         // Verify "clinician" has navigated to add procedures
-        verifyThat("#addProcedureAnchorPane", Node::isVisible);
+        verifyThat("#procedureAnchorPane", Node::isVisible);
         verifyThat( "#summaryInput", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         verifyThat( "#descriptionInput", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
@@ -140,7 +140,7 @@ public class GUIAddProcedureTest extends ApplicationTest {
             lookup( "#addProcedureButton" ).queryAs( Button.class ).fire();
         } );
         // Verify "clinician" has navigated to add procedures
-        verifyThat("#addProcedureAnchorPane", Node::isVisible);
+        verifyThat("#procedureAnchorPane", Node::isVisible);
         verifyThat( "#summaryInput", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
         verifyThat( "#descriptionInput", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
 
