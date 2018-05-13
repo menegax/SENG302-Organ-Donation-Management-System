@@ -65,6 +65,9 @@ public class GUIPatientProcedures implements IPopupable {
     public Button addProcedureButton;
 
     @FXML
+    public Button editProcedureButton;
+
+    @FXML
     public Button deleteProcedureButton;
 
     private Patient patient;
@@ -137,8 +140,10 @@ public class GUIPatientProcedures implements IPopupable {
     private void onItemSelect() {
         if (previousProceduresView.getSelectionModel().getSelectedItems().size() == 0 &&
                 pendingProceduresView.getSelectionModel().getSelectedItems().size() == 0) {
+            editProcedureButton.setDisable(true);
             deleteProcedureButton.setDisable(true);
         } else {
+            editProcedureButton.setDisable(false);
             deleteProcedureButton.setDisable(false);
         }
     }
@@ -157,9 +162,9 @@ public class GUIPatientProcedures implements IPopupable {
     @FXML
     public void addProcedure() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/addProcedure.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
-            GUIAddProcedure controller = fxmlLoader.getController();
+            GUIProcedureForm controller = fxmlLoader.getController();
             controller.setViewedPatient(patient);
             Stage popUpStage = new Stage();
             popUpStage.setScene(scene);
@@ -171,11 +176,52 @@ public class GUIPatientProcedures implements IPopupable {
             ScreenControl.addPopUp("addProcedurePopup", popUpStage); //ADD to screen control
             ScreenControl.displayPopUp("addProcedurePopup"); //display the popup
         } catch (IOException e) {
-            e.printStackTrace();
             userActions.log(Level.SEVERE,
                     "Failed to open add procedure popup from patient procedures",
                     "Attempted to open add procedure popup from patient procedures");
             new Alert(Alert.AlertType.ERROR, "Unable to open add procedure window", ButtonType.OK).show();
+        }
+    }
+
+    /**
+     * Opens an edit popup for the procedure that is currently selected
+     */
+    public void editProcedure() {
+        //Grabbing the currently selected procedure to pass to the form controller for loading
+        Procedure selectedProcedure = null;
+        if (previousProceduresView.getSelectionModel().getSelectedItem() != null) {
+            selectedProcedure = previousProceduresView.getSelectionModel().getSelectedItem();
+        }
+        if (pendingProceduresView.getSelectionModel().getSelectedItem() != null) {
+            selectedProcedure = pendingProceduresView.getSelectionModel().getSelectedItem();
+        }
+        if (selectedProcedure == null) {
+            new Alert(Alert.AlertType.ERROR, "No procedure is selected", ButtonType.OK).show();
+            return;
+        }
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            GUIProcedureForm controller = fxmlLoader.getController();
+            controller.setViewedPatient(patient);
+
+            controller.setupEditing(selectedProcedure);
+
+            Stage popUpStage = new Stage();
+            popUpStage.setScene(scene);
+
+            // When pop up is closed, refresh the table
+            popUpStage.setOnHiding(event -> Platform.runLater(this::refreshTables));
+
+            //Add and show the popup
+            ScreenControl.addPopUp("editProcedurePopup", popUpStage); //ADD to screen control
+            ScreenControl.displayPopUp("editProcedurePopup"); //display the popup
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE,
+                    "Failed to open edit procedure popup from patient procedures",
+                    "Attempted to open edit procedure popup from patient procedures");
+            new Alert(Alert.AlertType.ERROR, "Unable to open edit procedure window", ButtonType.OK).show();
         }
     }
 
