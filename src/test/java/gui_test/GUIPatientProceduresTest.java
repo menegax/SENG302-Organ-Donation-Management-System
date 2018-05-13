@@ -2,14 +2,8 @@ package gui_test;
 
 
 import controller.Main;
-import javafx.event.Event;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Patient;
 import org.junit.After;
@@ -21,8 +15,7 @@ import service.Database;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
-import static org.testfx.api.FxAssert.verifyThat;
+import static org.junit.Assert.assertFalse;
 
 /**
  * TestFX class to test the Patient Procedures screen
@@ -43,7 +36,7 @@ public class GUIPatientProceduresTest extends ApplicationTest {
         patient1 = new Patient("TFX9999", "Joe", new ArrayList<>(),"TestProceduresSearch1", LocalDate.of(1990, 2, 9));
         Database.addPatient(patient1);
         main.start(stage);
-        stage.setFullScreen(true);
+        //stage.setFullScreen(true); //This was causing tests to fail on MacOS
     }
 
     /**
@@ -60,6 +53,7 @@ public class GUIPatientProceduresTest extends ApplicationTest {
     public void verifyProceduresNonEditableAsPatient() {
         givenPatientLoggedIn();
         assertFalse(lookup("#addProcedureButton").queryAs(Button.class).isVisible());
+        assertFalse(lookup("#editProcedureButton").queryAs(Button.class).isVisible());
         assertFalse(lookup("#deleteProcedureButton").queryAs(Button.class).isVisible());
 
     }
