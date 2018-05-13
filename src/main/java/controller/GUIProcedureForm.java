@@ -71,27 +71,65 @@ public class GUIProcedureForm implements IPopupable {
         }
     }
 
-    /**
-     * Adds the procedure to the patient's list of procedures and closes the pop-up
-     */
     @FXML
-    public void addProcedure() {
-        Set <Organ> affectedDonations = new HashSet <>();
+    public void onSubmit() {
+        if (isEditInstance) {
+            editProcedure();
+        } else {
+            addProcedure();
+        }
+    }
+
+    /**
+     * Converts the selected checkboxes in the affected organ selection menu into a set of organs
+     * @return The resulting set of organs that are affected
+     */
+    private Set<Organ> getAffectedOrgansFromForm() {
+        Set<Organ> affectedOrgans = new HashSet<>();
         for (MenuItem organSelection : affectedInput.getItems()) {
             if (((CustomMenuItem) organSelection).getContent().getId() == null) {
                 CheckBox selectionCheckBox = (CheckBox) ((CustomMenuItem) organSelection).getContent();
                 if (selectionCheckBox.isSelected()) {
-                    affectedDonations.add( (Organ) Organ.getEnumFromString( selectionCheckBox.getText() ) );
+                    affectedOrgans.add((Organ) Organ.getEnumFromString(selectionCheckBox.getText()));
                 }
             }
         }
+        return affectedOrgans;
+    }
+
+    /**
+     * Applies the edits made in the form to the target procedure and closes the pop-up
+     */
+    private void editProcedure() {
+        Set<Organ> affectedDonations = getAffectedOrgansFromForm();
+
+        if (validateInputs(summaryInput.getText(), descriptionInput.getText(), dateInput.getValue())) {
+            this.procedure.setSummary(summaryInput.getText());
+            this.procedure.setDescription(descriptionInput.getText());
+            this.procedure.setAffectedDonations(affectedDonations);
+            this.procedure.setDate(dateInput.getValue());
+            ((Stage) procedureAnchorPane.getScene().getWindow()).close();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +
+                    "patients DOB. There must be a summary. A summary, and description, if any, must contain " +
+                    "alphabetic or numerical character(s), hyphens or spaces");
+            alert.setHeaderText( "Field input(s) are invalid!" );
+            alert.show();
+        }
+    }
+
+    /**
+     * Adds the procedure to the patient's list of procedures and closes the pop-up
+     */
+    private void addProcedure() {
+        Set <Organ> affectedDonations = getAffectedOrgansFromForm();
+
         if (validateInputs(summaryInput.getText(), descriptionInput.getText(), dateInput.getValue())){
             Procedure procedure = new Procedure( summaryInput.getText(), descriptionInput.getText(),
                     dateInput.getValue(), affectedDonations );
             patient.addProcedure( procedure );
             ((Stage) procedureAnchorPane.getScene().getWindow()).close();
         } else {
-            System.out.println( affectedDonations.size() );
             Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +
                     "patients DOB. There must be a summary. A summary, and description, if any, must contain " +
                     "alphabetic or numerical character(s), hyphens or spaces");
@@ -105,7 +143,7 @@ public class GUIProcedureForm implements IPopupable {
      * @param summary The procedure summary string
      * @param description The procedure description string
      * @param date The date of the procedure
-     * @param organs The selected organ(s) affected by the procedure
+     * //@param organs The selected organ(s) affected by the procedure
      * @return True if date is not before patient DOB, one or more organs, or summary/description are more than 1 chars
      */
     private Boolean validateInputs(String summary, String description, LocalDate date) {
