@@ -8,6 +8,7 @@ import service.Database;
 
 public class GUIClinicianHome {
 
+    @FXML
     public Button searchPatients;
 
     public AnchorPane clinicianHomePane;

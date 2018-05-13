@@ -18,6 +18,12 @@ import java.util.regex.Pattern;
 public class GUIProcedureForm implements IPopupable {
 
     @FXML
+    public Button doneButton;
+
+    @FXML
+    public Button closePane;
+
+    @FXML
     public TextField summaryInput;
 
     @FXML
@@ -79,16 +85,17 @@ public class GUIProcedureForm implements IPopupable {
                 }
             }
         }
-        if (validateInputs(summaryInput.getText(), descriptionInput.getText(), dateInput.getValue(), affectedDonations)){
+        if (validateInputs(summaryInput.getText(), descriptionInput.getText(), dateInput.getValue())){
             Procedure procedure = new Procedure( summaryInput.getText(), descriptionInput.getText(),
                     dateInput.getValue(), affectedDonations );
             patient.addProcedure( procedure );
             ((Stage) procedureAnchorPane.getScene().getWindow()).close();
         } else {
             System.out.println( affectedDonations.size() );
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Field input(s) are invalid. " +
-                    "Date must not be before patients DOB, there must be an affected organ, summary and description " +
-                    "must each contain at least one of only alphabetic or numerical characters, hyphens or spaces");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +
+                    "patients DOB. There must be a summary. A summary, and description, if any, must contain " +
+                    "alphabetic or numerical character(s), hyphens or spaces");
+            alert.setHeaderText( "Field input(s) are invalid!" );
             alert.show();
         }
     }
@@ -101,11 +108,11 @@ public class GUIProcedureForm implements IPopupable {
      * @param organs The selected organ(s) affected by the procedure
      * @return True if date is not before patient DOB, one or more organs, or summary/description are more than 1 chars
      */
-    private Boolean validateInputs(String summary, String description, LocalDate date, Set <Organ> organs) {
-        return !date.isBefore( patient.getBirth() ) && summary.length() >= 1 && description.length() >= 1 &&
+    private Boolean validateInputs(String summary, String description, LocalDate date) {
+        return date != null && !date.isBefore( patient.getBirth() ) && summary.length() >= 1 &&
                 Pattern.matches("[A-Za-z0-9- ]+", summary) && !summary.substring(0,1).equals(" ") &&
-                Pattern.matches("[A-Za-z0-9- ]+", description) && !description.substring( 0 ,1).equals(" ") &&
-                organs.size() != 0;
+                ((description.length() >= 1 && Pattern.matches("[A-Za-z0-9- ]+", description) &&
+                        !description.substring( 0 ,1).equals(" ")) || description.length() == 0);
     }
 
     /**
