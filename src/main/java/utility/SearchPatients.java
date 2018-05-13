@@ -239,15 +239,6 @@ public class SearchPatients {
 				}
 				docCount += 1;
 			}
-			
-//			for (ScoreDoc doc : allDocs) {
-//				Document thisDoc = indexSearcher.doc(doc.doc);
-//				nhi = thisDoc.get("nhi");
-//				patient = Database.getPatientByNhi(nhi);
-//				if (!results.contains(patient)) {
-//					results.add(patient);
-//				}
-//        	}
 		} catch (IOException e) {
 			userActions.log(Level.SEVERE, "Unable to search patients by name", "Attempted to search patients by name");
 		}
