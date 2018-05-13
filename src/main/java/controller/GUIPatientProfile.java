@@ -45,6 +45,9 @@ public class GUIPatientProfile implements IPopupable {
     public Button medicationBtn;
 
     @FXML
+    public Button proceduresButton;
+
+    @FXML
     private Label nhiLbl;
 
     @FXML
