@@ -99,8 +99,42 @@ public class SearchPatientsTest {
     	// For a number of patients more than 30
     	assertTrue(Database.getPatients().size() > 30);
     	
+        // Search to match all 36 added patients.
+        ArrayList<Patient> results = SearchPatients.searchByName("A B C D E F Z Y X W V U");
+
+        // The returned result should be exactly 30
+        assertTrue(results.size() == 30);
+    }
+    
+    /**
+     * Tests that a blank search will not return more than 30 results.
+     * @throws IOException
+     */
+    @Test
+    public void testNumberOfResultsBlankSearch() throws IOException {
+
+    	// Create more than 36 patients
+    	String[] firstNames = {"A", "B", "C", "D", "E", "F"};
+    	String[] lastNames = {"Z", "Y", "X", "W", "V", "U"};
+    	String[] nhi = {"AZA1111", "AZA1112", "AZA1113", "AZA1114", "AZA1115", "AZA1116", 
+    			"AZA1117", "AZA1118", "AZA1119", "AZA1120", "AZA1121", "AZA1122", 
+    			"AZA1123", "AZA1124", "AZA1125", "AZA1126", "AZA1127", "AZA1128", 
+    			"AZA1129", "AZA1130", "AZA1131", "AZA1132", "AZA1133", "AZA1134", 
+    			"AZA1135", "AZA1136", "AZA1137", "AZA1138", "AZA1139", "AZA1140", 
+    			"AZA1141", "AZA1142", "AZA1143", "AZA1144", "AZA1145", "AZA1146"};
+    	int count = 0;
+    	for (String lName : lastNames) {
+    		for (String fName : firstNames) {
+    			Database.addPatient(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
+    			count += 1;
+    		}
+    	}
+    	
+    	// For a number of patients more than 30
+    	assertTrue(Database.getPatients().size() > 30);
+    	
         // Blank search to return maximum number of results. EG every patient.
-        ArrayList<Patient> results = SearchPatients.searchByName("Ande Lafey");
+        ArrayList<Patient> results = SearchPatients.searchByName("");
 
         // The returned result should be less than or equal to 30
         assertTrue(results.size() <= 30);
