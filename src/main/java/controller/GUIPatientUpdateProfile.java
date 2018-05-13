@@ -549,7 +549,7 @@ public class GUIPatientUpdateProfile {
         if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientProfile");
             try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                ScreenControl.addTabToHome("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
                 ScreenControl.activate("patientProfile");
             }
             catch (IOException e) {

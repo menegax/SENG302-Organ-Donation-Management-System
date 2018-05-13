@@ -33,22 +33,20 @@ public class Main extends Application {
         ScreenControl.setRootScene(rootScene); // set this scene in screen controller
 
         // Add scenes
-        ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        ScreenControl.addScreen("patientRegister", FXMLLoader.load(getClass().getResource("/scene/patientRegister.fxml")));
-        ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
-        ScreenControl.addScreen("patientHome", FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml")));
+        ScreenControl.addTabToHome("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+        ScreenControl.addTabToHome("patientRegister", FXMLLoader.load(getClass().getResource("/scene/patientRegister.fxml")));
+        ScreenControl.addTabToHome("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
+        ScreenControl.addTabToHome("patientHome", FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml")));
 
         // add objects
         Database.importFromDiskPatients("./patient.json");
         Database.importFromDiskClinicians("./clinician.json");
-        // todo importFromDiskAllUserActions
         addDummyTestObjects();
         ensureDefaultClinician();
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
 
         setUpMenuBar(primaryStage);
 
-        primaryStage.setResizable(false);
         primaryStage.show();
 
     }
@@ -57,6 +55,11 @@ public class Main extends Application {
     public static void main(String[] args) {
         UserActionHistory.setup(); // start user action logs
         launch(args);
+    }
+
+
+    private void addAllFxmls(ScreenControl screenControl) throws IOException {
+        screenControl.addScene("/scene/login.fxml");
     }
 
 

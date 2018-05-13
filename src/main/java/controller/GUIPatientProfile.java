@@ -190,7 +190,7 @@ public class GUIPatientProfile {
         if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientUpdateProfile");
             try {
-                ScreenControl.addScreen("patientUpdateProfile", FXMLLoader.load(getClass().getResource("/scene/patientUpdateProfile.fxml")));
+                ScreenControl.addTabToHome("patientUpdateProfile", FXMLLoader.load(getClass().getResource("/scene/patientUpdateProfile.fxml")));
                 ScreenControl.activate("patientUpdateProfile");
             }
             catch (IOException e) {
@@ -217,7 +217,7 @@ public class GUIPatientProfile {
         if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientDonations");
             try {
-                ScreenControl.addScreen("patientDonations", FXMLLoader.load(getClass().getResource("/scene/patientUpdateDonations.fxml")));
+                ScreenControl.addTabToHome("patientDonations", FXMLLoader.load(getClass().getResource("/scene/patientUpdateDonations.fxml")));
                 ScreenControl.activate("patientDonations");
             }
             catch (IOException e) {
@@ -244,7 +244,7 @@ public class GUIPatientProfile {
         if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientContactDetails");
             try {
-                ScreenControl.addScreen("patientContactDetails", FXMLLoader.load(getClass().getResource("/scene/patientUpdateContacts.fxml")));
+                ScreenControl.addTabToHome("patientContactDetails", FXMLLoader.load(getClass().getResource("/scene/patientUpdateContacts.fxml")));
                 ScreenControl.activate("patientContactDetails");
             }
             catch (IOException e) {
@@ -273,7 +273,7 @@ public class GUIPatientProfile {
         if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientMedications");
             try {
-                ScreenControl.addScreen("patientMedications", FXMLLoader.load(getClass().getResource("/scene/patientMedications.fxml")));
+                ScreenControl.addTabToHome("patientMedications", FXMLLoader.load(getClass().getResource("/scene/patientMedications.fxml")));
                 ScreenControl.activate("patientMedications");
             }
             catch (IOException e) {

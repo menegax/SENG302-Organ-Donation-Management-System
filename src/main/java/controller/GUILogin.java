@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
@@ -10,13 +11,14 @@ import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.CheckBox;
-import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
 import service.Database;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.nio.file.Path;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -69,10 +71,13 @@ public class GUILogin {
             try {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
                 login.addLoggedInUserToCache(newPatient);
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.addScreen("patientProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/patientUpdateProfile.fxml")));
-                ScreenControl.addScreen("patientDonations", FXMLLoader.load(getClass().getResource("/scene/patientUpdateDonations.fxml")));
-                ScreenControl.addScreen("patientContacts", FXMLLoader.load(getClass().getResource("/scene/patientUpdateContacts.fxml")));
+
+                ScreenControl.addTabToHome("patientHome", FXMLLoader.load(getClass().getResource("/scene/PatientHome.fxml")));
+
+                ScreenControl.addTabToHome("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                ScreenControl.addTabToHome("patientProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/patientUpdateProfile.fxml")));
+                ScreenControl.addTabToHome("patientDonations", FXMLLoader.load(getClass().getResource("/scene/patientUpdateDonations.fxml")));
+                ScreenControl.addTabToHome("patientContacts", FXMLLoader.load(getClass().getResource("/scene/patientUpdateContacts.fxml")));
                 ScreenControl.activate("patientHome");
 //                if (newPatient.getPatientLog() != null) {
 //                    logHistory.addAll( newPatient.getPatientLog() ); // adds medication log from previous log-ins for user
@@ -93,9 +98,9 @@ public class GUILogin {
             try {
                 Clinician newClinician = Database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
                 login.addLoggedInUserToCache(newClinician);
-                ScreenControl.addScreen("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
-                ScreenControl.addScreen("clinicianSearchPatients", FXMLLoader.load(getClass().getResource("/scene/clinicianSearchPatients.fxml")));
-                ScreenControl.addScreen("clinicianProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/clinicianProfileUpdate.fxml")));
+                ScreenControl.addTabToHome("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
+                ScreenControl.addTabToHome("clinicianSearchPatients", FXMLLoader.load(getClass().getResource("/scene/clinicianSearchPatients.fxml")));
+                ScreenControl.addTabToHome("clinicianProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/clinicianProfileUpdate.fxml")));
                 ScreenControl.activate("clinicianHome");
             }
             catch (Exception e) {
@@ -104,6 +109,22 @@ public class GUILogin {
                 alert.show();
             }
 
+        }
+    }
+
+
+    private void setUpPatientHome() {
+
+        Stage primaryStage = new Stage();
+        try {
+            Scene home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
+
+
+
+            primaryStage.setScene(home);
+        }
+        catch (IOException e) {
+            e.printStackTrace();//todo rm
         }
     }
 

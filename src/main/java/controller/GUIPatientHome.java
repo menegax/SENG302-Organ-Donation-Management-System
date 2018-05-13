@@ -32,7 +32,7 @@ public class GUIPatientHome {
     @FXML
     public void goToHistory() {
         try {
-            ScreenControl.addScreen("patientHistory", FXMLLoader.load(getClass().getResource("/scene/patientHistory.fxml")));
+            ScreenControl.addTabToHome("patientHistory", FXMLLoader.load(getClass().getResource("/scene/patientHistory.fxml")));
         }
         catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "Unable load patient history").show();

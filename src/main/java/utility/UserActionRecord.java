@@ -1,12 +1,9 @@
 package utility;
 
-import controller.ScreenControl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.UUID;
 import java.util.logging.Level;
 
 public class UserActionRecord {

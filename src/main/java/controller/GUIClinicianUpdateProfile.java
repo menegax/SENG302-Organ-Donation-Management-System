@@ -252,7 +252,7 @@ public class GUIClinicianUpdateProfile {
     public void goBackToProfile() {
         ScreenControl.removeScreen("clinicianProfile");
         try {
-            ScreenControl.addScreen("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
+            ScreenControl.addTabToHome("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
             ScreenControl.activate("clinicianProfile");
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
