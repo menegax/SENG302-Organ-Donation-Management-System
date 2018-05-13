@@ -231,7 +231,7 @@ public class SearchPatients {
 			
 			int docCount = 0;
 			int patientCount = 0;
-			while (docCount < allDocs.size() && patientCount <= NUM_RESULTS) {
+			while (docCount < allDocs.size() && patientCount < NUM_RESULTS) {
 				patient = fetchPatient(allDocs.get(docCount));
 				if (!results.contains(patient)) {
 					results.add(patient);
