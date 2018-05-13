@@ -109,3 +109,9 @@ This meant that an action could not be undone after another action was performed
 This allows the user to more easily keep track of what changes they have made and what states they can switch between.  
 In addition we decided to bind redo to Ctrl + Y. This is because Ctrl + Y is the industry standard undo for non-technical applications (such as word).  
 This is how we aim to target our application, as we do not see most of our users having software development or similar backgrounds.
+
+#### Name Search For Patients
+We decided to use an external library, Lucene, to do our name searching of patients. This library allows us to not just do a simple exact name search but do a fuzzy search of the names.
+This term "fuzzy search" means that some of the character can be different from what is in the name and it will still be a result. In order to tell which results are "better" a "score" is included with the individual results, which symbolizes how close to the entered search the names are. The closer the name to the search, the higher the score.
+We thought this would be very useful when searching for patients, as the clinician may not know the exact spelling of a particular patient but knows roughly how it is spelt. Or in a much simpler case, the clincian may simply have a miss key press. 
+However we do not want every patient to be matched to any search, so we set the max number of the character difference between the search and the patient's name to two.
