@@ -2,7 +2,6 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -16,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class GUIAddProcedure implements IPopupable {
+public class GUIProcedureForm implements IPopupable {
 
     @FXML
     public TextField summaryInput;
@@ -31,9 +30,40 @@ public class GUIAddProcedure implements IPopupable {
     public MenuButton affectedInput;
 
     @FXML
-    public AnchorPane addProcedureAnchorPane;
+    public AnchorPane procedureAnchorPane;
 
     private Patient patient;
+    private boolean isEditInstance = false;
+    private Procedure procedure; //The Procedure that is being edited (null in the case of adding a procedure)
+
+    /**
+     * Used to signify that the instance is for editing a procedure
+     */
+    void setupEditing(Procedure procedure) {
+        isEditInstance = true;
+        this.procedure = procedure;
+        loadProcedure();
+    }
+
+    /**
+     * Loads the details of an existing procedure into the form inputs
+     */
+    private void loadProcedure() {
+        summaryInput.setText(procedure.getSummary());
+        descriptionInput.setText(procedure.getDescription());
+        dateInput.setValue(procedure.getDate());
+
+        //Select the organ checkboxes to match the target procedures affectedOrgan set
+        for (MenuItem organSelection : affectedInput.getItems()) {
+            if (((CustomMenuItem) organSelection).getContent().getId() == null) {
+                CheckBox organCheckBox = (CheckBox) ((CustomMenuItem) organSelection).getContent();
+                Organ organ = (Organ) Organ.getEnumFromString(organCheckBox.getText());
+                if (procedure.getAffectedDonations().contains(organ)) {
+                    organCheckBox.setSelected(true);
+                }
+            }
+        }
+    }
 
     /**
      * Adds the procedure to the patient's list of procedures and closes the pop-up
@@ -53,7 +83,7 @@ public class GUIAddProcedure implements IPopupable {
             Procedure procedure = new Procedure( summaryInput.getText(), descriptionInput.getText(),
                     dateInput.getValue(), affectedDonations );
             patient.addProcedure( procedure );
-            ((Stage) addProcedureAnchorPane.getScene().getWindow()).close();
+            ((Stage) procedureAnchorPane.getScene().getWindow()).close();
         } else {
             System.out.println( affectedDonations.size() );
             Alert alert = new Alert(Alert.AlertType.ERROR, "Field input(s) are invalid. " +
@@ -106,6 +136,6 @@ public class GUIAddProcedure implements IPopupable {
     }
 
     public void closeWindow() {
-        ((Stage) addProcedureAnchorPane.getScene().getWindow()).close();
+        ((Stage) procedureAnchorPane.getScene().getWindow()).close();
     }
 }
