@@ -92,6 +92,7 @@ public class Patient {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
         this.firstName = firstName;
+        this.preferredName = firstName;
         this.middleNames = middleNames;
         this.lastName = lastName;
         this.birth = date;

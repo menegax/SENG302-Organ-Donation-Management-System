@@ -320,8 +320,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
         }
 
         // preferred name
-        if (!preferrednameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
+        if (!preferrednameTxt.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
             valid = setInvalid(preferrednameTxt);
         }
         else {
@@ -453,6 +452,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
                 ArrayList<String> middles = new ArrayList<>(middlenames);
                 target.setMiddleNames(middles);
             }
+            target.setPreferredName( preferrednameTxt.getText() );
             if (birthGenderMaleRadio.isSelected()) {
                 target.setBirthGender((BirthGender) BirthGender.getEnumFromString("male"));
             }
@@ -460,13 +460,13 @@ public class GUIPatientUpdateProfile implements IPopupable{
                 target.setBirthGender((BirthGender) BirthGender.getEnumFromString("female"));
             }
             if (preferredGenderManRadio.isSelected()) {
-                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( ("man") ) );
+                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( "man" ) );
             }
             if (preferredGenderWomanRadio.isSelected()) {
-                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( ("woman") ) );
+                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( "woman" ) );
             }
             if (preferredGenderNonBinaryRadio.isSelected()) {
-                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( ("non-binary") ) );
+                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( "nonbinary" ) );
             }
             if (dobDate.getValue() != null) {
                 target.setBirth(dobDate.getValue());
