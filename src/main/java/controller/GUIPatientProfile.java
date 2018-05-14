@@ -99,6 +99,8 @@ public class GUIPatientProfile {
     @FXML
     private Label back;
 
+    private Patient viewedPatient;
+
     private UserControl userControl;
 
     private ListProperty<String> organListProperty = new SimpleListProperty<>();
@@ -109,6 +111,18 @@ public class GUIPatientProfile {
     private void removeBack() {
         back.setDisable(true);
         back.setVisible(false);
+    }
+
+
+    public void setViewedPatient(Patient patient) {
+        this.viewedPatient = patient;
+        removeBack();
+        try {
+            loadProfile(this.viewedPatient.getNhiNumber());
+        }
+        catch (InvalidObjectException e) {
+            userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
+        }
     }
 
 
