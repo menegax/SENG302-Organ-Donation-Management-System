@@ -73,8 +73,8 @@ public class DrugInteraction {
      * @param donorGender - Gender of the patient
      * @return - interactions based on the gender of the patient
      */
-    public JsonArray getGenderInteractionsHelper( BirthGender donorGender) {
-        JsonElement genderInteractions = response.get("gender_interaction").getAsJsonObject().get(donorGender.name().toLowerCase());
+    public JsonArray getGenderInteractionsHelper(BirthGender donorGender) {
+        JsonElement genderInteractions = response.get("gender_interaction").getAsJsonObject().get(donorGender.getValue().toLowerCase());
         JsonArray gender = new JsonArray();
         gender.addAll(genderInteractions.getAsJsonArray());
         return gender;
