@@ -73,7 +73,8 @@ public class GUIClinicianSearchPatients implements Initializable {
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
-                    .getSelectedItem() != null) {
+                    .getSelectedItem() != null && click.getPickResult().getIntersectedNode() ==
+                    patientDataTable.getSelectionModel().getSelectedCells()) {
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
