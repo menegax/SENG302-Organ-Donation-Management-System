@@ -80,6 +80,7 @@ public class GUIPatientProcedures implements IPopupable {
             this.patient = ScreenControl.getLoggedInPatient();
             setupTables();
             addProcedureButton.setVisible(false);
+            editProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
         }
     }
