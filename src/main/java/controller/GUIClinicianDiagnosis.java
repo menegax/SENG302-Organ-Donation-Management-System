@@ -94,10 +94,6 @@ public class GUIClinicianDiagnosis implements IPopupable {
      */
     private ArrayList<Disease> pastDiseases;
 
-    /**
-     * Selected disease
-     */
-    private Disease chosen;
 
     /**
      * Boolean to show if changes have been made
@@ -215,8 +211,6 @@ public class GUIClinicianDiagnosis implements IPopupable {
                 } );
                 rightClickPast.getItems().addAll( makeChronicAction, makeCuredAction, makeNullAction );
                 rightClickPast.show( pastDiagnosesView.getSelectionModel().getTableView(), click.getScreenX(), click.getScreenY() );
-            } else if (click.getButton() == MouseButton.PRIMARY && pastDiagnosesView.getSelectionModel().getSelectedItem() != null) {
-                chosen = pastDiagnosesView.getSelectionModel().getSelectedItem();
             }
         });
 
@@ -238,8 +232,6 @@ public class GUIClinicianDiagnosis implements IPopupable {
                 } );
                 rightClickCurrent.getItems().addAll( makeChronicAction, makeCuredAction, makeNullAction );
                 rightClickCurrent.show( currentDiagnosesView.getSelectionModel().getTableView(), click.getScreenX(), click.getScreenY() );
-            } else if (click.getButton() == MouseButton.PRIMARY && currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
-                chosen = currentDiagnosesView.getSelectionModel().getSelectedItem();
             }
         });
     }
@@ -359,7 +351,7 @@ public class GUIClinicianDiagnosis implements IPopupable {
     }
 
     /**
-     * Returns to the
+     * Returns to the patient profile page
      */
     @FXML
     public void goToProfile() {
@@ -521,22 +513,23 @@ public class GUIClinicianDiagnosis implements IPopupable {
     public void deleteDiagnoses() {
         if (pastDiagnosesView.getSelectionModel().getSelectedItem() != null) {
             changed = true;
-            pastDiseases.remove(chosen);
-            deletedPast.add(chosen);
+            pastDiseases.remove(pastDiagnosesView.getSelectionModel().getSelectedItem());
+            deletedPast.add(pastDiagnosesView.getSelectionModel().getSelectedItem());
             loadPastDiseases();
-            userActions.log(Level.FINE, "Successfully deleted a disease",  chosen + " is successfully deleted");
+            userActions.log(Level.FINE, "Successfully deleted a disease",  pastDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
             new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis deleted successfully", ButtonType.OK).show();
         } else if (currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
             changed = true;
-            currentDiseases.remove(chosen);
-            deletedCurrent.add(chosen);
+            currentDiseases.remove(currentDiagnosesView.getSelectionModel().getSelectedItem());
+            deletedCurrent.add(currentDiagnosesView.getSelectionModel().getSelectedItem());
             loadCurrentDiseases();
-            userActions.log(Level.WARNING, "Failed to delete a disease", chosen + " failed to be deleted");
+            userActions.log(Level.WARNING, "Successfully deleted a disease", currentDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
             new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis deleted successfully", ButtonType.OK).show();
         } else {
-            userActions.log(Level.WARNING, "Failed to delete a disease", chosen + " failed to be deleted");
+            userActions.log(Level.WARNING, "Failed to delete a disease", "disease failed to be deleted");
             new Alert(Alert.AlertType.WARNING, "No Diagnosis selected", ButtonType.OK).show();
         }
+        updateDiagnosesLists();
     }
 
     /**
