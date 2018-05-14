@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import utility.GlobalEnums;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -54,20 +55,13 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
      */
     private static Patient currentPatient;
 
+    private StatesHistoryScreen statesHistoryScreen;
 
 
     @Override
     public void setViewedPatient(Patient patient) {
         currentPatient = patient;
     }
-
-//    /**
-//     * Static method to set the current patient the updated diagnosis will apply to
-//     * @param target patient with altered diagnosis
-//     */
-//    public static void setPatient(Patient target) {
-//        currentPatient = target;
-//    }
 
     /**
      * Sets the diagnosis that is being updated
@@ -85,6 +79,12 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
     public void initialize() {
         populateDropdown();
         populateForm();
+        ArrayList<Control> controls = new ArrayList<Control>() {{
+            add(diseaseNameTextField);
+            add(diagnosisDate);
+            add(tagsDD);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(diagnosisUpdatePane, controls);
     }
 
     /**
@@ -251,4 +251,14 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
             alert.showAndWait();
         }
     }
+
+
+    public void redo() {
+        statesHistoryScreen.redo();
+    }
+
+    public void undo() {
+        statesHistoryScreen.undo();
+    }
+
 }
