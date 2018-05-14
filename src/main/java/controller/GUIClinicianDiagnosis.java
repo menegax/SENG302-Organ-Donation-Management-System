@@ -1,18 +1,13 @@
 package controller;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import model.Disease;
-import model.DrugInteraction;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
@@ -77,12 +72,12 @@ public class GUIClinicianDiagnosis implements IPopupable {
     /**
      * Deleted past diseases
      */
-    private ArrayList<Disease> deletedPast = new ArrayList<Disease>();
+    private ArrayList<Disease> deletedPast = new ArrayList<>();
 
     /**
      * Deleted current diseases
      */
-    private ArrayList<Disease> deletedCurrent = new ArrayList<Disease>();
+    private ArrayList<Disease> deletedCurrent = new ArrayList<>();
 
     /**
      * Patient's current diseases
@@ -116,8 +111,7 @@ public class GUIClinicianDiagnosis implements IPopupable {
     public static void staticSetPatient(Patient patient) {
         target = patient;
         try {
-            Patient p = Database.getPatientByNhi(target.getNhiNumber());
-            target = p;
+            target = Database.getPatientByNhi(target.getNhiNumber());
         } catch(InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading user",
                     "attempted to manage the diagnoses for logged in user");
@@ -145,7 +139,6 @@ public class GUIClinicianDiagnosis implements IPopupable {
         currentDiseases = target.getCurrentDiseases();
         pastDiseases = target.getPastDiseases();
         updateDiagnosesLists();
-        setUpRightClickTags();
         setUpDoubleClickEdit(pastDiagnosesView);
         setUpDoubleClickEdit(currentDiagnosesView);
     }
@@ -189,52 +182,6 @@ public class GUIClinicianDiagnosis implements IPopupable {
         });
     }
 
-    /**
-     * Sets up right click tags to change disease tag, and mark a disease as chronic, cured or remove tags
-     */
-    private void setUpRightClickTags() {
-        pastDiagnosesView.setOnMouseClicked(click -> {
-            if (click.getButton() == MouseButton.SECONDARY && pastDiagnosesView.getSelectionModel().getSelectedItem() != null) {
-                Disease selected = pastDiseases.get( pastDiseases.indexOf( pastDiagnosesView.getSelectionModel().getSelectedItem() ) );
-                ContextMenu rightClickPast = new ContextMenu();
-                MenuItem makeChronicAction = new MenuItem( "Tag chronic" );
-                MenuItem makeCuredAction = new MenuItem( "Tag cured" );
-                MenuItem makeNullAction = new MenuItem( "Remove tags" );
-                makeChronicAction.setOnAction( event -> {
-                    updatePastStatus( selected, "chronic" );
-                } );
-                makeCuredAction.setOnAction( event -> {
-                    updatePastStatus( selected, "cured" );
-                } );
-                makeNullAction.setOnAction( event -> {
-                    updatePastStatus( selected, "" );
-                } );
-                rightClickPast.getItems().addAll( makeChronicAction, makeCuredAction, makeNullAction );
-                rightClickPast.show( pastDiagnosesView.getSelectionModel().getTableView(), click.getScreenX(), click.getScreenY() );
-            }
-        });
-
-        currentDiagnosesView.setOnMouseClicked(click -> {
-            if (click.getButton() == MouseButton.SECONDARY && currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
-                Disease selected = currentDiseases.get( currentDiseases.indexOf( currentDiagnosesView.getSelectionModel().getSelectedItem() ) );
-                ContextMenu rightClickCurrent = new ContextMenu();
-                MenuItem makeChronicAction = new MenuItem( "Mark as chronic" );
-                MenuItem makeCuredAction = new MenuItem( "Mark as cured" );
-                MenuItem makeNullAction = new MenuItem( "Mark as null" );
-                makeChronicAction.setOnAction( event -> {
-                    updateCurrentStatus( selected, "chronic" );
-                } );
-                makeCuredAction.setOnAction( event -> {
-                    updateCurrentStatus( selected, "cured" );
-                } );
-                makeNullAction.setOnAction( event -> {
-                    updateCurrentStatus( selected, "" );
-                } );
-                rightClickCurrent.getItems().addAll( makeChronicAction, makeCuredAction, makeNullAction );
-                rightClickCurrent.show( currentDiagnosesView.getSelectionModel().getTableView(), click.getScreenX(), click.getScreenY() );
-            }
-        });
-    }
 
     /**
      * Registers a new diagnosis entry for a patient when 'Add diagnosis' is activated
@@ -394,54 +341,7 @@ public class GUIClinicianDiagnosis implements IPopupable {
 
 
     /**
-     * Updates the disease state for a current diagnosis if the update is not 'cured' when the current state is still 'chronic'
-     * If state is set to cured, the disease will be automatically moved to the past diseases list
-     * @param disease The disease in the list of the diagnosis being updated
-     * @param status The Disease status update
-     */
-    private void updateCurrentStatus(Disease disease, String status) {
-        if (status.toLowerCase().equals( "cured" ) && disease.getDiseaseState() == null) {
-            moveFromCurrentToPast( disease, status );
-            changed = true;
-        } else if (status.toLowerCase().equals( "cured" ) && disease.getDiseaseState().toString().toLowerCase().equals( "chronic" )) {
-            new Alert(Alert.AlertType.WARNING, "Can not set disease state to 'cured' if the current state is 'chronic'", ButtonType.OK).show();
-            userActions.log(Level.WARNING, "Failed to update a disease state", "Disease state could not be changed to 'cured' when it is 'chronic'");
-        } else if (status.toLowerCase().equals( "chronic" )) {
-            disease.setDiseaseState( GlobalEnums.DiseaseState.CHRONIC );
-            loadCurrentDiseases();
-            userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to chronic");
-            changed = true;
-        } else {
-            disease.setDiseaseState( null );
-            loadCurrentDiseases();
-            userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to " + status);
-            changed = true;
-        }
-    }
-
-    /**
-     * Updates the disease state for a past diagnosis
-     * @param disease The disease in the list of the diagnosis being updated
-     * @param status The Disease status update
-     */
-    private void updatePastStatus(Disease disease, String status) {
-        switch (status.toLowerCase()) {
-            case "chronic": moveFromPastToCurrent(disease, status); break;
-            case "cured":
-                disease.setDiseaseState( GlobalEnums.DiseaseState.CURED );
-                loadPastDiseases();
-                userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to cured");
-                break;
-            default:
-                disease.setDiseaseState( null );
-                loadPastDiseases();
-                userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to " + status);
-        }
-        changed = true;
-    }
-
-    /**
-     * Moves a diagnosis from the past diseases list to the current diseases list
+     * Moves a diagnosis from the past diseases list to the current diseases list when adding a new diagnosis
      * @param disease The diseases being moved from past to current diseases list
      * @param state The state of the disease; chronic or null
      */
@@ -462,32 +362,12 @@ public class GUIClinicianDiagnosis implements IPopupable {
         }
     }
 
-    /**
-     * Moves a diagnosis from the current diseases list to the past diseases list
-     * @param disease The diseases being moved from current to past diseases list
-     * @param state The state of the disease; cured or null
-     */
-    private void moveFromCurrentToPast(Disease disease, String state) {
-        if (state == null || state.toLowerCase().equals( "cured" )) {
-            if (state == null) {
-                disease.setDiseaseState( null );
-            } else {
-                disease.setDiseaseState( GlobalEnums.DiseaseState.CURED );
-            }
-            pastDiseases.add( disease );
-            currentDiseases.remove( disease );
-            userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to " + state);
-            userActions.log( Level.FINE, "Moved a disease from current to past", "Moved disease " + disease.getDiseaseName() + " from current to past" );
-            loadPastDiseases();
-            loadCurrentDiseases();
-        }
-    }
 
     /**
      * Iterates through current and past diagnoses and moves cured and chronic diseases to their required lists.
      * Reloads the lists to reflect updates
      */
-    public void updateDiagnosesLists() {
+    private void updateDiagnosesLists() {
         for(Disease disease : new ArrayList<>(currentDiseases)) {
             if(disease.getDiseaseState() == GlobalEnums.DiseaseState.CURED) {
                 currentDiseases.remove(disease);
@@ -530,13 +410,5 @@ public class GUIClinicianDiagnosis implements IPopupable {
             new Alert(Alert.AlertType.WARNING, "No Diagnosis selected", ButtonType.OK).show();
         }
         updateDiagnosesLists();
-    }
-
-    /**
-     * Refreshes the table data
-     */
-    private void tableRefresh() {
-        currentDiagnosesView.refresh();
-        pastDiagnosesView.refresh();
     }
 }
