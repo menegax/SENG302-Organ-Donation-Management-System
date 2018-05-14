@@ -12,9 +12,7 @@ import javafx.stage.Stage;
 import model.DrugInteraction;
 import service.Database;
 import service.OrganWaitlist;
-import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
-import utility.GlobalEnums.Region;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,7 +35,8 @@ public class GUIClinicianWaitingList {
     public TableColumn<OrganWaitlist.OrganRequest, String> nameCol;
     public TableColumn<OrganWaitlist.OrganRequest, String> organCol;
     public TableColumn<OrganWaitlist.OrganRequest, String> regionCol;
-    
+
+    private ObservableList<OrganWaitlist.OrganRequest> openProfiles = FXCollections.observableArrayList();
     private ObservableList<OrganWaitlist.OrganRequest> masterData = FXCollections.observableArrayList();
 
     /**
@@ -46,13 +45,6 @@ public class GUIClinicianWaitingList {
      */
     public void initialize() throws InvalidObjectException {
     	OrganWaitlist waitingList = Database.getWaitingList();
-
-        // TODO: 10/05/2018 remove test data after story 23 merged to development
-    	waitingList.add(Database.getPatientByNhi("ABC1238"), Organ.LIVER);
-        waitingList.add(Database.getPatientByNhi("ABC1238"), Organ.KIDNEY);
-        waitingList.add(Database.getPatientByNhi("ABC1234"), Organ.CORNEA);
-        waitingList.add(Database.getPatientByNhi("ABC1234"), Organ.KIDNEY);
-
         for (OrganWaitlist.OrganRequest request: waitingList) {
     		masterData.add(request);
     	}
@@ -61,29 +53,39 @@ public class GUIClinicianWaitingList {
     }
 
     /**
-     * Sets up double-click functionality for each row to open a patient profile update
+     * Closes an opened profile, and removes patient from profile open list so profile can be reopened
+     * @param index The index in the list of opened patient profiles
+     */
+    private void closeProfile(int index) {
+        Platform.runLater(this::tableRefresh);
+        openProfiles.remove( index );
+    }
+
+    /**
+     * Sets up double-click functionality for each row to open a patient profile update, ensures no duplicate profiles
      */
     private void setupDoubleClickToPatientEdit() {
 
         // Add double-click event to rows
         waitingListTableView.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && waitingListTableView.getSelectionModel()
-                    .getSelectedItem() != null) {
+                    .getSelectedItem() != null && !openProfiles.contains(waitingListTableView.getSelectionModel()
+                    .getSelectedItem())) {
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
                     GUIPatientProfile controller = fxmlLoader.getController();
-                    controller.setViewedPatient(Database.getPatientByNhi(waitingListTableView.getSelectionModel()
-                            .getSelectedItem().getReceiverNhi()));
-                    DrugInteraction.setViewedPatient(Database.getPatientByNhi(waitingListTableView.getSelectionModel()
-                            .getSelectedItem().getReceiverNhi()));
+                    OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
+                    controller.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
+                    DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
                     Stage popUpStage = new Stage();
                     popUpStage.setX(ScreenControl.getMain()
                             .getX()); //offset popup
                     popUpStage.setScene(scene);
+                    openProfiles.add(request);  // add the patient to a list so its profile can be opened once at a time
 
                     // When pop up is closed, refresh the table
-                    popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
+                    popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request )));
 
                     //Add and show the popup
                     ScreenControl.addPopUp("searchPopup", popUpStage); //ADD to screen control
@@ -96,7 +98,6 @@ public class GUIClinicianWaitingList {
                     new Alert(Alert.AlertType.ERROR, "Unable to open patient edit window", ButtonType.OK).show();
                 }
             }
-
         });
     }
 
