@@ -91,7 +91,6 @@ public class GUIProcedureForm implements IPopupable {
             patient.addProcedure( procedure );
             ((Stage) procedureAnchorPane.getScene().getWindow()).close();
         } else {
-            System.out.println( affectedDonations.size() );
             Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +
                     "patients DOB. There must be a summary. A summary, and description, if any, must contain " +
                     "alphabetic or numerical character(s), hyphens or spaces");
@@ -105,7 +104,6 @@ public class GUIProcedureForm implements IPopupable {
      * @param summary The procedure summary string
      * @param description The procedure description string
      * @param date The date of the procedure
-     * @param organs The selected organ(s) affected by the procedure
      * @return True if date is not before patient DOB, one or more organs, or summary/description are more than 1 chars
      */
     private Boolean validateInputs(String summary, String description, LocalDate date) {
