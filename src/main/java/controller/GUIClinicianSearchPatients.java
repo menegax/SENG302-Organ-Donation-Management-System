@@ -147,6 +147,8 @@ public class GUIClinicianSearchPatients implements Initializable {
                     // If filter text is empty, display all persons.
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
+                    } else if (newValue.toLowerCase().equals( "male" ) || newValue.toLowerCase().equals("female")) {
+                        return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() );
                     }
                     return SearchPatients.searchByName(newValue)
                             .contains(patient);
