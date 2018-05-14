@@ -19,7 +19,7 @@ public class CLIMain {
             Terminal terminal = builder.build();
             return LineReaderBuilder.builder().terminal(terminal).build();
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, "unable to start LineReader", "attempted to begin CLI application");
+            userActions.log(Level.SEVERE, "Unable to start LineReader", "Attempted to begin CLI application");
             System.exit(0);
         }
         return null;

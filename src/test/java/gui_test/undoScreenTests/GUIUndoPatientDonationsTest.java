@@ -84,6 +84,7 @@ public class GUIUndoPatientDonationsTest extends ApplicationTest{
             bonemarrowCBDefault = lookup("#bonemarrowCB").queryAs(CheckBox.class).isSelected();
             connectivetissueCBDefault = lookup("#connectivetissueCB").queryAs(CheckBox.class).isSelected();
         });
+
     }
 
     /**
