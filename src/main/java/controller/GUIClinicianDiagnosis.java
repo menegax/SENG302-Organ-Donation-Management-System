@@ -148,8 +148,7 @@ public class GUIClinicianDiagnosis implements IPopupable {
         }
         currentDiseases = target.getCurrentDiseases();
         pastDiseases = target.getPastDiseases();
-        loadCurrentDiseases();
-        loadPastDiseases();
+        updateDiagnosesLists();
         setUpRightClickTags();
         setUpDoubleClickEdit(pastDiagnosesView);
         setUpDoubleClickEdit(currentDiagnosesView);
@@ -181,7 +180,6 @@ public class GUIClinicianDiagnosis implements IPopupable {
                         userActions.log(Level.SEVERE, "Error loading update diagnoses screen in popup", "attempted to navigate from the diagnoses page to the update diagnosis page in popup");
                         new Alert(Alert.AlertType.WARNING, "Error loading update diagnoses page", ButtonType.OK).show();
                     }
-                    updateDiagnosesLists();
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -497,7 +495,7 @@ public class GUIClinicianDiagnosis implements IPopupable {
      * Iterates through current and past diagnoses and moves cured and chronic diseases to their required lists.
      * Reloads the lists to reflect updates
      */
-    private void updateDiagnosesLists() {
+    public void updateDiagnosesLists() {
         for(Disease disease : new ArrayList<>(currentDiseases)) {
             if(disease.getDiseaseState() == GlobalEnums.DiseaseState.CURED) {
                 currentDiseases.remove(disease);
