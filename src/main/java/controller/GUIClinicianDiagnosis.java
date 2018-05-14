@@ -172,24 +172,19 @@ public class GUIClinicianDiagnosis implements IPopupable {
                     .getSelectedItem() != null) {
                 try {
                     GUIPatientUpdateDiagnosis.setDisease(tableView.getSelectionModel().getSelectedItem());
-                    GUIPatientUpdateDiagnosis.setPatient(target);
-
-                    Stage popUpStage = new Stage();
+//                    GUIPatientUpdateDiagnosis.setPatient(target);
 
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateDiagnosis.fxml"));
-                    Scene scene = new Scene(fxmlLoader.load());
-                    popUpStage.setHeight(285);
-                    popUpStage.setWidth(420);
-                    popUpStage.setScene(scene);
-
-                    // When pop up is closed, refresh the table
-                    popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-
-                    popUpStage.showAndWait();
-
+                    try {
+                        ScreenControl.loadPopUpPane(clinicianDiagnosesPane.getScene(), fxmlLoader, target);
+                    } catch (IOException e) {
+                        userActions.log(Level.SEVERE, "Error loading update diagnoses screen in popup", "attempted to navigate from the diagnoses page to the update diagnosis page in popup");
+                        new Alert(Alert.AlertType.WARNING, "Error loading update diagnoses page", ButtonType.OK).show();
+                    }
                     updateDiagnosesLists();
                 }
                 catch (Exception e) {
+                    e.printStackTrace();
                     userActions.log(Level.SEVERE,
                             "Failed to open diagnosis update window from the diagnoses page",
                             "attempted to open diagnosis update window from the diagnoses page");

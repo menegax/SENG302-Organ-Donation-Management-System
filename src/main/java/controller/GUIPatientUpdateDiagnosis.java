@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -12,14 +13,18 @@ import model.Disease;
 import model.Patient;
 import utility.GlobalEnums;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 /**
  * Controller for diagnosis update popup window.
  */
-public class GUIPatientUpdateDiagnosis {
+public class GUIPatientUpdateDiagnosis implements IPopupable {
 
     @FXML
     public AnchorPane diagnosisUpdatePane;
@@ -50,13 +55,19 @@ public class GUIPatientUpdateDiagnosis {
     private static Patient currentPatient;
 
 
-    /**
-     * Static method to set the current patient the updated diagnosis will apply to
-     * @param target patient with altered diagnosis
-     */
-    public static void setPatient(Patient target) {
-        currentPatient = target;
+
+    @Override
+    public void setViewedPatient(Patient patient) {
+        currentPatient = patient;
     }
+
+//    /**
+//     * Static method to set the current patient the updated diagnosis will apply to
+//     * @param target patient with altered diagnosis
+//     */
+//    public static void setPatient(Patient target) {
+//        currentPatient = target;
+//    }
 
     /**
      * Sets the diagnosis that is being updated
@@ -106,10 +117,14 @@ public class GUIPatientUpdateDiagnosis {
      * Gets the source of the click event, gets the window that the source is on and casts the window to a stage
      * before calling the stage close method.
      */
-    public void cancelUpdate(ActionEvent actionEvent) {
-        Node source = (Node) actionEvent.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
+    public void cancelUpdate() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
+        try {
+            ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader, currentPatient);
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE, "Error returning to diagnoses screen in popup", "attempted to navigate from the update diagnosis page to the diagnoses page in popup");
+            new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
+        }
     }
 
     /***
@@ -181,9 +196,8 @@ public class GUIPatientUpdateDiagnosis {
      * (but not saved) to the current updated diagnosis information and the popup stage is closed.
      * If the update is invalid, an alert is shown with the errors in question explained in the alert information.
      * The stage is not closed in this case.
-     * @param actionEvent click event that triggered the update
      */
-    public void completeUpdate(ActionEvent actionEvent) {
+    public void completeUpdate() {
         if(isValidUpdate()) {
             if(!(target.getDiseaseName().equals(diseaseNameTextField.getText()) && target.getDateDiagnosed() ==
                     diagnosisDate.getValue() && target.getDiseaseState() ==
@@ -194,7 +208,7 @@ public class GUIPatientUpdateDiagnosis {
             try {
                 target.setDateDiagnosed(diagnosisDate.getValue(), currentPatient);
             } catch (InvalidObjectException e) {
-
+                userActions.log(Level.SEVERE, "The date is not valid. This should never be called.");
             }
             switch (tagsDD.getSelectionModel().getSelectedItem().toString()) {
                 case "cured":
@@ -208,9 +222,13 @@ public class GUIPatientUpdateDiagnosis {
                     break;
             }
 
-            Node source = (Node) actionEvent.getSource();
-            Stage stage = (Stage) source.getScene().getWindow();
-            stage.close();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader, currentPatient);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error returning to diagnoses screen in popup", "attempted to navigate from the update diagnosis page to the diagnoses page in popup");
+                new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
+            }
         } else {
             String errorString = "";
             if(diseaseNameTextField.getStyleClass().contains("invalid")) {
@@ -233,5 +251,4 @@ public class GUIPatientUpdateDiagnosis {
             alert.showAndWait();
         }
     }
-
 }
