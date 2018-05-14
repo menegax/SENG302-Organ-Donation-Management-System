@@ -21,32 +21,64 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
+/**
+ * Controller class for viewing a patient's diagnoses. Past and present lists are shown.
+ */
 public class GUIPatientDiagnosis {
 
 
+    @FXML
     public AnchorPane patientDiagnosesPane;
-    public TableView<Disease> pastDiagnosesView;
-    public TableColumn<Disease, LocalDate> pastDateCol;
-    public TableColumn<Disease, String> pastDiagnosisCol;
-    public TableColumn<Disease, GlobalEnums.DiseaseState> pastTagsCol;
-    public TableView<Disease> currentDiagnosesView;
-    public TableColumn<Disease, LocalDate> currentDateCol;
-    public TableColumn<Disease, String> currentDiagnosisCol;
-    public TableColumn<Disease, GlobalEnums.DiseaseState> currentTagsCol;
-
-    private Patient currentPatient;
-    private ArrayList<Disease> currentDiseases;
-    private ArrayList<Disease> pastDiseases;
 
     @FXML
+    public TableView<Disease> pastDiagnosesView;
+
+    @FXML
+    public TableColumn<Disease, LocalDate> pastDateCol;
+
+    @FXML
+    public TableColumn<Disease, String> pastDiagnosisCol;
+
+    @FXML
+    public TableColumn<Disease, GlobalEnums.DiseaseState> pastTagsCol;
+
+    @FXML
+    public TableView<Disease> currentDiagnosesView;
+
+    @FXML
+    public TableColumn<Disease, LocalDate> currentDateCol;
+
+    @FXML
+    public TableColumn<Disease, String> currentDiagnosisCol;
+
+    @FXML
+    public TableColumn<Disease, GlobalEnums.DiseaseState> currentTagsCol;
+
+    /**
+     * Current disease list of the patient
+     */
+    private ArrayList<Disease> currentDiseases;
+
+    /**
+     * Past disease list of the patient
+     */
+    private ArrayList<Disease> pastDiseases;
+
+    /**
+     * Initializes the patient view of their own diseases (past and current).
+     */
+    @FXML
     public void initialize() {
-        currentPatient = ScreenControl.getLoggedInPatient();
+        Patient currentPatient = ScreenControl.getLoggedInPatient();
         currentDiseases = currentPatient.getCurrentDiseases();
         pastDiseases = currentPatient.getPastDiseases();
         loadCurrentDiseases();
         loadPastDiseases();
     }
 
+    /**
+     * Loads current disease list from the target patient's current diseases
+     */
     public void loadCurrentDiseases() {
         if(currentDiseases == null) currentDiseases = new ArrayList<>();
         ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(currentDiseases);
@@ -56,6 +88,9 @@ public class GUIPatientDiagnosis {
         currentDiagnosesView.setItems(observableCurrentDiseases);
     }
 
+    /**
+     * Loads past disease list from the target patient's past diseases
+     */
     public void loadPastDiseases() {
         if(pastDiseases == null) pastDiseases = new ArrayList<>();
         ObservableList<Disease> observablePastDiseases = FXCollections.observableArrayList(pastDiseases);
@@ -65,6 +100,9 @@ public class GUIPatientDiagnosis {
         pastDiagnosesView.setItems(observablePastDiseases);
     }
 
+    /**
+     * Returns to the patient profile page
+     */
     @FXML
     public void goToProfile() {
         ScreenControl.removeScreen("patientProfile");

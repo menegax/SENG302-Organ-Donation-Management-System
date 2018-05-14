@@ -16,9 +16,10 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller for diagnosis update popup window.
+ */
 public class GUIPatientUpdateDiagnosis {
-
-
 
     @FXML
     public AnchorPane diagnosisUpdatePane;
@@ -38,24 +39,48 @@ public class GUIPatientUpdateDiagnosis {
     @FXML
     public ChoiceBox tagsDD;
 
+    /**
+     * Diagnosis being updated
+     */
     private static Disease target;
 
+    /**
+     * Patient who the target diagnosis belongs to
+     */
     private static Patient currentPatient;
 
 
+    /**
+     * Static method to set the current patient the updated diagnosis will apply to
+     * @param target patient with altered diagnosis
+     */
     public static void setPatient(Patient target) {
         currentPatient = target;
     }
 
+    /**
+     * Sets the diagnosis that is being updated
+     * @param disease diagnosis to update
+     */
     public static void setDisease(Disease disease) {
         target = disease;
     }
 
+    /**
+     * Initializes the popup window for updating a diagnosis.
+     * Adds dropdown for disease states.
+     * Populates all editable nodes with the current disease information
+     */
     public void initialize() {
         populateDropdown();
         populateForm();
     }
 
+    /**
+     * Sets the diagnosis name text field to the current name.
+     * Sets the diagnosis date picker to the current diagnosis date.
+     * Sets the drop down state menu to the diagnosis' current state.
+     */
     private void populateForm() {
         diseaseNameTextField.setText(target.getDiseaseName());
         diagnosisDate.setValue(target.getDateDiagnosed());
@@ -64,6 +89,9 @@ public class GUIPatientUpdateDiagnosis {
         }
     }
 
+    /**
+     * Populates the dropdown menu with all possible disease states
+     */
     private void populateDropdown() {
         List<String> tags = new ArrayList<>();
         tags.add("None");
@@ -111,6 +139,7 @@ public class GUIPatientUpdateDiagnosis {
     /**
      * Checks that the updated fields are valid (name, date and state of diagnosis.
      * Returns true if the update is valid and false otherwise.
+     * If the update is valid, the node is reset to whatever is currently shown
      * @return boolean valid updates
      */
     private boolean isValidUpdate() {
@@ -147,8 +176,20 @@ public class GUIPatientUpdateDiagnosis {
         return valid;
     }
 
+    /**
+     * Called when the done button is selected. If the update is valid, the diagnosis for the donor is updated
+     * (but not saved) to the current updated diagnosis information and the popup stage is closed.
+     * If the update is invalid, an alert is shown with the errors in question explained in the alert information.
+     * The stage is not closed in this case.
+     * @param actionEvent click event that triggered the update
+     */
     public void completeUpdate(ActionEvent actionEvent) {
         if(isValidUpdate()) {
+            if(!(target.getDiseaseName().equals(diseaseNameTextField.getText()) && target.getDateDiagnosed() ==
+                    diagnosisDate.getValue() && target.getDiseaseState() ==
+                    tagsDD.getSelectionModel().getSelectedItem())) {
+                GUIClinicianDiagnosis.setChanged(true);
+            }
             target.setDiseaseName(diseaseNameTextField.getText());
             try {
                 target.setDateDiagnosed(diagnosisDate.getValue(), currentPatient);

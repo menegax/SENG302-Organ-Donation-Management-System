@@ -25,34 +25,98 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
+/**
+ * Controller class for clinician viewing and editing of a patient's diagnoses.
+ */
 public class GUIClinicianDiagnosis implements IPopupable {
 
+    @FXML
     public AnchorPane clinicianDiagnosesPane;
+
+    @FXML
     public TableView<Disease> pastDiagnosesView;
+
+    @FXML
     public TableColumn<Disease, LocalDate> pastDateCol;
+
+    @FXML
     public TableColumn<Disease, String> pastDiagnosisCol;
+
+    @FXML
     public TableColumn<Disease, GlobalEnums.DiseaseState> pastTagsCol;
+
+    @FXML
     public TableView<Disease> currentDiagnosesView;
+
+    @FXML
     public TableColumn<Disease, LocalDate> currentDateCol;
+
+    @FXML
     public TableColumn<Disease, String> currentDiagnosisCol;
+
+    @FXML
     public TableColumn<Disease, GlobalEnums.DiseaseState> currentTagsCol;
+
+    @FXML
     public Button saveButton;
+
+    @FXML
     public Button deleteButton;
+
+    @FXML
     public Button addDiagnosisButton;
+
     @FXML
     private TextField newDiagnosis;
-    private static Patient target;
-    private ArrayList<Disease> deletedPast = new ArrayList<Disease>();
-    private ArrayList<Disease> deletedCurrent = new ArrayList<Disease>();
-    private ArrayList<Disease> currentDiseases;
-    private ArrayList<Disease> pastDiseases;
-    private Disease chosen;
-    private boolean changed = false; // Boolean for if there are any un-saved edits when leaving pane
 
+    /**
+     * Patient being viewed
+     */
+    private static Patient target;
+
+    /**
+     * Deleted past diseases
+     */
+    private ArrayList<Disease> deletedPast = new ArrayList<Disease>();
+
+    /**
+     * Deleted current diseases
+     */
+    private ArrayList<Disease> deletedCurrent = new ArrayList<Disease>();
+
+    /**
+     * Patient's current diseases
+     */
+    private ArrayList<Disease> currentDiseases;
+
+    /**
+     * Patient's past diseases
+     */
+    private ArrayList<Disease> pastDiseases;
+
+    /**
+     * Selected disease
+     */
+    private Disease chosen;
+
+    /**
+     * Boolean to show if changes have been made
+     */
+    private static boolean changed = false; // Boolean for if there are any un-saved edits when leaving pane
+
+    /**
+     * Sets the viewed patient being viewed and edited
+     * @param patient viewed patient
+     */
     public void setViewedPatient(Patient patient) {
         target = patient;
     }
 
+    /**
+     * Statically sets the patient being viewed and sets the target patient to the corresponding target by the
+     * same NHI number in the database
+     * @param patient viewed patient
+     */
     public static void staticSetPatient(Patient patient) {
         target = patient;
         try {
@@ -64,12 +128,18 @@ public class GUIClinicianDiagnosis implements IPopupable {
         }
     }
 
+    public static void setChanged(boolean bool) { changed = bool;}
 
+    /**
+     * Initializes the clinician diagnoses view window.
+     * Sets the target patient's current and past diseases to new ArrayLists of Disease objects if they have not been
+     * set before.
+     * Current diseases and past diseases are set as the target's current and past diseases, and these lists are
+     * loaded into the ListViews.
+     * Double click functions to update a diagnosis are added for both current and past diseases
+     */
     @FXML
     public void initialize() {
-        if(ScreenControl.getLoggedInPatient() != null) {
-            target = ScreenControl.getLoggedInPatient();
-        }
         if(target.getCurrentDiseases() == null) {
             target.setCurrentDiseases(new ArrayList<>());
         }
@@ -116,6 +186,8 @@ public class GUIClinicianDiagnosis implements IPopupable {
                     popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
 
                     popUpStage.showAndWait();
+
+                    updateDiagnosesLists();
                 }
                 catch (Exception e) {
                     userActions.log(Level.SEVERE,
@@ -185,7 +257,8 @@ public class GUIClinicianDiagnosis implements IPopupable {
      * @param diagnosis The entered diagnosis to textField for registration
      */
     private void addDiagnosis(String diagnosis) {
-        if (!diagnosis.equals("Enter a diagnosis") && !diagnosis.equals("") && !diagnosis.substring(0, 1).equals(" ")) {
+        if (!diagnosis.equals("Enter a diagnosis") && !diagnosis.equals("") && !diagnosis.substring(0, 1).equals(" ")
+                && diagnosis.matches("[A-Z|a-z0-9.]{3,75}")) {
             diagnosis = diagnosis.substring(0, 1).toUpperCase() + diagnosis.substring(1).toLowerCase();
             Boolean unique = true;
 
@@ -292,6 +365,9 @@ public class GUIClinicianDiagnosis implements IPopupable {
         });
     }
 
+    /**
+     * Returns to the
+     */
     @FXML
     public void goToProfile() {
         boolean back = false;
@@ -307,28 +383,19 @@ public class GUIClinicianDiagnosis implements IPopupable {
             back = true;
         }
         if (back) {
-            if(ScreenControl.getLoggedInPatient() != null) {
-                ScreenControl.removeScreen("patientProfile");
-                try {
-                    ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                    ScreenControl.activate("patientProfile");
-                } catch (IOException e) {
-                    userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the clinician diagnoses page to the profile page");
-                    new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-                    e.printStackTrace();
-                }
-            } else {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
                 try {
                     ScreenControl.loadPopUpPane(clinicianDiagnosesPane.getScene(), fxmlLoader, target);
                 } catch (IOException e) {
                     userActions.log(Level.SEVERE, "Error returning to profile screen in popup", "attempted to navigate from the diagnoses page to the profile page in popup");
                     new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
                 }
-            }
         }
     }
 
+    /**
+     * Saves the current diagnoses to the database
+     */
     @FXML
     public void saveDiagnoses() {
         target.setCurrentDiseases(currentDiseases);
@@ -340,25 +407,6 @@ public class GUIClinicianDiagnosis implements IPopupable {
         goToProfile();
     }
 
-    /**
-     * Updates the date of a current diagnosis for a patient with a provided date
-     * @param disease the disease in the currentDiseases ArrayList of the diagnosis being updated
-     * @param date The given date for the update
-     * @throws InvalidObjectException Indicates that one or more deserialized objects failed validation tests
-     */
-    private void updateCurrentDate(Disease disease, LocalDate date) throws InvalidObjectException {
-        if (date.isBefore(target.getBirth())) {
-            new Alert(Alert.AlertType.WARNING, "Can not set date to before patient's DOB: " + target.getBirth(), ButtonType.OK).show();
-            userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to before patient's DOB");
-        } else if (date.isAfter( LocalDate.now() )) {
-            new Alert(Alert.AlertType.WARNING, "Can not set date to after the current date", ButtonType.OK).show();
-            userActions.log(Level.WARNING, "Failed to update a disease date", "Disease date can not be set to after current date");
-        } else {
-            disease.setDateDiagnosed( date, target );
-            userActions.log(Level.FINE, "Updated a current disease date", "Updated a current disease date to " + date);
-            changed = true;
-        }
-    }
 
     /**
      * Updates the disease state for a current diagnosis if the update is not 'cured' when the current state is still 'chronic'
@@ -450,6 +498,32 @@ public class GUIClinicianDiagnosis implements IPopupable {
         }
     }
 
+    /**
+     * Iterates through current and past diagnoses and moves cured and chronic diseases to their required lists.
+     * Reloads the lists to reflect updates
+     */
+    private void updateDiagnosesLists() {
+        for(Disease disease : new ArrayList<>(currentDiseases)) {
+            if(disease.getDiseaseState() == GlobalEnums.DiseaseState.CURED) {
+                currentDiseases.remove(disease);
+                pastDiseases.add(disease);
+            }
+        }
+
+        for(Disease disease : new ArrayList<>(pastDiseases)) {
+            if(disease.getDiseaseState() == GlobalEnums.DiseaseState.CHRONIC) {
+                pastDiseases.remove(disease);
+                currentDiseases.add(disease);
+            }
+        }
+
+        loadCurrentDiseases();
+        loadPastDiseases();
+    }
+
+    /**
+     * Deletes the selected diagnosis
+     */
     @FXML
     public void deleteDiagnoses() {
         if (pastDiagnosesView.getSelectionModel().getSelectedItem() != null) {
