@@ -3,6 +3,7 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -10,12 +11,16 @@ import model.Patient;
 import model.Procedure;
 import utility.GlobalEnums.Organ;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-public class GUIProcedureForm implements IPopupable {
+import static utility.UserActionHistory.userActions;
+
+public class GUIPatientProcedureForm implements IPopupable {
 
     @FXML
     public Button doneButton;
@@ -108,7 +113,7 @@ public class GUIProcedureForm implements IPopupable {
             this.procedure.setDescription(descriptionInput.getText());
             this.procedure.setAffectedDonations(affectedDonations);
             this.procedure.setDate(dateInput.getValue());
-            ((Stage) procedureAnchorPane.getScene().getWindow()).close();
+            goBackToProcedures();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +
                     "patients DOB. There must be a summary. A summary, and description, if any, must contain " +
@@ -128,7 +133,7 @@ public class GUIProcedureForm implements IPopupable {
             Procedure procedure = new Procedure( summaryInput.getText(), descriptionInput.getText(),
                     dateInput.getValue(), affectedDonations );
             patient.addProcedure( procedure );
-            ((Stage) procedureAnchorPane.getScene().getWindow()).close();
+            goBackToProcedures();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +
                     "patients DOB. There must be a summary. A summary, and description, if any, must contain " +
@@ -179,7 +184,19 @@ public class GUIProcedureForm implements IPopupable {
         setupDonations();
     }
 
-    public void closeWindow() {
-        ((Stage) procedureAnchorPane.getScene().getWindow()).close();
+    public void goBackToProcedures() {
+        if (ScreenControl.getLoggedInPatient() != null) {
+            //todo add functionality for viewing from a patient login
+        } else {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedures.fxml"));
+                ScreenControl.loadPopUpPane(procedureAnchorPane.getScene(), fxmlLoader, patient);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE,
+                        "Failed to open procedures page from procedure form",
+                        "Attempted to open procedures page from procedure form");
+                new Alert(Alert.AlertType.ERROR, "Unable to open procedures page", ButtonType.OK).show();
+            }
+        }
     }
 }

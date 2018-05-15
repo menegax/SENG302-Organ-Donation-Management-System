@@ -164,18 +164,7 @@ public class GUIPatientProcedures implements IPopupable {
     public void addProcedure() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            GUIProcedureForm controller = fxmlLoader.getController();
-            controller.setViewedPatient(patient);
-            Stage popUpStage = new Stage();
-            popUpStage.setScene(scene);
-
-            // When pop up is closed, refresh the table
-            popUpStage.setOnHiding(event -> Platform.runLater(this::refreshTables));
-
-            //Add and show the popup
-            ScreenControl.addPopUp("addProcedurePopup", popUpStage); //ADD to screen control
-            ScreenControl.displayPopUp("addProcedurePopup"); //display the popup
+            ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader, patient);
         } catch (IOException e) {
             userActions.log(Level.SEVERE,
                     "Failed to open add procedure popup from patient procedures",
@@ -200,29 +189,16 @@ public class GUIPatientProcedures implements IPopupable {
             new Alert(Alert.AlertType.ERROR, "No procedure is selected", ButtonType.OK).show();
             return;
         }
-
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            GUIProcedureForm controller = fxmlLoader.getController();
-            controller.setViewedPatient(patient);
-
+            ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader, patient);
+            GUIPatientProcedureForm controller = fxmlLoader.getController();
             controller.setupEditing(selectedProcedure);
-
-            Stage popUpStage = new Stage();
-            popUpStage.setScene(scene);
-
-            // When pop up is closed, refresh the table
-            popUpStage.setOnHiding(event -> Platform.runLater(this::refreshTables));
-
-            //Add and show the popup
-            ScreenControl.addPopUp("editProcedurePopup", popUpStage); //ADD to screen control
-            ScreenControl.displayPopUp("editProcedurePopup"); //display the popup
         } catch (IOException e) {
             userActions.log(Level.SEVERE,
-                    "Failed to open edit procedure popup from patient procedures",
-                    "Attempted to open edit procedure popup from patient procedures");
-            new Alert(Alert.AlertType.ERROR, "Unable to open edit procedure window", ButtonType.OK).show();
+                    "Failed to load edit procedure scene from patient procedures popup",
+                    "Attempted to load edit procedure scene from patient procedures popup");
+            new Alert(Alert.AlertType.ERROR, "Unable to load procedures page", ButtonType.OK).show();
         }
     }
 
