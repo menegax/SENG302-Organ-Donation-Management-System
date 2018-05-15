@@ -4,10 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import model.Disease;
@@ -86,6 +83,26 @@ public class GUIPatientDiagnosis {
         currentDiagnosisCol.setCellValueFactory(new PropertyValueFactory<>("diseaseName"));
         currentTagsCol.setCellValueFactory(new PropertyValueFactory<>("diseaseState"));
         currentDiagnosesView.setItems(observableCurrentDiseases);
+        highlightChronic();
+    }
+
+    private void highlightChronic() {
+        currentDiagnosesView.setRowFactory(row -> new TableRow<Disease>() {
+
+            @Override
+            public void updateItem(Disease item, boolean empty) {
+                if(item != null) {
+                    super.updateItem(item, empty);
+                    if (item.getDiseaseState() != null && item.getDiseaseState() ==
+                            GlobalEnums.DiseaseState.CHRONIC) {
+                        setStyle("-fx-background-color: #e6b3b3");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+
+        });
     }
 
     /**

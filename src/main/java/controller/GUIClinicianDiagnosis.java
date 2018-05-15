@@ -381,9 +381,28 @@ public class GUIClinicianDiagnosis implements IPopupable {
                 currentDiseases.add(disease);
             }
         }
-
+        highlightChronic();
         loadCurrentDiseases();
         loadPastDiseases();
+    }
+
+    private void highlightChronic() {
+        currentDiagnosesView.setRowFactory(row -> new TableRow<Disease>() {
+
+            @Override
+            public void updateItem(Disease item, boolean empty) {
+                if(item != null) {
+                    super.updateItem(item, empty);
+                    if (item.getDiseaseState() != null && item.getDiseaseState() ==
+                            GlobalEnums.DiseaseState.CHRONIC) {
+                        setStyle("-fx-background-color: #e6b3b3");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+
+        });
     }
 
     /**
