@@ -12,10 +12,7 @@ import model.Clinician;
 import model.Patient;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ScreenControl {
 
@@ -23,11 +20,11 @@ public class ScreenControl {
 
     private static HashMap<String, Stage> popMap = new HashMap<>();
 
-    private static Map<String, Parent> scenes = new HashMap<>();
+    public static Map<String, Parent> scenes = new HashMap<>();
 
     private static Scene main;
 
-    private static Stage primaryStage;
+    public static Stage primaryStage;
 
 
     public ScreenControl(Stage stage) {
@@ -36,30 +33,28 @@ public class ScreenControl {
 
 
     void addScene(String path) throws IOException {
-        Parent parent = FXMLLoader.load(getClass().getResource(path));
-        scenes.put(path, parent);
+        FXMLLoader loader = FXMLLoader.load(getClass().getResource(path));
+        loader.load();
+        scenes.put(path, loader.getRoot());
     }
 
 
-    static void setUpHomeForPatient() {
-        // sets icons on left sided tabs
-        // adds scenes to stage
-
-        // create tab pane
-        TabPane profileTabPane = new TabPane();
-
-        Tab profileViewTab = new Tab();
-        profileViewTab.setContent(scenes.get("/scene/patientProfile.fxml"));
-        Tab historyTab = new Tab();
-        historyTab.setContent(scenes.get("/scene/patientProfile.fxml"));
-
-        profileTabPane.getTabs().add(profileViewTab);
-
-        Parent home = scenes.get("/scene/home.fxml");
-
-        primaryStage.setScene(new Scene(scenes.get("/scene/home.fxml")));
+    /**
+     *
+     * @param paths - List of paths to add to the scenes map
+     * @throws IOException -
+     */
+    void addScene(List<String> paths) throws IOException { //overloaded for ease of use
+        for (String path : paths) {
+            Parent parent= FXMLLoader.load(getClass().getResource(path));
+            scenes.put(path, parent);
+        }
+    }
 
 
+     static void setUpHomeForPatient(){
+         Parent root = ScreenControl.scenes.get("/scene/home.fxml");
+         ScreenControl.primaryStage.setScene(new Scene(root));
     }
 
 

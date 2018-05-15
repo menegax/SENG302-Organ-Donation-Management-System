@@ -71,14 +71,11 @@ public class GUILogin {
             try {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
                 login.addLoggedInUserToCache(newPatient);
+                ScreenControl.scenes.put("/scene/home.fxml", //place here for the moment, possibly get rid of screen control.
+                        // can't init home without patient profile etc being init, causes null pointer so have to add here
+                        FXMLLoader.load(getClass().getResource("/scene/home.fxml")));
+                ScreenControl.setUpHomeForPatient(); //TODO: remove after screen control has been removed
 
-                ScreenControl.addTabToHome("patientHome", FXMLLoader.load(getClass().getResource("/scene/PatientHome.fxml")));
-
-                ScreenControl.addTabToHome("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.addTabToHome("patientProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/patientUpdateProfile.fxml")));
-                ScreenControl.addTabToHome("patientDonations", FXMLLoader.load(getClass().getResource("/scene/patientUpdateDonations.fxml")));
-                ScreenControl.addTabToHome("patientContacts", FXMLLoader.load(getClass().getResource("/scene/patientUpdateContacts.fxml")));
-                ScreenControl.activate("patientHome");
 //                if (newPatient.getPatientLog() != null) {
 //                    logHistory.addAll( newPatient.getPatientLog() ); // adds medication log from previous log-ins for user
 //                }
@@ -87,11 +84,8 @@ public class GUILogin {
                 userActions.log(Level.WARNING, "Failed to log in", "Attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
                 alert.show();
-            }
-            catch (IOException e) {
-                userActions.log(Level.WARNING, "Failed to log in", "Attempted to log in");
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
-                alert.show();
+            } catch (IOException e) {
+                e.printStackTrace(); //TODO: rm
             }
         }
         else {

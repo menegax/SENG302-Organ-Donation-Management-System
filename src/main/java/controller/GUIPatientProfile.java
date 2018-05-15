@@ -111,7 +111,6 @@ public class GUIPatientProfile {
         back.setVisible(false);
     }
 
-
     public void initialize() {
         userControl = new UserControl();
         Object user = null;
@@ -126,7 +125,6 @@ public class GUIPatientProfile {
         }
 
         try {
-            assert user != null;
             loadProfile(((Patient)user).getNhiNumber());
         }
         catch (IOException e) {

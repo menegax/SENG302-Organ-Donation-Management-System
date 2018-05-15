@@ -32,12 +32,13 @@ public class Main extends Application {
         primaryStage.setScene(rootScene); //set scene on primary stage
         ScreenControl.setRootScene(rootScene); // set this scene in screen controller
 
-        // Add scenes
-        ScreenControl.addTabToHome("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        ScreenControl.addTabToHome("patientRegister", FXMLLoader.load(getClass().getResource("/scene/patientRegister.fxml")));
-        ScreenControl.addTabToHome("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
-        ScreenControl.addTabToHome("patientHome", FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml")));
 
+        ScreenControl screenControl = new ScreenControl(primaryStage);
+        // Add scenes
+        addAllScenes(screenControl);
+
+        //
+        //setUpHomeForPatient
         // add objects
         Database.importFromDiskPatients("./patient.json");
         Database.importFromDiskClinicians("./clinician.json");
@@ -58,8 +59,13 @@ public class Main extends Application {
     }
 
 
-    private void addAllFxmls(ScreenControl screenControl) throws IOException {
-        screenControl.addScene("/scene/login.fxml");
+    private void addAllScenes(ScreenControl screenControl) throws IOException {
+        screenControl.addScene(new ArrayList<String>(){{
+            add("/scene/login.fxml");
+            add("/scene/patientRegister.fxml");
+            add("/scene/clinicianHome.fxml");
+            add("/scene/patientHome.fxml");
+        }});
     }
 
 
