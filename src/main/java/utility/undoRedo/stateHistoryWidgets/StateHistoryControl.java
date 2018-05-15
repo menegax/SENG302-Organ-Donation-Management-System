@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents the stateHistory of a control object
+ */
 public abstract class StateHistoryControl {
 
     int index = 0;

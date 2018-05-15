@@ -19,7 +19,7 @@ public class StatesHistoryScreen {
     /**
      * ArrayList that stores all the stateHistories for a specific screen
      */
-    private ArrayList<StateHistoryControl> stateHistories = new ArrayList<>();
+    private List<StateHistoryControl> stateHistories = new ArrayList<>();
 
     /**
      * Boolean to keep track of whether an action has been undone or not
@@ -38,7 +38,7 @@ public class StatesHistoryScreen {
      *
      * @param params optional widget parameters to initialise
      */
-    public StatesHistoryScreen(Pane pane, ArrayList<Control> params) {
+    public StatesHistoryScreen(Pane pane, List<Control> params) {
         pane.setOnKeyPressed(event -> {
             if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
                 undo();
