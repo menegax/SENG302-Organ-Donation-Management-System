@@ -126,3 +126,455 @@
   <param>attempted to add a clinician</param>
 </record>
 </log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-15T19:47:51</date>
+  <millis>1526370471960</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-15T19:47:52</date>
+  <millis>1526370472022</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-15T19:47:52</date>
+  <millis>1526370472558</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-15T19:47:52</date>
+  <millis>1526370472576</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-15T19:47:52</date>
+  <millis>1526370472740</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-15T19:48:33</date>
+  <millis>1526370513220</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:33</date>
+  <millis>1526370513305</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>importFromDisk</method>
+  <thread>14</thread>
+  <message>Imported patients from disk</message>
+  <param>Attempted to import from disk</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:33</date>
+  <millis>1526370513903</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:33</date>
+  <millis>1526370513923</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>14</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514091</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514091</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param>Attempted to import a clinician from file</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514092</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514092</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param>Attempted to import a clinician from file</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514093</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514093</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param>Attempted to import a clinician from file</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514094</millis>
+  <sequence>10</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514094</millis>
+  <sequence>11</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param>Attempted to import a clinician from file</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514095</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514095</millis>
+  <sequence>13</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param>Attempted to import a clinician from file</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514096</millis>
+  <sequence>14</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 0</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514115</millis>
+  <sequence>15</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514116</millis>
+  <sequence>16</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param>Attempted to import a clinician from file</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514118</millis>
+  <sequence>17</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514118</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param>Attempted to import a clinician from file</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514119</millis>
+  <sequence>19</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514119</millis>
+  <sequence>20</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param>Attempted to import a clinician from file</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514120</millis>
+  <sequence>21</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514121</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param>Attempted to import a clinician from file</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514122</millis>
+  <sequence>23</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514122</millis>
+  <sequence>24</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param>Attempted to import a clinician from file</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514123</millis>
+  <sequence>25</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Successfully added clinician 1</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514123</millis>
+  <sequence>26</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514124</millis>
+  <sequence>27</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param>Attempted to import a clinician from file</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514124</millis>
+  <sequence>28</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514124</millis>
+  <sequence>29</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param>Attempted to import a clinician from file</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514125</millis>
+  <sequence>30</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>14</thread>
+  <message>Couldn't add clinician due to invalid field: staffID</message>
+  <param>attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-15T19:48:34</date>
+  <millis>1526370514125</millis>
+  <sequence>31</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>importFromDiskClinicians</method>
+  <thread>14</thread>
+  <message>Error importing clinician from file</message>
+  <param>Attempted to import a clinician from file</param>
+</record>
+</log>

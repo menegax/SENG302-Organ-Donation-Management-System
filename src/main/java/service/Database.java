@@ -218,7 +218,7 @@ public class Database {
             try {
                 Database.addClinician(c);
             } catch (IllegalArgumentException e) {
-                userActions.log(Level.WARNING, "Error importing clinician from file");
+                userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import a clinician from file");
             }
         }
     }
