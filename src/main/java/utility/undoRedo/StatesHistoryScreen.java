@@ -1,6 +1,6 @@
 package utility.undoRedo;
 
-import controller.IUndoRedo;
+import utility.undoRedo.stateHistoryWidgets.StateHistoryControl;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCodeCombination;
@@ -8,6 +8,8 @@ import javafx.scene.layout.Pane;
 import utility.undoRedo.stateHistoryWidgets.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents the state history of a screen of FXML widgets
@@ -17,7 +19,7 @@ public class StatesHistoryScreen {
     /**
      * ArrayList that stores all the stateHistories for a specific screen
      */
-    private ArrayList<IUndoRedo> stateHistories = new ArrayList<>();
+    private ArrayList<StateHistoryControl> stateHistories = new ArrayList<>();
 
     /**
      * Boolean to keep track of whether an action has been undone or not
@@ -213,7 +215,7 @@ public class StatesHistoryScreen {
      * Stores the current state of the screen
      */
     public void store() {
-        for (IUndoRedo stateHistory : stateHistories) {
+        for (StateHistoryControl stateHistory : stateHistories) {
             stateHistory.store();
         }
     }
@@ -224,7 +226,7 @@ public class StatesHistoryScreen {
      */
     public void undo() {
         undone = true; // change to true as to not trigger listeners to store
-        for (IUndoRedo stateHistory : stateHistories) {
+        for (StateHistoryControl stateHistory : stateHistories) {
             stateHistory.undo();
         }
         undone = false;
@@ -236,7 +238,7 @@ public class StatesHistoryScreen {
      */
     public void redo() {
         redone = true; // change to true as to not trigger listeners to store
-        for (IUndoRedo stateHistory : stateHistories) {
+        for (StateHistoryControl stateHistory : stateHistories) {
             stateHistory.redo();
         }
         redone = false;
@@ -249,7 +251,16 @@ public class StatesHistoryScreen {
      *
      * @return the ArrayList of state history objects
      */
-    public ArrayList<IUndoRedo> getStateHistories() {
-        return stateHistories;
+    public List<StateHistoryControl> getStateHistories() {
+        return Collections.unmodifiableList(stateHistories);
+    }
+
+    /**
+     * Gets the current state of the control at the index provided
+     * @param index the index of the control in the stateHistories list
+     * @return the current state of that control
+     */
+    public Object getStateOfControl(int index){
+        return stateHistories.get(index).getCurrentState();
     }
 }

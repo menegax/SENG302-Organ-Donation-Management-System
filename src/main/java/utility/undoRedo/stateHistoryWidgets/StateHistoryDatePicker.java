@@ -1,26 +1,17 @@
 package utility.undoRedo.stateHistoryWidgets;
 
-import controller.IUndoRedo;
 import javafx.scene.control.DatePicker;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class StateHistoryDatePicker implements IUndoRedo {
+public class StateHistoryDatePicker extends StateHistoryControl {
     /**
      * The DatePicker this object holds the states for
      */
     private DatePicker date;
-
-    /**
-     * The states of the DatePicker
-     */
-    private ArrayList<String> states = new ArrayList<>();
-
-    /**
-     * The index of the current state in the ArrayList
-     */
-    private int index = 0;
 
     /**
      * True if an undo has been executed, false otherwise - could be reset at exit from each interface
@@ -64,7 +55,7 @@ public class StateHistoryDatePicker implements IUndoRedo {
             if (states.get(index) == null) {
                 date.setValue(null);
             } else {
-                date.setValue(LocalDate.parse(states.get(index)));
+                date.setValue(LocalDate.parse((String) states.get(index)));
             }
             undone = true;
         }
@@ -79,26 +70,9 @@ public class StateHistoryDatePicker implements IUndoRedo {
             if (states.get(index) == null) {
                 date.setValue(null);
             } else {
-                date.setValue(LocalDate.parse(states.get(index)));
+                date.setValue(LocalDate.parse((String) states.get(index)));
             }
         }
     }
 
-    /**
-     * Gets the states of the DatePicker
-     * Currently only used in testing
-     * @return the states of the DatePicker
-     */
-    public ArrayList<Object> getStates() {
-        return new ArrayList<>(states);
-    }
-
-    /**
-     * Gets the index of the current state of the DatePicker
-     * currently only used in testing
-     * @return the index of the DatePicker
-     */
-    public int getIndex() {
-        return index;
-    }
 }

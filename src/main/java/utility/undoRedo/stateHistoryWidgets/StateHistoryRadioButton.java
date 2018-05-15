@@ -1,19 +1,16 @@
 package utility.undoRedo.stateHistoryWidgets;
 
-import controller.IUndoRedo;
 import javafx.scene.control.RadioButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class StateHistoryRadioButton implements IUndoRedo {
+public class StateHistoryRadioButton extends StateHistoryControl {
 
     private RadioButton radioButton;
 
-    private ArrayList<Boolean> states = new ArrayList<>();
-
     private boolean undone = false;
-
-    private int index = 0;
 
 
     public StateHistoryRadioButton(RadioButton radioButton) {
@@ -41,7 +38,7 @@ public class StateHistoryRadioButton implements IUndoRedo {
     public void undo() {
         if (index != 0) {
             index -= 1;
-            radioButton.setSelected(states.get(index));
+            radioButton.setSelected((Boolean) states.get(index));
             undone = true;
         }
     }
@@ -53,26 +50,7 @@ public class StateHistoryRadioButton implements IUndoRedo {
     public void redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
-            radioButton.setSelected(states.get(index));
+            radioButton.setSelected((Boolean) states.get(index));
         }
-    }
-
-
-    /**
-     * Gets the states of the RadioButton
-     * @return the states of the RadioButton
-     */
-    public ArrayList<Object> getStates() {
-        return new ArrayList<>(states);
-    }
-
-
-    /**
-     * Gets the index of the current state of the RadioButton
-     *
-     * @return the index of the current state
-     */
-    public int getIndex() {
-        return index;
     }
 }

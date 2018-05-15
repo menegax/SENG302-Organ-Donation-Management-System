@@ -1,29 +1,20 @@
 package utility.undoRedo.stateHistoryWidgets;
 
-import controller.IUndoRedo;
 import javafx.scene.control.TextField;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents the state history of a text entry field in the GUI
  */
-public class StateHistoryTextEntry implements IUndoRedo {
+public class StateHistoryTextEntry extends StateHistoryControl {
 
     /**
      * The TextField this object holds the states for
      */
     private TextField entry;
-
-    /**
-     * The states of the TextField
-     */
-    private ArrayList<String> states = new ArrayList<>();
-
-    /**
-     * The index of the current state in the ArrayList
-     */
-    private int index = 0;
 
     /**
      * True if an undo has been executed, false otherwise - could be reset at exit from each interface
@@ -60,7 +51,7 @@ public class StateHistoryTextEntry implements IUndoRedo {
     public void undo() {
         if (index != 0) {
             index -= 1;
-            entry.setText(states.get(index));
+            entry.setText((String) states.get(index));
             undone = true;
         }
     }
@@ -72,29 +63,7 @@ public class StateHistoryTextEntry implements IUndoRedo {
     public void redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
-            entry.setText(states.get(index));
+            entry.setText((String) states.get(index));
         }
-    }
-
-
-    /**
-     * Gets the states of the Text Entry
-     * Currently only used in testing
-     *
-     * @return the states of the text entry
-     */
-    public ArrayList<Object> getStates() {
-        return new ArrayList<>(states);
-    }
-
-
-    /**
-     * Gets the index of the current state of the Text Entry
-     * currently only used in testing
-     *
-     * @return the index of the text entry
-     */
-    public int getIndex() {
-        return index;
     }
 }

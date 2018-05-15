@@ -1,19 +1,16 @@
 package utility.undoRedo.stateHistoryWidgets;
 
-import controller.IUndoRedo;
 import javafx.scene.control.ChoiceBox;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class StateHistoryChoiceBox implements IUndoRedo {
+public class StateHistoryChoiceBox extends StateHistoryControl {
 
     private ChoiceBox<String> choiceBox;
 
-    private ArrayList<String> states = new ArrayList<>();
-
     private boolean undone = false;
-
-    private int index = 0;
 
 
     /**
@@ -48,40 +45,18 @@ public class StateHistoryChoiceBox implements IUndoRedo {
     public void undo() {
         if (index != 0) {
             index -= 1;
-            choiceBox.getSelectionModel()
-                    .select(states.get(index));
+            choiceBox.getSelectionModel().select((String) states.get(index));
             undone = true;
         }
     }
 
-
+    /**
+     * Resets the ChoiceBox to the state immediately prior to an undo
+     */
     public void redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
-            choiceBox.getSelectionModel()
-                    .select(states.get(index));
+            choiceBox.getSelectionModel().select((String) states.get(index));
         }
-    }
-
-
-    /**
-     * Gets the states of the Combo Box
-     * Currently only used in testing
-     *
-     * @return the states of the combo box
-     */
-    public ArrayList<Object> getStates() {
-        return new ArrayList<>(states);
-    }
-
-
-    /**
-     * Gets the index of the current state of the ChoiceBox
-     * currently only used in testing
-     *
-     * @return the index of the current state
-     */
-    public int getIndex() {
-        return index;
     }
 }
