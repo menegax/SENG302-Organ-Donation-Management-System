@@ -15,8 +15,6 @@ public class UserActionHistory {
      */
     public static final Logger userActions = Logger.getLogger(UserActionHistory.class.getName());
 
-    private static FormatterLog logFormat = new FormatterLog();
-
 
     /**
      * Sets up custom logger class.
@@ -26,7 +24,6 @@ public class UserActionHistory {
 
         userActions.setUseParentHandlers(false); // disables default console userActions in parent
 
-        // todo patient handler
         Handler patientHandler = new Handler() {
             public void publish(LogRecord logRecord) {
                 Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
