@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import static org.testfx.api.FxAssert.verifyThat;
 
 /**
- * TestFX class to test the Adding of procedures screen
+ * TestFX class to test adding procedures
  */
 public class GUIAddProcedureTest extends ApplicationTest {
 
@@ -405,7 +405,7 @@ public class GUIAddProcedureTest extends ApplicationTest {
     }
 
     @Test
-    public void addValidPreviousProcedure() {
+    public void addValidPreviousProcedureTest() {
         // Verify "clinician" has navigated to procedures
         verifyThat("#patientProceduresPane", Node::isVisible);
         // Verify that each of the previous and pending procedures tableViews are empty
@@ -423,7 +423,7 @@ public class GUIAddProcedureTest extends ApplicationTest {
         verifyThat("#summaryInput", TextInputControlMatchers.hasText(String.valueOf("Appendectomy")));
         verifyThat("#descriptionInput", TextInputControlMatchers.hasText(String.valueOf("Removed appendix")));
 
-        // Set the date to 2 years before the DOB of the patient the procedure is being created for
+        // Set the date to 1 day before the current date
         interact(() -> lookup("#dateInput").queryAs(DatePicker.class).setValue(LocalDate.now().minus(Period.ofDays(1))));
 
         // Open the organ selection menu
@@ -438,7 +438,7 @@ public class GUIAddProcedureTest extends ApplicationTest {
     }
 
     @Test
-    public void addValidPendingProcedure() {
+    public void addValidPendingProcedureTest() {
         // Verify "clinician" has navigated to procedures
         verifyThat("#patientProceduresPane", Node::isVisible);
         // Verify that each of the previous and pending procedures tableViews are empty
@@ -456,7 +456,7 @@ public class GUIAddProcedureTest extends ApplicationTest {
         verifyThat("#summaryInput", TextInputControlMatchers.hasText(String.valueOf("Angiogram")));
         verifyThat("#descriptionInput", TextInputControlMatchers.hasText(String.valueOf("Inspected blood vessels around the heart")));
 
-        // Set the date to 2 years before the DOB of the patient the procedure is being created for
+        // Set the date to 1 day after the current date
         interact(() -> lookup("#dateInput").queryAs(DatePicker.class).setValue(LocalDate.now().plus(Period.ofDays(1))));
 
         // Open the organ selection menu
@@ -468,6 +468,39 @@ public class GUIAddProcedureTest extends ApplicationTest {
 
         // Verify that the Angiogram was added to the correct table
         verifyThat("#pendingProceduresView", TableViewMatchers.hasTableCell("Angiogram"));
+    }
+
+    @Test
+    public void cancelOutOfAddProcedureFormTest() {
+        // Verify "clinician" has navigated to procedures
+        verifyThat("#patientProceduresPane", Node::isVisible);
+
+        int numPendingProcedures = lookup("#pendingProceduresView").queryAs(TableView.class).getItems().size();
+
+        interact(() -> lookup("#addProcedureButton").queryAs(Button.class).fire());
+        // Verify "clinician" has navigated to add procedures
+        verifyThat("#procedureAnchorPane", Node::isVisible);
+
+        // Enter a valid summary to textfield for adding a procedure
+        interact(() -> lookup("#summaryInput").queryAs(TextField.class).setText("Heart Surgery"));
+
+        // Enter an invalid empty string description to textfield for adding a procedure
+        interact(() -> lookup("#descriptionInput").queryAs(TextArea.class).setText("Operate on the heart"));
+        verifyThat("#summaryInput", TextInputControlMatchers.hasText(String.valueOf("Heart Surgery")));
+        verifyThat("#descriptionInput", TextInputControlMatchers.hasText(String.valueOf("Operate on the heart")));
+
+        // Set the date to 1 day after the current date
+        interact(() -> lookup("#dateInput").queryAs(DatePicker.class).setValue(LocalDate.now().plus(Period.ofDays(1))));
+
+        // Open the organ selection menu
+        interact(() -> lookup("#affectedInput").queryAs(MenuButton.class).fire());
+        interact(() -> lookup("liver").queryAs(CheckBox.class).setSelected(true));
+        // Close organ menu
+        closeContextMenus();
+        interact(() -> lookup("#closePane").queryAs(Button.class).fire());
+
+        // Verify that no new procedure was added to the table
+        verifyThat("#pendingProceduresView", TableViewMatchers.hasNumRows(numPendingProcedures));
     }
 }
 
