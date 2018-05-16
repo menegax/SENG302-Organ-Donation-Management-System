@@ -19,13 +19,15 @@ import model.DrugInteraction;
 import service.Database;
 import utility.GlobalEnums;
 import utility.SearchPatients;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
 
-public class GUIClinicianSearchPatients implements Initializable {
+public class GUIClinicianSearchPatients extends UndoableController implements Initializable {
 
     @FXML
     private TableView<Patient> patientDataTable;
@@ -61,9 +63,18 @@ public class GUIClinicianSearchPatients implements Initializable {
         setupSearchingListener(filteredData);
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
-
+        setupUndoRedo();
     }
 
+    /**
+     * Sets up undo redo for this screen
+     */
+    private void setupUndoRedo() {
+        controls = new ArrayList<Control>() {{
+            add(searchEntry);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANSEARCHPATIENTS);
+    }
 
     /**
      * Sets up double-click functionality for each row to open a patient profile update

@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Patient;
 import service.Database;
+import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ import static utility.UserActionHistory.userActions;
  * Details are saved when the Save button is selected, and the user is returned to the patient profile view screen.
  * @author Maree Palmer
  */
-public class GUIPatientUpdateContacts implements IPopupable {
+public class GUIPatientUpdateContacts extends UndoableController implements IPopupable {
 
     @FXML
     public AnchorPane patientContactsPane;
@@ -65,20 +66,6 @@ public class GUIPatientUpdateContacts implements IPopupable {
      */
     private Patient target;
 
-    private StatesHistoryScreen statesHistoryScreen;
-
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
-
     public void setViewedPatient(Patient patient) {
         target = patient;
         loadProfile(target.getNhiNumber());
@@ -117,7 +104,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
      * Sets up the variables needed for undo and redo functionality
      */
     private void setupUndoRedo() {
-        ArrayList<Control> controls = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(homePhoneField);
             add(mobilePhoneField);
             add(workPhoneField);
@@ -129,7 +116,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
             add(contactWorkPhoneField);
             add(contactEmailAddressField);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(patientContactsPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATECONTACTS);
     }
 
     /**

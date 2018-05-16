@@ -11,6 +11,9 @@ import java.util.List;
  */
 public class UndoRedoControl {
 
+    static public String undoShortcut = "Ctrl+Z";
+    static public String redoShortcut = "Ctrl+Y";
+
     /**
      * Sets the states of a list of control objects to the current states of the equivalent objects of a StatesHistoryScreen
      * The List of controls MUST be in the same order as they were instantiated in the StatesHistoryScreen

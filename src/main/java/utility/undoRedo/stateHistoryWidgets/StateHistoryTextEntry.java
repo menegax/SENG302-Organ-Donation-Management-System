@@ -12,11 +12,6 @@ import java.util.List;
 public class StateHistoryTextEntry extends StateHistoryControl {
 
     /**
-     * The TextField this object holds the states for
-     */
-    private TextField entry;
-
-    /**
      * True if an undo has been executed, false otherwise - could be reset at exit from each interface
      */
     private boolean undone = false;
@@ -28,7 +23,7 @@ public class StateHistoryTextEntry extends StateHistoryControl {
      * @param entry the Text Field whose state we are storing
      */
     public StateHistoryTextEntry(TextField entry) {
-        this.entry = entry;
+        this.control = entry;
         states.add(entry.getText());
     }
 
@@ -41,29 +36,33 @@ public class StateHistoryTextEntry extends StateHistoryControl {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(entry.getText());
+        states.add(((TextField) control).getText());
     }
 
 
     /**
      * Sets the TextField to the state before the current state
      */
-    public void undo() {
+    public boolean undo() {
         if (index != 0) {
             index -= 1;
-            entry.setText((String) states.get(index));
+            ((TextField) control).setText((String) states.get(index));
             undone = true;
+            return true;
         }
+        return false;
     }
 
 
     /**
      * Resets the TextField to the state immediately prior to an undo
      */
-    public void redo() {
+    public boolean redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
-            entry.setText((String) states.get(index));
+            ((TextField) control).setText((String) states.get(index));
+            return true;
         }
+        return false;
     }
 }

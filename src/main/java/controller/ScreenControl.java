@@ -61,7 +61,7 @@ public class ScreenControl {
      * @param name - name of screen to add
      * @param pane - Pane object from FXML
      */
-    static void addScreen(String name, Pane pane) {
+    public static void addScreen(String name, Pane pane) {
         screenMap.put(name, pane);
     }
 
@@ -81,7 +81,7 @@ public class ScreenControl {
      *
      * @param name - screen name to display
      */
-    static void activate(String name) {
+    public static void activate(String name) {
         main.setRoot(screenMap.get(name));
     }
 

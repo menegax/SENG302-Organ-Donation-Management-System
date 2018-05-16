@@ -10,8 +10,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import service.Database;
+import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -26,7 +28,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller class to control GUI Clinician updating screen.
  */
-public class GUIClinicianUpdateProfile {
+public class GUIClinicianUpdateProfile extends UndoableController{
 
     @FXML
     public AnchorPane clinicianUpdateAnchorPane;
@@ -54,24 +56,6 @@ public class GUIClinicianUpdateProfile {
     private ChoiceBox regionDD;
 
     private Clinician target;
-
-    private StatesHistoryScreen screenHistory;
-
-    /**
-     * Undoes an action taken when editing a clinician
-     */
-    @FXML
-    public void undo(){
-        screenHistory.undo();
-    }
-
-    /**
-     * Redoes an action taken when editing a clinician
-     */
-    @FXML
-    public void redo(){
-        screenHistory.redo();
-    }
 
     /**
      * Initializes the clinician editing screen.
@@ -114,7 +98,7 @@ public class GUIClinicianUpdateProfile {
      * the StateHistoryScreen used to undo or redo actions using the control elements
      */
     private void setUpStateHistory() {
-        ArrayList<Control> elements = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(staffId);
             add(firstnameTxt);
             add(lastnameTxt);
@@ -124,7 +108,7 @@ public class GUIClinicianUpdateProfile {
             add(suburbTxt);
             add(regionDD);
         }};
-        screenHistory = new StatesHistoryScreen(clinicianUpdateAnchorPane, elements);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPROFILEUPDATE);
     }
 
     /**

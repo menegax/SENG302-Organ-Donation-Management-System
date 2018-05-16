@@ -17,6 +17,7 @@ import model.Patient;
 import model.DrugInteraction;
 import model.Medication;
 import service.Database;
+import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.UserActionRecord;
 
@@ -34,13 +35,12 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 import static utility.UserActionRecord.logHistory;
 
-public class GUIPatientMedications implements IPopupable {
+public class GUIPatientMedications extends UndoableController implements IPopupable {
 
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
     private ObservableList<UserActionRecord> medLog = FXCollections.observableArrayList();
     private ListProperty<String> informationListProperty = new SimpleListProperty<>();
-    private StatesHistoryScreen stateHistoryScreen;
     private ArrayList<String> ingredients;
     private ArrayList<String> current;
     private ArrayList<String> history;
@@ -93,22 +93,6 @@ public class GUIPatientMedications implements IPopupable {
     public void setViewedPatient(Patient patient) {
         viewedPatient = patient;
         loadProfile(viewedPatient.getNhiNumber());
-    }
-
-    /**
-     * Goes back one edit if any editing has been conducted
-     */
-    @FXML
-    public void undo() {
-        stateHistoryScreen.undo();
-    }
-
-    /**
-     * Goes forward one edit if editing had been undone at least once
-     */
-    @FXML
-    public void redo() {
-        stateHistoryScreen.redo();
     }
 
     /**
@@ -193,9 +177,8 @@ public class GUIPatientMedications implements IPopupable {
         pastMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(pastMedications));
         pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        stateHistoryScreen = new StatesHistoryScreen(medicationPane, new ArrayList<Control>() {{
-            add(newMedication);
-        }});
+        controls = new ArrayList<Control>() {{ add(newMedication); }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS);
         if (ScreenControl.getLoggedInPatient() != null) {
             loadProfile(ScreenControl.getLoggedInPatient().getNhiNumber());
         }

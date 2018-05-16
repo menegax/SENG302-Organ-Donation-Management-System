@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientUpdateProfile implements IPopupable{
+public class GUIPatientUpdateProfile extends UndoableController implements IPopupable {
 
     @FXML
     private AnchorPane patientUpdateAnchorPane;
@@ -85,8 +85,6 @@ public class GUIPatientUpdateProfile implements IPopupable{
 
     private Patient target;
 
-    private StatesHistoryScreen statesHistoryScreen;
-
     public void setViewedPatient(Patient patient) {
         target = patient;
         loadProfile(target.getNhiNumber());
@@ -106,27 +104,8 @@ public class GUIPatientUpdateProfile implements IPopupable{
             if (e.getCode() == KeyCode.ENTER) {
                 saveProfile();
             }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
-                undo();
-            }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
-                redo();
-            }
         });
     }
-
-
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
 
     /**
      * Populates drop down menus that represent enum data
@@ -162,7 +141,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
             target = patient;
             populateForm(patient);
 
-            ArrayList<Control> controls = new ArrayList<Control>() {{
+            controls = new ArrayList<Control>() {{
                 add(nhiTxt);
                 add(firstnameTxt);
                 add(lastnameTxt);
@@ -181,7 +160,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
                 add(heightTxt);
                 add(zipTxt);
             }};
-            statesHistoryScreen = new StatesHistoryScreen(patientUpdateAnchorPane, controls);
+            statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEPROFILE);
 
         }
         catch (InvalidObjectException e) {

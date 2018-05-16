@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import model.Patient;
+import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 
@@ -23,7 +24,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientRegister {
+public class GUIPatientRegister extends UndoableController{
 
     @FXML
     public AnchorPane pane;
@@ -51,23 +52,7 @@ public class GUIPatientRegister {
     @FXML
     private Pane patientRegisterAnchorPane;
 
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
-
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
-
     private StringConverter<LocalDate> dateConverter;
-
-    private StatesHistoryScreen statesHistoryScreen;
-
 
 
     /**
@@ -75,23 +60,19 @@ public class GUIPatientRegister {
      */
     public void initialize() {
         setDateConverter();
-        ArrayList<Control> controls = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(firstnameRegister);
             add(lastnameRegister);
             add(middlenameRegister);
             add(birthRegister);
             add(nhiRegister);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(patientRegisterAnchorPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTREGISTER);
 
         // Enter key
         patientRegisterAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 register();
-            } else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
-                undo();
-            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
-                redo();
             }
         });
     }

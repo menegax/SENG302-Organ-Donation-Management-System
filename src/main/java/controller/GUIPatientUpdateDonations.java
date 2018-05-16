@@ -21,7 +21,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientUpdateDonations implements IPopupable {
+public class GUIPatientUpdateDonations extends UndoableController implements IPopupable {
 
     @FXML
     private CheckBox liverCB;
@@ -63,23 +63,7 @@ public class GUIPatientUpdateDonations implements IPopupable {
     @FXML
     private AnchorPane patientDonationsAnchorPane;
 
-
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
-
     private Patient target;
-
-    private StatesHistoryScreen statesHistoryScreen;
-
 
     public void initialize() {
         if (ScreenControl.getLoggedInPatient() != null) {
@@ -91,12 +75,6 @@ public class GUIPatientUpdateDonations implements IPopupable {
         patientDonationsAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveDonations();
-            }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
-                undo();
-            }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
-                redo();
             }
         });
     }
@@ -116,7 +94,7 @@ public class GUIPatientUpdateDonations implements IPopupable {
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
         }
-        ArrayList<Control> controls = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(liverCB);
             add(kidneyCB);
             add(pancreasCB);
@@ -130,7 +108,7 @@ public class GUIPatientUpdateDonations implements IPopupable {
             add(bonemarrowCB);
             add(connectivetissueCB);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(patientDonationsAnchorPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDONATIONS);
     }
 
 

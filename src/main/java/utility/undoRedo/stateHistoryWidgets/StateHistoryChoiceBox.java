@@ -8,10 +8,7 @@ import java.util.List;
 
 public class StateHistoryChoiceBox extends StateHistoryControl {
 
-    private ChoiceBox<String> choiceBox;
-
     private boolean undone = false;
-
 
     /**
      * Constructor which adds the current (base) state of the choice box to the history
@@ -20,7 +17,7 @@ public class StateHistoryChoiceBox extends StateHistoryControl {
      */
 
     public StateHistoryChoiceBox(ChoiceBox<String> choiceBox) {
-        this.choiceBox = choiceBox;
+        this.control = choiceBox;
         states.add(choiceBox.getSelectionModel()
                 .getSelectedItem());
     }
@@ -34,7 +31,7 @@ public class StateHistoryChoiceBox extends StateHistoryControl {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(choiceBox.getSelectionModel()
+        states.add(((ChoiceBox) control).getSelectionModel()
                 .getSelectedItem());
     }
 
@@ -42,21 +39,27 @@ public class StateHistoryChoiceBox extends StateHistoryControl {
     /**
      * Sets the ChoiceBox to the state before the current state
      */
-    public void undo() {
+    public boolean undo() {
         if (index != 0) {
             index -= 1;
-            choiceBox.getSelectionModel().select((String) states.get(index));
+            // Cast will always be safe
+            ((ChoiceBox<String>) control).getSelectionModel().select((String) states.get(index));
             undone = true;
+            return true;
         }
+        return false;
     }
 
     /**
      * Resets the ChoiceBox to the state immediately prior to an undo
      */
-    public void redo() {
+    public boolean redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
-            choiceBox.getSelectionModel().select((String) states.get(index));
+            // Cast will always be safe
+            ((ChoiceBox<String>) control).getSelectionModel().select((String) states.get(index));
+            return true;
         }
+        return false;
     }
 }

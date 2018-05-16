@@ -8,10 +8,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class StateHistoryDatePicker extends StateHistoryControl {
-    /**
-     * The DatePicker this object holds the states for
-     */
-    private DatePicker date;
 
     /**
      * True if an undo has been executed, false otherwise - could be reset at exit from each interface
@@ -23,11 +19,11 @@ public class StateHistoryDatePicker extends StateHistoryControl {
      * @param datePicker the datePicker whose state we are storing
      */
     public StateHistoryDatePicker(DatePicker datePicker) {
-        this.date = datePicker;
-        if (date.getValue() == null) {
+        this.control = datePicker;
+        if (((DatePicker) control).getValue() == null) {
             states.add(null);
         } else {
-            states.add(date.getValue().toString());
+            states.add(((DatePicker) control).getValue().toString());
         }
     }
 
@@ -39,40 +35,44 @@ public class StateHistoryDatePicker extends StateHistoryControl {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        if (date.getValue() == null) {
+        if (((DatePicker) control).getValue() == null) {
             states.add(null);
         } else {
-            states.add(date.getValue().toString());
+            states.add(((DatePicker) control).getValue().toString());
         }
     }
 
     /**
      * Sets the DatePicker to the state before the current state
      */
-    public void undo() {
+    public boolean undo() {
         if (index != 0) {
             index -= 1;
             if (states.get(index) == null) {
-                date.setValue(null);
+                ((DatePicker) control).setValue(null);
             } else {
-                date.setValue(LocalDate.parse((String) states.get(index)));
+                ((DatePicker) control).setValue(LocalDate.parse((String) states.get(index)));
             }
             undone = true;
+            return true;
         }
+        return false;
     }
 
     /**
      * Resets the DatePicker to the state immediately prior to an undo
      */
-    public void redo() {
+    public boolean redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
             if (states.get(index) == null) {
-                date.setValue(null);
+                ((DatePicker) control).setValue(null);
             } else {
-                date.setValue(LocalDate.parse((String) states.get(index)));
+                ((DatePicker) control).setValue(LocalDate.parse((String) states.get(index)));
             }
+            return true;
         }
+        return false;
     }
 
 }
