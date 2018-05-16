@@ -54,6 +54,9 @@ public class GUIPatientProfile implements IPopupable {
     private Label genderIdentityLbl;
 
     @FXML
+    private Label birthGenderLbl;
+
+    @FXML
     private Label dobLbl;
 
     @FXML
@@ -143,6 +146,7 @@ public class GUIPatientProfile implements IPopupable {
         nameLbl.setText(patient.getNameConcatenated());
         genderIdentityLbl.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender()
                 .getValue());
+        birthGenderLbl.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue());
         dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         dateOfDeathLabel.setText(patient.getDeath() == null ? "Not set" : patient.getDeath()

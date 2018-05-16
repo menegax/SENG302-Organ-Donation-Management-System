@@ -12,6 +12,8 @@
 1. The Search Patients screen is shown
 2. The header titled "Birth Gender" is selected
 3. The list is sorted alphabetically by birth gender
+4  The header titled "Birth Gender" is selected
+5. The list is sorted alphabetically in the opposite order
 
 ### The Patient List shows only searched female birth gender
 
@@ -25,13 +27,14 @@
 2. "male" is entered into the search testField
 3. Only patients with a "Male" birth gender are listed
 
-### Review the preferred gender and name on a patients profile
+### Review the birth gender, preferred gender and preferred name on a patients profile
 
 1. The Search Patients screen is shown
 2. A patient in the list is selected by mouse double-click
 3. The Profile screen is shown
 4. 'Gender Identity:' field shows either 'Man', 'Woman', 'Non-binary', or 'Not set'
-5. 'Name:' field shows preferred name (first name if not set), middle name(s), and last name
+3. 'Gender Assigned at Birth' field shows either 'Male', 'Female' or 'Not set'
+5. 'Name:' field shows preferred name (or first name if not set), middle name(s), and last name
 
 ### Edit the preferred name for a patient
 

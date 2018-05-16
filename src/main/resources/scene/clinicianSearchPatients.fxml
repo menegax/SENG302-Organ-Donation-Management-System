@@ -18,7 +18,7 @@
       <columns>
           <TableColumn fx:id="columnName" editable="false" maxWidth="300.0" minWidth="250.0" prefWidth="250.0" resizable="false" text="Name" />
           <TableColumn fx:id="columnAge" editable="false" maxWidth="100.0" minWidth="0.0" prefWidth="50.0" resizable="false" text="Age" />
-          <TableColumn fx:id="columnBirthGender" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Gender" />
+          <TableColumn fx:id="columnBirthGender" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Birth Gender" />
          <TableColumn fx:id="columnRegion" editable="false" maxWidth="200.0" prefWidth="180.0" resizable="false" text="Region" />
       </columns>
     </TableView>
