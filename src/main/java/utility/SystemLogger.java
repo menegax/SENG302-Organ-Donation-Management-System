@@ -22,7 +22,7 @@ public class SystemLogger {
 
 
         /**
-         * Sets up custom logger class with handlers
+         * Adds appropriate handlers to the logger
          */
         static public void setup() {
 
@@ -31,7 +31,7 @@ public class SystemLogger {
 
             // Console handler
             Handler console = new ConsoleHandler();
-            console.setLevel(Level.ALL); // TURN ON TO FINEST TO LOG ALL LEVELS TO CONSOLE
+            console.setLevel(Level.OFF); // TURN ON TO 'ALL' TO LOG ALL LEVELS TO CONSOLE
             console.setFormatter(new SimpleFormatter(){
                 @Override
                 public String format(LogRecord record){
