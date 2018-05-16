@@ -97,7 +97,7 @@ Medication selection is assumed to be possible in each listView simultaneously f
 The current option of multiple selection in each listView may not be appropriate for future stories. 
 
 
-####Donor Contact Details
+#### Donor Contact Details
 Contact Details for a Donor are updated in a separate update method. This is because as contact details are implemented solely in the GUI application, and so will only need handling there.
 
 For viewing a Donor's contact details, a new window is shown for both editing and viewing contact details. This is to reduce clutter in the profile view screen.
@@ -120,3 +120,16 @@ This meant that an action could not be undone after another action was performed
 This allows the user to more easily keep track of what changes they have made and what states they can switch between.  
 In addition we decided to bind redo to Ctrl + Y. This is because Ctrl + Y is the industry standard undo for non-technical applications (such as word).  
 This is how we aim to target our application, as we do not see most of our users having software development or similar backgrounds.
+
+#### User Actions Logging
+User actions are now an attribute within the patient object. This way the patient is in charge of its own logs. However, to log a record to the user 
+history, the userActionHistory class needs to be used. This way the UserActionHistory class is responsible for all user action logs regardless of 
+the patient or where in the app the log was created. However, the logger class needs some sort of access to the patient's logs, so we created a getter
+. Unfortunately, the getter must return a modifiable list of records. This opens up the possibility of other classes getting a list of modifiable 
+records and modifying them inappropriately. This is the trade off between for having a separate logger class that implements the Java API logger class.
+
+#### System Logging
+Since a Java logger had already been implemented it was very easy to implement an internal logging solution. This systemLogger is very similar to the 
+userActions log. It will be used for only developer debugging purposes. There should never be a System.out.println() call ever again; even temporarily
+-- it should be a systemLog.log() and when done debugging the statement should be left there for future use. Please add logs as you go and never delete
+ logs (unless they're incorrectly written, of course).  

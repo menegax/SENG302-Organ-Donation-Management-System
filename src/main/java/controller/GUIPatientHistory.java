@@ -84,19 +84,11 @@ public class GUIPatientHistory {
         sortedData.comparatorProperty()
                 .bind(logHistoryTable.comparatorProperty());
 
-        logHistoryTable.sort();
+//        logHistoryTable.getComparator().reversed();
 
         // add sorted (and filtered) data to the table.
         logHistoryTable.setItems(sortedData);
 
-    }
-
-    //todo rm
-    public void refresh() {
-        logHistoryTable.refresh();
-        masterData.clear();
-        masterData.addAll(target.getUserActionsList());
-        populateTable();
     }
 
 }

@@ -1,12 +1,18 @@
 package utility;
 
+import static java.util.logging.Level.INFO;
+
 import controller.UserControl;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.logging.*;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class UserActionHistory {
 
@@ -56,7 +62,7 @@ public class UserActionHistory {
 
         // Console handler
         Handler console = new ConsoleHandler();
-        console.setLevel(Level.INFO);
+        console.setLevel(INFO);
         console.setFormatter(new SimpleFormatter(){
             @Override
             public String format(LogRecord record){
