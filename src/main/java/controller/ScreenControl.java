@@ -1,62 +1,62 @@
 package controller;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import model.Clinician;
-import model.Patient;
+import utility.GlobalEnums.Stages;
 
 import java.io.IOException;
 import java.util.*;
 
 public class ScreenControl {
 
+    private static ScreenControl screenControl;
+
+    @Deprecated
     private static HashMap<String, Pane> screenMap = new HashMap<>();
-
+    @Deprecated
     private static HashMap<String, Stage> popMap = new HashMap<>();
-
+    @Deprecated
     public static Map<String, Parent> scenes = new HashMap<>();
 
+    @Deprecated
     private static Scene main;
 
-    public static Stage primaryStage;
+    private static Map<Stages, Stage> applicationStages;
 
 
-    public ScreenControl(Stage stage) {
-        primaryStage = stage;
+    private ScreenControl() {
+        applicationStages = new HashMap<>();
     }
 
-
-    void addScene(String path) throws IOException {
-        FXMLLoader loader = FXMLLoader.load(getClass().getResource(path));
-        loader.load();
-        scenes.put(path, loader.getRoot());
+    static ScreenControl getScreenControl() {
+        if (screenControl == null) {
+            screenControl = new ScreenControl();
+        }
+        return screenControl;
     }
 
 
     /**
      *
-     * @param paths - List of paths to add to the scenes map
-     * @throws IOException -
+     * @param key
+     * @param stage
      */
-    void addScene(List<String> paths) throws IOException { //overloaded for ease of use
-        for (String path : paths) {
-            Parent parent= FXMLLoader.load(getClass().getResource(path));
-            scenes.put(path, parent);
-        }
+    void addStage(Stages key, Stage stage){
+        applicationStages.put(key, stage);
     }
 
-
-     static void setUpHomeForPatient(){
-         Parent root = ScreenControl.scenes.get("/scene/home.fxml");
-         ScreenControl.primaryStage.setScene(new Scene(root));
+    /**
+     *
+     * @param root
+     */
+    void show(Stages stageName, Parent root) {
+        Stage stage = applicationStages.get(stageName);
+        stage.setScene(new Scene(root));
+        stage.show();
     }
-
 
     @Deprecated
     public static Scene getMain() {
@@ -81,6 +81,7 @@ public class ScreenControl {
      * @param name - name of screen to add
      * @param pane - Pane object from FXML
      */
+    @Deprecated
     static void addTabToHome(String name, Pane pane) {
         //create tab
         // load pane into tab
@@ -96,6 +97,7 @@ public class ScreenControl {
      *
      * @param name - screen to remove from the hashmap of screens
      */
+    @Deprecated
     static void removeScreen(String name) {
         screenMap.remove(name);
     }
@@ -118,6 +120,7 @@ public class ScreenControl {
      * @param name  - name of the popup
      * @param stage - stage to display
      */
+    @Deprecated
     static void addPopUp(String name, Stage stage) {
         popMap.put(name, stage);
     }
@@ -140,6 +143,7 @@ public class ScreenControl {
      *
      * @param name - name of the pop up to display
      */
+    @Deprecated
     static void displayPopUp(String name) {
         popMap.get(name)
                 .show();
@@ -151,6 +155,7 @@ public class ScreenControl {
      *
      * @param name - name of the popup to hide
      */
+    @Deprecated
     public static void closePopUp(String name) {
         popMap.get(name)
                 .close();

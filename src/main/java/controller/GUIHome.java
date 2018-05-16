@@ -31,4 +31,7 @@ public class GUIHome {
         historyViewTab.setContent(FXMLLoader.<Pane>load(getClass().getResource("/scene/patientHistory.fxml")));
         horizontalTabPane.getTabs().add(historyViewTab);
     }
+
+
+
 }

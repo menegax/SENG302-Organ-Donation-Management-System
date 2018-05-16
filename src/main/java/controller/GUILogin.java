@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -15,10 +16,10 @@ import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
 import service.Database;
+import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.nio.file.Path;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -67,18 +68,14 @@ public class GUILogin {
     @FXML
     public void logIn() {
         UserControl login = new UserControl();
+        ScreenControl screenControl = ScreenControl.getScreenControl();
         if (!clinicianToggle.isSelected()) {
             try {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
                 login.addLoggedInUserToCache(newPatient);
-                ScreenControl.scenes.put("/scene/home.fxml", //place here for the moment, possibly get rid of screen control.
-                        // can't init home without patient profile etc being init, causes null pointer so have to add here
-                        FXMLLoader.load(getClass().getResource("/scene/home.fxml")));
-                ScreenControl.setUpHomeForPatient(); //TODO: remove after screen control has been removed
-
-//                if (newPatient.getPatientLog() != null) {
-//                    logHistory.addAll( newPatient.getPatientLog() ); // adds medication log from previous log-ins for user
-//                }
+                Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
+                screenControl.addStage(GlobalEnums.Stages.HOME, new Stage());
+                screenControl.show(GlobalEnums.Stages.HOME, homeScreen);
             }
             catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "Failed to log in", "Attempted to log in");
@@ -112,8 +109,6 @@ public class GUILogin {
         Stage primaryStage = new Stage();
         try {
             Scene home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
-
-
 
             primaryStage.setScene(home);
         }
