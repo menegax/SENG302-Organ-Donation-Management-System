@@ -185,18 +185,14 @@ public class GUIPatientProcedureForm implements IPopupable {
     }
 
     public void goBackToProcedures() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            //todo add functionality for viewing from a patient login
-        } else {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedures.fxml"));
-                ScreenControl.loadPopUpPane(procedureAnchorPane.getScene(), fxmlLoader, patient);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE,
-                        "Failed to open procedures page from procedure form",
-                        "Attempted to open procedures page from procedure form");
-                new Alert(Alert.AlertType.ERROR, "Unable to open procedures page", ButtonType.OK).show();
-            }
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedures.fxml"));
+            ScreenControl.loadPopUpPane(procedureAnchorPane.getScene(), fxmlLoader, patient);
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE,
+                    "Failed to open procedures page from procedure form",
+                    "Attempted to open procedures page from procedure form");
+            new Alert(Alert.AlertType.ERROR, "Unable to open procedures page", ButtonType.OK).show();
         }
     }
 }
