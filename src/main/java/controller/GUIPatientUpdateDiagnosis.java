@@ -54,8 +54,11 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
      * Patient who the target diagnosis belongs to
      */
     private static Patient currentPatient;
+    public Label titleLabel;
 
     private StatesHistoryScreen statesHistoryScreen;
+
+    private static boolean isAdd;
 
 
     @Override
@@ -72,11 +75,25 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
     }
 
     /**
+     * Sets isAdd to true if the operation is a disease addition, and false if the operation is an update
+     * @param bool boolean
+     */
+    public static void setIsAdd(boolean bool) {
+        isAdd = bool;
+    }
+
+    /**
      * Initializes the popup window for updating a diagnosis.
      * Adds dropdown for disease states.
      * Populates all editable nodes with the current disease information
      */
     public void initialize() {
+        if(isAdd) {
+            titleLabel.setText("Add Diagnosis");
+            target = new Disease(null, null);
+        } else {
+            titleLabel.setText("Update Diagnosis");
+        }
         populateDropdown();
         populateForm();
         ArrayList<Control> controls = new ArrayList<Control>() {{
@@ -93,8 +110,14 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
      * Sets the drop down state menu to the diagnosis' current state.
      */
     private void populateForm() {
-        diseaseNameTextField.setText(target.getDiseaseName());
-        diagnosisDate.setValue(target.getDateDiagnosed());
+        if(target.getDiseaseName() != null) {
+            diseaseNameTextField.setText(target.getDiseaseName());
+        }
+
+        if(target.getDateDiagnosed() != null) {
+            diagnosisDate.setValue(target.getDateDiagnosed());
+        }
+
         if(target.getDiseaseState() != null) {
             tagsDD.setValue(target.getDiseaseState().getValue());
         }
@@ -191,6 +214,16 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
         return valid;
     }
 
+
+    private boolean isValidAdd() {
+        for (Disease disease : currentPatient.getCurrentDiseases()) {
+            if(disease.getDiseaseName().equals(diseaseNameTextField.getText())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Called when the done button is selected. If the update is valid, the diagnosis for the donor is updated
      * (but not saved) to the current updated diagnosis information and the popup stage is closed.
@@ -199,36 +232,54 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
      */
     public void completeUpdate() {
         if(isValidUpdate()) {
-            if(!(target.getDiseaseName().equals(diseaseNameTextField.getText()) && target.getDateDiagnosed() ==
-                    diagnosisDate.getValue() && target.getDiseaseState() ==
-                    tagsDD.getSelectionModel().getSelectedItem())) {
-                GUIClinicianDiagnosis.setChanged(true);
-            }
+            GUIClinicianDiagnosis.setChanged(true);
             target.setDiseaseName(diseaseNameTextField.getText());
             try {
                 target.setDateDiagnosed(diagnosisDate.getValue(), currentPatient);
             } catch (InvalidObjectException e) {
                 userActions.log(Level.SEVERE, "The date is not valid. This should never be called.");
             }
-            switch (tagsDD.getSelectionModel().getSelectedItem().toString()) {
-                case "cured":
-                    target.setDiseaseState(GlobalEnums.DiseaseState.CURED);
-                    break;
-                case "chronic":
-                    target.setDiseaseState(GlobalEnums.DiseaseState.CHRONIC);
-                    break;
-                default:
-                    target.setDiseaseState(null);
-                    break;
+            try {
+                switch (tagsDD.getSelectionModel().getSelectedItem().toString()) {
+                    case "cured":
+                        target.setDiseaseState(GlobalEnums.DiseaseState.CURED);
+                        break;
+                    case "chronic":
+                        target.setDiseaseState(GlobalEnums.DiseaseState.CHRONIC);
+                        break;
+                    default:
+                        target.setDiseaseState(null);
+                        break;
+                }
+            } catch (NullPointerException e) {
+                target.setDiseaseState(null);
             }
 
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
-            try {
-                ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader, currentPatient);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error returning to diagnoses screen in popup", "attempted to navigate from the update diagnosis page to the diagnoses page in popup");
-                new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
+            if(isAdd && isValidAdd()) {
+                currentPatient.getCurrentDiseases().add(target);
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
+                try {
+                    ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader, currentPatient);
+                } catch (IOException e) {
+                    userActions.log(Level.SEVERE, "Error returning to diagnoses screen in popup", "attempted to navigate from the update diagnosis page to the diagnoses page in popup");
+                    new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
+                }
+            } else if(isAdd && !isValidAdd()) {
+                String error = "A new diagnosis can not be a disease a patient currently has.";
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("Could not add diagnosis");
+                alert.setContentText(error);
+                alert.showAndWait();
+            } else {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
+                try {
+                    ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader, currentPatient);
+                } catch (IOException e) {
+                    userActions.log(Level.SEVERE, "Error returning to diagnoses screen in popup", "attempted to navigate from the update diagnosis page to the diagnoses page in popup");
+                    new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
+                }
             }
+
         } else {
             String errorString = "";
             if(diseaseNameTextField.getStyleClass().contains("invalid")) {

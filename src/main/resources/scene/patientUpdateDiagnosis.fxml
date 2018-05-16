@@ -10,7 +10,7 @@
 
 <AnchorPane fx:id="diagnosisUpdatePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientUpdateDiagnosis">
     <children>
-        <Label layoutX="184.0" layoutY="21.0" styleClass="title" text="Update Diagnosis">
+        <Label fx:id="titleLabel" layoutX="184.0" layoutY="21.0" styleClass="title" text="Update Diagnosis">
             <font>
                 <Font size="27.0" />
             </font>

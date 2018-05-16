@@ -26,7 +26,6 @@
         </TableView>
       <Button fx:id="saveButton" layoutX="545.0" layoutY="361.0" mnemonicParsing="false" onAction="#saveDiagnoses" text="Save" />
       <Button fx:id="deleteButton" layoutX="14.0" layoutY="361.0" mnemonicParsing="false" onAction="#deleteDiagnoses" text="Delete" />
-        <TextField fx:id="newDiagnosis" focusTraversable="false" layoutX="225.0" layoutY="46.0" prefHeight="25.0" prefWidth="140.0" promptText="Enter a new diagnosis" />
       <Button fx:id="addDiagnosisButton" layoutX="250.0" layoutY="82.0" mnemonicParsing="false" onAction="#registerDiagnosis" text="Add Diagnosis" />
       <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToProfile" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
       <Label layoutX="122.0" layoutY="115.0" text="Past Diagnoses" />

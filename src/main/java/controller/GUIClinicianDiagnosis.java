@@ -148,7 +148,7 @@ public class GUIClinicianDiagnosis implements IPopupable {
      */
     @FXML
     public void registerDiagnosis() {
-        addDiagnosis(newDiagnosis.getText());
+        addDiagnosis();
     }
 
     /**
@@ -160,8 +160,7 @@ public class GUIClinicianDiagnosis implements IPopupable {
                     .getSelectedItem() != null) {
                 try {
                     GUIPatientUpdateDiagnosis.setDisease(tableView.getSelectionModel().getSelectedItem());
-//                    GUIPatientUpdateDiagnosis.setPatient(target);
-
+                    GUIPatientUpdateDiagnosis.setIsAdd(false);
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateDiagnosis.fxml"));
                     try {
                         ScreenControl.loadPopUpPane(clinicianDiagnosesPane.getScene(), fxmlLoader, target);
@@ -185,51 +184,25 @@ public class GUIClinicianDiagnosis implements IPopupable {
 
     /**
      * Registers a new diagnosis entry for a patient when 'Add diagnosis' is activated
-     *
-     * @param diagnosis The entered diagnosis to textField for registration
      */
-    private void addDiagnosis(String diagnosis) {
-        if (!diagnosis.equals("Enter a diagnosis") && !diagnosis.equals("") && !diagnosis.substring(0, 1).equals(" ")
-                && diagnosis.matches("[A-Z|a-z0-9.]{3,75}")) {
-            diagnosis = diagnosis.substring(0, 1).toUpperCase() + diagnosis.substring(1).toLowerCase();
-            Boolean unique = true;
+    private void addDiagnosis() {
+        try {
+            GUIPatientUpdateDiagnosis.setIsAdd(true);
 
-            for (Disease current : currentDiseases) {
-                if (current.getDiseaseName().equals( diagnosis )) {
-                    userActions.log( Level.WARNING, "Failed to register a disease", diagnosis + " is already registered" );
-                    Alert err = new Alert( Alert.AlertType.ERROR, "'" + diagnosis + "' is already registered" );
-                    err.show();
-                    unique = false;
-                }
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateDiagnosis.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(clinicianDiagnosesPane.getScene(), fxmlLoader, target);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading update diagnoses screen in popup", "attempted to navigate from the diagnoses page to the update diagnosis page in popup");
+                new Alert(Alert.AlertType.WARNING, "Error loading update diagnoses page", ButtonType.OK).show();
             }
-
-            for (Disease past : pastDiseases) {
-                if (past.getDiseaseName().equals( diagnosis )) {
-                    if (past.getDiseaseState() == null) {
-                        moveFromPastToCurrent( past, null );
-                        unique = false;
-                        changed = true;
-                        break;
-                    } else {
-                        userActions.log( Level.WARNING, "Failed to register a disease", diagnosis + " is already registered" );
-                        Alert err = new Alert( Alert.AlertType.ERROR, "'" + diagnosis + "' is already registered" );
-                        err.show();
-                        unique = false;
-                    }
-                }
-            }
-
-            if (unique) {
-                changed = true;
-                currentDiseases.add( new Disease( diagnosis, null ) );
-                userActions.log( Level.FINE, "Successfully registered a disease", "Registered a new disease for a patient" );
-                loadCurrentDiseases();
-                newDiagnosis.clear();
-            }
-        } else {
-            userActions.log(Level.WARNING, "Failed to register a disease", diagnosis + " is invalid for registration");
-            Alert err = new Alert(Alert.AlertType.ERROR, "'" + diagnosis + "' is invalid for registration");
-            err.show();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            userActions.log(Level.SEVERE,
+                    "Failed to open diagnosis update window from the diagnoses page",
+                    "attempted to open diagnosis update window from the diagnoses page");
+            new Alert(Alert.AlertType.ERROR, "Unable to open diagnosis update window", ButtonType.OK).show();
         }
     }
 
