@@ -151,10 +151,9 @@ public class GUIPatientProcedureForm implements IPopupable {
      * @return True if date is not before patient DOB, one or more organs, or summary/description are more than 1 chars
      */
     private Boolean validateInputs(String summary, String description, LocalDate date) {
-        return date != null && !date.isBefore( patient.getBirth() ) && summary.length() >= 1 &&
-                Pattern.matches("[A-Za-z0-9- ]+", summary) && !summary.substring(0,1).equals(" ") &&
-                ((description.length() >= 1 && Pattern.matches("[A-Za-z0-9- ]+", description) &&
-                        !description.substring( 0 ,1).equals(" ")) || description.length() == 0);
+        return date != null && !date.isBefore( patient.getBirth() ) && summary.length() >= 1 && ((description.length()
+                >= 1 && Pattern.matches("[A-Za-z0-9- ]+", description) || description.length() == 0)) &&
+                Pattern.matches("[A-Za-z0-9- ]+", summary) && !summary.substring(0,1).equals(" ");
     }
 
     /**

@@ -6,7 +6,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import model.Clinician;
 import model.Patient;
 import org.junit.After;
 import org.junit.Before;
@@ -30,9 +29,13 @@ public class GUIAddProcedureTest extends ApplicationTest {
 
     private Main main = new Main();
     private Stage mainStage;
-    private Clinician clinician;
     private Patient patient;
 
+    /**
+     * Resets database, and creates a new patient specifically for the testing
+     * @param stage Scene for a GUI window
+     * @throws Exception Throws an exception
+     */
     @Override
     public void start( Stage stage ) throws Exception {
         Database.resetDatabase();
@@ -40,7 +43,8 @@ public class GUIAddProcedureTest extends ApplicationTest {
         mainStage = stage;
         ArrayList <String> middle = new ArrayList <>();
         middle.add( "Middle" );
-        Database.addPatient( new Patient( "TFX9999", "Joe", middle, "Bloggs", LocalDate.of( 2008, 2, 9 ) ) );
+        Database.addPatient( new Patient( "TFX9999", "Joe", middle, "Bloggs",
+                LocalDate.of( 2008, 2, 9 ) ) );
         patient = Database.getPatientByNhi( "TFX9999" );
     }
 
@@ -63,9 +67,9 @@ public class GUIAddProcedureTest extends ApplicationTest {
         } );
         // Verify that "clinician" has navigated to search pane
         verifyThat( "#clinicianSearchPatientsPane", Node::isVisible );
-        verifyThat( "#patientDataTable", TableViewMatchers.hasTableCell( "Joe Middle Bloggs" ) );
+        verifyThat( "#patientDataTable", TableViewMatchers.hasTableCell( "Willis Brucie" ) );
         interact( () -> {
-            doubleClickOn( "Joe Middle Bloggs" );
+            doubleClickOn( "Willis Brucie" );
         } );
         verifyThat( "#patientProfilePane", Node::isVisible );
         interact( () -> {
@@ -75,6 +79,9 @@ public class GUIAddProcedureTest extends ApplicationTest {
         verifyThat("#patientProceduresPane", Node::isVisible);
     }
 
+    /**
+     * An interrupt for testing
+     */
     @After
     public void waitForEvents() {
         Database.resetDatabase();
@@ -90,6 +97,9 @@ public class GUIAddProcedureTest extends ApplicationTest {
         sleep( 1000 );
     }
 
+    /**
+     * Tests that a procedure application is invalid when the procedure summary and date are null, no entries provided
+     */
     @Test
     public void addInvalidNullAllProcedureTest() {
         // Verify "clinician" has navigated to procedures
@@ -130,6 +140,9 @@ public class GUIAddProcedureTest extends ApplicationTest {
         verifyThat("#pendingProceduresView", TableViewMatchers.hasNumRows( 0 ));
     }
 
+    /**
+     * Tests that a procedure application is invalid when the procedure date is null, has no entry provided
+     */
     @Test
     public void addInvalidNullProcedureDateTest() {
         // Verify "clinician" has navigated to procedures
@@ -181,6 +194,9 @@ public class GUIAddProcedureTest extends ApplicationTest {
         verifyThat("#pendingProceduresView", TableViewMatchers.hasNumRows( 0 ));
     }
 
+    /**
+     * Tests that a procedure application is invalid when the procedure summary is null, has no entry provided
+     */
     @Test
     public void addInvalidNullSummaryTest() {
         // Verify "clinician" has navigated to procedures
@@ -232,6 +248,9 @@ public class GUIAddProcedureTest extends ApplicationTest {
         verifyThat("#pendingProceduresView", TableViewMatchers.hasNumRows( 0 ));
     }
 
+    /**
+     * Tests that a procedure application is invalid when the procedure summary contains a special character
+     */
     @Test
     public void addInvalidSummaryEntryWithSpecialCharTest() {
         // Verify "clinician" has navigated to procedures
@@ -283,6 +302,9 @@ public class GUIAddProcedureTest extends ApplicationTest {
         verifyThat("#pendingProceduresView", TableViewMatchers.hasNumRows( 0 ));
     }
 
+    /**
+     * Tests that a procedure application is invalid when the procedure summary contains an empty string, ie. " "
+     */
     @Test
     public void addInvalidEmptyStringSummaryTest() {
         // Verify "clinician" has navigated to procedures
@@ -334,57 +356,9 @@ public class GUIAddProcedureTest extends ApplicationTest {
         verifyThat("#pendingProceduresView", TableViewMatchers.hasNumRows( 0 ));
     }
 
-    @Test
-    public void addInvalidEmptyStringDescriptionTest() {
-        // Verify "clinician" has navigated to procedures
-        verifyThat("#patientProceduresPane", Node::isVisible);
-        // Verify that each of the previous and pending procedures tableViews are empty
-        verifyThat("#previousProceduresView", TableViewMatchers.hasNumRows( 0 ));
-        verifyThat("#pendingProceduresView", TableViewMatchers.hasNumRows( 0 ));
-        interact( () -> {
-            lookup( "#addProcedureButton" ).queryAs( Button.class ).fire();
-        } );
-        // Verify "clinician" has navigated to add procedures
-        verifyThat("#procedureAnchorPane", Node::isVisible);
-        verifyThat( "#summaryInput", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-        verifyThat( "#descriptionInput", TextInputControlMatchers.hasText( String.valueOf( "" ) ) );
-
-        // Enter a valid summary to textfield for adding a procedure
-        interact( () -> {
-            lookup( "#summaryInput" ).queryAs( TextField.class ).setText( "Valid Summary" );
-        } );
-
-        // Enter an invalid empty string description to textfield for adding a procedure
-        interact( () -> {
-            lookup( "#descriptionInput" ).queryAs( TextArea.class ).setText( " " );
-        } );
-        // Set the date to current date
-        interact( () -> {
-            lookup( "#dateInput").queryAs( DatePicker.class ).setValue( LocalDate.now() );
-        } );
-        verifyThat( "#summaryInput", TextInputControlMatchers.hasText( String.valueOf( "Valid Summary" ) ) );
-        verifyThat( "#descriptionInput", TextInputControlMatchers.hasText( String.valueOf( " " ) ) );
-
-        interact( () -> {
-            // Press the done button for adding the procedure, which should result in an alert stating invalid add
-            lookup( "#doneButton" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-
-        interact( () -> {
-            lookup("OK").queryAs(Button.class).fire();
-        });
-
-        interact( () -> {
-            // Closes the add procedure pane and returns to procedures listing pane
-            lookup( "#closePane" ).queryAs( Button.class ).getOnAction().handle( new ActionEvent() );
-        } );
-        // Verify "clinician" has navigated to procedures
-        verifyThat("#patientProceduresPane", Node::isVisible);
-        // Verify that each of the previous and pending procedures tableViews are empty
-        verifyThat("#previousProceduresView", TableViewMatchers.hasNumRows( 0 ));
-        verifyThat("#pendingProceduresView", TableViewMatchers.hasNumRows( 0 ));
-    }
-
+    /**
+     * Tests that a procedure application is invalid when the procedure description includes invalid special characters
+     */
     @Test
     public void addInvalidDescriptionEntryWithSpecialCharTest() {
         // Verify "clinician" has navigated to procedures
@@ -436,6 +410,9 @@ public class GUIAddProcedureTest extends ApplicationTest {
         verifyThat("#pendingProceduresView", TableViewMatchers.hasNumRows( 0 ));
     }
 
+    /***
+     * Tests that a procedure application is invalid when the procedure date is before the patient's date of birth
+     */
     @Test
     public void addInvalidProcedureDateBeforePatientDOBTest() {
         // Verify "clinician" has navigated to procedures
@@ -463,9 +440,9 @@ public class GUIAddProcedureTest extends ApplicationTest {
 
         LocalDate dob = patient.getBirth();
 
-        // Set the date to 2 years before the DOB of the patient the procedure is being created for
+        // Set the date to 1 day before the DOB of the patient the procedure is being created for
         interact( () -> {
-            lookup( "#dateInput").queryAs( DatePicker.class ).setValue( dob.minus(Period.ofYears(2)));
+            lookup( "#dateInput").queryAs( DatePicker.class ).setValue( dob.minus(Period.ofDays(1)));
         } );
         verifyThat( "#summaryInput", TextInputControlMatchers.hasText( String.valueOf( "Valid Summary" ) ) );
         verifyThat( "#descriptionInput", TextInputControlMatchers.hasText( String.valueOf( "Description*" ) ) );
