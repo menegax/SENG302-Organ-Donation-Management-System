@@ -13,8 +13,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.Patient;
 import utility.UserActionRecord;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +40,7 @@ public class GUIPatientHistory {
     private TableView<UserActionRecord> logHistoryTable;
 
     private ObservableList<UserActionRecord> masterData = FXCollections.observableArrayList();
+
 
     public void initialize() {
         UserControl userControl = new UserControl();
@@ -72,17 +75,23 @@ public class GUIPatientHistory {
         // wrap the FilteredList in a SortedList.
         SortedList<UserActionRecord> sortedData = new SortedList<>(filteredData);
 
+
+        timeStampColumn.setComparator(timeStampColumn.getComparator().reversed()); // reverses comparator
+
         //todo sort it correctly.
 
         // bind the SortedList comparator to the TableView comparator.
         sortedData.comparatorProperty()
                 .bind(logHistoryTable.comparatorProperty());
 
+        logHistoryTable.sort();
+
         // add sorted (and filtered) data to the table.
         logHistoryTable.setItems(sortedData);
 
     }
 
+    //todo rm
     public void refresh() {
         logHistoryTable.refresh();
         masterData.clear();

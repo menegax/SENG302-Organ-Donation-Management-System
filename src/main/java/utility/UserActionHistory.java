@@ -64,18 +64,8 @@ public class UserActionHistory {
 
             }
         });
-
         userActions.addHandler(console);
 
-        // todo remove maybe
-        // File handler
-        try {
-            Handler file = new FileHandler("UserActionHistory%u.xml", true);
-            userActions.addHandler(file);
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE, "Unable to write log to file");
-        }
 
     }
 }

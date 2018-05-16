@@ -1,5 +1,6 @@
 package controller;
 
+import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
@@ -17,6 +18,7 @@ import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 import utility.SearchPatients;
+import utility.SystemLogger;
 import utility.UserActionHistory;
 
 import java.io.IOException;
@@ -47,6 +49,7 @@ public class Main extends Application {
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
 
         setUpMenuBar(primaryStage);
+        systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
 
         primaryStage.setResizable(false);
         primaryStage.show();
@@ -55,6 +58,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         UserActionHistory.setup(); // start user action logs
+        SystemLogger.setup();
         launch(args);
     }
 
@@ -104,7 +108,7 @@ public class Main extends Application {
 
         // if default clinician 0 not in db, add it
         if (!Database.isClinicianInDb(0)) {
-            systemLogger.log(Level.INFO, "Default clinician not in database. Adding default clinician to database.");
+            systemLogger.log(INFO, "Default clinician not in database. Adding default clinician to database.");
             Database.addClinician(new Clinician(0, "initial", new ArrayList<String>() {{
                 add("Middle");
             }}, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
@@ -133,6 +137,9 @@ public class Main extends Application {
      * @param primaryStage the root stage of the application on which to set the menu
      */
     private void setUpMacOsMenuBar(Stage primaryStage) {
+
+        systemLogger.log(INFO, "Setting up menu bar for operating system MacOS");
+
 
         String appName = "Big Pharma";
         // Get the toolkit
@@ -174,5 +181,6 @@ public class Main extends Application {
 
         // Use the menu bar for primary stage
         tk.setMenuBar(primaryStage, bar);
+
     }
 }

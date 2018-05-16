@@ -31,11 +31,11 @@ public class SystemLogger {
 
             // Console handler
             Handler console = new ConsoleHandler();
-            console.setLevel(Level.OFF); // TURN ON TO FINEST TO LOG ALL LEVELS TO CONSOLE
+            console.setLevel(Level.ALL); // TURN ON TO FINEST TO LOG ALL LEVELS TO CONSOLE
             console.setFormatter(new SimpleFormatter(){
                 @Override
                 public String format(LogRecord record){
-                    return record.getLevel() + ": " + StringUtils.capitalize(record.getMessage()) + "\n";
+                    return "== SYSTEM DEBUG == " + record.getLevel() + ": " + StringUtils.capitalize(record.getMessage()) + "\n";
 
                 }
             });
@@ -45,6 +45,7 @@ public class SystemLogger {
             // File handler
             try {
                 Handler file = new FileHandler("system_logs_%u.xml", false);
+                file.setLevel(Level.ALL);
                 systemLogger.addHandler(file);
             }
             catch (IOException e) {
