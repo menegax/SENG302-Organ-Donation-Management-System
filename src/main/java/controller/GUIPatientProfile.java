@@ -116,7 +116,7 @@ public class GUIPatientProfile {
         Object user = null;
         if (userControl.getLoggedInUser() instanceof  Patient ) {
             medicationBtn.setDisable(true); //hide medications btn
-            medicationBtn.setVisible(false);
+          //  medicationBtn.setVisible(false); //TODO: uncomment
             user = userControl.getLoggedInUser();
         }
         if (userControl.getLoggedInUser() instanceof Clinician) {
