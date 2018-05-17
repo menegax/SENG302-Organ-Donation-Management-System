@@ -17,6 +17,7 @@ import model.Clinician;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -73,9 +74,10 @@ public class GUILogin {
             try {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
                 login.addLoggedInUserToCache(newPatient);
-                Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
-                screenControl.addStage(GlobalEnums.Stages.HOME, new Stage());
-                screenControl.show(GlobalEnums.Stages.HOME, homeScreen);
+                Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml"));
+                UndoableStage stage = new UndoableStage();
+                screenControl.addStage(stage.getUUID(), stage);
+                screenControl.show(stage.getUUID(), homeScreen);
             }
             catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "Failed to log in", "Attempted to log in");
@@ -108,7 +110,7 @@ public class GUILogin {
 
         Stage primaryStage = new Stage();
         try {
-            Scene home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
+            Scene home = FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml"));
 
             primaryStage.setScene(home);
         }

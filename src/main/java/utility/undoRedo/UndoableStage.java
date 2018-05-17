@@ -4,15 +4,18 @@ import controller.ScreenControl;
 import controller.UndoRedoControl;
 import controller.UndoableController;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -27,6 +30,8 @@ public class UndoableStage extends Stage {
     private int index = 0;
 
     private boolean changingStates = false;
+
+    private final UUID uuid = UUID.randomUUID();
 
     /**
      * Constructor for the undoable stage
@@ -98,12 +103,13 @@ public class UndoableStage extends Stage {
     private void navigateToScreen(String method) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource((statesHistoryScreens.get(index)).getUndoableScreen().toString() + ".fxml"));
         try {
-            ScreenControl.addScreen(statesHistoryScreens.get(index).getUndoableScreen().toString(), fxmlLoader.load());
+            ScreenControl screenControl = ScreenControl.getScreenControl();
+            screenControl.addStage(uuid,this);
+            screenControl.show(uuid, fxmlLoader.load());
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading screen", "Attempted to navigate screens during " + method);
             new Alert(Alert.AlertType.WARNING, "ERROR loading screen", ButtonType.OK).showAndWait();
         }
-        ScreenControl.activate(statesHistoryScreens.get(index).getUndoableScreen().toString());
         UndoableController controller = fxmlLoader.getController();
         UndoRedoControl.setStates(statesHistoryScreens.get(index), controller.getControls());
     }
@@ -119,5 +125,14 @@ public class UndoableStage extends Stage {
             statesHistoryScreens = new ArrayList<>(statesHistoryScreens.subList(0, index));
             statesHistoryScreens.add(statesHistoryScreen);
         }
+    }
+
+    /**
+     * Gets the UUID of the stage
+     * to be used as the stages hash key in screen control
+     * @return the uuid of the stage
+     */
+    public UUID getUUID() {
+        return uuid;
     }
 }

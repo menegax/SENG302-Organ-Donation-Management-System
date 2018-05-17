@@ -20,16 +20,19 @@ import utility.UserActionHistory;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class Main extends Application {
 
+    private final UUID uuid = UUID.randomUUID();
+
     @Override
     public void start(Stage primaryStage) throws IOException {
         ScreenControl screenControl = ScreenControl.getScreenControl();
-        screenControl.addStage(GlobalEnums.Stages.PRIMARY, primaryStage);
+        screenControl.addStage(uuid, primaryStage);
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-        screenControl.show(GlobalEnums.Stages.PRIMARY, loginScreen);
+        screenControl.show(uuid, loginScreen);
 
         // add objects
         Database.importFromDiskPatients("./patient.json");
@@ -162,5 +165,13 @@ public class Main extends Application {
 
         // Use the menu bar for primary stage
         tk.setMenuBar(primaryStage, bar);
+    }
+
+    /**
+     * Gets the uuid hash key used for the primary stage
+     * @return the uuid hash key used in the primary stage
+     */
+    public UUID getUuid() {
+        return uuid;
     }
 }

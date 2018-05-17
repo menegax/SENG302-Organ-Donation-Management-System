@@ -10,6 +10,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import service.Database;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 
@@ -26,10 +27,11 @@ public class GUIPatientHome {
 
     public Button logOutButton;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     @FXML
-    public void goToProfile() {
-        ScreenControl.activate("patientProfile");
+    public void goToProfile() throws IOException {
+        screenControl.show(((UndoableStage) homePane.getScene().getWindow()).getUUID(),FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
     }
 
 

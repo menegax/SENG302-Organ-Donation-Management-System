@@ -5,7 +5,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import utility.GlobalEnums.Stages;
 
 import java.io.IOException;
 import java.util.*;
@@ -24,14 +23,14 @@ public class ScreenControl {
     @Deprecated
     private static Scene main;
 
-    private static Map<Stages, Stage> applicationStages;
+    private static Map<UUID, Stage> applicationStages;
 
 
     private ScreenControl() {
         applicationStages = new HashMap<>();
     }
 
-    static ScreenControl getScreenControl() {
+    public static ScreenControl getScreenControl() {
         if (screenControl == null) {
             screenControl = new ScreenControl();
         }
@@ -44,7 +43,7 @@ public class ScreenControl {
      * @param key
      * @param stage
      */
-    void addStage(Stages key, Stage stage){
+    public void addStage(UUID key, Stage stage){
         applicationStages.put(key, stage);
     }
 
@@ -52,7 +51,7 @@ public class ScreenControl {
      *
      * @param root
      */
-    void show(Stages stageName, Parent root) {
+    public void show(UUID stageName, Parent root) {
         Stage stage = applicationStages.get(stageName);
         stage.setScene(new Scene(root));
         stage.show();
