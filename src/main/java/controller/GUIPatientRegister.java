@@ -24,7 +24,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientRegister extends UndoableController{
+public class GUIPatientRegister {
 
     @FXML
     public AnchorPane pane;
@@ -60,14 +60,6 @@ public class GUIPatientRegister extends UndoableController{
      */
     public void initialize() {
         setDateConverter();
-        controls = new ArrayList<Control>() {{
-            add(firstnameRegister);
-            add(lastnameRegister);
-            add(middlenameRegister);
-            add(birthRegister);
-            add(nhiRegister);
-        }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTREGISTER);
 
         // Enter key
         patientRegisterAnchorPane.setOnKeyPressed(e -> {

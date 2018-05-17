@@ -20,6 +20,7 @@ import service.Database;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -94,7 +95,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     DrugInteraction.setViewedPatient(patientDataTable.getSelectionModel()
                             .getSelectedItem());
 
-                    Stage popUpStage = new Stage();
+                    Stage popUpStage = new UndoableStage();
                     popUpStage.setX(ScreenControl.getMain()
                             .getX()); //offset popup
                     popUpStage.setScene(scene);

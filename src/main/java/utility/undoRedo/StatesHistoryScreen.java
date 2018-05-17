@@ -52,7 +52,9 @@ public class StatesHistoryScreen {
 //            }
 //        });
         this.undoableScreen = undoableScreen;
-        ((UndoableStage) controls.get(0).getScene().getWindow()).addStatesHistoryScreen(this);
+        controls.get(0).sceneProperty().addListener((observable, oldValue, newValue) -> {
+            ((UndoableStage) newValue.getWindow()).addStatesHistoryScreen(this);
+        });
         for (Control control : controls) {
             if ((control instanceof TextField)) {
                 createStateHistoriesTextField(control);

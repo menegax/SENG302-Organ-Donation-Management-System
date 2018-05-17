@@ -51,7 +51,5 @@
       <DatePicker fx:id="dateOfDeath" editable="false" focusTraversable="false" layoutX="120.0" layoutY="235.0" prefHeight="26.0" prefWidth="155.0" promptText="Date of death" />
       <Label layoutX="26.0" layoutY="240.0" text="Date of Death:" />
       <ChoiceBox fx:id="regionDD" layoutX="362.0" layoutY="195.0" prefHeight="27.0" prefWidth="155.0" />
-      <Button fx:id="redoButton" layoutX="556.0" layoutY="14.0" mnemonicParsing="false" onAction="#redo" prefHeight="36.0" prefWidth="31.0" styleClass="redo" stylesheets="@../css/guiStyle.css" />
-      <Button fx:id="undoButton" layoutX="520.0" layoutY="14.0" mnemonicParsing="false" onAction="#undo" prefHeight="36.0" prefWidth="31.0" styleClass="undo" stylesheets="@../css/guiStyle.css" />
    </children>
 </AnchorPane>

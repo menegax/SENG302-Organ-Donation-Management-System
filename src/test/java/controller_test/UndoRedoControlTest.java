@@ -35,7 +35,7 @@ public class UndoRedoControlTest {
     @Test
     public void testSetStates() {
         resetControls();
-        StatesHistoryScreen statesHistoryScreen = new StatesHistoryScreen(new Pane(), controls);
+        StatesHistoryScreen statesHistoryScreen = new StatesHistoryScreen(controls, null);
         checkBox.setSelected(true);
         choiceBox.getSelectionModel().select(0);
         comboBox.getSelectionModel().select(0);

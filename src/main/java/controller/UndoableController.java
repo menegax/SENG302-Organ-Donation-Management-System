@@ -16,13 +16,6 @@ public abstract class UndoableController {
     StatesHistoryScreen statesHistoryScreen;
 
     /**
-     * Stores the StatesHistoryScreen of the controller in its UndoableStage
-     */
-    private void storeStatesHistoryScreen() {
-        ((UndoableStage) controls.get(0).getScene().getWindow()).addStatesHistoryScreen(statesHistoryScreen);
-    }
-
-    /**
      * Gets the controls in the screen of this controller
      * @return the list of controls in this controller
      */

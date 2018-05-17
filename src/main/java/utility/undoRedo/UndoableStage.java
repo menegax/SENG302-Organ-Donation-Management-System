@@ -33,6 +33,7 @@ public class UndoableStage extends Stage {
      * Sets up the action listeners for undo and redo
      */
     public UndoableStage() {
+        super();
         this.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (KeyCodeCombination.keyCombination(UndoRedoControl.undoShortcut).match(event)) {
                 undo();

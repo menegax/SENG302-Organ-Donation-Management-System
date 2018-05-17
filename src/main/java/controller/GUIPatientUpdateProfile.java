@@ -161,7 +161,6 @@ public class GUIPatientUpdateProfile extends UndoableController implements IPopu
                 add(zipTxt);
             }};
             statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEPROFILE);
-
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
