@@ -134,4 +134,36 @@ public class GlobalEnums {
         }
     }
 
+    public enum Stages {
+        HOME("Home"), PRIMARY("Primary");
+
+        private String value;
+
+
+        Stages(final String value) {
+            this.value = value;
+        }
+
+
+        public String getValue() {
+            return value;
+        }
+
+
+        @Override
+        public String toString() {
+            return this.getValue();
+        }
+
+
+        public static Enum getEnumFromString(String value) {
+            try {
+                return Stages.valueOf(value.toUpperCase().replaceAll("\\s+", "_"));
+            }
+            catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
+    }
+
 }

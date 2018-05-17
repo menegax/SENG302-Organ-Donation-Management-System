@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
@@ -22,7 +23,10 @@ public class GUIHome {
         // create profile tab and add fxml into
         Tab profileViewTab = new Tab();
         profileViewTab.setText("Profile");
-        profileViewTab.setContent(FXMLLoader.<Pane>load(getClass().getResource("/scene/patientProfile.fxml")));
+
+        Pane pane = FXMLLoader.load(getClass().getResource("/scene/test.fxml"));
+
+        profileViewTab.setContent(pane);
         horizontalTabPane.getTabs().add(profileViewTab);
 
         // create history tab and add fxml into
@@ -31,4 +35,7 @@ public class GUIHome {
         historyViewTab.setContent(FXMLLoader.<Pane>load(getClass().getResource("/scene/patientHistory.fxml")));
         horizontalTabPane.getTabs().add(historyViewTab);
     }
+
+
+
 }

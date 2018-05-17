@@ -6,7 +6,6 @@ import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -27,27 +26,18 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-        Scene rootScene = new Scene(root, 600, 400);
-        primaryStage.setScene(rootScene); //set scene on primary stage
-        ScreenControl.setRootScene(rootScene); // set this scene in screen controller
+        ScreenControl screenControl = ScreenControl.getScreenControl();
+        screenControl.addStage(GlobalEnums.Stages.PRIMARY, primaryStage);
+        Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+        screenControl.show(GlobalEnums.Stages.PRIMARY, loginScreen);
 
-
-        ScreenControl screenControl = new ScreenControl(primaryStage);
-        // Add scenes
-        addAllScenes(screenControl);
-
-        //
-        //setUpHomeForPatient
         // add objects
         Database.importFromDiskPatients("./patient.json");
         Database.importFromDiskClinicians("./clinician.json");
         addDummyTestObjects();
         ensureDefaultClinician();
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
-
         setUpMenuBar(primaryStage);
-
         primaryStage.show();
 
     }
@@ -57,17 +47,6 @@ public class Main extends Application {
         UserActionHistory.setup(); // start user action logs
         launch(args);
     }
-
-
-    private void addAllScenes(ScreenControl screenControl) throws IOException {
-        screenControl.addScene(new ArrayList<String>(){{
-            add("/scene/login.fxml");
-            add("/scene/patientRegister.fxml");
-            add("/scene/clinicianHome.fxml");
-            add("/scene/patientHome.fxml");
-        }});
-    }
-
 
     /**
      * Adds dummy test objects for testing purposes
