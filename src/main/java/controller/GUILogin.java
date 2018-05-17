@@ -101,7 +101,6 @@ public class GUILogin {
             }
             catch (IOException e) {
                 userActions.log(Level.WARNING, "Unable to load clinician home page", "Attempted to log in");
-                e.printStackTrace(); //todo rm
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
             }

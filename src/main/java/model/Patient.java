@@ -84,8 +84,6 @@ public class Patient extends User {
 
     private String contactEmailAddress;
 
-//    private ArrayList<String> patientLog; //todo remove
-
     private ArrayList<UserActionRecord> userActionsList;
 
 
@@ -717,10 +715,9 @@ public class Patient extends User {
 //    }
 
 
-    //todo implement
     /**
      * Gets the list of user action history logs
-     * DO NOT USE UNLESS LOGGER //todo think about
+     * DO NOT USE UNLESS LOGGER
      * @return the list of user records
      */
     public ArrayList<UserActionRecord> getUserActionsList() {

@@ -72,8 +72,6 @@ public class GUIPatientHistory {
         // wrap the FilteredList in a SortedList.
         SortedList<UserActionRecord> sortedData = new SortedList<>(filteredData);
 
-        //todo sort it correctly.
-
         // bind the SortedList comparator to the TableView comparator.
         sortedData.comparatorProperty()
                 .bind(logHistoryTable.comparatorProperty());

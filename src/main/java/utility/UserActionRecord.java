@@ -19,10 +19,6 @@ public class UserActionRecord {
 
     private String action;
 
-    @Deprecated
-    private static ObservableList<UserActionRecord> logHistory = FXCollections.observableArrayList(); //todo move to db class
-
-
     UserActionRecord(Timestamp timestamp, Level level, String action, String message){
         this.timestamp = timestamp;
         this.level = level;
@@ -30,7 +26,6 @@ public class UserActionRecord {
         this.message = message;
 
     }
-
 
 
     public String getAction() {
@@ -41,7 +36,6 @@ public class UserActionRecord {
     public String getMessage() {
         return message;
     }
-
 
 
     public Level getLevel() {
