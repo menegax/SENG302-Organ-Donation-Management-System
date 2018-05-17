@@ -56,6 +56,8 @@ public class GUIPatientDiagnosis {
      */
     private ArrayList<Disease> currentDiseases;
 
+    private UserControl userControl;
+
     /**
      * Past disease list of the patient
      */
@@ -66,7 +68,14 @@ public class GUIPatientDiagnosis {
      */
     @FXML
     public void initialize() {
-        Patient currentPatient = ScreenControl.getLoggedInPatient();
+        userControl = new UserControl();
+        Patient currentPatient = null;
+        if (userControl.getLoggedInUser() instanceof  Patient ) {
+            currentPatient = (Patient) userControl.getLoggedInUser();
+        }
+        else {
+            currentPatient = userControl.getTargetPatient();
+        }
         currentDiseases = currentPatient.getCurrentDiseases();
         pastDiseases = currentPatient.getPastDiseases();
         loadCurrentDiseases();

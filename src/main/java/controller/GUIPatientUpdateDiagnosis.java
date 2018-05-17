@@ -25,7 +25,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller for diagnosis update popup window.
  */
-public class GUIPatientUpdateDiagnosis implements IPopupable {
+public class GUIPatientUpdateDiagnosis {
 
     @FXML
     public AnchorPane diagnosisUpdatePane;
@@ -45,6 +45,8 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
     @FXML
     public ChoiceBox tagsDD;
 
+    private UserControl userControl;
+
     /**
      * Diagnosis being updated
      */
@@ -59,12 +61,6 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
     private StatesHistoryScreen statesHistoryScreen;
 
     private static boolean isAdd;
-
-
-    @Override
-    public void setViewedPatient(Patient patient) {
-        currentPatient = patient;
-    }
 
     /**
      * Sets the diagnosis that is being updated
@@ -88,6 +84,8 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
      * Populates all editable nodes with the current disease information
      */
     public void initialize() {
+        userControl = new UserControl();
+        currentPatient = userControl.getTargetPatient();
         if(isAdd) {
             titleLabel.setText("Add Diagnosis");
             target = new Disease(null, null);
@@ -143,7 +141,7 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
     public void cancelUpdate() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
         try {
-            ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader, currentPatient);
+            ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader);
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error returning to diagnoses screen in popup", "attempted to navigate from the update diagnosis page to the diagnoses page in popup");
             new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
@@ -198,6 +196,8 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
                 diagnosisDate.setValue(diagnosisDate.getValue());
             }
         } catch(NullPointerException e) {
+            System.out.println(diagnosisDate.getValue());
+            System.out.println(currentPatient);
             valid = false;
             setInvalid(diagnosisDate);
         }
@@ -268,7 +268,7 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
                 currentPatient.getCurrentDiseases().add(target);
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
                 try {
-                    ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader, currentPatient);
+                    ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader);
                 } catch (IOException e) {
                     userActions.log(Level.SEVERE, "Error returning to diagnoses screen in popup", "attempted to navigate from the update diagnosis page to the diagnoses page in popup");
                     new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
@@ -283,7 +283,7 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
             } else {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
                 try {
-                    ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader, currentPatient);
+                    ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader);
                 } catch (IOException e) {
                     userActions.log(Level.SEVERE, "Error returning to diagnoses screen in popup", "attempted to navigate from the update diagnosis page to the diagnoses page in popup");
                     new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
