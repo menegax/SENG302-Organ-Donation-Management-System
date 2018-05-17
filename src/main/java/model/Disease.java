@@ -64,7 +64,7 @@ public class Disease {
      *  future or before the patient was born.
      * @param date - date to set as the diagnosed date
      * @param patient patient to
-     * @throws InvalidObjectException
+     * @throws InvalidObjectException invalid date
      */
     public void setDateDiagnosed(LocalDate date, Patient patient) throws InvalidObjectException {
         if (isInvalidDiagnosisDate(date, patient)){

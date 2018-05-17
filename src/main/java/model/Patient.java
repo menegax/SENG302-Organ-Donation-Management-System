@@ -747,7 +747,6 @@ public class Patient extends User {
 
 
     /**
-<<<<<<< HEAD
      * Gets the current diseases infecting a donor
      * @return ArrayList current diseases
      */
