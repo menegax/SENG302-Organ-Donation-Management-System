@@ -73,8 +73,11 @@ public class GUIClinicianUpdateProfile extends UndoableController{
 
         // Registering a change event to clear the invalid class
         regionDD.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> setValid(regionDD));
-
-        loadProfile(ScreenControl.getLoggedInClinician().getStaffID());
+        UserControl userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
+        if (user instanceof Clinician){
+            loadProfile(((Clinician) user).getStaffID());
+        }
         setUpStateHistory();
     }
 
@@ -233,7 +236,7 @@ public class GUIClinicianUpdateProfile extends UndoableController{
     public void goBackToProfile() {
         ScreenControl.removeScreen("clinicianProfile");
         try {
-            ScreenControl.addScreen("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
+            ScreenControl.addTabToHome("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
             ScreenControl.activate("clinicianProfile");
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");

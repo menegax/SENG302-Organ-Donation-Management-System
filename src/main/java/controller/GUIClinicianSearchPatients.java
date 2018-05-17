@@ -15,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Patient;
-import model.DrugInteraction;
 import service.Database;
 import utility.GlobalEnums;
 import utility.SearchPatients;
@@ -81,23 +80,17 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * Sets up double-click functionality for each row to open a patient profile update
      */
     private void setupDoubleClickToPatientEdit() {
-
+        UserControl userControl = new UserControl();
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
                     .getSelectedItem() != null) {
                 try {
+                    userControl.setTargetPatient(patientDataTable.getSelectionModel().getSelectedItem());
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
-                    GUIPatientProfile controller = fxmlLoader.getController();
-                    controller.setViewedPatient(patientDataTable.getSelectionModel()
-                            .getSelectedItem());
-                    DrugInteraction.setViewedPatient(patientDataTable.getSelectionModel()
-                            .getSelectedItem());
-
                     Stage popUpStage = new UndoableStage();
-                    popUpStage.setX(ScreenControl.getMain()
-                            .getX()); //offset popup
+                    popUpStage.setX(ScreenControl.getMain().getX()); //offset popup
                     popUpStage.setScene(scene);
 
                     // When pop up is closed, refresh the table

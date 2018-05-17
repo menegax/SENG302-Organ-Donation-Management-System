@@ -32,7 +32,11 @@ public class GUIClinicianProfile {
     private Label regionTxt;
 
     public void initialize() {
-        loadProfile(ScreenControl.getLoggedInClinician());
+        UserControl userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
+        if (user instanceof Clinician){
+            loadProfile(((Clinician) user));
+        }
     }
 
     private void loadProfile(Clinician clinician) {
@@ -47,7 +51,7 @@ public class GUIClinicianProfile {
     public void goToEdit() {
         ScreenControl.removeScreen("clinicianProfileUpdate");
         try {
-            ScreenControl.addScreen("clinicianProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/clinicianProfileUpdate.fxml")));
+            ScreenControl.addTabToHome("clinicianProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/clinicianProfileUpdate.fxml")));
             ScreenControl.activate("clinicianProfileUpdate");
         }catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading clinician update screen", "attempted to navigate from the clinician profile page to the edit page");

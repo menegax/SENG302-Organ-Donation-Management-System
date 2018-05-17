@@ -26,7 +26,7 @@ import static utility.UserActionHistory.userActions;
  * Details are saved when the Save button is selected, and the user is returned to the patient profile view screen.
  * @author Maree Palmer
  */
-public class GUIPatientUpdateContacts extends UndoableController implements IPopupable {
+public class GUIPatientUpdateContacts extends UndoableController {
 
     @FXML
     public AnchorPane patientContactsPane;
@@ -66,6 +66,8 @@ public class GUIPatientUpdateContacts extends UndoableController implements IPop
      */
     private Patient target;
 
+    private UserControl userControl;
+
     public void setViewedPatient(Patient patient) {
         target = patient;
         loadProfile(target.getNhiNumber());
@@ -86,8 +88,14 @@ public class GUIPatientUpdateContacts extends UndoableController implements IPop
      * display current contact attributes.
      */
     public void initialize() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            loadProfile(ScreenControl.getLoggedInPatient().getNhiNumber());
+        userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
+        if (user instanceof Patient) {
+            loadProfile(((Patient) user).getNhiNumber());
+            setContactFields();
+        }
+        if (userControl.getTargetPatient() != null) {
+            loadProfile((userControl.getTargetPatient()).getNhiNumber());
             setContactFields();
         }
         setupUndoRedo();
@@ -297,10 +305,10 @@ public class GUIPatientUpdateContacts extends UndoableController implements IPop
      * Closes the contact details screen and returns the user to the profile window without saving changes.
      */
     public void goToProfile() {
-        if (ScreenControl.getLoggedInPatient() != null) {
+        if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientProfile");
             try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                ScreenControl.addTabToHome("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
                 ScreenControl.activate("patientProfile");
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error returning to profile screen", "attempted to navigate from the donation page to the profile page");
@@ -309,7 +317,7 @@ public class GUIPatientUpdateContacts extends UndoableController implements IPop
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientContactsPane.getScene(), fxmlLoader, target);
+                ScreenControl.loadPopUpPane(patientContactsPane.getScene(), fxmlLoader);
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error returning to profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
                 new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
