@@ -214,6 +214,11 @@ public class GUIPatientUpdateDiagnosis {
         return valid;
     }
 
+    /**
+     * Returns true if diagnosis dates for the current disease and the date picker are the same
+     * @param disease disease
+     * @return boolean same diagnosis date
+     */
     private boolean isSameDate(Disease disease) {
         return disease.getDateDiagnosed().getYear() == (diagnosisDate.getValue().getYear()) &&
                 disease.getDateDiagnosed().getMonth() == diagnosisDate.getValue().getMonth() &&
@@ -221,6 +226,10 @@ public class GUIPatientUpdateDiagnosis {
     }
 
 
+    /**
+     * Checks for duplicate diseases to ensure an add is valid
+     * @return boolean valid add
+     */
     private boolean isValidAdd() {
         for (Disease disease : currentPatient.getCurrentDiseases()) {
             if(disease.getDiseaseName().equals(diseaseNameTextField.getText()) &&
