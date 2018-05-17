@@ -1,17 +1,16 @@
 package controller;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
+import static utility.UserActionHistory.userActions;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.layout.AnchorPane;
-
-import javafx.scene.input.KeyCode;
 import javafx.scene.control.CheckBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.Patient;
 import service.Database;
@@ -20,8 +19,6 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
-import static utility.UserActionHistory.userActions;
-
 
 public class GUILogin {
 
@@ -29,8 +26,6 @@ public class GUILogin {
     public AnchorPane loginPane;
 
     public Button loginButton;
-
-    public Hyperlink registerLabel;
 
     @FXML
     private TextField nhiLogin;
