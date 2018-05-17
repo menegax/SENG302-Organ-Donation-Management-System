@@ -99,8 +99,6 @@ public class GUIPatientProfile {
     @FXML
     private Label back;
 
-    private Patient viewedPatient;
-
     private UserControl userControl;
 
     private ListProperty<String> organListProperty = new SimpleListProperty<>();
@@ -108,24 +106,9 @@ public class GUIPatientProfile {
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
 
-    private void removeBack() {
-        back.setDisable(true);
-        back.setVisible(false);
-    }
-
-
-    public void setViewedPatient(Patient patient) {
-        this.viewedPatient = patient;
-        removeBack();
-        try {
-            loadProfile(this.viewedPatient.getNhiNumber());
-        }
-        catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
-        }
-    }
-
-
+    /**
+     * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
+     */
     public void initialize() {
         userControl = new UserControl();
         Object user = null;
@@ -140,6 +123,7 @@ public class GUIPatientProfile {
         }
 
         try {
+
             assert user != null;
             loadProfile(((Patient)user).getNhiNumber());
         }
@@ -149,6 +133,36 @@ public class GUIPatientProfile {
     }
 
 
+    /**
+     * Removes the back button from the scene
+     */
+    private void removeBack() {
+        back.setDisable(true);
+        back.setVisible(false);
+    }
+
+
+    /**
+     * Sets the patient for the controller. This patient's attributes will be loaded
+     * @param patient the patient to be viewed
+     */
+    void setViewedPatient(Patient patient) {
+        Patient viewedPatient = patient;
+        removeBack();
+        try {
+            loadProfile(viewedPatient.getNhiNumber());
+        }
+        catch (InvalidObjectException e) {
+            userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
+        }
+    }
+
+
+    /**
+     * Sets the patient's attributes for the scene's labels
+     * @param nhi the nhi of the patient to be viewed
+     * @throws InvalidObjectException if the nhi of the patient does not exist in the database
+     */
     private void loadProfile(String nhi) throws InvalidObjectException {
         Patient patient = Database.getPatientByNhi(nhi);
         nhiLbl.setText(patient.getNhiNumber());
@@ -200,6 +214,9 @@ public class GUIPatientProfile {
     }
 
 
+    /**
+     * Goes to the patient edit scene
+     */
     public void goToEdit() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientUpdateProfile");
@@ -227,6 +244,9 @@ public class GUIPatientProfile {
     }
 
 
+    /**
+     * Goes to the patient donations scene
+     */
     public void goToDonations() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientDonations");
@@ -254,6 +274,9 @@ public class GUIPatientProfile {
     }
 
 
+    /**
+     * Goes to the patient contact details edit scene
+     */
     public void goToContactDetails() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientContactDetails");
@@ -283,6 +306,9 @@ public class GUIPatientProfile {
     }
 
 
+    /**
+     * Goes to medications edit scene
+     */
     public void openMedication() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientMedications");
@@ -309,6 +335,9 @@ public class GUIPatientProfile {
     }
 
 
+    /**
+     * Goes to the patient home scene
+     */
     public void goToPatientHome() {
         ScreenControl.activate("patientHome");
     }

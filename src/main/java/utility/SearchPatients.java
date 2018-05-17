@@ -52,66 +52,6 @@ public class SearchPatients {
 
 
     /**
-     * Creates a full index of all patients currently loaded into the app.
-     */
-    public static void createFullIndex() {
-    	if (indexWriter != null) {
-    		SearchPatients.clearIndex();
-    	}
-        Set<Patient> patients = Database.getPatients();
-        for (Patient patient : patients) {
-        	addIndex(patient);
-        }
-    }
-
-
-    /**
-     * Add indices of patients via the index writer.
-     * @param patient patient to be indexed.
-     */
-    public static void addIndex(Patient patient) {
-        if (indexWriter == null) {
-            try {
-				initializeWriter();
-			} catch (IOException e) {
-				userActions.log(Level.SEVERE, "Failure to initialize index writer", "Attempted to intialize the index writer");
-			}
-        }
-        try {
-			indexWriter.addDocument(createDocument(patient));
-			indexWriter.commit();
-		} catch (IOException e) {
-			userActions.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
-		}
-    }
-
-    /**
-     * Removes indices of patients via the index writer.
-     * @param patient patient to remove index for.
-     */
-    public static void removeIndex(Patient patient) {
-    	Term toDel = new Term("nhi", patient.getNhiNumber().toUpperCase());
-    	try {
-			indexWriter.deleteDocuments(toDel);
-            userActions.log(Level.INFO,"Successfully removed patient: " + patient.getNhiNumber() + " from the search index", "Attempted to remove patient " + patient.getNhiNumber() + " from the search index");
-		} catch (IOException e) {
-            userActions.log(Level.SEVERE, "Unable to remove patient index", "Attempted to remove patient index");
-        }
-    }
-    
-    /**
-     * Removes all indices of all patients via the index writer.
-     */
-    public static void clearIndex() {
-    	try {
-			indexWriter.deleteAll();
-            userActions.log(Level.INFO,"Successfully cleared patient search index", "Attempted to delete all patients search indices");
-		} catch (IOException e) {
-            userActions.log(Level.SEVERE, "Unable to clear patient index", "Attempted to clear patient index");
-		}
-    }
-    
-    /**
      * Creates the index document for a patient.
      */
     private static Document createDocument(Patient patient) {
@@ -129,11 +69,71 @@ public class SearchPatients {
 
 
     /**
+     * Creates a full index of all patients currently loaded into the app.
+     */
+    public static void createFullIndex() {
+        if (indexWriter != null) {
+            SearchPatients.clearIndex();
+        }
+        Set<Patient> patients = Database.getPatients();
+        for (Patient patient : patients) {
+            addIndex(patient);
+        }
+    }
+
+    /**
+     * Add indices of patients via the index writer.
+     * @param patient patient to be indexed.
+     */
+    public static void addIndex(Patient patient) {
+        if (indexWriter == null) {
+            try {
+                initializeWriter();
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Failure to initialize index writer", "Attempted to intialize the index writer");
+            }
+        }
+        try {
+            indexWriter.addDocument(createDocument(patient));
+            indexWriter.commit();
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
+        }
+    }
+
+    /**
+     * Removes indices of patients via the index writer.
+     * @param patient patient to remove index for.
+     */
+    public static void removeIndex(Patient patient) {
+        Term toDel = new Term("nhi", patient.getNhiNumber().toUpperCase());
+        try {
+            indexWriter.deleteDocuments(toDel);
+            userActions.log(Level.INFO,"Successfully removed patient: " + patient.getNhiNumber() + " from the search index", "Attempted to remove patient " + patient.getNhiNumber() + " from the search index");
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE, "Unable to remove patient index", "Attempted to remove patient index");
+        }
+    }
+
+    /**
+     * Removes all indices of all patients via the index writer.
+     */
+    public static void clearIndex() {
+        try {
+            indexWriter.deleteAll();
+            userActions.log(Level.INFO,"Successfully cleared patient search index", "Attempted to delete all patients search indices");
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE, "Unable to clear patient index", "Attempted to clear patient index");
+        }
+    }
+
+
+    /**
      * Closes the index writer and ram directory freeing up the 
      * memory back to the operating system.
      * @throws IOException when the index or RAM memory cannot be accessed.
      */
-    public static void closeIndex() throws IOException {
+    public static void closeIndex() throws IOException { //Todo add call this method on app close
         ramDirectory.close();
         indexWriter.close();
     }

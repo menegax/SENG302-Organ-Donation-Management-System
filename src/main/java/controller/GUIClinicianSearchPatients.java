@@ -20,6 +20,7 @@ import service.Database;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -76,6 +77,9 @@ public class GUIClinicianSearchPatients implements Initializable {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
                     .getSelectedItem() != null) {
                 try {
+                    UserControl userControl = new UserControl();
+                    userControl.setTargetPatient(patientDataTable.getSelectionModel()
+                            .getSelectedItem());
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
                     GUIPatientProfile controller = fxmlLoader.getController();
@@ -94,11 +98,12 @@ public class GUIClinicianSearchPatients implements Initializable {
                     ScreenControl.addPopUp("searchPopup", popUpStage); //ADD to screen control
                     ScreenControl.displayPopUp("searchPopup"); //display the popup
                 }
-                catch (Exception e) {
+                catch (IOException e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");
                     new Alert(Alert.AlertType.ERROR, "Unable to open patient edit window", ButtonType.OK).show();
+                    e.printStackTrace(); //Todo rm
                 }
             }
 
