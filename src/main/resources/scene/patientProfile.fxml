@@ -35,6 +35,12 @@
                   <Label fx:id="genderLbl" text="Label" />
                </children>
             </HBox>
+            <HBox layoutX="10.0" layoutY="61.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Vital status:" />
+                  <Label fx:id="vitalLbl1" text="Label" />
+               </children>
+            </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Label prefHeight="16.0" prefWidth="112.0" text="Date of Birth: " />
