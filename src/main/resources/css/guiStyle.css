@@ -3,21 +3,24 @@
     -fx-font-family: "  Neue";
 
     /*colors from color scheme generator*/
-    color1: #F15025;
-    /*color2: ;*/
-    color3: #E6E8E6;
-    color4: #CED0CE;
-    color5: #FFFFFF;
-    black: #191919;
-    white: #f5f5f5;
+    color1: #A4ABB9;
+    color2: #F0EFEC;
+    color3: #A3C0DD;
+    color4: #A2C9E0;
+    color5: #A2B5C2;
+
+    black: #020812;
+    white: #f5f5f5; /* smoke white */
+
+    invalid: #e6b3b3;
 
     //Todo set
     hyperlink: #0;
-    hyperlink-clicked: #0;
+    /*hyperlink-clicked: ;*/
+    /*back-button: ;*/
+    back-button-pressed: #235587;
     button-highlight: #0;
     background: #0;
-
-
 
     -fx-base: color3;
     -fx-background: white;
@@ -34,7 +37,7 @@
 }
 
 .back:pressed {
-    -fx-text-fill: #235587;
+    -fx-text-fill: back-button-pressed;
 }
 
 .back {
@@ -56,7 +59,7 @@
 
 /* For invalid text-fields within forms */
 .invalid {
-    -fx-background-color: #e6b3b3;
+    -fx-background-color: invalid;
     -fx-border-color: red;
     -fx-border-width: 2px;
     -fx-border-radius: 3px;
