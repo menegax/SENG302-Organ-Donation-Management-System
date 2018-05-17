@@ -1,103 +1,76 @@
 package controller;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import utility.GlobalEnums.Stages;
+import model.Clinician;
+import model.Patient;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
 
 public class ScreenControl {
 
-    private static ScreenControl screenControl;
-
-    @Deprecated
     private static HashMap<String, Pane> screenMap = new HashMap<>();
-    @Deprecated
-    private static HashMap<String, Stage> popMap = new HashMap<>();
-    @Deprecated
-    public static Map<String, Parent> scenes = new HashMap<>();
 
-    @Deprecated
+    private static HashMap<String, Stage> popMap = new HashMap<>();
+
     private static Scene main;
 
-    private static Map<Stages, Stage> applicationStages;
+
+    public static Patient patient;
 
 
-    private ScreenControl() {
-        applicationStages = new HashMap<>();
+    public static Clinician clinician;
+
+
+    public static void setLoggedInPatient(Patient newPatient) {
+        patient = newPatient;
     }
 
-    static ScreenControl getScreenControl() {
-        if (screenControl == null) {
-            screenControl = new ScreenControl();
-        }
-        return screenControl;
+    public static Patient getLoggedInPatient() {
+        return patient;
     }
 
-
-    /**
-     *
-     * @param key
-     * @param stage
-     */
-    void addStage(Stages key, Stage stage){
-        applicationStages.put(key, stage);
-    }
-
-    /**
-     *
-     * @param root
-     */
-    void show(Stages stageName, Parent root) {
-        Stage stage = applicationStages.get(stageName);
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
-
-    @Deprecated
     public static Scene getMain() {
         return main;
     }
 
+    static void setLoggedInClinician(Clinician newClinician) {
+        clinician = newClinician;
+    }
+
+    static Clinician getLoggedInClinician() {
+        return clinician;
+    }
 
     /**
      * set initial screen to display
      *
      * @param mainScene - main screen to display
      */
-    @Deprecated
     static void setRootScene(Scene mainScene) {
         main = mainScene;
     }
 
 
     /**
-     * Add screen to the hash map of screens
+     * Add screen to the hashmap of screens
      *
      * @param name - name of screen to add
      * @param pane - Pane object from FXML
      */
-    @Deprecated
-    static void addTabToHome(String name, Pane pane) {
-        //create tab
-        // load pane into tab
-        // add tab to existing tab pane
-        //
+    public static void addScreen(String name, Pane pane) {
         screenMap.put(name, pane);
     }
-    //todo
 
 
     /**
-     * Remove screen from hash map
+     * Remove screen from hashmap
      *
      * @param name - screen to remove from the hashmap of screens
      */
-    @Deprecated
     static void removeScreen(String name) {
         screenMap.remove(name);
     }
@@ -108,11 +81,9 @@ public class ScreenControl {
      *
      * @param name - screen name to display
      */
-    @Deprecated
-    static void activate(String name) {
+    public static void activate(String name) {
         main.setRoot(screenMap.get(name));
     }
-
 
     /**
      * Adds stage, name pair to a hashmap
@@ -120,45 +91,40 @@ public class ScreenControl {
      * @param name  - name of the popup
      * @param stage - stage to display
      */
-    @Deprecated
     static void addPopUp(String name, Stage stage) {
         popMap.put(name, stage);
     }
-
 
     /**
      * Switches panes within a popup window, while passing along the current viewed patient
      *
      * @param scene      The scene to load the new pane into
      * @param fxmlLoader The fxmlLoader for the new pane
-     * @exception IOException If the pane fails to load
+     * @param patient      The patient to pass to the next pane
+     * @throws IOException If the pane fails to load
      */
-    static void loadPopUpPane(Scene scene, FXMLLoader fxmlLoader) throws IOException {
+    static void loadPopUpPane(Scene scene, FXMLLoader fxmlLoader, Patient patient) throws IOException {
         scene.setRoot(fxmlLoader.load());
+        IPopupable controller = fxmlLoader.getController();
+        controller.setViewedPatient(patient);
     }
-
 
     /**
      * Displays a given popup
      *
      * @param name - name of the pop up to display
      */
-    @Deprecated
     static void displayPopUp(String name) {
-        popMap.get(name)
-                .show();
+        popMap.get(name).show();
     }
 
-
     /**
-     * Closes a given popup
+     * Hides a given popup
      *
      * @param name - name of the popup to hide
      */
-    @Deprecated
-    public static void closePopUp(String name) {
-        popMap.get(name)
-                .close();
+    public static void hidePopUp(String name) {
+        popMap.get(name).close();
     }
 
 }
