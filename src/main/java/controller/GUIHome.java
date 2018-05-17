@@ -24,7 +24,7 @@ public class GUIHome {
         Tab profileViewTab = new Tab();
         profileViewTab.setText("Profile");
 
-        Pane pane = FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml"));
+        Pane pane = FXMLLoader.load(getClass().getResource("/scene/test.fxml"));
 
         profileViewTab.setContent(pane);
         horizontalTabPane.getTabs().add(profileViewTab);

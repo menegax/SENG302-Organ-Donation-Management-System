@@ -11,6 +11,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import model.Clinician;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +34,12 @@ public class GUIPatientProfile {
 
     @FXML
     private AnchorPane patientProfilePane;
+
+    @FXML
+    private VBox testInfo;
+
+    @FXML
+    private HBox testH;
 
     public Button editPatientButton;
 
@@ -115,7 +123,7 @@ public class GUIPatientProfile {
         userControl = new UserControl();
         Object user = null;
         if (userControl.getLoggedInUser() instanceof  Patient ) {
-            medicationBtn.setDisable(true); //hide medications btn
+//            medicationBtn.setDisable(true); //hide medications btn
           //  medicationBtn.setVisible(false); //TODO: uncomment
             user = userControl.getLoggedInUser();
         }
