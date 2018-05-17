@@ -151,22 +151,21 @@ public class SearchPatients {
     }
 
     /**
-     * Returns the first 30 patients in alphabetical order.
-     * @return First 30 patients from a alphabetical ordering.
+     * Returns the first num_results patients in alphabetical order.
+     * @return First num_results patients from a alphabetical ordering.
      */
-    public static ArrayList<Patient> getDefaultResults() {   	
-    	ArrayList<Patient> array = new ArrayList<Patient>();
-    	array.addAll(Database.getPatients());
-		Collections.sort(array, new Comparator<Patient>() {
-            @Override
-            public int compare(Patient o1, Patient o2) {
-            	int comparison = 0;
-                comparison = o1.getNameConcatenated().compareTo(o2.getNameConcatenated());
-                return comparison;
-            }
+    public static ArrayList<Patient> getDefaultResults() {
+        ArrayList<Patient> default_patients = new ArrayList<>(Database.getPatients());
+		default_patients.sort((o1, o2) -> { // sort by concatenated name
+            int comparison;
+            comparison = o1.getNameConcatenated()
+                    .compareTo(o2.getNameConcatenated());
+            return comparison;
         });
-    	array = new ArrayList<Patient>(array.subList(0, NUM_RESULTS));
-    	return array;
+		if (default_patients.size() > 30) {
+            default_patients = new ArrayList<>(default_patients.subList(0, NUM_RESULTS)); // truncate into size num_results
+        }
+    	return default_patients;
     }
     
     /**

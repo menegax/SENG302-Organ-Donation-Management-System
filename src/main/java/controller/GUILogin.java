@@ -1,5 +1,6 @@
 package controller;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -79,12 +80,12 @@ public class GUILogin {
 //                }
             }
             catch (InvalidObjectException e) {
-                userActions.log(Level.WARNING, "Failed to log in", "Attempted to log in");
+                userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
                 alert.show();
             }
             catch (IOException e) {
-                userActions.log(Level.WARNING, "Failed to log in", "Attempted to log in");
+                userActions.log(Level.WARNING, "Unable to load patient home page", "Attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
             }
@@ -98,9 +99,15 @@ public class GUILogin {
                 ScreenControl.addScreen("clinicianProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/clinicianProfileUpdate.fxml")));
                 ScreenControl.activate("clinicianHome");
             }
-            catch (Exception e) {
-                userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to log in");
+            catch (InvalidObjectException e) {
+                userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
+                alert.show();
+            }
+            catch (IOException e) {
+                userActions.log(Level.WARNING, "Unable to load clinician home page", "Attempted to log in");
+                e.printStackTrace(); //todo rm
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
             }
 

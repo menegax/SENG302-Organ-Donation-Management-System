@@ -140,12 +140,7 @@ public class GUIClinicianSearchPatients implements Initializable {
             masterData.clear();
             masterData.addAll(SearchPatients.searchByName(newValue));
 
-            filteredData.setPredicate(new Predicate<Patient>() {
-                                          @Override
-                                          public boolean test(Patient patient) {
-                                              return true;
-                                          }
-                                      });
+            filteredData.setPredicate(patient -> true);
         });
 
         // wrap the FilteredList in a SortedList.
