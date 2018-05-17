@@ -214,7 +214,13 @@ public class GUIClinicianDiagnosis implements IPopupable {
         setCellValues(currentDateCol, currentDiagnosisCol, currentTagsCol);
         currentDiagnosesView.setItems(observableCurrentDiseases);
         currentDiagnosesView.refresh();
-        setUpSortBehaviour(currentDiagnosesView, currentTagsCol);
+        setUpChronicSortBehaviour();
+
+        //Set default date sorting
+        currentDateCol.setSortType(TableColumn.SortType.DESCENDING);
+        currentDiagnosesView.getSortOrder().add(currentDateCol);
+
+        currentTagsCol.setSortable(false);
     }
 
     /**
@@ -225,7 +231,12 @@ public class GUIClinicianDiagnosis implements IPopupable {
         setCellValues(pastDateCol, pastDiagnosisCol, pastTagsCol);
         pastDiagnosesView.setItems(observablePastDiseases);
         pastDiagnosesView.refresh();
-        setUpSortBehaviour(pastDiagnosesView, pastTagsCol);
+
+        //Set default date sorting
+        pastDateCol.setSortType(TableColumn.SortType.DESCENDING);
+        pastDiagnosesView.getSortOrder().add(pastDateCol);
+
+        pastTagsCol.setSortable(false);
     }
 
     /**
@@ -242,15 +253,11 @@ public class GUIClinicianDiagnosis implements IPopupable {
     }
 
     /**
-     * Sets up sorting so that the diseases with the chronic tag remain at the top of the table no matter what the table
+     * Sets up sorting so that the diseases with the chronic tag remain at the top of the current table no matter what the table
      * is currently being sorting on. Diseases that both have the chronic tag will still be sorted accordingly
-     *
-     * @param table  The table to apply the sort behaviour to
-     * @param tagCol The column to disable sorting on - This will be the column that displays disease tags
      */
-    private void setUpSortBehaviour(TableView<Disease> table, TableColumn<Disease, GlobalEnums.DiseaseState> tagCol) {
-        tagCol.setSortable(false); //Disables sorting on the tag column
-        table.sortPolicyProperty().set(param -> {
+    private void setUpChronicSortBehaviour() {
+        currentDiagnosesView.sortPolicyProperty().set(param -> {
             Comparator<Disease> comparator = (o1, o2) -> {
                 if (o1.getDiseaseState() == GlobalEnums.DiseaseState.CHRONIC) {
                     if (o2.getDiseaseState() == GlobalEnums.DiseaseState.CHRONIC) {
@@ -265,7 +272,7 @@ public class GUIClinicianDiagnosis implements IPopupable {
                     return param.getComparator().compare(o1, o2);
                 }
             };
-            FXCollections.sort(table.getItems(), comparator);
+            FXCollections.sort(currentDiagnosesView.getItems(), comparator);
             return true;
         });
     }
