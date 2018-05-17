@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import model.Clinician;
 import model.Patient;
 import model.DrugInteraction;
@@ -49,7 +50,7 @@ public class GUIPatientMedications {
     private Patient target;
 
     @FXML
-    public AnchorPane medicationPane;
+    public GridPane medicationPane;
     public Button registerMed;
     public Button removeMed;
     public Button addMed;
@@ -91,10 +92,6 @@ public class GUIPatientMedications {
 
     private Patient viewedPatient;
 
-    public void setViewedPatient(Patient patient) {
-        viewedPatient = patient;
-        loadProfile(viewedPatient.getNhiNumber());
-    }
 
     /**
      * Goes back one edit if any editing has been conducted
@@ -252,7 +249,7 @@ public class GUIPatientMedications {
                     textWatcher.afterTextChange(GUIPatientMedications.class.getMethod("autoComplete"), this); //start timer
 
                 } catch (NoSuchMethodException e) {
-                    userActions.log(Level.SEVERE, e.getMessage()); // MAJOR ISSUE HERE!
+                    userActions.log(Level.SEVERE, "", ""); // MAJOR ISSUE HERE!
                 }
             }
         });
@@ -261,7 +258,8 @@ public class GUIPatientMedications {
     /**
      * Runs the updating of UI elements and API call
      */
-    private void autoComplete(){
+    @SuppressWarnings("WeakerAccess")
+    public void autoComplete(){
         Platform.runLater(() -> { // run this on the FX thread (next available)
             getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread
             displayDrugSuggestions();//UPDATE UI
@@ -304,7 +302,7 @@ public class GUIPatientMedications {
      */
     private MenuItem createMenuItem(String suggestion){
         Label menuLabel = new Label(suggestion);//create label with suggestion
-        menuLabel.setPrefWidth(newMedication.getPrefWidth() - 30);
+        menuLabel.setPrefWidth(newMedication.getWidth() - 30);
         menuLabel.setWrapText(true);
         MenuItem item = new MenuItem();
         item.setGraphic(menuLabel);

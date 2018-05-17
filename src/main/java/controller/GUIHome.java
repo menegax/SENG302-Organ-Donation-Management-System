@@ -26,29 +26,31 @@ public class GUIHome {
     public void initialize() { //Todo catch exception
         //Todo possibly create a smart way to check logged in user type
         // and then create the tabs based off that
-
         try {
             // create profile tab and add fxml into
             Tab profileViewTab = new Tab();
             profileViewTab.setText("Profile");
-
             Pane pane = FXMLLoader.load(getClass().getResource("/scene/test.fxml"));
-
             profileViewTab.setContent(pane);
-            horizontalTabPane.getTabs()
-                    .add(profileViewTab);
+            horizontalTabPane.getTabs().add(profileViewTab);
+
+
+            Tab medicationsTab = new Tab();
+            medicationsTab.setText("Medication");
+            Pane medicationPane = FXMLLoader.load(getClass().getResource("/scene/medicationTEST.fxml"));
+            medicationsTab.setContent(medicationPane);
+            horizontalTabPane.getTabs().add(medicationsTab);
 
             // create history tab and add fxml into
             Tab historyViewTab = new Tab();
             historyViewTab.setText("History");
             historyViewTab.setContent(FXMLLoader.<Pane>load(getClass().getResource("/scene/patientHistory.fxml")));
-            horizontalTabPane.getTabs()
-                    .add(historyViewTab);
-        }
-        catch (IOException e) {
+            horizontalTabPane.getTabs().add(historyViewTab);
+        } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
 //            systemLog.log(SEVERE, "Failed to load home scene and its fxmls", Arrays.toString(e.getStackTrace())); //Todo
         }
+
     }
 
 
