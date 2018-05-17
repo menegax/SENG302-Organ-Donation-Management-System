@@ -47,7 +47,7 @@ public class Database {
      * Removes a patient from the database
      *
      * @param nhi the nhi to search patients by
-     * @throws InvalidObjectException when the object cannot be found
+     * @exception InvalidObjectException when the object cannot be found
      */
     public static void removePatient(String nhi) throws InvalidObjectException {
         patients.remove(Database.getPatientByNhi(nhi));
@@ -60,7 +60,8 @@ public class Database {
      *
      * @param nhi the nhi to search patients by
      * @return Patient object
-     * @throws InvalidObjectException when the object cannot be found
+     *
+     * @exception InvalidObjectException when the object cannot be found
      */
     public static Patient getPatientByNhi(String nhi) throws InvalidObjectException {
         for (Patient d : getPatients()) {
@@ -192,7 +193,7 @@ public class Database {
     /**
      * Writes database patients to file on disk
      *
-     * @throws IOException when the file cannot be found nor created
+     * @exception IOException when the file cannot be found nor created
      */
     private static void saveToDiskPatients() throws IOException {
         Gson gson = new Gson();
@@ -223,8 +224,6 @@ public class Database {
 
     /**
      * Reads patient data from disk
-     *
-     * @throws IOException when the file cannot be found
      */
     public static void importFromDiskPatients(String fileName) {
         Gson gson = new Gson();
