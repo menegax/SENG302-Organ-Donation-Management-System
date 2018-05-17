@@ -1,20 +1,15 @@
 package controller;
 
-import static java.util.logging.Level.SEVERE;
 import static javafx.scene.control.Alert.AlertType.ERROR;
-import static utility.UserActionHistory.userActions;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.LoadException;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class GUIHome {
 
@@ -30,14 +25,14 @@ public class GUIHome {
             // create profile tab and add fxml into
             Tab profileViewTab = new Tab();
             profileViewTab.setText("Profile");
-            Pane pane = FXMLLoader.load(getClass().getResource("/scene/test.fxml"));
+            Pane pane = FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml"));
             profileViewTab.setContent(pane);
             horizontalTabPane.getTabs().add(profileViewTab);
 
 
             Tab medicationsTab = new Tab();
             medicationsTab.setText("Medication");
-            Pane medicationPane = FXMLLoader.load(getClass().getResource("/scene/medicationTEST.fxml"));
+            Pane medicationPane = FXMLLoader.load(getClass().getResource("/scene/patientMedication.fxml"));
             medicationsTab.setContent(medicationPane);
             horizontalTabPane.getTabs().add(medicationsTab);
 
