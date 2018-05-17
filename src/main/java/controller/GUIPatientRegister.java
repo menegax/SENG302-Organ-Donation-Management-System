@@ -15,6 +15,7 @@ import model.Patient;
 import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.lang.reflect.Array;
 import java.time.LocalDate;
