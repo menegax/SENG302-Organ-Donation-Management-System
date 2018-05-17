@@ -9,7 +9,15 @@
     color4: #CED0CE;
     color5: #FFFFFF;
     black: #191919;
-    white: #FFFFFF;
+    white: #f5f5f5;
+
+    //Todo set
+    hyperlink: #0;
+    hyperlink-clicked: #0;
+    button-highlight: #0;
+    background: #0;
+
+
 
     -fx-base: color3;
     -fx-background: white;
