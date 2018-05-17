@@ -133,7 +133,7 @@ public class SearchPatients {
      * memory back to the operating system.
      * @throws IOException when the index or RAM memory cannot be accessed.
      */
-    public static void closeIndex() throws IOException { //Todo add call this method on app close
+    public static void closeIndex() throws IOException {
         ramDirectory.close();
         indexWriter.close();
     }
