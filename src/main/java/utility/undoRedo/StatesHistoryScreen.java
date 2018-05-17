@@ -1,6 +1,5 @@
 package utility.undoRedo;
 
-import controller.IUndoRedo;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCodeCombination;
