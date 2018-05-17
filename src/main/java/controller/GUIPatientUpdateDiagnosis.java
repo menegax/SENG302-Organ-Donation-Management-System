@@ -217,8 +217,17 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
 
     private boolean isValidAdd() {
         for (Disease disease : currentPatient.getCurrentDiseases()) {
-            if(disease.getDiseaseName().equals(diseaseNameTextField.getText())) {
+            if(disease.getDiseaseName().equals(diseaseNameTextField.getText()) &&
+                    tagsDD.getSelectionModel().getSelectedItem() != GlobalEnums.DiseaseState.CURED) {
                 return false;
+            }
+        }
+
+        for(Disease disease : currentPatient.getPastDiseases()) {
+            if(disease.getDiseaseName().equals(diseaseNameTextField.getText())) {
+                if(disease.getDateDiagnosed() == diagnosisDate.getValue()) {
+                    return false;
+                }
             }
         }
         return true;
@@ -265,7 +274,8 @@ public class GUIPatientUpdateDiagnosis implements IPopupable {
                     new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
                 }
             } else if(isAdd && !isValidAdd()) {
-                String error = "A new diagnosis can not be a disease a patient currently has.";
+                String error = "A new diagnosis can not be a disease a patient currently has.\n\n A past disease " +
+                        "that has been cured can not be diagnosed as a current disease on the same date.";
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("Could not add diagnosis");
                 alert.setContentText(error);
