@@ -214,18 +214,26 @@ public class GUIPatientUpdateDiagnosis {
         return valid;
     }
 
+    private boolean isSameDate(Disease disease) {
+        return disease.getDateDiagnosed().getYear() == (diagnosisDate.getValue().getYear()) &&
+                disease.getDateDiagnosed().getMonth() == diagnosisDate.getValue().getMonth() &&
+                disease.getDateDiagnosed().getDayOfMonth() == diagnosisDate.getValue().getDayOfMonth();
+    }
+
 
     private boolean isValidAdd() {
         for (Disease disease : currentPatient.getCurrentDiseases()) {
             if(disease.getDiseaseName().equals(diseaseNameTextField.getText()) &&
-                    tagsDD.getSelectionModel().getSelectedItem() != GlobalEnums.DiseaseState.CURED) {
+                    tagsDD.getSelectionModel().getSelectedItem() != null &&
+                    !tagsDD.getSelectionModel().getSelectedItem().toString().equals("cured") &&
+                    !(isSameDate(disease))) {
                 return false;
             }
         }
 
         for(Disease disease : currentPatient.getPastDiseases()) {
             if(disease.getDiseaseName().equals(diseaseNameTextField.getText())) {
-                if(disease.getDateDiagnosed() == diagnosisDate.getValue()) {
+                if(isSameDate(disease)) {
                     return false;
                 }
             }
