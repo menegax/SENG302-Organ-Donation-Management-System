@@ -19,7 +19,9 @@ import service.Database;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 

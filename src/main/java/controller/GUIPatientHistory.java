@@ -16,6 +16,7 @@ import utility.UserActionRecord;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -72,22 +73,20 @@ public class GUIPatientHistory {
         // wrap ObservableList in a FilteredList
         FilteredList<UserActionRecord> filteredData = new FilteredList<>(masterData, d -> true);
 
+        masterData.sort((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp())); //sort so timestamp most recent at top
+
         // wrap the FilteredList in a SortedList.
         SortedList<UserActionRecord> sortedData = new SortedList<>(filteredData);
 
-
         timeStampColumn.setComparator(timeStampColumn.getComparator().reversed()); // reverses comparator
-
-        //todo sort it correctly.
 
         // bind the SortedList comparator to the TableView comparator.
         sortedData.comparatorProperty()
                 .bind(logHistoryTable.comparatorProperty());
 
-//        logHistoryTable.getComparator().reversed();
-
         // add sorted (and filtered) data to the table.
         logHistoryTable.setItems(sortedData);
+
 
     }
 
