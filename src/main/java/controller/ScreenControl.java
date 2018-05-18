@@ -1,10 +1,15 @@
 package controller;
 
+import de.codecentric.centerdevice.MenuToolkit;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import utility.GlobalEnums;
 import utility.GlobalEnums.Stages;
 
 import java.io.IOException;
@@ -12,24 +17,30 @@ import java.util.*;
 
 public class ScreenControl {
 
+    //Todo remove all deprecated stuff
+
+    private static Map<Stages, Stage> applicationStages;
+
     private static ScreenControl screenControl;
 
     @Deprecated
     private static HashMap<String, Pane> screenMap = new HashMap<>();
+
     @Deprecated
     private static HashMap<String, Stage> popMap = new HashMap<>();
+
     @Deprecated
     public static Map<String, Parent> scenes = new HashMap<>();
 
     @Deprecated
     private static Scene main;
 
-    private static Map<Stages, Stage> applicationStages;
 
 
     private ScreenControl() {
         applicationStages = new HashMap<>();
     }
+
 
     static ScreenControl getScreenControl() {
         if (screenControl == null) {
@@ -40,16 +51,15 @@ public class ScreenControl {
 
 
     /**
-     *
      * @param key
      * @param stage
      */
-    void addStage(Stages key, Stage stage){
+    void addStage(Stages key, Stage stage) {
         applicationStages.put(key, stage);
     }
 
+
     /**
-     *
      * @param root
      */
     void show(Stages stageName, Parent root) {
@@ -57,6 +67,7 @@ public class ScreenControl {
         stage.setScene(new Scene(root));
         stage.show();
     }
+
 
     @Deprecated
     public static Scene getMain() {

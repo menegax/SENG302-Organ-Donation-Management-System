@@ -244,6 +244,9 @@ public class Database {
         catch (FileNotFoundException e) {
             userActions.log(Level.WARNING, "Patient import file not found", "Attempted to read patient file");
         }
+        catch (Exception e) {
+            userActions.log(Level.WARNING, "Failed to import from file", "Attempted to read patient file");
+        }
 
     }
 
@@ -268,6 +271,9 @@ public class Database {
         }
         catch (FileNotFoundException e) {
             userActions.log(Level.WARNING, "Clinician import file not found", "Attempted to read clinician file");
+        }
+        catch (Exception e) {
+            userActions.log(Level.WARNING, "Failed to import from file", "Attempted to read clinician file");
         }
 
     }

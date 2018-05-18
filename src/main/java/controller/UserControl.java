@@ -7,6 +7,8 @@ import java.util.Map;
 
 public class UserControl {
 
+    //Todo there are two clear and clearCache methods -- redundant or does one need renaming to differentiate it? same as rm_logged_in_user_cache?
+
     private static final Map<String, Object> cache = new HashMap<>();
 
 
@@ -41,14 +43,6 @@ public class UserControl {
     }
 
     /**
-     * Clears the map of all entries
-     */
-    private void clear() {
-        cache.clear();
-    }
-
-
-    /**
      * Adds a user to the cache
      * @param user - user to be added
      */
@@ -56,12 +50,6 @@ public class UserControl {
         add("user_logged_in", user);
     }
 
-    /**
-     * Removes the logged in user from the cache
-     */
-    public void rmLoggedInUserCache() {
-        remove("user_logged_in");
-    }
 
     /**
      *  Gets the logged in user
@@ -75,7 +63,7 @@ public class UserControl {
      *  Gets the target patient that is currently being viewed
      * @return - Patient that is being viewed
      */
-    public Patient getTargetPatient() {
+    Patient getTargetPatient() {
         Object value = get("target_patient");
         if (value instanceof Patient) {
             return (Patient) value;
@@ -87,16 +75,29 @@ public class UserControl {
      * Sets the patient to be viewed
      * @param patient - Patient object to view
      */
-    public void setTargetPatient(Patient patient) {
+    void setTargetPatient(Patient patient) {
         add("target_patient", patient);
     }
 
     /**
      * Clears cache, removes all key value pairs
      */
-    public void clearCahce(){
+    void clearCahce(){
         clear();
+    } //Todo fix typo
+
+    /**
+     * Clears the map of all entries
+     */
+    private void clear() {
+        cache.clear();
     }
 
+    /**
+     * Removes the logged in user from the cache
+     */
+    public void rmLoggedInUserCache() {
+        remove("user_logged_in");
+    }
 
 }

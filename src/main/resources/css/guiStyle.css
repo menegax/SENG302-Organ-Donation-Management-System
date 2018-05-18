@@ -12,10 +12,9 @@
 
     /*hyperlink-clicked: ;*/
 
-    button-highlight: #0;
+    /*button-highlight: #0;*/
     -fx-base: color2;
 
-    -fx-background: color4;
     -fx-border-color: black;
     -fx-font-family: "  Neue";
     /*-fx-font: ;*/

@@ -1,5 +1,6 @@
 package controller;
 
+import static java.util.logging.Level.INFO;
 import static utility.UserActionHistory.userActions;
 
 import de.codecentric.centerdevice.MenuToolkit;
@@ -9,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
@@ -17,6 +19,7 @@ import utility.GlobalEnums;
 import utility.SearchPatients;
 import utility.UserActionHistory;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,10 +29,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+
+        // setup GUI
+        ScreenControl.getScreenControl().addStage(GlobalEnums.Stages.PRIMARY, primaryStage); //add primary stage to screen control to construct properly
         ScreenControl screenControl = ScreenControl.getScreenControl();
-        screenControl.addStage(GlobalEnums.Stages.PRIMARY, primaryStage);
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
         screenControl.show(GlobalEnums.Stages.PRIMARY, loginScreen);
+        setUpMenuBar(primaryStage);
+
 
         // add objects
         Database.importFromDiskPatients("./patient.json");
@@ -37,7 +44,7 @@ public class Main extends Application {
         addDummyTestObjects();
         ensureDefaultClinician();
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
-        setUpMenuBar(primaryStage);
+
         primaryStage.show();
 
     }
@@ -100,11 +107,9 @@ public class Main extends Application {
 
     }
 
-
     /**
      * Sets up the menu bar depending on the OS
      *
-     * @param primaryStage the stage to set the menu bar to
      */
     private void setUpMenuBar(Stage primaryStage) {
         if (System.getProperty("os.name")
@@ -117,12 +122,13 @@ public class Main extends Application {
 
     /**
      * Creates a native-looking MacOS menu bar for the application
-     *
-     * @param primaryStage the root stage of the application on which to set the menu
      */
-    private void setUpMacOsMenuBar(Stage primaryStage) {
+    private void setUpMacOsMenuBar(Stage stage) {
 
-        String appName = "Big Pharma";
+        String appName = "Big Pharma"; //Todo move to a string resources or config file
+
+        UserControl userControl = new UserControl();
+
         // Get the toolkit
         MenuToolkit tk = MenuToolkit.toolkit();
 
@@ -136,24 +142,47 @@ public class Main extends Application {
         // Add some more Menus...
         Menu menu1 = new Menu("App");
         MenuItem menu1Item1 = new MenuItem("Log out");
-        menu1Item1.setOnAction(event -> System.out.println("Log out clicked"));
+//        menu1Item1.setMnemonicParsing(true); //Todo it will parse menu item string for a key command and bind it to the stage if found
+        menu1Item1.setOnAction(event -> {
+            userControl.rmLoggedInUserCache();
+            userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
+        });
         MenuItem menu1Item2 = tk.createQuitMenuItem(appName);
         menu1.getItems()
                 .addAll(menu1Item1, menu1Item2);
 
         Menu menu2 = new Menu("File");
         MenuItem menu2Item1 = new MenuItem("Save");
-        menu2Item1.setOnAction(event -> System.out.println("Save clicked"));
-        MenuItem menu2Item2 = new MenuItem("Import...");
-        menu2Item2.setOnAction(event -> System.out.println("Import clicked"));
+        menu2Item1.setOnAction(event -> {
+            Database.saveToDisk();
+            userActions.log(INFO, "Successfully saved to disk", "Attempted to save to disk");
+        });
+        MenuItem menu2Item2 = new MenuItem("Import patients... ⌘I");
+        menu2Item2.setOnAction(event -> {
+            File file = new FileChooser().showOpenDialog(stage);
+            if (file != null) {
+                Database.importFromDiskPatients(file.getAbsolutePath());
+                userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
+                userActions.log(INFO, "Imported patient file from disk", "Attempted to import file from disk");
+            }
+        });
+        MenuItem menu2Item3 = new MenuItem("Import clinicians...");
+        menu2Item3.setOnAction(event -> {
+            File file = new FileChooser().showOpenDialog(stage);
+            if (file != null) {
+                Database.importFromDiskPatients(file.getAbsolutePath());
+                userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
+                userActions.log(INFO, "Imported clinician file from disk", "Attempted to import file from disk");
+            }
+        });
         menu2.getItems()
                 .addAll(menu2Item1, menu2Item2);
 
         Menu menu3 = new Menu("Edit");
-        MenuItem menu3Item1 = new MenuItem("Undo ⌃Z");
-        menu3Item1.setOnAction(event -> System.out.println("Undo clicked. Soon to be  ⌘⇧Y"));
-        MenuItem menu3Item2 = new MenuItem("Redo ⌃Y");
-        menu3Item2.setOnAction(event -> System.out.println("Redo clicked. Soon to be ⌘Z"));
+        MenuItem menu3Item1 = new MenuItem("Undo ⌘Z");
+        menu3Item1.setOnAction(event -> System.out.println("Undo clicked")); //Todo add functionality
+        MenuItem menu3Item2 = new MenuItem("Redo ⌘⇧Y");
+        menu3Item2.setOnAction(event -> System.out.println("Redo clicked")); //Todo add functionality
         menu3.getItems()
                 .addAll(menu3Item1, menu3Item2);
 
@@ -161,6 +190,8 @@ public class Main extends Application {
                 .addAll(menu1, menu2, menu3);
 
         // Use the menu bar for primary stage
-        tk.setMenuBar(primaryStage, bar);
+        tk.setMenuBar(stage, bar);
     }
+
+
 }
