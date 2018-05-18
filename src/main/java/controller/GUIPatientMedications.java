@@ -45,7 +45,6 @@ public class GUIPatientMedications {
     public Button removeMed;
     public Button addMed;
     public Button deleteMed;
-    public Button saveMed;
     public Button undoEdit;
     public Button redoEdit;
     public Button compareMeds;
@@ -111,19 +110,6 @@ public class GUIPatientMedications {
         ArrayList<String> selections = new ArrayList <>( pastMedications.getSelectionModel().getSelectedItems());
         selections.addAll(currentMedications.getSelectionModel().getSelectedItems() );
         removeMedication( selections );
-    }
-
-    /**
-     * Saves the current state of the history and current medications ArrayLists
-     */
-    @FXML
-    public void saveMedication() {
-        //userActions.log(Level.INFO, "Saved Medications", new String[]{"Attempted to save medications", target.getNhiNumber()});
-        Alert save = new Alert(Alert.AlertType.INFORMATION, "Medication(s) have been successfully saved");
-        //final Button dialogOK = (Button) save.getDialogPane().lookupButton(ButtonType.OK);
-//        dialogOK.addEventFilter(ActionEvent.ACTION, event -> saveToDisk());// Save to .json the changes made to medications
-        save.show();
-        clearSelections();
     }
 
 //    /**
