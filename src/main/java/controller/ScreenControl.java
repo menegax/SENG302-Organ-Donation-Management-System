@@ -1,28 +1,18 @@
 package controller;
 
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
-
-import de.codecentric.centerdevice.MenuToolkit;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import service.Database;
-import utility.GlobalEnums;
 import utility.GlobalEnums.Stages;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScreenControl {
 
@@ -44,17 +34,24 @@ public class ScreenControl {
     @Deprecated
     private static Scene main;
 
-    private static KeyCodeCombination logOut;
-    private static KeyCodeCombination save;
-    private static KeyCodeCombination importt;
-    private static KeyCodeCombination undo;
-    private static KeyCodeCombination redo;
+    private boolean macOs = System.getProperty("os.name").startsWith("Mac");
 
-    private static String appName = "Big Pharma";
+    private KeyCodeCombination logOut;
+
+    private KeyCodeCombination save;
+
+    private KeyCodeCombination importt;
+
+    private KeyCodeCombination undo;
+
+    private KeyCodeCombination redo;
+
+    private String appName = "Big Pharma";
 
 
     private ScreenControl() {
         applicationStages = new HashMap<>();
+        setUpKeyCodeCombinations();
     }
 
 
@@ -81,7 +78,6 @@ public class ScreenControl {
     void show(Stages stageName, Parent root) {
         Stage stage = applicationStages.get(stageName);
         stage.setScene(new Scene(root));
-        setUpMenuBar(stage);
         stage.show();
     }
 
@@ -117,9 +113,10 @@ public class ScreenControl {
         //
         screenMap.put(name, pane);
     }
+
+
+
     //todo
-
-
     /**
      * Remove screen from hash map
      *
@@ -190,12 +187,12 @@ public class ScreenControl {
     }
 
 
-
     /**
      * Sets keyboard shortcuts depending on the OS
      */
     private void setUpKeyCodeCombinations() {
-        if (System.getProperty("os.name").startsWith("Mac")) { // MacOS
+        if (System.getProperty("os.name")
+                .startsWith("Mac")) { // MacOS
             logOut = new KeyCodeCombination(KeyCode.Q, KeyCombination.ALT_DOWN, KeyCombination.META_DOWN);
             save = new KeyCodeCombination(KeyCode.S, KeyCombination.META_DOWN);
             importt = new KeyCodeCombination(KeyCode.I, KeyCombination.META_DOWN);
@@ -212,80 +209,36 @@ public class ScreenControl {
     }
 
 
-    /**
-     * Creates a native-looking MacOS menu bar for the application
-     */
-    private void setUpMenuBar(Stage stage) {
-
-        boolean isMacOs = System.getProperty("os.name").startsWith("Mac");
-
-        setUpKeyCodeCombinations();
-
-
-        // Get the toolkit
-        MenuToolkit tk = MenuToolkit.toolkit(); //Todo THIS IS A MAC OS ONLY LIBRARY i think
-
-        // Create a new menu bar
-        MenuBar bar = new MenuBar();
-
-        // Add the default application menu
-        bar.getMenus().add(tk.createDefaultApplicationMenu(appName)); //Todo add ternary using isMacOs
-
-        // Add some more Menus...
-        Menu menu1 = new Menu("App");
-        MenuItem menu1Item1 = new MenuItem("Log out");
-        menu1Item1.setAccelerator(logOut);
-        menu1Item1.setOnAction(event -> {
-            new UserControl().rmLoggedInUserCache();
-            userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
-        });
-        menu1.getItems().addAll(menu1Item1);
-
-        Menu menu2 = new Menu("File");
-        MenuItem menu2Item1 = new MenuItem("Save");
-        menu2Item1.setAccelerator(save);
-        menu2Item1.setOnAction(event -> {
-            Database.saveToDisk();
-            userActions.log(INFO, "Successfully saved to disk", "Attempted to save to disk");
-        });
-        Menu subMenuImport = new Menu("Import"); // import submenu
-        MenuItem menu2Item2 = new MenuItem("Import patients...");
-        menu2Item2.setAccelerator(importt);
-        menu2Item2.setOnAction(event -> {
-            File file = new FileChooser().showOpenDialog(stage);
-            if (file != null) {
-                Database.importFromDiskPatients(file.getAbsolutePath());
-                userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
-                userActions.log(INFO, "Imported patient file from disk", "Attempted to import file from disk");
-            }
-        });
-        MenuItem menu2Item3 = new MenuItem("Import clinicians...");
-        menu2Item3.setOnAction(event -> {
-            File file = new FileChooser().showOpenDialog(stage);
-            if (file != null) {
-                Database.importFromDiskPatients(file.getAbsolutePath());
-                userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
-                userActions.log(INFO, "Imported clinician file from disk", "Attempted to import file from disk");
-            }
-        });
-        subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
-        menu2.getItems().addAll(menu2Item1, subMenuImport);
-
-        Menu menu3 = new Menu("Edit");
-        MenuItem menu3Item1 = new MenuItem("Undo");
-        menu3Item1.setAccelerator(undo);
-        menu3Item1.setOnAction(event -> System.out.println("Undo clicked")); //Todo add functionality
-        MenuItem menu3Item2 = new MenuItem("Redo");
-        menu3Item2.setAccelerator(redo);
-        menu3Item2.setOnAction(event -> System.out.println("Redo clicked")); //Todo add functionality
-        menu3.getItems()
-                .addAll(menu3Item1, menu3Item2);
-
-        bar.getMenus()
-                .addAll(menu1, menu2, menu3);
-
-        // Use the menu bar for primary stage
-        tk.setMenuBar(stage, bar); //Todo use ternary for menubar if isMacOs else windows/linux
+    public KeyCodeCombination getSave() {
+        return save;
     }
 
+
+    public KeyCodeCombination getImportt() {
+        return importt;
+    }
+
+
+    public KeyCodeCombination getUndo() {
+        return undo;
+    }
+
+
+    public KeyCodeCombination getRedo() {
+        return redo;
+    }
+
+
+    public KeyCodeCombination getLogOut() {
+        return logOut;
+    }
+
+
+    public boolean isMacOs() {
+        return macOs;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
 }
