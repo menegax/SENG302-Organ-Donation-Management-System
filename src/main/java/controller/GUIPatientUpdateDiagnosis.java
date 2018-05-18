@@ -252,13 +252,13 @@ public class GUIPatientUpdateDiagnosis {
             userActions.log(Level.SEVERE, "The diagnosis date is not valid.");
         }
         for (Disease disease : currentPatient.getCurrentDiseases()) {
-            if(isDuplicate(disease, d)) {
+            if(disease != target && isDuplicate(disease, d)) {
                 return false;
             }
         }
 
         for (Disease disease: currentPatient.getPastDiseases()) {
-            if(isDuplicate(disease, d)) {
+            if(disease != target && isDuplicate(disease, d)) {
                 return false;
             }
         }
