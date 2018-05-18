@@ -76,8 +76,7 @@ public class GUIClinicianSearchPatients implements Initializable {
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
-                    .getSelectedItem() != null && click.getPickResult().getIntersectedNode() ==
-                    patientDataTable.getSelectionModel().getSelectedCells()) {
+                    .getSelectedItem() != null) {
                 try {
                     UserControl userControl = new UserControl();
                     userControl.setTargetPatient(patientDataTable.getSelectionModel()
