@@ -33,6 +33,9 @@ public class GUIPatientUpdateProfile {
     private Label lastModifiedLbl;
 
     @FXML
+    private Button saveButton;
+
+    @FXML
     private TextField nhiTxt;
 
     @FXML

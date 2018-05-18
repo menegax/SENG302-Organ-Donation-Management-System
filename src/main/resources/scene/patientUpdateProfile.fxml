@@ -18,7 +18,7 @@
       <TextField fx:id="lastnameTxt" focusTraversable="false" layoutX="23.0" layoutY="211.0" promptText="Last name" />
       <TextField fx:id="middlenameTxt" focusTraversable="false" layoutX="23.0" layoutY="261.0" promptText="Middle name(s)" />
       <TextField fx:id="preferrednameTxt" focusTraversable="false" layoutX="23.0" layoutY="313.0" promptText="Preferred name" />
-      <Button layoutX="504.0" layoutY="348.0" mnemonicParsing="false" onAction="#saveProfile" prefHeight="25.0" prefWidth="56.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Save" />
+      <Button fx:id="saveButton" layoutX="504.0" layoutY="348.0" mnemonicParsing="false" onAction="#saveProfile" prefHeight="25.0" prefWidth="56.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Save" />
       <TextField fx:id="nhiTxt" focusTraversable="false" layoutX="23.0" layoutY="114.0" promptText="NHI Number" />
       <DatePicker fx:id="dobDate" editable="false" focusTraversable="false" layoutX="188.0" layoutY="261.0" prefHeight="26.0" prefWidth="124.0" promptText="Date of birth" />
       <Label fx:id="lastModifiedLbl" alignment="CENTER" layoutX="166.0" layoutY="52.0" prefHeight="17.0" prefWidth="257.0" text="Last Modified: " />
