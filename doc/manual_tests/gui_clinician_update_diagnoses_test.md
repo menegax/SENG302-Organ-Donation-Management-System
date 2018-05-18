@@ -30,9 +30,9 @@
 3. The popup window closes and the diagnoses page is shown
 4. Changes made to the diagnosis are displayed in the window
 
-###Change past diagnosis to chronic
+###Change past diagnosis to not cured
 
-1. The clinician changes a past diagnosis to be chronic
+1. The clinician changes a past diagnosis to be chronic or have no state
 2. The clinician selects the done button
 3. The popup window closes and the diagnoses page is shown
 4. The updated diagnosis is now in the current diseases list
@@ -73,21 +73,6 @@
 ###Add a diagnosis already in current diagnoses
 
 1. The clinician selects the add button from the viewing screen
-2. The clinician enters a disease name that is currently in the patient's current diagnoses
+2. The clinician enters a disease name that is currently in the patient's current diagnoses, and sets the disease state to chronic or none.
 3. The clinician selects the done button
 4. An alert is shown stating the patient can not be diagnosed with a disease they are already infected with
-
-###Add a current diagnosis that has already been cured on a different date
-
-1. The clinician selects the add button from the viewing screen
-2. The clinician enters a disease name that is currently in the patient's past diagnoses
-3. The clinician selects the done button
-4. The diagnosis is added to the patient's current diagnoses
-
-###Add a diagnosis cured on the same date
-
-1. The clinician selects the add button from the viewing screen
-2. The clinician enters a disease name that is currently in the patient's past diagnoses, with the same date as the existing one
-3. The clinician selects the done button
-4. An alert is shown stating the patient can not be diagnosed with a disease they were cured of on the same day
- 

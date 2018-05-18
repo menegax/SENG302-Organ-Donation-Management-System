@@ -333,7 +333,7 @@ public class GUIClinicianDiagnosis {
         }
 
         for(Disease disease : new ArrayList<>(pastDiseases)) {
-            if(disease.getDiseaseState() == GlobalEnums.DiseaseState.CHRONIC) {
+            if(disease.getDiseaseState() != GlobalEnums.DiseaseState.CURED) {
                 pastDiseases.remove(disease);
                 currentDiseases.add(disease);
             }

@@ -1,5 +1,6 @@
 package controller;
 
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -196,8 +197,6 @@ public class GUIPatientUpdateDiagnosis {
                 diagnosisDate.setValue(diagnosisDate.getValue());
             }
         } catch(NullPointerException e) {
-            System.out.println(diagnosisDate.getValue());
-            System.out.println(currentPatient);
             valid = false;
             setInvalid(diagnosisDate);
         }
@@ -209,6 +208,16 @@ public class GUIPatientUpdateDiagnosis {
         } else {
             setValid(tagsDD);
             tagsDD.setValue(tagsDD.getSelectionModel().getSelectedItem());
+        }
+
+        for(Disease disease : currentPatient.getCurrentDiseases()) {
+            System.out.println(tagsDD.getSelectionModel().getSelectedItem().toString());
+            if(disease.getDiseaseName().equals(diseaseNameTextField.getText()) &&
+                    (tagsDD.getSelectionModel().getSelectedItem().toString().equals("None") ||
+                            tagsDD.getSelectionModel().getSelectedItem().toString().equals("chronic"))) {
+                valid = false;
+                setInvalid(diseaseNameTextField);
+            }
         }
 
         return valid;
@@ -232,20 +241,10 @@ public class GUIPatientUpdateDiagnosis {
      */
     private boolean isValidAdd() {
         for (Disease disease : currentPatient.getCurrentDiseases()) {
-            if(disease.getDiseaseName().equals(diseaseNameTextField.getText())) {
-                if(!(tagsDD.getSelectionModel().getSelectedItem() != null &&
-                        !tagsDD.getSelectionModel().getSelectedItem().toString().equals("cured")
-                        && !(isSameDate(disease)))) {
-                    return false;
-                }
-            }
-        }
-
-        for(Disease disease : currentPatient.getPastDiseases()) {
-            if(disease.getDiseaseName().equals(diseaseNameTextField.getText())) {
-                if(isSameDate(disease)) {
-                    return false;
-                }
+            if(disease.getDiseaseName().equals(diseaseNameTextField.getText()) &&
+                    (tagsDD.getSelectionModel().getSelectedItem() == null || tagsDD.getSelectionModel().getSelectedItem() ==
+                    GlobalEnums.DiseaseState.CHRONIC)) {
+                return false;
             }
         }
         return true;
@@ -257,7 +256,7 @@ public class GUIPatientUpdateDiagnosis {
      *
      * If the operation is adding a diagnosis, the operation is checked for validity for adding. If the add is
      * valid, the new diagnosis is added to the patient's current diagnoses. Otherwise an alert is shown and no new
-     * dignosisi
+     * dignosis
      *
      * If the update is invalid, an alert is shown with the errors in question explained in the alert information.
      * The stage is not closed in this case.
@@ -297,8 +296,7 @@ public class GUIPatientUpdateDiagnosis {
                     new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
                 }
             } else if(isAdd && !isValidAdd()) {
-                String error = "A new diagnosis can not be a disease a patient currently has.\n\n A past disease " +
-                        "that has been cured can not be diagnosed as a current disease on the same date.";
+                String error = "A new diagnosis can not be a disease a patient currently has.";
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("Could not add diagnosis");
                 alert.setContentText(error);
@@ -317,7 +315,7 @@ public class GUIPatientUpdateDiagnosis {
             String errorString = "";
             if(diseaseNameTextField.getStyleClass().contains("invalid")) {
                 errorString += "Disease names must be between 3 and 50 characters. " +
-                        "Names must be comprised of lowercase letters, uppercase letters, digits or full stops.\n\n";
+                        "Names must be comprised of lowercase letters, uppercase letters, digits or full stops, and be unique in current diseases.\n\n";
             }
 
             if(diagnosisDate.getStyleClass().contains("invalid")) {

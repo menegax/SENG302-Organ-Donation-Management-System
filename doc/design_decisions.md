@@ -123,7 +123,7 @@ However we do not want every patient to be matched to any search, so we set the 
 A diagnosis must have a name between 3 and 50 characters long, as this covers the length of the full names of most diseases and conditions. A diagnosis can not be made in the future or before the patient was born.
 
 ####Diagnosis Adding
-A diagnosis can not be added if the patient has a current diagnosis of the same name, or if the patient has a cured disease of the same name that was cured on the same date as the disease to be added.
+A diagnosis can not be added to the current diagnoses list if the patient has a current diagnosis of the same name.
 
 ####Setting past and current diagnoses lists
 Diagnoses lists for a patient are set entirely after all changes have been made before saving. This is to keep tracking changes made to a minimum to reduce operation complexity, and thus making the saving procedure quicker to execute.
