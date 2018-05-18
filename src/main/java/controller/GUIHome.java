@@ -26,7 +26,7 @@ public class GUIHome {
             // create profile tab and add fxml into
             Tab profileViewTab = new Tab();
             profileViewTab.setText("Profile");
-            Pane pane = FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml"));
+            Pane pane = FXMLLoader.load(getClass().getResource("/scene/testUpdate.fxml"));
             profileViewTab.setContent(pane);
             horizontalTabPane.getTabs().add(profileViewTab);
 
@@ -42,6 +42,7 @@ public class GUIHome {
             historyViewTab.setText("History");
             historyViewTab.setContent(FXMLLoader.<Pane>load(getClass().getResource("/scene/patientHistory.fxml")));
             horizontalTabPane.getTabs().add(historyViewTab);
+
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
 //            systemLog.log(SEVERE, "Failed to load home scene and its fxmls", Arrays.toString(e.getStackTrace())); //Todo
