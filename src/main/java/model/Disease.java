@@ -73,22 +73,6 @@ public class Disease {
         dateDiagnosed = date;
     }
 
-//    /**
-//     *  Gets the disease carrier
-//     * @return - Patient object of the carrier
-//     */
-//    public Patient getDiseaseCarrier() {
-//        return diseaseCarrier;
-//    }
-//
-//    /**
-//     *  Sets the carrier of the disease
-//     * @param diseaseCarrier - Patient object to set as the disease carrier
-//     */
-//    public void setDiseaseCarrier(Patient diseaseCarrier) {
-//        this.diseaseCarrier = diseaseCarrier;
-//    }
-
     /**
      * Gets the disease state
      * @return - DiseaseState enum
