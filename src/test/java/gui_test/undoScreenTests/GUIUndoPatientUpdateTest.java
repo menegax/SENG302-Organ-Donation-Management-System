@@ -68,29 +68,19 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest {
     @Before
     public void setFields() {
         interact(() -> {
-            lookup("#nhiTxt").queryAs(TextField.class)
-                    .setText("AAA1111");
-            lookup("#firstnameTxt").queryAs(TextField.class)
-                    .setText("FirstName");
-            lookup("#lastnameTxt").queryAs(TextField.class)
-                    .setText("LastName");
-            lookup("#middlenameTxt").queryAs(TextField.class)
-                    .setText("MiddleName");
-            lookup("#street1Txt").queryAs(TextField.class)
-                    .setText("1 Test Street");
-            lookup("#street2Txt").queryAs(TextField.class)
-                    .setText("2 Test Street");
-            lookup("#suburbTxt").queryAs(TextField.class)
-                    .setText("Suburb");
-            lookup("#regionDD").queryAs(ChoiceBox.class)
-                    .getSelectionModel()
-                    .select(1);
-            lookup("#zipTxt").queryAs(TextField.class)
-                    .setText("0001");
-            lookup("#weightTxt").queryAs(TextField.class)
-                    .setText("50");
-            lookup("#heightTxt").queryAs(TextField.class)
-                    .setText("2");
+            while (lookup("OK").queryAs(Button.class) != null) {
+                lookup("OK").queryAs(Button.class).fire();
+            }
+            nhiTxtDefault = lookup("#nhiTxt").queryAs(TextField.class).getText();
+            firstnameTxtDefault = lookup("#firstnameTxt").queryAs(TextField.class).getText();
+            lastnameTxtDefault = lookup("#lastnameTxt").queryAs(TextField.class).getText();
+            middlenameTxtDefault = lookup("#middlenameTxt").queryAs(TextField.class).getText();
+            street1TxtDefault = lookup("#street1Txt").queryAs(TextField.class).getText();
+            street2TxtDefault = lookup("#street2Txt").queryAs(TextField.class).getText();
+            suburbTxtDefault = lookup("#suburbTxt").queryAs(TextField.class).getText();
+            zipTxtDefault = lookup("#zipTxt").queryAs(TextField.class).getText();
+            weightTxtDefault = lookup("#weightTxt").queryAs(TextField.class).getText();
+            heightTxtDefault = lookup("#heightTxt").queryAs(TextField.class).getText();
 
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class)
                     .getSelectionModel()

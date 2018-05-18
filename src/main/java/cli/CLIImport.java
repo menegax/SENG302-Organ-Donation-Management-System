@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
-@Command(name = "import", description = "Reads and loads data into the application")
+@Command(name = "import", description = "Reads and loads patient data into the application")
 public class CLIImport implements Runnable {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
@@ -19,8 +19,8 @@ public class CLIImport implements Runnable {
     private String fileName;
 
     public void run() {
-        Database.importFromDisk(fileName);
-        userActions.log(Level.INFO, "successfully imported", "attempting to import");
+        Database.importFromDiskPatients(fileName);
+        userActions.log(Level.INFO, "Successfully imported", "Attempted to import patients");
     }
 
 }

@@ -1,7 +1,6 @@
 package gui_test;
 
 import controller.Main;
-import controller.ScreenControl;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -11,6 +10,7 @@ import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import controller.UserControl;
 import utility.GlobalEnums;
 
 import static org.testfx.api.FxAssert.verifyThat;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class GUIHomeTest extends ApplicationTest {
 
     private Main main = new Main();
-
+    UserControl loginHelper = new UserControl();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -67,7 +67,7 @@ public class GUIHomeTest extends ApplicationTest {
             lookup("#logOutButton").queryAs(Button.class)
                     .fire();
         });
-        assertThat(ScreenControl.getLoggedInPatient() == null);
+        assertThat((loginHelper.getLoggedInUser()) == null);
         verifyThat("#loginPane", Node::isVisible);
     }
 

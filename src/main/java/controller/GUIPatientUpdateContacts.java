@@ -25,7 +25,7 @@ import static utility.UserActionHistory.userActions;
  * Details are saved when the Save button is selected, and the user is returned to the patient profile view screen.
  * @author Maree Palmer
  */
-public class GUIPatientUpdateContacts implements IPopupable {
+public class GUIPatientUpdateContacts  {
 
     @FXML
     public AnchorPane patientContactsPane;
@@ -65,6 +65,8 @@ public class GUIPatientUpdateContacts implements IPopupable {
      */
     private Patient target;
 
+    private UserControl userControl;
+
     private StatesHistoryScreen statesHistoryScreen;
 
     @FXML
@@ -78,12 +80,6 @@ public class GUIPatientUpdateContacts implements IPopupable {
         statesHistoryScreen.undo();
     }
 
-
-    public void setViewedPatient(Patient patient) {
-        target = patient;
-        loadProfile(target.getNhiNumber());
-        setContactFields();
-    }
 
     /**
      * Saves changes to a patient's contact details by calling the Database saving method.
@@ -99,8 +95,14 @@ public class GUIPatientUpdateContacts implements IPopupable {
      * display current contact attributes.
      */
     public void initialize() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            loadProfile(ScreenControl.getLoggedInPatient().getNhiNumber());
+        userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
+        if (user instanceof Patient) {
+            loadProfile(((Patient) user).getNhiNumber());
+            setContactFields();
+        }
+        if (userControl.getTargetPatient() != null) {
+            loadProfile((userControl.getTargetPatient()).getNhiNumber());
             setContactFields();
         }
         setupUndoRedo();
@@ -324,7 +326,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
      * Closes the contact details screen and returns the user to the profile window without saving changes.
      */
     public void goToProfile() {
-        if (ScreenControl.getLoggedInPatient() != null) {
+        if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientProfile");
             try {
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
@@ -336,7 +338,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientContactsPane.getScene(), fxmlLoader, target);
+                ScreenControl.loadPopUpPane(patientContactsPane.getScene(), fxmlLoader);
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error returning to profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
                 new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();

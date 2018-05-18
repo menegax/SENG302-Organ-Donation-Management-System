@@ -18,30 +18,11 @@ public class ScreenControl {
 
     private static Scene main;
 
-    public static Patient patient;
-
-    public static Clinician clinician;
-
-
-    public static void setLoggedInPatient(Patient newPatient) {
-        patient = newPatient;
-    }
-
-    public static Patient getLoggedInPatient() {
-        return patient;
-    }
 
     public static Scene getMain() {
         return main;
     }
 
-    static void setLoggedInClinician(Clinician newClinician) {
-        clinician = newClinician;
-    }
-
-    static Clinician getLoggedInClinician() {
-        return clinician;
-    }
 
     /**
      * set initial screen to display
@@ -98,13 +79,10 @@ public class ScreenControl {
      *
      * @param scene      The scene to load the new pane into
      * @param fxmlLoader The fxmlLoader for the new pane
-     * @param patient      The patient to pass to the next pane
      * @throws IOException If the pane fails to load
      */
-    static void loadPopUpPane(Scene scene, FXMLLoader fxmlLoader, Patient patient) throws IOException {
+    static void loadPopUpPane(Scene scene, FXMLLoader fxmlLoader) throws IOException {
         scene.setRoot(fxmlLoader.load());
-        IPopupable controller = fxmlLoader.getController();
-        controller.setViewedPatient(patient);
     }
 
     /**
