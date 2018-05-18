@@ -949,3 +949,1158 @@
   <message>Successfully cleared patient search index</message>
   <param>Attempted to delete all patients search indices</param>
 </record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-18T17:33:08</date>
+  <millis>1526621588570</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:33:08</date>
+  <millis>1526621588583</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-18T17:33:08</date>
+  <millis>1526621588767</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:33:08</date>
+  <millis>1526621588768</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:33:08</date>
+  <millis>1526621588768</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:33:08</date>
+  <millis>1526621588770</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:33:08</date>
+  <millis>1526621588770</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:33:08</date>
+  <millis>1526621588771</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:33:08</date>
+  <millis>1526621588771</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-18T17:34:57</date>
+  <millis>1526621697540</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:34:57</date>
+  <millis>1526621697555</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-18T17:34:57</date>
+  <millis>1526621697789</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:34:57</date>
+  <millis>1526621697790</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:34:57</date>
+  <millis>1526621697790</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:34:57</date>
+  <millis>1526621697793</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:34:57</date>
+  <millis>1526621697793</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:34:57</date>
+  <millis>1526621697793</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:34:57</date>
+  <millis>1526621697793</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:00</date>
+  <millis>1526621700656</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUILogin</class>
+  <method>logIn</method>
+  <thread>12</thread>
+  <message>Incorrect credentials</message>
+  <param>Attempted to log in</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-18T17:35:33</date>
+  <millis>1526621733496</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:33</date>
+  <millis>1526621733512</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:33</date>
+  <millis>1526621733760</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:33</date>
+  <millis>1526621733761</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:33</date>
+  <millis>1526621733761</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:33</date>
+  <millis>1526621733768</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:33</date>
+  <millis>1526621733768</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:33</date>
+  <millis>1526621733768</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:33</date>
+  <millis>1526621733769</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-18T17:35:44</date>
+  <millis>1526621744443</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:44</date>
+  <millis>1526621744456</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:44</date>
+  <millis>1526621744682</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:44</date>
+  <millis>1526621744682</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:44</date>
+  <millis>1526621744682</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:44</date>
+  <millis>1526621744685</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:44</date>
+  <millis>1526621744685</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:44</date>
+  <millis>1526621744685</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:35:44</date>
+  <millis>1526621744686</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-18T17:36:43</date>
+  <millis>1526621803661</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:36:43</date>
+  <millis>1526621803677</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-18T17:36:43</date>
+  <millis>1526621803900</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:36:43</date>
+  <millis>1526621803900</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:36:43</date>
+  <millis>1526621803900</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:36:43</date>
+  <millis>1526621803904</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:36:43</date>
+  <millis>1526621803904</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:36:43</date>
+  <millis>1526621803904</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:36:43</date>
+  <millis>1526621803905</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-18T17:37:30</date>
+  <millis>1526621850459</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:37:30</date>
+  <millis>1526621850478</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-18T17:37:30</date>
+  <millis>1526621850704</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:37:30</date>
+  <millis>1526621850705</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:37:30</date>
+  <millis>1526621850705</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:37:30</date>
+  <millis>1526621850708</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:37:30</date>
+  <millis>1526621850708</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:37:30</date>
+  <millis>1526621850709</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:37:30</date>
+  <millis>1526621850709</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-18T17:39:39</date>
+  <millis>1526621979825</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:39:39</date>
+  <millis>1526621979840</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-18T17:39:40</date>
+  <millis>1526621980084</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:39:40</date>
+  <millis>1526621980084</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:39:40</date>
+  <millis>1526621980084</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:39:40</date>
+  <millis>1526621980087</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:39:40</date>
+  <millis>1526621980088</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:39:40</date>
+  <millis>1526621980088</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:39:40</date>
+  <millis>1526621980088</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-18T17:42:05</date>
+  <millis>1526622125108</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:42:05</date>
+  <millis>1526622125121</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-18T17:42:05</date>
+  <millis>1526622125334</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:42:05</date>
+  <millis>1526622125335</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:42:05</date>
+  <millis>1526622125335</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:42:05</date>
+  <millis>1526622125338</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:42:05</date>
+  <millis>1526622125338</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:42:05</date>
+  <millis>1526622125338</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:42:05</date>
+  <millis>1526622125339</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-18T17:44:10</date>
+  <millis>1526622250334</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:44:10</date>
+  <millis>1526622250352</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-18T17:44:10</date>
+  <millis>1526622250600</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:44:10</date>
+  <millis>1526622250600</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:44:10</date>
+  <millis>1526622250600</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:44:10</date>
+  <millis>1526622250603</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:44:10</date>
+  <millis>1526622250604</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:44:10</date>
+  <millis>1526622250604</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:44:10</date>
+  <millis>1526622250604</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-18T17:48:55</date>
+  <millis>1526622535333</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:48:55</date>
+  <millis>1526622535679</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:48:55</date>
+  <millis>1526622535679</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:48:55</date>
+  <millis>1526622535679</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:48:55</date>
+  <millis>1526622535683</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-18T17:48:55</date>
+  <millis>1526622535683</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient donations</message>
+  <param>Attempted to add organ liver to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:48:55</date>
+  <millis>1526622535684</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addDonation</method>
+  <thread>12</thread>
+  <message>Added organ cornea to patient donations</message>
+  <param>Attempted to add organ cornea to patient donations</param>
+</record>
+<record>
+  <date>2018-05-18T17:48:55</date>
+  <millis>1526622535684</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-18T17:48:55</date>
+  <millis>1526622535685</millis>
+  <sequence>8</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+<record>
+  <date>2018-05-18T17:49:34</date>
+  <millis>1526622574320</millis>
+  <sequence>18</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addRequired</method>
+  <thread>12</thread>
+  <message>Added organ liver to patient required organs</message>
+  <param>Attempted to add organ liver to patient required organs</param>
+</record>
+<record>
+  <date>2018-05-18T17:49:43</date>
+  <millis>1526622583821</millis>
+  <sequence>22</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.GUIClinicianDiagnosis</class>
+  <method>deleteDiagnoses</method>
+  <thread>12</thread>
+  <message>Failed to delete a disease</message>
+  <param>disease failed to be deleted</param>
+</record>
+</log>
