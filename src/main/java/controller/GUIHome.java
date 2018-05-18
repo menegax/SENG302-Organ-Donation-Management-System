@@ -21,6 +21,7 @@ public class GUIHome {
     public void initialize() { //Todo catch exception
         //Todo possibly create a smart way to check logged in user type
         // and then create the tabs based off that
+
         try {
             // create profile tab and add fxml into
             Tab profileViewTab = new Tab();
@@ -47,7 +48,5 @@ public class GUIHome {
         }
 
     }
-
-
 
 }
