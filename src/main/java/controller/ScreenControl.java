@@ -17,7 +17,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import service.Database;
-import utility.GlobalEnums;
 import utility.GlobalEnums.Stages;
 
 import java.io.File;
@@ -81,7 +80,7 @@ public class ScreenControl {
     void show(Stages stageName, Parent root) {
         Stage stage = applicationStages.get(stageName);
         stage.setScene(new Scene(root));
-        setUpMenuBar(stage);
+      //  setUpMenuBar(stage); //TODO: breaks on my pc
         stage.show();
     }
 
