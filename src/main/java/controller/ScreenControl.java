@@ -1,10 +1,12 @@
 package controller;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.util.*;
@@ -55,6 +57,24 @@ public class ScreenControl {
         Stage stage = applicationStages.get(stageName);
         stage.setScene(new Scene(root));
         stage.show();
+    }
+
+    public void show(Node node, String fxml) throws IOException{
+        Stage stage = applicationStages.get(((UndoableStage) node.getScene().getWindow()).getUUID());
+        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource(fxml))));
+        stage.show();
+    }
+
+    public void closeStage(UUID stageName) {
+        applicationStages.get(stageName).close();
+        applicationStages.remove(stageName);
+    }
+
+    public void closeStage(Node node) {
+        ((Stage) node.getScene().getWindow()).close();
+        if (node.getScene().getWindow() instanceof UndoableStage) {
+            applicationStages.remove(((UndoableStage) node.getScene().getWindow()).getUUID());
+        }
     }
 
     @Deprecated

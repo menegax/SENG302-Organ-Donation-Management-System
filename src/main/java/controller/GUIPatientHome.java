@@ -14,6 +14,9 @@ import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 
+import static java.util.logging.Level.SEVERE;
+import static utility.UserActionHistory.userActions;
+
 public class GUIPatientHome {
 
     @FXML
@@ -30,20 +33,25 @@ public class GUIPatientHome {
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     @FXML
-    public void goToProfile() throws IOException {
-        screenControl.show(((UndoableStage) homePane.getScene().getWindow()).getUUID(),FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+    public void goToProfile() {
+        try {
+            screenControl.show(homePane, "/scene/patientProfile.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load patient profile").show();
+            userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
+        }
     }
 
 
     @FXML
     public void goToHistory() {
         try {
-            ScreenControl.addTabToHome("patientHistory", FXMLLoader.load(getClass().getResource("/scene/patientHistory.fxml")));
+            screenControl.show(homePane, "/scene/patientHistory.fxml");
         }
         catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "Unable load patient history").show();
+            userActions.log(SEVERE, "Failed to load patient history", "Attempted to load patient history");
         }
-        ScreenControl.activate("patientHistory");
     }
 
 
@@ -51,7 +59,7 @@ public class GUIPatientHome {
     public void logOut() {
         UserControl userControl = new UserControl();
         userControl.clearCahce();
-        ScreenControl.activate("login");
+        screenControl.closeStage(homePane);
     }
 
 

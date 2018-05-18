@@ -8,136 +8,136 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane fx:id="patientProfilePane" minHeight="600.0" minWidth="600.0" prefHeight="662.0" prefWidth="988.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProfile">
+<AnchorPane fx:id="patientProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProfile">
    <children>
-      <VBox layoutX="30.0" layoutY="96.0" prefHeight="391.0" prefWidth="244.0" AnchorPane.bottomAnchor="174.8" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="714.0" AnchorPane.topAnchor="96.0">
+      <Label layoutX="264.0" layoutY="32.0" styleClass="title" text="Profile">
+         <font>
+            <Font size="40.0" />
+         </font>
+      </Label>
+      <VBox layoutX="37.0" layoutY="81.0" prefHeight="255.0" prefWidth="239.0">
          <children>
-            <HBox prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="18.0" prefWidth="200.0" text="NHI: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="nhiLbl" prefHeight="18.0" prefWidth="100.0" text="Label" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="150.0" text="NHI: " />
+                  <Label fx:id="nhiLbl" prefHeight="16.0" prefWidth="168.0" text="Label" textAlignment="CENTER" />
                </children>
             </HBox>
-            <HBox prefHeight="18.0" prefWidth="245.0" VBox.vgrow="NEVER">
+            <HBox prefHeight="30.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="18.0" prefWidth="200.0" text="Name: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="nameLbl" prefWidth="100.0" text="Label" textOverrun="CENTER_ELLIPSIS" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Name: " />
+                  <Label fx:id="nameLbl" text="Label" textOverrun="CENTER_ELLIPSIS" />
                </children>
             </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox prefHeight="30.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="200.0" text="Gender: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="genderLbl" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Gender: " />
+                  <Label fx:id="genderLbl" text="Label" />
                </children>
             </HBox>
-            <HBox layoutX="10.0" layoutY="61.0" prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox layoutX="10.0" layoutY="61.0" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="200.0" text="Vital status:" HBox.hgrow="ALWAYS" />
-                  <Label fx:id="vitalLbl1" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Vital status:" />
+                  <Label fx:id="vitalLbl1" text="Label" />
                </children>
             </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="200.0" text="Date of Birth: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="dobLbl" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Date of Birth: " />
+                  <Label fx:id="dobLbl" text="Label" />
                </children>
             </HBox>
-            <HBox layoutX="10.0" layoutY="61.0" prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox layoutX="10.0" layoutY="61.0" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="200.0" text="Date of Death: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="dateOfDeathLabel" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Date of Death: " />
+                  <Label fx:id="dateOfDeathLabel" text="Label" />
                </children>
             </HBox>
-            <HBox layoutX="10.0" layoutY="62.0" prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox layoutX="10.0" layoutY="62.0" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="200.0" text="Age:" HBox.hgrow="ALWAYS" />
-                  <Label fx:id="age" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Age:" />
+                  <Label fx:id="age" text="Label" />
                </children>
             </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox prefHeight="30.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="200.0" text="Height: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="heightLbl" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Height: " />
+                  <Label fx:id="heightLbl" text="Label" />
                </children>
             </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox prefHeight="30.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="200.0" text="Weight: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="weightLbl" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Weight: " />
+                  <Label fx:id="weightLbl" text="Label" />
                </children>
             </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox prefHeight="30.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="200.0" text="BMI: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="bmi" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="BMI: " />
+                  <Label fx:id="bmi" text="Label" />
                </children>
             </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="200.0" text="Blood Group: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="bloodGroupLbl" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Blood Group: " />
+                  <Label fx:id="bloodGroupLbl" text="Label" />
                </children>
             </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox prefHeight="30.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="200.0" text="Street 1: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="addLbl1" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Street 1: " />
+                  <Label fx:id="addLbl1" text="Label" />
                </children>
             </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="200.0" text="Street 2: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="addLbl2" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Street 2: " />
+                  <Label fx:id="addLbl2" text="Label" />
                </children>
             </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="200.0" text="Suburb: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="addLbl3" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Suburb: " />
+                  <Label fx:id="addLbl3" text="Label" />
                </children>
             </HBox>
-            <HBox prefHeight="28.0" prefWidth="258.0" VBox.vgrow="NEVER">
+            <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="11.0" prefWidth="200.0" text="Region: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="addLbl4" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Region: " />
+                  <Label fx:id="addLbl4" text="Label" />
                </children>
             </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER">
+            <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="16.0" prefWidth="200.0" text="Zip: " HBox.hgrow="ALWAYS" />
-                  <Label fx:id="addLbl5" prefWidth="100.0" text="Label" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Zip: " />
+                  <Label fx:id="addLbl5" text="Label" />
                </children>
             </HBox>
          </children>
       </VBox>
-      <VBox layoutX="624.0" layoutY="69.0" prefHeight="418.0" prefWidth="326.0" AnchorPane.bottomAnchor="174.60000000000002" AnchorPane.rightAnchor="37.60000000000002" AnchorPane.topAnchor="69.0">
+      <VBox layoutX="283.0" layoutY="100.0" prefHeight="200.0" prefWidth="142.0">
          <children>
-            <Label alignment="TOP_CENTER" prefHeight="27.0" prefWidth="326.0" text="Donations">
+            <Label alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Donations">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <ListView fx:id="organList" accessibleRole="PARENT" prefHeight="389.0" prefWidth="326.0" VBox.vgrow="ALWAYS" />
+            <ListView fx:id="organList" prefHeight="200.0" prefWidth="147.0" />
          </children>
       </VBox>
       <Label fx:id="back" layoutX="14.0" layoutY="14.0" onMouseClicked="#goToPatientHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-      <HBox fillHeight="false" layoutX="294.0" layoutY="577.0" prefHeight="47.0" prefWidth="698.0" AnchorPane.bottomAnchor="38.0" AnchorPane.rightAnchor="28.0">
+      <Button fx:id="editPatientButton" layoutX="323.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToEdit" text="Manage Profile" />
+      <Button fx:id="donationButton" layoutX="182.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
+      <Button fx:id="medicationBtn" layoutX="25.0" layoutY="349.0" mnemonicParsing="false" onAction="#openMedication" text="Manage Medications" />
+      <Button fx:id="contactButton" layoutX="445.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contacts" />
+      <VBox layoutX="445.0" layoutY="100.0" prefHeight="200.0" prefWidth="142.0">
          <children>
-             <Button fx:id="contactButton" mnemonicParsing="false" onAction="#goToContactDetails" prefHeight="47.0" prefWidth="303.0" text="Manage Contacts" />
-             <Button fx:id="editPatientButton" mnemonicParsing="false" onAction="#goToEdit" prefHeight="47.0" prefWidth="278.0" text="Manage Profile" />
-             <Button fx:id="donationButton" accessibleRole="PARENT" mnemonicParsing="false" onAction="#goToDonations" prefHeight="47.0" prefWidth="298.0" text="Manage Donations" />
-             <Button fx:id="medicationBtn" mnemonicParsing="false" onAction="#openMedication" prefHeight="47.0" prefWidth="282.0" text="Manage Medications" />
-         </children>
-      </HBox>
-      <VBox layoutX="284.0" layoutY="70.0" prefHeight="417.0" prefWidth="326.0" AnchorPane.bottomAnchor="174.39999999999998" AnchorPane.rightAnchor="377.6" AnchorPane.topAnchor="70.0">
-         <children>
-            <Label alignment="TOP_CENTER" prefHeight="27.0" prefWidth="328.0" text="Medications">
+            <Label alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Medications">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <ListView fx:id="medList" accessibleRole="PARENT" prefHeight="394.0" prefWidth="326.0" VBox.vgrow="ALWAYS" />
+            <ListView fx:id="medList" prefHeight="200.0" prefWidth="200.0" />
          </children>
       </VBox>
    </children>
