@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>English</string>
+    <key>CFBundleExecutable</key>
+    <string>JavaAppLauncher</string>
+    <key>CFBundleIconFile</key>
+    <string>fake_icon.icns</string>
+    <key>CFBundleIdentifier</key>
+    <string>controller.Main</string>
+    <key>CFBundleDisplayName</key>
+    <string>Big Pharma</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>Big Pharma</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>3.0</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>NSHumanReadableCopyright</key>
+    <string></string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
+    <key>JVMRuntime</key>
+    <string></string>
+    <key>JVMRuntimePath</key>
+    <string></string>
+    <key>JVMMainClassName</key>
+    <string>controller.Main</string>
+    <key>JVMClassPaths</key>
+    <array>
+      <string>seng302/Main/3.0/Main-3.0.jar</string>
+      <string>de/codecentric/centerdevice/centerdevice-nsmenufx/2.1.6/centerdevice-nsmenufx-2.1.6.jar</string>
+      <string>org/apache/httpcomponents/httpcore/4.4.5/httpcore-4.4.5.jar</string>
+      <string>org/apache/httpcomponents/fluent-hc/4.5/fluent-hc-4.5.jar</string>
+      <string>org/apache/httpcomponents/httpclient/4.5/httpclient-4.5.jar</string>
+      <string>commons-codec/commons-codec/1.9/commons-codec-1.9.jar</string>
+      <string>commons-logging/commons-logging/1.2/commons-logging-1.2.jar</string>
+      <string>org/apache/commons/commons-lang3/3.0/commons-lang3-3.0.jar</string>
+      <string>info/picocli/picocli/2.3.0/picocli-2.3.0.jar</string>
+      <string>com/google/code/gson/gson/2.8.2/gson-2.8.2.jar</string>
+      <string>org/jline/jline/3.5.1/jline-3.5.1.jar</string>
+      <string>org/apache/lucene/lucene-queryparser/7.3.0/lucene-queryparser-7.3.0.jar</string>
+      <string>org/apache/lucene/lucene-core/7.3.0/lucene-core-7.3.0.jar</string>
+      <string>org/apache/lucene/lucene-codecs/7.3.0/lucene-codecs-7.3.0.jar</string>
+      <string>org/apache/lucene/lucene-queries/7.3.0/lucene-queries-7.3.0.jar</string>
+      <string>org/apache/lucene/lucene-sandbox/7.3.0/lucene-sandbox-7.3.0.jar</string>
+    </array>
+    <key>JVMVersion</key>
+    <string>1.6+</string>
+    <key>JVMOptions</key>
+    <array>
+            <string>-Dapple.laf.useScreenMenuBar=true</string>
+      <string>-Xdock:name=Big Pharma</string>
+    </array>
+    <key>JVMArguments</key>
+    <array/>
+    <key>LauncherWorkingDirectory</key>
+    <string>$APP_ROOT</string>
+  </dict>
+</plist>

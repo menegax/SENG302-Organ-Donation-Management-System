@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>seng302</groupId>
-    <artifactId>Main</artifactId>
+    <artifactId>Big-Pharma</artifactId>
     <packaging>jar</packaging>
     <version>3.0</version>
     <name>Big Pharma</name>
@@ -10,6 +10,8 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <icon>${basedir}/src/main/resources/fake_icon.icns</icon>
+
     </properties>
 
     <dependencies>
@@ -138,7 +140,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                <groupId>org.jacoco</groupId>
                <artifactId>jacoco-maven-plugin</artifactId>
@@ -162,6 +163,25 @@
                      </goals>
                   </execution>
                </executions>
+            </plugin>
+            <plugin>
+                <groupId>sh.tak.appbundler</groupId>
+                <artifactId>appbundle-maven-plugin</artifactId>
+                <version>1.2.0</version>
+                <configuration>
+                    <mainClass>controller.Main</mainClass>
+                    <!--<dictionaryFile>Info.plist</dictionaryFile>-->
+                    <iconFile>/fake_icon.icns</iconFile>
+                    <generateDiskImageFile>true</generateDiskImageFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 </plugins>
     </build>
