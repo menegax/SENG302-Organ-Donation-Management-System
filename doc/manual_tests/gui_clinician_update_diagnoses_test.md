@@ -63,5 +63,31 @@
 2. The clinician selects the done button
 3. An alert is shown stating the diagnosis name must be valid. The diagnosis name field is highlighted in red.
 
+###Add a valid diagnosis
 
+1. The clinician selects the add button from the viewing screen
+2. The clinician enters a valid addition of a diagnosis (Not duplicated)
+3. The clinician selects the done button
+4. The diagnosis is added to the patient's list of diagnoses
+
+###Add a diagnosis already in current diagnoses
+
+1. The clinician selects the add button from the viewing screen
+2. The clinician enters a disease name that is currently in the patient's current diagnoses
+3. The clinician selects the done button
+4. An alert is shown stating the patient can not be diagnosed with a disease they are already infected with
+
+###Add a current diagnosis that has already been cured on a different date
+
+1. The clinician selects the add button from the viewing screen
+2. The clinician enters a disease name that is currently in the patient's past diagnoses
+3. The clinician selects the done button
+4. The diagnosis is added to the patient's current diagnoses
+
+###Add a diagnosis cured on the same date
+
+1. The clinician selects the add button from the viewing screen
+2. The clinician enters a disease name that is currently in the patient's past diagnoses, with the same date as the existing one
+3. The clinician selects the done button
+4. An alert is shown stating the patient can not be diagnosed with a disease they were cured of on the same day
  
