@@ -10,6 +10,7 @@ import model.Clinician;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianProfile {
@@ -31,6 +32,8 @@ public class GUIClinicianProfile {
     @FXML
     private Label regionTxt;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
     public void initialize() {
         UserControl userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
@@ -49,17 +52,20 @@ public class GUIClinicianProfile {
     }
 
     public void goToEdit() {
-        ScreenControl.removeScreen("clinicianProfileUpdate");
         try {
-            ScreenControl.addTabToHome("clinicianProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/clinicianProfileUpdate.fxml")));
-            ScreenControl.activate("clinicianProfileUpdate");
-        }catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading clinician update screen", "attempted to navigate from the clinician profile page to the edit page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading clinician edit page", ButtonType.OK).show();
+            screenControl.show(idTxt, "/scene/clinicianProfileUpdate.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load update clinician profile").show();
+            userActions.log(SEVERE, "Failed to load update clinician profile", "Attempted to load update clinician profile");
         }
     }
 
     public void goToClinicianHome() {
-        ScreenControl.activate("clinicianHome");
+        try {
+            screenControl.show(idTxt, "/scene/clinicianHome.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
+            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
+        }
     }
 }

@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 //import static utility.UserActionRecord.logHistory;
 
@@ -64,6 +65,8 @@ public class GUIPatientMedications extends UndoableController {
 
     private JsonObject suggestions;
     private boolean itemSelected = false;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
@@ -573,13 +576,11 @@ public class GUIPatientMedications extends UndoableController {
     @FXML
     public void goToProfile() {
         if (userControl.getLoggedInUser() instanceof Patient ) {
-            ScreenControl.removeScreen("patientProfile");
             try {
-                ScreenControl.addTabToHome("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
-            }catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the medication page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+                screenControl.show(medicationPane,"/scene/patientProfile.fxml");
+            } catch (IOException e) {
+                new Alert((Alert.AlertType.ERROR), "Unable to load patient profile").show();
+                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));

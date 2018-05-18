@@ -1,5 +1,6 @@
 package controller;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 import javafx.application.Platform;
@@ -21,6 +22,7 @@ import utility.SearchPatients;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -49,6 +51,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initialises the data within the table to all patients
@@ -88,17 +91,12 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 try {
                     userControl.setTargetPatient(patientDataTable.getSelectionModel().getSelectedItem());
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-                    Scene scene = new Scene(fxmlLoader.load());
-                    Stage popUpStage = new UndoableStage();
-                    popUpStage.setX(ScreenControl.getMain().getX()); //offset popup
-                    popUpStage.setScene(scene);
+                    UndoableStage popUpStage = new UndoableStage();
+                    screenControl.addStage(popUpStage.getUUID(), popUpStage);
+                    screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
 
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-
-                    //Add and show the popup
-                    ScreenControl.addPopUp("searchPopup", popUpStage); //ADD to screen control
-                    ScreenControl.displayPopUp("searchPopup"); //display the popup
                 }
                 catch (Exception e) {
                     userActions.log(Level.SEVERE,
@@ -213,7 +211,12 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
 
     public void goToClinicianHome() {
-        ScreenControl.activate("clinicianHome");
+        try {
+            screenControl.show(patientDataTable, "/scene/clinicianHome.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
+            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
+        }
     }
 
 

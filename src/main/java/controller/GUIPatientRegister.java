@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -16,6 +17,7 @@ import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 import javax.xml.crypto.Data;
@@ -53,6 +56,7 @@ public class GUIPatientRegister {
 
     private StringConverter<LocalDate> dateConverter;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Sets up register page GUI elements
@@ -75,7 +79,12 @@ public class GUIPatientRegister {
     @FXML
     public void goBackToLogin() {
         clearFields();
-        ScreenControl.activate("login");
+        try {
+            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
+            userActions.log(SEVERE, "Failed to load login", "Attempted to load login");
+        }
     }
 
 

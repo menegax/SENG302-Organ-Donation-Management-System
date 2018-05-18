@@ -27,7 +27,7 @@ public class UndoableStage extends Stage {
 
     private List<StatesHistoryScreen> statesHistoryScreens = new ArrayList<>();
 
-    private int index = 0;
+    private int index = -1;
 
     private boolean changingStates = false;
 

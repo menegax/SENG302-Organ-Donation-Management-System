@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -56,6 +57,8 @@ public class GUIClinicianUpdateProfile extends UndoableController{
     private ChoiceBox regionDD;
 
     private Clinician target;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initializes the clinician editing screen.
@@ -234,13 +237,11 @@ public class GUIClinicianUpdateProfile extends UndoableController{
      * Navigates back to the profile window
      */
     public void goBackToProfile() {
-        ScreenControl.removeScreen("clinicianProfile");
         try {
-            ScreenControl.addTabToHome("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
-            ScreenControl.activate("clinicianProfile");
+            screenControl.show(clinicianUpdateAnchorPane, "/scene/clinicianProfile.fxml");
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).show();
+            new Alert((Alert.AlertType.ERROR), "Unable to load clinician profile").show();
+            userActions.log(SEVERE, "Failed to load clinician profile", "Attempted to load clinician profile");
         }
     }
 }

@@ -25,7 +25,7 @@ import java.util.logging.Level;
 
 public class Main extends Application {
 
-    private final UUID uuid = UUID.randomUUID();
+    private static final UUID uuid = UUID.randomUUID();
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -171,7 +171,7 @@ public class Main extends Application {
      * Gets the uuid hash key used for the primary stage
      * @return the uuid hash key used in the primary stage
      */
-    public UUID getUuid() {
+    public static UUID getUuid() {
         return uuid;
     }
 }

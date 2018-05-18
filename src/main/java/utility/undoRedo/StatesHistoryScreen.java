@@ -52,8 +52,14 @@ public class StatesHistoryScreen {
 //            }
 //        });
         this.undoableScreen = undoableScreen;
-        controls.get(0).sceneProperty().addListener((observable, oldValue, newValue) -> {
-            ((UndoableStage) newValue.getWindow()).addStatesHistoryScreen(this);
+        controls.get(0).sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.windowProperty().addListener((observable2, oldStage, newStage) -> {
+                    if (newStage != null) {
+                        ((UndoableStage) newStage).addStatesHistoryScreen(this);
+                    }
+                });
+            }
         });
         for (Control control : controls) {
             if ((control instanceof TextField)) {

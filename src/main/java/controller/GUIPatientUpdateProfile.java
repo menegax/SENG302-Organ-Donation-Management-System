@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateProfile extends UndoableController {
@@ -87,6 +88,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     private UserControl userControl;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     public void initialize() {
         populateDropdowns();
@@ -525,14 +527,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
      */
     public void goBackToProfile() {
         if (userControl.getLoggedInUser() instanceof Patient) {
-            ScreenControl.removeScreen("patientProfile");
             try {
-                ScreenControl.addTabToHome("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
-            }
-            catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
-                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).show();
+                screenControl.show(patientUpdateAnchorPane, "/scene/patientProfile.fxml");
+            } catch (IOException e) {
+                new Alert((Alert.AlertType.ERROR), "Unable to patient profile").show();
+                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
             }
         }
         else {

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientProfile {
@@ -105,6 +106,7 @@ public class GUIPatientProfile {
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private void removeBack() {
         back.setDisable(true);
@@ -186,14 +188,11 @@ public class GUIPatientProfile {
 
     public void goToEdit() {
         if (userControl.getLoggedInUser() instanceof Patient) {
-            ScreenControl.removeScreen("patientUpdateProfile");
             try {
-                ScreenControl.addTabToHome("patientUpdateProfile", FXMLLoader.load(getClass().getResource("/scene/patientUpdateProfile.fxml")));
-                ScreenControl.activate("patientUpdateProfile");
-            }
-            catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading update screen", "attempted to navigate from the profile page to the edit page");
-                new Alert(Alert.AlertType.ERROR, "Error loading edit page", ButtonType.OK).show();
+                screenControl.show(patientProfilePane, "/scene/patientUpdateProfile.fxml");
+            } catch (IOException e) {
+                new Alert((Alert.AlertType.ERROR), "Unable to load update patient profile").show();
+                userActions.log(SEVERE, "Failed to load update patient profile", "Attempted to load update patient profile");
             }
         }
         else {
@@ -213,14 +212,11 @@ public class GUIPatientProfile {
 
     public void goToDonations() {
         if (userControl.getLoggedInUser() instanceof Patient) {
-            ScreenControl.removeScreen("patientDonations");
             try {
-                ScreenControl.addTabToHome("patientDonations", FXMLLoader.load(getClass().getResource("/scene/patientUpdateDonations.fxml")));
-                ScreenControl.activate("patientDonations");
-            }
-            catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading donation screen", "attempted to navigate from the profile page to the donation page");
-                new Alert(Alert.AlertType.ERROR, "Error loading donation page", ButtonType.OK).show();
+                screenControl.show(patientProfilePane,"/scene/patientUpdateDonations.fxml");
+            } catch (IOException e) {
+                new Alert((Alert.AlertType.ERROR), "Unable to load update patient donations").show();
+                userActions.log(SEVERE, "Failed to load update patient donations", "Attempted to load update patient donations");
             }
         }
         else {
@@ -240,16 +236,13 @@ public class GUIPatientProfile {
 
     public void goToContactDetails() {
         if (userControl.getLoggedInUser() instanceof Patient) {
-            ScreenControl.removeScreen("patientContactDetails");
-            try {
-                ScreenControl.addTabToHome("patientContactDetails", FXMLLoader.load(getClass().getResource("/scene/patientUpdateContacts.fxml")));
-                ScreenControl.activate("patientContactDetails");
-            }
-            catch (IOException e) {
-                userActions.log(Level.SEVERE,
-                        "Error loading contact details screen",
-                        "attempted to navigate from the profile page to the contact details page");
-                new Alert(Alert.AlertType.ERROR, "Error loading contact details page", ButtonType.OK).show();
+            if (userControl.getLoggedInUser() instanceof Patient) {
+                try {
+                    screenControl.show(patientProfilePane,"/scene/patientUpdateContacts.fxml");
+                } catch (IOException e) {
+                    new Alert((Alert.AlertType.ERROR), "Unable to load update patient contacts").show();
+                    userActions.log(SEVERE, "Failed to load update patient contacts", "Attempted to load update patient contacts");
+                }
             }
         }
         else {
@@ -269,16 +262,13 @@ public class GUIPatientProfile {
 
     public void openMedication() {
         if (userControl.getLoggedInUser() instanceof Patient) {
-            ScreenControl.removeScreen("patientMedications");
-            try {
-                ScreenControl.addTabToHome("patientMedications", FXMLLoader.load(getClass().getResource("/scene/patientMedications.fxml")));
-                ScreenControl.activate("patientMedications");
-            }
-            catch (IOException e) {
-                userActions.log(Level.SEVERE,
-                        "Error loading medication screen",
-                        "attempted to navigate from the profile page to the medication page");
-                new Alert(Alert.AlertType.WARNING, "ERROR loading medication page", ButtonType.OK).showAndWait();
+            if (userControl.getLoggedInUser() instanceof Patient) {
+                try {
+                    screenControl.show(patientProfilePane,"/scene/patientMedications.fxml");
+                } catch (IOException e) {
+                    new Alert((Alert.AlertType.ERROR), "Unable to load patient medications").show();
+                    userActions.log(SEVERE, "Failed to load patient medications", "Attempted to load patient medications");
+                }
             }
         }
         else {
@@ -294,7 +284,14 @@ public class GUIPatientProfile {
 
 
     public void goToPatientHome() {
-        ScreenControl.activate("patientHome");
+        if (userControl.getLoggedInUser() instanceof Patient) {
+            try {
+                screenControl.show(patientProfilePane, "/scene/patientHome.fxml");
+            } catch (IOException e) {
+                new Alert((Alert.AlertType.ERROR), "Unable to load patient home").show();
+                userActions.log(SEVERE, "Failed to load patient home", "Attempted to load patient home");
+            }
+        }
     }
 
 }
