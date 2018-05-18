@@ -1,51 +1,42 @@
 package controller;
 
 import api.APIHelper;
-import com.google.gson.*;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
-import model.Patient;
 import model.DrugInteraction;
 import model.Medication;
+import model.Patient;
 import service.Database;
+import service.TextWatcher;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.UserActionRecord;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.sql.Timestamp;
 import java.util.*;
-import javafx.geometry.Side;
-import service.TextWatcher;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
-//import static utility.UserActionRecord.logHistory;
 
 public class GUIPatientMedications {
 
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
-    private ObservableList<UserActionRecord> medLog = FXCollections.observableArrayList();
     private ListProperty<String> informationListProperty = new SimpleListProperty<>();
     private StatesHistoryScreen stateHistoryScreen;
     private ArrayList<String> ingredients;
     private ArrayList<String> current;
     private ArrayList<String> history;
-    private Timestamp time;
     private Patient target;
 
     @FXML
@@ -127,11 +118,9 @@ public class GUIPatientMedications {
      */
     @FXML
     public void saveMedication() {
-        time = new Timestamp(System.currentTimeMillis());
-//        medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), "Medications are now saved", "Medications has been saved"));
-//        logHistory.add(medLog.get(medLog.size() - 1));
+        //userActions.log(Level.INFO, "Saved Medications", new String[]{"Attempted to save medications", target.getNhiNumber()});
         Alert save = new Alert(Alert.AlertType.INFORMATION, "Medication(s) have been successfully saved");
-        final Button dialogOK = (Button) save.getDialogPane().lookupButton(ButtonType.OK);
+        //final Button dialogOK = (Button) save.getDialogPane().lookupButton(ButtonType.OK);
 //        dialogOK.addEventFilter(ActionEvent.ACTION, event -> saveToDisk());// Save to .json the changes made to medications
         save.show();
         clearSelections();
@@ -142,7 +131,7 @@ public class GUIPatientMedications {
 //     */
 //    private void saveToDisk() {
 //        if (target.getPatientLog() != null) {
-//            ObservableList<UserActionRecord> log = target.getPatientLog();
+//            ObservableList<PatientActionRecord> log = target.getPatientLog();
 //            log.addAll(medLog);
 //            target.setMedicationLog(log);
 //        } else {
@@ -229,7 +218,7 @@ public class GUIPatientMedications {
             refreshReview();
             addActionListeners();
         } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the medications for logged in user");
+            userActions.log(Level.SEVERE, "Error loading logged in user", new String[]{"Attempted to load patient profile", target.getNhiNumber()});
         }
     }
 
@@ -252,7 +241,7 @@ public class GUIPatientMedications {
                     textWatcher.afterTextChange(GUIPatientMedications.class.getMethod("autoComplete"), this); //start timer
 
                 } catch (NoSuchMethodException e) {
-                    userActions.log(Level.SEVERE, e.getMessage()); // MAJOR ISSUE HERE!
+                    //userActions.log(Level.SEVERE, e.getMessage()); // MAJOR ISSUE HERE!
                 }
             }
         });
@@ -360,25 +349,19 @@ public class GUIPatientMedications {
 
             if (!(current.contains(medication) || history.contains(medication))) {
                 target.getCurrentMedications().add( new Medication(medication));
-                time = new Timestamp(System.currentTimeMillis());
-//                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now registered as current", medication + " has successfully been registered"));
-//                logHistory.add(medLog.get(medLog.size() - 1));
+                userActions.log(Level.INFO, "Added medication: " + medication, new String[]{"Attempted to add medication: " + medication, target.getNhiNumber()});
                 viewCurrentMedications();
                 newMedication.clear();
             } else if (history.contains(medication) && !current.contains(medication)) {
                 moveToCurrent(new ArrayList<>(Collections.singleton( medication ) ));
                 newMedication.clear();
             } else {
-                time = new Timestamp(System.currentTimeMillis());
-//                medLog.add(new UserActionRecord(String.valueOf(time), Level.WARNING.toString(), medication + " is already registered", medication + " has failed registration"));
-//                logHistory.add(medLog.get(medLog.size() - 1));
+                userActions.log(Level.WARNING, "Medication already exists", new String[]{"Attempted to add medication: " + medication, target.getNhiNumber()});
                 Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is already registered");
                 err.show();
             }
         } else {
-            time = new Timestamp(System.currentTimeMillis());
-//            medLog.add(new UserActionRecord(String.valueOf(time), Level.WARNING.toString(), medication + " is invalid for registration", medication + " has failed registration"));
-//            logHistory.add(medLog.get(medLog.size() - 1));
+            userActions.log(Level.WARNING, "Invalid medication registration", new String[]{"Attempted to add medication: " + medication, target.getNhiNumber()});
             Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is invalid for registration");
             err.show();
         }
@@ -404,15 +387,12 @@ public class GUIPatientMedications {
     private void performDelete(String medication) {
         if (history.contains( medication )) {
             target.getMedicationHistory().remove( history.indexOf( medication ) );
-            time = new Timestamp(System.currentTimeMillis());
-//            medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from history list"));
-//            logHistory.add(medLog.get(medLog.size() - 1));
+            userActions.log(Level.INFO, "Deleted medication: " + medication, new String[]{"Attempted to delete medication: " + medication, target.getNhiNumber()});
             viewPastMedications();
         } else if (current.contains( medication )) {
             target.getCurrentMedications().remove( current.indexOf( medication ) );
-            time = new Timestamp(System.currentTimeMillis());
-//            medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from current list"));
-//            logHistory.add(medLog.get(medLog.size() - 1));
+            userActions.log(Level.INFO, "Deleted medication: " + medication, new String[]{"Attempted to delete medication: " + medication, target.getNhiNumber()});
+
             viewCurrentMedications();
         }
     }
@@ -431,9 +411,7 @@ public class GUIPatientMedications {
                     target.getCurrentMedications().add( new Medication( medication )  );
                     viewCurrentMedications();
                 }
-                time = new Timestamp(System.currentTimeMillis());
-//                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now current", medication + " moved from history to current list"));
-//                logHistory.add(medLog.get(medLog.size() - 1));
+                userActions.log(Level.INFO, "Moved medication to current: " + medication, new String[]{"Attempted to move medication " + medication + " to current medications", target.getNhiNumber()});
                 viewPastMedications();
             }
         }
@@ -453,9 +431,7 @@ public class GUIPatientMedications {
                     target.getMedicationHistory().add( new Medication( medication ) );
                     viewPastMedications();
                 }
-                time = new Timestamp(System.currentTimeMillis());
-//                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now history", medication + " moved from current to history list"));
-//                logHistory.add(medLog.get(medLog.size() - 1));
+                userActions.log(Level.INFO, "Moved medication to past: " + medication, new String[]{"Attempted to move medication " + medication + " to past medications", target.getNhiNumber()});
                 viewCurrentMedications();
             }
         }
@@ -589,23 +565,12 @@ public class GUIPatientMedications {
      */
     @FXML
     public void goToProfile() {
-        if (userControl.getLoggedInUser() instanceof Patient ) {
-            ScreenControl.removeScreen("patientProfile");
-            try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
-            }catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the medication page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-            }
-        } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-            try {
-                ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the edit page to the profile page in popup");
-                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
-            }
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+        try {
+            ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader);
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE, "Error loading profile screen in popup", new String[]{"Attempted to navigate from the edit page to the profile page in popup", target.getNhiNumber()});
+            new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
         }
     }
 

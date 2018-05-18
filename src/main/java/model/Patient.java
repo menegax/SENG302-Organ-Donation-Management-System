@@ -1,17 +1,14 @@
 package model;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.BloodGroup;
 import utility.GlobalEnums.Gender;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
+import utility.PatientActionRecord;
 import utility.SearchPatients;
-import utility.UserActionRecord;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
@@ -84,7 +81,7 @@ public class Patient extends User {
 
     private String contactEmailAddress;
 
-    private ArrayList<UserActionRecord> userActionsList;
+    private ArrayList<PatientActionRecord> userActionsList;
 
 
     public Patient(String nhiNumber, String firstName,
@@ -685,11 +682,11 @@ public class Patient extends User {
 
 
 //    /**
-//     * Returns a converted medication log ArrayList to a UserActionRecord OberservableList
-//     * @return The medication log as a UserActionRecord ObservableList
+//     * Returns a converted medication log ArrayList to a PatientActionRecord OberservableList
+//     * @return The medication log as a PatientActionRecord ObservableList
 //     */
-//    public ObservableList<UserActionRecord> getPatientLog() {
-//        ObservableList<UserActionRecord> currentLog = FXCollections.observableArrayList();
+//    public ObservableList<PatientActionRecord> getPatientLog() {
+//        ObservableList<PatientActionRecord> currentLog = FXCollections.observableArrayList();
 //        String time = null, level = null, message = null, action;
 //
 //        if (this.patientLog != null) {
@@ -698,7 +695,7 @@ public class Patient extends User {
 //                level = patientLog.get(i++);
 //                message = patientLog.get(i++);
 //                action = patientLog.get(i);
-//                currentLog.add(0, new UserActionRecord(time, level, message, action, this.getUuid()) );
+//                currentLog.add(0, new PatientActionRecord(time, level, message, action, this.getUuid()) );
 //            }
 //        } else {
 //            return null;
@@ -712,19 +709,19 @@ public class Patient extends User {
      * DO NOT USE UNLESS FROM LOGGER CLASS
      * @return the list of user records
      */
-    public ArrayList<UserActionRecord> getUserActionsList() {
+    public ArrayList<PatientActionRecord> getUserActionsList() {
         return userActionsList; //this is modifiable on purpose!
     }
 
 
 //    /**
-//     * Sets the medicationLog as a HashMap converted from a UserActionRecord ObservableList
-//     * @param log The UserActionRecord ObservableList
+//     * Sets the medicationLog as a HashMap converted from a PatientActionRecord ObservableList
+//     * @param log The PatientActionRecord ObservableList
 //     */
-//    public void setMedicationLog(ObservableList<UserActionRecord> log) {
+//    public void setMedicationLog(ObservableList<PatientActionRecord> log) {
 //        ArrayList<String> newLog = new ArrayList<>();
 //
-//        for (UserActionRecord record : log) {
+//        for (PatientActionRecord record : log) {
 //            newLog.add(record.getTimestamp().toString());
 //            newLog.add(record.getLevel().toString());
 //            newLog.add(record.getMessage());

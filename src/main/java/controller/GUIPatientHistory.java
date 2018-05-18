@@ -1,7 +1,6 @@
 package controller;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -9,11 +8,9 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import model.Patient;
-import utility.UserActionRecord;
+import utility.PatientActionRecord;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,21 +23,21 @@ public class GUIPatientHistory {
     private Patient target;
 
     @FXML
-    private TableColumn<UserActionRecord, String> timeStampColumn;
+    private TableColumn<PatientActionRecord, String> timeStampColumn;
 
     @FXML
-    private TableColumn<UserActionRecord, String> levelColumn;
+    private TableColumn<PatientActionRecord, String> levelColumn;
 
     @FXML
-    private TableColumn<UserActionRecord, String> actionColumn;
+    private TableColumn<PatientActionRecord, String> actionColumn;
 
     @FXML
-    private TableColumn<UserActionRecord, String> messageColumn;
+    private TableColumn<PatientActionRecord, String> messageColumn;
 
     @FXML
-    private TableView<UserActionRecord> logHistoryTable;
+    private TableView<PatientActionRecord> logHistoryTable;
 
-    private ObservableList<UserActionRecord> masterData = FXCollections.observableArrayList();
+    private ObservableList<PatientActionRecord> masterData = FXCollections.observableArrayList();
 
 
     public void initialize() {
@@ -71,12 +68,12 @@ public class GUIPatientHistory {
         actionColumn.setCellValueFactory(r -> new ReadOnlyStringWrapper(r.getValue().getAction()));
 
         // wrap ObservableList in a FilteredList
-        FilteredList<UserActionRecord> filteredData = new FilteredList<>(masterData, d -> true);
+        FilteredList<PatientActionRecord> filteredData = new FilteredList<>(masterData, d -> true);
 
         masterData.sort((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp())); //sort so timestamp most recent at top
 
         // wrap the FilteredList in a SortedList.
-        SortedList<UserActionRecord> sortedData = new SortedList<>(filteredData);
+        SortedList<PatientActionRecord> sortedData = new SortedList<>(filteredData);
 
         timeStampColumn.setComparator(timeStampColumn.getComparator().reversed()); // reverses comparator
 

@@ -1,9 +1,11 @@
 package model;
 
+import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -24,6 +26,8 @@ public class Clinician extends User {
     private Timestamp modified;
 
     private GlobalEnums.Region region;
+
+    private List<ClinicianActionRecord> clinicianActionsList = new ArrayList<>();
 
     /**
      * Creates a clinician instance without providing the workplace address details - as they are optional
@@ -175,5 +179,13 @@ public class Clinician extends User {
 
     public void clinicianModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
+    }
+
+    public List<ClinicianActionRecord> getClinicianActionsList() {
+        return clinicianActionsList;
+    }
+
+    public void addClinicianActionRecord(ClinicianActionRecord record) {
+        clinicianActionsList.add(record);
     }
 }

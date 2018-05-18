@@ -3,13 +3,13 @@ package utility;
 import static java.util.logging.Level.INFO;
 
 import controller.UserControl;
+import model.Clinician;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Timestamp;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -35,18 +35,27 @@ public class UserActionHistory {
                 Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
 
                 // get logged in patient if it exists
-                Patient loggedInPatient =
-                        new UserControl().getLoggedInUser() instanceof Patient ? ((Patient) new UserControl().getLoggedInUser()) : null;
+                Object loggedInUser = new UserControl().getLoggedInUser();
 
-                // if it exists log the record to it
-                if (loggedInPatient != null ) {
-                    loggedInPatient.getUserActionsList()
-                            .add(new UserActionRecord(currentTimeStamp,
+                if (loggedInUser instanceof Patient) { //Add a patient record if a patient is logged in
+                    ((Patient) loggedInUser).getUserActionsList()
+                            .add(new PatientActionRecord(currentTimeStamp,
                                     logRecord.getLevel(),
-                                    StringUtils.capitalize(logRecord.getParameters()[0].toString()), //capitalise the action
+                                    StringUtils.capitalize(logRecord.getParameters()[0].toString()),
                                     StringUtils.capitalize(logRecord.getMessage())));
+                } else if (loggedInUser instanceof Clinician) { //Add a clinician record if a clinician is logged in
+                    String nhiParam = null;
+                    //If there are more than 1 parameter, in which case the target nhi is provided as the second parameter
+                    if (logRecord.getParameters().length >= 2) {
+                        nhiParam = logRecord.getParameters()[1].toString().toUpperCase();
+                    }
+                    ((Clinician) loggedInUser).addClinicianActionRecord(
+                            new ClinicianActionRecord(currentTimeStamp,
+                                    logRecord.getLevel(),
+                                    StringUtils.capitalize(logRecord.getParameters()[0].toString()),
+                                    StringUtils.capitalize(logRecord.getMessage()),
+                                    nhiParam));
                 }
-
             }
 
             @Override
