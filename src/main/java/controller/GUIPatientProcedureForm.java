@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import model.Patient;
 import model.Procedure;
 import utility.GlobalEnums.Organ;
@@ -128,8 +127,13 @@ public class GUIPatientProcedureForm implements IPopupable {
      */
     private void addProcedure() {
         Set <Organ> affectedDonations = getAffectedOrgansFromForm();
-
+        //dateInput.setStyle( null );
+        summaryInput.setStyle( null );
+        //descriptionInput.setText( null );
         if (validateInputs(summaryInput.getText(), descriptionInput.getText(), dateInput.getValue())){
+            if ( affectedDonations.size() == 0 ) {
+                affectedDonations = null;
+            }
             Procedure procedure = new Procedure( summaryInput.getText(), descriptionInput.getText(),
                     dateInput.getValue(), affectedDonations );
             patient.addProcedure( procedure );
@@ -145,15 +149,29 @@ public class GUIPatientProcedureForm implements IPopupable {
 
     /**
      * Validates the input fields summary, description, date and organs on creation of a procedure
+     * If any field is invalid, the field will be highlighted red ro display that there is an error
      * @param summary The procedure summary string
      * @param description The procedure description string
      * @param date The date of the procedure
      * @return True if date is not before patient DOB, one or more organs, or summary/description are more than 1 chars
      */
     private Boolean validateInputs(String summary, String description, LocalDate date) {
-        return date != null && !date.isBefore( patient.getBirth() ) && summary.length() >= 1 && ((description.length()
-                >= 1 && Pattern.matches("[A-Za-z0-9- ]+", description) || description.length() == 0)) &&
-                Pattern.matches("[A-Za-z0-9- ]+", summary) && !summary.substring(0,1).equals(" ");
+        Boolean isValid = true;
+        if ( date == null || date.isBefore( patient.getBirth() )) {
+            isValid = false;
+            //dateInput.setStyle( "-fx-background-color: #e6b3b3" );
+        }
+        if ( summary.length() < 1 || !Pattern.matches("[A-Za-z0-9- ]+", summary) ||
+                summary.substring(0,1).equals(" ") ) {
+            isValid = false;
+            summaryInput.setStyle( "-fx-background-color: #e6b3b3" );
+        }
+        if ( description.length() > 1 && ( !Pattern.matches("[A-Za-z0-9- ]+", description) ||
+                description.substring( 0,1 ).equals(" ") )) {
+            isValid = false;
+            //descriptionInput.setStyle( "-fx-background-color: #e6b3b3" );
+        }
+        return isValid;
     }
 
     /**

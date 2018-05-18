@@ -1,4 +1,4 @@
-# GUI Names and Genders Revisited Manual Test
+# GUI Procedure Application Form Manual Test
 
 ## Precondition - navigate to the Add Procedure screen
 
@@ -21,9 +21,9 @@
 4. An error alert is displayed stating "Field input(s) are invalid!"
 5. Select the error alert 'OK' button
 6. The 'Add Procedure' screen will be shown
-7. Select the 'done' button
-8. The 'Procedures' screen will be shown
-9. There is no null procedure displayed in either pending or previous procedures tables
+7. The summary textField will be highlighted red
+8. Select the 'Cancel' button
+9. The 'Procedures' screen will be shown
 
 ### A procedure application with a null summary will be invalid
 
@@ -34,9 +34,10 @@
 5. An error alert is displayed stating "Field input(s) are invalid!"
 6. Select the error alert 'OK' button
 7. The 'Add Procedure' screen will be shown
-8. Select the 'done' button
-9. The 'Procedures' screen will be shown
-10. There is no null procedure displayed in either pending or previous procedures tables
+8. The summary textField will be highlighted red
+9. Select the 'Cancel' button
+10. The 'Procedures' screen will be shown
+11. There is no null procedure displaying in either pending or previous procedures tables
 
 ### A procedure application with a null date will be invalid
 
@@ -47,9 +48,9 @@
 5. An error alert is displayed stating "Field input(s) are invalid!"
 6. Select the error alert 'OK' button
 7. The 'Add Procedure' screen will be shown
-8. Select the 'done' button
+8. Select the 'Cancel' button
 9. The 'Procedures' screen will be shown
-10. There is no null procedure displayed in either pending or previous procedures tables
+10. There is no procedure with summary "Valid Summary" and null date displayed in either pending or previous procedures tables
 
 ### A procedure application with an empty summary will be invalid
 
@@ -61,9 +62,10 @@
 6. An error alert is displayed stating "Field input(s) are invalid!"
 7. Select the error alert 'OK' button
 8. The 'Add Procedure' screen will be shown
-9. Select the 'done' button
-10. The 'Procedures' screen will be shown
-11. There is no null procedure displayed in either pending or previous procedures tables
+9. The summary textField will be highlighted red
+10. Select the 'Cancel' button
+11. The 'Procedures' screen will be shown
+12. There is no procedure with summary " " with current date displayed in either pending or previous procedures tables
 
 ### A procedure application with a summary containing special character(s) will be invalid
 
@@ -75,9 +77,10 @@
 6. An error alert is displayed stating "Field input(s) are invalid!"
 7. Select the error alert 'OK' button
 8. The 'Add Procedure' screen will be shown
-9. Select the 'done' button
-10. The 'Procedures' screen will be shown
-11. There is no null procedure displayed in either pending or previous procedures tables
+9. The summary textField will be highlighted red
+10. Select the 'Cancel' button
+11. The 'Procedures' screen will be shown
+12. There is no procedure with summary "$ummary" and current date displayed in either pending or previous procedures tables
 
 ### A procedure application with a description containing special character(s) will be invalid
 
@@ -90,9 +93,9 @@
 7. An error alert is displayed stating "Field input(s) are invalid!"
 8. Select the error alert 'OK' button
 9. The 'Add Procedure' screen will be shown
-10. Select the 'done' button
+10. Select the 'Cancel' button
 11. The 'Procedures' screen will be shown
-12. There is no null procedure displayed in either pending or previous procedures tables
+12. There is no procedure with summary "Valid Summary" and description "Inv@lid description" and current date displayed in either pending or previous procedures tables
 
 ### A procedure application with a date that is before the patients date of birth is invalid
 
@@ -104,9 +107,9 @@
 6. An error alert is displayed stating "Field input(s) are invalid!"
 7. Select the error alert 'OK' button
 8. The 'Add Procedure' screen will be shown
-9. Select the 'done' button
+9. Select the 'Cancel' button
 10. The 'Procedures' screen will be shown
-11. There is no null procedure displayed in either pending or previous procedures tables
+11. There is no procedure with summary "Valid summary" and any date displayed in either pending or previous procedures tables
 
 ### A procedure application with a date that is after the current date is valid
 
