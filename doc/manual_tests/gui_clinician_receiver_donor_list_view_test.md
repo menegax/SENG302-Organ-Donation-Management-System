@@ -8,14 +8,14 @@
 
 ### Ensure that organs are listed on the receiving listview
 1. Navigate to the patient profile by using the steps described in `Navigate to clinician view of a patient` manual test
-2. Add organs to the patients required organ list by clicking on `Manage requirements`
+2. Add organs to the patients required organ list by clicking on `Manage Requested`
 3. Verify that the required organs scene is now displayed
 4. Click on a few organs to add organs to the required organs list of the patient (make sure a few organs checkboxes are selected)
 5. Click on the save button
 6. Verify that the receiving list is filled with the organs you selected
 
 ### Ensure that organs are listed on the donating listview
-1. Use the same steps as provided in `Ensure that organs are listed on the receiving listview`, however use the `Manage Donatons` button instead of `Manage Requirements` button as described in step 2. Also ensure that you select different organs as in the receiving list
+1. Use the same steps as provided in `Ensure that organs are listed on the donating listview`, however use the `Manage Donatons` button instead of `Manage Requested` button as described in step 2. Also ensure that you select different organs as in the receiving list
 2. Verify that the donations list is filled with the organs you selected
 
 ### Ensure that organs highlighted if patient is donating and receiving the same organ
