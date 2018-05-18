@@ -11,6 +11,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Separator;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
@@ -38,14 +40,14 @@ public class GUIHome {
         // and then create the tabs based off that
 
         try {
-            // create profile tab and add fxml into
+            // create profile tab and add fxml into todo extract adding tabs to a method
             Tab profileViewTab = new Tab();
 
             profileViewTab.setOnSelectionChanged(event -> {
                 try {
                     profileViewTab.setContent(FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
                 } catch (IOException e) {
-                    e.printStackTrace(); //todo: remove
+                    e.printStackTrace(); //todo: change to log system log
                 }
             });
             profileViewTab.setText("Profile");
@@ -73,7 +75,7 @@ public class GUIHome {
             horizontalTabPane.getTabs().add(historyViewTab);
 
             horizontalTabPane.sceneProperty().addListener((observable, oldValue, newValue) -> {
-                System.out.println("HORZ TAB PANE LOADED" + newValue.getWindow()); //todo rm
+                System.out.println("HORZ TAB PANE LOADED: " + newValue.getWindow()); //todo rm
                 setUpMenuBar((Stage) newValue.getWindow()); //todo Aidan figure out why newValue has a scene but .getWindow returns Null
             });
 
@@ -116,6 +118,7 @@ public class GUIHome {
             Database.saveToDisk();
             userActions.log(INFO, "Successfully saved to disk", "Attempted to save to disk");
         });
+        SeparatorMenuItem separateImport = new SeparatorMenuItem(); //todo add separator for import items
         Menu subMenuImport = new Menu("Import"); // import submenu
         MenuItem menu2Item2 = new MenuItem("Import patients...");
         menu2Item2.setAccelerator(screenControl.getImportt());
@@ -137,7 +140,7 @@ public class GUIHome {
             }
         });
         subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
-        menu2.getItems().addAll(menu2Item1, subMenuImport);
+        menu2.getItems().addAll(menu2Item1, separateImport, subMenuImport);
 
         Menu menu3 = new Menu("Edit");
         MenuItem menu3Item1 = new MenuItem("Undo");
