@@ -1,34 +1,38 @@
 /*Global attributes in root*/
 .root {
-    -fx-font-family: "  Neue";
-
-    /*colors from color scheme generator*/
-    color1: #A4ABB9;
+    /* Global Colors */
+    color1: #163a67; /* for text */
     color2: #F0EFEC;
     color3: #A3C0DD;
-    color4: #A2C9E0;
+    color4: rgba(223, 245, 255, 0.35);
     color5: #A2B5C2;
-
     black: #020812;
     white: #f5f5f5; /* smoke white */
-
     invalid: #e6b3b3;
 
-    //Todo set
-    hyperlink: #0;
     /*hyperlink-clicked: ;*/
-    /*back-button: ;*/
-    back-button-pressed: #235587;
-    button-highlight: #0;
-    background: #0;
 
-    -fx-base: color3;
-    -fx-background: white;
+    button-highlight: #0;
+    -fx-base: color2;
+
+    -fx-background: color4;
+    -fx-border-color: black;
+    -fx-font-family: "  Neue";
+    /*-fx-font: ;*/
+    /*-fx-font-size: ;*/
+    /*-fx-font-style: ;*/
+    /*-fx-font-weight: ;*/
 }
 
 .title {
+    -fx-text-fill: color1;
     -fx-font-weight: bold;
     -fx-font-size: 28px;
+}
+
+.back {
+    /*-fx-text-fill: color4;*/
+    -fx-font-size: 14px;
 }
 
 .back:hover {
@@ -37,15 +41,7 @@
 }
 
 .back:pressed {
-    -fx-text-fill: back-button-pressed;
-}
-
-.back {
-    -fx-font-size: 14px;
-}
-
-.tile {
-    /*for custom title styles in the home scene*/
+    -fx-text-fill: #235587;
 }
 
 .listViewTitles {
