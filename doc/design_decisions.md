@@ -120,3 +120,8 @@ This meant that an action could not be undone after another action was performed
 This allows the user to more easily keep track of what changes they have made and what states they can switch between.  
 In addition we decided to bind redo to Ctrl + Y. This is because Ctrl + Y is the industry standard undo for non-technical applications (such as word).  
 This is how we aim to target our application, as we do not see most of our users having software development or similar backgrounds.
+
+#### Keyboard Shortcuts
+MenuBar has the ability to set and bind keyboard shortcuts to a stage. Therefore we will use MenuBars to set the keyboard shortcuts. 
+This means there should not be other action listeners for global or stage-level shortcuts. If it has a keyboard shortcut, it belongs as an item in the menubar.
+ 
