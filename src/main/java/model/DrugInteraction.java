@@ -23,11 +23,13 @@ public class DrugInteraction {
      * Makes a call to the API and records the response
      * @param drugOne - drug to compare with for interactions
      * @param drugTwo - drug to compare with for interactions
+     * @param patient - patient taking drugs
      * @throws IOException - bad gateway error thrown
      */
-    public DrugInteraction (String drugOne, String drugTwo) throws IOException {
+    public DrugInteraction (String drugOne, String drugTwo, Patient patient) throws IOException {
         APIHelper apiHelper = new APIHelper();
         response = apiHelper.getDrugInteractions(drugOne, drugTwo);
+        viewedPatient = patient;
     }
 
 

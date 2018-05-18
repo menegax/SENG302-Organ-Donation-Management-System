@@ -14,6 +14,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>de.codecentric.centerdevice</groupId>
+            <artifactId>centerdevice-nsmenufx</artifactId>
+            <version>2.1.6</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
             <version>4.4.5</version>
@@ -92,6 +97,16 @@
             <version>8u76-b04</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+    		<groupId>org.apache.lucene</groupId>
+    		<artifactId>lucene-queryparser</artifactId>
+    		<version>7.3.0</version>
+		</dependency>
+		<dependency>
+ 		   <groupId>org.apache.lucene</groupId>
+ 		   <artifactId>lucene-core</artifactId>
+ 		   <version>7.3.0</version>
+		</dependency>
     </dependencies>
 
     <build>

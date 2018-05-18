@@ -7,7 +7,6 @@ import utility.GlobalEnums;
 import utility.SearchPatients;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,12 +24,10 @@ public class Database {
     }
     
     private static Set<Patient> patients = new HashSet<>();
+
     private static Set<Clinician> clinicians = new HashSet<>();
 
-    public static Set<Patient> getPatients() {
-        return patients;
-    }
-    public static Set<Clinician> getClinicians() { return clinicians; }
+
 
 
     /**
@@ -38,17 +35,20 @@ public class Database {
      *
      * @param newPatient the new patient to add
      */
-    public static void addPatient(Patient newPatient) {
+    public static void addPatient(Patient newPatient) throws IllegalArgumentException {
         try {
             newPatient.ensureValidNhi();
             newPatient.ensureUniqueNhi();
             patients.add(newPatient);
             SearchPatients.addIndex(newPatient);
-            userActions.log(Level.INFO,"Successfully added patient " + newPatient.getNhiNumber(), "attempted to add a patient");
-        } catch (IllegalArgumentException o) {
+            userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
+        }
+        catch (IllegalArgumentException o) {
+            userActions.log(Level.WARNING, "Failed to add patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
             throw new IllegalArgumentException(o.getMessage());
         }
     }
+
 
     /**
      * Removes a patient from the database
@@ -80,12 +80,47 @@ public class Database {
         throw new InvalidObjectException("Patient with NHI number " + nhi + " does not exist.");
     }
 
+
+    /**
+     * Checks if a patient with the given nhi exists in the database
+     *
+     * @param nhi the nhi of the patient to search
+     * @return true if exists else false
+     */
+    public static boolean isPatientInDb(String nhi) {
+        for (Patient d : getPatients()) {
+            if (d.getNhiNumber()
+                    .equals(nhi.toUpperCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Checks if a clinician with the given staffID exists in the database
+     *
+     * @param staffID the staffID of the clinician to search for
+     * @return true if exists else false
+     */
+    public static boolean isClinicianInDb(int staffID) {
+        for (Clinician c : getClinicians()) {
+            if (c.getStaffID() == staffID) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     /**
      * Searches clinicians by staffID
      *
      * @param staffID the staff ID to search clinicians by
      * @return Clinician object
-     * @throws InvalidObjectException when the object cannot be found
+     *
+     * @exception InvalidObjectException when the object cannot be found
      */
     public static Clinician getClinicianByID(int staffID) throws InvalidObjectException {
         for (Clinician c : getClinicians()) {
@@ -96,32 +131,39 @@ public class Database {
         throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
     }
 
+
     /**
      * Adds a clinician to the database
      *
      * @param newClinician the new clinician to add
      */
     public static void addClinician(Clinician newClinician) throws IllegalArgumentException {
-        try {
-            if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getFirstName()))
-                throw new IllegalArgumentException("firstname");
-            if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getLastName()))
-                throw new IllegalArgumentException("lastname");
+        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getFirstName())) {
+            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: first name", "Attempted to add a clinician");
+            throw new IllegalArgumentException("firstname");
+        }
 
-            if (newClinician.getStreet1() != null && !Pattern.matches("^[- a-zA-Z0-9]+$", newClinician.getStreet1()))
-                throw new IllegalArgumentException("street1");
+        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getLastName())) {
+            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: last name", "Attempted to add a clinician");
+            throw new IllegalArgumentException("lastname");
+        }
 
-            if (newClinician.getStaffID() == Database.getNextStaffID()) {
-                clinicians.add(newClinician);
-                userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "attempted to add a clinician");
-            } else {
-                throw new IllegalArgumentException("staffID");
-            }
-        } catch (IllegalArgumentException e) {
-            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: " + e.getMessage(), "attempted to add a clinician");
-            throw new IllegalArgumentException(e.getMessage());
+        if (newClinician.getStreet1() != null && !Pattern.matches("^[- a-zA-Z0-9]+$", newClinician.getStreet1())) {
+            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: street1", "Attempted to add a clinician");
+            throw new IllegalArgumentException("street1");
+        }
+
+        if (newClinician.getStaffID() == Database.getNextStaffID()) {
+            clinicians.add(newClinician);
+            userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
+        }
+
+        else {
+            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field staffID", "Attempted to add a clinician");
+            throw new IllegalArgumentException("staffID");
         }
     }
+
 
     /**
      * Returns the next valid staffID based on IDs in the clinician list
@@ -131,11 +173,16 @@ public class Database {
     public static int getNextStaffID() {
         if (clinicians.size() == 0) {
             return 0;
-        } else {
-            int currentID = clinicians.stream().max(Comparator.comparing(Clinician::getStaffID)).get().getStaffID();
+        }
+        else {
+            int currentID = clinicians.stream()
+                    .max(Comparator.comparing(Clinician::getStaffID))
+                    .get()
+                    .getStaffID();
             return currentID + 1;
         }
     }
+
 
     /**
      * Calls all sub-methods to save data to disk
@@ -145,8 +192,7 @@ public class Database {
             saveToDiskPatients();
             saveToDiskWaitlist();
             saveToDiskClinicians();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
     }
@@ -176,10 +222,11 @@ public class Database {
         writer.close();
     }
 
+
     /**
      * Writes database clinicians to file on disk
      *
-     * @throws IOException when the file cannot be found nor created
+     * @exception IOException when the file cannot be found nor created
      */
     private static void saveToDiskClinicians() throws IOException {
         Gson gson = new Gson();
@@ -193,71 +240,79 @@ public class Database {
 
 
     /**
-     * Calls importFromDisk and handles any errors
-     * @param directory The directory to import from
+     * Reads patient data from disk
+     * @param fileName file to import from
      */
-    public static void importFromDisk(String directory) {
+    public static void importFromDiskPatients(String fileName) {
+        Gson gson = new Gson();
+        BufferedReader br;
         try {
-            importFromDiskPatients(directory);
-            userActions.log(Level.INFO, "Imported patients from disk", "Attempted to import from disk");
-            SearchPatients.createFullIndex();
-            importFromDiskWaitlist(directory);
-            userActions.log(Level.INFO, "Imported waitlist from disk", "Attempted to import waitlist from disk");
+            br = new BufferedReader(new FileReader(fileName));
+            Patient[] patient = gson.fromJson(br, Patient[].class);
+            for (Patient d : patient) {
+                try {
+                    Database.addPatient(d);
+                }
+                catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Error importing donor from file", "Attempted to import donor from file");
+                }
+            }
         }
-        catch (IOException e) {
-            userActions.log(Level.WARNING, e.getMessage(), "attempted to import from disk");
+        catch (FileNotFoundException e) {
+            userActions.log(Level.WARNING, "Patient import file not found", "Attempted to read patient file");
         }
     }
 
-    private static void importFromDiskWaitlist(String directory) throws FileNotFoundException {
+    public static void importFromDiskWaitlist(String directory) throws FileNotFoundException {
     	String fileName = directory + "waitlist.json";
         Gson gson = new Gson();
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         organWaitingList = gson.fromJson(br, OrganWaitlist.class);
-//        Patient[] patients = gson.fromJson(br, Patient[].class);
-//        for (Patient p : patients) {
-//            Database.addPatients(p);
-//        }
-    }
-    
-    /**
-     * Reads patient data from disk
-     *
-     * @exception IOException when the file cannot be found
-     */
-    private static void importFromDiskPatients(String fileName) throws IOException {
-        Gson gson = new Gson();
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        Patient[] patient = gson.fromJson(br, Patient[].class);
-        for (Patient d : patient) {
-            Database.addPatient(d);
-        }
     }
 
 
     /**
      * Reads clinician data from disk
-     *
-     * @throws IOException when the file cannot be found
+     * @param fileName file to import from
      */
-    public static void importFromDiskClinicians(String fileName) throws IOException {
+    public static void importFromDiskClinicians(String fileName) {
         Gson gson = new Gson();
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        Clinician[] clinician = gson.fromJson(br, Clinician[].class);
-        for (Clinician c : clinician) {
-            try {
-                Database.addClinician(c);
-            } catch (IllegalArgumentException e) {
-                userActions.log(Level.WARNING, "Error importing clinician from file");
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(fileName));
+            Clinician[] clinician = gson.fromJson(br, Clinician[].class);
+            for (Clinician c : clinician) {
+                try {
+                    Database.addClinician(c);
+                }
+                catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
+                }
             }
         }
+        catch (FileNotFoundException e) {
+            userActions.log(Level.WARNING, "Clinician import file not found", "Attempted to read clinician file");
+        }
+
     }
 
+
     /**
-     *
+     * Clears the database of all patients
      */
     public static void resetDatabase() {
         patients = new HashSet<>();
+        clinicians = new HashSet<>();
     }
 
+
+
+    public static Set<Patient> getPatients() {
+        return patients;
+    }
+
+
+    public static Set<Clinician> getClinicians() {
+        return clinicians;
+    }
 }

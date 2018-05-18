@@ -89,8 +89,11 @@ public class GUIClinicianUpdateProfile {
 
         // Registering a change event to clear the invalid class
         regionDD.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> setValid(regionDD));
-
-        loadProfile(ScreenControl.getLoggedInClinician().getStaffID());
+        UserControl userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
+        if (user instanceof Clinician){
+            loadProfile(((Clinician) user).getStaffID());
+        }
         setUpStateHistory();
     }
 

@@ -39,11 +39,13 @@ public class GUIClinicianWaitingList {
     private ObservableList<OrganWaitlist.OrganRequest> openProfiles = FXCollections.observableArrayList();
     private ObservableList<OrganWaitlist.OrganRequest> masterData = FXCollections.observableArrayList();
 
+    private UserControl userControl;
+
     /**
      * Initializes waiting list screen by populating table and initializing a double click action
      * to view a patient's profile.
      */
-    public void initialize() throws InvalidObjectException {
+    public void initialize() {
     	OrganWaitlist waitingList = Database.getWaitingList();
         for (OrganWaitlist.OrganRequest request: waitingList) {
     		masterData.add(request);
@@ -72,12 +74,12 @@ public class GUIClinicianWaitingList {
                     .getSelectedItem() != null && !openProfiles.contains(waitingListTableView.getSelectionModel()
                     .getSelectedItem())) {
                 try {
+                    userControl = new UserControl();
+                    OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
+                    DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
+                    userControl.setTargetPatient(Database.getPatientByNhi(request.getReceiverNhi()));
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
-                    GUIPatientProfile controller = fxmlLoader.getController();
-                    OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
-                    controller.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
-                    DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
                     Stage popUpStage = new Stage();
                     popUpStage.setX(ScreenControl.getMain()
                             .getX()); //offset popup
@@ -92,6 +94,7 @@ public class GUIClinicianWaitingList {
                     ScreenControl.displayPopUp("searchPopup"); //display the popup
                 }
                 catch (Exception e) {
+                    e.printStackTrace();
                     userActions.log(Level.SEVERE,
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");
