@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientUpdateProfile implements IPopupable{
+public class GUIPatientUpdateProfile {
 
     @FXML
     private AnchorPane patientUpdateAnchorPane;
@@ -96,20 +96,19 @@ public class GUIPatientUpdateProfile implements IPopupable{
 
     private StatesHistoryScreen statesHistoryScreen;
 
-    public void setViewedPatient(Patient patient) {
-        target = patient;
-        loadProfile(target.getNhiNumber());
-    }
+    private UserControl userControl;
+
 
     public void initialize() {
-
         populateDropdowns();
-
-        if (ScreenControl.getLoggedInPatient() != null) {
-            loadProfile(ScreenControl.getLoggedInPatient()
-                    .getNhiNumber());
+        userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
+        if (user instanceof Patient) {
+            loadProfile(((Patient) user).getNhiNumber());
         }
-
+        if (userControl.getTargetPatient() != null) {
+            loadProfile((userControl.getTargetPatient()).getNhiNumber());
+        }
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -282,20 +281,36 @@ public class GUIPatientUpdateProfile implements IPopupable{
     public void saveProfile() {
         Boolean valid = true;
 
+        Alert invalidInfo = new Alert(Alert.AlertType.WARNING);
+        StringBuilder invalidContent = new StringBuilder("Please fix the following errors:\n");
+
         // nhi
-        if (!Pattern.matches("[A-Z]{3}[0-9]{4}",
+        if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}",
                 nhiTxt.getText()
                         .toUpperCase())) {
             valid = setInvalid(nhiTxt);
+            invalidContent.append("NHI must be three letters followed by four numbers\n");
         }
-        else {
-            setValid(nhiTxt);
+
+        try {
+            // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
+            if (Database.getPatientByNhi(nhiTxt.getText()).getUuid() != target.getUuid()) {
+                valid = setInvalid(nhiTxt);
+                invalidContent.append("NHI is already in use\n");
+            }
+            else {
+                setValid(nhiTxt);
+            }
+        }
+        catch (InvalidObjectException e) {
+            setInvalid(nhiTxt);
         }
 
         // first name
         if (!firstnameTxt.getText()
                 .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
             valid = setInvalid(firstnameTxt);
+            invalidContent.append("First name must be letters, ., or -.\n");
         }
         else {
             setValid(firstnameTxt);
@@ -305,6 +320,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
         if (!lastnameTxt.getText()
                 .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
             valid = setInvalid(lastnameTxt);
+            invalidContent.append("Last name must be letters, ., or -.\n");
         }
         else {
             setValid(lastnameTxt);
@@ -314,6 +330,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
         if (!middlenameTxt.getText()
                 .matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
             valid = setInvalid(middlenameTxt);
+            invalidContent.append("Middle name(s) must be letters, ., or -.\n");
         }
         else {
             setValid(middlenameTxt);
@@ -334,6 +351,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
                     .getSelectedItem());
             if (region == null) {
                 valid = setInvalid(regionDD);
+                invalidContent.append("Region must be a valid selection from the dropdown\n");
             }
             else {
                 setValid(regionDD);
@@ -352,6 +370,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
                         .length() != 4 && !(zipTxt.getText()
                         .equals(""))) {
                     valid = setInvalid(zipTxt);
+                    invalidContent.append("Zip must be four digits\n");
                 }
                 else {
                     Integer.parseInt(zipTxt.getText());
@@ -360,6 +379,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
             }
             catch (NumberFormatException e) {
                 valid = setInvalid(zipTxt);
+                invalidContent.append("Zip must be four digits\n");
             }
         }
         else {
@@ -370,6 +390,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
         if (weightTxt.getText() != null) {
             if (isInvalidDouble(weightTxt.getText())) {
                 valid = setInvalid(weightTxt);
+                invalidContent.append("Weight must be a valid decimal number\n");
             }
             else {
                 setValid(weightTxt);
@@ -383,6 +404,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
         if (heightTxt.getText() != null) {
             if (isInvalidDouble(heightTxt.getText())) {
                 valid = setInvalid(heightTxt);
+                invalidContent.append("Height must be a valid decimal number\n");
             }
             else {
                 setValid(heightTxt);
@@ -399,6 +421,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
             Enum bloodgroup = BloodGroup.getEnumFromString(bgStr);
             if (bloodgroup == null) {
                 valid = setInvalid(bloodGroupDD);
+                invalidContent.append("Blood group must be a valid selection\n");
             }
             else {
                 setValid(bloodGroupDD);
@@ -413,6 +436,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
             if (dobDate.getValue()
                     .isAfter(LocalDate.now())) {
                 valid = setInvalid(dobDate);
+                invalidContent.append("Date of birth must be a valid date either today or earlier and must be before date of death\n");
             }
             else {
                 setValid(dobDate);
@@ -428,6 +452,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
                     .isBefore(dobDate.getValue())) || dateOfDeath.getValue()
                     .isAfter(LocalDate.now())) {
                 valid = setInvalid(dateOfDeath);
+                invalidContent.append("Date of death must be a valid date either today or earlier and must be after date of birth\n");
             }
             else {
                 setValid(dateOfDeath);
@@ -509,8 +534,10 @@ public class GUIPatientUpdateProfile implements IPopupable{
             goBackToProfile();
         }
         else {
-            userActions.log(Level.WARNING, "Failed to update patient profile", "Attempted to update patient profile");
-            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
+            userActions.log(Level.WARNING, "Failed to update patient profile due to invalid fields", "Attempted to update patient profile");
+            invalidContent.append("\nYour changes have not been saved.");
+            invalidInfo.setContentText(invalidContent.toString());
+            invalidInfo.show();
         }
     }
 
@@ -542,7 +569,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
      * Returns to patient profile screen
      */
     public void goBackToProfile() {
-        if (ScreenControl.getLoggedInPatient() != null) {
+        if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientProfile");
             try {
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
@@ -556,7 +583,7 @@ public class GUIPatientUpdateProfile implements IPopupable{
         else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientUpdateAnchorPane.getScene(), fxmlLoader, target);
+                ScreenControl.loadPopUpPane(patientUpdateAnchorPane.getScene(), fxmlLoader);
             }
             catch (IOException e) {
                 userActions.log(Level.SEVERE,

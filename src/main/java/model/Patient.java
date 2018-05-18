@@ -7,19 +7,20 @@ import utility.GlobalEnums.*;
 import utility.SearchPatients;
 import utility.UserActionRecord;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class Patient {
-
-    private UUID uuid = UUID.randomUUID();
+public class Patient extends User {
 
     private final Timestamp CREATED;
 
@@ -85,7 +86,11 @@ public class Patient {
 
     private String contactEmailAddress;
 
-    private ArrayList<String> patientLog;
+    private ArrayList<UserActionRecord> userActionsList;
+
+    private ArrayList<Disease> currentDiseases = new ArrayList<>();
+
+    private ArrayList<Disease> pastDiseases = new ArrayList<>();
 
     public Patient(String nhiNumber, String firstName,
                    ArrayList<String> middleNames, String lastName, LocalDate date) {
@@ -98,7 +103,9 @@ public class Patient {
         this.birth = date;
         this.nhiNumber = nhiNumber.toUpperCase();
         this.donations = new ArrayList<>();
+        this.userActionsList = new ArrayList<>();
     }
+
 
     /**
      * Sets the attributes of the patient
@@ -302,10 +309,15 @@ public class Patient {
 
     public void setFirstName(String firstName) {
         if (this.firstName == null || (!firstName.equals(this.firstName))) {
+        	SearchPatients.removeIndex(this);
             this.firstName = firstName;
+<<<<<<< HEAD
             if (getPreferredName() == null) {
                 setPreferredName( firstName );
             }
+=======
+            SearchPatients.addIndex(this);
+>>>>>>> development
             patientModified();
         }
     }
@@ -316,7 +328,9 @@ public class Patient {
 
     public void setMiddleNames(ArrayList<String> middleNames) {
         if (this.middleNames == null || (!middleNames.equals(this.middleNames))) {
+        	SearchPatients.removeIndex(this);
             this.middleNames = middleNames;
+            SearchPatients.addIndex(this);
             patientModified();
         }
     }
@@ -327,7 +341,9 @@ public class Patient {
 
     public void setLastName(String lastName) {
         if (this.lastName == null || (!lastName.equals(this.lastName))) {
+        	SearchPatients.removeIndex(this);
             this.lastName = lastName;
+            SearchPatients.addIndex(this);
             patientModified();
         }
     }
@@ -500,6 +516,7 @@ public class Patient {
         return zip;
     }
 
+
     /**
      * Gets the current medication list for a Patient
      * @return ArrayList medications the Patient currently uses
@@ -587,10 +604,13 @@ public class Patient {
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
         ensureValidNhi();
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
-            this.nhiNumber = nhiNumber.toUpperCase();
-            patientModified();
+            SearchPatients.removeIndex(this);
+        	this.nhiNumber = nhiNumber.toUpperCase();
+            SearchPatients.addIndex(this);
+        	patientModified();
         }
     }
+
 
     public String getHomePhone() {
         return homePhone;
@@ -672,44 +692,93 @@ public class Patient {
         this.contactEmailAddress = contactEmailAddress;
     }
 
-    /**
-     * Returns a converted medication log ArrayList to a UserActionRecord OberservableList
-     * @return The medication log as a UserActionRecord ObservableList
-     */
-    public ObservableList<UserActionRecord> getPatientLog() {
-        ObservableList<UserActionRecord> currentLog = FXCollections.observableArrayList();
-        String time = null, level = null, message = null, action;
+<<<<<<< HEAD
+=======
 
-        if (this.patientLog != null) {
-            for (int i = 0; i < patientLog.size(); i++) {
-                time = patientLog.get(i++);
-                level = patientLog.get(i++);
-                message = patientLog.get(i++);
-                action = patientLog.get(i);
-                currentLog.add(0, new UserActionRecord( time, level, message, action ) );
-            }
-        } else {
-            return null;
-        }
-        return currentLog;
+//    /**
+//     * Returns a converted medication log ArrayList to a UserActionRecord OberservableList
+//     * @return The medication log as a UserActionRecord ObservableList
+//     */
+//    public ObservableList<UserActionRecord> getPatientLog() {
+//        ObservableList<UserActionRecord> currentLog = FXCollections.observableArrayList();
+//        String time = null, level = null, message = null, action;
+//
+//        if (this.patientLog != null) {
+//            for (int i = 0; i < patientLog.size(); i++) {
+//                time = patientLog.get(i++);
+//                level = patientLog.get(i++);
+//                message = patientLog.get(i++);
+//                action = patientLog.get(i);
+//                currentLog.add(0, new UserActionRecord(time, level, message, action, this.getUuid()) );
+//            }
+//        } else {
+//            return null;
+//        }
+//        return currentLog;
+//    }
+
+
+>>>>>>> development
+    /**
+     * Gets the list of user action history logs
+     * DO NOT USE UNLESS LOGGER
+     * @return the list of user records
+     */
+    public ArrayList<UserActionRecord> getUserActionsList() {
+        return userActionsList; //this is modifiable on purpose!
+    }
+
+
+//    /**
+//     * Sets the medicationLog as a HashMap converted from a UserActionRecord ObservableList
+//     * @param log The UserActionRecord ObservableList
+//     */
+//    public void setMedicationLog(ObservableList<UserActionRecord> log) {
+//        ArrayList<String> newLog = new ArrayList<>();
+//
+//        for (UserActionRecord record : log) {
+//            newLog.add(record.getTimestamp().toString());
+//            newLog.add(record.getLevel().toString());
+//            newLog.add(record.getMessage());
+//            newLog.add(record.getAction());
+//        }
+//        this.patientLog = newLog;
+//    }
+
+
+    /**
+     * Gets the current diseases infecting a donor
+     * @return ArrayList current diseases
+     */
+    public ArrayList<Disease> getCurrentDiseases() {
+        return this.currentDiseases;
     }
 
     /**
-     * Sets the medicationLog as a HashMap converted from a UserActionRecord ObservableList
-     * @param log The UserActionRecord ObservableList
+     * Sets the donor's current diseases to the given list
+     * @param currentDiseases list of diseases currently infecting a donor
      */
-    public void setMedicationLog(ObservableList<UserActionRecord> log) {
-        ArrayList<String> newLog = new ArrayList<>();
+    public void setCurrentDiseases(ArrayList<Disease> currentDiseases) { this.currentDiseases = currentDiseases; }
 
-        for (UserActionRecord record : log) {
-            newLog.add(record.getTimestamp());
-            newLog.add(record.getLevel());
-            newLog.add(record.getMessage());
-            newLog.add(record.getAction());
-        }
-        this.patientLog = newLog;
+    /**
+     * Gets the diseases the donor used to be infected with
+     * @return ArrayList past diseases
+     */
+    public ArrayList<Disease> getPastDiseases() {
+        return this.pastDiseases;
     }
 
+    /**
+     * Set the donor's past diseases to the given list
+     * @param pastDiseases list of diseases that used to infect a donor
+     */
+    public void setPastDiseases(ArrayList<Disease> pastDiseases) { this.pastDiseases = pastDiseases; }
+
+
+    /**
+     *
+     * Updates the modified timestamp of the patient
+     */
     private void patientModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
