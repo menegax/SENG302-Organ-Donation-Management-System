@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
@@ -27,7 +28,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIPatientUpdateProfile {
 
     @FXML
-    private AnchorPane patientUpdateAnchorPane;
+    private GridPane patientUpdateAnchorPane;
 
     @FXML
     private Label lastModifiedLbl;
@@ -505,7 +506,7 @@ public class GUIPatientUpdateProfile {
             }
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
             Database.saveToDisk();
-            goBackToProfile();
+//            goBackToProfile();
         }
         else {
             userActions.log(Level.WARNING, "Failed to update patient profile due to invalid fields", "Attempted to update patient profile");

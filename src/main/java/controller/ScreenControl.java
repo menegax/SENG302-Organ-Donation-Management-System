@@ -8,6 +8,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import service.Database;
 import utility.GlobalEnums.Stages;
 
 import java.io.IOException;
@@ -78,6 +79,7 @@ public class ScreenControl {
     void show(Stages stageName, Parent root) {
         Stage stage = applicationStages.get(stageName);
         stage.setScene(new Scene(root));
+      //  setUpMenuBar(stage); //TODO: breaks on my pc
         stage.show();
     }
 
