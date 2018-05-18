@@ -1,6 +1,6 @@
 package utility.undoRedo.stateHistoryWidgets;
 
-import controller.IUndoRedo;
+import utility.undoRedo.IUndoRedo;
 import javafx.scene.control.DatePicker;
 
 import java.time.LocalDate;
