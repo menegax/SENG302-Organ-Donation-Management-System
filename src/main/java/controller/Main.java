@@ -26,9 +26,12 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class Main extends Application {
+
+    private static final UUID uuid = UUID.randomUUID();
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -36,8 +39,9 @@ public class Main extends Application {
         // setup GUI
         ScreenControl.getScreenControl().addStage(GlobalEnums.Stages.PRIMARY, primaryStage); //add primary stage to screen control to construct properly
         ScreenControl screenControl = ScreenControl.getScreenControl();
+        screenControl.addStage(uuid, primaryStage);
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-        screenControl.show(GlobalEnums.Stages.PRIMARY, loginScreen);
+        screenControl.show(uuid, loginScreen);
 
 
         // add objects
@@ -110,4 +114,74 @@ public class Main extends Application {
     }
 
 
+    /**
+     * Sets up the menu bar depending on the OS
+     *
+     * @param primaryStage the stage to set the menu bar to
+     */
+    private void setUpMenuBar(Stage primaryStage) {
+        if (System.getProperty("os.name")
+                .startsWith("Mac")) {
+            setUpMacOsMenuBar(primaryStage);
+        }
+        // if windows, call here...
+    }
+
+
+    /**
+     * Creates a native-looking MacOS menu bar for the application
+     *
+     * @param primaryStage the root stage of the application on which to set the menu
+     */
+    private void setUpMacOsMenuBar(Stage primaryStage) {
+
+        String appName = "Big Pharma";
+        // Get the toolkit
+        MenuToolkit tk = MenuToolkit.toolkit();
+
+        // Create a new menu bar
+        MenuBar bar = new MenuBar();
+
+        // Add the default application menu
+        bar.getMenus()
+                .add(tk.createDefaultApplicationMenu(appName));
+
+        // Add some more Menus...
+        Menu menu1 = new Menu("App");
+        MenuItem menu1Item1 = new MenuItem("Log out");
+        menu1Item1.setOnAction(event -> System.out.println("Log out clicked"));
+        MenuItem menu1Item2 = tk.createQuitMenuItem(appName);
+        menu1.getItems()
+                .addAll(menu1Item1, menu1Item2);
+
+        Menu menu2 = new Menu("File");
+        MenuItem menu2Item1 = new MenuItem("Save");
+        menu2Item1.setOnAction(event -> System.out.println("Save clicked"));
+        MenuItem menu2Item2 = new MenuItem("Import...");
+        menu2Item2.setOnAction(event -> System.out.println("Import clicked"));
+        menu2.getItems()
+                .addAll(menu2Item1, menu2Item2);
+
+        Menu menu3 = new Menu("Edit");
+        MenuItem menu3Item1 = new MenuItem("Undo ⌃Z");
+        menu3Item1.setOnAction(event -> System.out.println("Undo clicked. Soon to be  ⌘⇧Y"));
+        MenuItem menu3Item2 = new MenuItem("Redo ⌃Y");
+        menu3Item2.setOnAction(event -> System.out.println("Redo clicked. Soon to be ⌘Z"));
+        menu3.getItems()
+                .addAll(menu3Item1, menu3Item2);
+
+        bar.getMenus()
+                .addAll(menu1, menu2, menu3);
+
+        // Use the menu bar for primary stage
+        tk.setMenuBar(primaryStage, bar);
+    }
+
+    /**
+     * Gets the uuid hash key used for the primary stage
+     * @return the uuid hash key used in the primary stage
+     */
+    public static UUID getUuid() {
+        return uuid;
+    }
 }

@@ -134,13 +134,15 @@ public class GlobalEnums {
         }
     }
 
-    public enum Stages {
-        HOME("Home"), PRIMARY("Primary");
+    public enum UndoableScreen {
+        CLINICIANSEARCHPATIENTS("clinicianSearchPatients"), CLINICIANPROFILEUPDATE("clinicianProfileUpdate"), PATIENTMEDICATIONS("patientMedications"),
+        PATIENTREGISTER("patientRegister"), PATIENTUPDATECONTACTS("patientUpdateContacts"), PATIENTUPDATEDONATIONS("patientUpdateDonations"),
+        PATIENTUPDATEPROFILE("patientUpdateProfile");
 
         private String value;
 
 
-        Stages(final String value) {
+        UndoableScreen(final String value) {
             this.value = value;
         }
 
@@ -158,7 +160,7 @@ public class GlobalEnums {
 
         public static Enum getEnumFromString(String value) {
             try {
-                return Stages.valueOf(value.toUpperCase().replaceAll("\\s+", "_"));
+                return BloodGroup.valueOf(value.toUpperCase().replaceAll("\\s+", "_"));
             }
             catch (IllegalArgumentException e) {
                 return null;
