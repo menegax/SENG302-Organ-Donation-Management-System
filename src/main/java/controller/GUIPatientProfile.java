@@ -256,11 +256,11 @@ public class GUIPatientProfile {
         donationList.itemsProperty().bind(donatingListProperty);
         receivingList.itemsProperty().bind(receivingListProperty);
         //Populate current medication listview
-//        Collection<Medication> meds = patient.getCurrentMedications();
-//        List<String> medsMapped = meds.stream().map(Medication::getMedicationName).collect(Collectors.toList());
-//        medListProperty.setValue(FXCollections.observableArrayList(medsMapped));
-//        medList.itemsProperty().bind(medListProperty);
-        // list view styling/highlighting
+        Collection<Medication> meds = patient.getCurrentMedications();
+        List<String> medsMapped = meds.stream().map(Medication::getMedicationName).collect(Collectors.toList());
+        medListProperty.setValue(FXCollections.observableArrayList(medsMapped));
+        medList.itemsProperty().bind(medListProperty);
+//         list view styling/highlighting
         highlightListCell(donationList, true);
         highlightListCell(receivingList, false);
     }
