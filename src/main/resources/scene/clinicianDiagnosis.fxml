@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="clinicianDiagnosesPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianDiagnosis">
+    <children>
+        <Label alignment="CENTER" layoutX="179.5" layoutY="6.0" styleClass="title" text="Disease Diagnoses" />
+        <TableView fx:id="pastDiagnosesView" layoutX="49.0" layoutY="140.0" prefHeight="219.0" prefWidth="227.0">
+            <columns>
+                <TableColumn fx:id="pastDateCol" prefWidth="75.0" text="Date" />
+                <TableColumn fx:id="pastDiagnosisCol" prefWidth="75.0" text="Diagnosis" />
+                <TableColumn fx:id="pastTagsCol" prefWidth="75.0" text="Tags" />
+            </columns>
+        </TableView>
+        <TableView fx:id="currentDiagnosesView" layoutX="324.0" layoutY="140.0" prefHeight="219.0" prefWidth="227.0">
+            <columns>
+                <TableColumn fx:id="currentDateCol" prefWidth="75.0" text="Date" />
+                <TableColumn fx:id="currentDiagnosisCol" prefWidth="75.0" text="Diagnosis" />
+                <TableColumn fx:id="currentTagsCol" prefWidth="75.0" text="Tags" />
+            </columns>
+        </TableView>
+      <Button fx:id="saveButton" layoutX="545.0" layoutY="361.0" mnemonicParsing="false" onAction="#saveDiagnoses" text="Save" />
+      <Button fx:id="deleteButton" layoutX="248.0" layoutY="90.0" mnemonicParsing="false" onAction="#deleteDiagnoses" text="Delete Diagnosis" />
+      <Button fx:id="addDiagnosisButton" layoutX="254.0" layoutY="55.0" mnemonicParsing="false" onAction="#registerDiagnosis" text="Add Diagnosis" />
+      <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToProfile" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
+      <Label layoutX="122.0" layoutY="115.0" text="Past Diagnoses" />
+      <Label layoutX="389.0" layoutY="115.0" text="Current Diagnoses" />
+    </children>
+</AnchorPane>

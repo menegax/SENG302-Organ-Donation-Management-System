@@ -88,6 +88,9 @@ public class Patient extends User {
 
     private ArrayList<UserActionRecord> userActionsList;
 
+    private ArrayList<Disease> currentDiseases = new ArrayList<>();
+
+    private ArrayList<Disease> pastDiseases = new ArrayList<>();
 
     public Patient(String nhiNumber, String firstName,
                    ArrayList<String> middleNames, String lastName, LocalDate date) {
@@ -745,6 +748,36 @@ public class Patient extends User {
 
 
     /**
+     * Gets the current diseases infecting a donor
+     * @return ArrayList current diseases
+     */
+    public ArrayList<Disease> getCurrentDiseases() {
+        return this.currentDiseases;
+    }
+
+    /**
+     * Sets the donor's current diseases to the given list
+     * @param currentDiseases list of diseases currently infecting a donor
+     */
+    public void setCurrentDiseases(ArrayList<Disease> currentDiseases) { this.currentDiseases = currentDiseases; }
+
+    /**
+     * Gets the diseases the donor used to be infected with
+     * @return ArrayList past diseases
+     */
+    public ArrayList<Disease> getPastDiseases() {
+        return this.pastDiseases;
+    }
+
+    /**
+     * Set the donor's past diseases to the given list
+     * @param pastDiseases list of diseases that used to infect a donor
+     */
+    public void setPastDiseases(ArrayList<Disease> pastDiseases) { this.pastDiseases = pastDiseases; }
+
+
+    /**
+     *
      * Updates the modified timestamp of the patient
      */
     private void patientModified() {
