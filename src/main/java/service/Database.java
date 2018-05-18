@@ -222,21 +222,20 @@ public class Database {
         writer.close();
     }
 
-
-    /**
-     * Calls importFromDisk and handles any errors
-     * @param fileName The file to import from
-     */
-    public static void importFromDisk(String fileName) {
-        try {
-            importFromDiskPatients(fileName);
-            userActions.log(Level.INFO, "Imported patients from disk", "Attempted to import from disk");
-            SearchPatients.createFullIndex();
-        }
-        catch (IOException e) {
-            userActions.log(Level.WARNING, e.getMessage(), "attempted to import from disk");
-        }
-    }
+//
+//    /**
+//     * Calls importFromDisk and handles any errors
+//     * @param fileName The file to import from
+//     */
+//    public static void importFromDisk(String fileName) {
+//        try {
+//            importFromDiskPatients(fileName);
+//            userActions.log(Level.INFO, "Imported patients from disk", "Attempted to import from disk");
+//            SearchPatients.createFullIndex();
+//        } catch (IOException e) {
+//            userActions.log(Level.WARNING, e.getMessage(), "attempted to import from disk");
+//        }
+//    }
 
     /**
      * Reads patient data from disk
@@ -283,10 +282,6 @@ public class Database {
         catch (FileNotFoundException e) {
             userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
         }
-        catch (FileNotFoundException e) {
-            userActions.log(Level.WARNING, "Clinician import file not found", "Attempted to read clinician file");
-        }
-
     }
 
 

@@ -49,9 +49,9 @@ public class ControllerClinicianTest extends ApplicationTest {
         //Check 'I am Clinician" checkbox to login as clinician
         interact(() -> {
             lookup("#clinicianToggle").queryAs(CheckBox.class).setSelected(true);
-            lookup("#nhiLogin").queryAs(TextField.class).setText("1");
+            lookup("#nhiLogin").queryAs(TextField.class).setText("0");
         });
-        verifyThat("#nhiLogin", TextInputControlMatchers.hasText("1"));
+        verifyThat("#nhiLogin", TextInputControlMatchers.hasText("0"));
         interact(() -> {
             lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
         });

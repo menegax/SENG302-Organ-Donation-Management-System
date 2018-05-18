@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
@@ -23,7 +24,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * This class is the controller for editing a patients required organs only accessible by the clinician
  */
-public class GUIPatientUpdateRequirements implements IPopupable {
+public class GUIPatientUpdateRequirements {
 
     @FXML
     private CheckBox liverCB;
@@ -81,30 +82,29 @@ public class GUIPatientUpdateRequirements implements IPopupable {
 
     private StatesHistoryScreen statesHistoryScreen;
 
-    /**
-     * initailizes the edit scene
-     */
-    public void initialize() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            loadProfile(ScreenControl.getLoggedInPatient()
-                    .getNhiNumber());
-        }
+    private UserControl userControl;
 
+    public void initialize() {
+        userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
+        if (user instanceof Patient) {
+            loadProfile(((Patient) user).getNhiNumber());
+        }
+        if (userControl.getTargetPatient() != null) {
+            loadProfile((userControl.getTargetPatient()).getNhiNumber());
+        }
         // Enter key triggers log in
         patientRequirementsAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveRequirements();
             }
+            else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
+                undo();
+            }
+            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
+                redo();
+            }
         });
-    }
-
-    /**
-     * Loads the required organs that the patient currently already has
-     * @param patient current patient being viewed
-     */
-    public void setViewedPatient(Patient patient) {
-        target = patient;
-        loadProfile(patient.getNhiNumber());
     }
 
     /**
@@ -267,12 +267,24 @@ public class GUIPatientUpdateRequirements implements IPopupable {
      * Goes back to the profile view
      */
     public void goToProfile() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-        try {
-            ScreenControl.loadPopUpPane(patientRequirementsAnchorPane.getScene(), fxmlLoader, target);
-        } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
-            new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+        if (userControl.getLoggedInUser() instanceof Patient) {
+            ScreenControl.removeScreen("patientProfile");
+            try {
+                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                ScreenControl.activate("patientProfile");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(patientRequirementsAnchorPane.getScene(), fxmlLoader);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the requirements page to the profile page in popup");
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+            }
         }
     }
+
 }

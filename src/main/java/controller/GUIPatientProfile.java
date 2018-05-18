@@ -143,15 +143,30 @@ public class GUIPatientProfile {
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
+    private Patient viewedPatient;
+
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
      */
-    public void initialize() {
+    public void initialize() throws InvalidObjectException{
         userControl = new UserControl();
         Object user = null;
         if (userControl.getLoggedInUser() instanceof  Patient ) {
-            medicationBtn.setDisable(true); //hide medications btn
+            requirementsButton.setDisable(true);
+            requirementsButton.setVisible(false);
+            medicationBtn.setDisable(true);
             medicationBtn.setVisible(false);
+            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
+                receivingList.setDisable(true);
+                receivingList.setVisible(false);
+                receivingTitle.setDisable(true);
+                receivingTitle.setVisible(false);
+            } if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getDonations().size() == 0) {
+                donatingTitle.setDisable(true);
+                donatingTitle.setVisible(false);
+                donationList.setDisable(true);
+                donationList.setVisible(false);
+            }
             user = userControl.getLoggedInUser();
         }
         if (userControl.getLoggedInUser() instanceof Clinician) {
@@ -179,67 +194,17 @@ public class GUIPatientProfile {
     }
 
     /**
-     * Gets the unique user identification of the clinician
-     * @return UUID of the clinician
-     */
-    public UUID getId() {
-        return id;
-    }
-
-    /**
      * Sets the patient for the controller. This patient's attributes will be loaded
      * @param patient the patient to be viewed
      */
     void setViewedPatient(Patient patient) {
-        Patient viewedPatient = patient;
+        viewedPatient = patient;
         removeBack();
         try {
             loadProfile(viewedPatient.getNhiNumber());
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
-        }
-    }
-
-    @FXML
-    private ListView receiveList;
-
-    /**
-     * Initializes the patient profile GUI pane
-     */
-    public void initialize() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            try {
-                loadProfile(ScreenControl.getLoggedInPatient()
-                        .getNhiNumber());
-            }
-            catch (InvalidObjectException e) {
-                userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
-            }
-        }
-        if (ScreenControl.getLoggedInPatient() != null) {
-            requirementsButton.setDisable(true);
-            requirementsButton.setVisible(false);
-            medicationBtn.setDisable(true);
-            medicationBtn.setVisible(false);
-            if (ScreenControl.getLoggedInPatient().getRequiredOrgans().size() == 0) {
-                receivingList.setDisable(true);
-                receivingList.setVisible(false);
-                receivingTitle.setDisable(true);
-                receivingTitle.setVisible(false);
-            } if (ScreenControl.getLoggedInPatient().getDonations().size() == 0) {
-                donatingTitle.setDisable(true);
-                donatingTitle.setVisible(false);
-                donationList.setDisable(true);
-                donationList.setVisible(false);
-            }
-
-            try {
-                loadProfile(ScreenControl.getLoggedInPatient()
-                        .getNhiNumber());
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Cannot load patient profile");
-            }
         }
     }
 
@@ -311,7 +276,7 @@ public class GUIPatientProfile {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                if (ScreenControl.getLoggedInPatient() == null) {
+                if (userControl.getLoggedInUser() instanceof Clinician) {
                     if (isDonorList) {
                         if (receivingListProperty.contains(item)) {
                             this.setStyle("-fx-background-color: #e6b3b3");
@@ -402,7 +367,7 @@ public class GUIPatientProfile {
     public void goToRequirements() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateRequirements.fxml"));
         try {
-            ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
+            ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
         }
         catch (Exception e) {
             e.printStackTrace();

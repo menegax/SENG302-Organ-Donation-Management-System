@@ -2,6 +2,7 @@ package gui_test;
 
 import controller.Main;
 import controller.ScreenControl;
+import controller.UserControl;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -17,6 +18,7 @@ import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 import utility.GlobalEnums;
 
+import javax.xml.crypto.Data;
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,26 +28,27 @@ import static org.testfx.assertions.api.Assertions.assertThat;
 
 public class GUIProfileTest extends ApplicationTest {
 
+    private UserControl userControl;
+
     private Main main = new Main();
+
     @Override
     public void start(Stage stage) throws Exception {
-        main.start(stage);
+        Database.resetDatabase();
+
         // add dummy patient
-        Patient patient = Database.getPatientByNhi("TFX9999");
-        if (patient == null) {
-            ArrayList<String> dal = new ArrayList<>();
-            dal.add("Middle");
-//        WaitForAsyncUtils.waitForFxEvents();
-//        sleep(2000);
-            Database.addPatient(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
-//        WaitForAsyncUtils.waitForFxEvents();
-//        sleep(2000);
-            Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-            Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
-        }
-        interact(() ->  {
+        ArrayList<String> dal = new ArrayList<>();
+        dal.add("Middle");
+        Database.addPatient(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getPatientByNhi("TFX9999")
+                .addDonation(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("TFX9999")
+                .addDonation(GlobalEnums.Organ.CORNEA);
+
+        main.start(stage);
+        interact(() -> {
             lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
-            lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
+            lookup("#loginButton").queryAs(Button.class).fire();
             lookup("#profileButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
         });
     }
@@ -105,11 +108,10 @@ public class GUIProfileTest extends ApplicationTest {
     }
 
     @Test
-    public void check_receiver_donor_segregation() {
-        Patient patient = ScreenControl.getLoggedInPatient();
-        patient.addDonation(GlobalEnums.Organ.LIVER);
-        patient.addDonation(GlobalEnums.Organ.CORNEA);
-        patient.setRequiredOrgans(new ArrayList<GlobalEnums.Organ>());
+    public void check_receiver_donor_segregation() throws InvalidObjectException {
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.getPatientByNhi("TFX9999").setRequiredOrgans(new ArrayList<GlobalEnums.Organ>());
         interact(() -> {
             lookup("#donationsButton").queryAs(Button.class).fire();
             lookup("#save").queryAs(Button.class).fire();
@@ -117,9 +119,9 @@ public class GUIProfileTest extends ApplicationTest {
         verifyThat("#donatingTitle", Node::isVisible);
         verifyThat("#receivingList", Node::isDisabled);
 //        System.out.println(patient.getDonations());
-        patient.addRequired(GlobalEnums.Organ.LIVER);
-        patient.addRequired(GlobalEnums.Organ.CORNEA);
-        patient.setDonations(new ArrayList<GlobalEnums.Organ>());
+        Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.CORNEA);
+        Database.getPatientByNhi("TFX9999").setDonations(new ArrayList<GlobalEnums.Organ>());
         interact(() -> {
             lookup("#donationsButton").queryAs(Button.class).fire();
             lookup("#save").queryAs(Button.class).fire();
