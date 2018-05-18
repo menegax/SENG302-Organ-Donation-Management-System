@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -8,19 +9,16 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import service.Database;
-import utility.GlobalEnums.Stages;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class ScreenControl {
 
     //Todo remove all deprecated stuff
-
-    private static Map<Stages, Stage> applicationStages;
-
     private static ScreenControl screenControl;
 
     @Deprecated
@@ -34,6 +32,8 @@ public class ScreenControl {
 
     @Deprecated
     private static Scene main;
+
+    private static Map<UUID, Stage> applicationStages;
 
     private boolean macOs = System.getProperty("os.name").startsWith("Mac");
 
@@ -56,7 +56,7 @@ public class ScreenControl {
     }
 
 
-    static ScreenControl getScreenControl() {
+    public static ScreenControl getScreenControl() {
         if (screenControl == null) {
             screenControl = new ScreenControl();
         }
@@ -68,7 +68,7 @@ public class ScreenControl {
      * @param key
      * @param stage
      */
-    void addStage(Stages key, Stage stage) {
+    public void addStage(UUID key, Stage stage){
         applicationStages.put(key, stage);
     }
 
@@ -76,13 +76,30 @@ public class ScreenControl {
     /**
      * @param root
      */
-    void show(Stages stageName, Parent root) {
+    public void show(UUID stageName, Parent root) {
         Stage stage = applicationStages.get(stageName);
         stage.setScene(new Scene(root));
       //  setUpMenuBar(stage); //TODO: breaks on my pc
         stage.show();
     }
 
+    public void show(Node node, String fxml) throws IOException{
+        Stage stage = applicationStages.get(((UndoableStage) node.getScene().getWindow()).getUUID());
+        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource(fxml))));
+        stage.show();
+    }
+
+    public void closeStage(UUID stageName) {
+        applicationStages.get(stageName).close();
+        applicationStages.remove(stageName);
+    }
+
+    public void closeStage(Node node) {
+        ((Stage) node.getScene().getWindow()).close();
+        if (node.getScene().getWindow() instanceof UndoableStage) {
+            applicationStages.remove(((UndoableStage) node.getScene().getWindow()).getUUID());
+        }
+    }
 
     @Deprecated
     public static Scene getMain() {

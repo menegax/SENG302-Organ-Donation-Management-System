@@ -17,11 +17,13 @@ import model.Clinician;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 
@@ -40,6 +42,7 @@ public class GUILogin {
     @FXML
     private CheckBox clinicianToggle;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     public void initialize() {
         // Enter key triggers log in
@@ -56,7 +59,12 @@ public class GUILogin {
      */
     @FXML
     public void goToRegister() {
-        ScreenControl.activate("patientRegister");
+        try {
+            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/patientRegister.fxml")));
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load patient register").show();
+            userActions.log(SEVERE, "Failed to load patient register", "Attempted to load patient register");
+        }
     }
 
 
@@ -74,8 +82,9 @@ public class GUILogin {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
                 login.addLoggedInUserToCache(newPatient);
                 Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
-                screenControl.addStage(GlobalEnums.Stages.HOME, new Stage());
-                screenControl.show(GlobalEnums.Stages.HOME, homeScreen);
+                UndoableStage stage = new UndoableStage();
+                screenControl.addStage(stage.getUUID(), stage);
+                screenControl.show(stage.getUUID(), homeScreen);
             }
             catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "Failed to log in", "Attempted to log in");
@@ -89,10 +98,10 @@ public class GUILogin {
             try {
                 Clinician newClinician = Database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
                 login.addLoggedInUserToCache(newClinician);
-                ScreenControl.addTabToHome("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
-                ScreenControl.addTabToHome("clinicianSearchPatients", FXMLLoader.load(getClass().getResource("/scene/clinicianSearchPatients.fxml")));
-                ScreenControl.addTabToHome("clinicianProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/clinicianProfileUpdate.fxml")));
-                ScreenControl.activate("clinicianHome");
+                UndoableStage stage = new UndoableStage();
+                Parent clincianHome = FXMLLoader.load((getClass().getResource("/scene/clinicianHome.fxml")));
+                screenControl.addStage(stage.getUUID(), stage);
+                screenControl.show(stage.getUUID(), clincianHome);
             }
             catch (Exception e) {
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
@@ -108,7 +117,7 @@ public class GUILogin {
 
         Stage primaryStage = new Stage();
         try {
-            Scene home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
+            Scene home = FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml"));
 
             primaryStage.setScene(home);
         }

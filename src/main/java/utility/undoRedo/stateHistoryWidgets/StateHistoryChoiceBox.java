@@ -1,20 +1,14 @@
 package utility.undoRedo.stateHistoryWidgets;
 
-import utility.undoRedo.IUndoRedo;
 import javafx.scene.control.ChoiceBox;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class StateHistoryChoiceBox implements IUndoRedo {
-
-    private ChoiceBox<String> choiceBox;
-
-    private ArrayList<String> states = new ArrayList<>();
+public class StateHistoryChoiceBox extends StateHistoryControl {
 
     private boolean undone = false;
-
-    private int index = 0;
-
 
     /**
      * Constructor which adds the current (base) state of the choice box to the history
@@ -23,7 +17,7 @@ public class StateHistoryChoiceBox implements IUndoRedo {
      */
 
     public StateHistoryChoiceBox(ChoiceBox<String> choiceBox) {
-        this.choiceBox = choiceBox;
+        this.control = choiceBox;
         states.add(choiceBox.getSelectionModel()
                 .getSelectedItem());
     }
@@ -37,7 +31,7 @@ public class StateHistoryChoiceBox implements IUndoRedo {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(choiceBox.getSelectionModel()
+        states.add(((ChoiceBox) control).getSelectionModel()
                 .getSelectedItem());
     }
 
@@ -45,43 +39,27 @@ public class StateHistoryChoiceBox implements IUndoRedo {
     /**
      * Sets the ChoiceBox to the state before the current state
      */
-    public void undo() {
+    public boolean undo() {
         if (index != 0) {
             index -= 1;
-            choiceBox.getSelectionModel()
-                    .select(states.get(index));
+            // Cast will always be safe
+            ((ChoiceBox<String>) control).getSelectionModel().select((String) states.get(index));
             undone = true;
+            return true;
         }
+        return false;
     }
 
-
-    public void redo() {
+    /**
+     * Resets the ChoiceBox to the state immediately prior to an undo
+     */
+    public boolean redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
-            choiceBox.getSelectionModel()
-                    .select(states.get(index));
+            // Cast will always be safe
+            ((ChoiceBox<String>) control).getSelectionModel().select((String) states.get(index));
+            return true;
         }
-    }
-
-
-    /**
-     * Gets the states of the Combo Box
-     * Currently only used in testing
-     *
-     * @return the states of the combo box
-     */
-    public ArrayList<Object> getStates() {
-        return new ArrayList<>(states);
-    }
-
-
-    /**
-     * Gets the index of the current state of the ChoiceBox
-     * currently only used in testing
-     *
-     * @return the index of the current state
-     */
-    public int getIndex() {
-        return index;
+        return false;
     }
 }

@@ -19,6 +19,7 @@ import model.Patient;
 import model.DrugInteraction;
 import model.Medication;
 import service.Database;
+import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.UserActionRecord;
 
@@ -33,16 +34,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 //import static utility.UserActionRecord.logHistory;
 
-public class GUIPatientMedications {
+public class GUIPatientMedications extends UndoableController {
 
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
     private ObservableList<UserActionRecord> medLog = FXCollections.observableArrayList();
     private ListProperty<String> informationListProperty = new SimpleListProperty<>();
-    private StatesHistoryScreen stateHistoryScreen;
     private ArrayList<String> ingredients;
     private ArrayList<String> current;
     private ArrayList<String> history;
@@ -65,6 +66,8 @@ public class GUIPatientMedications {
 
     private JsonObject suggestions;
     private boolean itemSelected = false;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
@@ -92,22 +95,6 @@ public class GUIPatientMedications {
 
     private Patient viewedPatient;
 
-
-    /**
-     * Goes back one edit if any editing has been conducted
-     */
-    @FXML
-    public void undo() {
-        stateHistoryScreen.undo();
-    }
-
-    /**
-     * Goes forward one edit if editing had been undone at least once
-     */
-    @FXML
-    public void redo() {
-        stateHistoryScreen.redo();
-    }
 
     /**
      * Removes a medication from the history or current ArrayList and listView
@@ -195,9 +182,8 @@ public class GUIPatientMedications {
         pastMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(pastMedications));
         pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        stateHistoryScreen = new StatesHistoryScreen(medicationPane, new ArrayList<Control>() {{
-            add(newMedication);
-        }});
+        controls = new ArrayList<Control>() {{ add(newMedication); }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS);
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         } else if (user instanceof Clinician) {
@@ -588,13 +574,11 @@ public class GUIPatientMedications {
     @FXML
     public void goToProfile() {
         if (userControl.getLoggedInUser() instanceof Patient ) {
-            ScreenControl.removeScreen("patientProfile");
             try {
-                ScreenControl.addTabToHome("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
-            }catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the medication page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+                screenControl.show(medicationPane,"/scene/patientProfile.fxml");
+            } catch (IOException e) {
+                new Alert((Alert.AlertType.ERROR), "Unable to load patient profile").show();
+                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
