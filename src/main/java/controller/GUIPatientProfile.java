@@ -5,6 +5,7 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -445,4 +446,32 @@ public class GUIPatientProfile {
         ScreenControl.activate("patientHome");
     }
 
+    /**
+     * Opens the patient's diagnoses screen.
+     */
+    public void openPatientDiagnoses() {
+        if(userControl.getLoggedInUser() instanceof Patient) {
+            ScreenControl.removeScreen("patientDiagnoses");
+            try {
+                ScreenControl.addScreen("patientDiagnoses", FXMLLoader.load(getClass().getResource("/scene/clinicianDiagnosis.fxml")));
+                ScreenControl.activate("patientDiagnoses");
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading diagnoses screen", "attempted to navigate from the profile page to the diagnoses page");
+                new Alert(Alert.AlertType.WARNING, "ERROR loading diagnoses page", ButtonType.OK).showAndWait();
+            }
+        }
+        else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
+            }
+            catch (IOException e) {
+                userActions.log(Level.SEVERE,
+                        "Error loading diagnoses screen in popup",
+                        "attempted to navigate from the profile page to the diagnoses page in popup");
+                new Alert(Alert.AlertType.ERROR, "Error loading diagnoses page", ButtonType.OK).show();
+            }
+        }
+
+    }
 }

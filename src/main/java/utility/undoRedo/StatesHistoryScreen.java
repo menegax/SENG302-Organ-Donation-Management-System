@@ -32,7 +32,7 @@ public class StatesHistoryScreen {
     /**
      * Constructor for the StatesHistoryScreen, creates state objects of passed in control items to keep track of
      * Creates the list of stateHistories in its initialisation
-     *
+     * @param pane pane application is showing
      * @param params optional widget parameters to initialise
      */
     public StatesHistoryScreen(Pane pane, ArrayList<Control> params) {

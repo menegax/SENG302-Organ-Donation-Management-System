@@ -239,6 +239,7 @@ public class Database {
 
     /**
      * Reads patient data from disk
+     * @param fileName file to import from
      */
     public static void importFromDiskPatients(String fileName) {
         Gson gson = new Gson();
@@ -264,6 +265,7 @@ public class Database {
 
     /**
      * Reads clinician data from disk
+     * @param fileName file to import from
      */
     public static void importFromDiskClinicians(String fileName) {
         Gson gson = new Gson();
