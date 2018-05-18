@@ -37,7 +37,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
 
         // setup GUI
-        ScreenControl.getScreenControl().addStage(GlobalEnums.Stages.PRIMARY, primaryStage); //add primary stage to screen control to construct properly
         ScreenControl screenControl = ScreenControl.getScreenControl();
         screenControl.addStage(uuid, primaryStage);
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));

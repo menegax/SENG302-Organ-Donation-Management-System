@@ -14,13 +14,11 @@ import utility.undoRedo.UndoableStage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class ScreenControl {
 
     //Todo remove all deprecated stuff
-
-    private static Map<Stages, Stage> applicationStages;
-
     private static ScreenControl screenControl;
 
     @Deprecated

@@ -81,7 +81,7 @@ public class GUILogin {
             try {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
                 login.addLoggedInUserToCache(newPatient);
-                Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml"));
+                Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
                 UndoableStage stage = new UndoableStage();
                 screenControl.addStage(stage.getUUID(), stage);
                 screenControl.show(stage.getUUID(), homeScreen);
