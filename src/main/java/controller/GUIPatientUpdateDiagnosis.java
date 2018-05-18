@@ -174,6 +174,19 @@ public class GUIPatientUpdateDiagnosis {
     }
 
     /**
+     * Checks if an added or updated disease is a duplicate of a disease the patient already has
+     * @param disease patient's disease
+     * @param d added or updated disease
+     * @return boolean is duplicate
+     */
+    private boolean isDuplicate(Disease disease, Disease d) {
+        if(disease.equals(d)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Checks that the updated fields are valid (name, date and state of diagnosis.
      * Returns true if the update is valid and false otherwise.
      * If the update is valid, the node is reset to whatever is currently shown
@@ -210,43 +223,46 @@ public class GUIPatientUpdateDiagnosis {
             tagsDD.setValue(tagsDD.getSelectionModel().getSelectedItem());
         }
 
-        for(Disease disease : currentPatient.getCurrentDiseases()) {
-            System.out.println(tagsDD.getSelectionModel().getSelectedItem().toString());
-            if(disease.getDiseaseName().equals(diseaseNameTextField.getText()) &&
-                    (tagsDD.getSelectionModel().getSelectedItem().toString().equals("None") ||
-                            tagsDD.getSelectionModel().getSelectedItem().toString().equals("chronic"))) {
-                valid = false;
-                setInvalid(diseaseNameTextField);
-            }
+        if(!isValidAdd()) {
+            valid = false;
         }
 
         return valid;
     }
 
     /**
-     * Returns true if diagnosis dates for the current disease and the date picker are the same
-     * @param disease disease
-     * @return boolean same diagnosis date
-     */
-    private boolean isSameDate(Disease disease) {
-        return disease.getDateDiagnosed().getYear() == (diagnosisDate.getValue().getYear()) &&
-                disease.getDateDiagnosed().getMonth() == diagnosisDate.getValue().getMonth() &&
-                disease.getDateDiagnosed().getDayOfMonth() == diagnosisDate.getValue().getDayOfMonth();
-    }
-
-
-    /**
      * Checks for duplicate diseases to ensure an add is valid
      * @return boolean valid add
      */
     private boolean isValidAdd() {
+        Disease d = new Disease(diseaseNameTextField.getText(), null);
+        if(tagsDD.getSelectionModel().getSelectedItem() != null) {
+            switch (tagsDD.getSelectionModel().getSelectedItem().toString()) {
+                case "cured":
+                    d.setDiseaseState(GlobalEnums.DiseaseState.CURED);
+                    break;
+                case "chronic":
+                    d.setDiseaseState(GlobalEnums.DiseaseState.CHRONIC);
+                    break;
+            }
+        }
+        try {
+            d.setDateDiagnosed(diagnosisDate.getValue(), currentPatient);
+        } catch (InvalidObjectException e) {
+            userActions.log(Level.SEVERE, "The diagnosis date is not valid.");
+        }
         for (Disease disease : currentPatient.getCurrentDiseases()) {
-            if(disease.getDiseaseName().equals(diseaseNameTextField.getText()) &&
-                    (tagsDD.getSelectionModel().getSelectedItem() == null || tagsDD.getSelectionModel().getSelectedItem() ==
-                    GlobalEnums.DiseaseState.CHRONIC)) {
+            if(isDuplicate(disease, d)) {
                 return false;
             }
         }
+
+        for (Disease disease: currentPatient.getPastDiseases()) {
+            if(isDuplicate(disease, d)) {
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -286,7 +302,7 @@ public class GUIPatientUpdateDiagnosis {
                 target.setDiseaseState(null);
             }
 
-            if(isAdd && isValidAdd()) {
+            if(isAdd) {
                 currentPatient.getCurrentDiseases().add(target);
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
                 try {
@@ -295,12 +311,6 @@ public class GUIPatientUpdateDiagnosis {
                     userActions.log(Level.SEVERE, "Error returning to diagnoses screen in popup", "attempted to navigate from the update diagnosis page to the diagnoses page in popup");
                     new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
                 }
-            } else if(isAdd && !isValidAdd()) {
-                String error = "A new diagnosis can not be a disease a patient currently has.";
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Could not add diagnosis");
-                alert.setContentText(error);
-                alert.showAndWait();
             } else {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
                 try {
@@ -312,7 +322,7 @@ public class GUIPatientUpdateDiagnosis {
             }
 
         } else {
-            String errorString = "";
+            String errorString = "Diseases must not have the same disease name and diagnosis date as another disease\n\n";
             if(diseaseNameTextField.getStyleClass().contains("invalid")) {
                 errorString += "Disease names must be between 3 and 50 characters. " +
                         "Names must be comprised of lowercase letters, uppercase letters, digits or full stops, and be unique in current diseases.\n\n";

@@ -76,3 +76,17 @@
 2. The clinician enters a disease name that is currently in the patient's current diagnoses, and sets the disease state to chronic or none.
 3. The clinician selects the done button
 4. An alert is shown stating the patient can not be diagnosed with a disease they are already infected with
+
+###Add a diagnosis already in past diagnoses
+
+1. The clinician selects the add button from the viewing screen
+2. The clinician enters a disease name that is currently in the patient's past diagnoses, and sets the disease state to chronic or none.
+3. The clinician selects the done button
+4. An alert is shown stating the patient can not be diagnosed with a disease they are already infected with
+
+###Update a diagnosis to be equal to another diagnosis
+
+1. The clinician double clicks an existing diagnosis from the viewing screen
+2. The clinician enters a disease name and diagnosis date that are both the same as another of the patient's diagnoses
+3. The clinician selects the done button
+4. An alert is shown stating diseases must be unique

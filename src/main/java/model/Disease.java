@@ -88,4 +88,25 @@ public class Disease {
     public void setDiseaseState(DiseaseState diseaseState) {
         this.diseaseState = diseaseState;
     }
+
+    /**
+     * Checks if an object is equal to this disease
+     * @param o Object to compare
+     * @return boolean is equal
+     */
+    @Override
+    public boolean equals(Object o) {
+        if(o == null) {
+            return false;
+        }
+        if(o instanceof Disease) {
+            Disease d = (Disease) o;
+            if(d.getDiseaseName().equals(this.diseaseName)) {
+                if(d.getDateDiagnosed().equals(this.dateDiagnosed)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
