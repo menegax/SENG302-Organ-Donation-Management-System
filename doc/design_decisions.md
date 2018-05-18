@@ -133,3 +133,10 @@ Since a Java logger had already been implemented it was very easy to implement a
 userActions log. It will be used for only developer debugging purposes. There should never be a System.out.println() call ever again; even temporarily
 -- it should be a systemLog.log() and when done debugging the statement should be left there for future use. Please add logs as you go and never delete
  logs (unless they're incorrectly written, of course).  
+ 
+#### Clinician Logging
+To keep consistency, the logging of medication actions and other clinician actions is now solely using the UserHistory logger. This allowed
+us to log actions that occur within the medications page (and other pages while a clinician is logged in) in a way that all actions, whether saved or unsaved,
+are visible within the new history table for clinicians. If a clinician alters medications for a patient, a ClinicianActionRecord is created that stores
+the standing log information, plus the NHI number of the 'target' patient that the changes are being made to. Logs (+ medication changes) will persist between 
+sessions after the user saves changes using the standard save button on the home screen.
