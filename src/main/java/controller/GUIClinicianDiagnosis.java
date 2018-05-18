@@ -139,6 +139,10 @@ public class GUIClinicianDiagnosis {
         currentDiseases = target.getCurrentDiseases();
         pastDiseases = target.getPastDiseases();
         updateDiagnosesLists();
+        if(!(userControl.getLoggedInUser() instanceof Patient)) {
+            setUpDoubleClickEdit(currentDiagnosesView);
+            setUpDoubleClickEdit(pastDiagnosesView);
+        }
     }
 
     /**

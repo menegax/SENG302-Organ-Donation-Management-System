@@ -115,3 +115,15 @@ We decided to use an external library, Lucene, to do our name searching of patie
 This term "fuzzy search" means that some of the character can be different from what is in the name and it will still be a result. In order to tell which results are "better" a "score" is included with the individual results, which symbolizes how close to the entered search the names are. The closer the name to the search, the higher the score.
 We thought this would be very useful when searching for patients, as the clinician may not know the exact spelling of a particular patient but knows roughly how it is spelt. Or in a much simpler case, the clincian may simply have a miss key press. 
 However we do not want every patient to be matched to any search, so we set the max number of the character difference between the search and the patient's name to two.
+
+
+##Sprint 4
+
+####Diagnosis Validation
+A diagnosis must have a name between 3 and 50 characters long, as this covers the length of the full names of most diseases and conditions. A diagnosis can not be made in the future or before the patient was born.
+
+####Diagnosis Adding
+A diagnosis can not be added if the patient has a current diagnosis of the same name, or if the patient has a cured disease of the same name that was cured on the same date as the disease to be added.
+
+####Setting past and current diagnoses lists
+Diagnoses lists for a patient are set entirely after all changes have been made before saving. This is to keep tracking changes made to a minimum to reduce operation complexity, and thus making the saving procedure quicker to execute.
