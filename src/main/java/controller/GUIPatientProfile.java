@@ -343,11 +343,14 @@ public class GUIPatientProfile {
         ScreenControl.activate("patientHome");
     }
 
-    public void openDonorDiagnoses() {
+    /**
+     * Opens the patient's diagnoses screen.
+     */
+    public void openPatientDiagnoses() {
         if(userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientDiagnoses");
             try {
-                ScreenControl.addScreen("patientDiagnoses", FXMLLoader.load(getClass().getResource("/scene/patientDiagnosis.fxml")));
+                ScreenControl.addScreen("patientDiagnoses", FXMLLoader.load(getClass().getResource("/scene/clinicianDiagnosis.fxml")));
                 ScreenControl.activate("patientDiagnoses");
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading diagnoses screen", "attempted to navigate from the profile page to the diagnoses page");

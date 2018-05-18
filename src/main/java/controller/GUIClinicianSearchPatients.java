@@ -88,8 +88,6 @@ public class GUIClinicianSearchPatients implements Initializable {
                             .getSelectedItem());
                     DrugInteraction.setViewedPatient(patientDataTable.getSelectionModel()
                             .getSelectedItem());
-                    GUIClinicianDiagnosis.staticSetPatient(patientDataTable.getSelectionModel()
-                    .getSelectedItem());
 
                     Stage popUpStage = new Stage();
                     popUpStage.setX(ScreenControl.getMain()

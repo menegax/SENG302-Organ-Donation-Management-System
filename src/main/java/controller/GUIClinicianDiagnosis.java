@@ -61,8 +61,6 @@ public class GUIClinicianDiagnosis {
     @FXML
     public Button addDiagnosisButton;
 
-    @FXML
-    private TextField newDiagnosis;
 
     /**
      * Patient being viewed
@@ -95,21 +93,13 @@ public class GUIClinicianDiagnosis {
      */
     private static boolean changed = false; // Boolean for if there are any un-saved edits when leaving pane
 
-    /**
-     * Statically sets the patient being viewed and sets the target patient to the corresponding target by the
-     * same NHI number in the database
-     * @param patient viewed patient
-     */
-    public static void staticSetPatient(Patient patient) {
-        target = patient;
-        try {
-            target = Database.getPatientByNhi(target.getNhiNumber());
-        } catch(InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading user",
-                    "attempted to manage the diagnoses for logged in user");
-        }
-    }
+    private UserControl userControl;
 
+
+    /**
+     * Sets if the patient's diagnoses have been altered at all.
+     * @param bool altered
+     */
     public static void setChanged(boolean bool) { changed = bool;}
 
     /**
@@ -122,6 +112,24 @@ public class GUIClinicianDiagnosis {
      */
     @FXML
     public void initialize() {
+        userControl = new UserControl();
+        if(userControl.getLoggedInUser() instanceof Patient) {
+            target = (Patient) userControl.getLoggedInUser();
+            addDiagnosisButton.setVisible(false);
+            addDiagnosisButton.setDisable(true);
+            saveButton.setVisible(false);
+            saveButton.setDisable(true);
+            deleteButton.setVisible(false);
+            deleteButton.setDisable(true);
+        } else {
+            target = userControl.getTargetPatient();
+            addDiagnosisButton.setVisible(true);
+            addDiagnosisButton.setDisable(false);
+            saveButton.setVisible(true);
+            saveButton.setDisable(false);
+            deleteButton.setVisible(true);
+            deleteButton.setDisable(false);
+        }
         if(target.getCurrentDiseases() == null) {
             target.setCurrentDiseases(new ArrayList<>());
         }
@@ -131,8 +139,6 @@ public class GUIClinicianDiagnosis {
         currentDiseases = target.getCurrentDiseases();
         pastDiseases = target.getPastDiseases();
         updateDiagnosesLists();
-        setUpDoubleClickEdit(pastDiagnosesView);
-        setUpDoubleClickEdit(currentDiagnosesView);
     }
 
     /**
@@ -311,29 +317,6 @@ public class GUIClinicianDiagnosis {
 
 
     /**
-     * Moves a diagnosis from the past diseases list to the current diseases list when adding a new diagnosis
-     * @param disease The diseases being moved from past to current diseases list
-     * @param state The state of the disease; chronic or null
-     */
-    private void moveFromPastToCurrent(Disease disease, String state) {
-        if (state == null || state.toLowerCase().equals( "chronic" )) {
-            if (state == null) {
-                disease.setDiseaseState( null );
-            } else {
-                disease.setDiseaseState( GlobalEnums.DiseaseState.CHRONIC );
-            }
-            currentDiseases.add( disease );
-            pastDiseases.remove( disease );
-            userActions.log(Level.FINE, "Updated a current disease state", "Updated a current disease state to " + state);
-            userActions.log( Level.FINE, "Moved a disease from past to current", "Moved disease " + disease.getDiseaseName() + " from past to current" );
-            loadCurrentDiseases();
-            loadPastDiseases();
-            newDiagnosis.clear();
-        }
-    }
-
-
-    /**
      * Iterates through current and past diagnoses and moves cured and chronic diseases to their required lists.
      * Reloads the lists to reflect updates
      */
@@ -356,6 +339,9 @@ public class GUIClinicianDiagnosis {
         loadPastDiseases();
     }
 
+    /**
+     * Highlights a viewed diagnosis in red if the diagnosis is chronic. No background colour set otherwise.
+     */
     private void highlightChronic() {
         currentDiagnosesView.setRowFactory(row -> new TableRow<Disease>() {
 

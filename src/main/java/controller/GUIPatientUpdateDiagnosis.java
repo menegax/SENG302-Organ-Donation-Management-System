@@ -180,7 +180,7 @@ public class GUIPatientUpdateDiagnosis {
      */
     private boolean isValidUpdate() {
         boolean valid = true;
-        if(!diseaseNameTextField.getText().matches("[A-Z|a-z0-9.]{3,75}")) {
+        if(!diseaseNameTextField.getText().matches("[A-Z|a-z0-9.]{3,50}")) {
             valid = false;
             setInvalid(diseaseNameTextField);
         } else {
@@ -232,11 +232,12 @@ public class GUIPatientUpdateDiagnosis {
      */
     private boolean isValidAdd() {
         for (Disease disease : currentPatient.getCurrentDiseases()) {
-            if(disease.getDiseaseName().equals(diseaseNameTextField.getText()) &&
-                    tagsDD.getSelectionModel().getSelectedItem() != null &&
-                    !tagsDD.getSelectionModel().getSelectedItem().toString().equals("cured") &&
-                    !(isSameDate(disease))) {
-                return false;
+            if(disease.getDiseaseName().equals(diseaseNameTextField.getText())) {
+                if(!(tagsDD.getSelectionModel().getSelectedItem() != null &&
+                        !tagsDD.getSelectionModel().getSelectedItem().toString().equals("cured")
+                        && !(isSameDate(disease)))) {
+                    return false;
+                }
             }
         }
 
@@ -252,7 +253,12 @@ public class GUIPatientUpdateDiagnosis {
 
     /**
      * Called when the done button is selected. If the update is valid, the diagnosis for the donor is updated
-     * (but not saved) to the current updated diagnosis information and the popup stage is closed.
+     * (but not saved) to the current updated diagnosis information and the diagnoses view screen is returned to.
+     *
+     * If the operation is adding a diagnosis, the operation is checked for validity for adding. If the add is
+     * valid, the new diagnosis is added to the patient's current diagnoses. Otherwise an alert is shown and no new
+     * dignosisi
+     *
      * If the update is invalid, an alert is shown with the errors in question explained in the alert information.
      * The stage is not closed in this case.
      */
@@ -310,7 +316,7 @@ public class GUIPatientUpdateDiagnosis {
         } else {
             String errorString = "";
             if(diseaseNameTextField.getStyleClass().contains("invalid")) {
-                errorString += "Disease names must be between 3 and 75 characters. " +
+                errorString += "Disease names must be between 3 and 50 characters. " +
                         "Names must be comprised of lowercase letters, uppercase letters, digits or full stops.\n\n";
             }
 
@@ -331,10 +337,16 @@ public class GUIPatientUpdateDiagnosis {
     }
 
 
+    /**
+     * Redoes an action
+     */
     public void redo() {
         statesHistoryScreen.redo();
     }
 
+    /**
+     * Undoes the last action
+     */
     public void undo() {
         statesHistoryScreen.undo();
     }

@@ -88,7 +88,6 @@ public class Patient extends User {
 
     private ArrayList<UserActionRecord> userActionsList;
 
-
     private ArrayList<Disease> currentDiseases = new ArrayList<>();
 
     private ArrayList<Disease> pastDiseases = new ArrayList<>();
