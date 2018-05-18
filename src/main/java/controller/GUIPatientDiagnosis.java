@@ -138,7 +138,6 @@ public class GUIPatientDiagnosis {
         }catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the diagnoses page to the profile page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
-            e.printStackTrace();
         }
     }
 }

@@ -352,7 +352,6 @@ public class GUIPatientProfile {
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading diagnoses screen", "attempted to navigate from the profile page to the diagnoses page");
                 new Alert(Alert.AlertType.WARNING, "ERROR loading diagnoses page", ButtonType.OK).showAndWait();
-                e.printStackTrace();
             }
         }
         else {
@@ -361,7 +360,6 @@ public class GUIPatientProfile {
                 ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
             }
             catch (IOException e) {
-                e.printStackTrace();
                 userActions.log(Level.SEVERE,
                         "Error loading diagnoses screen in popup",
                         "attempted to navigate from the profile page to the diagnoses page in popup");

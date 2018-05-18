@@ -162,7 +162,6 @@ public class GUIClinicianDiagnosis {
                     }
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
                     userActions.log(Level.SEVERE,
                             "Failed to open diagnosis update window from the diagnoses page",
                             "attempted to open diagnosis update window from the diagnoses page");
@@ -190,7 +189,6 @@ public class GUIClinicianDiagnosis {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
             userActions.log(Level.SEVERE,
                     "Failed to open diagnosis update window from the diagnoses page",
                     "attempted to open diagnosis update window from the diagnoses page");
