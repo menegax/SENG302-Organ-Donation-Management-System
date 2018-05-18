@@ -1,11 +1,7 @@
 package controller;
 
 import static utility.UserActionHistory.userActions;
-<<<<<<< HEAD
-=======
-
 import de.codecentric.centerdevice.MenuToolkit;
->>>>>>> development
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

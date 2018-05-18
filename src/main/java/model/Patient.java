@@ -311,13 +311,10 @@ public class Patient extends User {
         if (this.firstName == null || (!firstName.equals(this.firstName))) {
         	SearchPatients.removeIndex(this);
             this.firstName = firstName;
-<<<<<<< HEAD
             if (getPreferredName() == null) {
                 setPreferredName( firstName );
             }
-=======
             SearchPatients.addIndex(this);
->>>>>>> development
             patientModified();
         }
     }
@@ -692,9 +689,6 @@ public class Patient extends User {
         this.contactEmailAddress = contactEmailAddress;
     }
 
-<<<<<<< HEAD
-=======
-
 //    /**
 //     * Returns a converted medication log ArrayList to a UserActionRecord OberservableList
 //     * @return The medication log as a UserActionRecord ObservableList
@@ -717,8 +711,6 @@ public class Patient extends User {
 //        return currentLog;
 //    }
 
-
->>>>>>> development
     /**
      * Gets the list of user action history logs
      * DO NOT USE UNLESS LOGGER

@@ -108,20 +108,6 @@ public class GUIPatientProfile {
     private ListProperty<String> organListProperty = new SimpleListProperty<>();
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
-<<<<<<< HEAD
-    
-    private void removeBack() {
-        back.setDisable(true);
-        back.setVisible(false);
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setViewedPatient(Patient patient) {
-        this.viewedPatient = patient;
-=======
 
 
     /**
@@ -165,52 +151,41 @@ public class GUIPatientProfile {
      * @param patient the patient to be viewed
      */
     void setViewedPatient(Patient patient) {
-        Patient viewedPatient = patient;
->>>>>>> development
         removeBack();
         try {
-            loadProfile(viewedPatient.getNhiNumber());
+            loadProfile(patient.getNhiNumber());
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
         }
     }
 
-<<<<<<< HEAD
-    public void initialize() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            medicationBtn.setDisable(true);
-            medicationBtn.setVisible(false);
-            try {
-                loadProfile(ScreenControl.getLoggedInPatient()
-                        .getNhiNumber());
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Cannot load patient profile");
-            }
-        }
-    }
-
-=======
+    //public void initialize() {
+      //  if (ScreenControl.getLoggedInPatient() != null) {
+        //    medicationBtn.setDisable(true);
+          //  medicationBtn.setVisible(false);
+            //try {
+              //  loadProfile(ScreenControl.getLoggedInPatient()
+                //        .getNhiNumber());
+            //} catch (IOException e) {
+              //  userActions.log(Level.SEVERE, "Cannot load patient profile");
+            //}
+        //}
+    //}
 
     /**
      * Sets the patient's attributes for the scene's labels
      * @param nhi the nhi of the patient to be viewed
      * @throws InvalidObjectException if the nhi of the patient does not exist in the database
      */
->>>>>>> development
     private void loadProfile(String nhi) throws InvalidObjectException {
         Patient patient = Database.getPatientByNhi(nhi);
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
-<<<<<<< HEAD
         genderIdentityLbl.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender()
                 .getValue());
         birthGenderLbl.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue());
-=======
-        genderLbl.setText(patient.getGender() == null ? "Not set" : patient.getGender()
-                .toString());
         vitalLbl1.setText(patient.getDeath() == null ? "Alive" : "Deceased");
->>>>>>> development
         dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         dateOfDeathLabel.setText(patient.getDeath() == null ? "Not set" : patient.getDeath()
@@ -254,13 +229,9 @@ public class GUIPatientProfile {
                 .bind(medListProperty);
     }
 
-<<<<<<< HEAD
-=======
-
     /**
      * Goes to the patient edit scene
      */
->>>>>>> development
     public void goToEdit() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientUpdateProfile");
@@ -287,13 +258,9 @@ public class GUIPatientProfile {
         }
     }
 
-<<<<<<< HEAD
-=======
-
     /**
      * Goes to the patient donations scene
      */
->>>>>>> development
     public void goToDonations() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientDonations");
