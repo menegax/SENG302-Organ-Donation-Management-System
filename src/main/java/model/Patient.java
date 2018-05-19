@@ -293,7 +293,6 @@ public class Patient extends User {
         }
     }
 
-
     public Timestamp getCREATED() {
         return CREATED;
     }
@@ -385,11 +384,9 @@ public class Patient extends User {
         }
     }
 
-
     public Gender getGender() {
         return gender;
     }
-
 
     public void setGender(Gender gender) {
         if (this.gender != gender) {
@@ -398,11 +395,9 @@ public class Patient extends User {
         }
     }
 
-
     public double getHeight() {
         return height;
     }
-
 
     public void setHeight(double height) {
         if (this.height != height) {
@@ -411,11 +406,9 @@ public class Patient extends User {
         }
     }
 
-
     public double getWeight() {
         return weight;
     }
-
 
     public void setWeight(double weight) {
         if (this.weight != weight) {
@@ -423,7 +416,6 @@ public class Patient extends User {
             patientModified();
         }
     }
-
 
     /**
      * Calculates the Body Mass Index of the patient
@@ -436,11 +428,9 @@ public class Patient extends User {
         else return Double.valueOf(df.format(this.weight / (Math.pow(this.height, 2))));
     }
 
-
     public BloodGroup getBloodGroup() {
         return bloodGroup;
     }
-
 
     public void setBloodGroup(BloodGroup bloodGroup) {
         if (this.bloodGroup != bloodGroup) {
@@ -449,11 +439,9 @@ public class Patient extends User {
         }
     }
 
-
     public String getStreet1() {
         return street1;
     }
-
 
     public void setStreet1(String street1) {
         if (this.street1 == null || (!street1.equals(this.street1))) {
@@ -462,11 +450,9 @@ public class Patient extends User {
         }
     }
 
-
     public String getStreet2() {
         return street2;
     }
-
 
     public void setStreet2(String street2) {
         if (this.street2 == null || (!street2.equals(this.street2))) {
@@ -475,11 +461,9 @@ public class Patient extends User {
         }
     }
 
-
     public String getSuburb() {
         return suburb;
     }
-
 
     public void setSuburb(String suburb) {
         if (this.suburb == null || !suburb.equals(this.suburb)) {
@@ -488,11 +472,9 @@ public class Patient extends User {
         }
     }
 
-
     public Region getRegion() {
         return region;
     }
-
 
     public void setRegion(Region region) {
         if (this.region != region) {
@@ -501,11 +483,9 @@ public class Patient extends User {
         }
     }
 
-
     public int getZip() {
         return zip;
     }
-
 
     /**
      * Gets the current medication list for a Patient
@@ -554,16 +534,13 @@ public class Patient extends User {
         this.requiredOrgans = requiredOrgans;
     }
 
-
     public String getFormattedAddress() {
         return street1 + " " + street2 + " " + suburb + " " + region + " " + zip;
     }
 
-
     public Timestamp getModified() {
         return modified;
     }
-
 
     /**
      * Add organs to patient donations list
@@ -637,11 +614,9 @@ public class Patient extends User {
         }
     }
 
-
     public String getNhiNumber() {
         return nhiNumber;
     }
-
 
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
         ensureValidNhi();
@@ -652,7 +627,6 @@ public class Patient extends User {
         	patientModified();
         }
     }
-
 
     public String getHomePhone() {
         return homePhone;

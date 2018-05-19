@@ -82,7 +82,6 @@ public class GUIPatientUpdateDonations {
 
     private UserControl userControl;
 
-
     public void initialize() {
         userControl = new UserControl();
         Object user = userControl.getLoggedInUser();

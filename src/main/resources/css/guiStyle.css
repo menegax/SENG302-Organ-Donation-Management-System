@@ -90,3 +90,7 @@
 .list-view .list-cell:odd {
     -fx-control-inner-background: WHITE;
 }
+
+.list-cell:filled:selected {
+    -fx-text-fill: GREY;
+}
