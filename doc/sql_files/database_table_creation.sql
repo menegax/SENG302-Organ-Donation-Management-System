@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS tblTransplantWaitList;
 DROP TABLE IF EXISTS tblPatientProcedures;
 DROP TABLE IF EXISTS tblPatients;
 
-CREATE TABLE tblPatient(
+CREATE TABLE tblPatients(
 Nhi CHAR(7),
 FName VARCHAR(35) NOT NULL,
 MName VARCHAR(70),
@@ -22,17 +22,17 @@ PrefName VARCHAR(35),
 Height TINYINT UNSIGNED,
 Weight TINYINT UNSIGNED,
 BloodType CHAR(3),
-DonatingOrgans SET (‘liver’, ‘heart’, ‘kidney’, ‘bone’, ‘bone marrow’, ‘skin’, ‘connective tissue’, ‘cornea’, ‘pancreas’, ‘lung’, ‘middle ear’, ‘intestine’),
-ReceivingOrgans SET (‘liver’, ‘heart’, ‘kidney’, ‘bone’, ‘bone marrow’, ‘skin’, ‘connective tissue’, ‘cornea’, ‘pancreas’, ‘lung’, ‘middle ear’, ‘intestine’),
+DonatingOrgans SET ('liver', 'heart', 'kidney', 'bone', 'bone marrow', 'skin', 'connective tissue', 'cornea', 'pancreas', 'lung', 'middle ear', 'intestine'),
+ReceivingOrgans SET ('liver', 'heart', 'kidney', 'bone', 'bone marrow', 'skin', 'connective tissue', 'cornea', 'pancreas', 'lung', 'middle ear', 'intestine'),
 PRIMARY KEY(Nhi)
 );
 
 CREATE TABLE tblPatientContact(
 Patient CHAR(7),
-Street 1 VARCHAR(100),
-Street 2 VARCHAR(100),
+Street1 VARCHAR(100),
+Street2 VARCHAR(100),
 Suburb VARCHAR(100),
-Region ENUM(‘Northland’, ‘Auckland’, ‘Waikato’, ‘Bay of Plenty’, ‘Gisborne’, ’Hawkes Bay’, ‘Taranaki’, ‘Manawatu’, ‘Wellington’, ‘Tasman’, ‘Nelson’, ‘Marlborough’, ‘West Coast’, ‘Canterbury’, ‘Otago’, ‘Southland’),
+Region ENUM('Northland', 'Auckland', 'Waikato', 'Bay of Plenty', 'Gisborne', 'Hawkes Bay', 'Taranaki', 'Manawatu', 'Wellington', 'Tasman', 'Nelson', 'Marlborough', 'West Coast', 'Canterbury', 'Otago', 'Southland'),
 Zip CHAR(4),
 HomePhone VARCHAR(9),
 WorkPhone VARCHAR(9),
@@ -51,7 +51,7 @@ FOREIGN KEY(Patient) REFERENCES tblPatients(Nhi)
 CREATE TABLE tblPatientLogs(
 Patient CHAR(7),
 Time TIMESTAMP,
-Level ENUM(‘OFF’,’SEVERE’,’WARNING’,’INFO’,’CONFIG’,’FINE’,’FINER’,’FINEST’,’ALL’) NOT NULL,
+Level ENUM('OFF','SEVERE','WARNING','INFO','CONFIG','FINE','FINER','FINEST','ALL') NOT NULL,
 Message VARCHAR(100) NOT NULL,
 Action VARCHAR(100) NOT NULL,
 PRIMARY KEY(Patient, Time),
@@ -79,7 +79,7 @@ Patient CHAR(7),
 Summary VARCHAR(255),
 Description TEXT,
 ProDate DATE,
-AffectedOrgans Set(‘liver’, ‘heart’, ‘kidney’, ‘bone’, ‘bone marrow’, ‘skin’, ‘connective tissue’, ‘cornea’, ‘pancreas’, ‘lung’, ‘middle ear’, ‘intestine’),
+AffectedOrgans Set('liver', 'heart', 'kidney', 'bone', 'bone marrow', 'skin', 'connective tissue', 'cornea', 'pancreas', 'lung', 'middle ear', 'intestine'),
 PRIMARY KEY(Patient, Summary, ProDate),
 FOREIGN KEY(Patient) REFERENCES tblPatients(Nhi)
 );
@@ -87,8 +87,8 @@ FOREIGN KEY(Patient) REFERENCES tblPatients(Nhi)
 CREATE TABLE tblTransplantWaitList (
 Patient CHAR(7),
 RequestDate DATE,
-Organ ENUM(‘liver’, ‘heart’, ‘kidney’, ‘bone’, ‘bone marrow’, ‘skin’, ‘connective tissue’, ‘cornea’, ‘pancreas’, ‘lung’, ‘middle ear’, ‘intestine’),
-Region ENUM(‘Northland’, ‘Auckland’, ‘Waikato’, ‘Bay of Plenty’, ‘Gisborne’, ’Hawkes Bay’, ‘Taranaki’, ‘Manawatu’, ‘Wellington’, ‘Tasman’, ‘Nelson’, ‘Marlborough’, ‘West Coast’, ‘Canterbury’, ‘Otago’, ‘Southland’),
+Organ ENUM('liver', 'heart', 'kidney', 'bone', 'bone marrow', 'skin', 'connective tissue', 'cornea', 'pancreas', 'lung', 'middle ear', 'intestine'),
+Region ENUM('Northland', 'Auckland', 'Waikato', 'Bay of Plenty', 'Gisborne', 'Hawkes Bay', 'Taranaki', 'Manawatu', 'Wellington', 'Tasman', 'Nelson', 'Marlborough', 'West Coast', 'Canterbury', 'Otago', 'Southland'),
 PRIMARY KEY(Patient, RequestDate, Organ),
 FOREIGN KEY(Patient) REFERENCES tblPatients(Nhi)
 );
@@ -101,7 +101,7 @@ LName VARCHAR(35) NOT NULL,
 Street1 VARCHAR(100),
 Street2 VARCHAR(100),
 Suburb VARCHAR(100),
-Region ENUM(‘Northland’, ‘Auckland’, ‘Waikato’, ‘Bay of Plenty’, ‘Gisborne’, ’Hawkes Bay’, ‘Taranaki’, ‘Manawatu’, ‘Wellington’, ‘Tasman’, ‘Nelson’, ‘Marlborough’, ‘West Coast’, ‘Canterbury’, ‘Otago’, ‘Southland’),
+Region ENUM('Northland', 'Auckland', 'Waikato', 'Bay of Plenty', 'Gisborne', 'Hawkes Bay', 'Taranaki', 'Manawatu', 'Wellington', 'Tasman', 'Nelson', 'Marlborough', 'West Coast', 'Canterbury', 'Otago', 'Southland'),
 Modified TIMESTAMP NOT NULL,
 PRIMARY KEY(StaffID)
 );
