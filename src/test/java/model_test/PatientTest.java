@@ -9,6 +9,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import service.Database;
+import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 
 import static utility.UserActionHistory.userActions;
@@ -19,6 +20,8 @@ import static org.junit.Assert.*;
 public class PatientTest {
 
     private static Patient testPatient; //Patient obj not within the database
+
+    private static Patient testPatient1; //Patient obj not within the database
 
     /**
      * Populate database with test patients and disables logging
@@ -38,6 +41,9 @@ public class PatientTest {
 
         Database.addPatient(new Patient("DEF4567", "Bob", null, "Bobby",
                 LocalDate.of(1994, 12, 12)));
+
+        testPatient1 = new Patient("JJJ1234", "Rex", null, "Petsberg",
+                LocalDate.of(1977, 6, 16));
     }
 
     /**
@@ -47,6 +53,32 @@ public class PatientTest {
     public void testPatientConstructor() {
         Patient patient = givenPatient();
         thenPatientHasAttributes(patient);
+    }
+
+    /**
+     * Adds a few organs correctly to requirements
+     */
+    @Test
+    public void testAddingOfOrgansToRequirements() {
+        ArrayList<Organ> expected = new ArrayList<Organ>();
+        expected.add(Organ.LIVER);
+        expected.add(Organ.CORNEA);
+        testPatient1.addRequired(Organ.LIVER);
+        testPatient1.addRequired(Organ.CORNEA);
+        assertEquals(expected, testPatient1.getRequiredOrgans());
+    }
+
+    /**
+     * Removes a few organs correctly
+     */
+    @Test
+    public void testRemovingOfOrgansFromRequirements() {
+        ArrayList<Organ> expected = new ArrayList<Organ>();
+        testPatient1.addRequired(Organ.LIVER);
+        testPatient1.addRequired(Organ.CORNEA);
+        testPatient1.removeRequired(Organ.LIVER);
+        testPatient1.removeRequired(Organ.CORNEA);
+        assertEquals(expected, testPatient1.getRequiredOrgans());
     }
 
     /**
@@ -66,7 +98,6 @@ public class PatientTest {
         }};
         assertEquals(expected, testPatient.getDonations());
     }
-
 
     /**
      * Add a list containing at least one invalid organ,

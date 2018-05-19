@@ -286,6 +286,10 @@ public class Patient extends User {
     }
 
 
+    /**
+     * Sets the donation organs of the patient to the list parsed through
+     * @param donations
+     */
     public void setDonations(ArrayList<Organ> donations) {
         if (this.donations != donations) {
             this.donations = donations;
@@ -526,10 +530,18 @@ public class Patient extends User {
         }
     }
 
+    /**
+     * gets the current requred organs of the patient
+     * @return required organs of the patient
+     */
     public ArrayList<Organ> getRequiredOrgans() {
         return this.requiredOrgans;
     }
 
+    /**
+     * sets the required organs of the patient to the list parsed through
+     * @param requiredOrgans
+     */
     public void setRequiredOrgans(ArrayList requiredOrgans) {
         this.requiredOrgans = requiredOrgans;
     }
