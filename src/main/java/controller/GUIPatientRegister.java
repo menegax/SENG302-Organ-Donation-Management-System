@@ -226,7 +226,12 @@ public class GUIPatientRegister {
             Database.saveToDisk();
             clearFields();
             new Alert(Alert.AlertType.INFORMATION, "Successfully registered!").show();
-            ScreenControl.activate("login");
+            try {
+                screenControl.show(Main.getUuid(),FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+            } catch (IOException e) {
+                new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
+                userActions.log(SEVERE, "Failed to load login", "Attempted to load login");
+            }
         }
         else {
             userActions.log(Level.WARNING, "Failed to register patient profile due to invalid fields", "Attempted to register patient profile");
