@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,6 +9,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.input.KeyCode;
@@ -16,8 +18,8 @@ import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
 import service.Database;
-import utility.GlobalEnums;
 import utility.undoRedo.UndoableStage;
+
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -45,6 +47,7 @@ public class GUILogin {
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     public void initialize() {
+        nhiLogin.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         // Enter key triggers log in
         loginPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -143,5 +146,4 @@ public class GUILogin {
             nhiLogin.setPromptText("NHI");
         }
     }
-
 }

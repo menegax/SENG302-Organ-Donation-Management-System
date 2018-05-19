@@ -9,11 +9,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.stage.Stage;
 import model.Patient;
 import service.Database;
@@ -61,6 +63,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
+        searchEntry.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         FilteredList<Patient> filteredData = setupTableColumnsAndData();
 
         setupSearchingListener(filteredData);

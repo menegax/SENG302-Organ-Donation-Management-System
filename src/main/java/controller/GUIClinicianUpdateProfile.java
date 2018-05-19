@@ -3,9 +3,11 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
@@ -66,6 +68,13 @@ public class GUIClinicianUpdateProfile extends UndoableController{
      * Calls to load the clinician profile and calls to set up undo/redo functionality
      */
     public void initialize() {
+        staffId.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        firstnameTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        lastnameTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        middlenameTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        street1Txt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        street2Txt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        suburbTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         // Populate region dropdown with values from the Regions enum
         List<String> regions = new ArrayList<>();
         for (Region region : Region.values()) {

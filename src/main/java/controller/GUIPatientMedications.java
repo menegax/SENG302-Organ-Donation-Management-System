@@ -9,9 +9,11 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.Patient;
@@ -35,7 +37,6 @@ import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
-//import static utility.UserActionRecord.logHistory;
 
 public class GUIPatientMedications extends UndoableController {
 
@@ -56,8 +57,6 @@ public class GUIPatientMedications extends UndoableController {
     public Button addMed;
     public Button deleteMed;
     public Button saveMed;
-    public Button undoEdit;
-    public Button redoEdit;
     public Button compareMeds;
     public Button goBack;
     public Button clearMed;
@@ -178,6 +177,7 @@ public class GUIPatientMedications extends UndoableController {
      */
     @FXML
     public void initialize() {
+        newMedication.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
         //Register events for when an item is selected from a listView and set selection mode to multiple
