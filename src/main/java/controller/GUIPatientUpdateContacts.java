@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Patient;
 import service.Database;
+import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -25,7 +27,7 @@ import static utility.UserActionHistory.userActions;
  * Details are saved when the Save button is selected, and the user is returned to the patient profile view screen.
  * @author Maree Palmer
  */
-public class GUIPatientUpdateContacts implements IPopupable {
+public class GUIPatientUpdateContacts extends UndoableController {
 
     @FXML
     public AnchorPane patientContactsPane;
@@ -65,19 +67,9 @@ public class GUIPatientUpdateContacts implements IPopupable {
      */
     private Patient target;
 
-    private StatesHistoryScreen statesHistoryScreen;
+    private UserControl userControl;
 
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     public void setViewedPatient(Patient patient) {
         target = patient;
@@ -99,8 +91,14 @@ public class GUIPatientUpdateContacts implements IPopupable {
      * display current contact attributes.
      */
     public void initialize() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            loadProfile(ScreenControl.getLoggedInPatient().getNhiNumber());
+        userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
+        if (user instanceof Patient) {
+            loadProfile(((Patient) user).getNhiNumber());
+            setContactFields();
+        }
+        if (userControl.getTargetPatient() != null) {
+            loadProfile((userControl.getTargetPatient()).getNhiNumber());
             setContactFields();
         }
         setupUndoRedo();
@@ -117,7 +115,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
      * Sets up the variables needed for undo and redo functionality
      */
     private void setupUndoRedo() {
-        ArrayList<Control> controls = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(homePhoneField);
             add(mobilePhoneField);
             add(workPhoneField);
@@ -129,7 +127,7 @@ public class GUIPatientUpdateContacts implements IPopupable {
             add(contactWorkPhoneField);
             add(contactEmailAddressField);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(patientContactsPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATECONTACTS);
     }
 
     /**
@@ -310,19 +308,17 @@ public class GUIPatientUpdateContacts implements IPopupable {
      * Closes the contact details screen and returns the user to the profile window without saving changes.
      */
     public void goToProfile() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            ScreenControl.removeScreen("patientProfile");
+        if (userControl.getLoggedInUser() instanceof Patient) {
             try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
+                screenControl.show(patientContactsPane, "/scene/patientProfile.fxml");
             } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error returning to profile screen", "attempted to navigate from the donation page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+                new Alert((Alert.AlertType.ERROR), "Unable to patient profile").show();
+                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientContactsPane.getScene(), fxmlLoader, target);
+                ScreenControl.loadPopUpPane(patientContactsPane.getScene(), fxmlLoader);
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error returning to profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
                 new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();

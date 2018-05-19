@@ -38,21 +38,25 @@ public class StateHistoryTableView extends StateHistoryControl {
     /**
      * Sets the tableView to the state before the current state
      */
-    public void undo() {
+    public boolean undo() {
         if (index != 0) {
             index -= 1;
             tableView.getSelectionModel().select((String) states.get(index));
             undone = true;
+            return true;
         }
+        return false;
     }
 
     /**
      * Resets the tableView to the state immediately prior to an undo
      */
-    public void redo() {
+    public boolean redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
             tableView.getSelectionModel().select((String) states.get(index));
+            return true;
         }
+        return false;
     }
 }

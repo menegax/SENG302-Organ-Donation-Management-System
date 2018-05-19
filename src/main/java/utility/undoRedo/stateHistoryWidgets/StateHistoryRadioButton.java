@@ -8,13 +8,14 @@ import java.util.List;
 
 public class StateHistoryRadioButton extends StateHistoryControl {
 
-    private RadioButton radioButton;
-
     private boolean undone = false;
 
-
+    /**
+     * Constructor for a StateHistoryRadioButton
+     * @param radioButton the radioButton this object stores the state of
+     */
     public StateHistoryRadioButton(RadioButton radioButton) {
-        this.radioButton = radioButton;
+        this.control = radioButton;
         states.add(radioButton.isSelected());
 
     }
@@ -28,29 +29,33 @@ public class StateHistoryRadioButton extends StateHistoryControl {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(radioButton.isSelected());
+        states.add(((RadioButton) control).isSelected());
     }
 
 
     /**
      * Sets the RadioButton to the state before the current state
      */
-    public void undo() {
+    public boolean undo() {
         if (index != 0) {
             index -= 1;
-            radioButton.setSelected((Boolean) states.get(index));
+            ((RadioButton) control).setSelected((Boolean) states.get(index));
             undone = true;
+            return true;
         }
+        return false;
     }
 
 
     /**
      * Resets the RadioButton to the state immediately prior to an undo
      */
-    public void redo() {
+    public boolean redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
-            radioButton.setSelected((Boolean) states.get(index));
+            ((RadioButton) control).setSelected((Boolean) states.get(index));
+            return true;
         }
+        return false;
     }
 }

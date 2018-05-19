@@ -1,5 +1,9 @@
 package utility.undoRedo.stateHistoryWidgets;
 
+import javafx.scene.control.Control;
+import utility.GlobalEnums;
+import utility.undoRedo.UndoableStage;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,10 +17,13 @@ public abstract class StateHistoryControl {
 
     List<Object> states = new ArrayList<>();
 
+    Control control;
+
     /**
      * Display the state of the object one action ahead
+     * @return whether the stateHistory was successfully redone or not
      */
-    abstract public void redo();
+    abstract public boolean redo();
 
 
     /**
@@ -27,8 +34,9 @@ public abstract class StateHistoryControl {
 
     /**
      * Display the last state of the object to the user
+     * @return whether the stateHistory was successfully undone or not
      */
-    abstract public void undo();
+    abstract public boolean undo();
 
 
     /**
@@ -39,7 +47,7 @@ public abstract class StateHistoryControl {
      */
     public List<Object> getStates() {
         return Collections.unmodifiableList(states);
-    };
+    }
 
 
     /**
@@ -57,5 +65,11 @@ public abstract class StateHistoryControl {
      */
     public Object getCurrentState() {
         return states.get(index);
-    };
+    }
+
+    /**
+     * Gets the undoable stage that this stateHistoryControl is on
+     * @return the undoableStage of this stateHistoryControl
+     */
+    public UndoableStage getUndoableStage() { return (UndoableStage) control.getScene().getWindow(); }
 }

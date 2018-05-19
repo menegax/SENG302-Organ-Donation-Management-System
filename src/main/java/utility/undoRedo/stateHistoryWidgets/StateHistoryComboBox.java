@@ -12,11 +12,6 @@ import java.util.List;
  */
 public class StateHistoryComboBox extends StateHistoryControl {
 
-    /**
-     * The ComboBox this object holds the states for
-     */
-    private ComboBox<String> comboBox;
-
     /*
      * True if an undo has been executed, false otherwise - could be reset at exit from each interface
      */
@@ -29,7 +24,7 @@ public class StateHistoryComboBox extends StateHistoryControl {
      * @param comboBox the ComboBox whose state we are storing
      */
     public StateHistoryComboBox(ComboBox<String> comboBox) {
-        this.comboBox = comboBox;
+        this.control = comboBox;
         states.add(comboBox.getSelectionModel().getSelectedItem());
     }
 
@@ -42,28 +37,34 @@ public class StateHistoryComboBox extends StateHistoryControl {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(comboBox.getSelectionModel().getSelectedItem());
+        states.add(((ComboBox) control).getSelectionModel().getSelectedItem());
     }
 
 
     /**
      * Sets the ComboBox to the state before the current state
      */
-    public void undo() {
+    public boolean undo() {
         if (index != 0) {
             index -= 1;
-            comboBox.getSelectionModel().select((String) states.get(index));
+            // Cast is always safe
+            ((ComboBox<String>) control).getSelectionModel().select((String) states.get(index));
             undone = true;
+            return true;
         }
+        return false;
     }
 
     /**
      * Resets the ComboBox to the state immediately prior to an undo
      */
-    public void redo() {
+    public boolean redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
-            comboBox.getSelectionModel().select((String) states.get(index));
+            // Cast is always safe
+            ((ComboBox<String>) control).getSelectionModel().select((String) states.get(index));
+            return true;
         }
+        return false;
     }
 }

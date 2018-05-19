@@ -12,11 +12,6 @@ import java.util.List;
 public class StateHistoryCheckBox extends StateHistoryControl {
 
     /**
-     * The CheckBox this object holds the states for
-     */
-    private CheckBox checkBox;
-
-    /**
      * True if an undo has been executed, false otherwise - could be reset at exit from each interface
      */
     private boolean undone = false;
@@ -28,7 +23,7 @@ public class StateHistoryCheckBox extends StateHistoryControl {
      * @param checkBox the CheckBox whose state we are storing
      */
     public StateHistoryCheckBox(CheckBox checkBox) {
-        this.checkBox = checkBox;
+        this.control = checkBox;
         states.add(checkBox.isSelected());
     }
 
@@ -41,30 +36,34 @@ public class StateHistoryCheckBox extends StateHistoryControl {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(checkBox.isSelected());
+        states.add(((CheckBox) control).isSelected());
     }
 
 
     /**
      * Sets the CheckBox to the state before the current state
      */
-    public void undo() {
+    public boolean undo() {
         if (index != 0) {
             index -= 1;
-            checkBox.setSelected((Boolean) states.get(index));
+            ((CheckBox) control).setSelected((Boolean) states.get(index));
             undone = true;
+            return true;
         }
+        return false;
     }
 
 
     /**
      * Resets the Checkbox to the state immediately prior to an undo
      */
-    public void redo() {
+    public boolean redo() {
         if (undone && index + 1 < states.size()) {
             index += 1;
-            checkBox.setSelected((Boolean) states.get(index));
+            ((CheckBox) control).setSelected((Boolean) states.get(index));
+            return true;
         }
+        return false;
     }
 
 }

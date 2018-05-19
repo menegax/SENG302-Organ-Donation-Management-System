@@ -35,6 +35,12 @@
                   <Label fx:id="genderLbl" text="Label" />
                </children>
             </HBox>
+            <HBox layoutX="10.0" layoutY="61.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label prefHeight="16.0" prefWidth="112.0" text="Vital status:" />
+                  <Label fx:id="vitalLbl1" text="Label" />
+               </children>
+            </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Label prefHeight="16.0" prefWidth="112.0" text="Date of Birth: " />
@@ -120,10 +126,10 @@
          </children>
       </VBox>
       <Label fx:id="back" layoutX="14.0" layoutY="14.0" onMouseClicked="#goToPatientHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-       <Button fx:id="editPatientButton" layoutX="323.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToEdit" text="Manage Profile" />
-       <Button fx:id="donationButton" layoutX="182.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
-       <Button fx:id="medicationBtn" layoutX="25.0" layoutY="349.0" mnemonicParsing="false" onAction="#openMedication" text="Manage Medications" />
-       <Button fx:id="contactButton" layoutX="445.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contacts" />
+      <Button fx:id="editPatientButton" layoutX="323.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToEdit" text="Manage Profile" />
+      <Button fx:id="donationButton" layoutX="182.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
+      <Button fx:id="medicationBtn" layoutX="25.0" layoutY="349.0" mnemonicParsing="false" onAction="#openMedication" text="Manage Medications" />
+      <Button fx:id="contactButton" layoutX="445.0" layoutY="349.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contacts" />
       <VBox layoutX="445.0" layoutY="100.0" prefHeight="200.0" prefWidth="142.0">
          <children>
             <Label alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Medications">
