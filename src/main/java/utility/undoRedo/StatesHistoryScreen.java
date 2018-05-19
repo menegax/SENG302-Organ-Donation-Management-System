@@ -31,7 +31,6 @@ public class StatesHistoryScreen {
      */
     private boolean redone = false;
 
-
     /**
      * Constructor for the StatesHistoryScreen, creates state objects of passed in control items to keep track of
      * Creates the list of stateHistories in its initialisation
@@ -65,6 +64,9 @@ public class StatesHistoryScreen {
             }
             if (param instanceof DatePicker) {
                 createStateHistoriesDatePicker(param);
+            }
+            if (param instanceof TableView) {
+                createStateHistoriesTableView(param);
             }
         }
     }
@@ -165,29 +167,32 @@ public class StatesHistoryScreen {
 
 
     /**
-     * Creates state objects for every control item in the passed in array
+     * Creates state objects for every tableView item in the passed in array
      *
-     * @param choiceBox - object which can be cast to an arraylist<ChoiceBox>
+     * @param tableView - object which can be cast to an arraylist<TableView>
      */
 
-    private void createStateHistoriesChoiceBox(Object choiceBox) {
-        stateHistories.add(new StateHistoryChoiceBox((ChoiceBox<String>) choiceBox));
-        ((ChoiceBox<String>) choiceBox).getSelectionModel()
-                .selectedItemProperty()
+    private void createStateHistoriesTableView(Object tableView) {
+        stateHistories.add(new StateHistoryTableView( (TableView<String>) tableView ));
+        ((TableView<String>) tableView).getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if (((oldValue == null || newValue == null) || !newValue.equals(oldValue)) && !undone
-                            && !redone) { //don't want to store state when ChoiceBox has been undone
+                    if (((oldValue == null || newValue == null) || !newValue.equals(oldValue)) && !undone  && !redone) {
                         store();
                     }
                 });
-        //        The following code is commented out as Ctrl+Z still triggers on the AnchorPane when the choiceBox is selected
-        //        ((ChoiceBox<String>) choiceBox).setOnKeyPressed(event -> {
-        //            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-        //                undo();
-        //            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-        //                redo();
-        //            }
-        //        });
+    }
+
+
+    private void createStateHistoriesChoiceBox(Object choiceBox) {
+        stateHistories.add( new StateHistoryChoiceBox( (ChoiceBox <String>) choiceBox ) );
+        ((ChoiceBox <String>) choiceBox).getSelectionModel()
+                .selectedItemProperty()
+                .addListener( ( observable, oldValue, newValue ) -> {
+                    if (((oldValue == null || newValue == null) || !newValue.equals( oldValue )) && !undone
+                            && !redone) { //don't want to store state when ChoiceBox has been undone
+                        store();
+                    }
+                } );
     }
 
 
