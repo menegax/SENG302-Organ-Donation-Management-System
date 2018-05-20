@@ -72,4 +72,13 @@ public abstract class StateHistoryControl {
      * @return the undoableStage of this stateHistoryControl
      */
     public UndoableStage getUndoableStage() { return (UndoableStage) control.getScene().getWindow(); }
+
+    /**
+     * Sets the states in this StateHistoryControl to a copy of the provided StateHistoryControl
+     * @param stateHistoryControl the StateHistoryControl to copy the state of
+     */
+    public void setStates(StateHistoryControl stateHistoryControl) {
+        this.states = stateHistoryControl.getStates();
+        this.index = stateHistoryControl.getIndex();
+    }
 }

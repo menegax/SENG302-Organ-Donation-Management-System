@@ -42,15 +42,6 @@ public class StatesHistoryScreen {
      * @param undoableScreen the enum of the screen this StatesHistoryScreen represents
      */
     public StatesHistoryScreen(List<Control> controls, UndoableScreen undoableScreen) {
-        // todo remove if unnecessary
-//        pane.setOnKeyPressed(event -> {
-//            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-//                undo();
-//            }
-//            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-//                redo();
-//            }
-//        });
         this.undoableScreen = undoableScreen;
         controls.get(0).sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene != null) {
@@ -96,17 +87,20 @@ public class StatesHistoryScreen {
         stateHistories.add(new StateHistoryTextEntry((TextField) entry));
         ((TextField) entry).textProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if (!newValue.equals(oldValue) && !undone && !redone) { //don't want to store state when textfield has been undone or redone
+                    if (!newValue.equals(oldValue)) {
                         store();
                     }
                 });
         ((TextField) entry).setOnKeyPressed(event -> {
             if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-                undo();
+                ((TextField) entry).getParent().requestFocus();
+                ((UndoableStage) ((TextField) entry).getScene().getWindow()).undo();
             }
             else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                redo();
+                ((TextField) entry).getParent().requestFocus();
+                ((UndoableStage) ((TextField) entry).getScene().getWindow()).redo();
             }
+            event.consume();
         });
     }
 
@@ -122,18 +116,10 @@ public class StatesHistoryScreen {
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     if ((oldValue == null && newValue != null)
-                            || !newValue.equals(oldValue) && !undone && !redone) { //don't want to store state when ComboBox has been undone
+                            || !newValue.equals(oldValue)) {
                         store();
                     }
                 });
-        //        The following code is commented out as it is assumed, like choiceBox, Ctrl+Z still triggers on the AnchorPane when the comboBox is selected
-        //        ((ComboBox<String>) comboBox).setOnKeyPressed(event -> {
-        //            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-        //                undo();
-        //            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-        //                redo();
-        //            }
-        //        });
     }
 
 
@@ -147,7 +133,7 @@ public class StatesHistoryScreen {
         StateHistoryRadioButton stateHistoryRadioButton = new StateHistoryRadioButton((RadioButton) radioButton);
         stateHistories.add(stateHistoryRadioButton);
         ((RadioButton) radioButton).selectedProperty().addListener((observable, oldValue, newValue) -> {
-                    if (newValue != oldValue && !undone && !redone && ((RadioButton) radioButton).focusedProperty().getValue()) { //don't want to store state when radioButton has been undone
+                    if (newValue != oldValue && ((RadioButton) radioButton).focusedProperty().getValue()) {
                         store();
                     }
                 });
@@ -166,18 +152,10 @@ public class StatesHistoryScreen {
         stateHistories.add(new StateHistoryCheckBox((CheckBox) checkBox));
         ((CheckBox) checkBox).selectedProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if (!newValue.equals(oldValue) && !undone && !redone) { //don't want to store state when CheckBox has been undone
+                    if (!newValue.equals(oldValue)) {
                         store();
                     }
                 });
-        //        The following code is commented out as Ctrl + Z still still triggers on parent pane when checkbox is selected
-        //        ((CheckBox) checkBox).setOnKeyPressed(event -> {
-        //            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-        //                undo();
-        //            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-        //                redo();
-        //            }
-        //        });
     }
 
 
@@ -191,7 +169,7 @@ public class StatesHistoryScreen {
         stateHistories.add(new StateHistoryTableView( (TableView<String>) tableView ));
         ((TableView<String>) tableView).getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if (((oldValue == null || newValue == null) || !newValue.equals(oldValue)) && !undone  && !redone) {
+                    if (((oldValue == null || newValue == null) || !newValue.equals(oldValue))) {
                         store();
                     }
                 });
@@ -203,8 +181,7 @@ public class StatesHistoryScreen {
         ((ChoiceBox <String>) choiceBox).getSelectionModel()
                 .selectedItemProperty()
                 .addListener( ( observable, oldValue, newValue ) -> {
-                    if (((oldValue == null || newValue == null) || !newValue.equals( oldValue )) && !undone
-                            && !redone) { //don't want to store state when ChoiceBox has been undone
+                    if (((oldValue == null || newValue == null) || !newValue.equals( oldValue ))) {
                         store();
                     }
                 } );
@@ -220,7 +197,7 @@ public class StatesHistoryScreen {
         stateHistories.add(new StateHistoryDatePicker((DatePicker) datePicker));
         ((DatePicker) datePicker).valueProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if (newValue != oldValue && !undone && !redone) { //don't want to store state when DatePicker has been undone
+                    if (newValue != oldValue) {
                         store();
                     }
                 });
@@ -235,10 +212,12 @@ public class StatesHistoryScreen {
      * Stores the current state of the screen
      */
     public void store() {
-        for (StateHistoryControl stateHistory : stateHistories) {
-            stateHistory.store();
+        if (!undone && !redone && !stateHistories.get(0).getUndoableStage().isChangingStates()) {
+            for (StateHistoryControl stateHistory : stateHistories) {
+                stateHistory.store();
+            }
+            stateHistories.get(0).getUndoableStage().store();
         }
-        stateHistories.get(0).getUndoableStage().store();
     }
 
 
@@ -278,8 +257,6 @@ public class StatesHistoryScreen {
 
     /**
      * Gets the stateHistories ArrayList
-     * Currently only used for testing
-     *
      * @return the ArrayList of state history objects
      */
     public List<StateHistoryControl> getStateHistories() {
@@ -302,4 +279,5 @@ public class StatesHistoryScreen {
     public UndoableScreen getUndoableScreen() {
         return undoableScreen;
     }
+
 }

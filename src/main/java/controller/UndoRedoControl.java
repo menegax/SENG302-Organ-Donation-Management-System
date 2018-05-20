@@ -2,6 +2,7 @@ package controller;
 
 import javafx.scene.control.*;
 import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.stateHistoryWidgets.StateHistoryControl;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,6 +24,17 @@ public class UndoRedoControl {
     static public void setStates(StatesHistoryScreen statesHistoryScreen, List<Control> controlList) {
         for (int i = 0; i < controlList.size(); i++) {
             setControl(controlList.get(i), statesHistoryScreen.getStateOfControl(i));
+        }
+    }
+
+    /**
+     * Sets the controller's statesHistoryScreen to the states in the provided statesHistoryScreen
+     * @param controller the controller of the current screen to set
+     * @param statesHistoryScreen the statesHistoryScreen to get the states from
+     */
+    static public void setStatesHistoryScreen (UndoableController controller, StatesHistoryScreen statesHistoryScreen) {
+        for (int i = 0; i < statesHistoryScreen.getStateHistories().size(); i++) {
+            controller.setStateHistory(i, statesHistoryScreen.getStateHistories().get(i));
         }
     }
 
@@ -52,7 +64,11 @@ public class UndoRedoControl {
             ((ComboBox) control).getSelectionModel().select(state);
         }
         if (control instanceof DatePicker) {
-            ((DatePicker) control).setValue(LocalDate.parse((String) state));
+            if (state != null) {
+                ((DatePicker) control).setValue(LocalDate.parse((String) state));
+            } else {
+                ((DatePicker) control).setValue(null);
+            }
         }
     }
 }

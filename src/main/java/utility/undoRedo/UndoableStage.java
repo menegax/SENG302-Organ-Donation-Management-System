@@ -51,7 +51,7 @@ public class UndoableStage extends Stage {
     /**
      * Undoes the previous action and navigates to the appropriate screen where applicable
      */
-    private void undo() {
+    public void undo() {
         changingStates = true;
         boolean success = false;
         while (statesHistoryScreens.size() != 0 && !success) {
@@ -61,8 +61,8 @@ public class UndoableStage extends Stage {
             }
             if (!success) {
                 index -= 1;
-                navigateToScreen("undo");
             }
+            navigateToScreen("undo");
         }
         changingStates = false;
     }
@@ -70,7 +70,7 @@ public class UndoableStage extends Stage {
     /**
      * Redoes the last undone action and navigates to the appropriate screen where applicable
      */
-    private void redo() {
+    public void redo() {
         changingStates = true;
         boolean success = false;
         while (statesHistoryScreens.size() != 0 && !success) {
@@ -80,8 +80,8 @@ public class UndoableStage extends Stage {
             }
             if (!success) {
                 index += 1;
-                navigateToScreen("redo");
             }
+            navigateToScreen("redo");
         }
         changingStates = false;
     }
@@ -101,10 +101,9 @@ public class UndoableStage extends Stage {
      * @param method whether this was called from an undo or redo
      */
     private void navigateToScreen(String method) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource((statesHistoryScreens.get(index)).getUndoableScreen().toString() + ".fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/" + (statesHistoryScreens.get(index)).getUndoableScreen().toString() + ".fxml"));
         try {
             ScreenControl screenControl = ScreenControl.getScreenControl();
-            screenControl.addStage(uuid,this);
             screenControl.show(uuid, fxmlLoader.load());
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading screen", "Attempted to navigate screens during " + method);
@@ -112,6 +111,8 @@ public class UndoableStage extends Stage {
         }
         UndoableController controller = fxmlLoader.getController();
         UndoRedoControl.setStates(statesHistoryScreens.get(index), controller.getControls());
+        UndoRedoControl.setStatesHistoryScreen(controller, statesHistoryScreens.get(index));
+        statesHistoryScreens.set(index, controller.getStatesHistory());
     }
 
     /**
@@ -134,5 +135,13 @@ public class UndoableStage extends Stage {
      */
     public UUID getUUID() {
         return uuid;
+    }
+
+    /**
+     * Whether the undoable stage has called an undo or redo (changing states)
+     * @return if the stage is in the process of an undo or redo
+     */
+    public boolean isChangingStates() {
+        return changingStates;
     }
 }
