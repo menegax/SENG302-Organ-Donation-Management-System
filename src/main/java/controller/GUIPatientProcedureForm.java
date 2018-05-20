@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientProcedureForm implements IPopupable {
+public class GUIPatientProcedureForm extends UndoableController {
 
     @FXML
     public Button doneButton;
@@ -45,6 +45,14 @@ public class GUIPatientProcedureForm implements IPopupable {
     private Patient patient;
     private boolean isEditInstance = false;
     private Procedure procedure; //The Procedure that is being edited (null in the case of adding a procedure)
+
+    private UserControl userControl;
+
+
+    public void initialize() {
+        userControl = new UserControl();
+        patient = userControl.getTargetPatient();
+    }
 
     /**
      * Used to signify that the instance is for editing a procedure
@@ -204,7 +212,8 @@ public class GUIPatientProcedureForm implements IPopupable {
     public void goBackToProcedures() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedures.fxml"));
-            ScreenControl.loadPopUpPane(procedureAnchorPane.getScene(), fxmlLoader, patient);
+            ScreenControl.loadPopUpPane(procedureAnchorPane.getScene(), fxmlLoader);
+
         } catch (IOException e) {
             userActions.log(Level.SEVERE,
                     "Failed to open procedures page from procedure form",

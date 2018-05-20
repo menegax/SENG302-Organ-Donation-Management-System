@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Clinician;
 import model.Patient;
 import model.Procedure;
 import utility.GlobalEnums.Organ;
@@ -21,12 +22,13 @@ import java.time.LocalDate;
 import java.util.Set;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
  * Controller class for the Patient procedures screen
  */
-public class GUIPatientProcedures implements IPopupable {
+public class GUIPatientProcedures extends UndoableController {
 
     @FXML
     public AnchorPane patientProceduresPane;
@@ -72,16 +74,25 @@ public class GUIPatientProcedures implements IPopupable {
 
     private Patient patient;
 
+    private UserControl userControl;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+
     /**
      * Sets the TableViews to the appropriate procedures for the current patient
      */
     public void initialize() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            this.patient = ScreenControl.getLoggedInPatient();
+        userControl = new UserControl();
+        if (userControl.getLoggedInUser() instanceof Patient) {
+            this.patient = (Patient) userControl.getLoggedInUser();
             setupTables();
             addProcedureButton.setVisible(false);
             editProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
+        } else if (userControl.getLoggedInUser() instanceof Clinician) {
+            this.patient = userControl.getTargetPatient();
+            setupTables();
         }
     }
 
@@ -164,7 +175,7 @@ public class GUIPatientProcedures implements IPopupable {
     public void addProcedure() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
-            ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader, patient);
+            ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader);
         } catch (IOException e) {
             userActions.log(Level.SEVERE,
                     "Failed to open add procedure popup from patient procedures",
@@ -191,7 +202,7 @@ public class GUIPatientProcedures implements IPopupable {
         }
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
-            ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader, patient);
+            ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader);
             GUIPatientProcedureForm controller = fxmlLoader.getController();
             controller.setupEditing(selectedProcedure);
         } catch (IOException e) {
@@ -247,19 +258,17 @@ public class GUIPatientProcedures implements IPopupable {
 
     @FXML
     public void goToProfile() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            ScreenControl.removeScreen("patientProfile");
+        if (userControl.getLoggedInUser() instanceof Patient ) {
             try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
+                screenControl.show(patientProceduresPane,"/scene/patientProfile.fxml");
             } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the procedures page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+                new Alert((Alert.AlertType.ERROR), "Unable to load patient profile").show();
+                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader, patient);
+                ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader);
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the procedures page to the profile page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
