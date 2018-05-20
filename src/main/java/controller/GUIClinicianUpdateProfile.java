@@ -3,15 +3,19 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import service.Database;
+import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -21,12 +25,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
  * Controller class to control GUI Clinician updating screen.
  */
-public class GUIClinicianUpdateProfile {
+public class GUIClinicianUpdateProfile extends UndoableController{
 
     @FXML
     public AnchorPane clinicianUpdateAnchorPane;
@@ -55,23 +60,7 @@ public class GUIClinicianUpdateProfile {
 
     private Clinician target;
 
-    private StatesHistoryScreen screenHistory;
-
-    /**
-     * Undoes an action taken when editing a clinician
-     */
-    @FXML
-    public void undo(){
-        screenHistory.undo();
-    }
-
-    /**
-     * Redoes an action taken when editing a clinician
-     */
-    @FXML
-    public void redo(){
-        screenHistory.redo();
-    }
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initializes the clinician editing screen.
@@ -79,6 +68,13 @@ public class GUIClinicianUpdateProfile {
      * Calls to load the clinician profile and calls to set up undo/redo functionality
      */
     public void initialize() {
+        staffId.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        firstnameTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        lastnameTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        middlenameTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        street1Txt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        street2Txt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        suburbTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         // Populate region dropdown with values from the Regions enum
         List<String> regions = new ArrayList<>();
         for (Region region : Region.values()) {
@@ -89,8 +85,11 @@ public class GUIClinicianUpdateProfile {
 
         // Registering a change event to clear the invalid class
         regionDD.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> setValid(regionDD));
-
-        loadProfile(ScreenControl.getLoggedInClinician().getStaffID());
+        UserControl userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
+        if (user instanceof Clinician){
+            loadProfile(((Clinician) user).getStaffID());
+        }
         setUpStateHistory();
     }
 
@@ -114,7 +113,7 @@ public class GUIClinicianUpdateProfile {
      * the StateHistoryScreen used to undo or redo actions using the control elements
      */
     private void setUpStateHistory() {
-        ArrayList<Control> elements = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(staffId);
             add(firstnameTxt);
             add(lastnameTxt);
@@ -124,7 +123,7 @@ public class GUIClinicianUpdateProfile {
             add(suburbTxt);
             add(regionDD);
         }};
-        screenHistory = new StatesHistoryScreen(clinicianUpdateAnchorPane, elements);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPROFILEUPDATE);
     }
 
     /**
@@ -247,13 +246,11 @@ public class GUIClinicianUpdateProfile {
      * Navigates back to the profile window
      */
     public void goBackToProfile() {
-        ScreenControl.removeScreen("clinicianProfile");
         try {
-            ScreenControl.addScreen("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
-            ScreenControl.activate("clinicianProfile");
+            screenControl.show(clinicianUpdateAnchorPane, "/scene/clinicianProfile.fxml");
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).show();
+            new Alert((Alert.AlertType.ERROR), "Unable to load clinician profile").show();
+            userActions.log(SEVERE, "Failed to load clinician profile", "Attempted to load clinician profile");
         }
     }
 }

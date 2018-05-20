@@ -9,14 +9,18 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
+import model.Clinician;
 import model.Patient;
 import model.DrugInteraction;
 import model.Medication;
 import service.Database;
+import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.UserActionRecord;
 
@@ -31,16 +35,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
-import static utility.UserActionRecord.logHistory;
 
-public class GUIPatientMedications implements IPopupable {
+public class GUIPatientMedications extends UndoableController {
 
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
     private ObservableList<UserActionRecord> medLog = FXCollections.observableArrayList();
     private ListProperty<String> informationListProperty = new SimpleListProperty<>();
-    private StatesHistoryScreen stateHistoryScreen;
     private ArrayList<String> ingredients;
     private ArrayList<String> current;
     private ArrayList<String> history;
@@ -54,8 +57,6 @@ public class GUIPatientMedications implements IPopupable {
     public Button addMed;
     public Button deleteMed;
     public Button saveMed;
-    public Button undoEdit;
-    public Button redoEdit;
     public Button compareMeds;
     public Button goBack;
     public Button clearMed;
@@ -63,6 +64,8 @@ public class GUIPatientMedications implements IPopupable {
 
     private JsonObject suggestions;
     private boolean itemSelected = false;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
@@ -96,22 +99,6 @@ public class GUIPatientMedications implements IPopupable {
     }
 
     /**
-     * Goes back one edit if any editing has been conducted
-     */
-    @FXML
-    public void undo() {
-        stateHistoryScreen.undo();
-    }
-
-    /**
-     * Goes forward one edit if editing had been undone at least once
-     */
-    @FXML
-    public void redo() {
-        stateHistoryScreen.redo();
-    }
-
-    /**
      * Removes a medication from the history or current ArrayList and listView
      */
     @FXML
@@ -127,29 +114,29 @@ public class GUIPatientMedications implements IPopupable {
     @FXML
     public void saveMedication() {
         time = new Timestamp(System.currentTimeMillis());
-        medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), "Medications are now saved", "Medications has been saved"));
-        logHistory.add(medLog.get(medLog.size() - 1));
+//        medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), "Medications are now saved", "Medications has been saved"));
+//        logHistory.add(medLog.get(medLog.size() - 1));
         Alert save = new Alert(Alert.AlertType.INFORMATION, "Medication(s) have been successfully saved");
         final Button dialogOK = (Button) save.getDialogPane().lookupButton(ButtonType.OK);
-        dialogOK.addEventFilter(ActionEvent.ACTION, event -> saveToDisk());// Save to .json the changes made to medications
+//        dialogOK.addEventFilter(ActionEvent.ACTION, event -> saveToDisk());// Save to .json the changes made to medications
         save.show();
         clearSelections();
     }
 
-    /**
-     * Saves the current state of the logged-in patient data to the patient.json file
-     */
-    private void saveToDisk() {
-        if (target.getPatientLog() != null) {
-            ObservableList<UserActionRecord> log = target.getPatientLog();
-            log.addAll(medLog);
-            target.setMedicationLog(log);
-        } else {
-            target.setMedicationLog( medLog );
-        }
-        Database.saveToDisk();
-        medLog = FXCollections.observableArrayList();
-    }
+//    /**
+//     * Saves the current state of the logged-in patient data to the patient.json file
+//     */
+//    private void saveToDisk() {
+//        if (target.getPatientLog() != null) {
+//            ObservableList<UserActionRecord> log = target.getPatientLog();
+//            log.addAll(medLog);
+//            target.setMedicationLog(log);
+//        } else {
+//            target.setMedicationLog( medLog );
+//        }
+//        Database.saveToDisk();
+//        medLog = FXCollections.observableArrayList();
+//    }
 
     /**
      * Swaps a medication in history to current ArrayList and listView
@@ -183,21 +170,28 @@ public class GUIPatientMedications implements IPopupable {
         addMedication(newMedication.getText());
     }
 
+    private UserControl userControl;
+
     /**
      * Initializes the Medication GUI pane, adds any medications stored for donor to current and past listViews
      */
     @FXML
     public void initialize() {
+        newMedication.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
         //Register events for when an item is selected from a listView and set selection mode to multiple
         currentMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(currentMedications));
         pastMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(pastMedications));
         pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        stateHistoryScreen = new StatesHistoryScreen(medicationPane, new ArrayList<Control>() {{
-            add(newMedication);
-        }});
-        if (ScreenControl.getLoggedInPatient() != null) {
-            loadProfile(ScreenControl.getLoggedInPatient().getNhiNumber());
+        controls = new ArrayList<Control>() {{ add(newMedication); }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS);
+        if (user instanceof Patient) {
+            loadProfile(((Patient) user).getNhiNumber());
+        } else if (user instanceof Clinician) {
+            viewedPatient = userControl.getTargetPatient();
+            loadProfile(viewedPatient.getNhiNumber());
         }
     }
 
@@ -353,8 +347,8 @@ public class GUIPatientMedications implements IPopupable {
             if (!(current.contains(medication) || history.contains(medication))) {
                 target.getCurrentMedications().add( new Medication(medication));
                 time = new Timestamp(System.currentTimeMillis());
-                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now registered as current", medication + " has successfully been registered"));
-                logHistory.add(medLog.get(medLog.size() - 1));
+//                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now registered as current", medication + " has successfully been registered"));
+//                logHistory.add(medLog.get(medLog.size() - 1));
                 viewCurrentMedications();
                 newMedication.clear();
             } else if (history.contains(medication) && !current.contains(medication)) {
@@ -362,15 +356,15 @@ public class GUIPatientMedications implements IPopupable {
                 newMedication.clear();
             } else {
                 time = new Timestamp(System.currentTimeMillis());
-                medLog.add(new UserActionRecord(String.valueOf(time), Level.WARNING.toString(), medication + " is already registered", medication + " has failed registration"));
-                logHistory.add(medLog.get(medLog.size() - 1));
+//                medLog.add(new UserActionRecord(String.valueOf(time), Level.WARNING.toString(), medication + " is already registered", medication + " has failed registration"));
+//                logHistory.add(medLog.get(medLog.size() - 1));
                 Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is already registered");
                 err.show();
             }
         } else {
             time = new Timestamp(System.currentTimeMillis());
-            medLog.add(new UserActionRecord(String.valueOf(time), Level.WARNING.toString(), medication + " is invalid for registration", medication + " has failed registration"));
-            logHistory.add(medLog.get(medLog.size() - 1));
+//            medLog.add(new UserActionRecord(String.valueOf(time), Level.WARNING.toString(), medication + " is invalid for registration", medication + " has failed registration"));
+//            logHistory.add(medLog.get(medLog.size() - 1));
             Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is invalid for registration");
             err.show();
         }
@@ -397,14 +391,14 @@ public class GUIPatientMedications implements IPopupable {
         if (history.contains( medication )) {
             target.getMedicationHistory().remove( history.indexOf( medication ) );
             time = new Timestamp(System.currentTimeMillis());
-            medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from history list"));
-            logHistory.add(medLog.get(medLog.size() - 1));
+//            medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from history list"));
+//            logHistory.add(medLog.get(medLog.size() - 1));
             viewPastMedications();
         } else if (current.contains( medication )) {
             target.getCurrentMedications().remove( current.indexOf( medication ) );
             time = new Timestamp(System.currentTimeMillis());
-            medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from current list"));
-            logHistory.add(medLog.get(medLog.size() - 1));
+//            medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now removed", medication + " is deleted from current list"));
+//            logHistory.add(medLog.get(medLog.size() - 1));
             viewCurrentMedications();
         }
     }
@@ -424,8 +418,8 @@ public class GUIPatientMedications implements IPopupable {
                     viewCurrentMedications();
                 }
                 time = new Timestamp(System.currentTimeMillis());
-                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now current", medication + " moved from history to current list"));
-                logHistory.add(medLog.get(medLog.size() - 1));
+//                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now current", medication + " moved from history to current list"));
+//                logHistory.add(medLog.get(medLog.size() - 1));
                 viewPastMedications();
             }
         }
@@ -446,8 +440,8 @@ public class GUIPatientMedications implements IPopupable {
                     viewPastMedications();
                 }
                 time = new Timestamp(System.currentTimeMillis());
-                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now history", medication + " moved from current to history list"));
-                logHistory.add(medLog.get(medLog.size() - 1));
+//                medLog.add(new UserActionRecord(String.valueOf(time), Level.FINE.toString(), medication + " is now history", medication + " moved from current to history list"));
+//                logHistory.add(medLog.get(medLog.size() - 1));
                 viewCurrentMedications();
             }
         }
@@ -554,7 +548,7 @@ public class GUIPatientMedications implements IPopupable {
         }};
         if ( selectedMedications.size()  == 2){ //if two are selected
             try {
-                DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1));
+                DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1), viewedPatient);
                 displayInteractions(interaction.getInteractionsWithDurations(), selectedMedications.get(0), selectedMedications.get(1));
             } catch (IOException e ){
                 alert.setContentText("Drug interactions not available, either this study has not been completed or" +
@@ -581,19 +575,17 @@ public class GUIPatientMedications implements IPopupable {
      */
     @FXML
     public void goToProfile() {
-        if (ScreenControl.getLoggedInPatient() != null ) {
-            ScreenControl.removeScreen("patientProfile");
+        if (userControl.getLoggedInUser() instanceof Patient ) {
             try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
-            }catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the medication page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).showAndWait();
+                screenControl.show(medicationPane,"/scene/patientProfile.fxml");
+            } catch (IOException e) {
+                new Alert((Alert.AlertType.ERROR), "Unable to load patient profile").show();
+                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader, viewedPatient);
+                ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader);
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the edit page to the profile page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();

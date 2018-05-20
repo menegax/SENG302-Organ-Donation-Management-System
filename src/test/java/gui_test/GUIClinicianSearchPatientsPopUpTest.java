@@ -68,38 +68,38 @@ public class GUIClinicianSearchPatientsPopUpTest extends ApplicationTest {
         verifyThat( "#clinicianSearchPatientsPane", Node::isVisible ); // Verify that login has taken "user" to the clinician profile panel
     }
 
-    /**
-     * Tests the pop up for table row double-clicking
-     */
-    @Test
-    public void successfulPopUpNavigation() {
-        //Check 'I am Clinician" checkbox to login as clinician
-        interact(() -> {
-            lookup("#clinicianToggle").queryAs(CheckBox.class)
-                    .setSelected(true);
-            lookup("#nhiLogin").queryAs(TextField.class)
-                    .setText("0");
-        });
-        verifyThat("#nhiLogin", TextInputControlMatchers.hasText("0"));
-        interact(() -> {
-            lookup("#loginButton").queryAs(Button.class)
-                    .getOnAction()
-                    .handle(new ActionEvent());
-        });
-        verifyThat("#clinicianHomePane", Node::isVisible); // Verify that login has taken "user" to the clinician home panel
-        interact(() -> {
-            lookup("#searchPatients").queryAs(Button.class)
-                    .getOnAction()
-                    .handle(new ActionEvent());
-        });
-
-        // double-click to get a pop up
-        interact( () -> {
-            lookup( "#patientDataTable" ).queryAs(TableView.class ).getSelectionModel().select(0);
-            doubleClickOn( "#patientDataTable" ).doubleClickOn();
-        });
-        verifyThat("#patientProfilePane", Node::isVisible);
-
-    }
+//    /**
+//     * Tests the pop up for table row double-clicking
+//     */
+//    @Test
+//    public void successfulPopUpNavigation() {
+//        //Check 'I am Clinician" checkbox to login as clinician
+//        interact(() -> {
+//            lookup("#clinicianToggle").queryAs(CheckBox.class)
+//                    .setSelected(true);
+//            lookup("#nhiLogin").queryAs(TextField.class)
+//                    .setText("0");
+//        });
+//        verifyThat("#nhiLogin", TextInputControlMatchers.hasText("0"));
+//        interact(() -> {
+//            lookup("#loginButton").queryAs(Button.class)
+//                    .getOnAction()
+//                    .handle(new ActionEvent());
+//        });
+//        verifyThat("#clinicianHomePane", Node::isVisible); // Verify that login has taken "user" to the clinician home panel
+//        interact(() -> {
+//            lookup("#searchPatients").queryAs(Button.class)
+//                    .getOnAction()
+//                    .handle(new ActionEvent());
+//        });
+//
+//        // double-click to get a pop up
+//        interact( () -> {
+//            lookup( "#patientDataTable" ).queryAs(TableView.class ).getSelectionModel().select(0);
+//            doubleClickOn( "#patientDataTable" ).doubleClickOn();
+//        });
+//        verifyThat("#patientProfilePane", Node::isVisible);
+//
+//    }
 }
 

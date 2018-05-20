@@ -28,7 +28,5 @@
         <TextField fx:id="street2Txt" layoutX="276.0" layoutY="179.0" prefHeight="26.0" prefWidth="235.0" />
         <TextField fx:id="suburbTxt" layoutX="276.0" layoutY="230.0" prefHeight="26.0" prefWidth="155.0" />
         <ChoiceBox fx:id="regionDD" layoutX="276.0" layoutY="287.0" prefHeight="27.0" prefWidth="155.0" />
-        <Button fx:id="redoButton" layoutX="542.0" layoutY="14.0" mnemonicParsing="false" onAction="#redo" prefHeight="36.0" prefWidth="31.0" styleClass="redo" stylesheets="@../css/guiStyle.css" />
-        <Button fx:id="undoButton" layoutX="507.0" layoutY="14.0" mnemonicParsing="false" onAction="#undo" prefHeight="36.0" prefWidth="31.0" styleClass="undo" stylesheets="@../css/guiStyle.css" />
     </children>
 </AnchorPane>

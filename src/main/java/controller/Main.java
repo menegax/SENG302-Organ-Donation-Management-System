@@ -2,10 +2,13 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 
+import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
@@ -17,41 +20,29 @@ import utility.UserActionHistory;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class Main extends Application {
 
+    private static final UUID uuid = UUID.randomUUID();
+
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-        Scene rootScene = new Scene(root, 600, 400);
-        primaryStage.setScene(rootScene); //set scene on primary stage
-        ScreenControl.setRootScene(rootScene); // set this scene in screen controller
+    public void start(Stage primaryStage) throws IOException {
+        ScreenControl screenControl = ScreenControl.getScreenControl();
+        screenControl.addStage(uuid, primaryStage);
+        Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+        screenControl.show(uuid, loginScreen);
 
-        // import patients
-        Database.importFromDisk("./patient.json");
+        // add objects
+        Database.importFromDiskPatients("./patient.json");
+        Database.importFromDiskClinicians("./clinician.json");
         addDummyTestObjects();
-
+        ensureDefaultClinician();
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
-
-        // Add scenes
-        ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        ScreenControl.addScreen("patientRegister", FXMLLoader.load(getClass().getResource("/scene/patientRegister.fxml")));
-        ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
-        ScreenControl.addScreen("patientHome", FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml")));
-
-        try {
-            Database.importFromDiskClinicians("clinician.json");
-        } catch (IOException e) {
-            if (Database.getClinicians().size() == 0) {
-                //Initialise default clinciian
-                ArrayList<String> mid = new ArrayList<>();
-                mid.add("Middle");
-                Database.addClinician(new Clinician(Database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
-            }
-        }
-        primaryStage.setResizable(false);
+        setUpMenuBar(primaryStage);
         primaryStage.show();
+
     }
 
 
@@ -59,7 +50,6 @@ public class Main extends Application {
         UserActionHistory.setup(); // start user action logs
         launch(args);
     }
-
 
     /**
      * Adds dummy test objects for testing purposes
@@ -96,5 +86,92 @@ public class Main extends Application {
             userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
         }
 
+    }
+
+
+    /**
+     * Adds the default clinician if there isn't one already
+     */
+    private void ensureDefaultClinician() {
+
+        // if default clinician 0 not in db, add it
+        if (!Database.isClinicianInDb(0)) {
+            Database.addClinician(new Clinician(0, "initial", new ArrayList<String>() {{
+                add("Middle");
+            }}, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
+        }
+
+    }
+
+
+    /**
+     * Sets up the menu bar depending on the OS
+     *
+     * @param primaryStage the stage to set the menu bar to
+     */
+    private void setUpMenuBar(Stage primaryStage) {
+        if (System.getProperty("os.name")
+                .startsWith("Mac")) {
+            setUpMacOsMenuBar(primaryStage);
+        }
+        // if windows, call here...
+    }
+
+
+    /**
+     * Creates a native-looking MacOS menu bar for the application
+     *
+     * @param primaryStage the root stage of the application on which to set the menu
+     */
+    private void setUpMacOsMenuBar(Stage primaryStage) {
+
+        String appName = "Big Pharma";
+        // Get the toolkit
+        MenuToolkit tk = MenuToolkit.toolkit();
+
+        // Create a new menu bar
+        MenuBar bar = new MenuBar();
+
+        // Add the default application menu
+        bar.getMenus()
+                .add(tk.createDefaultApplicationMenu(appName));
+
+        // Add some more Menus...
+        Menu menu1 = new Menu("App");
+        MenuItem menu1Item1 = new MenuItem("Log out");
+        menu1Item1.setOnAction(event -> System.out.println("Log out clicked"));
+        MenuItem menu1Item2 = tk.createQuitMenuItem(appName);
+        menu1.getItems()
+                .addAll(menu1Item1, menu1Item2);
+
+        Menu menu2 = new Menu("File");
+        MenuItem menu2Item1 = new MenuItem("Save");
+        menu2Item1.setOnAction(event -> System.out.println("Save clicked"));
+        MenuItem menu2Item2 = new MenuItem("Import...");
+        menu2Item2.setOnAction(event -> System.out.println("Import clicked"));
+        menu2.getItems()
+                .addAll(menu2Item1, menu2Item2);
+
+        Menu menu3 = new Menu("Edit");
+        MenuItem menu3Item1 = new MenuItem("Undo ⌃Z");
+        menu3Item1.setOnAction(event -> System.out.println("Undo clicked. Soon to be  ⌘⇧Y"));
+        MenuItem menu3Item2 = new MenuItem("Redo ⌃Y");
+        menu3Item2.setOnAction(event -> System.out.println("Redo clicked. Soon to be ⌘Z"));
+        menu3.getItems()
+                .addAll(menu3Item1, menu3Item2);
+
+        bar.getMenus()
+                .addAll(menu1, menu2, menu3);
+
+        // Use the menu bar for primary stage
+        tk.setMenuBar(primaryStage, bar);
+    }
+
+    /**
+     * Gets the uuid hash key used for the primary stage
+     * @return the uuid hash key used in the primary stage
+     */
+    public static UUID getUuid() {
+        return uuid;
     }
 }

@@ -46,6 +46,8 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest{
     private boolean genderFemaleRadioDefault;
     private boolean genderOtherRadioDefault;
 
+    //todo rework
+
     /**
      * Launches the main application
      * @param stage the stage to launch the app on
@@ -74,6 +76,9 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest{
     @Before
     public void getFields() {
         interact(() -> {
+            while (lookup("OK").queryAs(Button.class) != null) {
+                lookup("OK").queryAs(Button.class).fire();
+            }
             nhiTxtDefault = lookup("#nhiTxt").queryAs(TextField.class).getText();
             firstnameTxtDefault = lookup("#firstnameTxt").queryAs(TextField.class).getText();
             lastnameTxtDefault = lookup("#lastnameTxt").queryAs(TextField.class).getText();
@@ -124,34 +129,34 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest{
         interact(() -> {
             lookup("#nhiTxt").queryAs(TextField.class).setText("BBB2222");
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
             lookup("#firstnameTxt").queryAs(TextField.class).setText("FirstName2");
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
             lookup("#lastnameTxt").queryAs(TextField.class).setText("LastName2");
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
             lookup("#middlenameTxt").queryAs(TextField.class).setText("MiddleName2");
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
             lookup("#street1Txt").queryAs(TextField.class).setText("1 Test2 Street");
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
             lookup("#street2Txt").queryAs(TextField.class).setText("2 Test2 Street");
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
             lookup("#suburbTxt").queryAs(TextField.class).setText("Suburb2");
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
             lookup("#zipTxt").queryAs(TextField.class).setText("0002");
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
             lookup("#weightTxt").queryAs(TextField.class).setText("52");
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
             lookup("#heightTxt").queryAs(TextField.class).setText("2.2");
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
         });
 
         assertEquals(nhiTxtDefault, lookup("#nhiTxt").queryAs(TextField.class).getText());
@@ -209,7 +214,7 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest{
         interact(() -> {
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
             lookup("#regionDD").queryAs(ChoiceBox.class).getSelectionModel().select(1);
             lookup("#undoButton").queryAs(Button.class).fire();
         });
@@ -308,17 +313,17 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest{
             lookup("#nhiTxt").queryAs(TextField.class).setText("CCC3333");
             lookup("#nhiTxt").queryAs(TextField.class).setText("DDD4444");
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("CCC3333"));
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("BBB2222"));
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals(nhiTxtDefault));
 
@@ -327,17 +332,17 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest{
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(2);
             lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().select(3);
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
         });
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 2);
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
         });
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == 1);
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
         });
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == bloodGroupDDDefault);
 
@@ -346,17 +351,17 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest{
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2003, 3, 3));
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2004, 4, 4));
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
         });
         assertTrue(lookup("#dobDate").queryAs(DatePicker.class).getValue().equals(LocalDate.of(2003, 3, 3)));
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
         });
         assertTrue(lookup("#dobDate").queryAs(DatePicker.class).getValue().equals(LocalDate.of(2002, 2, 2)));
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
         });
         assertTrue(lookup("#dobDate").queryAs(DatePicker.class).getValue().equals(dobDateDefault));
 
@@ -482,7 +487,7 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest{
         assertTrue(lookup("#genderMaleRadio").queryAs(RadioButton.class).isSelected() == genderMaleRadioDefault);
         interact(() -> {
             lookup("#undoButton").queryAs(Button.class).fire();
-            
+
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals(nhiTxtDefault));
         assertTrue(lookup("#bloodGroupDD").queryAs(ChoiceBox.class).getSelectionModel().getSelectedIndex() == bloodGroupDDDefault);
@@ -496,7 +501,7 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest{
             lookup("#dobDate").queryAs(DatePicker.class).setValue(LocalDate.of(2002, 2, 2));
             lookup("#genderMaleRadio").queryAs(RadioButton.class).requestFocus();
             lookup("#genderMaleRadio").queryAs(RadioButton.class).fire();
-            
+
             press(CONTROL).press(Z).release(CONTROL).release(Z);
         });
         assertTrue(lookup("#nhiTxt").queryAs(TextField.class).getText().equals("BBB2222"));

@@ -94,7 +94,7 @@ public class StatesHistoryScreenTest {
             add(datePicker1);
             add(datePicker2);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(new Pane(), controlList);
+        statesHistoryScreen = new StatesHistoryScreen(controlList, null);
     }
 
     /**
@@ -103,7 +103,7 @@ public class StatesHistoryScreenTest {
     @Test
     public void testConstructor() {
         checkWidgets();
-        statesHistoryScreen = new StatesHistoryScreen(new Pane(), new ArrayList<Control>());
+        statesHistoryScreen = new StatesHistoryScreen(new ArrayList<Control>(), null);
         assertEquals(statesHistoryScreen.getStateHistories().size(), 0);
     }
 

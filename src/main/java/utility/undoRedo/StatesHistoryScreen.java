@@ -1,6 +1,8 @@
 package utility.undoRedo;
 
-import controller.IUndoRedo;
+import controller.ScreenControl;
+import utility.GlobalEnums.UndoableScreen;
+import utility.undoRedo.stateHistoryWidgets.StateHistoryControl;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCodeCombination;
@@ -8,6 +10,8 @@ import javafx.scene.layout.Pane;
 import utility.undoRedo.stateHistoryWidgets.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents the state history of a screen of FXML widgets
@@ -17,7 +21,7 @@ public class StatesHistoryScreen {
     /**
      * ArrayList that stores all the stateHistories for a specific screen
      */
-    private ArrayList<IUndoRedo> stateHistories = new ArrayList<>();
+    private List<StateHistoryControl> stateHistories = new ArrayList<>();
 
     /**
      * Boolean to keep track of whether an action has been undone or not
@@ -29,40 +33,55 @@ public class StatesHistoryScreen {
      */
     private boolean redone = false;
 
+    private UndoableScreen undoableScreen;
 
     /**
      * Constructor for the StatesHistoryScreen, creates state objects of passed in control items to keep track of
      * Creates the list of stateHistories in its initialisation
-     *
-     * @param params optional widget parameters to initialise
+     * @param controls list of controls on the screen
+     * @param undoableScreen the enum of the screen this StatesHistoryScreen represents
      */
-    public StatesHistoryScreen(Pane pane, ArrayList<Control> params) {
-        pane.setOnKeyPressed(event -> {
-            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-                undo();
-            }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-                redo();
+    public StatesHistoryScreen(List<Control> controls, UndoableScreen undoableScreen) {
+        // todo remove if unnecessary
+//        pane.setOnKeyPressed(event -> {
+//            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+//                undo();
+//            }
+//            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+//                redo();
+//            }
+//        });
+        this.undoableScreen = undoableScreen;
+        controls.get(0).sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.windowProperty().addListener((observable2, oldStage, newStage) -> {
+                    if (newStage != null) {
+                        ((UndoableStage) newStage).addStatesHistoryScreen(this);
+                    }
+                });
             }
         });
-        for (Control param : params) {
-            if ((param instanceof TextField)) {
-                createStateHistoriesTextField(param);
+        for (Control control : controls) {
+            if ((control instanceof TextField)) {
+                createStateHistoriesTextField(control);
             }
-            if ((param) instanceof RadioButton) {
-                createStateHistoriesRadioButton(param);
+            if ((control) instanceof RadioButton) {
+                createStateHistoriesRadioButton(control);
             }
-            if ((param) instanceof CheckBox) {
-                createStateHistoriesCheckBox(param);
+            if ((control) instanceof CheckBox) {
+                createStateHistoriesCheckBox(control);
             }
-            if ((param) instanceof ChoiceBox) {
-                createStateHistoriesChoiceBox(param);
+            if ((control) instanceof ChoiceBox) {
+                createStateHistoriesChoiceBox(control);
             }
-            if (param instanceof ComboBox) {
-                createStateHistoriesComboBox(param);
+            if (control instanceof ComboBox) {
+                createStateHistoriesComboBox(control);
             }
-            if (param instanceof DatePicker) {
-                createStateHistoriesDatePicker(param);
+            if (control instanceof DatePicker) {
+                createStateHistoriesDatePicker(control);
+            }
+            if (control instanceof TableView) {
+                createStateHistoriesTableView(control);
             }
         }
     }
@@ -163,29 +182,32 @@ public class StatesHistoryScreen {
 
 
     /**
-     * Creates state objects for every control item in the passed in array
+     * Creates state objects for every tableView item in the passed in array
      *
-     * @param choiceBox - object which can be cast to an arraylist<ChoiceBox>
+     * @param tableView - object which can be cast to an arraylist<TableView>
      */
 
-    private void createStateHistoriesChoiceBox(Object choiceBox) {
-        stateHistories.add(new StateHistoryChoiceBox((ChoiceBox<String>) choiceBox));
-        ((ChoiceBox<String>) choiceBox).getSelectionModel()
-                .selectedItemProperty()
+    private void createStateHistoriesTableView(Object tableView) {
+        stateHistories.add(new StateHistoryTableView( (TableView<String>) tableView ));
+        ((TableView<String>) tableView).getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if (((oldValue == null || newValue == null) || !newValue.equals(oldValue)) && !undone
-                            && !redone) { //don't want to store state when ChoiceBox has been undone
+                    if (((oldValue == null || newValue == null) || !newValue.equals(oldValue)) && !undone  && !redone) {
                         store();
                     }
                 });
-        //        The following code is commented out as Ctrl+Z still triggers on the AnchorPane when the choiceBox is selected
-        //        ((ChoiceBox<String>) choiceBox).setOnKeyPressed(event -> {
-        //            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
-        //                undo();
-        //            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
-        //                redo();
-        //            }
-        //        });
+    }
+
+
+    private void createStateHistoriesChoiceBox(Object choiceBox) {
+        stateHistories.add( new StateHistoryChoiceBox( (ChoiceBox <String>) choiceBox ) );
+        ((ChoiceBox <String>) choiceBox).getSelectionModel()
+                .selectedItemProperty()
+                .addListener( ( observable, oldValue, newValue ) -> {
+                    if (((oldValue == null || newValue == null) || !newValue.equals( oldValue )) && !undone
+                            && !redone) { //don't want to store state when ChoiceBox has been undone
+                        store();
+                    }
+                } );
     }
 
 
@@ -213,33 +235,44 @@ public class StatesHistoryScreen {
      * Stores the current state of the screen
      */
     public void store() {
-        for (IUndoRedo stateHistory : stateHistories) {
+        for (StateHistoryControl stateHistory : stateHistories) {
             stateHistory.store();
         }
+        stateHistories.get(0).getUndoableStage().store();
     }
 
 
     /**
      * Undoes the previous action performed on the screen by returning it to its previous state
+     * @return whether there was an action to undo or not
      */
-    public void undo() {
+    public boolean undo() {
         undone = true; // change to true as to not trigger listeners to store
-        for (IUndoRedo stateHistory : stateHistories) {
-            stateHistory.undo();
+        for (StateHistoryControl stateHistory : stateHistories) {
+            boolean success = stateHistory.undo();
+            if (!success) {
+                return false;
+            }
         }
         undone = false;
+        return true;
     }
 
 
     /**
      * Resets the latest screen state undo by returning to the initial state immediately prior to undo
+     * @return whether the was action to redo or not
      */
-    public void redo() {
+    public boolean redo() {
         redone = true; // change to true as to not trigger listeners to store
-        for (IUndoRedo stateHistory : stateHistories) {
-            stateHistory.redo();
+        for (StateHistoryControl stateHistory : stateHistories) {
+            boolean success = stateHistory.redo();
+            if (!success) {
+                return false;
+            }
         }
         redone = false;
+        return true;
     }
 
 
@@ -249,7 +282,24 @@ public class StatesHistoryScreen {
      *
      * @return the ArrayList of state history objects
      */
-    public ArrayList<IUndoRedo> getStateHistories() {
-        return stateHistories;
+    public List<StateHistoryControl> getStateHistories() {
+        return Collections.unmodifiableList(stateHistories);
+    }
+
+    /**
+     * Gets the current state of the control at the index provided
+     * @param index the index of the control in the stateHistories list
+     * @return the current state of that control
+     */
+    public Object getStateOfControl(int index){
+        return stateHistories.get(index).getCurrentState();
+    }
+
+    /**
+     * Gets the undoable screen enum of the screen this object represents
+     * @return the undoable screen enum for this object
+     */
+    public UndoableScreen getUndoableScreen() {
+        return undoableScreen;
     }
 }
