@@ -12,23 +12,34 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static utility.UserActionHistory.userActions;
+import utility.UserActionHistory.userActions;
 
 public class Database {
 
-    private static Set<Patient> patients = new HashSet<>();
+    private Set<Patient> patients;
 
-    private static Set<Clinician> clinicians = new HashSet<>();
+    private Set<Clinician> clinicians;
 
+    private static Database database = null;
 
+    private Database() {
+        patients = new HashSet<>();
+        clinicians = new HashSet<>();
+    }
 
+    public static Database getDatabase() {
+        if (database == null) {
+            database = new Database();
+        }
+        return database;
+    }
 
     /**
      * Adds a patient to the database
      *
      * @param newPatient the new patient to add
      */
-    public static void addPatient(Patient newPatient) throws IllegalArgumentException {
+    public void addPatient(Patient newPatient) throws IllegalArgumentException {
         try {
             newPatient.ensureValidNhi();
             newPatient.ensureUniqueNhi();
@@ -49,7 +60,7 @@ public class Database {
      * @param nhi the nhi to search patients by
      * @exception InvalidObjectException when the object cannot be found
      */
-    public static void removePatient(String nhi) throws InvalidObjectException {
+    public void removePatient(String nhi) throws InvalidObjectException {
         patients.remove(Database.getPatientByNhi(nhi));
         userActions.log(Level.INFO, "Successfully removed patient " + nhi, "attempted to remove a patient");
     }
@@ -63,7 +74,7 @@ public class Database {
      *
      * @exception InvalidObjectException when the object cannot be found
      */
-    public static Patient getPatientByNhi(String nhi) throws InvalidObjectException {
+    public Patient getPatientByNhi(String nhi) throws InvalidObjectException {
         for (Patient d : getPatients()) {
             if (d.getNhiNumber()
                     .equals(nhi.toUpperCase())) {
@@ -80,7 +91,7 @@ public class Database {
      * @param nhi the nhi of the patient to search
      * @return true if exists else false
      */
-    public static boolean isPatientInDb(String nhi) {
+    public boolean isPatientInDb(String nhi) {
         for (Patient d : getPatients()) {
             if (d.getNhiNumber()
                     .equals(nhi.toUpperCase())) {
@@ -97,7 +108,7 @@ public class Database {
      * @param staffID the staffID of the clinician to search for
      * @return true if exists else false
      */
-    public static boolean isClinicianInDb(int staffID) {
+    public boolean isClinicianInDb(int staffID) {
         for (Clinician c : getClinicians()) {
             if (c.getStaffID() == staffID) {
                 return true;
@@ -115,7 +126,7 @@ public class Database {
      *
      * @exception InvalidObjectException when the object cannot be found
      */
-    public static Clinician getClinicianByID(int staffID) throws InvalidObjectException {
+    public Clinician getClinicianByID(int staffID) throws InvalidObjectException {
         for (Clinician c : getClinicians()) {
             if (c.getStaffID() == staffID) {
                 return c;
@@ -130,7 +141,7 @@ public class Database {
      *
      * @param newClinician the new clinician to add
      */
-    public static void addClinician(Clinician newClinician) throws IllegalArgumentException {
+    public void addClinician(Clinician newClinician) throws IllegalArgumentException {
         if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getFirstName())) {
             userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: first name", "Attempted to add a clinician");
             throw new IllegalArgumentException("firstname");
@@ -163,7 +174,7 @@ public class Database {
      *
      * @return the valid id
      */
-    public static int getNextStaffID() {
+    public int getNextStaffID() {
         if (clinicians.size() == 0) {
             return 0;
         }
@@ -180,7 +191,7 @@ public class Database {
     /**
      * Calls all sub-methods to save data to disk
      */
-    public static void saveToDisk() {
+    public void saveToDisk() {
         try {
             saveToDiskPatients();
             saveToDiskClinicians();
@@ -195,7 +206,7 @@ public class Database {
      *
      * @exception IOException when the file cannot be found nor created
      */
-    private static void saveToDiskPatients() throws IOException {
+    private void saveToDiskPatients() throws IOException {
         Gson gson = new Gson();
         String json = gson.toJson(patients);
 
@@ -211,7 +222,7 @@ public class Database {
      *
      * @exception IOException when the file cannot be found nor created
      */
-    private static void saveToDiskClinicians() throws IOException {
+    private void saveToDiskClinicians() throws IOException {
         Gson gson = new Gson();
         String json = gson.toJson(clinicians);
 
@@ -226,7 +237,7 @@ public class Database {
      * Reads patient data from disk
      * @param fileName file to import from
      */
-    public static void importFromDiskPatients(String fileName) {
+    public void importFromDiskPatients(String fileName) {
         Gson gson = new Gson();
         BufferedReader br;
         try {
@@ -252,7 +263,7 @@ public class Database {
      * Reads clinician data from disk
      * @param fileName file to import from
      */
-    public static void importFromDiskClinicians(String fileName) {
+    public void importFromDiskClinicians(String fileName) {
         Gson gson = new Gson();
         BufferedReader br;
         try {
@@ -277,19 +288,19 @@ public class Database {
     /**
      * Clears the database of all patients
      */
-    public static void resetDatabase() {
+    public void resetDatabase() {
         patients = new HashSet<>();
         clinicians = new HashSet<>();
     }
 
 
 
-    public static Set<Patient> getPatients() {
+    public Set<Patient> getPatients() {
         return patients;
     }
 
 
-    public static Set<Clinician> getClinicians() {
+    public Set<Clinician> getClinicians() {
         return clinicians;
     }
 }
