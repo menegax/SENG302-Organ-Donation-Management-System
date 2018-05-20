@@ -89,12 +89,6 @@ public class GUIProfileTest extends ApplicationTest {
         verifyThat("#patientDonationsAnchorPane", Node::isVisible);
     }
 
-    @Test
-    public void should_go_to_receiving_organs() {
-        interact(() -> { lookup("#requirementsButton").queryAs(Button.class).fire(); } );
-        verifyThat("#patientRequirementsAnchorPane", Node::isVisible);
-    }
-
 //    @Test
 //    public void should_have_correct_patient_details() {
 //        // Made around default patient in the system with NHI of ABC1238
