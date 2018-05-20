@@ -42,7 +42,7 @@ public class GUIHome {
         try {
             if (userControl.getLoggedInUser() instanceof Patient){
                 addTabsPatient();
-            }else if (userControl.getLoggedInUser() instanceof Clinician) {
+            } else if (userControl.getLoggedInUser() instanceof Clinician) {
                 addTabsClinican();
             }
             horizontalTabPane.sceneProperty().addListener((observable, oldValue, newValue) -> {
@@ -94,19 +94,25 @@ public class GUIHome {
         horizontalTabPane.getTabs().add(historyViewTab);
 
 
-        //TODO: remove to clinican pop up
+        //TODO: remove to clinician pop up
         Tab medicationsTab = new Tab();
         medicationsTab.setText("Medication");
         Pane medicationPane = FXMLLoader.load(getClass().getResource("/scene/patientMedication.fxml"));
         medicationsTab.setContent(medicationPane);
         horizontalTabPane.getTabs().add(medicationsTab);
 
+        //todo setUpMenuBar() call here
+
 
     }
 
 
-    private void addTabsClinican(){
-
+    private void addTabsClinican() throws IOException {
+        Tab clinicianProfileTab = new Tab();
+        clinicianProfileTab.setText("Profile");
+        Pane clinicianProfilePane = FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml"));
+        clinicianProfileTab.setContent(clinicianProfilePane);
+        horizontalTabPane.getTabs().add(clinicianProfileTab);
     }
 
 

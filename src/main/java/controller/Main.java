@@ -1,6 +1,5 @@
 package controller;
 
-import static java.util.logging.Level.INFO;
 import static utility.UserActionHistory.userActions;
 
 import de.codecentric.centerdevice.MenuToolkit;
@@ -10,10 +9,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
@@ -22,7 +17,6 @@ import utility.GlobalEnums;
 import utility.SearchPatients;
 import utility.UserActionHistory;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
