@@ -1,6 +1,29 @@
 # GUI Organ Waiting List Manual Test
 
-## Precondition - navigate to the Waiting List screen
+##Precondition 1: navigate to the Organ Request screen for a patient
+1. Open GUI application
+2. Login as a clinician
+3. Open Patient Search screen
+4. Double click on a patient in the table
+5. The patient's profile is opened
+6. The Manage Requests button is selected
+7. The request management screen is open
+
+###An organ request is added when a patient has a requested organ added
+1. The clinician selects one or more organs to add to a patient's required organs
+2. The clinician selects the save button
+3. In the main window, the clinician selects the back button
+4. In the clinician home window, the clinician selects the Organ Waiting List button
+5. The organ waiting list screen is shown, with the patient's requested organs shown in the table
+
+###An organ request is removed when a patient has a requested organ removed
+1. The clinician selects one or more organs to remove from a patient's required organs
+2. The clinician selects the save button
+3. In the main window, the clinician selects the back button
+4. In the clinician home window, the clinician selects the Organ Waiting List button
+5. The organ waiting list screen is shown, with the patient's removed requests absent from the table
+
+## Precondition 2: navigate to the Waiting List screen
 
 1. Open GUI application
 2. Login as a clinician
