@@ -19,9 +19,7 @@ import model.Medication;
 import model.Patient;
 import service.Database;
 import service.TextWatcher;
-import utility.UserActionRecord;
 import utility.undoRedo.StatesHistoryScreen;
-import service.TextWatcher;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
