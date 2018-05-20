@@ -18,7 +18,6 @@ public class ScreenControl {
 
     private static Scene main;
 
-
     public static Scene getMain() {
         return main;
     }
@@ -70,7 +69,7 @@ public class ScreenControl {
      * @param name  - name of the popup
      * @param stage - stage to display
      */
-    static void addPopUp(String name, Stage stage) {
+    public static void addPopUp(String name, Stage stage) {
         popMap.put(name, stage);
     }
 
@@ -90,7 +89,7 @@ public class ScreenControl {
      *
      * @param name - name of the pop up to display
      */
-    static void displayPopUp(String name) {
+    public static void displayPopUp(String name) {
         popMap.get(name).show();
     }
 

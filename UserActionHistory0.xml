@@ -3684,3 +3684,1143 @@
   <param>Attempted to delete all patients search indices</param>
 </record>
 </log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-20T20:40:19</date>
+  <millis>1526805619646</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient AAA1111</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T20:40:19</date>
+  <millis>1526805619665</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T20:40:19</date>
+  <millis>1526805619673</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T20:40:19</date>
+  <millis>1526805619676</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T20:40:19</date>
+  <millis>1526805619679</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-20T20:40:19</date>
+  <millis>1526805619906</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Failed to add patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T20:40:19</date>
+  <millis>1526805619907</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-20T20:40:19</date>
+  <millis>1526805619907</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+<record>
+  <date>2018-05-20T20:41:35</date>
+  <millis>1526805695213</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addRequired</method>
+  <thread>12</thread>
+  <message>Added organ kidney to patient required organs</message>
+  <param>Attempted to add organ kidney to patient required organs</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-20T21:11:28</date>
+  <millis>1526807488146</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:11:28</date>
+  <millis>1526807488171</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:11:28</date>
+  <millis>1526807488174</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:11:28</date>
+  <millis>1526807488177</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient AAA1111</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:11:28</date>
+  <millis>1526807488181</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-20T21:11:28</date>
+  <millis>1526807488433</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Failed to add patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:11:28</date>
+  <millis>1526807488433</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-20T21:11:28</date>
+  <millis>1526807488433</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-20T21:17:19</date>
+  <millis>1526807839475</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:17:19</date>
+  <millis>1526807839493</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient AAA1111</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:17:19</date>
+  <millis>1526807839499</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:17:19</date>
+  <millis>1526807839502</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:17:19</date>
+  <millis>1526807839505</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-20T21:17:19</date>
+  <millis>1526807839698</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Failed to add patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:17:19</date>
+  <millis>1526807839698</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-20T21:17:19</date>
+  <millis>1526807839698</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+<record>
+  <date>2018-05-20T21:17:31</date>
+  <millis>1526807851295</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addRequired</method>
+  <thread>12</thread>
+  <message>Added organ kidney to patient required organs</message>
+  <param>Attempted to add organ kidney to patient required organs</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-20T21:20:16</date>
+  <millis>1526808016958</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient AAA1111</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:20:16</date>
+  <millis>1526808016975</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:20:16</date>
+  <millis>1526808016982</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:20:16</date>
+  <millis>1526808016986</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:20:16</date>
+  <millis>1526808016991</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-20T21:20:17</date>
+  <millis>1526808017195</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Failed to add patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T21:20:17</date>
+  <millis>1526808017195</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-20T21:20:17</date>
+  <millis>1526808017195</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+<record>
+  <date>2018-05-20T21:20:26</date>
+  <millis>1526808026063</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addRequired</method>
+  <thread>12</thread>
+  <message>Added organ kidney to patient required organs</message>
+  <param>Attempted to add organ kidney to patient required organs</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-20T22:33:23</date>
+  <millis>1526812403417</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:23</date>
+  <millis>1526812403438</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:23</date>
+  <millis>1526812403443</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:23</date>
+  <millis>1526812403446</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient AAA1111</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:23</date>
+  <millis>1526812403450</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:23</date>
+  <millis>1526812403700</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Failed to add patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:23</date>
+  <millis>1526812403700</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:23</date>
+  <millis>1526812403701</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:34</date>
+  <millis>1526812414864</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addRequired</method>
+  <thread>12</thread>
+  <message>Added organ kidney to patient required organs</message>
+  <param>Attempted to add organ kidney to patient required organs</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:37</date>
+  <millis>1526812417290</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>model.Patient</class>
+  <method>removeRequired</method>
+  <thread>12</thread>
+  <message>Failed to open deregistration of required organ scene from required organs update scene</message>
+  <param>attempted to open deregistration of required organ reason window from required organs update scene</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-20T22:33:58</date>
+  <millis>1526812438672</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:58</date>
+  <millis>1526812438685</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient AAA1111</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:58</date>
+  <millis>1526812438690</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:58</date>
+  <millis>1526812438693</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:58</date>
+  <millis>1526812438695</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:58</date>
+  <millis>1526812438901</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Failed to add patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:58</date>
+  <millis>1526812438901</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-20T22:33:58</date>
+  <millis>1526812438901</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+<record>
+  <date>2018-05-20T22:34:07</date>
+  <millis>1526812447054</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addRequired</method>
+  <thread>12</thread>
+  <message>Added organ kidney to patient required organs</message>
+  <param>Attempted to add organ kidney to patient required organs</param>
+</record>
+<record>
+  <date>2018-05-20T22:34:09</date>
+  <millis>1526812449645</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>model.Patient</class>
+  <method>removeRequired</method>
+  <thread>12</thread>
+  <message>Failed to open deregistration of required organ scene from required organs update scene</message>
+  <param>attempted to open deregistration of required organ reason window from required organs update scene</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-20T22:38:42</date>
+  <millis>1526812722729</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient AAA1111</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:38:42</date>
+  <millis>1526812722749</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:38:42</date>
+  <millis>1526812722752</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:38:42</date>
+  <millis>1526812722755</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:38:42</date>
+  <millis>1526812722759</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-20T22:38:42</date>
+  <millis>1526812722970</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Failed to add patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:38:42</date>
+  <millis>1526812722971</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-20T22:38:42</date>
+  <millis>1526812722971</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+<record>
+  <date>2018-05-20T22:38:50</date>
+  <millis>1526812730102</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addRequired</method>
+  <thread>12</thread>
+  <message>Added organ kidney to patient required organs</message>
+  <param>Attempted to add organ kidney to patient required organs</param>
+</record>
+<record>
+  <date>2018-05-20T22:38:53</date>
+  <millis>1526812733443</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>model.Patient</class>
+  <method>removeRequired</method>
+  <thread>12</thread>
+  <message>Failed to open deregistration of required organ scene from required organs update scene</message>
+  <param>attempted to open deregistration of required organ reason window from required organs update scene</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-20T22:41:44</date>
+  <millis>1526812904553</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:41:44</date>
+  <millis>1526812904570</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:41:44</date>
+  <millis>1526812904574</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:41:44</date>
+  <millis>1526812904577</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient AAA1111</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:41:44</date>
+  <millis>1526812904580</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-20T22:41:44</date>
+  <millis>1526812904818</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Failed to add patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:41:44</date>
+  <millis>1526812904818</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-20T22:41:44</date>
+  <millis>1526812904819</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+<record>
+  <date>2018-05-20T22:41:52</date>
+  <millis>1526812912669</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addRequired</method>
+  <thread>12</thread>
+  <message>Added organ kidney to patient required organs</message>
+  <param>Attempted to add organ kidney to patient required organs</param>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-20T22:48:44</date>
+  <millis>1526813324124</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:48:44</date>
+  <millis>1526813324147</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient AAA1111</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:48:44</date>
+  <millis>1526813324151</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:48:44</date>
+  <millis>1526813324154</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:48:44</date>
+  <millis>1526813324158</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-20T22:48:44</date>
+  <millis>1526813324402</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Failed to add patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:48:44</date>
+  <millis>1526813324403</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-20T22:48:44</date>
+  <millis>1526813324403</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+<record>
+  <date>2018-05-20T22:48:53</date>
+  <millis>1526813333426</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addRequired</method>
+  <thread>12</thread>
+  <message>Added organ kidney to patient required organs</message>
+  <param>Attempted to add organ kidney to patient required organs</param>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-20T22:52:33</date>
+  <millis>1526813553361</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient AAA1111</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:52:33</date>
+  <millis>1526813553378</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:52:33</date>
+  <millis>1526813553384</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:52:33</date>
+  <millis>1526813553388</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:52:33</date>
+  <millis>1526813553394</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-20T22:52:33</date>
+  <millis>1526813553688</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Failed to add patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-20T22:52:33</date>
+  <millis>1526813553689</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-20T22:52:33</date>
+  <millis>1526813553689</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+<record>
+  <date>2018-05-20T22:52:41</date>
+  <millis>1526813561595</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addRequired</method>
+  <thread>12</thread>
+  <message>Added organ kidney to patient required organs</message>
+  <param>Attempted to add organ kidney to patient required organs</param>
+</record>
+</log>
