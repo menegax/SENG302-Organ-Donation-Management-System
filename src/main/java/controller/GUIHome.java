@@ -16,6 +16,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.Clinician;
+import model.Patient;
 import service.Database;
 
 import java.io.File;
@@ -36,48 +38,13 @@ public class GUIHome {
     public void initialize() { //Todo catch exception
         //Todo possibly create a smart way to check logged in user type
         // and then create the tabs based off that
-
+        UserControl userControl = new UserControl();
         try {
-            // create profile tab and add fxml into
-            Tab profileViewTab = new Tab();
-
-            profileViewTab.setOnSelectionChanged(event -> {
-                try {
-                    profileViewTab.setContent(FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                } catch (IOException e) {
-                    e.printStackTrace(); //todo: remove
-                }
-            });
-            profileViewTab.setText("Profile");
-            Pane pane = FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml"));
-            profileViewTab.setContent(pane);
-            horizontalTabPane.getTabs().add(profileViewTab);
-
-            Tab updateProfileTab = new Tab();
-            updateProfileTab.setText("Update");
-            Pane updatePane = FXMLLoader.load(getClass().getResource("/scene/testUpdate.fxml"));
-            updateProfileTab.setContent(updatePane);
-            horizontalTabPane.getTabs().add(updateProfileTab);
-
-
-            Tab medicationsTab = new Tab();
-            medicationsTab.setText("Medication");
-            Pane medicationPane = FXMLLoader.load(getClass().getResource("/scene/patientMedication.fxml"));
-            medicationsTab.setContent(medicationPane);
-            horizontalTabPane.getTabs().add(medicationsTab);
-
-            // create history tab and add fxml into
-            Tab historyViewTab = new Tab();
-            historyViewTab.setText("History");
-            historyViewTab.setContent(FXMLLoader.<Pane>load(getClass().getResource("/scene/patientHistory.fxml")));
-            horizontalTabPane.getTabs().add(historyViewTab);
-
-            Tab patientDonationsTab = new Tab();
-            patientDonationsTab.setText("Donations");
-            Pane donationsPane = FXMLLoader.load(getClass().getResource("/scene/testDonationUpdate.fxml"));
-            patientDonationsTab.setContent(donationsPane);
-            horizontalTabPane.getTabs().add(patientDonationsTab);
-
+            if (userControl.getLoggedInUser() instanceof Patient){
+                addTabsPatient();
+            }else if (userControl.getLoggedInUser() instanceof Clinician) {
+                addTabsClinican();
+            }
             horizontalTabPane.sceneProperty().addListener((observable, oldValue, newValue) -> {
                 System.out.println("HORZ TAB PANE LOADED" + newValue.getWindow()); //todo rm
                 setUpMenuBar((Stage) newValue.getWindow()); //todo Aidan figure out why newValue has a scene but .getWindow returns Null
@@ -90,6 +57,58 @@ public class GUIHome {
         }
 
     }
+
+
+    private void addTabsPatient() throws IOException {
+        // create profile tab and add fxml into
+        Tab profileViewTab = new Tab();
+        profileViewTab.setOnSelectionChanged(event -> {
+            try {
+                profileViewTab.setContent(FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+            } catch (IOException e) {
+                e.printStackTrace(); //todo: remove
+            }
+        });
+        profileViewTab.setText("Profile");
+        Pane pane = FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml"));
+        profileViewTab.setContent(pane);
+        horizontalTabPane.getTabs().add(profileViewTab);
+
+        Tab updateProfileTab = new Tab();
+        updateProfileTab.setText("Update");
+        Pane updatePane = FXMLLoader.load(getClass().getResource("/scene/testUpdate.fxml"));
+        updateProfileTab.setContent(updatePane);
+        horizontalTabPane.getTabs().add(updateProfileTab);
+
+        Tab patientDonationsTab = new Tab();
+        patientDonationsTab.setText("Donations");
+        Pane donationsPane = FXMLLoader.load(getClass().getResource("/scene/testDonationUpdate.fxml"));
+        patientDonationsTab.setContent(donationsPane);
+        horizontalTabPane.getTabs().add(patientDonationsTab);
+
+
+        // create history tab and add fxml into
+        Tab historyViewTab = new Tab();
+        historyViewTab.setText("History");
+        historyViewTab.setContent(FXMLLoader.<Pane>load(getClass().getResource("/scene/patientHistory.fxml")));
+        horizontalTabPane.getTabs().add(historyViewTab);
+
+
+        //TODO: remove to clinican pop up
+        Tab medicationsTab = new Tab();
+        medicationsTab.setText("Medication");
+        Pane medicationPane = FXMLLoader.load(getClass().getResource("/scene/patientMedication.fxml"));
+        medicationsTab.setContent(medicationPane);
+        horizontalTabPane.getTabs().add(medicationsTab);
+
+
+    }
+
+
+    private void addTabsClinican(){
+
+    }
+
 
     /**
      * Creates a native-looking MacOS menu bar for the application

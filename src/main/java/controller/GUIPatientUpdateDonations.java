@@ -279,7 +279,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
         }
         Database.saveToDisk();
-        goToProfile();
+        //goToProfile();
     }
 
 
