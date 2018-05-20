@@ -8,6 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
@@ -15,6 +16,9 @@ import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 
 import static org.testfx.api.FxAssert.verifyThat;
+import static utility.UserActionHistory.userActions;
+
+import java.util.logging.Level;
 
 public class ControllerClinicianTest extends ApplicationTest {
     private Main main = new Main();
@@ -24,6 +28,12 @@ public class ControllerClinicianTest extends ApplicationTest {
         main.start(stage);
     }
 
+    @Before
+    public void setUp() {
+        userActions.setLevel(Level.ALL);
+        main = new Main();
+    }
+
     @After
     public void waitForEvents() {
         Database.resetDatabase();
@@ -31,10 +41,10 @@ public class ControllerClinicianTest extends ApplicationTest {
         sleep(1000);
     }
 
-    @Test
     /**
      * Tests logging in as a clinician successfully
      */
+    @Test
     public void successfulLoginTestandGoToProfile() {
         //Check 'I am Clinician" checkbox to login as clinician
         interact(() -> {
@@ -52,10 +62,11 @@ public class ControllerClinicianTest extends ApplicationTest {
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that login has taken "user" to the clinician profile panel
     }
 
-    @Test
-    /*
+
+    /**
      * Tests the invalid login with wrong staffId
      */
+    @Test
     public void unsuccessfulLoginTest() {
         interact(() -> {
             lookup("#clinicianToggle").queryAs(CheckBox.class).setSelected(true);

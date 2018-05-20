@@ -8,10 +8,13 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="medicationPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientMedications">
+<AnchorPane fx:id="medicationPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientMedications">
     <children>
-        <Label alignment="CENTER" layoutX="233.0" layoutY="11.0" styleClass="title" text="Medication" />
-        <TextField fx:id="newMedication" focusTraversable="false" layoutX="33.0" layoutY="61.0" prefHeight="27.0" prefWidth="182.0" promptText="Enter medicine">
+        <Label alignment="CENTER" layoutX="200.0" layoutY="11.0" styleClass="title" text="Medication" />
+        <Label alignment="CENTER" layoutX="252.0" layoutY="105.0" styleClass="listViewTitles" text="Current usage" />
+        <Label alignment="CENTER" layoutX="15.0" layoutY="105.0" styleClass="listViewTitles" text="Historic usage" />
+        <Label alignment="CENTER" layoutX="381.0" layoutY="61.0" prefHeight="20.0" prefWidth="230.0" styleClass="listViewTitles" text="Ingredients &amp; Interactions" />
+        <TextField fx:id="newMedication" focusTraversable="false" layoutX="132.0" layoutY="57.0" prefHeight="27.0" prefWidth="182.0" promptText="Enter medicine">
          <contextMenu>
             <ContextMenu fx:id="contextMenu">
               <items>
@@ -19,9 +22,10 @@
               </items>
             </ContextMenu>
          </contextMenu></TextField>
-        <Button fx:id="registerMed" layoutX="227.0" layoutY="61.0" mnemonicParsing="false" onAction="#registerMedication" prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Register" />
+        <Button fx:id="registerMed" layoutX="314.0" layoutY="57.0" mnemonicParsing="false" onAction="#registerMedication" prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Register" />
         <ListView fx:id="currentMedications" layoutX="243.0" layoutY="127.0" prefHeight="210.0" prefWidth="125.0" />
-        <ListView fx:id="medicineInformation" layoutX="424.0" layoutY="74.0" prefHeight="266.0" prefWidth="162.0" />
+        <ListView fx:id="medicineInformation" layoutX="424.0" layoutY="89.0" prefHeight="251.0" prefWidth="162.0" />
+        <Button fx:id="wipeReview" layoutX="424.0" layoutY="352.0" mnemonicParsing="false" onAction="#refreshReview" prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Clear" />
         <Button fx:id="removeMed" layoutX="137.0" layoutY="219.0" mnemonicParsing="false" onAction="#makeHistory" prefHeight="27.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Remove" />
         <Button fx:id="addMed" layoutX="137.0" layoutY="180.0" mnemonicParsing="false" onAction="#makeCurrent" prefHeight="27.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Add" />
         <ListView fx:id="pastMedications" layoutX="14.0" layoutY="130.0" prefHeight="210.0" prefWidth="110.0" />
@@ -31,8 +35,5 @@
         <Button fx:id="goBack" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="27.0" prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="〱 Back" />
         <Button fx:id="undoEdit" layoutX="524.0" layoutY="5.0" mnemonicParsing="false" onAction="#undo" prefHeight="36.0" prefWidth="31.0" styleClass="undo" stylesheets="@../css/guiStyle.css" />
         <Button fx:id="redoEdit" layoutX="560.0" layoutY="5.0" mnemonicParsing="false" onAction="#redo" prefHeight="36.0" prefWidth="31.0" styleClass="redo" stylesheets="@../css/guiStyle.css" />
-      <Label layoutX="14.0" layoutY="104.0" prefHeight="17.0" prefWidth="110.0" text="Past Medications" />
-      <Label layoutX="239.0" layoutY="104.0" prefHeight="17.0" prefWidth="134.0" text="Current Medications" />
-      <Label layoutX="426.0" layoutY="49.0" text="Ingredients &amp; Interactions" />
     </children>
 </AnchorPane>

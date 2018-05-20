@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
 import service.Database;
+import service.OrganWaitlist;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 import utility.SystemLogger;
@@ -44,6 +45,7 @@ public class Main extends Application {
         // add objects
         Database.importFromDiskPatients("./patient.json");
         Database.importFromDiskClinicians("./clinician.json");
+        Database.importFromDiskWaitlist("./");
         addDummyTestObjects();
         ensureDefaultClinician();
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
