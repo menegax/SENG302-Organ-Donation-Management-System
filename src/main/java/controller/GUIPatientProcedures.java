@@ -8,10 +8,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
 import model.Procedure;
@@ -87,6 +85,7 @@ public class GUIPatientProcedures extends UndoableController {
         if (userControl.getLoggedInUser() instanceof Patient) {
             this.patient = (Patient) userControl.getLoggedInUser();
             setupTables();
+            //Disable any add, edit, or delete functionality for patients
             addProcedureButton.setVisible(false);
             editProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
@@ -243,17 +242,6 @@ public class GUIPatientProcedures extends UndoableController {
     private void refreshTables() {
         previousProceduresView.refresh();
         pendingProceduresView.refresh();
-    }
-
-    /**
-     * Sets the patient viewed by this scene and resets the display
-     * Only called from a clinicians user
-     * @param patient the patient which the screen represents
-     */
-    public void setViewedPatient(Patient patient) {
-        this.patient = patient;
-        setupTables();
-        enableEditing();
     }
 
     @FXML

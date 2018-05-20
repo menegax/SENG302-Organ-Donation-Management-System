@@ -46,12 +46,9 @@ public class GUIPatientProcedureForm extends UndoableController {
     private boolean isEditInstance = false;
     private Procedure procedure; //The Procedure that is being edited (null in the case of adding a procedure)
 
-    private UserControl userControl;
-
-
     public void initialize() {
-        userControl = new UserControl();
-        patient = userControl.getTargetPatient();
+        patient = new UserControl().getTargetPatient();
+        setupDonations();
     }
 
     /**
@@ -76,7 +73,7 @@ public class GUIPatientProcedureForm extends UndoableController {
             if (((CustomMenuItem) organSelection).getContent().getId() == null) {
                 CheckBox organCheckBox = (CheckBox) ((CustomMenuItem) organSelection).getContent();
                 Organ organ = (Organ) Organ.getEnumFromString(organCheckBox.getText());
-                if (procedure.getAffectedDonations().contains(organ)) {
+                if (procedure.getAffectedDonations() != null && procedure.getAffectedDonations().contains(organ)) {
                     organCheckBox.setSelected(true);
                 }
             }
@@ -198,15 +195,6 @@ public class GUIPatientProcedureForm extends UndoableController {
             donations.add(new CustomMenuItem(noneLabel));
         }
         affectedInput.getItems().setAll(donations);
-    }
-
-    /**
-     * Sets the viewed patient to the patient provided and sets up the screen accordingly
-     * @param patient the patient to add a procedure to
-     */
-    public void setViewedPatient(Patient patient) {
-        this.patient = patient;
-        setupDonations();
     }
 
     public void goBackToProcedures() {
