@@ -270,13 +270,10 @@ public class GUIPatientUpdateRequirements {
     private void createOrganRequests() {
         OrganWaitlist waitlist = Database.getWaitingList();
         Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();
-        System.out.println(waitlist.size());
         while(iter.hasNext()) {
             OrganWaitlist.OrganRequest next = iter.next();
             if(next.getReceiverNhi().equals(target.getNhiNumber())) {
-                System.out.println("here");
                 iter.remove();
-                System.out.println(waitlist.size());
             }
         }
         for(GlobalEnums.Organ organ : target.getRequiredOrgans()) {

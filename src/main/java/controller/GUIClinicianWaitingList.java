@@ -94,7 +94,6 @@ public class GUIClinicianWaitingList {
                     ScreenControl.displayPopUp("searchPopup"); //display the popup
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
                     userActions.log(Level.SEVERE,
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");
