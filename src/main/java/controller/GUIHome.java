@@ -105,8 +105,12 @@ public class GUIHome {
     }
 
 
-    private void addTabsClinican(){
-
+    private void addTabsClinican() throws IOException {
+        Tab searchTab = new Tab();
+        searchTab.setText("Search Patients");
+        Pane searchPane = FXMLLoader.load(getClass().getResource("/scene/clinicianSearchPatients.fxml"));
+        searchTab.setContent(searchPane);
+        horizontalTabPane.getTabs().add(searchTab);
     }
 
 

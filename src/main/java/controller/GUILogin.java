@@ -99,11 +99,12 @@ public class GUILogin {
                 Clinician newClinician = Database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
                 login.addLoggedInUserToCache(newClinician);
                 UndoableStage stage = new UndoableStage();
-                Parent clincianHome = FXMLLoader.load((getClass().getResource("/scene/clinicianHome.fxml")));
+                Parent clincianHome = FXMLLoader.load((getClass().getResource("/scene/home.fxml")));
                 screenControl.addStage(stage.getUUID(), stage);
                 screenControl.show(stage.getUUID(), clincianHome);
             }
             catch (Exception e) {
+                e.printStackTrace();
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to log in");
                 alert.show();
