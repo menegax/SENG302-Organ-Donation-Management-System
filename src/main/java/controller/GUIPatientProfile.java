@@ -287,19 +287,17 @@ public class GUIPatientProfile {
 
     @FXML
     public void goToPatientProcedures() {
-        if (ScreenControl.getLoggedInPatient() != null) {
-            ScreenControl.removeScreen("patientProcedures");
+        if (userControl.getLoggedInUser() instanceof Patient) {
             try {
-                ScreenControl.addScreen("patientProcedures", FXMLLoader.load(getClass().getResource("/scene/patientProcedures.fxml")));
-                ScreenControl.activate("patientProcedures");
+                screenControl.show(patientProfilePane, "/scene/patientProcedures.fxml");
             } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading procedures screen", "attempted to navigate from the profile page to the procedures page");
-                new Alert(Alert.AlertType.WARNING, "ERROR loading procedures page", ButtonType.OK).showAndWait();
+                new Alert(Alert.AlertType.ERROR, "Unable to load patient procedures").show();
+                userActions.log(SEVERE, "Failed to load patient procedures", "Attempted to load patient procedures");
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedures.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader, viewedPatient);
+                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading procedures screen in popup", "attempted to navigate from the profile page to the procedures page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading procedures page", ButtonType.OK).showAndWait();
