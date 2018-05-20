@@ -103,8 +103,8 @@ public class GUIHome {
 
         //todo setUpMenuBar() call here
 
-
     }
+
 
 
     private void addTabsClinican() throws IOException {
@@ -113,6 +113,12 @@ public class GUIHome {
         Pane clinicianProfilePane = FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml"));
         clinicianProfileTab.setContent(clinicianProfilePane);
         horizontalTabPane.getTabs().add(clinicianProfileTab);
+
+        Tab searchTab = new Tab();
+        searchTab.setText("Search Patients");
+        Pane searchPane = FXMLLoader.load(getClass().getResource("/scene/clinicianSearchPatients.fxml"));
+        searchTab.setContent(searchPane);
+        horizontalTabPane.getTabs().add(searchTab);
     }
 
 
