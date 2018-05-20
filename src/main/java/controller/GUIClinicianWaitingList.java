@@ -1,25 +1,24 @@
 package controller;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.DrugInteraction;
 import service.Database;
 import service.OrganWaitlist;
-import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 
-import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -39,6 +38,26 @@ public class GUIClinicianWaitingList {
     private ObservableList<OrganWaitlist.OrganRequest> openProfiles = FXCollections.observableArrayList();
     private ObservableList<OrganWaitlist.OrganRequest> masterData = FXCollections.observableArrayList();
 
+    @FXML
+    private ChoiceBox organSelection = new ChoiceBox(FXCollections.observableArrayList(Gender.getEnumFromString(
+            "liver"), Gender.getEnumFromString("kidney"), Gender.getEnumFromString("pancreas"),
+            Gender.getEnumFromString("heart"), Gender.getEnumFromString("lung"), Gender.getEnumFromString(
+            "intestine"), Gender.getEnumFromString("cornea"), Gender.getEnumFromString(
+            "middle ear"), Gender.getEnumFromString("skin"), Gender.getEnumFromString(
+            "bone"), Gender.getEnumFromString("bone marrow"),
+            Gender.getEnumFromString("connective tissue")));
+
+    @FXML
+    private ChoiceBox regionSelection = new ChoiceBox(FXCollections.observableArrayList(
+            Region.getEnumFromString("Northland"), Region.getEnumFromString("Auckland"),
+            Region.getEnumFromString("Waikato"), Region.getEnumFromString("Bay of Plenty"),
+            Region.getEnumFromString("Hawkes Bay"), Region.getEnumFromString("Taranaki"),
+            Region.getEnumFromString("Manawatu"), Region.getEnumFromString("Wellington"),
+            Region.getEnumFromString("Tasman"), Region.getEnumFromString("Nelson"),
+            Region.getEnumFromString("Marlborough"), Region.getEnumFromString("West Coast"),
+            Region.getEnumFromString("Canterbury"), Region.getEnumFromString("Otago"),
+            Region.getEnumFromString("Southland"), Region.getEnumFromString("Gisborne")));
+
     private UserControl userControl;
 
     /**
@@ -52,6 +71,27 @@ public class GUIClinicianWaitingList {
     	}
         populateTable();
     	setupDoubleClickToPatientEdit();
+    	//organSelection.getItems().add("liver");
+    	//regionSelection.getItems().add("Auckland");
+
+        //organChoiceBoxActionListener();
+        //regionChoiceBoxActionListener();
+    }
+
+    private void organChoiceBoxActionListener() {
+        organSelection.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            public void changed (ObservableValue organ, Number value, Number newValue) {
+                ;
+            }
+        });
+    }
+
+    private void regionChoiceBoxActionListener() {
+        regionSelection.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            public void changed (ObservableValue region, Number value, Number newValue) {
+                ;
+            }
+        });
     }
 
     /**
