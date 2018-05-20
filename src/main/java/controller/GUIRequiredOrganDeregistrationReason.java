@@ -7,9 +7,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.Patient;
+import service.Database;
 import utility.GlobalEnums;
 
+import java.io.InvalidObjectException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,7 +36,16 @@ public class GUIRequiredOrganDeregistrationReason {
     @FXML
     private Button okButton1;
 
+    @FXML
+    private Label pleaseSpecify;
+
+    private UserControl userControl;
+
+    @FXML
+    private AnchorPane requiredOrganDeregistrationReasonPane;
+
     public void initialize() {
+        userControl = new UserControl();
         populateDropdown();
         populateForm();
         dateOfDeath.setDisable(true);
@@ -62,12 +75,14 @@ public class GUIRequiredOrganDeregistrationReason {
     private void populateForm() {
         dateOfDeath.setValue(LocalDate.now());
         reasons.setValue(GlobalEnums.DeregistrationReason.ERROR.getValue());
+        pleaseSpecify.setText("Please specify a reason for removing " + userControl.getTargetPatient().getRemovedOrgan() + ": ");
     }
 
     /**
      * saves the reason why the clinician removed a organ from the patient required organs list
      */
     public void saveReason() {
-
+        Stage reasonStage = (Stage)requiredOrganDeregistrationReasonPane.getScene().getWindow();
+        reasonStage.close();
     }
 }

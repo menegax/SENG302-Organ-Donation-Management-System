@@ -1405,3 +1405,126 @@
   <param>Attempted to load dummy objects for testing</param>
 </record>
 </log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-21T09:22:52</date>
+  <millis>1526851372051</millis>
+  <sequence>0</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1234</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-21T09:22:52</date>
+  <millis>1526851372064</millis>
+  <sequence>1</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-21T09:22:52</date>
+  <millis>1526851372069</millis>
+  <sequence>2</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient BBB9782</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-21T09:22:52</date>
+  <millis>1526851372072</millis>
+  <sequence>3</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Successfully added patient AAA1111</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-21T09:22:52</date>
+  <millis>1526851372075</millis>
+  <sequence>4</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>service.Database</class>
+  <method>addClinician</method>
+  <thread>12</thread>
+  <message>Successfully added clinician 0</message>
+  <param>Attempted to add a clinician</param>
+</record>
+<record>
+  <date>2018-05-21T09:22:52</date>
+  <millis>1526851372295</millis>
+  <sequence>5</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>service.Database</class>
+  <method>addPatient</method>
+  <thread>12</thread>
+  <message>Failed to add patient ABC1238</message>
+  <param>Attempted to add a patient</param>
+</record>
+<record>
+  <date>2018-05-21T09:22:52</date>
+  <millis>1526851372295</millis>
+  <sequence>6</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>WARNING</level>
+  <class>controller.Main</class>
+  <method>addDummyTestObjects</method>
+  <thread>12</thread>
+  <message>Unable to add dummy objects</message>
+  <param>Attempted to load dummy objects for testing</param>
+</record>
+<record>
+  <date>2018-05-21T09:22:52</date>
+  <millis>1526851372296</millis>
+  <sequence>7</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>utility.SearchPatients</class>
+  <method>clearIndex</method>
+  <thread>12</thread>
+  <message>Successfully cleared patient search index</message>
+  <param>Attempted to delete all patients search indices</param>
+</record>
+<record>
+  <date>2018-05-21T09:23:03</date>
+  <millis>1526851383091</millis>
+  <sequence>9</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>INFO</level>
+  <class>model.Patient</class>
+  <method>addRequired</method>
+  <thread>12</thread>
+  <message>Added organ kidney to patient required organs</message>
+  <param>Attempted to add organ kidney to patient required organs</param>
+</record>
+<record>
+  <date>2018-05-21T09:23:06</date>
+  <millis>1526851386532</millis>
+  <sequence>12</sequence>
+  <logger>utility.UserActionHistory</logger>
+  <level>SEVERE</level>
+  <class>model.Patient</class>
+  <method>removeRequired</method>
+  <thread>12</thread>
+  <message>Failed to open deregistration of required organ scene from required organs update scene</message>
+  <param>attempted to open deregistration of required organ reason window from required organs update scene</param>
+</record>

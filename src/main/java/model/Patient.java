@@ -1,6 +1,7 @@
 package model;
 
 import controller.ScreenControl;
+import controller.UserControl;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -102,6 +103,8 @@ public class Patient extends User {
     private ArrayList<Disease> currentDiseases = new ArrayList<>();
 
     private ArrayList<Disease> pastDiseases = new ArrayList<>();
+
+    private GlobalEnums.Organ removedOrgan;
 
     /**
      * Constructor for the patient class. Initializes basic attributes
@@ -629,6 +632,7 @@ public class Patient extends User {
         if (requiredOrgans.contains(organ)) {
             requiredOrgans.remove(organ);
             patientModified();
+            setRemovedOrgan(organ);
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/deregistrationReason.fxml"));
                 Scene scene = new Scene(fxmlLoader.load());
@@ -661,6 +665,14 @@ public class Patient extends User {
         } else {
             return "Organ " + organ + " is not part of the patient's required organs, so could not be removed.";
         }
+    }
+
+    public GlobalEnums.Organ getRemovedOrgan() {
+        return removedOrgan;
+    }
+
+    public void setRemovedOrgan(GlobalEnums.Organ organ) {
+        removedOrgan = organ;
     }
 
     public String getNhiNumber() {
