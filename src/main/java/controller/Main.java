@@ -96,6 +96,7 @@ public class Main extends Application {
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
+            systemLogger.log(INFO, "Unable to add dummy patients");
         }
 
     }

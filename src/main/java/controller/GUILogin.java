@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 
@@ -85,6 +86,7 @@ public class GUILogin {
             }
             catch (IOException e) {
                 userActions.log(Level.WARNING, "Failed to log in", "Attempted to log in");
+                systemLogger.log(Level.INFO, "Failed to find the .fxml file for login" + e.getStackTrace());
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
             }
