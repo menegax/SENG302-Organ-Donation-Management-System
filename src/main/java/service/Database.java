@@ -14,7 +14,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import utility.UserActionHistory.userActions;
+
+import static utility.UserActionHistory.userActions;
 
 public class Database {
 
@@ -22,17 +23,14 @@ public class Database {
 
     private Set<Clinician> clinicians;
 
-    private static OrganWaitlist organWaitingList = new OrganWaitlist();
-
-    public static OrganWaitlist getWaitingList() {
-        return organWaitingList;
-    }
+    private OrganWaitlist organWaitingList;
 
     private static Database database = null;
 
     private Database() {
         patients = new HashSet<>();
         clinicians = new HashSet<>();
+        organWaitingList = new OrganWaitlist();
     }
 
     public static Database getDatabase() {
@@ -42,17 +40,79 @@ public class Database {
         return database;
     }
 
+    //ToDO Complete
+    public void runQuery(String query) {
+        String type = query.split(" ")[0].toUpperCase();
+        if (type.equals("SELECT")) {
+
+        }
+        else if (type.equals("UPDATE")) {
+
+        }
+//        else if (type.equals("INSERT")) {
+//
+//        }
+    }
+
+    //ToDo Complete
+    private void runSelectQuery(String query) {
+
+    }
+
+    //ToDo Complete
+    public void add(Object object) {
+        if (object instanceof Patient) {
+            addPatient((Patient) object);
+        }
+        else if (object instanceof Clinician) {
+
+        }
+    }
+
+    private void runInsertQuery(String query, String[] params) {
+
+    }
+
+    public OrganWaitlist getWaitingList() {
+        return organWaitingList;
+    }
+
+    private String[] getPatientAttributes(Patient patient) {
+        String[] attr = new String[16];
+        attr[0] = patient.getNhiNumber();
+        attr[1] = patient.getFirstName();
+        attr[2] = String.join(" ", patient.getMiddleNames());
+        attr[3] = patient.getLastName();
+        attr[4] = patient.getBirth().toString();
+        attr[5] = patient.getCREATED().toString();
+        attr[5] = patient.getModified().toString();
+        attr[5] = patient.getDeath().toString();
+        attr[5] = patient.getGender().toString().substring(0,1);
+        attr[5] = null;
+        attr[5] = null;
+        attr[5] = String.valueOf(patient.getHeight());
+        attr[5] = String.valueOf(patient.getWeight());
+        attr[5] = patient.getBloodGroup().toString();
+
+
+    }
+
     /**
      * Adds a patient to the database
      *
      * @param newPatient the new patient to add
      */
-    public void addPatient(Patient newPatient) throws IllegalArgumentException {
+    private void addPatient(Patient newPatient) throws IllegalArgumentException {
         try {
             newPatient.ensureValidNhi();
             newPatient.ensureUniqueNhi();
             patients.add(newPatient);
             SearchPatients.addIndex(newPatient);
+
+            String[] attr = getPatientAttributes(newPatient);
+            String query = "INSERT INTO tblPatients" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            runInsertQuery(query, attr);
             userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
         }
         catch (IllegalArgumentException o) {
@@ -60,6 +120,26 @@ public class Database {
             throw new IllegalArgumentException(o.getMessage());
         }
     }
+
+//ToDo Local version remove?????
+//    /**
+//     * Adds a patient to the database
+//     *
+//     * @param newPatient the new patient to add
+//     */
+//    public void addPatient(Patient newPatient) throws IllegalArgumentException {
+//        try {
+//            newPatient.ensureValidNhi();
+//            newPatient.ensureUniqueNhi();
+//            patients.add(newPatient);
+//            SearchPatients.addIndex(newPatient);
+//            userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
+//        }
+//        catch (IllegalArgumentException o) {
+//            userActions.log(Level.WARNING, "Failed to add patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
+//            throw new IllegalArgumentException(o.getMessage());
+//        }
+//    }
 
 
     /**
@@ -69,7 +149,7 @@ public class Database {
      * @exception InvalidObjectException when the object cannot be found
      */
     public void removePatient(String nhi) throws InvalidObjectException {
-        patients.remove(Database.getPatientByNhi(nhi));
+        patients.remove(getPatientByNhi(nhi));
         userActions.log(Level.INFO, "Successfully removed patient " + nhi, "attempted to remove a patient");
     }
 
@@ -83,8 +163,8 @@ public class Database {
      * @exception InvalidObjectException when the object cannot be found
      */
     public Patient getPatientByNhi(String nhi) throws InvalidObjectException {
-        for (Patient d : getPatients()) {
-            if (d.getNhiNumber()
+        for (Patient p : getPatients()) {
+            if (p.getNhiNumber()
                     .equals(nhi.toUpperCase())) {
                 return p;
             }
@@ -165,7 +245,7 @@ public class Database {
             throw new IllegalArgumentException("street1");
         }
 
-        if (newClinician.getStaffID() == Database.getNextStaffID()) {
+        if (newClinician.getStaffID() == getNextStaffID()) {
             clinicians.add(newClinician);
             userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
         }
@@ -209,7 +289,7 @@ public class Database {
         }
     }
 
-    private static void saveToDiskWaitlist() throws IOException {
+    private void saveToDiskWaitlist() throws IOException {
         Gson gson = new Gson();
         String json = gson.toJson(organWaitingList);
 
@@ -277,7 +357,7 @@ public class Database {
             Patient[] patient = gson.fromJson(br, Patient[].class);
             for (Patient d : patient) {
                 try {
-                    Database.addPatient(d);
+                    addPatient(d);
                 }
                 catch (IllegalArgumentException e) {
                     userActions.log(Level.WARNING, "Error importing donor from file", "Attempted to import donor from file");
@@ -289,7 +369,7 @@ public class Database {
         }
     }
 
-    public static void importFromDiskWaitlist(String directory) throws FileNotFoundException {
+    public void importFromDiskWaitlist(String directory) throws FileNotFoundException {
     	String fileName = directory + "waitlist.json";
         Gson gson = new Gson();
         BufferedReader br = new BufferedReader(new FileReader(fileName));
@@ -308,7 +388,7 @@ public class Database {
             Clinician[] clinician = gson.fromJson(br, Clinician[].class);
             for (Clinician c : clinician) {
                 try {
-                    Database.addClinician(c);
+                    addClinician(c);
                 } catch (IllegalArgumentException e) {
                     userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
                 }
