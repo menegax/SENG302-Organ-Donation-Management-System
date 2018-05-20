@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane fx:id="patientDonationsAnchorPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/9.0.1" fx:controller="controller.GUIPatientUpdateDonations">
+  <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="96.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="118.4000244140625" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.20001220703125" minWidth="10.0" prefWidth="85.5999755859375" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <CheckBox fx:id="liverCB" mnemonicParsing="false" text="Liver" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <CheckBox fx:id="pancreasCB" mnemonicParsing="false" text="Pancreas" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <CheckBox fx:id="lungCB" mnemonicParsing="false" text="Lung" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <CheckBox fx:id="corneaCB" mnemonicParsing="false" text="Cornea" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <CheckBox fx:id="skinCB" mnemonicParsing="false" text="Skin" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <CheckBox fx:id="bonemarrowCB" mnemonicParsing="false" text="Bone marrow" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <CheckBox fx:id="kidneyCB" mnemonicParsing="false" text="Kidney" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+      <CheckBox fx:id="heartCB" mnemonicParsing="false" text="Heart" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+      <CheckBox fx:id="intestineCB" mnemonicParsing="false" text="Intestine" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="3" />
+      <CheckBox fx:id="middleearCB" mnemonicParsing="false" text="Middle ear" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
+      <CheckBox fx:id="boneCB" mnemonicParsing="false" text="Bone" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="5" />
+      <CheckBox fx:id="connectivetissueCB" mnemonicParsing="false" text="Connective tissue" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="6" />
+   </children>
+</GridPane>

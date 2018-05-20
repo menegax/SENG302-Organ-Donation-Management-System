@@ -72,6 +72,12 @@ public class GUIHome {
             historyViewTab.setContent(FXMLLoader.<Pane>load(getClass().getResource("/scene/patientHistory.fxml")));
             horizontalTabPane.getTabs().add(historyViewTab);
 
+            Tab patientDonationsTab = new Tab();
+            patientDonationsTab.setText("Donations");
+            Pane donationsPane = FXMLLoader.load(getClass().getResource("/scene/testDonationUpdate.fxml"));
+            patientDonationsTab.setContent(donationsPane);
+            horizontalTabPane.getTabs().add(patientDonationsTab);
+
             horizontalTabPane.sceneProperty().addListener((observable, oldValue, newValue) -> {
                 System.out.println("HORZ TAB PANE LOADED" + newValue.getWindow()); //todo rm
                 setUpMenuBar((Stage) newValue.getWindow()); //todo Aidan figure out why newValue has a scene but .getWindow returns Null
