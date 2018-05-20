@@ -9,6 +9,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
+
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
@@ -43,7 +48,6 @@ public class GUILogin {
         });
     }
 
-
     /**
      * Open the register screen
      */
@@ -51,7 +55,6 @@ public class GUILogin {
     public void goToRegister() {
         ScreenControl.activate("patientRegister");
     }
-
 
     /**
      * Attempt to log the user in using the entered NHI
@@ -104,10 +107,8 @@ public class GUILogin {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
             }
-
         }
     }
-
 
     /**
      * Attempt to log the user in using the entered NHI
@@ -125,5 +126,4 @@ public class GUILogin {
             nhiLogin.setPromptText("NHI");
         }
     }
-
 }

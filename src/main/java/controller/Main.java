@@ -92,7 +92,7 @@ public class Main extends Application {
                     .setGender(GlobalEnums.Gender.FEMALE);
         }
         catch (Exception e) {
-            userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
+            userActions.log(Level.WARNING, "Unable to add dummy objects", "Attempted to load dummy objects for testing");
         }
 
     }

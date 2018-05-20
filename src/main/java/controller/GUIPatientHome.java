@@ -48,7 +48,6 @@ public class GUIPatientHome {
         ScreenControl.activate("login");
     }
 
-
     @FXML
     public void save() {
         Database.saveToDisk();

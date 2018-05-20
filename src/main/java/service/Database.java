@@ -3,6 +3,7 @@ package service;
 import com.google.gson.Gson;
 import model.Clinician;
 import model.Patient;
+import org.omg.CORBA.DynAnyPackage.Invalid;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 
@@ -238,6 +239,20 @@ public class Database {
         writer.close();
     }
 
+//
+//    /**
+//     * Calls importFromDisk and handles any errors
+//     * @param fileName The file to import from
+//     */
+//    public static void importFromDisk(String fileName) {
+//        try {
+//            importFromDiskPatients(fileName);
+//            userActions.log(Level.INFO, "Imported patients from disk", "Attempted to import from disk");
+//            SearchPatients.createFullIndex();
+//        } catch (IOException e) {
+//            userActions.log(Level.WARNING, e.getMessage(), "attempted to import from disk");
+//        }
+//    }
 
     /**
      * Reads patient data from disk
@@ -270,7 +285,6 @@ public class Database {
         organWaitingList = gson.fromJson(br, OrganWaitlist.class);
     }
 
-
     /**
      * Reads clinician data from disk
      * @param fileName file to import from
@@ -284,16 +298,14 @@ public class Database {
             for (Clinician c : clinician) {
                 try {
                     Database.addClinician(c);
-                }
-                catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
                 }
             }
         }
         catch (FileNotFoundException e) {
-            userActions.log(Level.WARNING, "Clinician import file not found", "Attempted to read clinician file");
+            userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
         }
-
     }
 
 
