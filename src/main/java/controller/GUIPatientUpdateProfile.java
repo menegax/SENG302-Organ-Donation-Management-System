@@ -246,10 +246,9 @@ public class GUIPatientUpdateProfile {
             regionDD.setValue(patient.getRegion()
                     .getValue());
         }
-        if (patient.getZip() != 0) {
+        if(patient.getZip() != 0) {
             zipTxt.setText(String.valueOf(patient.getZip()));
-            while (zipTxt.getText()
-                    .length() < 4) {
+            while(zipTxt.getText().length() < 4) {
                 zipTxt.setText("0" + zipTxt.getText());
             }
         }

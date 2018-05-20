@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import utility.GlobalEnums;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -52,13 +53,15 @@ public class GUIUndoPatientDonationsTest extends ApplicationTest{
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
         Database.addPatient(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
         interact(() -> {
             lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
             lookup("#loginButton").queryAs(Button.class).fire();
             lookup("#profileButton").queryAs(Button.class).fire();
-            lookup("#donationButton").queryAs(Button.class).fire();
+            lookup("#donationsButton").queryAs(Button.class).fire();
         });
     }
 

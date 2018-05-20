@@ -17,7 +17,7 @@ public class ScreenControl {
     private static HashMap<String, Stage> popMap = new HashMap<>();
 
     private static Scene main;
-    
+
 
     public static Scene getMain() {
         return main;

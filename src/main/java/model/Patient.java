@@ -1,20 +1,15 @@
 package model;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import service.Database;
 import utility.GlobalEnums.*;
 import utility.SearchPatients;
 import utility.UserActionRecord;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -40,9 +35,9 @@ public class Patient extends User {
 
     private PreferredGender preferredGender;
 
-    private double height; //Height in meters
+    private double height; // Height in meters
 
-    private double weight; //Weight in kilograms
+    private double weight; // Weight in kilograms
 
     private BloodGroup bloodGroup;
 
@@ -57,6 +52,8 @@ public class Patient extends User {
     private int zip;
 
     private ArrayList<Organ> donations;
+
+    private ArrayList<Organ> requiredOrgans;
 
     private Timestamp modified;
 
@@ -92,8 +89,15 @@ public class Patient extends User {
 
     private ArrayList<Disease> pastDiseases = new ArrayList<>();
 
-    public Patient(String nhiNumber, String firstName,
-                   ArrayList<String> middleNames, String lastName, LocalDate date) {
+    /**
+     * Constructor for the patient class. Initializes basic attributes
+     * @param nhiNumber unique number to identify the patient by
+     * @param firstName first name of the patient
+     * @param middleNames middle names of the patient
+     * @param lastName last name of the patient
+     * @param date date of birth of patient
+     */
+    public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
         this.firstName = firstName;
@@ -104,6 +108,7 @@ public class Patient extends User {
         this.nhiNumber = nhiNumber.toUpperCase();
         this.donations = new ArrayList<>();
         this.userActionsList = new ArrayList<>();
+        this.requiredOrgans = new ArrayList<>();
     }
 
 
@@ -258,8 +263,8 @@ public class Patient extends User {
      * @throws IllegalArgumentException when the nhi number given is already in use
      */
     public void ensureUniqueNhi() throws IllegalArgumentException {
-        for (Patient d : Database.getPatients()) {
-            if (d.nhiNumber.equals(nhiNumber.toUpperCase())) {
+        for (Patient p : Database.getPatients()) {
+            if (p.nhiNumber.equals(nhiNumber.toUpperCase())) {
                 throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
             }
         }
@@ -292,6 +297,10 @@ public class Patient extends User {
         return donations == null ? new ArrayList<>() : donations;
     }
 
+    /**
+     * Sets the donation organs of the patient to the list parsed through
+     * @param donations The donations being set to the patient donations array list
+     */
     public void setDonations(ArrayList<Organ> donations) {
         if (this.donations != donations) {
             this.donations = donations;
@@ -513,7 +522,6 @@ public class Patient extends User {
         return zip;
     }
 
-
     /**
      * Gets the current medication list for a Patient
      * @return ArrayList medications the Patient currently uses
@@ -553,6 +561,22 @@ public class Patient extends User {
         }
     }
 
+    /**
+     * gets the current requred organs of the patient
+     * @return required organs of the patient
+     */
+    public ArrayList<Organ> getRequiredOrgans() {
+        return this.requiredOrgans;
+    }
+
+    /**
+     * sets the required organs of the patient to the list parsed through
+     * @param requiredOrgans
+     */
+    public void setRequiredOrgans(ArrayList requiredOrgans) {
+        this.requiredOrgans = requiredOrgans;
+    }
+
     public String getFormattedAddress() {
         return street1 + " " + street2 + " " + suburb + " " + region + " " + zip;
     }
@@ -574,8 +598,30 @@ public class Patient extends User {
         else {
             donations.add(organ);
             patientModified();
+            userActions.log(Level.INFO, "Added organ " + organ + " to patient donations", "Attempted to add organ " + organ + " to patient donations");
             return "Successfully added " + organ + " to donations";
         }
+    }
+
+    /**
+     * Add organs to patient requirements list
+     *
+     * @param organ - organ to add to the patient required organs list
+     * @return string of message
+     */
+    public String addRequired(Organ organ) {
+        if (requiredOrgans != null) {
+            if (requiredOrgans.contains(organ)) {
+                return "Organ " + organ + " is already part of the patient's required organs, so was not added.";
+            }
+        }
+        if (requiredOrgans == null) {
+            requiredOrgans = new ArrayList<>();
+        }
+        requiredOrgans.add(organ);
+        patientModified();
+        userActions.log(Level.INFO, "Added organ " + organ + " to patient required organs", "Attempted to add organ " + organ + " to patient required organs");
+        return "Successfully added " + organ + " to required organs";
     }
 
     /**
@@ -588,9 +634,26 @@ public class Patient extends User {
         if (donations.contains(organ)) {
             donations.remove(organ);
             patientModified();
+            userActions.log(Level.INFO, "Removed " + organ + " from patient donations", "Attempted to remove donation from a patient");
             return "Successfully removed " + organ + " from donations";
         } else {
             return "Organ " + organ + " is not part of the patients donations, so could not be removed.";
+        }
+    }
+
+    /**
+     * Remove organs from patients required organs list
+     *
+     * @param organ - organ to remove from the patients required organs list
+     * @return string of message
+     */
+    public String removeRequired(Organ organ) {
+        if (requiredOrgans.contains(organ)) {
+            requiredOrgans.remove(organ);
+            patientModified();
+            return "Successfully removed " + organ + " from required organs";
+        } else {
+            return "Organ " + organ + " is not part of the patient's required organs, so could not be removed.";
         }
     }
 

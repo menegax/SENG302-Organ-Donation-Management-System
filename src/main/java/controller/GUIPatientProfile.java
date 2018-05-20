@@ -3,20 +3,20 @@ package controller;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.control.*;
-import model.Clinician;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
-import model.Medication;
 import service.Database;
+import model.Clinician;
+import model.Medication;
 import utility.GlobalEnums;
 
 import java.io.IOException;
@@ -24,11 +24,17 @@ import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import static utility.UserActionHistory.userActions;
 
+/**
+ * Patient profile page where in patient view, they may view their attributes, donating organs and required organs.
+ * In clinician view, they can see the highlighted cell if the donating organ is also required by the patient.
+ * This class loads and controls this view.
+ */
 public class GUIPatientProfile {
 
     @FXML
@@ -38,10 +44,16 @@ public class GUIPatientProfile {
 
     public Button contactButton;
 
-    public Button donationButton;
+    //public Button donationButton;
 
     @FXML
     public Button medicationBtn;
+
+    @FXML
+    public Button donationsButton;
+
+    @FXML
+    public Button requirementsButton;
 
     @FXML
     private Label nhiLbl;
@@ -94,8 +106,27 @@ public class GUIPatientProfile {
     @FXML
     private Label addLbl5;
 
+    //@FXML
+    //private ListView<String> organList;
+
     @FXML
-    private ListView<String> organList;
+    private ListView receivingList;
+
+    @FXML
+    private Label receivingTitle;
+
+    @FXML
+    private Label donatingTitle;
+
+    private ListProperty<String> donatingListProperty = new SimpleListProperty<>();
+
+    private ListProperty<String> receivingListProperty = new SimpleListProperty<>();
+
+    /**
+     * A list for the organs a patient is donating
+     */
+    @FXML
+    private ListView donationList;
 
     @FXML
     private ListView<String> medList;
@@ -105,7 +136,7 @@ public class GUIPatientProfile {
 
     private UserControl userControl;
 
-    private ListProperty<String> organListProperty = new SimpleListProperty<>();
+    //private ListProperty<String> organListProperty = new SimpleListProperty<>();
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
@@ -113,12 +144,25 @@ public class GUIPatientProfile {
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
      */
-    public void initialize() {
+    public void initialize() throws InvalidObjectException{
         userControl = new UserControl();
         Object user = null;
         if (userControl.getLoggedInUser() instanceof  Patient ) {
-            medicationBtn.setDisable(true); //hide medications btn
+            requirementsButton.setDisable(true);
+            requirementsButton.setVisible(false);
+            medicationBtn.setDisable(true);
             medicationBtn.setVisible(false);
+            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
+                receivingList.setDisable(true);
+                receivingList.setVisible(false);
+                receivingTitle.setDisable(true);
+                receivingTitle.setVisible(false);
+            } if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getDonations().size() == 0) {
+                donatingTitle.setDisable(true);
+                donatingTitle.setVisible(false);
+                donationList.setDisable(true);
+                donationList.setVisible(false);
+            }
             user = userControl.getLoggedInUser();
         }
         if (userControl.getLoggedInUser() instanceof Clinician) {
@@ -127,7 +171,6 @@ public class GUIPatientProfile {
         }
 
         try {
-
             assert user != null;
             loadProfile(((Patient)user).getNhiNumber());
         }
@@ -145,33 +188,20 @@ public class GUIPatientProfile {
         back.setVisible(false);
     }
 
-
-    /**
-     * Sets the patient for the controller. This patient's attributes will be loaded
-     * @param patient the patient to be viewed
-     */
-    void setViewedPatient(Patient patient) {
-        removeBack();
-        try {
-            loadProfile(patient.getNhiNumber());
-        }
-        catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
-        }
-    }
-
-    //public void initialize() {
-      //  if (ScreenControl.getLoggedInPatient() != null) {
-        //    medicationBtn.setDisable(true);
-          //  medicationBtn.setVisible(false);
-            //try {
-              //  loadProfile(ScreenControl.getLoggedInPatient()
-                //        .getNhiNumber());
-            //} catch (IOException e) {
-              //  userActions.log(Level.SEVERE, "Cannot load patient profile");
-            //}
-        //}
-    //}
+//    /**
+//     * Sets the patient for the controller. This patient's attributes will be loaded
+//     * @param patient the patient to be viewed
+//     */
+//    void setViewedPatient(Patient patient) {
+//        viewedPatient = patient;
+//        removeBack();
+//        try {
+//            loadProfile(viewedPatient.getNhiNumber());
+//        }
+//        catch (InvalidObjectException e) {
+//            userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
+//        }
+//    }
 
     /**
      * Sets the patient's attributes for the scene's labels
@@ -211,26 +241,65 @@ public class GUIPatientProfile {
         else {
             addLbl5.setText("Not set");
         }
-        //Populate organ listview
-        Collection<GlobalEnums.Organ> organs = patient.getDonations();
-        List<String> organsMapped = organs.stream()
-                .map(e -> StringUtils.capitalize(e.getValue()))
-                .collect(Collectors.toList());
-        organListProperty.setValue(FXCollections.observableArrayList(organsMapped));
-        organList.itemsProperty()
-                .bind(organListProperty);
+
+        if (patient.getRequiredOrgans() == null) { patient.setRequiredOrgans(new ArrayList<>()); }
+        Collection<GlobalEnums.Organ> organsD = patient.getDonations();
+        Collection<GlobalEnums.Organ> organsR = patient.getRequiredOrgans();
+        List<String> organsMappedD = organsD.stream().map(e -> StringUtils.capitalize(e.getValue())).collect(Collectors.toList());
+        List<String> organsMappedR = organsR.stream().map(e -> StringUtils.capitalize(e.getValue())).collect(Collectors.toList());
+        donatingListProperty.setValue(FXCollections.observableArrayList(organsMappedD));
+        receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
+        donationList.itemsProperty().bind(donatingListProperty);
+        receivingList.itemsProperty().bind(receivingListProperty);
         //Populate current medication listview
         Collection<Medication> meds = patient.getCurrentMedications();
-        List<String> medsMapped = meds.stream()
-                .map(Medication::getMedicationName)
-                .collect(Collectors.toList());
+        List<String> medsMapped = meds.stream().map(Medication::getMedicationName).collect(Collectors.toList());
         medListProperty.setValue(FXCollections.observableArrayList(medsMapped));
-        medList.itemsProperty()
-                .bind(medListProperty);
+        medList.itemsProperty().bind(medListProperty);
+//         list view styling/highlighting
+        highlightListCell(donationList, true);
+        highlightListCell(receivingList, false);
     }
 
     /**
-     * Goes to the patient edit scene
+     * Highlights the listview cell if the organ donating is also required by the patient in clinician view. If in
+     * patient view, the listview cells are just styled.
+     * @param listView The listView that the cells being highlighted are in
+     * @param isDonorList boolean for if the receiving organ is also in the donating list
+     */
+    public void highlightListCell(ListView<String> listView, boolean isDonorList) {
+        listView.setCellFactory(column -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (userControl.getLoggedInUser() instanceof Clinician) {
+                    if (isDonorList) {
+                        if (receivingListProperty.contains(item)) {
+                            this.setStyle("-fx-background-color: #e6b3b3");
+                            this.setText(item);
+                        } else {
+                            this.setStyle("-fx-background-color: WHITE");
+                            this.setText(item);
+                        }
+                    } else {
+                        if (donatingListProperty.contains(item)) {
+                            this.setStyle("-fx-background-color: #e6b3b3");
+                            this.setText(item);
+                        } else {
+                            this.setStyle("-fx-background-color: WHITE");
+                            this.setText(item);
+                        }
+                    }
+                } else {
+                        this.setStyle("-fx-background-color: WHITE");
+                        this.setText(item);
+                }
+            }
+        });
+    }
+
+    /**
+     * Takes the user to the edit patient profile scene and controller
      */
     public void goToEdit() {
         if (userControl.getLoggedInUser() instanceof Patient) {
@@ -287,9 +356,24 @@ public class GUIPatientProfile {
         }
     }
 
+    /**
+     * Takes the user to the edit required organs scene and controller
+     */
+    public void goToRequirements() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateRequirements.fxml"));
+        try {
+            ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
+        }
+        catch (Exception e) {
+            userActions.log(Level.SEVERE,
+                    "Error loading required organs screen in popup",
+                    "attempted to navigate from the profile page to the required organs page in popup");
+            new Alert(Alert.AlertType.ERROR, "Error loading edit page", ButtonType.OK).show();
+        }
+    }
 
     /**
-     * Goes to the patient contact details edit scene
+     * Takes the user to edit the patients contact details
      */
     public void goToContactDetails() {
         if (userControl.getLoggedInUser() instanceof Patient) {
@@ -311,8 +395,7 @@ public class GUIPatientProfile {
                 ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
             }
             catch (IOException e) {
-                userActions.log(Level.SEVERE,
-                        "Error loading contacts screen in popup",
+                userActions.log(Level.SEVERE, "Error loading contacts screen in popup",
                         "attempted to navigate from the profile page to the contacts page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading contacts page", ButtonType.OK).show();
             }

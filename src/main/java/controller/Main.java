@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
 import service.Database;
+import service.OrganWaitlist;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 import utility.UserActionHistory;
@@ -39,6 +40,7 @@ public class Main extends Application {
         // add objects
         Database.importFromDiskPatients("./patient.json");
         Database.importFromDiskClinicians("./clinician.json");
+        Database.importFromDiskWaitlist("./");
         addDummyTestObjects();
         ensureDefaultClinician();
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
@@ -86,7 +88,7 @@ public class Main extends Application {
                     .setBirthGender(GlobalEnums.BirthGender.FEMALE);
         }
         catch (Exception e) {
-            userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
+            userActions.log(Level.WARNING, "Unable to add dummy objects", "Attempted to load dummy objects for testing");
         }
     }
 
