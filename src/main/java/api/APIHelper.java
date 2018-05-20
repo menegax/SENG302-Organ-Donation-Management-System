@@ -40,7 +40,7 @@ public class APIHelper {
      * Builds API query and get the response in a form of a json object
      * @param medicationString -
      * @return - JSONObject of the response from the API
-     * @throws IOException - if a connection to the API cannot be obtainted
+     * @throws IOException - if a connection to the API cannot be obtained
      */
     public JsonObject getMapiDrugSuggestions(String medicationString) throws IOException { // throw to application layer
         medicationString = medicationString.replaceAll("[^a-zA-Z0-9]", "");

@@ -32,7 +32,11 @@ public class GUIClinicianProfile {
     private Label regionTxt;
 
     public void initialize() {
-        loadProfile(ScreenControl.getLoggedInClinician());
+        UserControl userControl = new UserControl();
+        Object user = userControl.getLoggedInUser();
+        if (user instanceof Clinician){
+            loadProfile(((Clinician) user));
+        }
     }
 
     private void loadProfile(Clinician clinician) {

@@ -84,18 +84,7 @@ See the GUIDonorRegister class for examples of goToLogin() and register()
 All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new donor would not be logged either.
 
 ## Sprint 3
-26th March to the 3rd of May
-
-#### GUI Donor Medications
-
-To reduce error, for in the case that a medication has been selected in each of the history and the current listViews, it has been decided to reserve deletion of a medication from the history listView, only. Otherwise, if not reserve deletion to only one listView, and include both listViews, being that there is currently no found appropriate method to determine which medication is the most recently selected between listViews, and that deciding deletion between listViews can only currently be done by determining if one listView does not have a medication selected before deleting a selected medication from another listView, then a selected medication other than the most previously selected medication could be deleted instead if the most recently selected medication is in the listView that has a selected medication deleted from it only after the other listView is determined to not have any selected medication for deleting, when in the case that each listView has a medication selected.
-
-If a medication is selected in each of the current and history listViews, and a user selects either a remove or add button unintentionally, then a medication will be swapped from one listView to the other, depending on which button is selected, even if this medication is not the most recently selected between the two listViews. If this is not the intention of the user, then this has been assumed to be determined as user error, and not the fault of the program.
-
-Medication selection is assumed to be possible in each listView simultaneously for the benefit of future stories.
-
-The current option of multiple selection in each listView may not be appropriate for future stories. 
-
+26th of March to the 3rd of May
 
 ####Donor Contact Details
 Contact Details for a Donor are updated in a separate update method. This is because as contact details are implemented solely in the GUI application, and so will only need handling there.
@@ -120,3 +109,21 @@ This meant that an action could not be undone after another action was performed
 This allows the user to more easily keep track of what changes they have made and what states they can switch between.  
 In addition we decided to bind redo to Ctrl + Y. This is because Ctrl + Y is the industry standard undo for non-technical applications (such as word).  
 This is how we aim to target our application, as we do not see most of our users having software development or similar backgrounds.
+
+#### Name Search For Patients
+We decided to use an external library, Lucene, to do our name searching of patients. This library allows us to not just do a simple exact name search but do a fuzzy search of the names.
+This term "fuzzy search" means that some of the character can be different from what is in the name and it will still be a result. In order to tell which results are "better" a "score" is included with the individual results, which symbolizes how close to the entered search the names are. The closer the name to the search, the higher the score.
+We thought this would be very useful when searching for patients, as the clinician may not know the exact spelling of a particular patient but knows roughly how it is spelt. Or in a much simpler case, the clincian may simply have a miss key press. 
+However we do not want every patient to be matched to any search, so we set the max number of the character difference between the search and the patient's name to two.
+
+
+##Sprint 4
+
+####Diagnosis Validation
+A diagnosis must have a name between 3 and 50 characters long, as this covers the length of the full names of most diseases and conditions. A diagnosis can not be made in the future or before the patient was born.
+
+####Diagnosis Adding
+A diagnosis can not be added to the current diagnoses list if the patient has a diagnosis of the same name and the same diagnosis date.
+
+####Setting past and current diagnoses lists
+Diagnoses lists for a patient are set entirely after all changes have been made before saving. This is to keep tracking changes made to a minimum to reduce operation complexity, and thus making the saving procedure quicker to execute.
