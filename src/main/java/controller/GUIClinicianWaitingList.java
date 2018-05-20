@@ -114,8 +114,13 @@ public class GUIClinicianWaitingList {
         		.getRequestDate().toString()));
         organCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getRequestedOrgan().toString()));
-        regionCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
-                .getRequestRegion().toString()));
+        regionCol.setCellValueFactory(r -> {
+            if(r.getValue().getRequestRegion() != null) {
+                return new SimpleStringProperty(r.getValue()
+                        .getRequestRegion().toString());
+            }
+            return null;
+        });
 
         // wrap ObservableList in a FilteredList
         FilteredList<OrganWaitlist.OrganRequest> filteredData = new FilteredList<>(masterData, d -> true);
