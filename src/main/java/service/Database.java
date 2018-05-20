@@ -3,6 +3,8 @@ package service;
 import com.google.gson.Gson;
 import model.Clinician;
 import model.Patient;
+import org.omg.CORBA.DynAnyPackage.Invalid;
+import utility.GlobalEnums;
 import utility.SearchPatients;
 
 import java.io.*;
@@ -64,10 +66,10 @@ public class Database {
      * @exception InvalidObjectException when the object cannot be found
      */
     public static Patient getPatientByNhi(String nhi) throws InvalidObjectException {
-        for (Patient d : getPatients()) {
-            if (d.getNhiNumber()
+        for (Patient p : getPatients()) {
+            if (p.getNhiNumber()
                     .equals(nhi.toUpperCase())) {
-                return d;
+                return p;
             }
         }
         throw new InvalidObjectException("Patient with NHI number " + nhi + " does not exist.");
@@ -189,7 +191,6 @@ public class Database {
         }
     }
 
-
     /**
      * Writes database patients to file on disk
      *
@@ -221,6 +222,20 @@ public class Database {
         writer.close();
     }
 
+//
+//    /**
+//     * Calls importFromDisk and handles any errors
+//     * @param fileName The file to import from
+//     */
+//    public static void importFromDisk(String fileName) {
+//        try {
+//            importFromDiskPatients(fileName);
+//            userActions.log(Level.INFO, "Imported patients from disk", "Attempted to import from disk");
+//            SearchPatients.createFullIndex();
+//        } catch (IOException e) {
+//            userActions.log(Level.WARNING, e.getMessage(), "attempted to import from disk");
+//        }
+//    }
 
     /**
      * Reads patient data from disk
@@ -261,16 +276,14 @@ public class Database {
             for (Clinician c : clinician) {
                 try {
                     Database.addClinician(c);
-                }
-                catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
                 }
             }
         }
         catch (FileNotFoundException e) {
-            userActions.log(Level.WARNING, "Clinician import file not found", "Attempted to read clinician file");
+            userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
         }
-
     }
 
 
