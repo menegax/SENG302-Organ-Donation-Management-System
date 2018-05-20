@@ -9,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.layout.GridPane;
 import model.Patient;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
@@ -62,7 +63,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
 
     @FXML
-    private AnchorPane patientDonationsAnchorPane;
+    private GridPane patientDonationsAnchorPane;
 
     private Patient target;
 
@@ -278,7 +279,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
         }
         Database.saveToDisk();
-        goToProfile();
+        //goToProfile();
     }
 
 
