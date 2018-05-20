@@ -181,11 +181,11 @@ public class Clinician extends User {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
 
+    /**
+     * Returns the list of this clinicians actions. This should only be modified within UserActionHistory
+     * @return the list of Clinician Action Records
+     */
     public List<ClinicianActionRecord> getClinicianActionsList() {
         return clinicianActionsList;
-    }
-
-    public void addClinicianActionRecord(ClinicianActionRecord record) {
-        clinicianActionsList.add(record);
     }
 }

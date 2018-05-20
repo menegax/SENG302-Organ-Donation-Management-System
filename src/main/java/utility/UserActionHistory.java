@@ -49,8 +49,8 @@ public class UserActionHistory {
                     if (logRecord.getParameters().length >= 2) {
                         nhiParam = logRecord.getParameters()[1].toString().toUpperCase();
                     }
-                    ((Clinician) loggedInUser).addClinicianActionRecord(
-                            new ClinicianActionRecord(currentTimeStamp,
+                    ((Clinician) loggedInUser).getClinicianActionsList()
+                            .add(new ClinicianActionRecord(currentTimeStamp,
                                     logRecord.getLevel(),
                                     StringUtils.capitalize(logRecord.getParameters()[0].toString()),
                                     StringUtils.capitalize(logRecord.getMessage()),
