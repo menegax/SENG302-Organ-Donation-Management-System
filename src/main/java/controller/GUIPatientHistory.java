@@ -49,7 +49,6 @@ public class GUIPatientHistory {
 
     /**
      * Go to home page action listener for back button
-     * Maybe call is goToHome
      */
     public void goToPatientHome() {
         ScreenControl.activate("patientHome");

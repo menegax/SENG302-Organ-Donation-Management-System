@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import model.Patient;
+import service.OrganWaitlist;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
@@ -17,6 +18,8 @@ import utility.GlobalEnums;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -259,8 +262,23 @@ public class GUIPatientUpdateRequirements {
         else {
             target.removeRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
+        createOrganRequests();
         Database.saveToDisk();
         goToProfile();
+    }
+
+    private void createOrganRequests() {
+        OrganWaitlist waitlist = Database.getWaitingList();
+        Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();
+        while(iter.hasNext()) {
+            OrganWaitlist.OrganRequest next = iter.next();
+            if(next.getReceiverNhi().equals(target.getNhiNumber())) {
+                iter.remove();
+            }
+        }
+        for(GlobalEnums.Organ organ : target.getRequiredOrgans()) {
+            waitlist.add(target, organ);
+        }
     }
 
     /**

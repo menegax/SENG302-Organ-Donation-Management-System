@@ -4,8 +4,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.Control;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import javafx.scene.input.KeyCodeCombination;
@@ -58,7 +59,6 @@ public class GUIPatientUpdateDonations {
 
     @FXML
     private CheckBox connectivetissueCB;
-
 
     @FXML
     private AnchorPane patientDonationsAnchorPane;
@@ -131,7 +131,6 @@ public class GUIPatientUpdateDonations {
         }};
         statesHistoryScreen = new StatesHistoryScreen(patientDonationsAnchorPane, controls);
     }
-
 
 
     private void populateForm(Patient patient) {

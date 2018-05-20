@@ -86,7 +86,13 @@ public class GUIPatientUpdateContacts  {
      */
     @FXML
     public void saveContactDetails() {
-        saveToDisk();
+        boolean valid = setPatientContactDetails();
+        if(valid) {
+            Database.saveToDisk();
+            goToProfile();
+        } else {
+            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
+        }
     }
 
 
@@ -345,8 +351,6 @@ public class GUIPatientUpdateContacts  {
             }
         }
     }
-
-
     /**
      * Sets the patient's contact details to the values specified in the GUI, and runs the save operation from
      * the application database. An alert is then shown to inform the user of a successful save, and the patient

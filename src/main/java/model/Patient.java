@@ -640,6 +640,7 @@ public class Patient extends User {
         }
     }
 
+
     public String getHomePhone() {
         return homePhone;
     }

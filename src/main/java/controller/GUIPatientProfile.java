@@ -1,5 +1,13 @@
 package controller;
 
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import com.sun.glass.ui.View;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -25,12 +33,16 @@ import model.Clinician;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import model.Medication;
+import org.apache.commons.lang3.StringUtils;
+import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -114,6 +126,8 @@ public class GUIPatientProfile {
     private Label addLbl5;
 
     @FXML
+    private ListView<String> organList;
+    @FXML
     private ListView receivingList;
 
     @FXML
@@ -144,7 +158,6 @@ public class GUIPatientProfile {
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
-    private Patient viewedPatient;
 
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
@@ -176,7 +189,6 @@ public class GUIPatientProfile {
         }
 
         try {
-
             assert user != null;
             loadProfile(((Patient)user).getNhiNumber());
         }
@@ -194,20 +206,20 @@ public class GUIPatientProfile {
         back.setVisible(false);
     }
 
-    /**
-     * Sets the patient for the controller. This patient's attributes will be loaded
-     * @param patient the patient to be viewed
-     */
-    void setViewedPatient(Patient patient) {
-        viewedPatient = patient;
-        removeBack();
-        try {
-            loadProfile(viewedPatient.getNhiNumber());
-        }
-        catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
-        }
-    }
+//    /**
+//     * Sets the patient for the controller. This patient's attributes will be loaded
+//     * @param patient the patient to be viewed
+//     */
+//    void setViewedPatient(Patient patient) {
+//        viewedPatient = patient;
+//        removeBack();
+//        try {
+//            loadProfile(viewedPatient.getNhiNumber());
+//        }
+//        catch (InvalidObjectException e) {
+//            userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
+//        }
+//    }
 
     /**
      * Loads the attributes and organs for the patient to be able to be viewed
@@ -371,7 +383,6 @@ public class GUIPatientProfile {
             ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
         }
         catch (Exception e) {
-            e.printStackTrace();
             userActions.log(Level.SEVERE,
                     "Error loading required organs screen in popup",
                     "attempted to navigate from the profile page to the required organs page in popup");
@@ -401,8 +412,8 @@ public class GUIPatientProfile {
             try {
                 ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
             }
-            catch (IOException e) {                userActions.log(Level.SEVERE,
-                        "Error loading contacts screen in popup",
+            catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading contacts screen in popup",
                         "attempted to navigate from the profile page to the contacts page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading contacts page", ButtonType.OK).show();
             }

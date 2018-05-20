@@ -18,6 +18,12 @@ import static utility.UserActionHistory.userActions;
 
 public class Database {
 
+    private static OrganWaitlist organWaitingList = new OrganWaitlist();
+
+    public static OrganWaitlist getWaitingList() {
+    	return organWaitingList;
+    }
+    
     private static Set<Patient> patients = new HashSet<>();
 
     private static Set<Clinician> clinicians = new HashSet<>();
@@ -185,12 +191,23 @@ public class Database {
     public static void saveToDisk() {
         try {
             saveToDiskPatients();
+            saveToDiskWaitlist();
             saveToDiskClinicians();
         } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
     }
 
+    private static void saveToDiskWaitlist() throws IOException {
+        Gson gson = new Gson();
+        String json = gson.toJson(organWaitingList);
+
+        String PatientPath = "./";
+        Writer writer = new FileWriter(new File(PatientPath, "waitlist.json"));
+        writer.write(json);
+        writer.close();
+    }
+    
     /**
      * Writes database patients to file on disk
      *
@@ -259,9 +276,14 @@ public class Database {
         catch (FileNotFoundException e) {
             userActions.log(Level.WARNING, "Patient import file not found", "Attempted to read patient file");
         }
-
     }
 
+    public static void importFromDiskWaitlist(String directory) throws FileNotFoundException {
+    	String fileName = directory + "waitlist.json";
+        Gson gson = new Gson();
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        organWaitingList = gson.fromJson(br, OrganWaitlist.class);
+    }
 
     /**
      * Reads clinician data from disk
