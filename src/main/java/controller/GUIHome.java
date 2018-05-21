@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
 import service.Database;
+import utility.undoRedo.UndoableStage;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class GUIHome {
             if (userControl.getLoggedInUser() instanceof Patient){
                 addTabsPatient();
             } else if (userControl.getLoggedInUser() instanceof Clinician) {
-                //addTabsClinican();
+                addTabsClinican();
             }
 
             horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
@@ -180,7 +181,7 @@ public class GUIHome {
         Menu menu3 = new Menu("Edit");
         MenuItem menu3Item1 = new MenuItem("Undo");
         menu3Item1.setAccelerator(screenControl.getUndo());
-        menu3Item1.setOnAction(event -> System.out.println("Undo clicked")); //Todo add functionality
+        menu3Item1.setOnAction(event -> ((UndoableStage) stage).undo()); //Todo undo doesn't work yet
         MenuItem menu3Item2 = new MenuItem("Redo");
         menu3Item2.setAccelerator(screenControl.getRedo());
         menu3Item2.setOnAction(event -> System.out.println("Redo clicked")); //Todo add functionality
@@ -195,7 +196,7 @@ public class GUIHome {
             // Get the toolkit THIS IS MAC OS ONLY
             MenuToolkit tk = MenuToolkit.toolkit();
             // Add the default application menu
-            bar.getMenus().add(tk.createDefaultApplicationMenu(screenControl.getAppName()));
+            bar.getMenus().add(0, tk.createDefaultApplicationMenu(screenControl.getAppName())); // set leftmost MacOS system menu
             tk.setMenuBar(stage, bar);
         }
         else {// if windows

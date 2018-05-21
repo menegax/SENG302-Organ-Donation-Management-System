@@ -226,7 +226,6 @@ public class GUIPatientRegister {
             Database.saveToDisk();
             clearFields();
             new Alert(Alert.AlertType.INFORMATION, "Successfully registered!").show();
-            ScreenControl.activate("login");
         }
         else {
             userActions.log(Level.WARNING, "Failed to register patient profile due to invalid fields", "Attempted to register patient profile");

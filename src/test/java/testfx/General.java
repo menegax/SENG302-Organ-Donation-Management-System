@@ -93,7 +93,6 @@ public class General extends ApplicationTest {
      * @param expectedHeader -
      * @param expectedContent -
      */
-
     public void validateAlert(String expectedHeader, String expectedContent) {
         final Stage actualAlertDialog = getTopModalStage();
         assertNotNull(actualAlertDialog);

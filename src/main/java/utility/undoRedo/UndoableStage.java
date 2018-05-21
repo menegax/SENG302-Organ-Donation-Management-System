@@ -51,7 +51,7 @@ public class UndoableStage extends Stage {
     /**
      * Undoes the previous action and navigates to the appropriate screen where applicable
      */
-    private void undo() {
+    public void undo() {
         changingStates = true;
         boolean success = false;
         while (statesHistoryScreens.size() != 0 && !success) {

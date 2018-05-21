@@ -116,11 +116,6 @@ public class GUIPatientProfile {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private void removeBack() {
-        back.setDisable(true);
-        back.setVisible(false);
-    }
-
     public void initialize() {
         userControl = new UserControl();
         Object user = null;
@@ -130,7 +125,6 @@ public class GUIPatientProfile {
             user = userControl.getLoggedInUser();
         }
         if (userControl.getLoggedInUser() instanceof Clinician) {
-            removeBack();
             user = userControl.getTargetPatient();
         }
 

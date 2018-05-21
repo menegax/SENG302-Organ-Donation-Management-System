@@ -1,33 +1,22 @@
 package utility_test;
 
+import static junit.framework.TestCase.assertTrue;
 import static utility.UserActionHistory.userActions;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import model.Patient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
+import org.junit.Test;
 import service.Database;
 import utility.SearchPatients;
 
 public class SearchPatientsTest {
-
-    //	@Test
-    //	public void testCreateFullIndex() {
-    //		fail("Not yet implemented");
-    //	}
-    //
-    //	@Test
-    //	public void testAddIndex() {
-    //		fail("Not yet implemented");
-    //	}
-    //
-    //	@Test
-    //	public void testCloseIndex() {
-    //		fail("Not yet implemented");
-    //	}
 
 	private static Patient d1;
 	private static Patient d2;
@@ -57,20 +46,22 @@ public class SearchPatientsTest {
         SearchPatients.createFullIndex();
     }
 
-//    /**
-//     *
-//     */
-//    @Test
-//    public void testSearchAfterUpdatePatient() throws IOException {
-//
-//        // When first name of patient changed
-//        Database.getPatientByNhi("abc1234").setFirstName("Andrew");
-//
-//        // Then searching by new first name returns correct results
-//        ArrayList<Patient> results = SearchPatients.searchByName("Ande Lafey");
-//
-//        assertTrue(results.contains(Database.getPatientByNhi("abc1234")));
-//    }
+    /**
+     * Ensures the search results are changed after a patient's attributes are changed
+     *
+     * @throws IOException when the patient's nhi cannot be found in the database
+     */
+    @Test
+    public void testSearchAfterUpdatePatient() throws IOException {
+
+            // When first name of patient changed
+            Database.getPatientByNhi("abc1234").setFirstName("Andrew");
+
+            // Then searching by new first name returns correct results
+            ArrayList<Patient> results = SearchPatients.searchByName("Ande Lafey");
+
+            assertTrue(results.contains(Database.getPatientByNhi("abc1234")));
+        }
 
 
     /**
