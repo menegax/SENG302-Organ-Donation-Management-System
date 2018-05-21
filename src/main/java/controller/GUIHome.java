@@ -107,6 +107,12 @@ public class GUIHome {
         medicationsTab.setContent(medicationPane);
         horizontalTabPane.getTabs().add(medicationsTab);
 
+        Tab contactsTab = new Tab();
+        contactsTab.setText("Contact Details");
+        Pane contactsPane = FXMLLoader.load(getClass().getResource("/scene/testPatientContactUpdate.fxml"));
+        contactsTab.setContent(contactsPane);
+        horizontalTabPane.getTabs().add(contactsTab);
+
 
         //todo setUpMenuBar() call here
 

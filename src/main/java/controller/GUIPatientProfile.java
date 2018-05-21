@@ -105,9 +105,6 @@ public class GUIPatientProfile {
     @FXML
     private ListView<String> medList;
 
-    @FXML
-    private Label back;
-
     private UserControl userControl;
 
     private ListProperty<String> organListProperty = new SimpleListProperty<>();
@@ -115,11 +112,6 @@ public class GUIPatientProfile {
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
-
-    private void removeBack() {
-        back.setDisable(true);
-        back.setVisible(false);
-    }
 
     public void initialize() {
         userControl = new UserControl();
@@ -130,7 +122,6 @@ public class GUIPatientProfile {
             user = userControl.getLoggedInUser();
         }
         if (userControl.getLoggedInUser() instanceof Clinician) {
-            removeBack();
             user = userControl.getTargetPatient();
         }
 

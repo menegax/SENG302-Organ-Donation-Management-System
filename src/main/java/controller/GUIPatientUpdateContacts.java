@@ -8,6 +8,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
@@ -30,7 +31,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIPatientUpdateContacts extends UndoableController {
 
     @FXML
-    public AnchorPane patientContactsPane;
+    public GridPane patientContactsPane;
 
     @FXML
     private TextField homePhoneField;
