@@ -6,9 +6,12 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
+import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ScreenControl {
 
@@ -21,7 +24,6 @@ public class ScreenControl {
     public static Scene getMain() {
         return main;
     }
-
 
     /**
      * set initial screen to display

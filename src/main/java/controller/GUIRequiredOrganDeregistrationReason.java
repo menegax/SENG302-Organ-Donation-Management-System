@@ -1,5 +1,6 @@
 package controller;
 
+import com.sun.xml.internal.ws.util.StringUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,12 +10,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Patient;
-import service.Database;
 import utility.GlobalEnums;
-
-import java.io.InvalidObjectException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +34,9 @@ public class GUIRequiredOrganDeregistrationReason {
 
     @FXML
     private Label pleaseSpecify;
+
+    @FXML
+    private Label reasonTitle;
 
     private UserControl userControl;
 
@@ -75,7 +74,14 @@ public class GUIRequiredOrganDeregistrationReason {
     private void populateForm() {
         dateOfDeath.setValue(LocalDate.now());
         reasons.setValue(GlobalEnums.DeregistrationReason.ERROR.getValue());
-        pleaseSpecify.setText("Please specify a reason for removing " + userControl.getTargetPatient().getRemovedOrgan() + ": ");
+    }
+
+    /**
+     * sets the label with organ name
+     */
+    public void setOrgan(GlobalEnums.Organ organ) {
+        pleaseSpecify.setText("Please specify a reason for removing " + organ + ": ");
+        reasonTitle.setText("Deregistration of " + StringUtils.capitalize(organ.toString()));
     }
 
     /**
@@ -84,5 +90,6 @@ public class GUIRequiredOrganDeregistrationReason {
     public void saveReason() {
         Stage reasonStage = (Stage)requiredOrganDeregistrationReasonPane.getScene().getWindow();
         reasonStage.close();
+        //GUIPatientUpdateRequirements.setClosed(true);
     }
 }
