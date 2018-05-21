@@ -1,11 +1,7 @@
 package model;
 
 import service.Database;
-import utility.GlobalEnums;
-import utility.GlobalEnums.BloodGroup;
-import utility.GlobalEnums.Gender;
-import utility.GlobalEnums.Organ;
-import utility.GlobalEnums.Region;
+import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.SearchPatients;
 
@@ -13,9 +9,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -84,6 +78,8 @@ public class Patient extends User {
     private String contactWorkPhone;
 
     private String contactEmailAddress;
+
+    private Status status; // Whether patient is receiving/donating/both/neither
 
     private ArrayList<PatientActionRecord> userActionsList;
 
@@ -161,27 +157,27 @@ public class Patient extends User {
             setSuburb(suburb);
         }
         if (region != null) {
-            globalEnum = GlobalEnums.Region.getEnumFromString(region);
+            globalEnum = Region.getEnumFromString(region);
             if (globalEnum != null) {
-                setRegion((GlobalEnums.Region) globalEnum);
+                setRegion((Region) globalEnum);
             }
             else {
                 userActions.log(Level.WARNING, "Invalid region", "attempted to update patient attributes");
             }
         }
         if (gender != null) {
-            globalEnum = GlobalEnums.Gender.getEnumFromString(gender);
+            globalEnum = Gender.getEnumFromString(gender);
             if (globalEnum != null) {
-                setGender((GlobalEnums.Gender) globalEnum);
+                setGender((Gender) globalEnum);
             }
             else {
                 userActions.log(Level.WARNING, "Invalid gender", "attempted to update patient attributes");
             }
         }
         if (bloodGroup != null) {
-            globalEnum = GlobalEnums.BloodGroup.getEnumFromString(bloodGroup);
+            globalEnum = BloodGroup.getEnumFromString(bloodGroup);
             if (globalEnum != null) {
-                setBloodGroup((GlobalEnums.BloodGroup) globalEnum);
+                setBloodGroup((BloodGroup) globalEnum);
             }
             else {
                 userActions.log(Level.WARNING, "Invalid blood group", "attempted to update patient attributes");
@@ -383,6 +379,29 @@ public class Patient extends User {
         else {
             return (int) ChronoUnit.YEARS.between(this.birth, LocalDate.now());
         }
+    }
+
+    public Status getStatus() {
+        if (this.donations.size() == 0 && this.requiredOrgans.size() == 0) {
+            setStatus( null );
+        }
+        if (this.donations.size() > 0) {
+            setStatus( (Status) Status.getEnumFromString( "donating" ) );
+        }
+        if (this.requiredOrgans.size() > 0) {
+            setStatus( (Status) Status.getEnumFromString( "receiving" ) );
+        }
+        if (this.donations.size() > 0 && this.requiredOrgans.size() > 0) {
+            setStatus( (Status) Status.getEnumFromString( "both" ) );
+        }
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        if (this.status != status) {
+            this.status = status;
+        }
+        patientModified();
     }
 
     public Gender getGender() {
