@@ -1,11 +1,11 @@
 package controller;
 
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
@@ -13,9 +13,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import model.Patient;
+import utility.GlobalEnums;
+import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,6 +29,8 @@ import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
+
+import javax.xml.crypto.Data;
 
 public class GUIPatientRegister {
 
@@ -57,11 +62,6 @@ public class GUIPatientRegister {
      * Sets up register page GUI elements
      */
     public void initialize() {
-        firstnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        lastnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        middlenameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        nhiRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        birthRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         setDateConverter();
 
         // Enter key
