@@ -33,6 +33,8 @@ public class UndoableStage extends Stage {
 
     private final UUID uuid = UUID.randomUUID();
 
+    private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
+
     /**
      * Constructor for the undoable stage
      * Sets up the action listeners for undo and redo
@@ -40,9 +42,9 @@ public class UndoableStage extends Stage {
     public UndoableStage() {
         super();
         this.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (KeyCodeCombination.keyCombination(UndoRedoControl.undoShortcut).match(event)) {
+            if (KeyCodeCombination.keyCombination(undoRedoControl.undoShortcut).match(event)) {
                 undo();
-            } else if (KeyCodeCombination.keyCombination(UndoRedoControl.redoShortcut).match(event)) {
+            } else if (KeyCodeCombination.keyCombination(undoRedoControl.redoShortcut).match(event)) {
                 redo();
             }
         });
@@ -110,8 +112,8 @@ public class UndoableStage extends Stage {
             new Alert(Alert.AlertType.WARNING, "ERROR loading screen", ButtonType.OK).showAndWait();
         }
         UndoableController controller = fxmlLoader.getController();
-        UndoRedoControl.setStates(statesHistoryScreens.get(index), controller.getControls());
-        UndoRedoControl.setStatesHistoryScreen(controller, statesHistoryScreens.get(index));
+        undoRedoControl.setStates(statesHistoryScreens.get(index), controller.getControls());
+        undoRedoControl.setStatesHistoryScreen(controller, statesHistoryScreens.get(index));
         statesHistoryScreens.set(index, controller.getStatesHistory());
     }
 

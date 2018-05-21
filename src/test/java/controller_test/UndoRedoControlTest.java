@@ -28,6 +28,7 @@ public class UndoRedoControlTest {
     private DatePicker datePicker;
     private RadioButton radioButton;
     private TextField textField;
+    private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
     /**
      * Tests that the controls are set to the states of the statesHistoryScreen if and only if setStates is called
@@ -53,7 +54,7 @@ public class UndoRedoControlTest {
         radioButton.setSelected(false);
         textField.setText("B");
         assertFalse(testControlStates(statesHistoryScreen));
-        UndoRedoControl.setStates(statesHistoryScreen, controls);
+        undoRedoControl.setStates(statesHistoryScreen, controls);
         assertTrue(testControlStates(statesHistoryScreen));
     }
 
