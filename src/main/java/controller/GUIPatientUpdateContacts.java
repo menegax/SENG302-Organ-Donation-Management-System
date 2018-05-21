@@ -84,7 +84,13 @@ public class GUIPatientUpdateContacts extends UndoableController {
      */
     @FXML
     public void saveContactDetails() {
-        saveToDisk();
+        boolean valid = setPatientContactDetails();
+        if(valid) {
+            Database.saveToDisk();
+            goToProfile();
+        } else {
+            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
+        }
     }
 
 
@@ -189,6 +195,20 @@ public class GUIPatientUpdateContacts extends UndoableController {
     private void loadProfile(String nhi) {
         try {
             target = Database.getPatientByNhi(nhi);
+
+            ArrayList<Control> controls = new ArrayList<Control>() {{
+                add(homePhoneField);
+                add(mobilePhoneField);
+                add(workPhoneField);
+                add(emailAddressField);
+                add(contactNameField);
+                add(contactRelationshipField);
+                add(contactHomePhoneField);
+                add(contactMobilePhoneField);
+                add(contactWorkPhoneField);
+                add(contactEmailAddressField);
+            }};
+            statesHistoryScreen = new StatesHistoryScreen(patientContactsPane, controls);
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
@@ -337,8 +357,6 @@ public class GUIPatientUpdateContacts extends UndoableController {
             }
         }
     }
-
-
     /**
      * Sets the patient's contact details to the values specified in the GUI, and runs the save operation from
      * the application database. An alert is then shown to inform the user of a successful save, and the patient

@@ -1,6 +1,5 @@
 package utility;
 
-@SuppressWarnings("unused")
 public class GlobalEnums {
 
     public enum Gender {
@@ -135,37 +134,42 @@ public class GlobalEnums {
     }
 
     public enum UndoableScreen {
-        CLINICIANSEARCHPATIENTS("clinicianSearchPatients"), CLINICIANPROFILEUPDATE("clinicianProfileUpdate"), PATIENTMEDICATIONS("patientMedications"),
-        PATIENTREGISTER("patientRegister"), PATIENTUPDATECONTACTS("patientUpdateContacts"), PATIENTUPDATEDONATIONS("patientUpdateDonations"),
-        PATIENTUPDATEPROFILE("patientUpdateProfile");
+        CLINICIANSEARCHPATIENTS( "clinicianSearchPatients" ), CLINICIANPROFILEUPDATE( "clinicianProfileUpdate" ), PATIENTMEDICATIONS( "patientMedications" ),
+        PATIENTREGISTER( "patientRegister" ), PATIENTUPDATECONTACTS( "patientUpdateContacts" ), PATIENTUPDATEDONATIONS( "patientUpdateDonations" ),
+        PATIENTUPDATEPROFILE( "patientUpdateProfile" );
 
         private String value;
 
-
-        UndoableScreen(final String value) {
+        UndoableScreen( final String value ) {
             this.value = value;
         }
+    }
 
+    public enum DiseaseState {
+        CURED ("cured"),
+        CHRONIC ("chronic");
+
+        private String value;
+
+        DiseaseState(final String value) {
+            this.value = value;
+        }
 
         public String getValue() {
             return value;
         }
-
 
         @Override
         public String toString() {
             return this.getValue();
         }
 
-
         public static Enum getEnumFromString(String value) {
             try {
-                return BloodGroup.valueOf(value.toUpperCase().replaceAll("\\s+", "_"));
-            }
-            catch (IllegalArgumentException e) {
+                return DiseaseState.valueOf(value.toUpperCase());
+            } catch (IllegalArgumentException e) {
                 return null;
             }
         }
     }
-
 }

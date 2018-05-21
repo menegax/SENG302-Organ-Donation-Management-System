@@ -39,7 +39,6 @@ public class ScreenControl {
         return screenControl;
     }
 
-
     /**
      *
      * @param key

@@ -12,6 +12,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Clinician;
+import model.Patient;
+import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
@@ -50,7 +52,7 @@ public class GUIClinicianSearchPatientsPopUpTest extends ApplicationTest {
      * Tests logging in as a clinician and going to the search donors scene
      */
     @Test
-    public void successfulLoginTestAndGoToSearchDonors() {
+    public void successfulLoginTestAndGoToSearchPatients() {
         //Check 'I am Clinician" checkbox to login as clinician
         interact( () -> {
             lookup("#clinicianToggle").queryAs(CheckBox.class).setSelected(true);
