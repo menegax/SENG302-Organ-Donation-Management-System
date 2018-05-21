@@ -43,15 +43,7 @@ public class StatesHistoryScreen {
      */
     public StatesHistoryScreen(List<Control> controls, UndoableScreen undoableScreen) {
         this.undoableScreen = undoableScreen;
-        controls.get(0).sceneProperty().addListener((observable, oldScene, newScene) -> {
-            if (newScene != null) {
-                newScene.windowProperty().addListener((observable2, oldStage, newStage) -> {
-                    if (newStage != null) {
-                        ((UndoableStage) newStage).addStatesHistoryScreen(this);
-                    }
-                });
-            }
-        });
+        addToUndoableStage(controls.get(0));
         for (Control control : controls) {
             if ((control instanceof TextField)) {
                 createStateHistoriesTextField(control);
@@ -74,6 +66,36 @@ public class StatesHistoryScreen {
             if (control instanceof TableView) {
                 createStateHistoriesTableView(control);
             }
+        }
+    }
+
+    /**
+     * Adds this object to the appropriate undoableStage
+     * @param control a control on the current screen
+     */
+    private void addToUndoableStage(Control control) {
+        if (control.getScene() == null) {
+            control.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    if (newScene.getWindow() == null) {
+                        newScene.windowProperty().addListener((observable2, oldStage, newStage) -> {
+                            if (newStage != null) {
+                                ((UndoableStage) newStage).addStatesHistoryScreen(this);
+                            }
+                        });
+                    } else {
+                        ((UndoableStage) newScene.getWindow()).addStatesHistoryScreen(this);
+                    }
+                }
+            });
+        } else if (control.getScene().getWindow() == null){
+            control.getScene().windowProperty().addListener((observable2, oldStage, newStage) -> {
+                if (newStage != null) {
+                    ((UndoableStage) newStage).addStatesHistoryScreen(this);
+                }
+            });
+        } else {
+            ((UndoableStage) control.getScene().getWindow()).addStatesHistoryScreen(this);
         }
     }
 
