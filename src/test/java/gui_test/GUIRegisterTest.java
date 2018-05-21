@@ -61,7 +61,7 @@ public class GUIRegisterTest extends ApplicationTest {
 
 
     @Test
-    public void should_successfully_register_with_middle_name() {
+    public void AllFields() {
         givenValidNhi();
         givenValidFirstName();
         givenValidMiddleNames();
@@ -75,7 +75,7 @@ public class GUIRegisterTest extends ApplicationTest {
 
 
     @Test
-    public void should_successfully_register_without_middle_name() {
+    public void NoMiddleName() {
         givenValidNhi();
         givenValidFirstName();
         givenValidLastName();
@@ -88,7 +88,7 @@ public class GUIRegisterTest extends ApplicationTest {
 
 
     @Test
-    public void unsuccessful_register_no_input() {
+    public void NoInput() {
         whenClickDone();
 
         thenAlertHasHeader("Warning");
@@ -96,7 +96,7 @@ public class GUIRegisterTest extends ApplicationTest {
 
 
     @Test
-    public void unsuccessful_register_no_nhi() {
+    public void NoNhi() {
         givenValidFirstName();
         givenValidLastName();
         givenValidBirthDate();
@@ -108,7 +108,7 @@ public class GUIRegisterTest extends ApplicationTest {
 
 
     @Test
-    public void unsuccessful_register_invalid_nhi() {
+    public void InvalidNhi() {
         givenInvalidNhi();
         givenValidFirstName();
         givenValidLastName();
@@ -121,7 +121,7 @@ public class GUIRegisterTest extends ApplicationTest {
 
 
     @Test
-    public void unsuccessful_register_no_first_name() {
+    public void NoFirstName() {
         givenValidNhi();
         givenValidLastName();
         givenValidBirthDate();
@@ -133,7 +133,7 @@ public class GUIRegisterTest extends ApplicationTest {
 
 
     @Test
-    public void unsuccessful_register_no_last_name() {
+    public void NoLastName() {
         givenValidNhi();
         givenValidFirstName();
         givenValidBirthDate();
@@ -145,7 +145,7 @@ public class GUIRegisterTest extends ApplicationTest {
 
 
     @Test
-    public void unsuccessful_register_no_birth_date() {
+    public void NoBirthDate() {
         givenValidNhi();
         givenValidFirstName();
         givenValidLastName();
@@ -160,7 +160,7 @@ public class GUIRegisterTest extends ApplicationTest {
      * Tests to ensure a patient cannot register with a birth date in the future
      */
     @Test
-    public void unsuccessful_register_future_birth_date() {
+    public void InvalidBirthDate() {
         givenInvalidNhi();
         givenValidFirstName();
         givenValidLastName();
@@ -173,9 +173,10 @@ public class GUIRegisterTest extends ApplicationTest {
 
 
     @Test
-    public void unsuccessful_register_duplicate_nhi() {
+    public void DuplicateNhi() {
 
-        Database.addPatient(new Patient("TFX9999", "Joe", new ArrayList<>(Collections.singletonList("Middle")), "Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.addPatient(new Patient("TFX9999", "Joe", new ArrayList<>(Collections.singletonList("Middle")),
+                "Bloggs", LocalDate.of(1990, 2, 9)));
 
         lookup("#nhiRegister").queryAs(TextField.class)
                 .setText("TFX9999");
@@ -189,7 +190,7 @@ public class GUIRegisterTest extends ApplicationTest {
 
 
     @Test
-    public void unsuccessful_register_with_invalid_name() {
+    public void InvalidFirstName() {
         givenValidNhi();
         givenInvalidFirstName();
         givenValidMiddleNames();
