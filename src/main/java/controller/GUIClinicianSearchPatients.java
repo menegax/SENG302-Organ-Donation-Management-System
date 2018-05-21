@@ -23,7 +23,6 @@ import utility.SearchPatients;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -36,6 +35,9 @@ public class GUIClinicianSearchPatients implements Initializable {
 
     @FXML
     private TableColumn<Patient, String> columnName;
+
+    @FXML
+    private TableColumn<Patient, String> columnStatus;
 
     @FXML
     private TableColumn<Patient, String> columnAge;
@@ -121,6 +123,10 @@ public class GUIClinicianSearchPatients implements Initializable {
         columnName.setCellValueFactory(d -> d.getValue()
                 .getNameConcatenated() != null ? new SimpleStringProperty(d.getValue()
                 .getNameConcatenated()) : new SimpleStringProperty(""));
+        columnStatus.setCellValueFactory( d -> d.getValue()
+                .getStatus() != null ? new SimpleStringProperty(d.getValue()
+                .getStatus()
+                .toString()) : new SimpleStringProperty(""));
         columnAge.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue()
                 .getAge())));
         columnGender.setCellValueFactory(d -> d.getValue()
@@ -174,7 +180,6 @@ public class GUIClinicianSearchPatients implements Initializable {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
-
                     return SearchPatients.searchByName(newValue)
                             .contains(patient);
 
