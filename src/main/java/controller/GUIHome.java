@@ -13,6 +13,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -26,13 +27,16 @@ import java.io.IOException;
 
 public class GUIHome {
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    @FXML
+    public BorderPane homePane;
 
     @FXML
     private TabPane horizontalTabPane;
 
     @FXML
     private MenuBar menuBar;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
 
     @FXML

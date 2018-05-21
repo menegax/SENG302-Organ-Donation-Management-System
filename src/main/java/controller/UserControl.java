@@ -1,5 +1,7 @@
 package controller;
 
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
+import model.Clinician;
 import model.Patient;
 
 import java.util.HashMap;
@@ -7,9 +9,8 @@ import java.util.Map;
 
 public class UserControl {
 
-    //Todo there are two clear and clearCache methods -- redundant or does one need renaming to differentiate it? same as rm_logged_in_user_cache?
 
-    private static final Map<String, Object> cache = new HashMap<>();
+    private static final Map<String, Object> users = new HashMap<>();
 
 
     /**
@@ -19,7 +20,7 @@ public class UserControl {
      */
     private void add(String key, Object value) {
         if (key != null && value != null){
-            cache.put(key, value);
+            users.put(key, value);
         }
     }
 
@@ -28,8 +29,8 @@ public class UserControl {
      * @param key - key value to be removed
      */
     private void remove(String key) {
-        if (cache.get(key) != null) {
-            cache.remove(key);
+        if (users.get(key) != null) {
+            users.remove(key);
         }
     }
 
@@ -39,14 +40,14 @@ public class UserControl {
      * @return - object at the given key
      */
     private Object get(String key) {
-        return cache.get(key);
+        return users.get(key);
     }
 
     /**
      * Adds a user to the cache
      * @param user - user to be added
      */
-    public void addLoggedInUserToCache(Object user) {
+    void addLoggedInUserToCache(Object user) {
         add("user_logged_in", user);
     }
 
@@ -57,6 +58,11 @@ public class UserControl {
      */
     public Object getLoggedInUser() {
         return get("user_logged_in");
+    }
+
+    public boolean isUserLoggedIn() {
+        Object obj = getLoggedInUser();
+        return (obj instanceof Patient || obj instanceof Clinician);
     }
 
     /**
@@ -90,13 +96,13 @@ public class UserControl {
      * Clears the map of all entries
      */
     private void clear() {
-        cache.clear();
+        users.clear();
     }
 
     /**
      * Removes the logged in user from the cache
      */
-    public void rmLoggedInUserCache() {
+    void rmLoggedInUserCache() {
         remove("user_logged_in");
     }
 

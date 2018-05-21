@@ -88,8 +88,7 @@ public class GUILogin {
             }
             catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "Failed to log in", "Attempted to log in");
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
-                alert.show();
+                new Alert(Alert.AlertType.WARNING, "Incorrect credentials").show();
             } catch (IOException e) {
                 e.printStackTrace(); //TODO: rm
             }
