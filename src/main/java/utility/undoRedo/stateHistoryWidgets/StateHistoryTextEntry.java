@@ -1,6 +1,8 @@
 package utility.undoRedo.stateHistoryWidgets;
 
+import javafx.event.Event;
 import javafx.scene.control.TextField;
+import javafx.scene.input.ContextMenuEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +20,7 @@ public class StateHistoryTextEntry extends StateHistoryControl {
      * @param entry the Text Field whose state we are storing
      */
     public StateHistoryTextEntry(TextField entry) {
+        entry.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume); // removes right click menu which shows undo/redo
         this.control = entry;
         states.add(entry.getText());
     }

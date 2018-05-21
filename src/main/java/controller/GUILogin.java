@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,6 +9,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.input.KeyCode;
@@ -46,6 +48,7 @@ public class GUILogin {
 
     public void initialize() {
         // Enter key triggers log in
+        nhiLogin.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         loginPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 logIn();
