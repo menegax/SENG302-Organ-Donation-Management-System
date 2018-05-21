@@ -52,6 +52,9 @@ public class GUIClinicianSearchPatients implements Initializable {
     @FXML
     private TextField searchEntry;
 
+    @FXML
+    private Button displayX;
+
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
 
 
@@ -69,6 +72,7 @@ public class GUIClinicianSearchPatients implements Initializable {
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
         searchEntry.setPromptText( "There are " + getProfileCount() + " profiles" );
+        setDisplayDefaultProfilesButton( true, false );
     }
 
 
@@ -177,6 +181,11 @@ public class GUIClinicianSearchPatients implements Initializable {
         // set the filter Predicate whenever the filter changes.
         searchEntry.textProperty()
                 .addListener((observable, oldValue, newValue) -> filteredData.setPredicate(patient -> {
+                    if (getProfileCount() <= X) {
+                        setDisplayDefaultProfilesButton( true, false );
+                    } else {
+                        setDisplayDefaultProfilesButton( false, true );
+                    }
                     // If filter text is empty, display all persons.
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
@@ -185,6 +194,24 @@ public class GUIClinicianSearchPatients implements Initializable {
                             .contains(patient);
 
                 }));
+    }
+
+    /**
+     * Displays only the first X=30 profiles to the search patients table if more than X results from search
+     */
+    @FXML
+    private void displayDefaultProfiles() {
+        ; // TO DO
+    }
+
+    /**
+     * Sets the button for displaying the default number of profiles from a search
+     * @param a The boolean for whether the button is disabled
+     * @param b The boolean for whether the button is visible
+     */
+    private void setDisplayDefaultProfilesButton(boolean a, boolean b) {
+        displayX.setDisable( a );
+        displayX.setVisible( b );
     }
 
     /**

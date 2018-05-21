@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.Button?>
 <AnchorPane fx:id="clinicianSearchPatientsPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
     <Label alignment="CENTER" layoutX="81.0" layoutY="14.0" prefHeight="57.0" prefWidth="439.0" styleClass="title" text="Search Patients" textAlignment="CENTER">
         <font>
@@ -24,4 +25,5 @@
     </TableView>
     <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToClinicianHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
     <TextField fx:id="searchEntry" layoutX="10.0" layoutY="71.0" prefHeight="27.0" prefWidth="251.0" />
+    <Button fx:id="displayX" layoutX="300.0" layoutY="71.0" mnemonicParsing="false" onAction="#displayDefaultProfiles" text="Display top 30 profiles" />
 </AnchorPane>
