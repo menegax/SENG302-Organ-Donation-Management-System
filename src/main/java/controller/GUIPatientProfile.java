@@ -105,9 +105,6 @@ public class GUIPatientProfile {
     @FXML
     private ListView<String> medList;
 
-    @FXML
-    private Label back;
-
     private UserControl userControl;
 
     private ListProperty<String> organListProperty = new SimpleListProperty<>();
