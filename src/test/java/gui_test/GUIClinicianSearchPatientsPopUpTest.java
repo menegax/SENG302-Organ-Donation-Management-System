@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Clinician;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
@@ -49,6 +50,7 @@ public class GUIClinicianSearchPatientsPopUpTest extends ApplicationTest {
     /**
      * Tests logging in as a clinician and going to the search donors scene
      */
+    @Ignore //Todo move to before
     @Test
     public void successfulLoginTestAndGoToSearchDonors() {
         //Check 'I am Clinician" checkbox to login as clinician

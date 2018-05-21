@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import model.Patient;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
@@ -23,6 +24,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 /**
  * TestFX class to test the undo functionality of the patient donations update screen
  */
+@Ignore //Todo
 public class GUIUndoPatientDonationsTest extends ApplicationTest{
 
     private Main main = new Main();

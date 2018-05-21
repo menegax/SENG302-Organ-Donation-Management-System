@@ -8,6 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
@@ -31,10 +32,11 @@ public class ControllerClinicianTest extends ApplicationTest {
         sleep(1000);
     }
 
-    @Test
     /**
      * Tests logging in as a clinician successfully
      */
+    @Ignore //todo move to login test class
+    @Test
     public void successfulLoginTestandGoToProfile() {
         //Check 'I am Clinician" checkbox to login as clinician
         interact(() -> {
@@ -52,10 +54,12 @@ public class ControllerClinicianTest extends ApplicationTest {
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that login has taken "user" to the clinician profile panel
     }
 
-    @Test
-    /*
+
+    /**
      * Tests the invalid login with wrong staffId
      */
+    @Ignore //todo
+    @Test
     public void unsuccessfulLoginTest() {
         interact(() -> {
             lookup("#clinicianToggle").queryAs(CheckBox.class).setSelected(true);
