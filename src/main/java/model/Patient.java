@@ -1,17 +1,14 @@
 package model;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.BloodGroup;
 import utility.GlobalEnums.Gender;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
+import utility.PatientActionRecord;
 import utility.SearchPatients;
-import utility.UserActionRecord;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
@@ -90,7 +87,7 @@ public class Patient extends User {
 
     private String contactEmailAddress;
 
-    private ArrayList<UserActionRecord> userActionsList;
+    private ArrayList<PatientActionRecord> userActionsList;
 
     private ArrayList<Disease> currentDiseases = new ArrayList<>();
 
@@ -745,54 +742,15 @@ public class Patient extends User {
         return procedures;
     }
 
-//    /**
-//     * Returns a converted medication log ArrayList to a UserActionRecord OberservableList
-//     * @return The medication log as a UserActionRecord ObservableList
-//     */
-//    public ObservableList<UserActionRecord> getPatientLog() {
-//        ObservableList<UserActionRecord> currentLog = FXCollections.observableArrayList();
-//        String time = null, level = null, message = null, action;
-//
-//        if (this.patientLog != null) {
-//            for (int i = 0; i < patientLog.size(); i++) {
-//                time = patientLog.get(i++);
-//                level = patientLog.get(i++);
-//                message = patientLog.get(i++);
-//                action = patientLog.get(i);
-//                currentLog.add(0, new UserActionRecord(time, level, message, action, this.getUuid()) );
-//            }
-//        } else {
-//            return null;
-//        }
-//        return currentLog;
-//    }
-
 
     /**
      * Gets the list of user action history logs
-     * DO NOT USE UNLESS LOGGER
+     * DO NOT USE UNLESS FROM LOGGER CLASS
      * @return the list of user records
      */
-    public ArrayList<UserActionRecord> getUserActionsList() {
+    public ArrayList<PatientActionRecord> getUserActionsList() {
         return userActionsList; //this is modifiable on purpose!
     }
-
-
-//    /**
-//     * Sets the medicationLog as a HashMap converted from a UserActionRecord ObservableList
-//     * @param log The UserActionRecord ObservableList
-//     */
-//    public void setMedicationLog(ObservableList<UserActionRecord> log) {
-//        ArrayList<String> newLog = new ArrayList<>();
-//
-//        for (UserActionRecord record : log) {
-//            newLog.add(record.getTimestamp().toString());
-//            newLog.add(record.getLevel().toString());
-//            newLog.add(record.getMessage());
-//            newLog.add(record.getAction());
-//        }
-//        this.patientLog = newLog;
-//    }
 
 
     /**

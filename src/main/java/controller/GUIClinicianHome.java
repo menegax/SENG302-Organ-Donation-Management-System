@@ -62,6 +62,17 @@ public class GUIClinicianHome {
         alert.show();
     }
 
+    @FXML
+    public void goToHistory() {
+        try {
+            ScreenControl.addScreen("clinicianHistory", FXMLLoader.load(getClass().getResource("/scene/clinicianHistory.fxml")));
+        }
+        catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, "Unable load clinician history").show();
+        }
+        ScreenControl.activate("clinicianHistory");
+    }
+
     public void goToClinicianWaitingList(ActionEvent event) {
         ScreenControl.removeScreen("clinicianWaitingList");
         try {

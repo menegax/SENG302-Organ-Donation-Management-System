@@ -11,10 +11,8 @@ import java.util.List;
 public class App {
 
     public static void main(String[] argv) {
-        String[] args;
 
         List<String> argArrayList = Arrays.asList(argv);
-
 
         if (argArrayList.contains("cli")) {
             CLIMain.main(null);
