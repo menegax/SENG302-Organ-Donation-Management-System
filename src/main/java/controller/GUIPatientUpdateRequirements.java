@@ -87,6 +87,8 @@ public class GUIPatientUpdateRequirements {
 
     private UserControl userControl;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
     public void initialize() {
         userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
@@ -137,7 +139,7 @@ public class GUIPatientUpdateRequirements {
             add(bonemarrowCB);
             add(connectivetissueCB);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(patientRequirementsAnchorPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEREQUIREMENTS);
     }
 
     /**
@@ -286,10 +288,8 @@ public class GUIPatientUpdateRequirements {
      */
     public void goToProfile() {
         if (userControl.getLoggedInUser() instanceof Patient) {
-            ScreenControl.removeScreen("patientProfile");
             try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
+                screenControl.show(patientRequirementsAnchorPane, "/scene/patientProfile.fxml");
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
                 new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();

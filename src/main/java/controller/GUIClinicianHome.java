@@ -65,22 +65,21 @@ public class GUIClinicianHome {
     @FXML
     public void goToHistory() {
         try {
-            ScreenControl.addScreen("clinicianHistory", FXMLLoader.load(getClass().getResource("/scene/clinicianHistory.fxml")));
+            screenControl.show(clinicianHomePane, "/scene/clinicianHistory.fxml");
         }
         catch (IOException e) {
+            userActions.log(Level.SEVERE, "Error loading history screen", "Attempted to navigate from the " +
+                    "home page to the history page");
             new Alert(Alert.AlertType.ERROR, "Unable load clinician history").show();
         }
-        ScreenControl.activate("clinicianHistory");
     }
 
     public void goToClinicianWaitingList(ActionEvent event) {
-        ScreenControl.removeScreen("clinicianWaitingList");
         try {
-            ScreenControl.addScreen("clinicianWaitingList", FXMLLoader.load(getClass().getResource("/scene/clinicianWaitingList.fxml")));
-            ScreenControl.activate("clinicianWaitingList");
+            screenControl.show(clinicianHomePane, "/scene/clinicianWaitingList.fxml");
         }
         catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading organ waiting list screen", "attempted to navigate from the " +
+            userActions.log(Level.SEVERE, "Error loading organ waiting list screen", "Attempted to navigate from the " +
                     "home page to the waiting list page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading organ waiting list page", ButtonType.OK).showAndWait();
         }

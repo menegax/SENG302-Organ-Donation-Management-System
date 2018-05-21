@@ -459,8 +459,7 @@ public class GUIPatientProfile {
         if(userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientDiagnoses");
             try {
-                ScreenControl.addScreen("patientDiagnoses", FXMLLoader.load(getClass().getResource("/scene/clinicianDiagnosis.fxml")));
-                ScreenControl.activate("patientDiagnoses");
+                screenControl.show(patientProfilePane, "/scene/clinicianDiagnosis.fxml");
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading diagnoses screen", "attempted to navigate from the profile page to the diagnoses page");
                 new Alert(Alert.AlertType.WARNING, "ERROR loading diagnoses page", ButtonType.OK).showAndWait();

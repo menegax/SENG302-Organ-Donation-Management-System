@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.Set;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
@@ -230,6 +231,7 @@ public class GUIPatientProcedures extends UndoableController {
             Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
             dialogOK.addEventFilter(ActionEvent.ACTION, event -> {
                 patient.removeProcedure(finalProcedure);
+                userActions.log(INFO, "Removed procedure " + finalProcedure.getSummary(), new String[]{"Attempted to remove a procedure", patient.getNhiNumber()});
                 setupTables();
             });
             alert.show();

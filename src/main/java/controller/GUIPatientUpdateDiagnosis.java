@@ -100,7 +100,7 @@ public class GUIPatientUpdateDiagnosis {
             add(diagnosisDate);
             add(tagsDD);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(diagnosisUpdatePane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDIAGNOSIS);
     }
 
     /**

@@ -117,6 +117,7 @@ public class GUIPatientProcedureForm extends UndoableController {
             this.procedure.setDescription(descriptionInput.getText());
             this.procedure.setAffectedDonations(affectedDonations);
             this.procedure.setDate(dateInput.getValue());
+            userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attemped to update procedure", patient.getNhiNumber()});
             goBackToProcedures();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +
@@ -142,6 +143,7 @@ public class GUIPatientProcedureForm extends UndoableController {
             Procedure procedure = new Procedure( summaryInput.getText(), descriptionInput.getText(),
                     dateInput.getValue(), affectedDonations );
             patient.addProcedure( procedure );
+            userActions.log(Level.INFO, "Added procedure " + procedure.getSummary(), new String[]{"Attempted to add a procedure", patient.getNhiNumber()});
             goBackToProcedures();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +

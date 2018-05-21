@@ -208,7 +208,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
                 add(contactWorkPhoneField);
                 add(contactEmailAddressField);
             }};
-            statesHistoryScreen = new StatesHistoryScreen(patientContactsPane, controls);
+            statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATECONTACTS);
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
