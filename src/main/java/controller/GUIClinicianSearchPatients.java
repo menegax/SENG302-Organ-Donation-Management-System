@@ -17,7 +17,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.DrugInteraction;
 import model.Patient;
-import service.Database;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 
@@ -29,6 +28,8 @@ import java.util.logging.Level;
 
 
 public class GUIClinicianSearchPatients implements Initializable {
+
+    private static final int X = 30; // Constant for the maximum default number of profiles returned in a search
 
     @FXML
     private TableView<Patient> patientDataTable;
@@ -67,7 +68,7 @@ public class GUIClinicianSearchPatients implements Initializable {
         setupSearchingListener(filteredData);
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
-        displayProfileCount();
+        searchEntry.setPromptText( "There are " + getProfileCount() + " profiles" );
     }
 
 
@@ -186,8 +187,12 @@ public class GUIClinicianSearchPatients implements Initializable {
                 }));
     }
 
-    private void displayProfileCount() {
-        searchEntry.setPromptText( "There are " + patientDataTable.getItems().size() + " profiles" );
+    /**
+     * Gets the number of profiles that have been returned from a patient search by clinician
+     * @return An integer value representing the total number of profiles returned from the search
+     */
+    private int getProfileCount() {
+       return patientDataTable.getItems().size();
     }
 
 
