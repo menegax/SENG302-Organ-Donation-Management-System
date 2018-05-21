@@ -43,11 +43,17 @@ public class GUIHome {
             if (userControl.getLoggedInUser() instanceof Patient){
                 addTabsPatient();
             } else if (userControl.getLoggedInUser() instanceof Clinician) {
-                addTabsClinican();
+                //addTabsClinican();
             }
-            horizontalTabPane.sceneProperty().addListener((observable, oldValue, newValue) -> {
-                System.out.println("HORZ TAB PANE LOADED" + newValue.getWindow()); //todo rm
-                setUpMenuBar((Stage) newValue.getWindow()); //todo Aidan figure out why newValue has a scene but .getWindow returns Null
+
+            horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    newScene.windowProperty().addListener((observable1, oldStage, newStage) -> {
+                        if (newStage != null) {
+                            setUpMenuBar((Stage) newStage);
+                        }
+                    });
+                }
             });
 
         } catch (IOException e) {
@@ -101,6 +107,7 @@ public class GUIHome {
         medicationsTab.setContent(medicationPane);
         horizontalTabPane.getTabs().add(medicationsTab);
 
+
         //todo setUpMenuBar() call here
 
     }
@@ -127,14 +134,8 @@ public class GUIHome {
      */
     private void setUpMenuBar(Stage stage) {
 
-        // Get the toolkit THIS IS MAC OS ONLY
-        MenuToolkit tk = MenuToolkit.toolkit();
-
         // Create a new menu bar
         MenuBar bar = new MenuBar();
-
-        // Add the default application menu
-        bar.getMenus().add(tk.createDefaultApplicationMenu(screenControl.getAppName()));
 
         /* Build the menu bar with new menus and menu items */
         Menu menu1 = new Menu("App");
@@ -191,10 +192,15 @@ public class GUIHome {
 
         // Use the menu bar for primary stage
         if (screenControl.isMacOs()) {
+            // Get the toolkit THIS IS MAC OS ONLY
+            MenuToolkit tk = MenuToolkit.toolkit();
+            // Add the default application menu
+            bar.getMenus().add(tk.createDefaultApplicationMenu(screenControl.getAppName()));
             tk.setMenuBar(stage, bar);
         }
         else {// if windows
-            menuBar = bar;
+            menuBar.getMenus().clear();
+            menuBar.getMenus().addAll(menu1, menu2, menu3);
         }
 
 
