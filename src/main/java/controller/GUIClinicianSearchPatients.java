@@ -31,6 +31,8 @@ public class GUIClinicianSearchPatients implements Initializable {
 
     private static final int X = 30; // Constant for the maximum default number of profiles returned in a search
 
+    private static int numResultsSelected; // The number of results selected by clicking either X or Y buttons
+
     @FXML
     private TableView<Patient> patientDataTable;
 
@@ -56,6 +58,8 @@ public class GUIClinicianSearchPatients implements Initializable {
     private Button displayX;
 
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
+
+    private String searchValue;  // For setting a search value to so when toggling number of views can refresh table
 
 
     /**
@@ -190,6 +194,7 @@ public class GUIClinicianSearchPatients implements Initializable {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
+                    searchValue = newValue;
                     return SearchPatients.searchByName(newValue)
                             .contains(patient);
 
@@ -201,7 +206,8 @@ public class GUIClinicianSearchPatients implements Initializable {
      */
     @FXML
     private void displayDefaultProfiles() {
-        ; // TO DO
+        numResultsSelected = X;
+        SearchPatients.filterNumberSearchResults(numResultsSelected);
     }
 
     /**

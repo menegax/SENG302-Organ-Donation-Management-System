@@ -39,7 +39,9 @@ public class SearchPatients {
 
     private static IndexSearcher indexSearcher = null;
 
-    private static int NUM_RESULTS = 30;
+    private static ArrayList<Patient> totalResults = new ArrayList<>();
+
+    private static final int NUM_RESULTS = 30;
 
 
     /**
@@ -179,6 +181,20 @@ public class SearchPatients {
 		String nhi = thisDoc.get("nhi");
 		return Database.getPatientByNhi(nhi);
     }
+
+    /**
+     * Filters the number of patient profiles to the selected search number
+     * @param numResults The number of profiles selected to be displayed
+     * @return Number of profiles equal to the number selected for displaying
+     */
+    public static ArrayList<Patient> filterNumberSearchResults(int numResults) {
+        ArrayList<Patient> filteredResults = new ArrayList <>();
+        for (int i = 0; i < numResults && i < totalResults.size(); i++) {
+            filteredResults.add(totalResults.get( i ));
+        }
+        return filteredResults;
+
+    }
     
     /**
      * Searches through the index for patients by full name.
@@ -193,7 +209,7 @@ public class SearchPatients {
 
         String[] names = input.split(" ");
 
-    	ArrayList<Patient> results = new ArrayList<>();
+    	//ArrayList<Patient> results = new ArrayList<>();
         ArrayList<FuzzyQuery> queries = new ArrayList<>();
         for (String name : names) {
             queries.add(new FuzzyQuery(new Term("fName", name.toUpperCase()), 2));
@@ -229,18 +245,18 @@ public class SearchPatients {
 	        });
 			
 			int docCount = 0;
-			int patientCount = 0;
-			while (docCount < allDocs.size() && patientCount < NUM_RESULTS) {
+			//int patientCount = 0;
+			while (docCount < allDocs.size()) { //&& patientCount <= NUM_RESULTS) {
 				patient = fetchPatient(allDocs.get(docCount));
-				if (!results.contains(patient)) {
-					results.add(patient);
-					patientCount += 1;
+				if (!totalResults.contains(patient)) {
+                    totalResults.add(patient);
+					//patientCount += 1;
 				}
 				docCount += 1;
 			}
 		} catch (IOException e) {
 			userActions.log(Level.SEVERE, "Unable to search patients by name", "Attempted to search patients by name");
 		}
-        return results;
+        return filterNumberSearchResults(NUM_RESULTS);
     }
 }
