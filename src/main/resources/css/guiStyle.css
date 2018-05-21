@@ -70,11 +70,11 @@
 }
 
 .redo {
-    -fx-background-image: url("../Icons/redo.png");
+    -fx-background-image: url("../image/redo.png");
 }
 
 .undo {
-    -fx-background-image: url("../Icons/undo.png");
+    -fx-background-image: url("../image/undo.png");
 }
 
 .redo:hover, .undo:hover {
