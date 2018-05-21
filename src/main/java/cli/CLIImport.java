@@ -18,8 +18,10 @@ public class CLIImport implements Runnable {
     @Option(names = {"-f", "--file"}, required = true, description = "the file name you wish to import i.e. import -f=doc/examples/example_patient.json")
     private String fileName;
 
+    Database database = Database.getDatabase();
+
     public void run() {
-        Database.importFromDiskPatients(fileName);
+        database.importFromDiskPatients(fileName);
         userActions.log(Level.INFO, "Successfully imported", "Attempted to import patients");
     }
 

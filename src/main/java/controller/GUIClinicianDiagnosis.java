@@ -61,6 +61,8 @@ public class GUIClinicianDiagnosis {
     @FXML
     public Button addDiagnosisButton;
 
+    Database database = Database.getDatabase();
+
 
     /**
      * Patient being viewed
@@ -312,7 +314,7 @@ public class GUIClinicianDiagnosis {
     public void saveDiagnoses() {
         target.setCurrentDiseases(currentDiseases);
         target.setPastDiseases(pastDiseases);
-        Database.saveToDisk();
+        database.saveToDisk();
         userActions.log( Level.FINE, "Successfully saved patient diseases", "Successfully saved patient " + target.getNhiNumber() + "diseases");
         new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis saved successfully", ButtonType.OK).show();
         changed = false;

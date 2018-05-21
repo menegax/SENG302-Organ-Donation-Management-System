@@ -55,6 +55,8 @@ public class GUIPatientRegister {
 
     private StatesHistoryScreen statesHistoryScreen;
 
+    Database database = Database.getDatabase();
+
 
     /**
      * Sets up register page GUI elements
@@ -171,7 +173,7 @@ public class GUIPatientRegister {
             valid = setInvalid(nhiRegister);
             invalidContent.append("NHI must be three letters followed by four numbers\n");
         }
-        else if (Database.isPatientInDb(nhiRegister.getText())) {
+        else if (database.isPatientInDb(nhiRegister.getText())) {
             // checks to see if nhi already in use
             valid = setInvalid(nhiRegister);
             invalidContent.append("NHI is already in use\n");
@@ -238,9 +240,9 @@ public class GUIPatientRegister {
             }
             LocalDate birth = birthRegister.getValue();
 
-            Database.addPatient(new Patient(nhi, firstName, middles, lastName, birth));
+            database.addPatient(new Patient(nhi, firstName, middles, lastName, birth));
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
-            Database.saveToDisk();
+            database.saveToDisk();
             clearFields();
             new Alert(Alert.AlertType.INFORMATION, "Successfully registered!").show();
             ScreenControl.activate("login");

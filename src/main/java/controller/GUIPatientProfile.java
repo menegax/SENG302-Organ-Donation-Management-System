@@ -158,6 +158,7 @@ public class GUIPatientProfile {
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
+    Database database = Database.getDatabase();
 
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
@@ -170,12 +171,12 @@ public class GUIPatientProfile {
             requirementsButton.setVisible(false);
             medicationBtn.setDisable(true);
             medicationBtn.setVisible(false);
-            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
+            if (database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
                 receivingList.setDisable(true);
                 receivingList.setVisible(false);
                 receivingTitle.setDisable(true);
                 receivingTitle.setVisible(false);
-            } if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getDonations().size() == 0) {
+            } if (database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getDonations().size() == 0) {
                 donatingTitle.setDisable(true);
                 donatingTitle.setVisible(false);
                 donationList.setDisable(true);
@@ -227,7 +228,7 @@ public class GUIPatientProfile {
      * @throws InvalidObjectException
      */
     private void loadProfile(String nhi) throws InvalidObjectException {
-        Patient patient = Database.getPatientByNhi(nhi);
+        Patient patient = database.getPatientByNhi(nhi);
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
         genderLbl.setText(patient.getGender() == null ? "Not set" : patient.getGender()

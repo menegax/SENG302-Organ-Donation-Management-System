@@ -21,20 +21,21 @@ import java.util.ArrayList;
 
 public class GUIHomeTest extends ApplicationTest {
 
+    Database database = Database.getDatabase();
     private Main main = new Main();
     UserControl loginHelper = new UserControl();
 
     @Override
     public void start(Stage stage) throws Exception {
-        Database.resetDatabase();
+        database.resetDatabase();
 
         // add dummy patient
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addPatient(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getPatientByNhi("TFX9999")
+        database.addPatient(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
+        database.getPatientByNhi("TFX9999")
                 .addDonation(GlobalEnums.Organ.LIVER);
-        Database.getPatientByNhi("TFX9999")
+        database.getPatientByNhi("TFX9999")
                 .addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
@@ -47,7 +48,7 @@ public class GUIHomeTest extends ApplicationTest {
 
     @After
     public void waitForEvents() {
-        Database.resetDatabase();
+        database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }

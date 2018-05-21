@@ -28,21 +28,22 @@ import static org.testfx.assertions.api.Assertions.assertThat;
 
 public class GUIProfileTest extends ApplicationTest {
 
+    Database database = Database.getDatabase();
     private UserControl userControl;
 
     private Main main = new Main();
 
     @Override
     public void start(Stage stage) throws Exception {
-        Database.resetDatabase();
+        database.resetDatabase();
 
         // add dummy patient
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addPatient(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getPatientByNhi("TFX9999")
+        database.addPatient(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
+        database.getPatientByNhi("TFX9999")
                 .addDonation(GlobalEnums.Organ.LIVER);
-        Database.getPatientByNhi("TFX9999")
+        database.getPatientByNhi("TFX9999")
                 .addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
@@ -55,12 +56,12 @@ public class GUIProfileTest extends ApplicationTest {
 
     @After
     public void waitForEvents() throws InvalidObjectException {
-        Database.resetDatabase();
+        database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
 //        try {
-//        Database.removePatient("TFX9999");
-//        Database.resetDatabase();
+//        database.removePatient("TFX9999");
+//        database.resetDatabase();
 //        } catch (InvalidObjectException e) {
 //            throw new InvalidObjectException(e.getMessage());
 //        }
@@ -109,9 +110,9 @@ public class GUIProfileTest extends ApplicationTest {
 
     @Test
     public void check_receiver_donor_segregation() throws InvalidObjectException {
-        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
-        Database.getPatientByNhi("TFX9999").setRequiredOrgans(new ArrayList<GlobalEnums.Organ>());
+        database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+        database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+        database.getPatientByNhi("TFX9999").setRequiredOrgans(new ArrayList<GlobalEnums.Organ>());
         interact(() -> {
             lookup("#donationsButton").queryAs(Button.class).fire();
             lookup("#save").queryAs(Button.class).fire();
@@ -119,9 +120,9 @@ public class GUIProfileTest extends ApplicationTest {
         verifyThat("#donatingTitle", Node::isVisible);
         verifyThat("#receivingList", Node::isDisabled);
 //        System.out.println(patient.getDonations());
-        Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.LIVER);
-        Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.CORNEA);
-        Database.getPatientByNhi("TFX9999").setDonations(new ArrayList<GlobalEnums.Organ>());
+        database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.LIVER);
+        database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.CORNEA);
+        database.getPatientByNhi("TFX9999").setDonations(new ArrayList<GlobalEnums.Organ>());
         interact(() -> {
             lookup("#donationsButton").queryAs(Button.class).fire();
             lookup("#save").queryAs(Button.class).fire();

@@ -38,6 +38,7 @@ public class GUILogin {
     @FXML
     private CheckBox clinicianToggle;
 
+    Database database = Database.getDatabase();
 
     public void initialize() {
         // Enter key triggers log in
@@ -66,7 +67,7 @@ public class GUILogin {
         UserControl login = new UserControl();
         if (!clinicianToggle.isSelected()) {
             try {
-                Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
+                Patient newPatient = database.getPatientByNhi(nhiLogin.getText());
                 login.addLoggedInUserToCache(newPatient);
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
                 ScreenControl.addScreen("patientProfileUpdate", FXMLLoader.load(getClass().getResource("/scene/patientUpdateProfile.fxml")));
@@ -90,7 +91,7 @@ public class GUILogin {
         }
         else {
             try {
-                Clinician newClinician = Database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
+                Clinician newClinician = database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
                 login.addLoggedInUserToCache(newClinician);
                 ScreenControl.addScreen("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
                 ScreenControl.addScreen("clinicianSearchPatients", FXMLLoader.load(getClass().getResource("/scene/clinicianSearchPatients.fxml")));

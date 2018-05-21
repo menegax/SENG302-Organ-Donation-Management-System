@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class GUILoginTest extends ApplicationTest {
 
-
+    Database database = Database.getDatabase();
     private Main main = new Main();
     private UserControl loginHelper = new UserControl();
 
@@ -37,16 +37,16 @@ public class GUILoginTest extends ApplicationTest {
         // add dummy patient
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addPatient(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+        database.addPatient(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+        database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
     }
 
     @After
     public void waitForEvents() {
-        Database.resetDatabase();
+        database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }

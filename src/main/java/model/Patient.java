@@ -26,7 +26,7 @@ import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
 
-    private final Timestamp CREATED;
+    private Timestamp CREATED;
 
     private String firstName;
 
@@ -93,6 +93,8 @@ public class Patient extends User {
     private ArrayList<Disease> currentDiseases = new ArrayList<>();
 
     private ArrayList<Disease> pastDiseases = new ArrayList<>();
+
+    Database database = Database.getDatabase();
 
     /**
      * Constructor for the patient class. Initializes basic attributes
@@ -256,7 +258,7 @@ public class Patient extends User {
      * @throws IllegalArgumentException when the nhi number given is already in use
      */
     public void ensureUniqueNhi() throws IllegalArgumentException {
-        for (Patient p : Database.getPatients()) {
+        for (Patient p : database.getPatients()) {
             if (p.nhiNumber.equals(nhiNumber.toUpperCase())) {
                 throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
             }
@@ -300,6 +302,8 @@ public class Patient extends User {
     public Timestamp getCREATED() {
         return CREATED;
     }
+
+    public void setCREATED(Timestamp created) { this.CREATED = created; }
 
 
     public String getFirstName() {
@@ -553,6 +557,8 @@ public class Patient extends User {
     public Timestamp getModified() {
         return modified;
     }
+
+    public void setModified(Timestamp modified) { this.modified = modified; }
 
     /**
      * Add organs to patient donations list

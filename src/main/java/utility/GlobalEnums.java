@@ -102,8 +102,8 @@ public class GlobalEnums {
     }
 
     public enum BloodGroup {
-        A_POSITIVE("A positive"), A_NEGATIVE("A negative"), B_POSITIVE("B positive"), B_NEGATIVE("B negative"), AB_POSITIVE("AB positive"), AB_NEGATIVE(
-                "AB negative"), O_POSITIVE("O positive"), O_NEGATIVE("O negative");
+        A_POSITIVE("A+"), A_NEGATIVE("A-"), B_POSITIVE("B+"), B_NEGATIVE("B-"), AB_POSITIVE("AB+"), AB_NEGATIVE(
+                "AB-"), O_POSITIVE("O+"), O_NEGATIVE("O-");
 
         private String value;
 

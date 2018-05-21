@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 public class GUIClinicianSearchPatientsPopUpTest extends ApplicationTest {
 
+    Database database = Database.getDatabase();
     private Main main = new Main();
 
     @Override
@@ -35,14 +36,14 @@ public class GUIClinicianSearchPatientsPopUpTest extends ApplicationTest {
 
         ArrayList<String> mid = new ArrayList<>();
         mid.add("Middle");
-        Database.addClinician(new Clinician(Database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
+        database.addClinician(new Clinician(database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
 
 
     }
 
     @After
     public void waitForEvents() {
-        Database.resetDatabase();
+        database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep( 1000 );
     }

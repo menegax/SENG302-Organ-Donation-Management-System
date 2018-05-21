@@ -20,6 +20,7 @@ import utility.SearchPatients;
 
 public class SearchPatientsTest {
 
+    private static Database database = Database.getDatabase();
 	private static Patient d1;
 	private static Patient d2;
 	private static Patient d3;
@@ -32,17 +33,17 @@ public class SearchPatientsTest {
     public static void setUp() {
 
         userActions.setLevel(Level.OFF);
-        Database.resetDatabase();
+        database.resetDatabase();
         
         // Given patients in a db
         d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
         d2 = new Patient("def1234", "Patik", new ArrayList<String>(), "Laffey", LocalDate.now());
         d3 = new Patient("ghi1234", "George", new ArrayList<String>(), "Romera", LocalDate.now());
         d4 = new Patient("jkl1234", "George", new ArrayList<String>(), "Bobington", LocalDate.now());
-        Database.addPatient(d4);
-        Database.addPatient(d3);
-        Database.addPatient(d2);
-        Database.addPatient(d1);
+        database.addPatient(d4);
+        database.addPatient(d3);
+        database.addPatient(d2);
+        database.addPatient(d1);
 
         SearchPatients.clearIndex();
         
@@ -115,13 +116,13 @@ public class SearchPatientsTest {
     	int count = 0;
     	for (String lName : lastNames) {
     		for (String fName : firstNames) {
-    			Database.addPatient(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
+    			database.addPatient(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
     			count += 1;
     		}
     	}
     	
     	// For a number of patients more than 30
-    	assertTrue(Database.getPatients().size() > 30);
+    	assertTrue(database.getPatients().size() > 30);
     	
         // Search to match all 36 added patients.
         ArrayList<Patient> results = SearchPatients.searchByName("A B C D E F Z Y X W V U");
@@ -149,13 +150,13 @@ public class SearchPatientsTest {
     	int count = 0;
     	for (String lName : lastNames) {
     		for (String fName : firstNames) {
-    			Database.addPatient(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
+    			database.addPatient(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
     			count += 1;
     		}
     	}
     	
     	// For a number of patients more than 30
-    	assertTrue(Database.getPatients().size() > 30);
+    	assertTrue(database.getPatients().size() > 30);
     	
         // Blank search to return maximum number of results. EG every patient.
         ArrayList<Patient> results = SearchPatients.searchByName("");
@@ -171,17 +172,17 @@ public class SearchPatientsTest {
     @Test
     public void testSearchByName() throws IOException {
     	//Bug with setup() means it has to be copied here or wont work
-        Database.resetDatabase();
+        database.resetDatabase();
 
         // Given patients in a db
         d1 = new Patient("abc1234", "Pat", null, "Laff", LocalDate.now());
         d2 = new Patient("def1234", "Patik", null, "Laffey", LocalDate.now());
         d3 = new Patient("ghi1234", "George", null, "Romera", LocalDate.now());
         d4 = new Patient("jkl1234", "George", null, "Bobington", LocalDate.now());
-        Database.addPatient(d4);
-        Database.addPatient(d3);
-        Database.addPatient(d2);
-        Database.addPatient(d1);
+        database.addPatient(d4);
+        database.addPatient(d3);
+        database.addPatient(d2);
+        database.addPatient(d1);
 
         SearchPatients.clearIndex();
 
@@ -192,13 +193,13 @@ public class SearchPatientsTest {
         ArrayList<Patient> results = SearchPatients.searchByName("Pat Bobinton");
 
         // Should contain Pat Laff
-        assertTrue(results.contains(Database.getPatientByNhi("abc1234")));
+        assertTrue(results.contains(database.getPatientByNhi("abc1234")));
         // Should contain Patik Laffey
-        assertTrue(results.contains(Database.getPatientByNhi("def1234")));
+        assertTrue(results.contains(database.getPatientByNhi("def1234")));
         // Shouldn't contain George Romera
-        assertFalse(results.contains(Database.getPatientByNhi("ghi1234")));
+        assertFalse(results.contains(database.getPatientByNhi("ghi1234")));
         // Should contain George Bobington
-        assertTrue(results.contains(Database.getPatientByNhi("jkl1234")));
+        assertTrue(results.contains(database.getPatientByNhi("jkl1234")));
     }
 
 
@@ -209,12 +210,12 @@ public class SearchPatientsTest {
     public void testSearchAfterNameUpdate() throws IOException {
 
         // When first name of patient changed
-        Database.getPatientByNhi("abc1234").setFirstName("Andrew");
+        database.getPatientByNhi("abc1234").setFirstName("Andrew");
 
         // Then searching by new first name returns correct results
         ArrayList<Patient> results = SearchPatients.searchByName("Ande Lafey");
  
-        assertTrue(results.contains(Database.getPatientByNhi("abc1234")));
+        assertTrue(results.contains(database.getPatientByNhi("abc1234")));
     }
 
     /**
@@ -224,28 +225,28 @@ public class SearchPatientsTest {
     @Test
     public void testSearchAfterNhiUpdate() throws IOException {
     	//Bug with setup() means it has to be copied here or wont work
-        Database.resetDatabase();
+        database.resetDatabase();
 
         // Given patients in a db
         d1 = new Patient("abc1234", "Pat", null, "Laff", LocalDate.now());
         d2 = new Patient("def1234", "Patik", null, "Laffey", LocalDate.now());
         d3 = new Patient("ghi1234", "George", null, "Romera", LocalDate.now());
         d4 = new Patient("jkl1234", "George", null, "Bobington", LocalDate.now());
-        Database.addPatient(d4);
-        Database.addPatient(d3);
-        Database.addPatient(d2);
-        Database.addPatient(d1);
+        database.addPatient(d4);
+        database.addPatient(d3);
+        database.addPatient(d2);
+        database.addPatient(d1);
 
         SearchPatients.clearIndex();
 
         // Given an index
         SearchPatients.createFullIndex();
-    	String name = Database.getPatientByNhi("def1234").getFirstName();
-    	Database.getPatientByNhi("def1234").setNhiNumber("def5678");
+    	String name = database.getPatientByNhi("def1234").getFirstName();
+    	database.getPatientByNhi("def1234").setNhiNumber("def5678");
 
     	ArrayList<Patient> results = SearchPatients.searchByName(name);
 
-    	assertTrue(results.contains(Database.getPatientByNhi("def5678")));
+    	assertTrue(results.contains(database.getPatientByNhi("def5678")));
     }
 
     /**
@@ -254,17 +255,17 @@ public class SearchPatientsTest {
      */
     @Test
     public void testSearchUnusualNameResults() throws InvalidObjectException {
-        Database.resetDatabase();
+        database.resetDatabase();
 
         // Given patients in a db
         d1 = new Patient("abc9876", "Joe", null, "Plaffer", LocalDate.now());
         d2 = new Patient("def9876", "Johnothan", null, "zzne", LocalDate.now());
         d3 = new Patient("ghi9876", "John", null, "Romera", LocalDate.now());
         d4 = new Patient("jkl9876", "Samantha", null, "Fon", LocalDate.now());
-        Database.addPatient(d4);
-        Database.addPatient(d3);
-        Database.addPatient(d2);
-        Database.addPatient(d1);
+        database.addPatient(d4);
+        database.addPatient(d3);
+        database.addPatient(d2);
+        database.addPatient(d1);
 
         SearchPatients.clearIndex();
 

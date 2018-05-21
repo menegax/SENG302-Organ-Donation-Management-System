@@ -26,6 +26,7 @@ public class GUIClinicianHome {
 
     public Button logoutButton;
 
+    Database database = Database.getDatabase();
 
     @FXML
     public void goToClinicianProfile(){ ScreenControl.activate("clinicianProfile"); }
@@ -42,7 +43,7 @@ public class GUIClinicianHome {
 
     @FXML
     public void saveClinician() {
-        Database.saveToDisk();
+        database.saveToDisk();
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Successfully Saved!");
         alert.show();
     }

@@ -64,6 +64,8 @@ public class GUIPatientMedications {
     private JsonObject suggestions;
     private boolean itemSelected = false;
 
+    Database database = Database.getDatabase();
+
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
      */
@@ -215,7 +217,7 @@ public class GUIPatientMedications {
      */
     private void loadProfile(String nhi) {
         try {
-            target = Database.getPatientByNhi(nhi);
+            target = database.getPatientByNhi(nhi);
 
             if (target.getCurrentMedications() == null) {
                 target.setCurrentMedications(new ArrayList<>());

@@ -63,6 +63,8 @@ public class GUIPatientUpdateDonations {
     @FXML
     private AnchorPane patientDonationsAnchorPane;
 
+    Database database = Database.getDatabase();
+
 
     @FXML
     private void redo() {
@@ -108,7 +110,7 @@ public class GUIPatientUpdateDonations {
 
     private void loadProfile(String nhi) {
         try {
-            Patient patient = Database.getPatientByNhi(nhi);
+            Patient patient = database.getPatientByNhi(nhi);
             target = patient;
             populateForm(patient);
         }
@@ -250,7 +252,7 @@ public class GUIPatientUpdateDonations {
         else {
             target.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
-        Database.saveToDisk();
+        database.saveToDisk();
         goToProfile();
     }
 

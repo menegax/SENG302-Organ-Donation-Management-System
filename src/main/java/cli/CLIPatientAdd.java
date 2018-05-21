@@ -33,10 +33,12 @@ class CLIPatientAdd implements Runnable {
     @Option(names = {"-b", "--dateofbirth"}, required = true, description = "The date of birth of the patient (yyyy-mm-dd).")
     private LocalDate birth;
 
+    Database database = Database.getDatabase();
+
     public void run() {
         Patient patient = new Patient(nhi, firstName, middleNames, lastName, birth);
         try {
-            Database.addPatient(patient);
+            database.addPatient(patient);
         } catch(IllegalArgumentException i){
             userActions.log(Level.SEVERE, i.getMessage(), "attempted to add patient");
         }

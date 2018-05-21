@@ -69,6 +69,8 @@ public class GUIPatientUpdateContacts  {
 
     private StatesHistoryScreen statesHistoryScreen;
 
+    Database database = Database.getDatabase();
+
     @FXML
     private void redo() {
         statesHistoryScreen.redo();
@@ -88,7 +90,7 @@ public class GUIPatientUpdateContacts  {
     public void saveContactDetails() {
         boolean valid = setPatientContactDetails();
         if(valid) {
-            Database.saveToDisk();
+            database.saveToDisk();
             goToProfile();
         } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
@@ -186,7 +188,7 @@ public class GUIPatientUpdateContacts  {
      */
     private void loadProfile(String nhi) {
         try {
-            target = Database.getPatientByNhi(nhi);
+            target = database.getPatientByNhi(nhi);
 
             ArrayList<Control> controls = new ArrayList<Control>() {{
                 add(homePhoneField);
@@ -359,7 +361,7 @@ public class GUIPatientUpdateContacts  {
     private void saveToDisk() {
         boolean valid = setPatientContactDetails();
         if(valid) {
-            Database.saveToDisk();
+            database.saveToDisk();
             goToProfile();
         } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();

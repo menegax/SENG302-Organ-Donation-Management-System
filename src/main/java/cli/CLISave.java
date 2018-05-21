@@ -15,8 +15,10 @@ public class CLISave implements Runnable {
     @CommandLine.Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
+    Database database = Database.getDatabase();
+
     public void run() {
-        Database.saveToDisk();
+        database.saveToDisk();
         userActions.log(Level.INFO, "successfully saved", "attempted to save data");
     }
 

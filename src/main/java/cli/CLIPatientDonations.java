@@ -25,6 +25,8 @@ public class CLIPatientDonations implements Runnable {
     @Option(names = {"-l", "--list"}, description = "Lists current organ donations.")
     private boolean donationsRequested;
 
+    Database database = Database.getDatabase();
+
     @Option(names = "--add", split = ",", description = "Takes a comma-separated list of organs to add to donations.\n" +
             "LIVER\n" +
             "KIDNEY\n" +
@@ -55,7 +57,7 @@ public class CLIPatientDonations implements Runnable {
 
     public void run() {
         try {
-            Patient patient = Database.getPatientByNhi(searchNhi);
+            Patient patient = database.getPatientByNhi(searchNhi);
             if (donationsRequested) {
                 displayPatientDonations(patient);
             }

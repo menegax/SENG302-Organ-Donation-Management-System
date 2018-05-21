@@ -26,6 +26,8 @@ import java.util.logging.Level;
 
 public class Main extends Application {
 
+    Database database = Database.getDatabase();
+
     @Override
     public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
@@ -40,9 +42,10 @@ public class Main extends Application {
         ScreenControl.addScreen("patientHome", FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml")));
 
         // add objects
-        Database.importFromDiskPatients("./patient.json");
-        Database.importFromDiskClinicians("./clinician.json");
-        Database.importFromDiskWaitlist("./");
+//        database.importFromDiskPatients("./patient.json");
+//        database.importFromDiskClinicians("./clinician.json");
+//        database.importFromDiskWaitlist("./");
+        database.loadAll();
         addDummyTestObjects();
         ensureDefaultClinician();
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
@@ -71,24 +74,24 @@ public class Main extends Application {
             ArrayList<String> middles = new ArrayList<>();
             middles.add("Middle");
             middles.add("Xavier");
-            Database.addPatient(new Patient("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
-            Database.getPatientByNhi("ABC1238")
+            database.addPatient(new Patient("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
+            database.getPatientByNhi("ABC1238")
                     .addDonation(GlobalEnums.Organ.LIVER);
-            Database.getPatientByNhi("ABC1238")
+            database.getPatientByNhi("ABC1238")
                     .addDonation(GlobalEnums.Organ.CORNEA);
-            Database.getPatientByNhi("ABC1238")
+            database.getPatientByNhi("ABC1238")
                     .setRegion(GlobalEnums.Region.AUCKLAND);
-            Database.getPatientByNhi("ABC1238")
+            database.getPatientByNhi("ABC1238")
                     .setGender(GlobalEnums.Gender.OTHER);
 
-            Database.addPatient(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
-            Database.getPatientByNhi("ABC1234")
+            database.addPatient(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
+            database.getPatientByNhi("ABC1234")
                     .addDonation(GlobalEnums.Organ.LIVER);
-            Database.getPatientByNhi("ABC1234")
+            database.getPatientByNhi("ABC1234")
                     .addDonation(GlobalEnums.Organ.CORNEA);
-            Database.getPatientByNhi("ABC1234")
+            database.getPatientByNhi("ABC1234")
                     .setRegion(GlobalEnums.Region.CANTERBURY);
-            Database.getPatientByNhi("ABC1234")
+            database.getPatientByNhi("ABC1234")
                     .setGender(GlobalEnums.Gender.FEMALE);
         }
         catch (Exception e) {
@@ -104,8 +107,8 @@ public class Main extends Application {
     private void ensureDefaultClinician() {
 
         // if default clinician 0 not in db, add it
-        if (!Database.isClinicianInDb(0)) {
-            Database.addClinician(new Clinician(0, "initial", new ArrayList<String>() {{
+        if (!database.isClinicianInDb(0)) {
+            database.addClinician(new Clinician(0, "initial", new ArrayList<String>() {{
                 add("Middle");
             }}, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
         }

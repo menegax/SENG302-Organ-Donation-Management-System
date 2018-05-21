@@ -24,6 +24,7 @@ import static org.testfx.api.FxAssert.verifyThat;
  */
 public class GUIUndoPatientUpdateTest extends ApplicationTest{
 
+    Database database = Database.getDatabase();
     private Main main = new Main();
     private String nhiTxtDefault;
     private String firstnameTxtDefault;
@@ -57,7 +58,7 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest{
         // add dummy patient
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addPatient(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
+        database.addPatient(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
 
         main.start(stage);
         interact(() -> {
@@ -105,7 +106,7 @@ public class GUIUndoPatientUpdateTest extends ApplicationTest{
      */
     @After
     public void waitForEvents() {
-        Database.resetDatabase();
+        database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }

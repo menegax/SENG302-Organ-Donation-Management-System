@@ -89,6 +89,8 @@ public class GUIPatientUpdateProfile {
 
     private UserControl userControl;
 
+    Database database = Database.getDatabase();
+
 
     public void initialize() {
         populateDropdowns();
@@ -157,7 +159,7 @@ public class GUIPatientUpdateProfile {
      */
     private void loadProfile(String nhi) {
         try {
-            Patient patient = Database.getPatientByNhi(nhi);
+            Patient patient = database.getPatientByNhi(nhi);
             target = patient;
             populateForm(patient);
 
@@ -283,7 +285,7 @@ public class GUIPatientUpdateProfile {
 
         try {
             // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
-            if (Database.getPatientByNhi(nhiTxt.getText()).getUuid() != target.getUuid()) {
+            if (database.getPatientByNhi(nhiTxt.getText()).getUuid() != target.getUuid()) {
                 valid = setInvalid(nhiTxt);
                 invalidContent.append("NHI is already in use\n");
             }
@@ -503,7 +505,7 @@ public class GUIPatientUpdateProfile {
                         .getSelectedItem()));
             }
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
-            Database.saveToDisk();
+            database.saveToDisk();
             goBackToProfile();
         }
         else {

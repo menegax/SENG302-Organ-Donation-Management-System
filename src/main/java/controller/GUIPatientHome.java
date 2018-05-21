@@ -22,6 +22,8 @@ public class GUIPatientHome {
 
     public Button logOutButton;
 
+    Database database = Database.getDatabase();
+
 
     @FXML
     public void goToProfile() {
@@ -50,7 +52,7 @@ public class GUIPatientHome {
 
     @FXML
     public void save() {
-        Database.saveToDisk();
+        database.saveToDisk();
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Successfully saved!");
         alert.show();
     }

@@ -3,14 +3,14 @@ package service;
 import com.google.gson.Gson;
 import model.Clinician;
 import model.Patient;
-import org.omg.CORBA.DynAnyPackage.Invalid;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 
 import java.io.*;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -27,10 +27,13 @@ public class Database {
 
     private static Database database = null;
 
+    private Connection conn;
+
     private Database() {
         patients = new HashSet<>();
         clinicians = new HashSet<>();
         organWaitingList = new OrganWaitlist();
+        initializeConnection();
     }
 
     public static Database getDatabase() {
@@ -40,23 +43,55 @@ public class Database {
         return database;
     }
 
+
+    //ToDo change to real database before submittion
+    private void initializeConnection() {
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test",
+                    "seng302-team800", "ScornsGammas5531");
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     //ToDO Complete
-    public void runQuery(String query) {
-        String type = query.split(" ")[0].toUpperCase();
-        if (type.equals("SELECT")) {
-
-        }
-        else if (type.equals("UPDATE")) {
-
-        }
+    public ArrayList<String[]> runQuery(String query, String[] params) {
+        try {
+            String type = query.split(" ")[0].toUpperCase();
+            PreparedStatement stmt = setupQuery(query, params);
+            if (type.equals("SELECT")) {
+                return runSelectQuery(stmt);
+            }
+            else if (type.equals("UPDATE")) {
+                runUpdateQuery(stmt);
+            }
 //        else if (type.equals("INSERT")) {
 //
 //        }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     //ToDo Complete
-    private void runSelectQuery(String query) {
-
+    private ArrayList<String[]> runSelectQuery(PreparedStatement query) throws SQLException {
+        ResultSet resultSet = query.executeQuery();
+        ArrayList<String[]> results = new ArrayList<>();
+        int columns = resultSet.getMetaData().getColumnCount();
+        int count = 0;
+        while (resultSet.next()) {
+            String[] result = new String[columns];
+            while (count < columns) {
+                result[count] = resultSet.getString(count + 1);
+                count += 1;
+            }
+            count = 0;
+            results.add(result);
+        }
+        return results;
     }
 
     //ToDo Complete
@@ -69,14 +104,33 @@ public class Database {
         }
     }
 
-    private void runInsertQuery(String query, String[] params) {
+    private PreparedStatement setupQuery(String query, String[] params) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(query);
+        int count = 0;
+        while (count < params.length) {
+            stmt.setString(count + 1, params[count]);
+            count += 1;
+        }
+        return stmt;
+    }
 
+    private void runUpdateQuery(PreparedStatement stmt) {
+        try {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage() + "\n" + e.getSQLState() + "\n" + e.getErrorCode());
+        }
     }
 
     public OrganWaitlist getWaitingList() {
         return organWaitingList;
     }
 
+    /**
+     * Gets patient's attributes and stores them in a String array
+     * @param patient Patient to get attributes from
+     * @return String[] attributes of patient
+     */
     private String[] getPatientAttributes(Patient patient) {
         String[] attr = new String[16];
         attr[0] = patient.getNhiNumber();
@@ -85,16 +139,23 @@ public class Database {
         attr[3] = patient.getLastName();
         attr[4] = patient.getBirth().toString();
         attr[5] = patient.getCREATED().toString();
-        attr[5] = patient.getModified().toString();
-        attr[5] = patient.getDeath().toString();
-        attr[5] = patient.getGender().toString().substring(0,1);
-        attr[5] = null;
-        attr[5] = null;
-        attr[5] = String.valueOf(patient.getHeight());
-        attr[5] = String.valueOf(patient.getWeight());
-        attr[5] = patient.getBloodGroup().toString();
-
-
+        attr[6] = patient.getModified().toString();
+        if(patient.getDeath() != null) {
+            attr[7] = patient.getDeath().toString();
+        }
+        if(patient.getGender() != null) {
+            attr[8] = patient.getGender().toString().substring(0,1);
+        }
+        attr[9] = null;
+        attr[10] = null;
+        attr[11] = String.valueOf(patient.getHeight() * 100);
+        attr[12] = String.valueOf(patient.getWeight());
+        attr[13] = patient.getBloodGroup().toString();
+        attr[14] = String.join(",", patient.getDonations().toString())
+                .replaceAll("\\[","").replaceAll("\\]", "");
+        attr[15] = String.join(",", patient.getRequiredOrgans().toString())
+                .replaceAll("\\[","").replaceAll("\\]", "");
+        return attr;
     }
 
     /**
@@ -110,18 +171,76 @@ public class Database {
             SearchPatients.addIndex(newPatient);
 
             String[] attr = getPatientAttributes(newPatient);
-            String query = "INSERT INTO tblPatients" +
+            String query = "INSERT INTO tblPatients " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            runInsertQuery(query, attr);
+            PreparedStatement stmt = setupQuery(query, attr);
+            runUpdateQuery(stmt);
             userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
         }
-        catch (IllegalArgumentException o) {
+        catch (SQLException o) {
             userActions.log(Level.WARNING, "Failed to add patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
             throw new IllegalArgumentException(o.getMessage());
         }
     }
 
-//ToDo Local version remove?????
+    public void loadAll() {
+        loadAllPatients();
+        loadAllClinicians();
+        loadWaitingList();
+    }
+
+    private ArrayList<GlobalEnums.Organ> loadOrgans(String organs) {
+        String[] organArray = organs.split(",");
+        ArrayList<GlobalEnums.Organ> organArrayList = new ArrayList<>();
+        for(String organ : organArray) {
+            organArrayList.add(GlobalEnums.Organ.valueOf(organ));
+        }
+        return organArrayList;
+    }
+
+    private Patient parsePatient(String[] attr) {
+        String nhi = attr[0];
+        String fName = attr[1];
+        ArrayList<String> middleNames = new ArrayList<>();
+        middleNames.addAll(Arrays.asList(attr[2].split(" ")));
+        String lName = attr[3];
+        LocalDate birth = LocalDate.parse(attr[4]);
+        Patient newPatient = new Patient(nhi, fName, middleNames, lName, birth);
+        newPatient.setCREATED(Timestamp.valueOf(attr[5]));
+        Timestamp modified = Timestamp.valueOf(attr[6]);
+        newPatient.setDeath(LocalDate.parse(attr[7]));
+        switch (attr[8]) {
+            case "M": newPatient.setGender(GlobalEnums.Gender.MALE);break;
+            case "F": newPatient.setGender(GlobalEnums.Gender.FEMALE);break;
+            default: newPatient.setGender(GlobalEnums.Gender.OTHER);break;
+        }
+        //todo: set pref gender and name here after story 29 is in
+        newPatient.setHeight(Double.parseDouble(attr[11]) / 100);
+        newPatient.setWeight(Double.parseDouble(attr[12]));
+        newPatient.setBloodGroup(GlobalEnums.BloodGroup.valueOf(attr[13]));
+        newPatient.setDonations(loadOrgans(attr[14]));
+        newPatient.setRequiredOrgans(loadOrgans(attr[15]));
+        newPatient.setModified(modified);
+        
+        return newPatient;
+    }
+
+    private void loadAllPatients() {
+        ArrayList<String[]> patientsRaw = runQuery("SELECT * FROM tblPatients",null);
+        for (String[] attr : patientsRaw) {
+            patients.add(parsePatient(attr));
+        }
+    }
+
+    private void loadAllClinicians() {
+
+    }
+
+    private void loadWaitingList() {
+
+    }
+
+////ToDo Local version remove?????
 //    /**
 //     * Adds a patient to the database
 //     *
@@ -316,7 +435,7 @@ public class Database {
 
 
     /**
-     * Writes database clinicians to file on disk
+     * Writes database clinicians to file on diskreturn null;
      *
      * @exception IOException when the file cannot be found nor created
      */
@@ -417,5 +536,16 @@ public class Database {
 
     public Set<Clinician> getClinicians() {
         return clinicians;
+    }
+
+
+    public static void main(String[] argv) {
+        Database test = Database.getDatabase();
+        String stmt = "SELECT * FROM tblPatients WHERE LName = ?";
+        String[] params = {"Joeson"};
+        ArrayList<String[]> results = test.runQuery(stmt, params);
+        for (String[] col: results) {
+            System.out.println(String.join(" ", col));
+        }
     }
 }

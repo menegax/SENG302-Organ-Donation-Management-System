@@ -41,12 +41,14 @@ public class GUIClinicianWaitingList {
 
     private UserControl userControl;
 
+    Database database = Database.getDatabase();
+
     /**
      * Initializes waiting list screen by populating table and initializing a double click action
      * to view a patient's profile.
      */
     public void initialize() {
-    	OrganWaitlist waitingList = Database.getWaitingList();
+    	OrganWaitlist waitingList = database.getWaitingList();
         for (OrganWaitlist.OrganRequest request: waitingList) {
     		masterData.add(request);
     	}
@@ -76,8 +78,8 @@ public class GUIClinicianWaitingList {
                 try {
                     userControl = new UserControl();
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
-                    DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
-                    userControl.setTargetPatient(Database.getPatientByNhi(request.getReceiverNhi()));
+                    DrugInteraction.setViewedPatient(database.getPatientByNhi(request.getReceiverNhi()));
+                    userControl.setTargetPatient(database.getPatientByNhi(request.getReceiverNhi()));
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
                     Stage popUpStage = new Stage();

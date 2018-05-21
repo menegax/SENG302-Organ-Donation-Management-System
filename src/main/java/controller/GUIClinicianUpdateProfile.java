@@ -57,6 +57,8 @@ public class GUIClinicianUpdateProfile {
 
     private StatesHistoryScreen screenHistory;
 
+    Database database = Database.getDatabase();
+
     /**
      * Undoes an action taken when editing a clinician
      */
@@ -104,7 +106,7 @@ public class GUIClinicianUpdateProfile {
      */
     private void loadProfile(int staffId) {
         try {
-            Clinician clinician = Database.getClinicianByID(staffId);
+            Clinician clinician = database.getClinicianByID(staffId);
             target = clinician;
             populateForm(clinician);
         } catch (InvalidObjectException e) {

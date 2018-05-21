@@ -69,6 +69,8 @@ public class GUIPatientUpdateRequirements {
     @FXML
     private AnchorPane patientRequirementsAnchorPane;
 
+    Database database = Database.getDatabase();
+
     @FXML
     private void redo() {
         statesHistoryScreen.redo();
@@ -116,7 +118,7 @@ public class GUIPatientUpdateRequirements {
      */
     private void loadProfile(String nhi) {
         try {
-            Patient patient = Database.getPatientByNhi(nhi);
+            Patient patient = database.getPatientByNhi(nhi);
             target = patient;
             populateForm(patient);
         }
@@ -263,12 +265,12 @@ public class GUIPatientUpdateRequirements {
             target.removeRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
         createOrganRequests();
-        Database.saveToDisk();
+        database.saveToDisk();
         goToProfile();
     }
 
     private void createOrganRequests() {
-        OrganWaitlist waitlist = Database.getWaitingList();
+        OrganWaitlist waitlist = database.getWaitingList();
         Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();
         while(iter.hasNext()) {
             OrganWaitlist.OrganRequest next = iter.next();

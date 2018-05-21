@@ -23,6 +23,7 @@ import static org.testfx.api.FxAssert.verifyThat;
  */
 public class GUIUndoPatientRegisterTest extends ApplicationTest{
 
+    Database database = Database.getDatabase();
     private Main main = new Main();
 
     private String firstnameRegisterDefault;
@@ -67,7 +68,7 @@ public class GUIUndoPatientRegisterTest extends ApplicationTest{
      */
     @After
     public void waitForEvents() {
-        Database.resetDatabase();
+        database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }

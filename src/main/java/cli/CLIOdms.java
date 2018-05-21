@@ -35,6 +35,8 @@ public class CLIOdms implements Runnable {
     @Option(names = {"-d", "--dev"}, hidden = true, description = "Auto adds a patient for your convenience.")
     private boolean devMode;
 
+    Database database = Database.getDatabase();
+
     @Override
     public void run() {
         if (devMode) {
@@ -44,11 +46,11 @@ public class CLIOdms implements Runnable {
 
     private void prepTheApp() {
         try{
-            Database.addPatient(new Patient("aaa1111", "David", new ArrayList<String>() {{
+            database.addPatient(new Patient("aaa1111", "David", new ArrayList<String>() {{
                 add("John");
             }}, "Dennison", LocalDate.of(1994, 12, 12)));
 
-            Database.addPatient(new Patient("bbb2222", "Peggy", new ArrayList<String>() {{
+            database.addPatient(new Patient("bbb2222", "Peggy", new ArrayList<String>() {{
                 add("Jane");
             }}, "Peterson", LocalDate.of(1994, 12, 12)));
         } catch (IllegalArgumentException i){

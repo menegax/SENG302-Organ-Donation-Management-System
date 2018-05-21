@@ -21,6 +21,7 @@ import static utility.UserActionHistory.userActions;
 import java.util.logging.Level;
 
 public class ControllerClinicianTest extends ApplicationTest {
+    Database database = Database.getDatabase();
     private Main main = new Main();
 
     @Override
@@ -36,7 +37,7 @@ public class ControllerClinicianTest extends ApplicationTest {
 
     @After
     public void waitForEvents() {
-        Database.resetDatabase();
+        database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }

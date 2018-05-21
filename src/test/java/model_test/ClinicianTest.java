@@ -18,6 +18,7 @@ import static junit.framework.TestCase.*;
  * Tests valid and invalid controller creation, fetching clinicians from the database, as well as updating clinicians
  */
 public class ClinicianTest {
+    Database database = Database.getDatabase();
     private Clinician clinician;
 
     @Before
@@ -27,22 +28,22 @@ public class ClinicianTest {
 
     @Test
     public void testIncreasingStaffID() {
-        Clinician newClinician = new Clinician(Database.getNextStaffID(), "John", new ArrayList<>(), "Doe", GlobalEnums.Region.AUCKLAND);
-        Database.addClinician(newClinician);
-        assertEquals(newClinician.getStaffID() + 1, Database.getNextStaffID());
+        Clinician newClinician = new Clinician(database.getNextStaffID(), "John", new ArrayList<>(), "Doe", GlobalEnums.Region.AUCKLAND);
+        database.addClinician(newClinician);
+        assertEquals(newClinician.getStaffID() + 1, database.getNextStaffID());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalFirstName() {
-        Database.addClinician(new Clinician(Database.getNextStaffID(), "23-%%d", new ArrayList<>(), "Everyman", GlobalEnums.Region.GISBORNE));
+        database.addClinician(new Clinician(database.getNextStaffID(), "23-%%d", new ArrayList<>(), "Everyman", GlobalEnums.Region.GISBORNE));
     }
 
     @Test
     public void testGettingClinicianById() {
-        int id = Database.getNextStaffID();
-        Database.addClinician(new Clinician(id, "Joeseph", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND));
+        int id = database.getNextStaffID();
+        database.addClinician(new Clinician(id, "Joeseph", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND));
         try {
-            assertEquals(Database.getClinicianByID(id).getFirstName(), "Joeseph");
+            assertEquals(database.getClinicianByID(id).getFirstName(), "Joeseph");
         } catch (InvalidObjectException e) {
             Assert.fail();
         }
@@ -50,10 +51,10 @@ public class ClinicianTest {
 
     @Test
     public void testCreationWithAddress() {
-        int id = Database.getNextStaffID();
-        Database.addClinician(new Clinician(id, "Lorem", new ArrayList<>(), "Ipsum", "123 some street", "This place", "Ilam", GlobalEnums.Region.GISBORNE));
+        int id = database.getNextStaffID();
+        database.addClinician(new Clinician(id, "Lorem", new ArrayList<>(), "Ipsum", "123 some street", "This place", "Ilam", GlobalEnums.Region.GISBORNE));
         try {
-            assertNotNull(Database.getClinicianByID(id).getStreet1());
+            assertNotNull(database.getClinicianByID(id).getStreet1());
         } catch (InvalidObjectException e) {
             Assert.fail();
         }

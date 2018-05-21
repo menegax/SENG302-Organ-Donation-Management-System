@@ -41,6 +41,7 @@ public class SearchPatients {
 
     private static int NUM_RESULTS = 30;
 
+    private static Database database = Database.getDatabase();
 
     /**
      * Initializes the index writer in RAM.
@@ -75,7 +76,7 @@ public class SearchPatients {
         if (indexWriter != null) {
             SearchPatients.clearIndex();
         }
-        Set<Patient> patients = Database.getPatients();
+        Set<Patient> patients = database.getPatients();
         for (Patient patient : patients) {
             addIndex(patient);
         }
@@ -155,7 +156,7 @@ public class SearchPatients {
      * @return First num_results patients from a alphabetical ordering.
      */
     public static ArrayList<Patient> getDefaultResults() {
-        ArrayList<Patient> default_patients = new ArrayList<>(Database.getPatients());
+        ArrayList<Patient> default_patients = new ArrayList<>(database.getPatients());
 		default_patients.sort((o1, o2) -> { // sort by concatenated name
             int comparison;
             comparison = o1.getNameConcatenated()
@@ -177,7 +178,7 @@ public class SearchPatients {
     private static Patient fetchPatient(ScoreDoc doc) throws IOException {
 		Document thisDoc = indexSearcher.doc(doc.doc);
 		String nhi = thisDoc.get("nhi");
-		return Database.getPatientByNhi(nhi);
+		return database.getPatientByNhi(nhi);
     }
     
     /**
