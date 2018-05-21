@@ -65,7 +65,7 @@ public class GUIClinicianSearchPatients implements Initializable {
         setupSearchingListener(filteredData);
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
-
+        displayProfileCount();
     }
 
 
@@ -179,6 +179,10 @@ public class GUIClinicianSearchPatients implements Initializable {
                             .contains(patient);
 
                 }));
+    }
+
+    private void displayProfileCount() {
+        searchEntry.setPromptText( "There are " + patientDataTable.getItems().size() + " profiles" );
     }
 
 
