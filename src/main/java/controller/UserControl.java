@@ -1,6 +1,5 @@
 package controller;
 
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import model.Clinician;
 import model.Patient;
 
