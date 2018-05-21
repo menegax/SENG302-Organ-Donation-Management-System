@@ -4,10 +4,14 @@ import controller.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import model.Patient;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
@@ -17,171 +21,271 @@ import utility.GlobalEnums;
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
+import static java.util.logging.Level.OFF;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
+import static utility.UserActionHistory.userActions;
 
 public class GUIRegisterTest extends ApplicationTest {
 
     private Main main = new Main();
-    private LocalDate d = LocalDate.of(1957,6,21);
+
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        main.start(stage);
+
+        // navigate to register scene
+        interact(() -> lookup("#registerHyperlink").queryAs(Hyperlink.class)
+                .fire());
+
+    }
+
+
+    @BeforeClass
+    public static void setUpClass() {
+        userActions.setLevel(OFF);
+    }
+
 
     @Before
     public void setup() {
         Database.resetDatabase();
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        main.start(stage);
-        interact(() ->  lookup("#registerHyperlink").queryAs(Hyperlink.class).fire());
-
-    }
-
-    @After
-    public void waitForEvents() {
-        Database.resetDatabase();
-        WaitForAsyncUtils.waitForFxEvents();
-        sleep(1000);
-    }
-
-    @Test
-    public void verify_screen() {
-        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
-    }
 
     @Test
     public void should_successfully_register_with_middle_name() {
-        interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("BBB9922");
-            lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
-            lookup("#middlenameRegister").queryAs(TextField.class).setText("Wil");
-            lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
-            lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
-        });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB9922"));
-        assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("William"));
-        assertThat(lookup("#middlenameRegister").queryAs(TextField.class).getText().equals("Wil"));
-        assertThat(lookup("#lastnameRegister").queryAs(TextField.class).getText().equals("Williamson"));
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == d);
+        givenValidNhi();
+        givenValidFirstName();
+        givenValidMiddleNames();
+        givenValidLastName();
+        givenValidBirthDate();
 
-        interact(() -> {
-            lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-            //clickOn(900,450);
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        verifyThat("#loginPane", Node::isVisible);
+        whenClickDone();
+
+        thenAlertHasHeader("Message");
     }
+
 
     @Test
     public void should_successfully_register_without_middle_name() {
-        interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("BBB9782");
-            lookup("#firstnameRegister").queryAs(TextField.class).setText("Willis");
-            lookup("#lastnameRegister").queryAs(TextField.class).setText("Brucie");
-            lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
-        });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB9752"));
-        assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("Willis"));
-        assertThat(lookup("#lastnameRegister").queryAs(TextField.class).getText().equals("Brucie"));
-        assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == d);
+        givenValidNhi();
+        givenValidFirstName();
+        givenValidLastName();
+        givenValidBirthDate();
 
-        interact(() -> {
-            lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        verifyThat("#loginPane", Node::isVisible);
+        whenClickDone();
+
+        thenAlertHasHeader("Message");
     }
+
 
     @Test
     public void unsuccessful_register_no_input() {
-        interact(() -> {
-            lookup("#doneButton").queryAs(Button.class).fire();
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        verifyThat(lookup("#patientRegisterAnchorPane"), Node::isVisible);
+        whenClickDone();
+
+        thenAlertHasHeader("Warning");
     }
+
 
     @Test
     public void unsuccessful_register_no_nhi() {
-        interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("");
-            lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
-            lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
-            lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
-            lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
+        givenValidFirstName();
+        givenValidLastName();
+        givenValidBirthDate();
+
+        whenClickDone();
+
+        thenAlertHasHeader("Warning");
     }
+
 
     @Test
     public void unsuccessful_register_invalid_nhi() {
-        interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("2222bbb");
-            lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
-            lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
-            lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
-            lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
+        givenInvalidNhi();
+        givenValidFirstName();
+        givenValidLastName();
+        givenValidBirthDate();
+
+        whenClickDone();
+
+        thenAlertHasHeader("Warning");
     }
+
 
     @Test
     public void unsuccessful_register_no_first_name() {
-        interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("BBB2222");
-            lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
-            lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
-            lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
+        givenValidNhi();
+        givenValidLastName();
+        givenValidBirthDate();
+
+        whenClickDone();
+
+        thenAlertHasHeader("Warning");
     }
+
 
     @Test
     public void unsuccessful_register_no_last_name() {
-        interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("2222bbb");
-            lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
-            lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
-            lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
+        givenValidNhi();
+        givenValidFirstName();
+        givenValidBirthDate();
+
+        whenClickDone();
+
+        thenAlertHasHeader("Warning");
     }
+
 
     @Test
     public void unsuccessful_register_no_birth_date() {
-        interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("2222bbb");
-            lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
-            lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
-            lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
+        givenValidNhi();
+        givenValidFirstName();
+        givenValidLastName();
+
+        whenClickDone();
+
+        thenAlertHasHeader("Warning");
     }
+
+
+    /**
+     * Tests to ensure a patient cannot register with a birth date in the future
+     */
+    @Test
+    public void unsuccessful_register_future_birth_date() {
+        givenInvalidNhi();
+        givenValidFirstName();
+        givenValidLastName();
+        givenInvalidBirthDate();
+
+        whenClickDone();
+
+        thenAlertHasHeader("Warning");
+    }
+
 
     @Test
-    public void unsuccessful_register_duplicate_nhi() throws InvalidObjectException {
+    public void unsuccessful_register_duplicate_nhi() {
 
-        ArrayList<String> dal = new ArrayList<>();
-        dal.add("Middle");
-        Database.addPatient(new Patient("TFX9999", "Joe", dal,"Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.addPatient(new Patient("TFX9999", "Joe", new ArrayList<>(Collections.singletonList("Middle")), "Bloggs", LocalDate.of(1990, 2, 9)));
 
-        interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("TFX9999");
-            lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
-            lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
-            lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
-            lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-            lookup("OK").queryAs(Button.class).fire();
-        });
-        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
+        lookup("#nhiRegister").queryAs(TextField.class)
+                .setText("TFX9999");
+
+        givenValidFirstName();
+        givenValidLastName();
+        givenValidBirthDate();
+        whenClickDone();
+        thenAlertHasHeader("Warning");
     }
 
+
+    @Test
+    public void unsuccessful_register_with_invalid_name() {
+        givenValidNhi();
+        givenInvalidFirstName();
+        givenValidMiddleNames();
+        givenValidLastName();
+        givenValidBirthDate();
+
+        whenClickDone();
+
+        thenAlertHasHeader("Warning");
+    }
+
+
+    private void givenInvalidFirstName() {
+        lookup("#firstnameRegister").queryAs(TextField.class)
+                .setText("@");
+    }
+
+
+    private void givenValidNhi() {
+        interact(() -> lookup("#nhiRegister").queryAs(TextField.class)
+                .setText("BBB9922"));
+    }
+
+
+    private void givenValidFirstName() {
+        interact(() -> lookup("#firstnameRegister").queryAs(TextField.class)
+                .setText("William"));
+    }
+
+
+    private void givenValidLastName() {
+        interact(() -> lookup("#lastnameRegister").queryAs(TextField.class)
+                .setText("Williamson"));
+    }
+
+
+    private void givenValidBirthDate() {
+        interact(() -> lookup("#birthRegister").queryAs(DatePicker.class)
+                .setValue(LocalDate.of(1957, 6, 21)));
+    }
+
+
+    private void givenValidMiddleNames() {
+        interact(() -> lookup("#middlenameRegister").queryAs(TextField.class)
+                .setText("Wil"));
+    }
+
+
+    private void givenInvalidBirthDate() {
+        lookup("#birthRegister").queryAs(DatePicker.class)
+                .setValue(LocalDate.now()
+                        .plusDays(1)); // register with bday of tomorrow
+    }
+
+
+    private void givenInvalidNhi() {
+        lookup("#nhiRegister").queryAs(TextField.class)
+                .setText("2222bbb");
+    }
+
+
+    private void whenClickDone() {
+        interact(() -> lookup("#doneButton").queryAs(Button.class)
+                .getOnAction()
+                .handle(new ActionEvent()));
+    }
+
+
+    /**
+     * Ensures a given Alert has the expected header
+     *
+     * <p>
+     * The Alert popup is then closed by clicking a button with string "OK"
+     * </p>
+     *
+     * @param expectedHeader the string header that is the title of the Alert
+     */
+    private void thenAlertHasHeader(String expectedHeader) {
+        final Stage actualAlertDialog = getTopModalStage();
+        assertNotNull(actualAlertDialog);
+        final DialogPane dialogPane = (DialogPane) actualAlertDialog.getScene()
+                .getRoot();
+        assertEquals(expectedHeader, dialogPane.getHeaderText());
+        interact(() -> clickOn("OK"));
+    }
+
+
+    //todo doc
+    private Stage getTopModalStage() {
+        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder()
+                .listWindows());
+        Collections.reverse(allWindows);
+        return (Stage) allWindows.stream()
+                .filter(window -> window instanceof Stage)
+                .filter(window -> ((Stage) window).getModality() == Modality.APPLICATION_MODAL)
+                .findFirst()
+                .orElse(null);
+    }
 }
