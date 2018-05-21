@@ -132,9 +132,9 @@ public class GUIPatientProcedureForm extends UndoableController {
      */
     private void addProcedure() {
         Set <Organ> affectedDonations = getAffectedOrgansFromForm();
-        //dateInput.setStyle( null );
+        dateInput.setStyle( null );
         summaryInput.setStyle( null );
-        //descriptionInput.setText( null );
+        descriptionInput.setStyle( null );
         if (validateInputs(summaryInput.getText(), descriptionInput.getText(), dateInput.getValue())){
             if ( affectedDonations.size() == 0 ) {
                 affectedDonations = null;
@@ -146,7 +146,7 @@ public class GUIPatientProcedureForm extends UndoableController {
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +
                     "patients DOB. There must be a summary. A summary, and description, if any, must contain " +
-                    "alphabetic or numerical character(s), hyphens or spaces");
+                    "alphabetic or numerical character(s), or ',.%() or spaces");
             alert.setHeaderText( "Field input(s) are invalid!" );
             alert.show();
         }
@@ -164,17 +164,17 @@ public class GUIPatientProcedureForm extends UndoableController {
         Boolean isValid = true;
         if ( date == null || date.isBefore( patient.getBirth() )) {
             isValid = false;
-            //dateInput.setStyle( "-fx-background-color: #e6b3b3" );
+            dateInput.setStyle( "-fx-base: red;" );
         }
-        if ( summary.length() < 1 || !Pattern.matches("[A-Za-z0-9- ]+", summary) ||
+        if ( summary.length() < 1 || !Pattern.matches("[A-Za-z0-9-,.'%() ]+", summary) ||
                 summary.substring(0,1).equals(" ") ) {
             isValid = false;
-            summaryInput.setStyle( "-fx-background-color: #e6b3b3" );
+            summaryInput.setStyle( "-fx-base: red;" );
         }
-        if ( description.length() > 1 && ( !Pattern.matches("[A-Za-z0-9- ]+", description) ||
-                description.substring( 0,1 ).equals(" ") )) {
+        if ( description.length() < 1 || !Pattern.matches("[A-Za-z0-9-,.'%() ]+", description) ||
+                description.substring( 0,1 ).equals(" ") ) {
             isValid = false;
-            //descriptionInput.setStyle( "-fx-background-color: #e6b3b3" );
+            descriptionInput.setStyle( "-fx-base: red;" );
         }
         return isValid;
     }

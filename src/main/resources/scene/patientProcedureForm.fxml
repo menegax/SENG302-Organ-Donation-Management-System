@@ -8,6 +8,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import javafx.scene.control.ToggleGroup?>
 <AnchorPane fx:id="procedureAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProcedureForm">
    <children>
       <Label alignment="CENTER" layoutX="145.0" layoutY="25.0" prefHeight="55.0" prefWidth="311.0" styleClass="title" stylesheets="@../css/guiStyle.css" text="Add Procedure" />
