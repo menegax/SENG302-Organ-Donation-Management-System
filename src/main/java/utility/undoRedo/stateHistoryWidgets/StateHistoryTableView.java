@@ -7,9 +7,6 @@ public class StateHistoryTableView extends StateHistoryControl {
 
     private TableView<String> tableView;
 
-    private boolean undone = false;
-
-
     /**
      * Constructor which adds the current (base) state of the tableView to the history
      *
@@ -42,7 +39,6 @@ public class StateHistoryTableView extends StateHistoryControl {
         if (index != 0) {
             index -= 1;
             tableView.getSelectionModel().select((String) states.get(index));
-            undone = true;
             return true;
         }
         return false;
@@ -52,7 +48,7 @@ public class StateHistoryTableView extends StateHistoryControl {
      * Resets the tableView to the state immediately prior to an undo
      */
     public boolean redo() {
-        if (undone && index + 1 < states.size()) {
+        if (index + 1 < states.size()) {
             index += 1;
             tableView.getSelectionModel().select((String) states.get(index));
             return true;
