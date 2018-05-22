@@ -1,6 +1,9 @@
 package controller;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -10,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.DrugInteraction;
+import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import service.OrganWaitlist;
 import utility.GlobalEnums.*;
@@ -19,6 +23,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -39,24 +44,10 @@ public class GUIClinicianWaitingList {
     private ObservableList<OrganWaitlist.OrganRequest> masterData = FXCollections.observableArrayList();
 
     @FXML
-    private ChoiceBox organSelection = new ChoiceBox(FXCollections.observableArrayList(Gender.getEnumFromString(
-            "liver"), Gender.getEnumFromString("kidney"), Gender.getEnumFromString("pancreas"),
-            Gender.getEnumFromString("heart"), Gender.getEnumFromString("lung"), Gender.getEnumFromString(
-            "intestine"), Gender.getEnumFromString("cornea"), Gender.getEnumFromString(
-            "middle ear"), Gender.getEnumFromString("skin"), Gender.getEnumFromString(
-            "bone"), Gender.getEnumFromString("bone marrow"),
-            Gender.getEnumFromString("connective tissue")));
+    private ChoiceBox<String> organSelection;
 
     @FXML
-    private ChoiceBox regionSelection = new ChoiceBox(FXCollections.observableArrayList(
-            Region.getEnumFromString("Northland"), Region.getEnumFromString("Auckland"),
-            Region.getEnumFromString("Waikato"), Region.getEnumFromString("Bay of Plenty"),
-            Region.getEnumFromString("Hawkes Bay"), Region.getEnumFromString("Taranaki"),
-            Region.getEnumFromString("Manawatu"), Region.getEnumFromString("Wellington"),
-            Region.getEnumFromString("Tasman"), Region.getEnumFromString("Nelson"),
-            Region.getEnumFromString("Marlborough"), Region.getEnumFromString("West Coast"),
-            Region.getEnumFromString("Canterbury"), Region.getEnumFromString("Otago"),
-            Region.getEnumFromString("Southland"), Region.getEnumFromString("Gisborne")));
+    private ChoiceBox<String> regionSelection;
 
     private UserControl userControl;
 
@@ -71,6 +62,7 @@ public class GUIClinicianWaitingList {
     	}
         populateTable();
     	setupDoubleClickToPatientEdit();
+        populateFilterChoiceBoxes();
     	//organSelection.getItems().add("liver");
     	//regionSelection.getItems().add("Auckland");
 
@@ -78,20 +70,20 @@ public class GUIClinicianWaitingList {
         //regionChoiceBoxActionListener();
     }
 
-    private void organChoiceBoxActionListener() {
-        organSelection.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            public void changed (ObservableValue organ, Number value, Number newValue) {
-                ;
-            }
-        });
-    }
 
-    private void regionChoiceBoxActionListener() {
-        regionSelection.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            public void changed (ObservableValue region, Number value, Number newValue) {
-                ;
-            }
-        });
+    /**
+     * Populates the choice boxes for filter
+     */
+    private void populateFilterChoiceBoxes(){
+        regionSelection.getItems().add(""); //for empty selection
+        for (Region region : Region.values()){ //add values to region choice box
+            regionSelection.getItems().add(StringUtils.capitalize(region.getValue()));
+        }
+        organSelection.getItems().add("");
+        for (Organ organ : Organ.values()){
+            organSelection.getItems().add(StringUtils.capitalize(organ.getValue()));
+        }
+
     }
 
     /**
@@ -146,7 +138,7 @@ public class GUIClinicianWaitingList {
     /**
      * Populates waiting list table with all patients waiting to receive an organ
      */
-    public void populateTable() {
+    private void populateTable() {
         // initialize columns
         nameCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getReceiverName()));
@@ -164,6 +156,43 @@ public class GUIClinicianWaitingList {
 
         // wrap ObservableList in a FilteredList
         FilteredList<OrganWaitlist.OrganRequest> filteredData = new FilteredList<>(masterData, d -> true);
+        organSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
+            if (newValue.equals("")){
+                if (regionSelection.getValue() == null || regionSelection.getValue().equals("")) { //check if region selection is null or ""
+                    return true;
+                } else if (OrganRequest.getRequestRegion() == null){ //if region is not given in donor
+                    return false;
+                }else if (OrganRequest.getRequestRegion().getValue().equals(regionSelection.getValue())){
+                    return true;
+                }
+            }
+            if (OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(newValue.toLowerCase())) {
+                if (regionSelection.getValue() == null || regionSelection.getValue().equals("")) {
+                    return true;
+                } else if (OrganRequest.getRequestRegion() != null) {
+                    return OrganRequest.getRequestRegion().getValue().toLowerCase().equals(regionSelection.getValue().toLowerCase());
+                }
+            }
+            return false;
+        }));
+
+        regionSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
+            if (newValue.equals("")){
+                if (organSelection.getValue() == null ||
+                        OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()) ||
+                        organSelection.getValue().equals("")){
+                    return true;
+                }
+            }
+            Region requestedRegion = OrganRequest.getRequestRegion();
+            if (requestedRegion != null) {
+                return requestedRegion.getValue().toLowerCase().equals(newValue.toLowerCase()) &&
+                        (organSelection.getValue() == null || organSelection.getValue().equals("")||
+                        OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()));
+            }
+            return false;
+        }));
+
 
         // wrap the FilteredList in a SortedList.
         SortedList<OrganWaitlist.OrganRequest> sortedData = new SortedList<>(filteredData);
