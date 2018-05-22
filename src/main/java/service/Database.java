@@ -6,6 +6,7 @@ import model.Disease;
 import model.Medication;
 import model.Patient;
 import utility.GlobalEnums;
+import utility.GlobalEnums.Region;
 import utility.SearchPatients;
 
 import java.io.*;
@@ -46,7 +47,7 @@ public class Database {
     }
 
 
-    //ToDo change to real database before submittion
+    //TODO change to real database before submittion
     private void initializeConnection() {
         try {
         	//TODO Uncomment for final product
@@ -87,7 +88,7 @@ public class Database {
         return null;
     }
 
-    //ToDo Complete
+    //TODO Complete
     private ArrayList<String[]> runSelectQuery(PreparedStatement query) throws SQLException {
         ResultSet resultSet = query.executeQuery();
         ArrayList<String[]> results = new ArrayList<>();
@@ -105,13 +106,13 @@ public class Database {
         return results;
     }
 
-    //ToDo Complete
+    //TODO Complete
     public void add(Object object) {
         if (object instanceof Patient) {
             addPatient((Patient) object);
         }
         else if (object instanceof Clinician) {
-
+        	addClinician((Clinician) object);
         }
     }
 
@@ -195,6 +196,25 @@ public class Database {
         return contactAttr;
     }
 
+    /**
+     * Gets a clinician's attributes and stores them in a String array
+     * @param clinician Clinician to get attributes from
+     * @return String[] clinician attributes
+     */
+    private String[] getClinicianAttributes(Clinician clinician) {
+    	String[] clinicianAttr = new String[9];
+    	clinicianAttr[0] = String.valueOf(clinician.getStaffID());
+    	clinicianAttr[1] = clinician.getFirstName();
+    	clinicianAttr[2] = String.join(" ", clinician.getMiddleNames());
+    	clinicianAttr[3] = clinician.getLastName();
+    	clinicianAttr[4] = clinician.getStreet1();
+    	clinicianAttr[5] = clinician.getStreet2();
+    	clinicianAttr[6] = clinician.getSuburb();
+    	clinicianAttr[7] = clinician.getRegion().toString();
+    	clinicianAttr[8] = clinician.getModified().toString();
+    	return clinicianAttr;
+    }
+    
     /**
      * Gets all attributes for a medication object
      * @param patient Patient who is taking or used to take the medication
@@ -283,6 +303,49 @@ public class Database {
         }
     }
 
+    /**
+     * Adds a clinician to the database
+     *
+     * @param newClinician the new clinician to add
+     */
+    private void addClinician(Clinician newClinician) throws IllegalArgumentException {
+        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getFirstName())) {
+            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: first name", "Attempted to add a clinician");
+            throw new IllegalArgumentException("firstname");
+        }
+
+        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getLastName())) {
+            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: last name", "Attempted to add a clinician");
+            throw new IllegalArgumentException("lastname");
+        }
+
+        if (newClinician.getStreet1() != null && !Pattern.matches("^[- a-zA-Z0-9]+$", newClinician.getStreet1())) {
+            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: street1", "Attempted to add a clinician");
+            throw new IllegalArgumentException("street1");
+        }
+
+        if (newClinician.getStaffID() == getNextStaffID()) {
+            clinicians.add(newClinician);
+            
+            String[] attr = getClinicianAttributes(newClinician);
+            String query = "INSERT INTO tblClinicians " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement stmt;
+			try {
+				stmt = setupQuery(query, attr);
+				runUpdateQuery(stmt);
+				userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
+			} catch (SQLException e) {
+	            userActions.log(Level.WARNING, "Couldn't add clinician due to database error", "Attempted to add a clinician");
+			}   
+        }
+
+        else {
+            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field staffID", "Attempted to add a clinician");
+            throw new IllegalArgumentException("staffID");
+        }
+    }
+    
     public void loadAll() {
         loadAllPatients();
         loadAllClinicians();
@@ -325,22 +388,53 @@ public class Database {
         return newPatient;
     }
 
-    private void loadAllPatients() {
-        ArrayList<String[]> patientsRaw = runQuery("SELECT * FROM tblPatients",null);
-        for (String[] attr : patientsRaw) {
-            patients.add(parsePatient(attr));
-        }
-    }
-
-    private void loadAllClinicians() {
-
-    }
+    /**
+     * Creates a clinician object from a String array of its attributes.
+     * @param attr String array of the clinicians attributes.
+     * @return The clinician object.
+     */
+	private Clinician parseClinician(String[] attr) {
+		int staffID = Integer.parseInt(attr[0]);
+	    String fName = attr[1];
+	    ArrayList<String> mNames = new ArrayList<>();
+	    mNames.addAll(Arrays.asList(attr[2].split(" ")));
+	    String lName = attr[3];
+	    String street1 = attr[4];
+	    String street2 = attr[5];
+	    String suburb = attr[6];
+	    Region region = GlobalEnums.Region.valueOf(attr[7]);
+	    Timestamp modified = Timestamp.valueOf(attr[8]);
+	    
+	    Clinician newClinician = new Clinician(staffID, fName, mNames, lName, street1, street2, suburb, region);
+	    newClinician.setModified(modified);
+		return newClinician;
+	}
+	
+	/**
+	 * Loads all patients into the application from the remote database.
+	 */
+	private void loadAllPatients() {
+	    ArrayList<String[]> patientsRaw = runQuery("SELECT * FROM tblPatients", null);
+	    for (String[] attr : patientsRaw) {
+	        patients.add(parsePatient(attr));
+	    }
+	}
+	
+	/**
+	 * Loads all clinicians into the application from the remote database.
+	 */
+	private void loadAllClinicians() {
+		ArrayList<String[]> clinicianRaw = runQuery("SELECT * FROM tblClincians", null);
+		for (String[] attr : clinicianRaw) {
+			clinicians.add(parseClinician(attr));
+		}
+	}
 
     private void loadWaitingList() {
 
     }
 
-////ToDo Local version remove?????
+////TODO Local version remove?????
 //    /**
 //     * Adds a patient to the database
 //     *
@@ -359,7 +453,38 @@ public class Database {
 //            throw new IllegalArgumentException(o.getMessage());
 //        }
 //    }
-
+//
+//    /**
+//     * Adds a clinician to the database
+//     *
+//     * @param newClinician the new clinician to add
+//     */
+//    private void addClinician(Clinician newClinician) throws IllegalArgumentException {
+//        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getFirstName())) {
+//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: first name", "Attempted to add a clinician");
+//            throw new IllegalArgumentException("firstname");
+//        }
+//
+//        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getLastName())) {
+//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: last name", "Attempted to add a clinician");
+//            throw new IllegalArgumentException("lastname");
+//        }
+//
+//        if (newClinician.getStreet1() != null && !Pattern.matches("^[- a-zA-Z0-9]+$", newClinician.getStreet1())) {
+//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: street1", "Attempted to add a clinician");
+//            throw new IllegalArgumentException("street1");
+//        }
+//
+//        if (newClinician.getStaffID() == getNextStaffID()) {
+//            clinicians.add(newClinician);
+//            userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
+//        }
+//
+//        else {
+//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field staffID", "Attempted to add a clinician");
+//            throw new IllegalArgumentException("staffID");
+//        }
+//    }
 
     /**
      * Removes a patient from the database
@@ -440,39 +565,6 @@ public class Database {
             }
         }
         throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
-    }
-
-
-    /**
-     * Adds a clinician to the database
-     *
-     * @param newClinician the new clinician to add
-     */
-    public void addClinician(Clinician newClinician) throws IllegalArgumentException {
-        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getFirstName())) {
-            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: first name", "Attempted to add a clinician");
-            throw new IllegalArgumentException("firstname");
-        }
-
-        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getLastName())) {
-            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: last name", "Attempted to add a clinician");
-            throw new IllegalArgumentException("lastname");
-        }
-
-        if (newClinician.getStreet1() != null && !Pattern.matches("^[- a-zA-Z0-9]+$", newClinician.getStreet1())) {
-            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: street1", "Attempted to add a clinician");
-            throw new IllegalArgumentException("street1");
-        }
-
-        if (newClinician.getStaffID() == getNextStaffID()) {
-            clinicians.add(newClinician);
-            userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
-        }
-
-        else {
-            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field staffID", "Attempted to add a clinician");
-            throw new IllegalArgumentException("staffID");
-        }
     }
 
 

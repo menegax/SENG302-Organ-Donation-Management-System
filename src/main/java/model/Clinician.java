@@ -172,6 +172,10 @@ public class Clinician extends User {
     }
 
     public Timestamp getModified() { return this.modified; }
+    
+    public void setModified(Timestamp modified) {
+    	this.modified = modified;
+    }
 
     public void clinicianModified() {
         this.modified = new Timestamp(System.currentTimeMillis());

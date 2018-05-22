@@ -108,7 +108,7 @@ public class Main extends Application {
 
         // if default clinician 0 not in db, add it
         if (!database.isClinicianInDb(0)) {
-            database.addClinician(new Clinician(0, "initial", new ArrayList<String>() {{
+            database.add(new Clinician(0, "initial", new ArrayList<String>() {{
                 add("Middle");
             }}, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
         }
