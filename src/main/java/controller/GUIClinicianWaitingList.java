@@ -155,7 +155,27 @@ public class GUIClinicianWaitingList {
         });
 
         // wrap ObservableList in a FilteredList
+        FilteredList<OrganWaitlist.OrganRequest> filteredData = filterMasterData();
+
+        // wrap the FilteredList in a SortedList.
+        SortedList<OrganWaitlist.OrganRequest> sortedData = new SortedList<>(filteredData);
+
+        // bind the SortedList comparator to the TableView comparator.
+        sortedData.comparatorProperty().bind(waitingListTableView.comparatorProperty());
+
+        // add sorted (and filtered) data to the table.
+        waitingListTableView.setItems(sortedData);
+
+    }
+
+    /**
+     * Create and add predicates to filterList to filter master data
+     * @return - filter list containing data that is filtered based on selections
+     */
+    private FilteredList<OrganWaitlist.OrganRequest> filterMasterData(){
         FilteredList<OrganWaitlist.OrganRequest> filteredData = new FilteredList<>(masterData, d -> true);
+
+        //add listener to organ choice box and add predicate
         organSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
             if (newValue.equals("")){
                 if (regionSelection.getValue() == null || regionSelection.getValue().equals("")) { //check if region selection is null or ""
@@ -176,6 +196,7 @@ public class GUIClinicianWaitingList {
             return false;
         }));
 
+        //add listener to organ choice box and add predicate
         regionSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
             if (newValue.equals("")){
                 if (organSelection.getValue() == null ||
@@ -188,21 +209,12 @@ public class GUIClinicianWaitingList {
             if (requestedRegion != null) {
                 return requestedRegion.getValue().toLowerCase().equals(newValue.toLowerCase()) &&
                         (organSelection.getValue() == null || organSelection.getValue().equals("")||
-                        OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()));
+                                OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()));
             }
             return false;
         }));
 
-
-        // wrap the FilteredList in a SortedList.
-        SortedList<OrganWaitlist.OrganRequest> sortedData = new SortedList<>(filteredData);
-
-        // bind the SortedList comparator to the TableView comparator.
-        sortedData.comparatorProperty().bind(waitingListTableView.comparatorProperty());
-
-        // add sorted (and filtered) data to the table.
-        waitingListTableView.setItems(sortedData);
-
+        return filteredData;
     }
     
     /**
