@@ -58,8 +58,10 @@ public class GUIPatientProcedureForm extends UndoableController {
             add(dateInput);
         }};
         for (MenuItem menuItem : affectedInput.getItems()) { //Adding organ checkboxes to the undo/redo controls
+            if (((CustomMenuItem) menuItem).getContent() instanceof CheckBox) {
             CheckBox checkbox = (CheckBox) ((CustomMenuItem) menuItem).getContent();
             controls.add(checkbox);
+            }
         }
         statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTPROCEDUREFORM);
     }
