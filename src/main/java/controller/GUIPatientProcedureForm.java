@@ -8,10 +8,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import model.Patient;
 import model.Procedure;
+import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -49,6 +52,12 @@ public class GUIPatientProcedureForm extends UndoableController {
     public void initialize() {
         patient = new UserControl().getTargetPatient();
         setupDonations();
+        controls = new ArrayList<Control>() {{
+            add(summaryInput);
+            add(descriptionInput);
+            add(dateInput);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTPROCEDUREFORM);
     }
 
     /**

@@ -739,6 +739,9 @@ public class Patient extends User {
     }
 
     public List<Procedure> getProcedures() {
+        if (procedures == null) {
+            procedures = new ArrayList<>();
+        }
         return procedures;
     }
 
