@@ -165,7 +165,8 @@ public class GUIClinicianSearchPatients implements Initializable {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     } else if (newValue.toLowerCase().equals( "male" ) || newValue.toLowerCase().equals("female")) {
-                        return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() );
+                        //return SearchPatients.searchByGender(newValue).contains(patient);
+                        return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() ); // ------------------------------this is where it fails!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
                     return SearchPatients.searchByName(newValue)
                             .contains(patient);

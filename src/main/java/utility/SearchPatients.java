@@ -243,4 +243,59 @@ public class SearchPatients {
 		}
         return results;
     }
+
+//    /**
+//     * Searches through the index for patients by full name.
+//     * @param input The name you want to search for.
+//     * @return ArrayList of the patients it found as a result of the search.
+//     */
+//    public static ArrayList<Patient> searchByGender(String input) {
+//
+//        if (input.isEmpty()) {
+//            return getDefaultResults();
+//        }
+//
+//        ArrayList<Patient> results = new ArrayList<>();
+//        FuzzyQuery query = new FuzzyQuery(new Term("birthGender", input.toLowerCase()));
+//
+//        TopDocs docs;
+//        ArrayList<ScoreDoc> allDocs = new ArrayList<ScoreDoc>();
+//        try {
+//            Patient patient;
+//            docs = searchQuery(query);
+//            for (ScoreDoc doc : docs.scoreDocs) {
+//                allDocs.add(doc);
+//            }
+//
+//            Collections.sort(allDocs, new Comparator<ScoreDoc>() {
+//                @Override
+//                public int compare(ScoreDoc o1, ScoreDoc o2) {
+//                    int comparison = new Float(o2.score).compareTo(o1.score);
+//                    if (comparison == 0) {
+//                        try {
+//                            comparison = fetchPatient(o1).getNameConcatenated()
+//                                    .compareTo(fetchPatient(o2).getNameConcatenated());
+//                        } catch (IOException e) {
+//                            userActions.log(Level.SEVERE, "Unable to get patient from database", "Attempted to get patient from database");
+//                        }
+//                    }
+//                    return comparison;
+//                }
+//            });
+//
+//            int docCount = 0;
+//            int patientCount = 0;
+//            while (docCount < allDocs.size() && patientCount < NUM_RESULTS) {
+//                patient = fetchPatient(allDocs.get(docCount));
+//                if (!results.contains(patient)) {
+//                    results.add(patient);
+//                    patientCount += 1;
+//                }
+//                docCount += 1;
+//            }
+//        } catch (IOException e) {
+//            userActions.log(Level.SEVERE, "Unable to search patients by name", "Attempted to search patients by name");
+//        }
+//        return results;
+//    }
 }
