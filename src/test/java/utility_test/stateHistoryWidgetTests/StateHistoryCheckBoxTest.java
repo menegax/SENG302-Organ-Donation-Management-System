@@ -1,4 +1,4 @@
-package model_test.stateHistoryWidgetTests;
+package utility_test.stateHistoryWidgetTests;
 
 import com.sun.javafx.application.PlatformImpl;
 import javafx.scene.control.CheckBox;
@@ -19,10 +19,9 @@ public class StateHistoryCheckBoxTest {
 
     /**
      * Creates the checkbox to be used and sets up the JavaFX environment so JavaFX objects can be created
-     * @throws InterruptedException if the JavaFX environment is interrupted
      */
     @BeforeClass
-    public static void setup() throws InterruptedException{
+    public static void setup() {
         PlatformImpl.startup(() -> {});
         checkBox = new CheckBox();
         checkBox.setSelected(false);

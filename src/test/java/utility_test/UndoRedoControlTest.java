@@ -1,4 +1,4 @@
-package controller_test;
+package utility_test;
 
 import com.sun.javafx.application.PlatformImpl;
 import controller.UndoRedoControl;
@@ -33,7 +33,7 @@ public class UndoRedoControlTest {
     /**
      * Tests that the controls are set to the states of the statesHistoryScreen if and only if setStates is called
      */
-    @Ignore //Todo
+//    @Ignore //Todo
     @Test
     public void testSetStates() {
         resetControls();

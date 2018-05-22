@@ -1,13 +1,6 @@
-package model_test.stateHistoryWidgetTests;
+package utility_test.stateHistoryWidgetTests;
 
-import com.sun.javafx.application.PlatformImpl;
 import javafx.scene.control.DatePicker;
-import utility.undoRedo.stateHistoryWidgets.StateHistoryDatePicker;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
