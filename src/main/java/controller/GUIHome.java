@@ -73,7 +73,7 @@ public class GUIHome {
 
 
     /**
-     *
+     * Creates and adds tab to the tabpane
      * @param title - title of the new tab
      * @param fxmlPath - path of the fxml to be loaded
      */
@@ -92,8 +92,8 @@ public class GUIHome {
     }
 
     /**
-     *
-     * @throws IOException
+     * Adds tabs to the home tabpane for a patient logged in
+     * @throws IOException - if fxml cannot be located
      */
     private void addTabsPatient() throws IOException {
         createTab("Profile", "/scene/patientProfile.fxml");
@@ -106,8 +106,8 @@ public class GUIHome {
 
 
     /**
-     *
-     * @throws IOException
+     * Adds tabs for a clinician viewing a patient
+     * @throws IOException- if fxml cannot be located
      */
     private void addTabsForPatientClinician() throws IOException{
         createTab("Profile", "/scene/patientProfile.fxml");
@@ -119,8 +119,8 @@ public class GUIHome {
 
 
     /**
-     *
-     * @throws IOException
+     * Adds tabs for a logged in clinician
+     * @throws IOException- if fxml cannot be located
      */
     private void addTabsClinician() throws IOException {
         createTab("Profile", "/scene/clinicianProfile.fxml");
