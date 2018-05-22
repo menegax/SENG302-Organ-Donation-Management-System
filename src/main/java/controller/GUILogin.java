@@ -103,7 +103,6 @@ public class GUILogin {
                 screenControl.show(stage.getUUID(), clinicianHome);
             }
             catch (Exception e) {
-                e.printStackTrace();
                 userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to log in");
                 alert.show();

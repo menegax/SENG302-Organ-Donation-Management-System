@@ -55,6 +55,7 @@ public class SearchPatientsTest {
 
         // Then searching by new first name returns correct results
         ArrayList<Patient> results = SearchPatients.searchByName("Ande Lafey");
+        System.out.println(results);
         assertTrue(results.contains(Database.getPatientByNhi("abc1234")));
     }
 

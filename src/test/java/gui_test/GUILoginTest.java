@@ -4,11 +4,13 @@ import controller.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import model.Clinician;
 import model.Patient;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -18,6 +20,7 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 import controller.UserControl;
+import utility.GlobalEnums;
 
 import static java.util.logging.Level.OFF;
 import static junit.framework.TestCase.assertEquals;
@@ -42,6 +45,8 @@ public class GUILoginTest extends ApplicationTest {
 
     private String existingNhi = "TFX9999";
 
+    private int existingStaffId = 0;
+
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -55,6 +60,11 @@ public class GUILoginTest extends ApplicationTest {
                 "Bloggs",
                 LocalDate.of(1990, 2, 9)));
 
+        // add dummy clinician
+        Database.addClinician(new Clinician(existingStaffId, "initial", new ArrayList<String>() {{
+            add("Middle");
+        }}, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
+
         main.start(stage);
     }
 
@@ -66,27 +76,64 @@ public class GUILoginTest extends ApplicationTest {
 
 
     @Test
-    public void ValidCredentials() {
+    public void PatientValidCredentials() {
         givenCredentials(existingNhi);
+        givenClinicianToggle(false);
         whenClickLogIn();
-        verifyThat("#homePane", Node::isVisible);
+        thenHomePaneVisible();
     }
 
 
     @Test
-    public void NonExistentPatient() {
+    public void PatientNonExistent() {
         givenCredentials("ABD1234");
+        givenClinicianToggle(false);
         whenClickLogIn();
         thenNoPatientLoggedIn();
         thenAlertIsWarning();
     }
 
+
     @Test
-    public void BlankInput() {
+    public void PatientBlankInput() {
         givenCredentials("");
+        givenClinicianToggle(false);
         whenClickLogIn();
         thenNoPatientLoggedIn();
         thenAlertIsWarning();
+    }
+
+
+    @Test
+    public void ClinicianValidCredentials() {
+        givenCredentials(String.valueOf(existingStaffId));
+        givenClinicianToggle(true);
+        whenClickLogIn();
+        thenHomePaneVisible();
+    }
+
+
+    @Test
+    public void ClinicianBlankInput() {
+        givenCredentials(String.valueOf(""));
+        givenClinicianToggle(true);
+        whenClickLogIn();
+        thenAlertIsWarning();
+    }
+
+
+    @Test
+    public void ClinicianNonExistent() {
+        givenCredentials(String.valueOf(1234567890));
+        givenClinicianToggle(true);
+        whenClickLogIn();
+        thenAlertIsWarning();
+    }
+
+
+    private void givenClinicianToggle(boolean toggle) {
+        lookup("#clinicianToggle").queryAs(CheckBox.class)
+                .setSelected(toggle);
     }
 
 
@@ -105,7 +152,12 @@ public class GUILoginTest extends ApplicationTest {
 
     private void thenNoPatientLoggedIn() {
         assertThat(userControl.isUserLoggedIn());
-//        assertThat(((Patient) userControl.getLoggedInUser()).getNhiNumber() == null);
+        //        assertThat(((Patient) userControl.getLoggedInUser()).getNhiNumber() == null);
+    }
+
+
+    private void thenHomePaneVisible() {
+        verifyThat("#homePane", Node::isVisible);
     }
 
 
