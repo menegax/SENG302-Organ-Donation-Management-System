@@ -23,6 +23,10 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
 
     private Main main = new Main();
 
+    String existingPatientNhi1 = "TFX9999";
+
+    String existingPatientNhi2 = "TFX9998";
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -30,15 +34,8 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
         Database.resetDatabase();
 
         // add dummy patients
-        ArrayList<String> dal = new ArrayList<>();
-        dal.add("Middle");
-        Database.addPatient(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getPatientByNhi("TFX9999")
-                .addDonation(GlobalEnums.Organ.LIVER);
-        Database.getPatientByNhi("TFX9999")
-                .addDonation(GlobalEnums.Organ.CORNEA);
-
-        Database.addPatient(new Patient("TFX9998", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.addPatient(new Patient(existingPatientNhi1, "Joe", null, "Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.addPatient(new Patient(existingPatientNhi2, "Joe", null, "Bloggs", LocalDate.of(1990, 2, 9)));
 
 
         main.start(stage);
@@ -46,10 +43,10 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
         // log in
         interact(() -> {
             lookup("#nhiLogin").queryAs(TextField.class)
-                    .setText("TFX9999");
-            lookup("#loginButton").queryAs(Button.class)
+                    .setText(existingPatientNhi1);
+            lookup("#loginButton").queryButton()
                     .fire();
-            lookup("#profileButton").queryAs(Button.class)
+            lookup("#profileButton").queryButton()
                     .fire();
         });
 

@@ -165,7 +165,7 @@ public class GUILoginTest extends ApplicationTest {
      * Ensures an alert exists with the title "Warning"
      *
      * <p>
-     * The Alert popup is then closed by clicking a button with string "OK"
+     * The Alert is then closed by clicking a button with string "OK"
      * </p>
      */
     private void thenAlertIsWarning() {
