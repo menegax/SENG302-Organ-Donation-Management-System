@@ -85,6 +85,7 @@ public class GUILogin {
                 UndoableStage stage = new UndoableStage();
                 screenControl.addStage(stage.getUUID(), stage);
                 screenControl.show(stage.getUUID(), homeScreen);
+                screenControl.closeStage(Main.getUuid());
             }
             catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "Failed to log in", "Attempted to log in");
