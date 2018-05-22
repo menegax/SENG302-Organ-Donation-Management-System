@@ -29,11 +29,9 @@ import java.util.logging.Level;
 
 public class GUIClinicianSearchPatients implements Initializable {
 
-    private static final int X = 30; // Constant for the maximum default number of profiles returned in a search
+    private static final int X = 1; // Constant for the maximum default number of profiles returned in a search
 
-    private static final int MAX_RESULTS = 200; // The maximum number of results possible to display
-
-    private static int numResultsSelected; // The number of results selected by clicking either X or Y buttons
+    private static final int MAX_RESULTS = 3; // The maximum number of results possible to display
 
     @FXML
     private TableView<Patient> patientDataTable;
@@ -63,8 +61,7 @@ public class GUIClinicianSearchPatients implements Initializable {
     private Button displayY;
 
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
-
-    private String searchValue;  // For setting a search value to so when toggling number of views can refresh table
+    private ObservableList<Patient> filteredList = FXCollections.observableArrayList();
 
 
     /**
@@ -75,13 +72,12 @@ public class GUIClinicianSearchPatients implements Initializable {
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
+        setDisplaySearchResultsButton( true, false );
         FilteredList<Patient> filteredData = setupTableColumnsAndData();
-
         setupSearchingListener(filteredData);
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
         searchEntry.setPromptText( "There are " + getProfileCount() + " profiles" );
-        setDisplaySearchResultsButton( true, false );
     }
 
 
@@ -164,8 +160,13 @@ public class GUIClinicianSearchPatients implements Initializable {
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             masterData.clear();
             masterData.addAll(SearchPatients.searchByName(newValue));
-
             filteredData.setPredicate(patient -> true);
+
+            if (filteredData.size() < X) {
+                setDisplaySearchResultsButton( true, false );
+            } else {
+                setDisplaySearchResultsButton( false, true );
+            }
         });
 
         // wrap the FilteredList in a SortedList.
@@ -177,6 +178,12 @@ public class GUIClinicianSearchPatients implements Initializable {
 
         // add sorted (and filtered) data to the table.
         patientDataTable.setItems(sortedData);
+
+        if (masterData.size() < X) {
+            setDisplaySearchResultsButton( true, false );
+        } else {
+            setDisplaySearchResultsButton( false, true );
+        }
         return filteredData;
     }
 
@@ -190,7 +197,7 @@ public class GUIClinicianSearchPatients implements Initializable {
         // set the filter Predicate whenever the filter changes.
         searchEntry.textProperty()
                 .addListener((observable, oldValue, newValue) -> filteredData.setPredicate(patient -> {
-                    if (getProfileCount() <= X) {
+                    if (SearchPatients.filteredResults.size() < X) {
                         setDisplaySearchResultsButton( true, false );
                     } else {
                         setDisplaySearchResultsButton( false, true );
@@ -199,10 +206,8 @@ public class GUIClinicianSearchPatients implements Initializable {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
-                    searchValue = newValue;
                     return SearchPatients.searchByName(newValue)
                             .contains(patient);
-
                 }));
     }
 
@@ -211,8 +216,9 @@ public class GUIClinicianSearchPatients implements Initializable {
      */
     @FXML
     private void displayDefaultProfiles() {
-        numResultsSelected = X;
-        SearchPatients.filterNumberSearchResults(numResultsSelected);
+        filteredList.clear();
+        filteredList.addAll( SearchPatients.filterNumberSearchResults(X) );
+        patientDataTable.setItems( filteredList );
     }
 
     /**
@@ -220,9 +226,12 @@ public class GUIClinicianSearchPatients implements Initializable {
      */
     @FXML
     private void displayCustomProfiles() {
-        numResultsSelected = MAX_RESULTS;
-        SearchPatients.filterNumberSearchResults(numResultsSelected);
+        filteredList.clear();
+        filteredList.addAll( SearchPatients.filterNumberSearchResults(MAX_RESULTS) );
+        patientDataTable.setItems( filteredList );
     }
+
+
 
     /**
      * Sets disable/visible for the buttons displaying X or Y number of profiles from a search
@@ -246,7 +255,7 @@ public class GUIClinicianSearchPatients implements Initializable {
      * @return An integer value representing the total number of profiles returned from the search
      */
     private int getProfileCount() {
-       return patientDataTable.getItems().size();
+       return SearchPatients.totalResults.size();
     }
 
 

@@ -25,8 +25,6 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.logging.Level;
 
-import static utility.UserActionHistory.userActions;
-
 public class SearchPatients {
 
     private static Analyzer analyzer = new StandardAnalyzer();
@@ -40,6 +38,8 @@ public class SearchPatients {
     private static IndexSearcher indexSearcher = null;
 
     public static ArrayList<Patient> totalResults = new ArrayList<>();
+
+    public static ArrayList<Patient> filteredResults = new ArrayList <>();
 
     private static final int NUM_RESULTS = 30; // The default number of results to display if more than 30 results
 
@@ -188,7 +188,7 @@ public class SearchPatients {
      * @return Number of profiles equal to the number selected for displaying
      */
     public static ArrayList<Patient> filterNumberSearchResults(int numResults) {
-        ArrayList<Patient> filteredResults = new ArrayList <>();
+        filteredResults = new ArrayList <>();
         for (int i = 0; i < numResults && i < totalResults.size(); i++) {
             filteredResults.add(totalResults.get( i ));
         }
@@ -201,7 +201,6 @@ public class SearchPatients {
      * @return ArrayList of the patients it found as a result of the search.
      */
     public static ArrayList<Patient> searchByName(String input) {
-
         if (input.isEmpty()) {
             return getDefaultResults();
         }
