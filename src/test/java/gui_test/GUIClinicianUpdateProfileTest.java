@@ -45,7 +45,7 @@ public class GUIClinicianUpdateProfileTest extends ApplicationTest {
 
     private Main main = new Main();
 
-    private int existingStaffId = 1;
+    private int existingStaffId = Database.getNextStaffID();
 
     private int clinicianUpdateProfileTabIndex = 2;
 
