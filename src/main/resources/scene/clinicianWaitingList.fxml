@@ -24,7 +24,7 @@
         </columns>
       </TableView>
       <Button fx:id="backButton" layoutX="14.0" layoutY="25.0" mnemonicParsing="false" onAction="#goToClinicianHome" text="Back" />
-        <ChoiceBox fx:id="organSelection" layoutX="302" layoutY="65" text="Organs" />
-        <ChoiceBox fx:id="regionSelection" layoutX="413" layoutY="65" text="Regions" />
+        <ChoiceBox fx:id="organSelection" layoutX="302" layoutY="350" />
+        <ChoiceBox fx:id="regionSelection" layoutX="413" layoutY="350" />
     </children>
 </AnchorPane>

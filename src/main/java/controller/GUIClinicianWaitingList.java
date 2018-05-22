@@ -39,24 +39,10 @@ public class GUIClinicianWaitingList {
     private ObservableList<OrganWaitlist.OrganRequest> masterData = FXCollections.observableArrayList();
 
     @FXML
-    private ChoiceBox organSelection = new ChoiceBox(FXCollections.observableArrayList(Gender.getEnumFromString(
-            "liver"), Gender.getEnumFromString("kidney"), Gender.getEnumFromString("pancreas"),
-            Gender.getEnumFromString("heart"), Gender.getEnumFromString("lung"), Gender.getEnumFromString(
-            "intestine"), Gender.getEnumFromString("cornea"), Gender.getEnumFromString(
-            "middle ear"), Gender.getEnumFromString("skin"), Gender.getEnumFromString(
-            "bone"), Gender.getEnumFromString("bone marrow"),
-            Gender.getEnumFromString("connective tissue")));
+    private ChoiceBox organSelection;
 
     @FXML
-    private ChoiceBox regionSelection = new ChoiceBox(FXCollections.observableArrayList(
-            Region.getEnumFromString("Northland"), Region.getEnumFromString("Auckland"),
-            Region.getEnumFromString("Waikato"), Region.getEnumFromString("Bay of Plenty"),
-            Region.getEnumFromString("Hawkes Bay"), Region.getEnumFromString("Taranaki"),
-            Region.getEnumFromString("Manawatu"), Region.getEnumFromString("Wellington"),
-            Region.getEnumFromString("Tasman"), Region.getEnumFromString("Nelson"),
-            Region.getEnumFromString("Marlborough"), Region.getEnumFromString("West Coast"),
-            Region.getEnumFromString("Canterbury"), Region.getEnumFromString("Otago"),
-            Region.getEnumFromString("Southland"), Region.getEnumFromString("Gisborne")));
+    private ChoiceBox regionSelection;
 
     private UserControl userControl;
 
@@ -65,7 +51,25 @@ public class GUIClinicianWaitingList {
      * to view a patient's profile.
      */
     public void initialize() {
-    	OrganWaitlist waitingList = Database.getWaitingList();
+        organSelection.setItems( FXCollections.observableArrayList(
+                Organ.getEnumFromString( "liver"), Organ.getEnumFromString("kidney"),
+                Organ.getEnumFromString("pancreas"), Organ.getEnumFromString("heart"),
+                Organ.getEnumFromString("lung"), Organ.getEnumFromString( "intestine"),
+                Organ.getEnumFromString("cornea"), Organ.getEnumFromString( "middle ear"),
+                Organ.getEnumFromString("skin"), Organ.getEnumFromString( "bone"),
+                Organ.getEnumFromString("bone marrow"), Organ.getEnumFromString("connective tissue")));
+
+        regionSelection.setItems( FXCollections.observableArrayList(
+                Region.getEnumFromString("Northland"), Region.getEnumFromString("Auckland"),
+                Region.getEnumFromString("Waikato"), Region.getEnumFromString("Bay of Plenty"),
+                Region.getEnumFromString("Hawkes Bay"), Region.getEnumFromString("Taranaki"),
+                Region.getEnumFromString("Manawatu"), Region.getEnumFromString("Wellington"),
+                Region.getEnumFromString("Tasman"), Region.getEnumFromString("Nelson"),
+                Region.getEnumFromString("Marlborough"), Region.getEnumFromString("West Coast"),
+                Region.getEnumFromString("Canterbury"), Region.getEnumFromString("Otago"),
+                Region.getEnumFromString("Southland"), Region.getEnumFromString("Gisborne")));
+
+        OrganWaitlist waitingList = Database.getWaitingList();
         for (OrganWaitlist.OrganRequest request: waitingList) {
     		masterData.add(request);
     	}
