@@ -62,12 +62,6 @@ public class GUIPatientProfile {
     private Label nameLbl;
 
     @FXML
-    private Label genderIdentityLbl;
-
-    @FXML
-    private Label birthGenderLbl;
-
-    @FXML
     public Label vitalLbl1;
 
     @FXML
@@ -106,8 +100,11 @@ public class GUIPatientProfile {
     @FXML
     private Label addLbl5;
 
-    //@FXML
-    //private ListView<String> organList;
+    @FXML
+    private Label genderDeclaration;
+
+    @FXML
+    private Label genderStatus;
 
     @FXML
     private ListView receivingList;
@@ -212,9 +209,14 @@ public class GUIPatientProfile {
         Patient patient = Database.getPatientByNhi(nhi);
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
-        genderIdentityLbl.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender()
-                .getValue());
-        birthGenderLbl.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue());
+        if (userControl.getLoggedInUser() instanceof Clinician) {
+            genderDeclaration.setText( "Gender assigned at birth: " );
+            genderStatus.setText( patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue() );
+        } else {
+            genderDeclaration.setText( "Gender identity: " );
+            genderStatus.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender()
+                    .getValue());
+        }
         vitalLbl1.setText(patient.getDeath() == null ? "Alive" : "Deceased");
         dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
