@@ -357,7 +357,7 @@ public class GUIPatientUpdateRequirements {
                 ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
                 ScreenControl.activate("patientProfile");
             } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
+                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the required organs page to the profile page");
                 new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
             }
         } else {

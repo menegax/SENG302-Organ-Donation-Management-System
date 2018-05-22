@@ -10,10 +10,14 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Patient;
 import utility.GlobalEnums;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 public class GUIRequiredOrganDeregistrationReason {
 
@@ -24,7 +28,7 @@ public class GUIRequiredOrganDeregistrationReason {
     private Label dateOfDeathLabel;
 
     @FXML
-    private ChoiceBox<String> reasons;
+    private ChoiceBox<GlobalEnums.DeregistrationReason> reasons;
 
     @FXML
     private Button okButton;
@@ -37,6 +41,8 @@ public class GUIRequiredOrganDeregistrationReason {
 
     @FXML
     private Label reasonTitle;
+
+    private GlobalEnums.Organ organ;
 
     private UserControl userControl;
 
@@ -60,11 +66,11 @@ public class GUIRequiredOrganDeregistrationReason {
      */
     private void populateDropdown() {
         // Populate blood group drop down with values from the Blood groups enum
-        List<String> deregistrationReasons = new ArrayList<>();
+        List<GlobalEnums.DeregistrationReason> deregistrationReasons = new ArrayList<>();
         for (GlobalEnums.DeregistrationReason reason : GlobalEnums.DeregistrationReason.values()) {
-            deregistrationReasons.add(reason.getValue());
+            deregistrationReasons.add(reason);
         }
-        ObservableList<String> deregistrationReasonsOL = FXCollections.observableList(deregistrationReasons);
+        ObservableList<GlobalEnums.DeregistrationReason> deregistrationReasonsOL = FXCollections.observableList(deregistrationReasons);
         reasons.setItems(deregistrationReasonsOL);
     }
 
@@ -73,13 +79,14 @@ public class GUIRequiredOrganDeregistrationReason {
      */
     private void populateForm() {
         dateOfDeath.setValue(LocalDate.now());
-        reasons.setValue(GlobalEnums.DeregistrationReason.ERROR.getValue());
+        reasons.setValue(GlobalEnums.DeregistrationReason.ERROR);
     }
 
     /**
      * sets the label with organ name
      */
     public void setOrgan(GlobalEnums.Organ organ) {
+        this.organ = organ;
         pleaseSpecify.setText("Please specify a reason for removing " + organ + ": ");
         reasonTitle.setText("Deregistration of " + StringUtils.capitalize(organ.toString()));
     }
@@ -88,6 +95,17 @@ public class GUIRequiredOrganDeregistrationReason {
      * saves the reason why the clinician removed a organ from the patient required organs list
      */
     public void saveReason() {
+        GlobalEnums.DeregistrationReason reason = reasons.getSelectionModel().getSelectedItem();
+        Patient target = userControl.getTargetPatient();
+        if (reason == GlobalEnums.DeregistrationReason.ERROR) {
+            userActions.log(Level.INFO, "Deregistered " + organ + " due to error", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+        } else if (reason == GlobalEnums.DeregistrationReason.CURED) {
+            userActions.log(Level.INFO, "Deregistered " + organ + " due to cure", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+        } else if (reason == GlobalEnums.DeregistrationReason.DIED) {
+            userActions.log(Level.INFO, "Deregistered " + organ + " due to death", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+        } else if (reason == GlobalEnums.DeregistrationReason.RECEIVED) {
+            userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+        }
         Stage reasonStage = (Stage)requiredOrganDeregistrationReasonPane.getScene().getWindow();
         reasonStage.close();
         //GUIPatientUpdateRequirements.setClosed(true);
