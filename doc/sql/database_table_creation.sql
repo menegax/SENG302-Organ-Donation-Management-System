@@ -70,6 +70,7 @@ FOREIGN KEY(Patient) REFERENCES tblPatients(Nhi)
 CREATE TABLE tblMedications(
 Patient CHAR(7),
 Name VARCHAR(50),
+State TINYINT(1),
 PRIMARY KEY(Patient, Name),
 FOREIGN KEY(Patient) REFERENCES tblPatients(Nhi)
 );

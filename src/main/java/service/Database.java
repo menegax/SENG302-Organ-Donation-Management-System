@@ -2,6 +2,8 @@ package service;
 
 import com.google.gson.Gson;
 import model.Clinician;
+import model.Disease;
+import model.Medication;
 import model.Patient;
 import utility.GlobalEnums;
 import utility.SearchPatients;
@@ -159,6 +161,65 @@ public class Database {
     }
 
     /**
+     * Gets a patient's contact details and stores them in a String array
+     * @param patient Patient to get attributes from
+     * @return String[] contact attributes
+     */
+    private String[] getPatientContactAttributes(Patient patient) {
+        String[] contactAttr = new String[16];
+        contactAttr[0] = patient.getNhiNumber();
+        contactAttr[1] = patient.getStreet1();
+        contactAttr[2] = patient.getStreet2();
+        contactAttr[3] = patient.getSuburb();
+        contactAttr[4] = patient.getRegion().toString();
+        contactAttr[5] = String.valueOf(patient.getZip());
+        contactAttr[6] = patient.getHomePhone();
+        contactAttr[7] = patient.getWorkPhone();
+        contactAttr[8] = patient.getMobilePhone();
+        contactAttr[9] = patient.getEmailAddress();
+        contactAttr[10] = patient.getContactName();
+        contactAttr[11] = patient.getContactRelationship();
+        contactAttr[12] = patient.getContactHomePhone();
+        contactAttr[13] = patient.getContactWorkPhone();
+        contactAttr[14] = patient.getContactMobilePhone();
+        contactAttr[15] = patient.getContactEmailAddress();
+        return contactAttr;
+    }
+
+    /**
+     * Gets all attributes for a medication object
+     * @param patient Patient who is taking or used to take the medication
+     * @param medication The medication used by the patient
+     * @return String[] medication attributes
+     */
+    public String[] getMedicationAtttributes(Patient patient, Medication medication) {
+        String[] medAttr = new String[2];
+        medAttr[0] = patient.getNhiNumber();
+        medAttr[1] = medication.getMedicationName();
+        medAttr[2] = "1";
+        return medAttr;
+    }
+
+    /**
+     * Gets all attributes for a disease object
+     * @param patient Patient with disease
+     * @param disease Disease to get attributes from
+     * @return String[] disease attributes
+     */
+    public String[] getDiseaseAttributes(Patient patient, Disease disease) {
+        String[] diseaseAttr = new String[4];
+        diseaseAttr[0] = patient.getNhiNumber();
+        diseaseAttr[1] = disease.getDiseaseName();
+        diseaseAttr[2] = disease.getDateDiagnosed().toString();
+        switch (disease.getDiseaseState().toString()) {
+            case "chronic": diseaseAttr[3] = "1"; break;
+            case "cured": diseaseAttr[3] = "2"; break;
+            default: diseaseAttr[3] = "0";
+        }
+        return diseaseAttr;
+    }
+
+    /**
      * Adds a patient to the database
      *
      * @param newPatient the new patient to add
@@ -175,6 +236,36 @@ public class Database {
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = setupQuery(query, attr);
             runUpdateQuery(stmt);
+
+            String[] contactAttr = getPatientContactAttributes(newPatient);
+            String contactQuery = "INSERT INTO tblPatientContact " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement contactStmt = setupQuery(contactQuery, contactAttr);
+            runUpdateQuery(contactStmt);
+
+            for(Medication medication : newPatient.getCurrentMedications()) {
+                String[] medAttr = getMedicationAtttributes(newPatient, medication);
+                String medQuery = "INSERT INTO tblMedications VALUES (?, ?)";
+                PreparedStatement medStmt = setupQuery(medQuery, medAttr);
+                runUpdateQuery(medStmt);
+            }
+
+            for(Medication medication : newPatient.getMedicationHistory()) {
+                String[] medAttr = getMedicationAtttributes(newPatient, medication);
+                String medQuery = "INSERT INTO tblMedications VALUES (?, ?)";
+                PreparedStatement medStmt = setupQuery(medQuery, medAttr);
+                runUpdateQuery(medStmt);
+            }
+
+            ArrayList<Disease> allDiseases = newPatient.getCurrentDiseases();
+            allDiseases.addAll(newPatient.getPastDiseases());
+            for(Disease disease : allDiseases) {
+                String[] diseaseAttr = getDiseaseAttributes(newPatient, disease);
+                String diseaseQuery = "INSERT INTO tblDiseases VALUES (?, ?, ?, ?)";
+                PreparedStatement diseaseStmt = setupQuery(diseaseQuery, diseaseAttr);
+                runUpdateQuery(diseaseStmt);
+            }
+
             userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
         }
         catch (SQLException o) {
