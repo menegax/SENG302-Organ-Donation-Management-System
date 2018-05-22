@@ -14,7 +14,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Clinician;
@@ -97,10 +96,10 @@ public class GUIHome {
      */
     private void addTabsPatient() throws IOException {
         createTab("Profile", "/scene/patientProfile.fxml");
-        createTab("Update", "/scene/testUpdate.fxml");
-        createTab("Donations", "/scene/testDonationUpdate.fxml");
+        createTab("Update", "/scene/patientProfileUpdate.fxml");
+        createTab("Donations", "/scene/patientDonationUpdate.fxml");
         createTab("History", "/scene/patientHistory.fxml");
-        createTab("Contact Details", "/scene/testPatientContactUpdate.fxml");
+        createTab("Contact Details", "/scene/patientContactUpdate.fxml");
         //todo setUpMenuBar() call here
     }
 
@@ -111,10 +110,10 @@ public class GUIHome {
      */
     private void addTabsForPatientClinician() throws IOException{
         createTab("Profile", "/scene/patientProfile.fxml");
-        createTab("Update", "/scene/testUpdate.fxml");
+        createTab("Update", "/scene/patientProfileUpdate.fxml");
         createTab("Medications", "/scene/patientMedication.fxml");
-        createTab("Donations", "/scene/testDonationUpdate.fxml");
-        createTab("Contact Details", "/scene/testPatientContactUpdate.fxml");
+        createTab("Donations", "/scene/patientDonationUpdate.fxml");
+        createTab("Contact Details", "/scene/patientContactUpdate.fxml");
     }
 
 
