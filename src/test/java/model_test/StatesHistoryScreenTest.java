@@ -38,10 +38,9 @@ public class StatesHistoryScreenTest {
 
     /**
      * Creates the widgets to be used and sets up the JavaFX environment so JavaFX objects can be created
-     * @throws InterruptedException if the JavaFX environment is interrupted
      */
     @BeforeClass
-    public static void setup() throws InterruptedException{
+    public static void setup() {
         PlatformImpl.startup(() -> {});
         textField1 = new TextField();
         textField2 = new TextField();

@@ -1,4 +1,4 @@
-package testfx;
+package helper;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
