@@ -40,15 +40,17 @@ public class GUIHome {
 
 
     @FXML
-    public void initialize() { //Todo catch exception
-        //Todo possibly create a smart way to check logged in user type
-        // and then create the tabs based off that
+    public void initialize() {
         UserControl userControl = new UserControl();
         try {
             if (userControl.getLoggedInUser() instanceof Patient){
                 addTabsPatient();
             } else if (userControl.getLoggedInUser() instanceof Clinician) {
-                addTabsClinican();
+                if (userControl.getTargetPatient() != null) {
+                    addTabsForPatientClinician(); //if we are a clinician looking at a patient
+                } else {
+                    addTabsClinician();
+                }
             }
 
             horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
@@ -70,73 +72,59 @@ public class GUIHome {
     }
 
 
-    private void addTabsPatient() throws IOException {
-        // create profile tab and add fxml into
-        Tab profileViewTab = new Tab();
-        profileViewTab.setOnSelectionChanged(event -> {
+    /**
+     *
+     * @param title - title of the new tab
+     * @param fxmlPath - path of the fxml to be loaded
+     */
+    private void createTab(String title, String fxmlPath) throws IOException {
+        Tab newTab = new Tab();
+        newTab.setText(title);
+        newTab.setOnSelectionChanged(event -> {
             try {
-                profileViewTab.setContent(FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
             } catch (IOException e) {
                 e.printStackTrace(); //todo: remove
             }
         });
-        profileViewTab.setText("Profile");
-        Pane pane = FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml"));
-        profileViewTab.setContent(pane);
-        horizontalTabPane.getTabs().add(profileViewTab);
+        newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
+        horizontalTabPane.getTabs().add(newTab);
+    }
 
-        Tab updateProfileTab = new Tab();
-        updateProfileTab.setText("Update");
-        Pane updatePane = FXMLLoader.load(getClass().getResource("/scene/testUpdate.fxml"));
-        updateProfileTab.setContent(updatePane);
-        horizontalTabPane.getTabs().add(updateProfileTab);
-
-        Tab patientDonationsTab = new Tab();
-        patientDonationsTab.setText("Donations");
-        Pane donationsPane = FXMLLoader.load(getClass().getResource("/scene/testDonationUpdate.fxml"));
-        patientDonationsTab.setContent(donationsPane);
-        horizontalTabPane.getTabs().add(patientDonationsTab);
-
-
-        // create history tab and add fxml into
-        Tab historyViewTab = new Tab();
-        historyViewTab.setText("History");
-        historyViewTab.setContent(FXMLLoader.<Pane>load(getClass().getResource("/scene/patientHistory.fxml")));
-        horizontalTabPane.getTabs().add(historyViewTab);
-
-
-        //TODO: remove to clinician pop up
-        Tab medicationsTab = new Tab();
-        medicationsTab.setText("Medication");
-        Pane medicationPane = FXMLLoader.load(getClass().getResource("/scene/patientMedication.fxml"));
-        medicationsTab.setContent(medicationPane);
-        horizontalTabPane.getTabs().add(medicationsTab);
-
-        Tab contactsTab = new Tab();
-        contactsTab.setText("Contact Details");
-        Pane contactsPane = FXMLLoader.load(getClass().getResource("/scene/testPatientContactUpdate.fxml"));
-        contactsTab.setContent(contactsPane);
-        horizontalTabPane.getTabs().add(contactsTab);
-
-
+    /**
+     *
+     * @throws IOException
+     */
+    private void addTabsPatient() throws IOException {
+        createTab("Profile", "/scene/patientProfile.fxml");
+        createTab("Update", "/scene/testUpdate.fxml");
+        createTab("Donations", "/scene/testDonationUpdate.fxml");
+        createTab("History", "/scene/patientHistory.fxml");
+        createTab("Contact Details", "/scene/testPatientContactUpdate.fxml");
         //todo setUpMenuBar() call here
-
     }
 
 
+    /**
+     *
+     * @throws IOException
+     */
+    private void addTabsForPatientClinician() throws IOException{
+        createTab("Profile", "/scene/patientProfile.fxml");
+        createTab("Update", "/scene/testUpdate.fxml");
+        createTab("Medications", "/scene/patientMedication.fxml");
+        createTab("Donations", "/scene/testDonationUpdate.fxml");
+        createTab("Contact Details", "/scene/testPatientContactUpdate.fxml");
+    }
 
-    private void addTabsClinican() throws IOException {
-        Tab clinicianProfileTab = new Tab();
-        clinicianProfileTab.setText("Profile");
-        Pane clinicianProfilePane = FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml"));
-        clinicianProfileTab.setContent(clinicianProfilePane);
-        horizontalTabPane.getTabs().add(clinicianProfileTab);
 
-        Tab searchTab = new Tab();
-        searchTab.setText("Search Patients");
-        Pane searchPane = FXMLLoader.load(getClass().getResource("/scene/clinicianSearchPatients.fxml"));
-        searchTab.setContent(searchPane);
-        horizontalTabPane.getTabs().add(searchTab);
+    /**
+     *
+     * @throws IOException
+     */
+    private void addTabsClinician() throws IOException {
+        createTab("Profile", "/scene/clinicianProfile.fxml");
+        createTab("Search Patients", "/scene/clinicianSearchPatients.fxml");
     }
 
 

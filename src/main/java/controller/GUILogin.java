@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
 import service.Database;
-import utility.GlobalEnums;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
@@ -80,6 +79,7 @@ public class GUILogin {
         if (!clinicianToggle.isSelected()) {
             try {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
+                login.clearCache(); //clear cache on user login
                 login.addLoggedInUserToCache(newPatient);
                 Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
                 UndoableStage stage = new UndoableStage();
@@ -98,9 +98,9 @@ public class GUILogin {
                 Clinician newClinician = Database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
                 login.addLoggedInUserToCache(newClinician);
                 UndoableStage stage = new UndoableStage();
-                Parent clincianHome = FXMLLoader.load((getClass().getResource("/scene/home.fxml")));
+                Parent clinicianHome = FXMLLoader.load((getClass().getResource("/scene/home.fxml")));
                 screenControl.addStage(stage.getUUID(), stage);
-                screenControl.show(stage.getUUID(), clincianHome);
+                screenControl.show(stage.getUUID(), clinicianHome);
             }
             catch (Exception e) {
                 e.printStackTrace();

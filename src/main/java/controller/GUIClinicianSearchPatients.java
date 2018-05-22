@@ -90,7 +90,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     .getSelectedItem() != null) {
                 try {
                     userControl.setTargetPatient(patientDataTable.getSelectionModel().getSelectedItem());
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     UndoableStage popUpStage = new UndoableStage();
                     screenControl.addStage(popUpStage.getUUID(), popUpStage);
                     screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
@@ -99,6 +99,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
                 }
                 catch (Exception e) {
+                    e.printStackTrace(); //todo remove
                     userActions.log(Level.SEVERE,
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");

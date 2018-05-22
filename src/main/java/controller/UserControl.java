@@ -87,7 +87,7 @@ public class UserControl {
     /**
      * Clears cache, removes all key value pairs
      */
-    void clearCahce(){
+    void clearCache(){
         clear();
     } //Todo fix typo
 
