@@ -240,7 +240,7 @@ public class GUIPatientRegister {
             }
             LocalDate birth = birthRegister.getValue();
 
-            database.addPatient(new Patient(nhi, firstName, middles, lastName, birth));
+            database.add(new Patient(nhi, firstName, middles, lastName, birth));
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
             database.saveToDisk();
             clearFields();

@@ -40,10 +40,10 @@ public class SearchPatientsTest {
         d2 = new Patient("def1234", "Patik", new ArrayList<String>(), "Laffey", LocalDate.now());
         d3 = new Patient("ghi1234", "George", new ArrayList<String>(), "Romera", LocalDate.now());
         d4 = new Patient("jkl1234", "George", new ArrayList<String>(), "Bobington", LocalDate.now());
-        database.addPatient(d4);
-        database.addPatient(d3);
-        database.addPatient(d2);
-        database.addPatient(d1);
+        database.add(d4);
+        database.add(d3);
+        database.add(d2);
+        database.add(d1);
 
         SearchPatients.clearIndex();
         
@@ -116,7 +116,7 @@ public class SearchPatientsTest {
     	int count = 0;
     	for (String lName : lastNames) {
     		for (String fName : firstNames) {
-    			database.addPatient(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
+    			database.add(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
     			count += 1;
     		}
     	}
@@ -150,7 +150,7 @@ public class SearchPatientsTest {
     	int count = 0;
     	for (String lName : lastNames) {
     		for (String fName : firstNames) {
-    			database.addPatient(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
+    			database.add(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
     			count += 1;
     		}
     	}
@@ -179,10 +179,10 @@ public class SearchPatientsTest {
         d2 = new Patient("def1234", "Patik", null, "Laffey", LocalDate.now());
         d3 = new Patient("ghi1234", "George", null, "Romera", LocalDate.now());
         d4 = new Patient("jkl1234", "George", null, "Bobington", LocalDate.now());
-        database.addPatient(d4);
-        database.addPatient(d3);
-        database.addPatient(d2);
-        database.addPatient(d1);
+        database.add(d4);
+        database.add(d3);
+        database.add(d2);
+        database.add(d1);
 
         SearchPatients.clearIndex();
 
@@ -232,10 +232,10 @@ public class SearchPatientsTest {
         d2 = new Patient("def1234", "Patik", null, "Laffey", LocalDate.now());
         d3 = new Patient("ghi1234", "George", null, "Romera", LocalDate.now());
         d4 = new Patient("jkl1234", "George", null, "Bobington", LocalDate.now());
-        database.addPatient(d4);
-        database.addPatient(d3);
-        database.addPatient(d2);
-        database.addPatient(d1);
+        database.add(d4);
+        database.add(d3);
+        database.add(d2);
+        database.add(d1);
 
         SearchPatients.clearIndex();
 
@@ -262,10 +262,10 @@ public class SearchPatientsTest {
         d2 = new Patient("def9876", "Johnothan", null, "zzne", LocalDate.now());
         d3 = new Patient("ghi9876", "John", null, "Romera", LocalDate.now());
         d4 = new Patient("jkl9876", "Samantha", null, "Fon", LocalDate.now());
-        database.addPatient(d4);
-        database.addPatient(d3);
-        database.addPatient(d2);
-        database.addPatient(d1);
+        database.add(d4);
+        database.add(d3);
+        database.add(d2);
+        database.add(d1);
 
         SearchPatients.clearIndex();
 

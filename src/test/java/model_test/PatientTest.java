@@ -35,12 +35,12 @@ public class PatientTest {
         testPatient = new Patient("ABC1234", "James", null, "Wallace",
                 LocalDate.of(1970, 2, 12));
 
-        database.addPatient(new Patient("XYZ9876", "Joe", new ArrayList<String>() {{
+        database.add(new Patient("XYZ9876", "Joe", new ArrayList<String>() {{
             add("Jane");
         }},
                 "Bloggs", LocalDate.of(1994, 12, 12)));
 
-        database.addPatient(new Patient("DEF4567", "Bob", null, "Bobby",
+        database.add(new Patient("DEF4567", "Bob", null, "Bobby",
                 LocalDate.of(1994, 12, 12)));
 
         testPatient1 = new Patient("JJJ1234", "Rex", null, "Petsberg",

@@ -38,7 +38,7 @@ class CLIPatientAdd implements Runnable {
     public void run() {
         Patient patient = new Patient(nhi, firstName, middleNames, lastName, birth);
         try {
-            database.addPatient(patient);
+            database.add(patient);
         } catch(IllegalArgumentException i){
             userActions.log(Level.SEVERE, i.getMessage(), "attempted to add patient");
         }

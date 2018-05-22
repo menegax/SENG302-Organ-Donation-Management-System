@@ -644,7 +644,7 @@ public class Database {
         String stmt = "SELECT * FROM tblPatients WHERE LName = ?";
         String[] params = {"Joeson"};
         ArrayList<String[]> results = test.runQuery(stmt, params);
-        System.out.println("All Pateints with last name Joeson");
+        System.out.println("All Patients with last name Joeson");
         for (String[] col: results) {
             System.out.println(String.join(" ", col));
         }

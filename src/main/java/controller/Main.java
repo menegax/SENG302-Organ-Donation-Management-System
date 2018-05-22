@@ -74,7 +74,7 @@ public class Main extends Application {
             ArrayList<String> middles = new ArrayList<>();
             middles.add("Middle");
             middles.add("Xavier");
-            database.addPatient(new Patient("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
+            database.add(new Patient("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
             database.getPatientByNhi("ABC1238")
                     .addDonation(GlobalEnums.Organ.LIVER);
             database.getPatientByNhi("ABC1238")
@@ -84,7 +84,7 @@ public class Main extends Application {
             database.getPatientByNhi("ABC1238")
                     .setGender(GlobalEnums.Gender.OTHER);
 
-            database.addPatient(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
+            database.add(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
             database.getPatientByNhi("ABC1234")
                     .addDonation(GlobalEnums.Organ.LIVER);
             database.getPatientByNhi("ABC1234")

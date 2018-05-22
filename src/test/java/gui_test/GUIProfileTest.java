@@ -40,7 +40,7 @@ public class GUIProfileTest extends ApplicationTest {
         // add dummy patient
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        database.addPatient(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
+        database.add(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
         database.getPatientByNhi("TFX9999")
                 .addDonation(GlobalEnums.Organ.LIVER);
         database.getPatientByNhi("TFX9999")
