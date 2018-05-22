@@ -39,9 +39,9 @@ public class SearchPatients {
 
     private static IndexSearcher indexSearcher = null;
 
-    private static ArrayList<Patient> totalResults = new ArrayList<>();
+    public static ArrayList<Patient> totalResults = new ArrayList<>();
 
-    private static final int NUM_RESULTS = 30;
+    private static final int NUM_RESULTS = 30; // The default number of results to display if more than 30 results
 
 
     /**
@@ -157,17 +157,17 @@ public class SearchPatients {
      * @return First num_results patients from a alphabetical ordering.
      */
     public static ArrayList<Patient> getDefaultResults() {
-        ArrayList<Patient> default_patients = new ArrayList<>(Database.getPatients());
-		default_patients.sort((o1, o2) -> { // sort by concatenated name
+        totalResults = new ArrayList<>(Database.getPatients());
+        totalResults.sort((o1, o2) -> { // sort by concatenated name
             int comparison;
             comparison = o1.getNameConcatenated()
                     .compareTo(o2.getNameConcatenated());
             return comparison;
         });
-		if (default_patients.size() > 30) {
-            default_patients = new ArrayList<>(default_patients.subList(0, NUM_RESULTS)); // truncate into size num_results
+		if (totalResults.size() > 30) {
+            totalResults = new ArrayList<>(totalResults.subList(0, NUM_RESULTS)); // truncate into size num_results
         }
-    	return default_patients;
+    	return totalResults;
     }
     
     /**
@@ -193,7 +193,6 @@ public class SearchPatients {
             filteredResults.add(totalResults.get( i ));
         }
         return filteredResults;
-
     }
     
     /**
@@ -209,7 +208,7 @@ public class SearchPatients {
 
         String[] names = input.split(" ");
 
-    	//ArrayList<Patient> results = new ArrayList<>();
+    	totalResults = new ArrayList<>();
         ArrayList<FuzzyQuery> queries = new ArrayList<>();
         for (String name : names) {
             queries.add(new FuzzyQuery(new Term("fName", name.toUpperCase()), 2));

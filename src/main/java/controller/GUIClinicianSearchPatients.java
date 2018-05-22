@@ -31,6 +31,8 @@ public class GUIClinicianSearchPatients implements Initializable {
 
     private static final int X = 30; // Constant for the maximum default number of profiles returned in a search
 
+    private static final int MAX_RESULTS = 200; // The maximum number of results possible to display
+
     private static int numResultsSelected; // The number of results selected by clicking either X or Y buttons
 
     @FXML
@@ -57,6 +59,9 @@ public class GUIClinicianSearchPatients implements Initializable {
     @FXML
     private Button displayX;
 
+    @FXML
+    private Button displayY;
+
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
 
     private String searchValue;  // For setting a search value to so when toggling number of views can refresh table
@@ -76,7 +81,7 @@ public class GUIClinicianSearchPatients implements Initializable {
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
         searchEntry.setPromptText( "There are " + getProfileCount() + " profiles" );
-        setDisplayDefaultProfilesButton( true, false );
+        setDisplaySearchResultsButton( true, false );
     }
 
 
@@ -186,9 +191,9 @@ public class GUIClinicianSearchPatients implements Initializable {
         searchEntry.textProperty()
                 .addListener((observable, oldValue, newValue) -> filteredData.setPredicate(patient -> {
                     if (getProfileCount() <= X) {
-                        setDisplayDefaultProfilesButton( true, false );
+                        setDisplaySearchResultsButton( true, false );
                     } else {
-                        setDisplayDefaultProfilesButton( false, true );
+                        setDisplaySearchResultsButton( false, true );
                     }
                     // If filter text is empty, display all persons.
                     if (newValue == null || newValue.isEmpty()) {
@@ -211,13 +216,29 @@ public class GUIClinicianSearchPatients implements Initializable {
     }
 
     /**
-     * Sets the button for displaying the default number of profiles from a search
+     * Displays only the first X=30 profiles to the search patients table if more than X results from search
+     */
+    @FXML
+    private void displayCustomProfiles() {
+        numResultsSelected = MAX_RESULTS;
+        SearchPatients.filterNumberSearchResults(numResultsSelected);
+    }
+
+    /**
+     * Sets disable/visible for the buttons displaying X or Y number of profiles from a search
      * @param a The boolean for whether the button is disabled
      * @param b The boolean for whether the button is visible
      */
-    private void setDisplayDefaultProfilesButton(boolean a, boolean b) {
+    private void setDisplaySearchResultsButton(boolean a, boolean b) {
         displayX.setDisable( a );
         displayX.setVisible( b );
+        displayY.setDisable( a );
+        displayY.setVisible( b );
+        if (SearchPatients.totalResults.size() < MAX_RESULTS) {
+            displayY.setText( "Display total " + SearchPatients.totalResults.size() + " profiles" );
+        } else {
+            displayY.setText( "Display total " + MAX_RESULTS + " profiles" );
+        }
     }
 
     /**
