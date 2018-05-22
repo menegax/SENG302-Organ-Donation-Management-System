@@ -302,10 +302,10 @@ public class GUIPatientUpdateRequirements {
         Set<GlobalEnums.Organ> removedOrgans = initialRequirements;
         removedOrgans.removeAll(finalRequirements);
 
-        Iterator<GlobalEnums.Organ> iter = removedOrgans.iterator();
-        GlobalEnums.Organ organ = iter.next();
-        openReasonPopup(organ);
-        removedOrgans.remove(organ);
+        for(GlobalEnums.Organ organ : removedOrgans) {
+            openReasonPopup(organ);
+            target.removeRequired(organ);
+        }
     }
 
     private void openReasonPopup(GlobalEnums.Organ organ) {
