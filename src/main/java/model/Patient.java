@@ -119,7 +119,7 @@ public class Patient extends User {
 
     //TODO add pref name and gender. Add procedures.
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
-                   Timestamp created, Timestamp modified, LocalDate death, double height, double weight,
+                   Timestamp created, Timestamp modified, LocalDate death, GlobalEnums.Gender gender, double height, double weight,
                    BloodGroup bloodType, ArrayList<Organ> donations, ArrayList<Organ> receiving, String street1,
                    String street2, String suburb, Region region, int zip, String homePhone, String workPhone,
                    String mobilePhone, String emailAddress, String contactName, String contactRelationship,
@@ -135,6 +135,7 @@ public class Patient extends User {
         this.CREATED = created;
         this.modified = modified;
         this.death = death;
+        this.gender = gender;
         this.height = height;
         this.weight = weight;
         this.bloodGroup = bloodType;

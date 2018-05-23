@@ -472,6 +472,11 @@ public class Database {
         return new UserActionRecord(timestamp, level, message, action);
     }
 
+    private String[] parsePatientContacts(String nhi) throws SQLException {
+        String[] contactsRaw = runQuery("SELECT * FROM tblPatientContact WHERE Patient = " + nhi, null).get(0);
+        return Arrays.copyOfRange(contactsRaw, 1, contactsRaw.length);
+    }
+
     private Patient parsePatient(String[] attr) {
         String nhi = attr[0];
         String fName = attr[1];
@@ -507,8 +512,15 @@ public class Database {
         ArrayList<Disease> pastDiseases = new ArrayList<>();
         ArrayList<Medication> currentMeds = new ArrayList<>();
         ArrayList<Medication> medHistory = new ArrayList<>();
+        GlobalEnums.Region region = null;
+        int zip = 0;
+        String[] contactAttr = new String[15];
         try {
             //TODO rewrite method to do medication history and current assigning within load method
+            contactAttr = parsePatientContacts(nhi);
+            //3 and 4 need parsing
+            region = GlobalEnums.Region.valueOf(contactAttr[3]);
+            zip = Integer.parseInt(contactAttr[4]);
             ArrayList<Medication>[] meds = loadMedications(nhi);
             currentMeds = meds[0];
             medHistory = meds[1];
@@ -521,10 +533,13 @@ public class Database {
         }
 
         return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, height, weight,
-                bloodType, donations, requested);
+                bloodType, donations, requested, contactAttr[0], contactAttr[1], contactAttr[2], region, zip,
+                contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
+                contactAttr[11], contactAttr[12], contactAttr[13], contactAttr[14], null, currentDiseases,
+                pastDiseases, currentMeds, medHistory);
     }
 
-    private ArrayList<Medication>[] loadMedications(String nhi) throws InvalidObjectException, SQLException {
+    private ArrayList<Medication>[] loadMedications(String nhi) throws SQLException {
         ArrayList<String[]> medicationsRaw = runQuery("SELECT * FROM tblMedications WHERE Patient = " + nhi, null);
         ArrayList<Medication> currentMedications = new ArrayList<>();
         ArrayList<Medication> medicationHistory = new ArrayList<>();
