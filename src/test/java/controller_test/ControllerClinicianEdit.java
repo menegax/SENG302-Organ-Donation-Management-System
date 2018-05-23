@@ -341,5 +341,5 @@ public class ControllerClinicianEdit extends ApplicationTest {
         assertThat(!Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStreet1().equals("12 RD"));
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
-    
+
 }
