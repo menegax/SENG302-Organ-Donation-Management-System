@@ -119,6 +119,7 @@ public class GUIHome {
         createTab("Donations", "/scene/patientUpdateDonations.fxml");
         createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
         createTab("Requested Donations", "/scene/testPatientUpdateRequirements.fxml");
+        createTab("View Diseases","/scene/testClinicianDiagnosis.fxml");
     }
 
 
