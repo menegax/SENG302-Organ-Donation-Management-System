@@ -4,18 +4,19 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="requiredOrganDeregistrationReasonPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="219.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIRequiredOrganDeregistrationReason">
+<AnchorPane fx:id="requiredOrganDeregistrationReasonPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="219.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIRequiredOrganDeregistrationReason">
     <children>
         <Label fx:id="reasonTitle" layoutX="25.0" layoutY="14.0" prefHeight="55.0" prefWidth="545.0" styleClass="title" stylesheets="@../css/guiStyle.css" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
         <Button fx:id="okButton1" layoutX="483.0" layoutY="169.0" mnemonicParsing="false" onAction="#saveReason" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="OK" />
         <Label fx:id="pleaseSpecify" layoutX="30.0" layoutY="69.0" />
         <DatePicker fx:id="dateOfDeath" editable="false" focusTraversable="false" layoutX="29.0" layoutY="169.0" prefHeight="26.0" prefWidth="435.0" promptText="Date of death" />
         <Label fx:id="dateOfDeathLabel" layoutX="30.0" layoutY="139.0" text="Date of Death:" />
-        <ChoiceBox fx:id="reasons" layoutX="30.0" layoutY="99.0" prefHeight="27.0" prefWidth="435.0"  onAction="#reasonSelected"/>
+        <ChoiceBox fx:id="reasons" layoutX="30.0" layoutY="99.0" onAction="#reasonSelected" prefHeight="27.0" prefWidth="435.0" />
       <Button fx:id="okButton" layoutX="483.0" layoutY="100.0" mnemonicParsing="false" onAction="#saveReason" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="OK" />
-      <ChoiceBox fx:id="diseaseCured" layoutX="29.0" layoutY="168.0" prefHeight="27.0" prefWidth="435.0" />
       <Label fx:id="curedLabel" layoutX="30.0" layoutY="139.0" text="Cured Disease:" />
+      <MenuButton fx:id="diseaseCured" layoutX="30.0" layoutY="168.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="435.0" text="Diseases" />
     </children>
 </AnchorPane>

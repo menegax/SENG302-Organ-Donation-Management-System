@@ -4,18 +4,23 @@ import com.sun.xml.internal.ws.util.StringUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import utility.GlobalEnums;
+
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -47,7 +52,7 @@ public class GUIRequiredOrganDeregistrationReason {
     private Label curedLabel;
 
     @FXML
-    private ChoiceBox<Disease> diseaseCured;
+    private MenuButton diseaseCured;
 
     private GlobalEnums.Organ organ;
 
@@ -91,6 +96,13 @@ public class GUIRequiredOrganDeregistrationReason {
             for (GlobalEnums.DeregistrationReason reason : GlobalEnums.DeregistrationReason.values()) {
                 deregistrationReasons.add(reason);
             }
+            Set<CustomMenuItem> diseaseItems = new HashSet<>();
+            for (Disease disease : target.getCurrentDiseases()) {
+                CustomMenuItem menuItem = new CustomMenuItem(new CheckBox(disease.getDiseaseName()));
+                menuItem.setHideOnClick(false);
+                diseaseItems.add(menuItem);
+            }
+            diseaseCured.getItems().setAll(diseaseItems);
         }
         ObservableList<GlobalEnums.DeregistrationReason> deregistrationReasonsOL = FXCollections.observableList(deregistrationReasons);
         reasons.setItems(deregistrationReasonsOL);
@@ -156,7 +168,17 @@ public class GUIRequiredOrganDeregistrationReason {
         if (reason == GlobalEnums.DeregistrationReason.ERROR) {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to error", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         } else if (reason == GlobalEnums.DeregistrationReason.CURED) {
-            userActions.log(Level.INFO, "Deregistered " + organ + " due to cure", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+            List<String> selected = new ArrayList<>();
+            for (MenuItem menuItem : diseaseCured.getItems()) {
+                Node content = ((CustomMenuItem) menuItem).getContent();
+                if (content instanceof CheckBox) {
+                    if (((CheckBox) content).isSelected()) {
+                        selected.add(((CheckBox) content).getText());
+                    }
+                }
+            }
+            String diseaseCuredString = selected.size() == 0 ? "" : " Cured: " + String.join(",", selected);
+            userActions.log(Level.INFO, "Deregistered " + organ + " due to cure." + diseaseCuredString, new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         } else if (reason == GlobalEnums.DeregistrationReason.DIED) {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to death", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         } else if (reason == GlobalEnums.DeregistrationReason.RECEIVED) {
