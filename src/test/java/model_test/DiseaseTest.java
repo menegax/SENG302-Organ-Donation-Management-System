@@ -36,7 +36,7 @@ public class DiseaseTest {
      */
     @Test(expected = InvalidObjectException.class)
     public void setDateDiagnosedInFutureTest() throws InvalidObjectException{
-        disease.setDateDiagnosed(LocalDate.of(2050,12,12), diseaseCarrier);
+        disease.setDateDiagnosed(LocalDate.of(2050,12,12), diseaseCarrier.getBirth());
     }
 
 
@@ -46,7 +46,7 @@ public class DiseaseTest {
      */
     @Test(expected = InvalidObjectException.class)
     public void setDateDiagnosedBeforePatientBirthTest() throws InvalidObjectException{
-        disease.setDateDiagnosed(LocalDate.of(2000,12,12), diseaseCarrier);
+        disease.setDateDiagnosed(LocalDate.of(2000,12,12), diseaseCarrier.getBirth());
     }
 
     /**
@@ -55,7 +55,7 @@ public class DiseaseTest {
     @Test
     public void setDateDiagnosedBirthTest() throws InvalidObjectException{
         LocalDate dateDiagnosed = LocalDate.of(2018,02,12);
-        disease.setDateDiagnosed(dateDiagnosed, diseaseCarrier);
+        disease.setDateDiagnosed(dateDiagnosed, diseaseCarrier.getBirth());
         Assert.assertEquals(disease.getDateDiagnosed(), dateDiagnosed);
     }
 

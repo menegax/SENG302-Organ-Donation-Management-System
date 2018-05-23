@@ -16,8 +16,13 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 
 	
 	public OrganWaitlist() {
-		database = Database.getDatabase();
 	    requests = new TreeSet<OrganRequest>();
+	}
+
+	public void checkDatabase() {
+		if(database == null) {
+			database = Database.getDatabase();
+		}
 	}
 	
 	/**
@@ -27,6 +32,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	 * @return			- Returns true if Collection changed otherwise false.
 	 */
 	public boolean add(Patient receiver, Organ organ) {
+		checkDatabase();
 		OrganRequest request = new OrganRequest(receiver, organ);
 		database.saveTransplantRequest(request);
 	    return requests.add(request);

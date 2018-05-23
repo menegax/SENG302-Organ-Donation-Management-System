@@ -58,7 +58,7 @@ public class Database {
     }
 
 
-    //TODO change to real database before submittion
+    //TODO change to real database before submission
 
     /**
      * Initialize the connection to the remote database.
@@ -66,12 +66,12 @@ public class Database {
     private void initializeConnection() {
         try {
             //TODO Uncomment for final product
-            //conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test",
-            //        "seng302-team800", "ScornsGammas5531");
+            conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test",
+                    "seng302-team800", "ScornsGammas5531");
 
             //TODO Uncomment for outside Patricks network
-            conn = DriverManager.getConnection("jdbc:mysql://122.62.50.128:3306/seng302-2018-team800-test",
-                    "seng302-team800", "ScornsGammas5531");
+//            conn = DriverManager.getConnection("jdbc:mysql://122.62.50.128:3306/seng302-2018-team800-test",
+//                    "seng302-team800", "ScornsGammas5531");
 
             //TODO Uncomment for inside Patricks network
 //            conn = DriverManager.getConnection("jdbc:mysql://192.168.1.70:3306/seng302-2018-team800-test",
@@ -197,7 +197,9 @@ public class Database {
         attr[10] = null;
         attr[11] = String.valueOf(patient.getHeight() * 100);
         attr[12] = String.valueOf(patient.getWeight());
-        attr[13] = patient.getBloodGroup().toString();
+        if(patient.getBloodGroup() != null) {
+            attr[13] = patient.getBloodGroup().toString();
+        }
         attr[14] = String.join(",", patient.getDonations().toString())
                 .replaceAll("\\[", "").replaceAll("\\]", "");
         attr[15] = String.join(",", patient.getRequiredOrgans().toString())
@@ -217,7 +219,9 @@ public class Database {
         contactAttr[1] = patient.getStreet1();
         contactAttr[2] = patient.getStreet2();
         contactAttr[3] = patient.getSuburb();
-        contactAttr[4] = patient.getRegion().toString();
+        if(patient.getRegion() != null) {
+            contactAttr[4] = patient.getRegion().toString();
+        }
         contactAttr[5] = String.valueOf(patient.getZip());
         contactAttr[6] = patient.getHomePhone();
         contactAttr[7] = patient.getWorkPhone();
@@ -306,6 +310,11 @@ public class Database {
         return recordAttr;
     }
 
+    /**
+     * Gets all attributes for a transplant request
+     * @param request
+     * @return
+     */
     private String[] getTransplantRequestAttributes(OrganWaitlist.OrganRequest request) {
         String[] attr = new String[4];
         attr[0] = request.getReceiverNhi();
@@ -435,12 +444,20 @@ public class Database {
         }
     }
 
+    /**
+     * loads all data from databae into application
+     */
     public void loadAll() {
         loadAllPatients();
         loadAllClinicians();
         loadTransplantWaitingList();
     }
 
+    /**
+     * Loads all organs for a patient and stores them in an ArrayList
+     * @param organs arraylist of loaded organs
+     * @return
+     */
     private ArrayList<GlobalEnums.Organ> loadOrgans(String organs) {
         String[] organArray = organs.split(",");
         ArrayList<GlobalEnums.Organ> organArrayList = new ArrayList<>();
@@ -450,6 +467,11 @@ public class Database {
         return organArrayList;
     }
 
+    /**
+     * Loads user action logs for a patient
+     * @param nhi Patient nhi
+     * @return ArrayList all logs for the patient
+     */
     private ArrayList<UserActionRecord> loadPatientLogs(String nhi) {
         ArrayList<UserActionRecord> patientLogs = new ArrayList<>();
         try {
@@ -464,6 +486,11 @@ public class Database {
         return patientLogs;
     }
 
+    /**
+     * Parses a user log from a string array of attributes from the database
+     * @param attr log attributes from database
+     * @return UserActionRecord user action log entry
+     */
     private UserActionRecord parseLog(String[] attr) {
         Timestamp timestamp = Timestamp.valueOf(attr[1]);
         Level level = Level.parse(attr[2]);
@@ -472,11 +499,23 @@ public class Database {
         return new UserActionRecord(timestamp, level, message, action);
     }
 
+    /**
+     * Gets the contact details for a patient from the database and returns all attributes except the patient's NHI in a
+     * String array
+     * @param nhi Patient's nhi number
+     * @return String array of patient contacts
+     * @throws SQLException returned if SELECT operation from database fails
+     */
     private String[] parsePatientContacts(String nhi) throws SQLException {
         String[] contactsRaw = runQuery("SELECT * FROM tblPatientContact WHERE Patient = " + nhi, null).get(0);
         return Arrays.copyOfRange(contactsRaw, 1, contactsRaw.length);
     }
 
+    /**
+     * Creates a patient object from a string array of attributes retrieved from the server
+     * @param attr String array of attributes
+     * @return Patient parsed patient
+     */
     private Patient parsePatient(String[] attr) {
         String nhi = attr[0];
         String fName = attr[1];
@@ -539,6 +578,13 @@ public class Database {
                 pastDiseases, currentMeds, medHistory);
     }
 
+    /**
+     * Gets all diseases for a patient and sorts them into two arraylists of past and current medications.
+     * Returns an ArrayList array of current and past medications
+     * @param nhi Patient nhi
+     * @return ArrayList array of current and past medications
+     * @throws SQLException returned if SELECT operation from database fails
+     */
     private ArrayList<Medication>[] loadMedications(String nhi) throws SQLException {
         ArrayList<String[]> medicationsRaw = runQuery("SELECT * FROM tblMedications WHERE Patient = " + nhi, null);
         ArrayList<Medication> currentMedications = new ArrayList<>();
@@ -552,6 +598,15 @@ public class Database {
         return medArray;
     }
 
+    /**
+     * Gets all diseases for a patient and sorts them into two arraylists of past and current diseases.
+     * Returns an ArrayList array of current and past diseases
+     * @param birth Patient birth date
+     * @param nhi Patient nhi
+     * @return ArrayList array of current and past diseases
+     * @throws InvalidObjectException returned if diagnosis date is invalid
+     * @throws SQLException returned if SELECT operation from database fails
+     */
     private ArrayList<Disease>[] loadDiseases(LocalDate birth, String nhi) throws InvalidObjectException, SQLException {
         ArrayList<String[]> diseasesRaw = runQuery("SELECT * FROM tblDiseases WHERE Patient = " + nhi, null);
         ArrayList<Disease> patientDiseases = new ArrayList<>();
@@ -573,7 +628,12 @@ public class Database {
         return diseaseArray;
     }
 
-
+    /**
+     * Adds a medication to the current or psat medications for a patient
+     * @param attr String array of attributes of a medication
+     * @param meds ArrayList array of current and past medication lists
+     * @return
+     */
     private ArrayList<Medication>[] addMedication(String[] attr, ArrayList<Medication>[] meds) {
         switch (attr[2]) {
             case "0":
@@ -586,6 +646,12 @@ public class Database {
         return meds;
     }
 
+    /**
+     * Adds a medication to the current or past diseases for a patient
+     * @param attr String array of attributes of a disease
+     * @param birthDate birth date of the patient
+     * @return
+     */
     private Disease addDisease(String[] attr, LocalDate birthDate) throws InvalidObjectException {
         Disease disease = new Disease(null, null);
         disease.setDiseaseName(attr[1]);
@@ -969,13 +1035,11 @@ public class Database {
     public static void main(String[] argv) {
         try {
             Database test = Database.getDatabase();
-            String stmt = "SELECT * FROM tblPatients WHERE LName = ?";
+            database.add(new Patient("ABC1238", "Joe", new ArrayList<String>(), "Joeson", LocalDate.now()));
+            String stmt = "UPDATE tblPatients SET Weight = 67 WHERE LName = ?";
             String[] params = {"Joeson"};
             ArrayList<String[]> results = test.runQuery(stmt, params);
-            System.out.println("All Patients with last name Joeson");
-            for (String[] col : results) {
-                System.out.println(String.join(" ", col));
-            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
