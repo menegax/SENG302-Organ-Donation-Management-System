@@ -65,11 +65,11 @@ public class GUIProfileTest extends ApplicationTest {
         verifyThat("#patientProfilePane", Node::isVisible);
     }
 
-    @Test
+    /*@Test
     public void should_enter_edit_pane() {
         interact(() -> { lookup("#editPatientButton").queryAs(Button.class).fire();});
         verifyThat("#patientUpdateAnchorPane", Node::isVisible);
-    }
+    }*/
 
     @Test
     public void should_enter_contact_details_pane() {
