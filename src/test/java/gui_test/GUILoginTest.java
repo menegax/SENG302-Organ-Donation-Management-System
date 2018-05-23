@@ -13,6 +13,7 @@ import javafx.stage.Window;
 import model.Clinician;
 import model.Patient;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.api.FxRobotException;
