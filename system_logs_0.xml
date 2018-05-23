@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-05-23T18:46:15</date>
+  <millis>1527057975144</millis>
+  <sequence>8</sequence>
+  <logger>utility.SystemLogger</logger>
+  <level>INFO</level>
+  <class>controller.Main</class>
+  <method>ensureDefaultClinician</method>
+  <thread>12</thread>
+  <message>Default clinician not in database. Adding default clinician to database.</message>
+</record>
+<record>
+  <date>2018-05-23T18:46:15</date>
+  <millis>1527057975151</millis>
+  <sequence>11</sequence>
+  <logger>utility.SystemLogger</logger>
+  <level>INFO</level>
+  <class>controller.Main</class>
+  <method>start</method>
+  <thread>12</thread>
+  <message>Finished the start method for the app. Beginning app</message>
+</record>
+</log>
