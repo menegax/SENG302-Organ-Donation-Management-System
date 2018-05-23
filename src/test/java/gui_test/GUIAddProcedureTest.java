@@ -419,7 +419,8 @@ public class GUIAddProcedureTest extends ApplicationTest {
         // Enter a valid summary to textfield for adding a procedure
         interact(() -> lookup("#summaryInput").queryAs(TextField.class).setText("Valid String 2"));
         verifyThat("#summaryInput", TextInputControlMatchers.hasText(String.valueOf("Valid String 2")));
-        verifyThat("#descriptionInput", TextInputControlMatchers.hasText(String.valueOf("")));
+        interact(() -> lookup("#descriptionInput").queryAs(TextArea.class).setText("Valid description"));
+        verifyThat("#descriptionInput", TextInputControlMatchers.hasText(String.valueOf("Valid description")));
 
         // Set the date to the current date
         interact(() -> lookup("#dateInput").queryAs(DatePicker.class).setValue(LocalDate.now()));
@@ -448,7 +449,8 @@ public class GUIAddProcedureTest extends ApplicationTest {
         // Enter a valid summary to textfield for adding a procedure
         interact(() -> lookup("#summaryInput").queryAs(TextField.class).setText("Valid String 3"));
         verifyThat("#summaryInput", TextInputControlMatchers.hasText(String.valueOf("Valid String 3")));
-        verifyThat("#descriptionInput", TextInputControlMatchers.hasText(String.valueOf("")));
+        interact(() -> lookup("#descriptionInput").queryAs(TextArea.class).setText("Valid Desc"));
+        verifyThat("#descriptionInput", TextInputControlMatchers.hasText(String.valueOf("Valid Desc")));
 
         LocalDate dob = patient.getBirth();
         // Set the date to the current date
@@ -478,7 +480,8 @@ public class GUIAddProcedureTest extends ApplicationTest {
         // Enter a valid summary to textfield for adding a procedure
         interact(() -> lookup("#summaryInput").queryAs(TextField.class).setText("Valid String 4"));
         verifyThat("#summaryInput", TextInputControlMatchers.hasText(String.valueOf("Valid String 4")));
-        verifyThat("#descriptionInput", TextInputControlMatchers.hasText(String.valueOf("")));
+        interact(() -> lookup("#descriptionInput").queryAs(TextArea.class).setText("Valid Desc"));
+        verifyThat("#descriptionInput", TextInputControlMatchers.hasText(String.valueOf("Valid Desc")));
 
         // Set the date to the current date
         interact(() -> lookup("#dateInput").queryAs(DatePicker.class).setValue(LocalDate.now().plus( Period.ofDays( 1 ) )));
