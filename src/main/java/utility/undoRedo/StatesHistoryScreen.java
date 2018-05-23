@@ -255,7 +255,6 @@ public class StatesHistoryScreen {
      * Stores the current state of the screen
      */
     public void store() {
-        System.out.println("here");
         if (!undone && !redone && !undoableStage.isChangingStates()) {
             for (StateHistoryControl stateHistory : stateHistories) {
                 stateHistory.store();
@@ -270,7 +269,6 @@ public class StatesHistoryScreen {
      * @return whether there was an action to undo or not
      */
     public boolean undo() {
-        System.out.println("here2");
         undone = true; // change to true as to not trigger listeners to store
         for (StateHistoryControl stateHistory : stateHistories) {
             boolean success = stateHistory.undo();

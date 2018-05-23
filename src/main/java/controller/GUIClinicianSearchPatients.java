@@ -13,6 +13,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -95,12 +96,12 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     userControl.setTargetPatient(patientDataTable.getSelectionModel()
                             .getSelectedItem());
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+                    Parent root = fxmlLoader.load();
                     GUIPatientProfile controller = fxmlLoader.getController();
-                    controller.setViewedPatient(patientDataTable.getSelectionModel()
-                            .getSelectedItem());
+                    controller.setViewedPatient(patientDataTable.getSelectionModel().getSelectedItem());
                     UndoableStage popUpStage = new UndoableStage();
                     screenControl.addStage(popUpStage.getUUID(), popUpStage);
-                    screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
+                    screenControl.show(popUpStage.getUUID(), root);
 
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
