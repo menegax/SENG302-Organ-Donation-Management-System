@@ -125,7 +125,7 @@
             <ListView fx:id="donationList" prefHeight="200.0" prefWidth="200.0" />
          </children>
       </VBox>
-      <VBox alignment="TOP_RIGHT"layoutX="467.0" layoutY="200.0" prefHeight="200.0" prefWidth="129.0">
+      <VBox alignment="TOP_RIGHT" layoutX="467.0" layoutY="200.0" prefHeight="200.0" prefWidth="129.0">
          <children>
             <Label fx:id="receivingTitle" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Receiving">
                <font>

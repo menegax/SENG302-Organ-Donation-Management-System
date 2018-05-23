@@ -2,6 +2,7 @@ package controller;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -18,10 +19,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import utility.undoRedo.UndoableStage;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -40,6 +44,8 @@ public class GUIClinicianWaitingList {
     private ObservableList<OrganWaitlist.OrganRequest> masterData = FXCollections.observableArrayList();
 
     private UserControl userControl;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initializes waiting list screen by populating table and initializing a double click action
@@ -60,7 +66,7 @@ public class GUIClinicianWaitingList {
      */
     private void closeProfile(int index) {
         Platform.runLater(this::tableRefresh);
-        openProfiles.remove( index );
+        //openProfiles.remove( index );
     }
 
     /**
@@ -79,21 +85,15 @@ public class GUIClinicianWaitingList {
                     DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
                     userControl.setTargetPatient(Database.getPatientByNhi(request.getReceiverNhi()));
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-                    Scene scene = new Scene(fxmlLoader.load());
-                    Stage popUpStage = new Stage();
-                    popUpStage.setX(ScreenControl.getMain()
-                            .getX()); //offset popup
-                    popUpStage.setScene(scene);
-                    openProfiles.add(request);  // add the patient to a list so its profile can be opened once at a time
+                    Parent root = fxmlLoader.load();
+                    UndoableStage popUpStage = new UndoableStage();
+                    screenControl.addStage(popUpStage.getUUID(), popUpStage);
+                    screenControl.show(popUpStage.getUUID(), root);
 
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request )));
-
-                    //Add and show the popup
-                    ScreenControl.addPopUp("searchPopup", popUpStage); //ADD to screen control
-                    ScreenControl.displayPopUp("searchPopup"); //display the popup
                 }
-                catch (Exception e) {
+                catch (IOException e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");
@@ -139,7 +139,15 @@ public class GUIClinicianWaitingList {
     /**
      * Returns the user to the clinician home page
      */
-    public void goToClinicianHome() { ScreenControl.activate("clinicianHome"); }
+    public void goToClinicianHome() {
+        try {
+        screenControl.show(clinicianWaitingListAnchorPane, "/scene/clinicianHome.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
+            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
+        }
+    }
 
     /**
      * Refreshes the table data

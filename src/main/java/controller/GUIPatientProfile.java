@@ -380,6 +380,7 @@ public class GUIPatientProfile {
             ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
         }
         catch (Exception e) {
+            e.printStackTrace();
             userActions.log(Level.SEVERE,
                     "Error loading required organs screen in popup",
                     "attempted to navigate from the profile page to the required organs page in popup");
@@ -434,7 +435,6 @@ public class GUIPatientProfile {
             try {
                 ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
             } catch (IOException e) {
-                e.printStackTrace();
                 userActions.log(Level.SEVERE, "Error loading medication screen in popup", "attempted to navigate from the profile page to the medication page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading medication page", ButtonType.OK).showAndWait();
             }
@@ -461,13 +461,11 @@ public class GUIPatientProfile {
      */
     public void openPatientDiagnoses() {
         if(userControl.getLoggedInUser() instanceof Patient) {
-            ScreenControl.removeScreen("patientDiagnoses");
             try {
-                ScreenControl.addScreen("patientDiagnoses", FXMLLoader.load(getClass().getResource("/scene/clinicianDiagnosis.fxml")));
-                ScreenControl.activate("patientDiagnoses");
+                screenControl.show(patientProfilePane, "/scene/clinicianDiagnosis.fxml");
             } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading diagnoses screen", "attempted to navigate from the profile page to the diagnoses page");
-                new Alert(Alert.AlertType.WARNING, "ERROR loading diagnoses page", ButtonType.OK).showAndWait();
+                new Alert((Alert.AlertType.ERROR), "ERROR loading diagnoses page").show();
+                userActions.log(SEVERE, "Error loading diagnoses screen", "attempted to navigate from the profile page to the diagnoses page");
             }
         }
         else {
