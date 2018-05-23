@@ -97,6 +97,4 @@ public class UserControl {
     public void clearCahce(){
         clear();
     }
-
-
 }

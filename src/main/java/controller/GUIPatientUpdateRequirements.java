@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -9,6 +10,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
+import javafx.stage.Stage;
 import model.Patient;
 import service.OrganWaitlist;
 import utility.undoRedo.StatesHistoryScreen;
@@ -17,9 +19,7 @@ import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
@@ -75,6 +75,12 @@ public class GUIPatientUpdateRequirements extends UndoableController{
     private UserControl userControl;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private Set<GlobalEnums.Organ> initialRequirements = new HashSet<>();
+
+    private Set<GlobalEnums.Organ> finalRequirements = new HashSet<>();
+
+//    private boolean closed = false;
 
     public void initialize() {
         userControl = new UserControl();
@@ -132,39 +138,51 @@ public class GUIPatientUpdateRequirements extends UndoableController{
         if (organs != null) {
             if (organs.contains(GlobalEnums.Organ.LIVER)) {
                 liverCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.LIVER);
             }
             if (organs.contains(GlobalEnums.Organ.KIDNEY)) {
                 kidneyCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.KIDNEY);
             }
             if (organs.contains(GlobalEnums.Organ.PANCREAS)) {
                 pancreasCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.PANCREAS);
             }
             if (organs.contains(GlobalEnums.Organ.HEART)) {
                 heartCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.HEART);
             }
             if (organs.contains(GlobalEnums.Organ.LUNG)) {
                 lungCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.LUNG);
             }
             if (organs.contains(GlobalEnums.Organ.INTESTINE)) {
                 intestineCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.INTESTINE);
             }
             if (organs.contains(GlobalEnums.Organ.CORNEA)) {
                 corneaCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.CORNEA);
             }
             if (organs.contains(GlobalEnums.Organ.MIDDLEEAR)) {
                 middleearCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.MIDDLEEAR);
             }
             if (organs.contains(GlobalEnums.Organ.SKIN)) {
                 skinCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.SKIN);
             }
             if (organs.contains(GlobalEnums.Organ.BONE)) {
                 boneCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.BONE);
             }
             if (organs.contains(GlobalEnums.Organ.BONE_MARROW)) {
                 bonemarrowCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.BONE_MARROW);
             }
             if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) {
                 connectivetissueCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.CONNECTIVETISSUE);
             }
         }
     }
@@ -175,79 +193,126 @@ public class GUIPatientUpdateRequirements extends UndoableController{
     public void saveRequirements() {
         if (liverCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.LIVER);
+            finalRequirements.add(GlobalEnums.Organ.LIVER);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.LIVER);
         }
         if (kidneyCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.KIDNEY);
+            finalRequirements.add(GlobalEnums.Organ.KIDNEY);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.KIDNEY);
         }
         if (pancreasCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.PANCREAS);
+            finalRequirements.add(GlobalEnums.Organ.PANCREAS);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.PANCREAS);
         }
         if (heartCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.HEART);
+            finalRequirements.add(GlobalEnums.Organ.HEART);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.HEART);
         }
         if (lungCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.LUNG);
+            finalRequirements.add(GlobalEnums.Organ.LUNG);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.LUNG);
         }
         if (intestineCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.INTESTINE);
+            finalRequirements.add(GlobalEnums.Organ.INTESTINE);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.INTESTINE);
         }
         if (corneaCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.CORNEA);
+            finalRequirements.add(GlobalEnums.Organ.CORNEA);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.CORNEA);
         }
         if (middleearCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.MIDDLEEAR);
+            finalRequirements.add(GlobalEnums.Organ.MIDDLEEAR);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.MIDDLEEAR);
         }
         if (skinCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.SKIN);
+            finalRequirements.add(GlobalEnums.Organ.SKIN);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.SKIN);
         }
         if (boneCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.BONE);
+            finalRequirements.add(GlobalEnums.Organ.BONE);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.BONE);
         }
         if (bonemarrowCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.BONE_MARROW);
+            finalRequirements.add(GlobalEnums.Organ.BONE_MARROW);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.BONE_MARROW);
         }
         if (connectivetissueCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
+            finalRequirements.add(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
+        deregistrationReason();
         createOrganRequests();
         Database.saveToDisk();
         goToProfile();
+    }
+
+    private void deregistrationReason() {
+        Set<GlobalEnums.Organ> removedOrgans = initialRequirements;
+        removedOrgans.removeAll(finalRequirements);
+
+        for(GlobalEnums.Organ organ : removedOrgans) {
+            openReasonPopup(organ);
+            target.removeRequired(organ);
+        }
+    }
+
+    private void openReasonPopup(GlobalEnums.Organ organ) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/deregistrationReason.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+
+            GUIRequiredOrganDeregistrationReason controller = fxmlLoader.getController();
+            controller.setOrgan(organ);
+
+            Stage popUpStage = new Stage();
+            popUpStage.setX(ScreenControl.getMain()
+                    .getX()); //offset popup
+            popUpStage.setScene(scene);
+
+            //Add and show the popup
+            ScreenControl.addPopUp("deregistrationReason", popUpStage); //ADD to screen control
+            ScreenControl.displayPopUp("deregistrationReason"); //display the popup
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE,
+                    "Failed to open deregistration of required organ scene from required organs update scene",
+                    "attempted to open deregistration of required organ reason window from required organs update scene");
+            new Alert(Alert.AlertType.ERROR, "Unable to open deregistration of required organ reason window", ButtonType.OK).show();
+        }
     }
 
     private void createOrganRequests() {
@@ -272,8 +337,8 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             try {
                 screenControl.show(patientRequirementsAnchorPane, "/scene/patientProfile.fxml");
             } catch (IOException e) {
-                new Alert((Alert.AlertType.ERROR), "Unable to patient profile").show();
-                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile from requirements page");
+                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the required organs page to the profile page");
+                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));

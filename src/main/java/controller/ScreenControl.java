@@ -7,9 +7,12 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import utility.undoRedo.UndoableStage;
+import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ScreenControl {
 
@@ -99,7 +102,6 @@ public class ScreenControl {
     public static Scene getMain() {
         return main;
     }
-
 
     /**
      * set initial screen to display

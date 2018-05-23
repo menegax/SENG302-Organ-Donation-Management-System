@@ -207,4 +207,35 @@ public class GlobalEnums {
 
     }
 
+    public enum DeregistrationReason {
+        ERROR ("Registering of the organ was an error"),
+        CURED ("Treatment has cured the disease, no longer requiring an organ transplant"),
+        DIED ("Receiver has died"),
+        RECEIVED ("Receiver has received an organ transplant");
+
+        private String value;
+
+        DeregistrationReason(final String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue();
+        }
+
+        public static Enum getEnumFromString(String value) {
+            try {
+                return DeregistrationReason.valueOf(value.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
+
+    }
+
 }

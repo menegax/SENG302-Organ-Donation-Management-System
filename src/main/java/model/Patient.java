@@ -1,10 +1,24 @@
 package model;
 
+import controller.ScreenControl;
+import controller.UserControl;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Stage;
+import jdk.nashorn.internal.scripts.JO;
 import service.Database;
+import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.SearchPatients;
 
+import java.io.IOException;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
@@ -88,6 +102,8 @@ public class Patient extends User {
     private ArrayList<Disease> currentDiseases = new ArrayList<>();
 
     private ArrayList<Disease> pastDiseases = new ArrayList<>();
+
+    private GlobalEnums.Organ removedOrgan;
 
     /**
      * Constructor for the patient class. Initializes basic attributes
@@ -651,10 +667,19 @@ public class Patient extends User {
         if (requiredOrgans.contains(organ)) {
             requiredOrgans.remove(organ);
             patientModified();
+            setRemovedOrgan(organ);
             return "Successfully removed " + organ + " from required organs";
         } else {
             return "Organ " + organ + " is not part of the patient's required organs, so could not be removed.";
         }
+    }
+
+    public GlobalEnums.Organ getRemovedOrgan() {
+        return removedOrgan;
+    }
+
+    public void setRemovedOrgan(GlobalEnums.Organ organ) {
+        removedOrgan = organ;
     }
 
     public String getNhiNumber() {
