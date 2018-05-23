@@ -27,11 +27,12 @@ public class SystemLogger {
         static public void setup() {
 
             systemLogger.setUseParentHandlers(false); // disables default console handler in parent
+            systemLogger.setLevel(Level.ALL);
 
 
             // Console handler
             Handler console = new ConsoleHandler();
-            console.setLevel(Level.OFF); // TURN ON TO 'ALL' TO LOG ALL LEVELS TO CONSOLE
+            console.setLevel(Level.ALL); // TURN ON TO 'ALL' TO LOG ALL LEVELS TO CONSOLE
             console.setFormatter(new SimpleFormatter(){
                 @Override
                 public String format(LogRecord record){
