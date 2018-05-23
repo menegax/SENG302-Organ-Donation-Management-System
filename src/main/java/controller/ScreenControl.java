@@ -1,6 +1,7 @@
 package controller;
 
 import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
@@ -281,7 +282,7 @@ public class ScreenControl {
 
     private static void addUserStage(User user, Stage newStage) {
 
-        systemLogger.log(FINE, "Added user " + user.getUuid() + " and stage " + newStage.getTitle());
+        systemLogger.log(FINE, "Added user and stage");
 
         if (userStages.containsKey(user)) {
             userStages.get(user)
@@ -296,16 +297,37 @@ public class ScreenControl {
 
 
     static void closeAllUserStages(User user) {
+        systemLogger.log(FINER, "Attempting to close all user stages...");
         Set<Stage> stages = userStages.get(user);
         try {
             for (Stage stage : stages) {
                 stage.close();
             }
+            systemLogger.log(FINER, "Closed all user stages.");
         } catch (NullPointerException e) {
-            systemLogger.log(SEVERE, "Failed to close all user stages", e);
-            e.printStackTrace(); //todo rm
+            systemLogger.log(SEVERE, "Failed to close all user stages.", e);
         }
         userStages.remove(user);
+
+    }
+
+
+    /**
+     * Sets up a new login scene
+     *
+     * To be used when the user has logged out and a new login scene needs to be instantiated
+     */
+    public void setUpNewLogin() {
+        // UNTIL WE SUPPORT MULTI USER LOGIN
+        try {
+            ScreenControl screenControl = ScreenControl.getScreenControl();
+            Pane loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+            screenControl.addStage(Main.getUuid(), new Stage());
+            screenControl.show(Main.getUuid(), loginScreen);
+        }
+        catch (IOException e) {
+            systemLogger.log(SEVERE, "Failed to recreate login scene");
+        }
     }
 
 }

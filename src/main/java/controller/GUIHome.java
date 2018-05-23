@@ -61,6 +61,7 @@ public class GUIHome {
         } catch (Exception e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls", Arrays.toString(e.getStackTrace()));
+            e.printStackTrace(); //todo rm
         }
 
     }
@@ -125,6 +126,8 @@ public class GUIHome {
         systemLogger.log(FINE, "User trying to log out");
         ScreenControl.closeAllUserStages(new UserControl().getLoggedInUser());
         new UserControl().rmLoggedInUserCache();
+
+        screenControl.setUpNewLogin(); // ONLY FOR SINGLE USER SUPPORT. REMOVE WHEN MULTI USER SUPPORT
     }
 
     /**

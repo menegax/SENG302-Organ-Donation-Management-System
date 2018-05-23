@@ -89,7 +89,7 @@ public class GUILogin {
                 screenControl.addStage(stage.getUUID(), stage);
                 Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
                 screenControl.show(stage.getUUID(), homeScreen);
-                screenControl.closeStage(Main.getUuid());
+                screenControl.closeStage(Main.getUuid()); // close login scene after login
             }
             catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
@@ -111,6 +111,7 @@ public class GUILogin {
                 screenControl.addStage(stage.getUUID(), stage);
                 Parent clinicianHome = FXMLLoader.load((getClass().getResource("/scene/home.fxml")));
                 screenControl.show(stage.getUUID(), clinicianHome);
+                screenControl.closeStage(Main.getUuid()); // close login scene after login
             }
             catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
