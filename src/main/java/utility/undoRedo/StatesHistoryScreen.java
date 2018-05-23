@@ -40,13 +40,13 @@ public class StatesHistoryScreen {
     /**
      * Constructor for the StatesHistoryScreen, creates state objects of passed in control items to keep track of
      * Creates the list of stateHistories in its initialisation
-     * @param controls list of controls on the screen
+     * @param controls list of controls on the screen (can also contain arraylists of controls)
      * @param undoableScreen the enum of the screen this StatesHistoryScreen represents
      */
     public StatesHistoryScreen(List<Control> controls, UndoableScreen undoableScreen) {
         this.undoableScreen = undoableScreen;
         addToUndoableStage(controls.get(0));
-        for (Control control : controls) {
+        for (Object control : controls) {
             if ((control instanceof TextField)) {
                 createStateHistoriesTextField(control);
             }
@@ -212,7 +212,7 @@ public class StatesHistoryScreen {
     private void createStateHistoriesListView(Object listView) {
         stateHistories.add(new StateHistoryListView( (ListView<Object>) listView ));
         ((ListView<Object>) listView).itemsProperty().addListener((observable, oldValue, newValue) -> {
-            if (((oldValue == null || newValue == null) || !newValue.equals(oldValue))) {
+            if (((oldValue == null || newValue == null) || !newValue.equals(oldValue)) && ((ListView<Object>) listView).focusedProperty().getValue()) {
                 store();
             }
         });
@@ -255,6 +255,7 @@ public class StatesHistoryScreen {
      * Stores the current state of the screen
      */
     public void store() {
+        System.out.println("here");
         if (!undone && !redone && !undoableStage.isChangingStates()) {
             for (StateHistoryControl stateHistory : stateHistories) {
                 stateHistory.store();
@@ -269,6 +270,7 @@ public class StatesHistoryScreen {
      * @return whether there was an action to undo or not
      */
     public boolean undo() {
+        System.out.println("here2");
         undone = true; // change to true as to not trigger listeners to store
         for (StateHistoryControl stateHistory : stateHistories) {
             boolean success = stateHistory.undo();
