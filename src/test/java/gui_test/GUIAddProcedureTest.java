@@ -44,10 +44,10 @@ public class GUIAddProcedureTest extends ApplicationTest {
         mainStage = stage;
         ArrayList<String> middle = new ArrayList<>();
         middle.add("Middle");
-        Database.addPatient(new Patient("TFX9999", "Joe", middle, "Bloggs",
+        Database.addPatient(new Patient("TFX1111", "Joe", middle, "Bloggs",
                 LocalDate.of(2008, 2, 9)));
-        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        patient = Database.getPatientByNhi("TFX9999");
+        Database.getPatientByNhi("TFX1111").addDonation(GlobalEnums.Organ.LIVER);
+        patient = Database.getPatientByNhi("TFX1111");
     }
 
     /**

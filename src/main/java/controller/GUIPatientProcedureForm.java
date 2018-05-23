@@ -194,8 +194,8 @@ public class GUIPatientProcedureForm extends UndoableController {
             isValid = false;
             summaryInput.setStyle( "-fx-base: red;" );
         }
-        if ( description.length() < 1 || !Pattern.matches("[A-Za-z0-9-,.'%() ]+", description) ||
-                description.substring( 0,1 ).equals(" ") ) {
+        if ( description.length() > 0 && (!Pattern.matches("[A-Za-z0-9-,.'%() ]+", description) ||
+                description.substring( 0,1 ).equals(" ") )) {
             isValid = false;
             descriptionInput.setStyle( "-fx-base: red;" );
         }

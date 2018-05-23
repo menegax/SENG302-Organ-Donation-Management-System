@@ -1,5 +1,14 @@
 # GUI Procedure Application Form Manual Test
 
+### Procedure buttons disabled for patients
+1. Open GUI Application
+2. Login as Patient
+3. Click Profile button
+4. The patient profile screen will be shown
+5. Click View Procedures button
+6. The `Procedures` screen will be shown
+7. Verify that the `Add Procedure`, `Edit`, and `Delete` buttons are not visible
+
 ## Precondition - navigate to the Add Procedure screen
 
 1. Open GUI application
@@ -12,6 +21,7 @@
 8. The 'Procedures' screen will be shown
 9. Select the 'Add Procedure' button
 10. The 'Add Procedure' screen will be shown
+
 
 ### A null procedure application will be invalid
 
@@ -145,19 +155,6 @@
   displayed in the pending procedures tables with the date being the current date, null description, and
   null affected organs
   
-### A procedure application with a description only containing alphabet, numbers, -, and spaces is valid
-
-1. The 'Add Procedure' screen will be shown
-2. Summary is "A valid summary"
-3. Date is the current date
-4. Description is "-A description without 1 special character except for hyphen is valid-"
-5. Affected donations is null (and has no effect on validation)
-6. Select the 'Done' button
-7. The 'Procedures' screen will be shown
-8. There is a procedure with summary "A valid summary" displayed in the pending procedures tables with the
-   date being the current date, description "-A description without 1 special character except for hyphen
-   is valid-", and null affected organs
-   
 ### A procedure application with a description only containing alphabet, numbers, -, and spaces is valid
 
 1. The 'Add Procedure' screen will be shown

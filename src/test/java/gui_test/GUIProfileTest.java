@@ -58,12 +58,6 @@ public class GUIProfileTest extends ApplicationTest {
         Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
-//        try {
-//        Database.removePatient("TFX9999");
-//        Database.resetDatabase();
-//        } catch (InvalidObjectException e) {
-//            throw new InvalidObjectException(e.getMessage());
-//        }
     }
 
     @Test

@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import model.Patient;
 import org.junit.After;
 import org.junit.Test;
@@ -26,6 +27,7 @@ public class GUIPatientProceduresTest extends ApplicationTest {
 
     private Main main = new Main();
     private Patient patient1;
+    private Stage mainStage;
 
     /**
      * Launches the main application
@@ -39,6 +41,7 @@ public class GUIPatientProceduresTest extends ApplicationTest {
         patient1 = new Patient("TFX9999", "Joe", new ArrayList<>(), "TestProceduresSearch1", LocalDate.of(1990, 2, 9));
         Database.addPatient(patient1);
         main.start(stage);
+        mainStage = stage;
         //stage.setFullScreen(true); //This was causing tests to fail on MacOS
     }
 
@@ -49,17 +52,16 @@ public class GUIPatientProceduresTest extends ApplicationTest {
     public void waitForEvents() {
         Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
-        sleep(1000);
     }
 
-    @Test
+    /**@Test
     public void verifyProceduresNonEditableAsPatient() {
         givenPatientLoggedIn();
         assertFalse(lookup("#addProcedureButton").queryAs(Button.class).isVisible());
         assertFalse(lookup("#editProcedureButton").queryAs(Button.class).isVisible());
         assertFalse(lookup("#deleteProcedureButton").queryAs(Button.class).isVisible());
 
-    }
+    }**/
 
     @Test
     public void verifyEditDeleteButtonsDisabledByDefault() {
