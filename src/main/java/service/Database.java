@@ -384,9 +384,69 @@ public class Database {
         newPatient.setDonations(loadOrgans(attr[14]));
         newPatient.setRequiredOrgans(loadOrgans(attr[15]));
         newPatient.setModified(modified);
-        
+        ArrayList<Disease> pastDiseases = new ArrayList<>();
+        ArrayList<Disease> currentDiseases = new ArrayList<>();
+        ArrayList<Medication> medHistory = new ArrayList<>();
+        ArrayList<Medication> currentMeds = new ArrayList<>();
+        try {
+            //TODO rewrite method to do medication history and current assigning within load method
+            loadMedications(newPatient);
+            ArrayList<Disease> allDiseases = loadDiseases(newPatient);
+            for(Disease disease : allDiseases) {
+                if(disease.getDiseaseState() == GlobalEnums.DiseaseState.CURED) {
+                    pastDiseases.add(disease);
+                } else {
+                    currentDiseases.add(disease);
+                }
+            }
+        } catch (InvalidObjectException e) {
+            e.printStackTrace();
+        }
         return newPatient;
     }
+
+    private ArrayList<Medication> loadMedications(Patient patient) throws InvalidObjectException {
+        ArrayList<String[]> medicationsRaw = runQuery("SELECT * FROM tblMedications WHERE Patient = " + patient.getNhiNumber(), null);
+        ArrayList<Medication> patientMedications = new ArrayList<>();
+        for(String[] attr : medicationsRaw) {
+            patientMedications.add(addMedication(attr));
+        }
+        return patientMedications;
+    }
+
+    private ArrayList<Disease> loadDiseases(Patient patient) throws InvalidObjectException {
+        ArrayList<String[]> diseasesRaw = runQuery("SELECT * FROM tblDiseases WHERE Patient = " + patient.getNhiNumber(), null);
+        ArrayList<Disease> patientDiseases = new ArrayList<>();
+        for(String[] attr : diseasesRaw) {
+            patientDiseases.add(addDisease(attr));
+        }
+        return patientDiseases;
+    }
+
+
+    private Medication addMedication(String[] attr) throws InvalidObjectException {
+        return new Medication(attr[1]);
+    }
+
+    private Disease addDisease(String[] attr) throws InvalidObjectException {
+        Disease disease = new Disease(null, null);
+        Patient patient = database.getPatientByNhi(attr[0]);
+        disease.setDiseaseName(attr[1]);
+        disease.setDateDiagnosed(LocalDate.parse(attr[2]), patient);
+        switch (attr[3]) {
+            case "0":
+                disease.setDiseaseState(null);
+                break;
+            case "1":
+                disease.setDiseaseState(GlobalEnums.DiseaseState.CHRONIC);
+                break;
+            case "2":
+                disease.setDiseaseState(GlobalEnums.DiseaseState.CURED);
+                break;
+        }
+        return disease;
+    }
+
 
     /**
      * Creates a clinician object from a String array of its attributes.
@@ -409,7 +469,7 @@ public class Database {
 	    newClinician.setModified(modified);
 		return newClinician;
 	}
-	
+
 	/**
 	 * Loads all patients into the application from the remote database.
 	 */

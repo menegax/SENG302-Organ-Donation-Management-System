@@ -29,19 +29,19 @@ public class ClinicianTest {
     @Test
     public void testIncreasingStaffID() {
         Clinician newClinician = new Clinician(database.getNextStaffID(), "John", new ArrayList<>(), "Doe", GlobalEnums.Region.AUCKLAND);
-        database.addClinician(newClinician);
+        database.add(newClinician);
         assertEquals(newClinician.getStaffID() + 1, database.getNextStaffID());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalFirstName() {
-        database.addClinician(new Clinician(database.getNextStaffID(), "23-%%d", new ArrayList<>(), "Everyman", GlobalEnums.Region.GISBORNE));
+        database.add(new Clinician(database.getNextStaffID(), "23-%%d", new ArrayList<>(), "Everyman", GlobalEnums.Region.GISBORNE));
     }
 
     @Test
     public void testGettingClinicianById() {
         int id = database.getNextStaffID();
-        database.addClinician(new Clinician(id, "Joeseph", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND));
+        database.add(new Clinician(id, "Joeseph", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND));
         try {
             assertEquals(database.getClinicianByID(id).getFirstName(), "Joeseph");
         } catch (InvalidObjectException e) {
@@ -52,7 +52,7 @@ public class ClinicianTest {
     @Test
     public void testCreationWithAddress() {
         int id = database.getNextStaffID();
-        database.addClinician(new Clinician(id, "Lorem", new ArrayList<>(), "Ipsum", "123 some street", "This place", "Ilam", GlobalEnums.Region.GISBORNE));
+        database.add(new Clinician(id, "Lorem", new ArrayList<>(), "Ipsum", "123 some street", "This place", "Ilam", GlobalEnums.Region.GISBORNE));
         try {
             assertNotNull(database.getClinicianByID(id).getStreet1());
         } catch (InvalidObjectException e) {
