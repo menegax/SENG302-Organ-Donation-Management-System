@@ -131,7 +131,6 @@ public class StatesHistoryScreen {
                 ((TextField) entry).getParent().requestFocus();
                 ((UndoableStage) ((TextField) entry).getScene().getWindow()).redo();
             }
-            event.consume();
         });
     }
 
