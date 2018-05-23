@@ -216,7 +216,7 @@ public class GUIPatientMedications {
                     textWatcher.afterTextChange(GUIPatientMedications.class.getMethod("autoComplete"), this); //start timer
 
                 } catch (NoSuchMethodException e) {
-                    userActions.log(Level.SEVERE, e.getMessage(), "");
+                    userActions.log(Level.SEVERE, "No method exists for autocomplete", "Attempted to make API call"); // MAJOR ISSUE HERE!
                 }
             }
         });
@@ -225,7 +225,6 @@ public class GUIPatientMedications {
     /**
      * Runs the updating of UI elements and API call
      */
-    @SuppressWarnings("WeakerAccess")
     public void autoComplete() {
         Platform.runLater(() -> { // run this on the FX thread (next available)
             getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread

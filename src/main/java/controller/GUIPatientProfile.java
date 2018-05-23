@@ -3,39 +3,20 @@ package controller;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import com.sun.glass.ui.View;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.control.Label;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
 import model.Clinician;
-import model.Patient;
-import org.apache.commons.lang3.StringUtils;
 import model.Medication;
-import org.apache.commons.lang3.StringUtils;
-import model.Patient;
-import service.Database;
 import utility.GlobalEnums;
 
 import java.io.IOException;
@@ -44,9 +25,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -66,7 +44,7 @@ public class GUIPatientProfile {
 
     public Button contactButton;
 
-    public Button donationButton;
+    //public Button donationButton;
 
     @FXML
     public Button medicationBtn;
@@ -82,9 +60,6 @@ public class GUIPatientProfile {
 
     @FXML
     private Label nameLbl;
-
-    @FXML
-    private Label genderLbl;
 
     @FXML
     public Label vitalLbl1;
@@ -126,7 +101,11 @@ public class GUIPatientProfile {
     private Label addLbl5;
 
     @FXML
-    private ListView<String> organList;
+    private Label genderDeclaration;
+
+    @FXML
+    private Label genderStatus;
+
     @FXML
     private ListView receivingList;
 
@@ -154,7 +133,7 @@ public class GUIPatientProfile {
 
     private UserControl userControl;
 
-    private ListProperty<String> organListProperty = new SimpleListProperty<>();
+    //private ListProperty<String> organListProperty = new SimpleListProperty<>();
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
@@ -222,16 +201,22 @@ public class GUIPatientProfile {
 //    }
 
     /**
-     * Loads the attributes and organs for the patient to be able to be viewed
-     * @param nhi of the patient
-     * @throws InvalidObjectException
+     * Sets the patient's attributes for the scene's labels
+     * @param nhi the nhi of the patient to be viewed
+     * @throws InvalidObjectException if the nhi of the patient does not exist in the database
      */
     private void loadProfile(String nhi) throws InvalidObjectException {
         Patient patient = Database.getPatientByNhi(nhi);
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
-        genderLbl.setText(patient.getGender() == null ? "Not set" : patient.getGender()
-                .toString());
+        if (userControl.getLoggedInUser() instanceof Clinician) {
+            genderDeclaration.setText( "Gender assigned at birth: " );
+            genderStatus.setText( patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue() );
+        } else {
+            genderDeclaration.setText( "Gender identity: " );
+            genderStatus.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender()
+                    .getValue());
+        }
         vitalLbl1.setText(patient.getDeath() == null ? "Alive" : "Deceased");
         dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
@@ -281,8 +266,8 @@ public class GUIPatientProfile {
     /**
      * Highlights the listview cell if the organ donating is also required by the patient in clinician view. If in
      * patient view, the listview cells are just styled.
-     * @param listView
-     * @param isDonorList
+     * @param listView The listView that the cells being highlighted are in
+     * @param isDonorList boolean for if the receiving organ is also in the donating list
      */
     public void highlightListCell(ListView<String> listView, boolean isDonorList) {
         listView.setCellFactory(column -> new ListCell<String>() {
@@ -343,7 +328,6 @@ public class GUIPatientProfile {
             }
         }
     }
-
 
     /**
      * Goes to the patient donations scene
