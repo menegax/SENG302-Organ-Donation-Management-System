@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import model.Disease;
 import model.Patient;
 import service.Database;
@@ -26,7 +27,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIClinicianDiagnosis {
 
     @FXML
-    public AnchorPane clinicianDiagnosesPane;
+    public GridPane clinicianDiagnosesPane;
 
     @FXML
     public TableView<Disease> pastDiagnosesView;

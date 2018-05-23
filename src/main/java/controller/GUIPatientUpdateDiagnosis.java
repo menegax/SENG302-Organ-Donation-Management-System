@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
@@ -29,7 +30,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIPatientUpdateDiagnosis {
 
     @FXML
-    public AnchorPane diagnosisUpdatePane;
+    private GridPane diagnosisUpdatePane;
 
     @FXML
     public Button doneButton;
@@ -88,10 +89,10 @@ public class GUIPatientUpdateDiagnosis {
         userControl = new UserControl();
         currentPatient = userControl.getTargetPatient();
         if(isAdd) {
-            titleLabel.setText("Add Diagnosis");
+            //titleLabel.setText("Add Diagnosis");
             target = new Disease(null, null);
         } else {
-            titleLabel.setText("Update Diagnosis");
+            //titleLabel.setText("Update Diagnosis");
         }
         populateDropdown();
         populateForm();

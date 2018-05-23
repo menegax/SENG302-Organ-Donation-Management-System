@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -18,6 +17,5 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToPatientHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
    </children>
 </AnchorPane>
