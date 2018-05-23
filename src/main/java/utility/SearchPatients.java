@@ -65,7 +65,6 @@ public class SearchPatients {
             }
         }
         patientDoc.add(new StringField("lName", patient.getLastName().toUpperCase(), Field.Store.YES));
-        //TODO Remove for patient should require a birth gender
         if (patient.getBirthGender() != null) {
             patientDoc.add(new StringField("birthGender", patient.getBirthGender().toString().toUpperCase(), Field.Store.YES));
         }

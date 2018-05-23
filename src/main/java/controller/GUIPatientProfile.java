@@ -364,7 +364,6 @@ public class GUIPatientProfile {
             ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
         }
         catch (Exception e) {
-            e.printStackTrace();
             userActions.log(Level.SEVERE,
                     "Error loading required organs screen in popup",
                     "attempted to navigate from the profile page to the required organs page in popup");

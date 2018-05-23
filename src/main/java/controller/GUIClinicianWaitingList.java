@@ -219,7 +219,6 @@ public class GUIClinicianWaitingList {
         try {
         screenControl.show(clinicianWaitingListAnchorPane, "/scene/clinicianHome.fxml");
         } catch (IOException e) {
-            e.printStackTrace();
             new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
             userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
         }

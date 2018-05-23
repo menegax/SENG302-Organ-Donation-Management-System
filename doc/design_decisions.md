@@ -147,3 +147,8 @@ us to log actions that occur within the medications page (and other pages while 
 are visible within the new history table for clinicians. If a clinician alters medications for a patient, a ClinicianActionRecord is created that stores
 the standing log information, plus the NHI number of the 'target' patient that the changes are being made to. Logs (+ medication changes) will persist between 
 sessions after the user saves changes using the standard save button on the home screen.
+
+#### Undo/Redo
+We decided to reload the fxml on every undo and redo as it did not create significant processing time.  
+In addition it removed the necessity for the application to know whether it was on the screen it needed to undo or not.
+We created abstract classes UndoableStage and UndoableController to enable future implementations with ease as most methods and attributes would be inherited.

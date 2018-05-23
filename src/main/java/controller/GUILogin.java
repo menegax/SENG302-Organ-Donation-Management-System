@@ -127,20 +127,6 @@ public class GUILogin {
         }
     }
 
-    private void setUpPatientHome() {
-
-        Stage primaryStage = new Stage();
-        try {
-            Scene home = FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml"));
-
-            primaryStage.setScene(home);
-        }
-        catch (IOException e) {
-            e.printStackTrace();//todo rm
-        }
-    }
-
-
     /**
      * Attempt to log the user in using the entered NHI
      * If successful, opens home screen
