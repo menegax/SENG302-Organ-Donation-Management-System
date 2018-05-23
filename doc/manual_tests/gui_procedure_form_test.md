@@ -1,15 +1,36 @@
 # GUI Procedure Application Form Manual Test
 
-### Procedure buttons disabled for patients
+### Procedure buttons invisible for patients
 1. Open GUI Application
 2. Login as Patient
 3. Click Profile button
 4. The patient profile screen will be shown
-5. Click View Procedures button
+5. Click `View Procedures` button
 6. The `Procedures` screen will be shown
 7. Verify that the `Add Procedure`, `Edit`, and `Delete` buttons are not visible
 
-## Precondition - navigate to the Add Procedure screen
+### Procedure buttons visible for clinicians
+1. Open GUI Application
+2. Login as Clinician
+3. Click `Search Patients` button
+4. Double click on a patient
+5. The patient profile screen will be shown
+6. Click `Manage Procedures` button
+7. The `Procedures` screen will be shown
+8. Verify that the `Add Procedure`, `Edit`, and `Delete` buttons are visible
+
+### Edit and Delete buttons disabled by default
+1. Open GUI Application
+2. Login as Clinician
+3. Click `Search Patients` button
+4. Double click on a patient
+5. The patient profile screen will be shown
+6. Click `Manage Procedures` button
+7. The `Procedures` screen will be shown
+8. Verify that the `Edit` and `Delete` buttons are disabled by default
+9. Verify that the `Edit` and `Delete` buttons enable when a procedure is selected
+
+## Precondition (for tests below) - navigate to the Add Procedure screen
 
 1. Open GUI application
 2. Login as a clinician
@@ -179,3 +200,4 @@
  7. The 'Procedures' screen will be shown
  8. There is a procedure with summary "A valid summary" displayed in the pending procedures tables with
     the date being the current date, description is null, and affected organs is the selected organ
+    

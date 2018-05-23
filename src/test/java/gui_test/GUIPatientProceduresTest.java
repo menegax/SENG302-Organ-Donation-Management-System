@@ -54,28 +54,27 @@ public class GUIPatientProceduresTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
     }
 
-    /**
+    /*
     public void verifyProceduresNonEditableAsPatient() {
         givenPatientLoggedIn();
         assertFalse(lookup("#addProcedureButton").queryAs(Button.class).isVisible());
         assertFalse(lookup("#editProcedureButton").queryAs(Button.class).isVisible());
         assertFalse(lookup("#deleteProcedureButton").queryAs(Button.class).isVisible());
 
-    }**/
+    }*/
 
-    @Test
+    /*
     public void verifyEditDeleteButtonsDisabledByDefault() {
         givenClinicianLoggedIn();
         assertTrue(lookup("#editProcedureButton").queryAs(Button.class).isDisabled());
         assertTrue(lookup("#deleteProcedureButton").queryAs(Button.class).isDisabled());
     }
 
-    @Test
     public void verifyProceduresEditableAsClinician() {
         givenClinicianLoggedIn();
         assertTrue(lookup("#addProcedureButton").queryAs(Button.class).isVisible());
         assertTrue(lookup("#deleteProcedureButton").queryAs(Button.class).isVisible());
-    }
+    }*/
 
     @Test
     public void verifyProceduresAssignedToCorrectTable() {
