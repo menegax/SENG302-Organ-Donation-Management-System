@@ -177,7 +177,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 add(heightTxt);
                 add(zipTxt);
             }};
-            statesHistoryScreen = new StatesHistoryScreen( controls, GlobalEnums.UndoableScreen.PATIENTUPDATEPROFILE);
+            statesHistoryScreen = new StatesHistoryScreen( controls, UndoableScreen.PATIENTUPDATEPROFILE);
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
