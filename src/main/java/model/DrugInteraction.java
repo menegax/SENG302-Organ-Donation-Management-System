@@ -15,12 +15,15 @@ public class DrugInteraction {
 
     private JsonObject response;
 
-    private Patient viewedPatient;
+    private static Patient viewedPatient;
+
+    public static void setViewedPatient(Patient patient) { viewedPatient = patient; }
 
     /**
      * Makes a call to the API and records the response
      * @param drugOne - drug to compare with for interactions
      * @param drugTwo - drug to compare with for interactions
+     * @param patient - patient taking drugs
      * @throws IOException - bad gateway error thrown
      */
     public DrugInteraction (String drugOne, String drugTwo, Patient patient) throws IOException {

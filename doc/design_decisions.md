@@ -22,7 +22,7 @@ The decision was made to maintain one large global enumerations class in a separ
 #### Date Library
 JodaTime will be used for dates and times (i.e. DateTime and LocalDate), not the native Java Date class from utils.
 
-#### Donor Unique ID
+#### Patient Unique ID
 In order to satisfy story number 43, the user must be able to search for a particular patient and receive one search result. 
 This requires a unique search term to be entered such that duplicates are not returned. 
 
@@ -63,7 +63,7 @@ JNativeHook captured keypress events on a global level (Even if the terminal did
 creating functionality in which the keypress events would 'navigate' through that list and fill out the terminal command line. 
 
 #### IRD -> NHI Transition
-We decided to change form using IRD as the identifier of a patient to the NHI number. The IRD number is thus no longer used. The reason behind this is that it makes
+We decided to change form using IRD as the identifier of a donor to the NHI number. The IRD number is thus no longer used. The reason behind this is that it makes
 more sense in the context of a health app, and users may feel more comfortable provided a NHI number instead of an IRD number due to NHI's association with health rather than tax and finance.
 
 #### Logging and System Print Messages
@@ -81,7 +81,7 @@ goToScreen() can be used as a method name only if the only code inside the metho
 See the GUIDonorRegister class for examples of goToLogin() and register()
 
 #### User Action History
-All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new patient would not be logged either.
+All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new donor would not be logged either.
 
 ## Sprint 3
 26th March to the 3rd of May
@@ -120,6 +120,44 @@ This meant that an action could not be undone after another action was performed
 This allows the user to more easily keep track of what changes they have made and what states they can switch between.  
 In addition we decided to bind redo to Ctrl + Y. This is because Ctrl + Y is the industry standard undo for non-technical applications (such as word).  
 This is how we aim to target our application, as we do not see most of our users having software development or similar backgrounds.
+
+#### Name Search For Patients
+We decided to use an external library, Lucene, to do our name searching of patients. This library allows us to not just do a simple exact name search but do a fuzzy search of the names.
+This term "fuzzy search" means that some of the character can be different from what is in the name and it will still be a result. In order to tell which results are "better" a "score" is included with the individual results, which symbolizes how close to the entered search the names are. The closer the name to the search, the higher the score.
+We thought this would be very useful when searching for patients, as the clinician may not know the exact spelling of a particular patient but knows roughly how it is spelt. Or in a much simpler case, the clincian may simply have a miss key press. 
+However we do not want every patient to be matched to any search, so we set the max number of the character difference between the search and the patient's name to two.
+
+
+##Sprint 4
+
+####Diagnosis Validation
+A diagnosis must have a name between 3 and 50 characters long, as this covers the length of the full names of most diseases and conditions. A diagnosis can not be made in the future or before the patient was born.
+
+####Diagnosis Adding
+A diagnosis can not be added to the current diagnoses list if the patient has a diagnosis of the same name and the same diagnosis date.
+
+####Setting past and current diagnoses lists
+Diagnoses lists for a patient are set entirely after all changes have been made before saving. This is to keep tracking changes made to a minimum to reduce operation complexity, and thus making the saving procedure quicker to execute.
+
+#### User Actions Logging
+User actions are now an attribute within the patient object. This way the patient is in charge of its own logs. However, to log a record to the user 
+history, the userActionHistory class needs to be used. This way the UserActionHistory class is responsible for all user action logs regardless of 
+the patient or where in the app the log was created. However, the logger class needs some sort of access to the patient's logs, so we created a getter
+. Unfortunately, the getter must return a modifiable list of records. This opens up the possibility of other classes getting a list of modifiable 
+records and modifying them inappropriately. This is the trade off between for having a separate logger class that implements the Java API logger class.
+
+#### System Logging
+Since a Java logger had already been implemented it was very easy to implement an internal logging solution. This systemLogger is very similar to the 
+userActions log. It will be used for only developer debugging purposes. There should never be a System.out.println() call ever again; even temporarily
+-- it should be a systemLog.log() and when done debugging the statement should be left there for future use. Please add logs as you go and never delete
+ logs (unless they're incorrectly written, of course).  
+ 
+#### Clinician Logging
+To keep consistency, the logging of medication actions and other clinician actions is now solely using the UserHistory logger. This allowed
+us to log actions that occur within the medications page (and other pages while a clinician is logged in) in a way that all actions, whether saved or unsaved,
+are visible within the new history table for clinicians. If a clinician alters medications for a patient, a ClinicianActionRecord is created that stores
+the standing log information, plus the NHI number of the 'target' patient that the changes are being made to. Logs (+ medication changes) will persist between 
+sessions after the user saves changes using the standard save button on the home screen.
 
 #### Keyboard Shortcuts
 MenuBar has the ability to set and bind keyboard shortcuts to a stage. Therefore we will use MenuBars to set the keyboard shortcuts. 

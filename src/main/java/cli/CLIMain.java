@@ -5,6 +5,7 @@ import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import picocli.CommandLine;
+import utility.SystemLogger;
 import utility.UserActionHistory;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -20,7 +21,7 @@ public class CLIMain {
             return LineReaderBuilder.builder().terminal(terminal).build();
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Unable to start LineReader", "Attempted to begin CLI application");
-            System.exit(0);
+            System.exit(1);
         }
         return null;
     }
@@ -29,6 +30,7 @@ public class CLIMain {
         String[] args;
 
         UserActionHistory.setup();
+        SystemLogger.setup();
 
         LineReader reader = getLineReader();
         String userCommand;

@@ -5,6 +5,7 @@ import static utility.UserActionHistory.userActions;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -15,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import model.DrugInteraction;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
@@ -24,8 +26,10 @@ import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
 
@@ -98,8 +102,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
                 }
-                catch (Exception e) {
-                    e.printStackTrace(); //todo remove
+                catch (IOException e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");
@@ -133,7 +136,20 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 .toString()) : new SimpleStringProperty(""));
 
         // wrap ObservableList in a FilteredList
-        FilteredList<Patient> filteredData = new FilteredList<>(masterData, d -> true);
+        FilteredList<Patient> filteredData = new FilteredList<>(masterData, new Predicate<Patient>() {
+            @Override
+            public boolean test(Patient d) {
+                return true;
+            }
+        });
+
+        // 2. Set the filter Predicate whenever the filter changes.
+        searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            masterData.clear();
+            masterData.addAll(SearchPatients.searchByName(newValue));
+
+            filteredData.setPredicate(patient -> true);
+        });
 
         // wrap the FilteredList in a SortedList.
         SortedList<Patient> sortedData = new SortedList<>(filteredData);
@@ -207,7 +223,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * Adds all db data via constructor
      */
     public GUIClinicianSearchPatients() {
-        masterData.addAll(Database.getPatients());
+        masterData.addAll(SearchPatients.getDefaultResults());
     }
 
 
@@ -228,4 +244,3 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         patientDataTable.refresh();
     }
 }
-

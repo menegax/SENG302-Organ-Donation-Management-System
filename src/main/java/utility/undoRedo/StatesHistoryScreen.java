@@ -38,8 +38,8 @@ public class StatesHistoryScreen {
     /**
      * Constructor for the StatesHistoryScreen, creates state objects of passed in control items to keep track of
      * Creates the list of stateHistories in its initialisation
-     * @param controls list of controls on the screen
-     * @param undoableScreen the enum of the screen this StatesHistoryScreen represents
+     * @param pane pane application is showing
+     * @param params optional widget parameters to initialise
      */
     public StatesHistoryScreen(List<Control> controls, UndoableScreen undoableScreen) {
         // todo remove if unnecessary

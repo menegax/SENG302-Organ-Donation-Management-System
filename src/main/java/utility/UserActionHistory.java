@@ -1,12 +1,18 @@
 package utility;
 
+import static java.util.logging.Level.INFO;
+
 import controller.UserControl;
+import model.Clinician;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.logging.*;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class UserActionHistory {
 
@@ -14,8 +20,6 @@ public class UserActionHistory {
      * This log contains user actions and their results in parameters param and message respectively.
      */
     public static final Logger userActions = Logger.getLogger(UserActionHistory.class.getName());
-
-    private static FormatterLog logFormat = new FormatterLog();
 
 
     /**
@@ -26,24 +30,32 @@ public class UserActionHistory {
 
         userActions.setUseParentHandlers(false); // disables default console userActions in parent
 
-        // todo patient handler
         Handler patientHandler = new Handler() {
             public void publish(LogRecord logRecord) {
                 Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
 
                 // get logged in patient if it exists
-                Patient loggedInPatient =
-                        new UserControl().getLoggedInUser() instanceof Patient ? ((Patient) new UserControl().getLoggedInUser()) : null;
+                Object loggedInUser = new UserControl().getLoggedInUser();
 
-                // if it exists log the record to it
-                if (loggedInPatient != null ) {
-                    loggedInPatient.getUserActionsList()
-                            .add(new UserActionRecord(currentTimeStamp,
+                if (loggedInUser instanceof Patient) { //Add a patient record if a patient is logged in
+                    ((Patient) loggedInUser).getUserActionsList()
+                            .add(new PatientActionRecord(currentTimeStamp,
                                     logRecord.getLevel(),
-                                    StringUtils.capitalize(logRecord.getParameters()[0].toString()), //capitalise the action
+                                    StringUtils.capitalize(logRecord.getParameters()[0].toString()),
                                     StringUtils.capitalize(logRecord.getMessage())));
+                } else if (loggedInUser instanceof Clinician) { //Add a clinician record if a clinician is logged in
+                    String nhiParam = null;
+                    //If there are more than 1 parameter, in which case the target nhi is provided as the second parameter
+                    if (logRecord.getParameters().length >= 2) {
+                        nhiParam = logRecord.getParameters()[1].toString().toUpperCase();
+                    }
+                    ((Clinician) loggedInUser).getClinicianActionsList()
+                            .add(new ClinicianActionRecord(currentTimeStamp,
+                                    logRecord.getLevel(),
+                                    StringUtils.capitalize(logRecord.getParameters()[0].toString()),
+                                    StringUtils.capitalize(logRecord.getMessage()),
+                                    nhiParam));
                 }
-
             }
 
             @Override
@@ -59,7 +71,7 @@ public class UserActionHistory {
 
         // Console handler
         Handler console = new ConsoleHandler();
-        console.setLevel(Level.INFO);
+        console.setLevel(INFO);
         console.setFormatter(new SimpleFormatter(){
             @Override
             public String format(LogRecord record){
@@ -67,18 +79,8 @@ public class UserActionHistory {
 
             }
         });
-
         userActions.addHandler(console);
 
-        // todo remove maybe
-        // File handler
-        try {
-            Handler file = new FileHandler("UserActionHistory%u.xml", true);
-            userActions.addHandler(file);
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE, "Unable to write log to file");
-        }
 
     }
 }

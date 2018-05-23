@@ -13,11 +13,14 @@ import model.Patient;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.testfx.framework.junit.ApplicationTest;
 import service.Database;
 import utility.GlobalEnums;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
+import javax.xml.crypto.Data;
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class GUIProfileTest extends ApplicationTest {
+
+    private UserControl userControl;
 
     private Main main = new Main();
 
@@ -86,6 +91,29 @@ public class GUIProfileTest extends ApplicationTest {
         // todo make these asserts actually be enforced
         assertThat(lookup("#organList").queryListView().getItems().containsAll(existingPatient.getDonations()));
         assertThat(lookup("#medList").queryListView().getItems().containsAll(existingPatient.getMedicationHistory()));
+    }
+
+    @Test
+    public void check_receiver_donor_segregation() throws InvalidObjectException {
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
+        Database.getPatientByNhi("TFX9999").setRequiredOrgans(new ArrayList<GlobalEnums.Organ>());
+        interact(() -> {
+            lookup("#donationsButton").queryAs(Button.class).fire();
+            lookup("#save").queryAs(Button.class).fire();
+        });
+        verifyThat("#donatingTitle", Node::isVisible);
+        verifyThat("#receivingList", Node::isDisabled);
+//        System.out.println(patient.getDonations());
+        Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.CORNEA);
+        Database.getPatientByNhi("TFX9999").setDonations(new ArrayList<GlobalEnums.Organ>());
+        interact(() -> {
+            lookup("#donationsButton").queryAs(Button.class).fire();
+            lookup("#save").queryAs(Button.class).fire();
+        });
+        verifyThat("#receivingList", Node::isVisible);
+        verifyThat("#donationList", Node::isDisabled);
     }
 
 }

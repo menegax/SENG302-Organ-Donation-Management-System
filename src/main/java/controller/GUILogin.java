@@ -1,18 +1,25 @@
 package controller;
 
+import static utility.UserActionHistory.userActions;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
+import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.Patient;
 import service.Database;
@@ -22,6 +29,7 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
+import static utility.SystemLogger.systemLogger;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
@@ -32,8 +40,6 @@ public class GUILogin {
     public AnchorPane loginPane;
 
     public Button loginButton;
-
-    public Hyperlink registerLabel;
 
     @FXML
     private TextField nhiLogin;
@@ -52,7 +58,6 @@ public class GUILogin {
         });
     }
 
-
     /**
      * Open the register screen
      */
@@ -65,7 +70,6 @@ public class GUILogin {
             userActions.log(SEVERE, "Failed to load patient register", "Attempted to load patient register");
         }
     }
-
 
     /**
      * Attempt to log the user in using the entered NHI
@@ -88,10 +92,15 @@ public class GUILogin {
                 screenControl.closeStage(Main.getUuid());
             }
             catch (InvalidObjectException e) {
-                userActions.log(Level.WARNING, "Failed to log in", "Attempted to log in");
-                new Alert(Alert.AlertType.WARNING, "Incorrect credentials").show();
-            } catch (IOException e) {
-                e.printStackTrace(); //TODO: rm
+                userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
+                alert.show();
+            }
+            catch (IOException e) {
+                userActions.log(Level.WARNING, "Unable to load patient home page", "Attempted to log in");
+                systemLogger.log(Level.INFO, "Failed to find the .fxml file for login" + e.getStackTrace());
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
+                alert.show();
             }
         }
         else {
@@ -103,15 +112,18 @@ public class GUILogin {
                 screenControl.addStage(stage.getUUID(), stage);
                 screenControl.show(stage.getUUID(), clinicianHome);
             }
-            catch (Exception e) {
-                userActions.log(Level.WARNING, "failed to log in", "attempted to log in");
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to log in");
+            catch (InvalidObjectException e) {
+                userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
                 alert.show();
             }
-
+            catch (IOException e) {
+                userActions.log(Level.WARNING, "Unable to load clinician home page", "Attempted to log in");
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
+                alert.show();
+            }
         }
     }
-
 
     private void setUpPatientHome() {
 
@@ -143,5 +155,4 @@ public class GUILogin {
             nhiLogin.setPromptText("NHI");
         }
     }
-
 }
