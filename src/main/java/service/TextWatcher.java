@@ -23,7 +23,6 @@ public class TextWatcher {
      * @param classInstance - the class instance from where the timer is called
      */
     public void afterTextChange(java.lang.reflect.Method method, Object classInstance){
-
         timer.schedule(new TimerTask() { //create new timer task
             @Override
             public void run() {
@@ -31,7 +30,7 @@ public class TextWatcher {
                     method.invoke(classInstance,null); //invoke the method with the given class instance
                     timer.cancel(); //CANCEL TIMER THREAD!!!
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    userActions.log(Level.SEVERE, "Could not invoke method from timer");
+                    userActions.log(Level.SEVERE, "Could not invoke method from timer", "Attempted to invoke autocomplete method");
                 }
             }
         }, 500); // delay 500ms before executing timer task

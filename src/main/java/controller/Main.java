@@ -3,7 +3,6 @@ package controller;
 import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
-
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +19,6 @@ import utility.GlobalEnums;
 import utility.SearchPatients;
 import utility.SystemLogger;
 import utility.UserActionHistory;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -53,7 +51,6 @@ public class Main extends Application {
 
     }
 
-
     public static void main(String[] args) {
         UserActionHistory.setup(); // start user action logs
         SystemLogger.setup();
@@ -79,7 +76,7 @@ public class Main extends Application {
             Database.getPatientByNhi("ABC1238")
                     .setRegion(GlobalEnums.Region.AUCKLAND);
             Database.getPatientByNhi("ABC1238")
-                    .setGender(GlobalEnums.Gender.OTHER);
+                    .setBirthGender(GlobalEnums.BirthGender.MALE);
 
             Database.addPatient(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
             Database.getPatientByNhi("ABC1234")
@@ -89,13 +86,12 @@ public class Main extends Application {
             Database.getPatientByNhi("ABC1234")
                     .setRegion(GlobalEnums.Region.CANTERBURY);
             Database.getPatientByNhi("ABC1234")
-                    .setGender(GlobalEnums.Gender.FEMALE);
+                    .setBirthGender(GlobalEnums.BirthGender.FEMALE);
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
             systemLogger.log(INFO, "Unable to add dummy patients");
         }
-
     }
 
 

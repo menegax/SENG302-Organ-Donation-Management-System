@@ -1,33 +1,54 @@
 package utility;
 
-@SuppressWarnings("unused")
 public class GlobalEnums {
 
-    public enum Gender {
-        MALE("male"), FEMALE("female"), OTHER("other");
+    public enum PreferredGender {
+        MAN("Man"), WOMAN("Woman"), NONBINARY("Non-binary");
 
         private String value;
 
-
-        Gender(final String value) {
-            this.value = value;
-        }
-
+        PreferredGender(final String value) { this.value = value; }
 
         public String getValue() {
             return value != null ? value : "Not set";
         }
-
 
         @Override
         public String toString() {
             return this.getValue() != null ? this.getValue() : "Not set";
         }
 
+        public static Enum getEnumFromString(String value) {
+            try {
+                return PreferredGender.valueOf(value.toUpperCase());
+            }
+            catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
+    }
+
+    public enum BirthGender {
+        MALE("Male"), FEMALE("Female");
+
+        private String value;
+
+        BirthGender(final String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value != null ? value : "Not set";
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue() != null ? this.getValue() : "Not set";
+        }
 
         public static Enum getEnumFromString(String value) {
             try {
-                return Gender.valueOf(value.toUpperCase());
+                return BirthGender.valueOf(value.toUpperCase());
             }
             catch (IllegalArgumentException e) {
                 return null;
@@ -42,22 +63,18 @@ public class GlobalEnums {
 
         private String value;
 
-
         Region(final String value) {
             this.value = value;
         }
-
 
         public String getValue() {
             return value;
         }
 
-
         @Override
         public String toString() {
             return this.getValue();
         }
-
 
         public static Enum getEnumFromString(String value) {
             try {
@@ -74,22 +91,18 @@ public class GlobalEnums {
 
         private String value;
 
-
         Organ(final String value) {
             this.value = value;
         }
-
 
         public String getValue() {
             return value;
         }
 
-
         @Override
         public String toString() {
             return this.getValue();
         }
-
 
         public static Enum getEnumFromString(String value) {
             try {
@@ -107,22 +120,18 @@ public class GlobalEnums {
 
         private String value;
 
-
         BloodGroup(final String value) {
             this.value = value;
         }
-
 
         public String getValue() {
             return value;
         }
 
-
         @Override
         public String toString() {
             return this.getValue();
         }
-
 
         public static Enum getEnumFromString(String value) {
             try {
