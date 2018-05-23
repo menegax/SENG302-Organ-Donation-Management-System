@@ -34,6 +34,9 @@ public class Database {
 
     private Connection conn;
 
+    /**
+     * Private constructor for creating instance of Database for Singleton.
+     */
     private Database() {
         patients = new HashSet<>();
         clinicians = new HashSet<>();
@@ -41,6 +44,12 @@ public class Database {
         initializeConnection();
     }
 
+    /**
+     * Returns the instance of the database.
+     * If one does not exist, it creates one.
+     *
+     * @return The instance of the database for Singleton.
+     */
     public static Database getDatabase() {
         if (database == null) {
             database = new Database();
@@ -50,44 +59,59 @@ public class Database {
 
 
     //TODO change to real database before submittion
+
+    /**
+     * Initialize the connection to the remote database.
+     */
     private void initializeConnection() {
         try {
-        	//TODO Uncomment for final product
+            //TODO Uncomment for final product
             //conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test",
             //        "seng302-team800", "ScornsGammas5531");
-        	
-        	//TODO Uncomment for outside Patricks network
+
+            //TODO Uncomment for outside Patricks network
             conn = DriverManager.getConnection("jdbc:mysql://122.62.50.128:3306/seng302-2018-team800-test",
                     "seng302-team800", "ScornsGammas5531");
-        	
-        	//TODO Uncomment for inside Patricks network
+
+            //TODO Uncomment for inside Patricks network
 //            conn = DriverManager.getConnection("jdbc:mysql://192.168.1.70:3306/seng302-2018-team800-test",
 //                    "seng302-team800", "ScornsGammas5531");
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     //ToDO Complete
+
+    /**
+     * Runs a SQL query on the database.
+     *
+     * @param query The SQL query to run.
+     * @param params The parameters to put into the query.
+     * @return Null if update or insert query or if select query ArrayList of String arrays
+     * with the ArrayList being the full set of results and each internal String
+     * array being a row of the queried table.
+     * @throws SQLException If there is an error communicating with the database or SQL syntax error.
+     */
     public ArrayList<String[]> runQuery(String query, String[] params) throws SQLException {
-//        try {
-            String type = query.split(" ")[0].toUpperCase();
-            PreparedStatement stmt = setupQuery(query, params);
-            if (type.equals("SELECT")) {
-                return runSelectQuery(stmt);
-            }
-            else if (type.equals("UPDATE") || type.equals("INSERT")) {
-                runUpdateQuery(stmt);
-            }
-//        }
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        String type = query.split(" ")[0].toUpperCase();
+        PreparedStatement stmt = setupQuery(query, params);
+        if (type.equals("SELECT")) {
+            return runSelectQuery(stmt);
+        } else if (type.equals("UPDATE") || type.equals("INSERT")) {
+            runUpdateQuery(stmt);
+        }
         return null;
     }
 
     //TODO Complete
+
+    /**
+     * @param query The select query to run on the database.
+     * @return ArrayList of String arrays with the ArrayList being the full set of results and each internal String
+     * array being a row of the queried table.
+     * @throws SQLException If there is an error communicating with the database or SQL syntax error.
+     */
     private ArrayList<String[]> runSelectQuery(PreparedStatement query) throws SQLException {
         ResultSet resultSet = query.executeQuery();
         ArrayList<String[]> results = new ArrayList<>();
@@ -106,15 +130,26 @@ public class Database {
     }
 
     //TODO Complete
+
+    /**
+     * Adds a object to the database.
+     * @param object Object to add to the database.
+     */
     public void add(Object object) {
         if (object instanceof Patient) {
             addPatient((Patient) object);
-        }
-        else if (object instanceof Clinician) {
-        	addClinician((Clinician) object);
+        } else if (object instanceof Clinician) {
+            addClinician((Clinician) object);
         }
     }
 
+    /**
+     * Sets a query up as a Prepared Statement from the query string and a string array of the parameters.
+     * @param query String representation of a MySQL query.
+     * @param params String array of the parameters of the query.
+     * @return Prepared Statement of the MySQL query.
+     * @throws SQLException If there is an error communicating with the database or SQL syntax error.
+     */
     private PreparedStatement setupQuery(String query, String[] params) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement(query);
         int count = 0;
@@ -139,6 +174,7 @@ public class Database {
 
     /**
      * Gets patient's attributes and stores them in a String array
+     *
      * @param patient Patient to get attributes from
      * @return String[] attributes of patient
      */
@@ -151,11 +187,11 @@ public class Database {
         attr[4] = patient.getBirth().toString();
         attr[5] = patient.getCREATED().toString();
         attr[6] = patient.getModified().toString();
-        if(patient.getDeath() != null) {
+        if (patient.getDeath() != null) {
             attr[7] = patient.getDeath().toString();
         }
-        if(patient.getGender() != null) {
-            attr[8] = patient.getGender().toString().substring(0,1);
+        if (patient.getGender() != null) {
+            attr[8] = patient.getGender().toString().substring(0, 1);
         }
         attr[9] = null;
         attr[10] = null;
@@ -163,14 +199,15 @@ public class Database {
         attr[12] = String.valueOf(patient.getWeight());
         attr[13] = patient.getBloodGroup().toString();
         attr[14] = String.join(",", patient.getDonations().toString())
-                .replaceAll("\\[","").replaceAll("\\]", "");
+                .replaceAll("\\[", "").replaceAll("\\]", "");
         attr[15] = String.join(",", patient.getRequiredOrgans().toString())
-                .replaceAll("\\[","").replaceAll("\\]", "");
+                .replaceAll("\\[", "").replaceAll("\\]", "");
         return attr;
     }
 
     /**
      * Gets a patient's contact details and stores them in a String array
+     *
      * @param patient Patient to get attributes from
      * @return String[] contact attributes
      */
@@ -197,26 +234,28 @@ public class Database {
 
     /**
      * Gets a clinician's attributes and stores them in a String array
+     *
      * @param clinician Clinician to get attributes from
      * @return String[] clinician attributes
      */
     private String[] getClinicianAttributes(Clinician clinician) {
-    	String[] clinicianAttr = new String[9];
-    	clinicianAttr[0] = String.valueOf(clinician.getStaffID());
-    	clinicianAttr[1] = clinician.getFirstName();
-    	clinicianAttr[2] = String.join(" ", clinician.getMiddleNames());
-    	clinicianAttr[3] = clinician.getLastName();
-    	clinicianAttr[4] = clinician.getStreet1();
-    	clinicianAttr[5] = clinician.getStreet2();
-    	clinicianAttr[6] = clinician.getSuburb();
-    	clinicianAttr[7] = clinician.getRegion().toString();
-    	clinicianAttr[8] = clinician.getModified().toString();
-    	return clinicianAttr;
+        String[] clinicianAttr = new String[9];
+        clinicianAttr[0] = String.valueOf(clinician.getStaffID());
+        clinicianAttr[1] = clinician.getFirstName();
+        clinicianAttr[2] = String.join(" ", clinician.getMiddleNames());
+        clinicianAttr[3] = clinician.getLastName();
+        clinicianAttr[4] = clinician.getStreet1();
+        clinicianAttr[5] = clinician.getStreet2();
+        clinicianAttr[6] = clinician.getSuburb();
+        clinicianAttr[7] = clinician.getRegion().toString();
+        clinicianAttr[8] = clinician.getModified().toString();
+        return clinicianAttr;
     }
-    
+
     /**
      * Gets all attributes for a medication object
-     * @param patient Patient who is taking or used to take the medication
+     *
+     * @param patient    Patient who is taking or used to take the medication
      * @param medication The medication used by the patient
      * @return String[] medication attributes
      */
@@ -224,7 +263,7 @@ public class Database {
         String[] medAttr = new String[3];
         medAttr[0] = patient.getNhiNumber();
         medAttr[1] = medication.getMedicationName();
-        if(isCurrent) {
+        if (isCurrent) {
             medAttr[2] = "0";
         } else {
             medAttr[2] = "1";
@@ -234,6 +273,7 @@ public class Database {
 
     /**
      * Gets all attributes for a disease object
+     *
      * @param patient Patient with disease
      * @param disease Disease to get attributes from
      * @return String[] disease attributes
@@ -244,9 +284,14 @@ public class Database {
         diseaseAttr[1] = disease.getDiseaseName();
         diseaseAttr[2] = disease.getDateDiagnosed().toString();
         switch (disease.getDiseaseState().toString()) {
-            case "chronic": diseaseAttr[3] = "1"; break;
-            case "cured": diseaseAttr[3] = "2"; break;
-            default: diseaseAttr[3] = "0";
+            case "chronic":
+                diseaseAttr[3] = "1";
+                break;
+            case "cured":
+                diseaseAttr[3] = "2";
+                break;
+            default:
+                diseaseAttr[3] = "0";
         }
         return diseaseAttr;
     }
@@ -271,14 +316,14 @@ public class Database {
     }
 
     private void addPatientMedications(Patient newPatient) throws SQLException {
-        for(Medication medication : newPatient.getCurrentMedications()) {
+        for (Medication medication : newPatient.getCurrentMedications()) {
             String[] medAttr = getMedicationAttributes(newPatient, medication, true);
             String medQuery = "INSERT INTO tblMedications VALUES (?, ?, ?)";
             runQuery(medQuery, medAttr);
 
         }
 
-        for(Medication medication : newPatient.getMedicationHistory()) {
+        for (Medication medication : newPatient.getMedicationHistory()) {
             String[] medAttr = getMedicationAttributes(newPatient, medication, false);
             String medQuery = "INSERT INTO tblMedications VALUES (?, ?, ?)";
             runQuery(medQuery, medAttr);
@@ -288,7 +333,7 @@ public class Database {
     private void addPatientDiseases(Patient newPatient) throws SQLException {
         ArrayList<Disease> allDiseases = newPatient.getCurrentDiseases();
         allDiseases.addAll(newPatient.getPastDiseases());
-        for(Disease disease : allDiseases) {
+        for (Disease disease : allDiseases) {
             String[] diseaseAttr = getDiseaseAttributes(newPatient, disease);
             String diseaseQuery = "INSERT INTO tblDiseases VALUES (?, ?, ?, ?)";
             runQuery(diseaseQuery, diseaseAttr);
@@ -334,8 +379,7 @@ public class Database {
             addPatientLogs(newPatient);
 
             userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
-        }
-        catch (SQLException o) {
+        } catch (SQLException o) {
             userActions.log(Level.WARNING, "Failed to add patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
             throw new IllegalArgumentException(o.getMessage());
         }
@@ -364,19 +408,17 @@ public class Database {
 
         if (newClinician.getStaffID() == getNextStaffID()) {
             clinicians.add(newClinician);
-            
+
             String[] attr = getClinicianAttributes(newClinician);
             String query = "INSERT INTO tblClinicians " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			try {
-				runQuery(query, attr);
-				userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
-			} catch (SQLException e) {
-	            userActions.log(Level.WARNING, "Couldn't add clinician due to database error", "Attempted to add a clinician");
-			}   
-        }
-
-        else {
+            try {
+                runQuery(query, attr);
+                userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
+            } catch (SQLException e) {
+                userActions.log(Level.WARNING, "Couldn't add clinician due to database error", "Attempted to add a clinician");
+            }
+        } else {
             userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field staffID", "Attempted to add a clinician");
             throw new IllegalArgumentException("staffID");
         }
@@ -402,7 +444,7 @@ public class Database {
     private ArrayList<GlobalEnums.Organ> loadOrgans(String organs) {
         String[] organArray = organs.split(",");
         ArrayList<GlobalEnums.Organ> organArrayList = new ArrayList<>();
-        for(String organ : organArray) {
+        for (String organ : organArray) {
             organArrayList.add(GlobalEnums.Organ.valueOf(organ));
         }
         return organArrayList;
@@ -442,9 +484,15 @@ public class Database {
         LocalDate death = LocalDate.parse(attr[7]);
         GlobalEnums.Gender gender;
         switch (attr[8]) {
-            case "M": gender = GlobalEnums.Gender.MALE;break;
-            case "F": gender = GlobalEnums.Gender.FEMALE;break;
-            default: gender = GlobalEnums.Gender.OTHER;break;
+            case "M":
+                gender = GlobalEnums.Gender.MALE;
+                break;
+            case "F":
+                gender = GlobalEnums.Gender.FEMALE;
+                break;
+            default:
+                gender = GlobalEnums.Gender.OTHER;
+                break;
         }
         //todo: set pref gender and name here after story 29 is in
         double height = Double.parseDouble(attr[11]) / 100;
@@ -483,7 +531,7 @@ public class Database {
         ArrayList<Medication>[] medArray = new ArrayList[2];
         medArray[0] = currentMedications;
         medArray[1] = medicationHistory;
-        for(String[] attr : medicationsRaw) {
+        for (String[] attr : medicationsRaw) {
             medArray = addMedication(attr, medArray);
         }
         return medArray;
@@ -492,14 +540,14 @@ public class Database {
     private ArrayList<Disease>[] loadDiseases(LocalDate birth, String nhi) throws InvalidObjectException, SQLException {
         ArrayList<String[]> diseasesRaw = runQuery("SELECT * FROM tblDiseases WHERE Patient = " + nhi, null);
         ArrayList<Disease> patientDiseases = new ArrayList<>();
-        for(String[] attr : diseasesRaw) {
+        for (String[] attr : diseasesRaw) {
             patientDiseases.add(addDisease(attr, birth));
         }
         ArrayList<Disease>[] diseaseArray = new ArrayList[2];
         ArrayList<Disease> pastDiseases = new ArrayList<>();
         ArrayList<Disease> currentDiseases = new ArrayList<>();
-        for(Disease disease : patientDiseases) {
-            if(disease.getDiseaseState() == GlobalEnums.DiseaseState.CURED) {
+        for (Disease disease : patientDiseases) {
+            if (disease.getDiseaseState() == GlobalEnums.DiseaseState.CURED) {
                 pastDiseases.add(disease);
             } else {
                 currentDiseases.add(disease);
@@ -513,8 +561,12 @@ public class Database {
 
     private ArrayList<Medication>[] addMedication(String[] attr, ArrayList<Medication>[] meds) {
         switch (attr[2]) {
-            case "0": meds[0].add(new Medication(attr[1])); break;
-            case "1": meds[1].add(new Medication(attr[1])); break;
+            case "0":
+                meds[0].add(new Medication(attr[1]));
+                break;
+            case "1":
+                meds[1].add(new Medication(attr[1]));
+                break;
         }
         return meds;
     }
@@ -540,53 +592,54 @@ public class Database {
 
     /**
      * Creates a clinician object from a String array of its attributes.
+     *
      * @param attr String array of the clinicians attributes.
      * @return The clinician object.
      */
-	private Clinician parseClinician(String[] attr) {
-		int staffID = Integer.parseInt(attr[0]);
-	    String fName = attr[1];
-	    ArrayList<String> mNames = new ArrayList<>();
-	    mNames.addAll(Arrays.asList(attr[2].split(" ")));
-	    String lName = attr[3];
-	    String street1 = attr[4];
-	    String street2 = attr[5];
-	    String suburb = attr[6];
-	    Region region = GlobalEnums.Region.valueOf(attr[7]);
-	    Timestamp modified = Timestamp.valueOf(attr[8]);
-	    
-	    Clinician newClinician = new Clinician(staffID, fName, mNames, lName, street1, street2, suburb, region);
-	    newClinician.setModified(modified);
-		return newClinician;
-	}
+    private Clinician parseClinician(String[] attr) {
+        int staffID = Integer.parseInt(attr[0]);
+        String fName = attr[1];
+        ArrayList<String> mNames = new ArrayList<>();
+        mNames.addAll(Arrays.asList(attr[2].split(" ")));
+        String lName = attr[3];
+        String street1 = attr[4];
+        String street2 = attr[5];
+        String suburb = attr[6];
+        Region region = GlobalEnums.Region.valueOf(attr[7]);
+        Timestamp modified = Timestamp.valueOf(attr[8]);
 
-	/**
-	 * Loads all patients into the application from the remote database.
-	 */
-	private void loadAllPatients() {
-	    try {
+        Clinician newClinician = new Clinician(staffID, fName, mNames, lName, street1, street2, suburb, region);
+        newClinician.setModified(modified);
+        return newClinician;
+    }
+
+    /**
+     * Loads all patients into the application from the remote database.
+     */
+    private void loadAllPatients() {
+        try {
             ArrayList<String[]> patientsRaw = runQuery("SELECT * FROM tblPatients", null);
             for (String[] attr : patientsRaw) {
                 patients.add(parsePatient(attr));
             }
         } catch (SQLException e) {
-	        e.printStackTrace();
+            e.printStackTrace();
         }
-	}
-	
-	/**
-	 * Loads all clinicians into the application from the remote database.
-	 */
-	private void loadAllClinicians() {
-	    try {
+    }
+
+    /**
+     * Loads all clinicians into the application from the remote database.
+     */
+    private void loadAllClinicians() {
+        try {
             ArrayList<String[]> clinicianRaw = runQuery("SELECT * FROM tblClincians", null);
             for (String[] attr : clinicianRaw) {
                 clinicians.add(parseClinician(attr));
             }
-        } catch(SQLException e) {
-	        e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-	}
+    }
 
     private void loadTransplantWaitingList() {
         try {
@@ -662,7 +715,7 @@ public class Database {
      * Removes a patient from the database
      *
      * @param nhi the nhi to search patients by
-     * @exception InvalidObjectException when the object cannot be found
+     * @throws InvalidObjectException when the object cannot be found
      */
     public void removePatient(String nhi) throws InvalidObjectException {
         patients.remove(getPatientByNhi(nhi));
@@ -675,8 +728,7 @@ public class Database {
      *
      * @param nhi the nhi to search patients by
      * @return Patient object
-     *
-     * @exception InvalidObjectException when the object cannot be found
+     * @throws InvalidObjectException when the object cannot be found
      */
     public Patient getPatientByNhi(String nhi) throws InvalidObjectException {
         for (Patient p : getPatients()) {
@@ -727,8 +779,7 @@ public class Database {
      *
      * @param staffID the staff ID to search clinicians by
      * @return Clinician object
-     *
-     * @exception InvalidObjectException when the object cannot be found
+     * @throws InvalidObjectException when the object cannot be found
      */
     public Clinician getClinicianByID(int staffID) throws InvalidObjectException {
         for (Clinician c : getClinicians()) {
@@ -748,8 +799,7 @@ public class Database {
     public int getNextStaffID() {
         if (clinicians.size() == 0) {
             return 0;
-        }
-        else {
+        } else {
             int currentID = clinicians.stream()
                     .max(Comparator.comparing(Clinician::getStaffID))
                     .get()
@@ -781,11 +831,11 @@ public class Database {
         writer.write(json);
         writer.close();
     }
-    
+
     /**
      * Writes database patients to file on disk
      *
-     * @exception IOException when the file cannot be found nor created
+     * @throws IOException when the file cannot be found nor created
      */
     private void saveToDiskPatients() throws IOException {
         Gson gson = new Gson();
@@ -801,7 +851,7 @@ public class Database {
     /**
      * Writes database clinicians to file on diskreturn null;
      *
-     * @exception IOException when the file cannot be found nor created
+     * @throws IOException when the file cannot be found nor created
      */
     private void saveToDiskClinicians() throws IOException {
         Gson gson = new Gson();
@@ -830,6 +880,7 @@ public class Database {
 
     /**
      * Reads patient data from disk
+     *
      * @param fileName file to import from
      */
     public void importFromDiskPatients(String fileName) {
@@ -841,19 +892,17 @@ public class Database {
             for (Patient d : patient) {
                 try {
                     addPatient(d);
-                }
-                catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     userActions.log(Level.WARNING, "Error importing donor from file", "Attempted to import donor from file");
                 }
             }
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             userActions.log(Level.WARNING, "Patient import file not found", "Attempted to read patient file");
         }
     }
 
     public void importFromDiskWaitlist(String directory) throws FileNotFoundException {
-    	String fileName = directory + "waitlist.json";
+        String fileName = directory + "waitlist.json";
         Gson gson = new Gson();
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         organWaitingList = gson.fromJson(br, OrganWaitlist.class);
@@ -861,6 +910,7 @@ public class Database {
 
     /**
      * Reads clinician data from disk
+     *
      * @param fileName file to import from
      */
     public void importFromDiskClinicians(String fileName) {
@@ -876,8 +926,7 @@ public class Database {
                     userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
                 }
             }
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
         }
     }
@@ -890,7 +939,6 @@ public class Database {
         patients = new HashSet<>();
         clinicians = new HashSet<>();
     }
-
 
 
     public Set<Patient> getPatients() {
