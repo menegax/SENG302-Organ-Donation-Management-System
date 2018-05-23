@@ -13,10 +13,13 @@ import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.Patient;
 import model.Procedure;
+import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.StreamSupport;
@@ -95,6 +98,18 @@ public class GUIPatientProcedures extends UndoableController {
             this.patient = userControl.getTargetPatient();
             setupTables();
         }
+        setupUndoRedo();
+    }
+
+    /**
+     * Sets up undo redo for the patient procedures screen
+     */
+    private void setupUndoRedo() {
+        controls = new ArrayList<Control>(){{
+            add(pendingProceduresView);
+            add(previousProceduresView);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
     }
 
     /**
