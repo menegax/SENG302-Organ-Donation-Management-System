@@ -108,10 +108,9 @@ public class GUIPatientProfile {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private void removeBack() {
-        back.setDisable(true);
-        back.setVisible(false);
-    }
+    /**
+        * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
+     */
 
     public void initialize() {
         userControl = new UserControl();
@@ -127,6 +126,8 @@ public class GUIPatientProfile {
         }
 
         try {
+
+            assert user != null;
             loadProfile(((Patient)user).getNhiNumber());
         }
         catch (IOException e) {
@@ -135,6 +136,36 @@ public class GUIPatientProfile {
     }
 
 
+    /**
+     * Removes the back button from the scene
+     */
+    private void removeBack() {
+        back.setDisable(true);
+        back.setVisible(false);
+    }
+
+
+    /**
+     * Sets the patient for the controller. This patient's attributes will be loaded
+     * @param patient the patient to be viewed
+     */
+    void setViewedPatient(Patient patient) {
+        Patient viewedPatient = patient;
+        removeBack();
+        try {
+            loadProfile(viewedPatient.getNhiNumber());
+        }
+        catch (InvalidObjectException e) {
+            userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
+        }
+    }
+
+
+    /**
+     * Sets the patient's attributes for the scene's labels
+     * @param nhi the nhi of the patient to be viewed
+     * @throws InvalidObjectException if the nhi of the patient does not exist in the database
+     */
     private void loadProfile(String nhi) throws InvalidObjectException {
         Patient patient = Database.getPatientByNhi(nhi);
         nhiLbl.setText(patient.getNhiNumber());
@@ -186,6 +217,9 @@ public class GUIPatientProfile {
     }
 
 
+    /**
+     * Goes to the patient edit scene
+     */
     public void goToEdit() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             try {
@@ -210,6 +244,9 @@ public class GUIPatientProfile {
     }
 
 
+    /**
+     * Goes to the patient donations scene
+     */
     public void goToDonations() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             try {
@@ -234,6 +271,9 @@ public class GUIPatientProfile {
     }
 
 
+    /**
+     * Goes to the patient contact details edit scene
+     */
     public void goToContactDetails() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             if (userControl.getLoggedInUser() instanceof Patient) {
@@ -260,6 +300,9 @@ public class GUIPatientProfile {
     }
 
 
+    /**
+     * Goes to medications edit scene
+     */
     public void openMedication() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             if (userControl.getLoggedInUser() instanceof Patient) {
@@ -284,6 +327,9 @@ public class GUIPatientProfile {
     }
 
 
+    /**
+     * Goes to the patient home scene
+     */
     public void goToPatientHome() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             try {

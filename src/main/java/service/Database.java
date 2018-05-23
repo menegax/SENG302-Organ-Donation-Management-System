@@ -184,8 +184,7 @@ public class Database {
         try {
             saveToDiskPatients();
             saveToDiskClinicians();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
     }

@@ -26,7 +26,6 @@ public class UserActionHistory {
 
         userActions.setUseParentHandlers(false); // disables default console userActions in parent
 
-        // todo patient handler
         Handler patientHandler = new Handler() {
             public void publish(LogRecord logRecord) {
                 Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
@@ -70,7 +69,6 @@ public class UserActionHistory {
 
         userActions.addHandler(console);
 
-        // todo remove maybe
         // File handler
         try {
             Handler file = new FileHandler("UserActionHistory%u.xml", true);

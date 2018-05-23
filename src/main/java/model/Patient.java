@@ -17,6 +17,8 @@ import java.time.LocalDate;
 import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -83,8 +85,6 @@ public class Patient extends User {
     private String contactWorkPhone;
 
     private String contactEmailAddress;
-
-//    private ArrayList<String> patientLog; //todo remove
 
     private ArrayList<UserActionRecord> userActionsList;
 
@@ -294,7 +294,9 @@ public class Patient extends User {
 
     public void setFirstName(String firstName) {
         if (this.firstName == null || (!firstName.equals(this.firstName))) {
+        	SearchPatients.removeIndex(this);
             this.firstName = firstName;
+            SearchPatients.addIndex(this);
             patientModified();
         }
     }
@@ -307,7 +309,9 @@ public class Patient extends User {
 
     public void setMiddleNames(ArrayList<String> middleNames) {
         if (this.middleNames == null || (!middleNames.equals(this.middleNames))) {
+        	SearchPatients.removeIndex(this);
             this.middleNames = middleNames;
+            SearchPatients.addIndex(this);
             patientModified();
         }
     }
@@ -320,7 +324,9 @@ public class Patient extends User {
 
     public void setLastName(String lastName) {
         if (this.lastName == null || (!lastName.equals(this.lastName))) {
+        	SearchPatients.removeIndex(this);
             this.lastName = lastName;
+            SearchPatients.addIndex(this);
             patientModified();
         }
     }
@@ -581,8 +587,10 @@ public class Patient extends User {
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
         ensureValidNhi();
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
-            this.nhiNumber = nhiNumber.toUpperCase();
-            patientModified();
+            SearchPatients.removeIndex(this);
+        	this.nhiNumber = nhiNumber.toUpperCase();
+            SearchPatients.addIndex(this);
+        	patientModified();
         }
     }
 
@@ -709,10 +717,9 @@ public class Patient extends User {
 //    }
 
 
-    //todo implement
     /**
      * Gets the list of user action history logs
-     * DO NOT USE UNLESS LOGGER //todo think about
+     * DO NOT USE UNLESS LOGGER
      * @return the list of user records
      */
     public ArrayList<UserActionRecord> getUserActionsList() {

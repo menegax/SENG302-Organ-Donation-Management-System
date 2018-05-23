@@ -5,6 +5,7 @@ import static utility.UserActionHistory.userActions;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
 
@@ -83,14 +85,19 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * Sets up double-click functionality for each row to open a patient profile update
      */
     private void setupDoubleClickToPatientEdit() {
-        UserControl userControl = new UserControl();
+
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
                     .getSelectedItem() != null) {
                 try {
-                    userControl.setTargetPatient(patientDataTable.getSelectionModel().getSelectedItem());
+                    UserControl userControl = new UserControl();
+                    userControl.setTargetPatient(patientDataTable.getSelectionModel()
+                            .getSelectedItem());
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+                    GUIPatientProfile controller = fxmlLoader.getController();
+                    controller.setViewedPatient(patientDataTable.getSelectionModel()
+                            .getSelectedItem());
                     UndoableStage popUpStage = new UndoableStage();
                     screenControl.addStage(popUpStage.getUUID(), popUpStage);
                     screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
@@ -98,7 +105,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
                 }
-                catch (Exception e) {
+                catch (IOException e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");
@@ -132,7 +139,20 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 .toString()) : new SimpleStringProperty(""));
 
         // wrap ObservableList in a FilteredList
-        FilteredList<Patient> filteredData = new FilteredList<>(masterData, d -> true);
+        FilteredList<Patient> filteredData = new FilteredList<>(masterData, new Predicate<Patient>() {
+            @Override
+            public boolean test(Patient d) {
+                return true;
+            }
+        });
+
+        // 2. Set the filter Predicate whenever the filter changes.
+        searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            masterData.clear();
+            masterData.addAll(SearchPatients.searchByName(newValue));
+
+            filteredData.setPredicate(patient -> true);
+        });
 
         // wrap the FilteredList in a SortedList.
         SortedList<Patient> sortedData = new SortedList<>(filteredData);
@@ -206,7 +226,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * Adds all db data via constructor
      */
     public GUIClinicianSearchPatients() {
-        masterData.addAll(Database.getPatients());
+        masterData.addAll(SearchPatients.getDefaultResults());
     }
 
 
@@ -227,4 +247,3 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         patientDataTable.refresh();
     }
 }
-
