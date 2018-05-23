@@ -8,12 +8,10 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.DrugInteraction;
@@ -21,6 +19,7 @@ import model.Medication;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
+import service.TextWatcher;
 import utility.undoRedo.StatesHistoryScreen;
 import service.TextWatcher;
 
@@ -49,8 +48,6 @@ public class GUIPatientMedications extends UndoableController {
     public Button addMed;
     public Button deleteMed;
     public Button compareMeds;
-    public Button undoEdit;
-    public Button redoEdit;
     public Button goBack;
     public Button wipeReview;
     public Button clearMed;
@@ -142,7 +139,6 @@ public class GUIPatientMedications extends UndoableController {
      */
     @FXML
     public void initialize() {
-        newMedication.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
         //Register events for when an item is selected from a listView and set selection mode to multiple
@@ -150,14 +146,17 @@ public class GUIPatientMedications extends UndoableController {
         pastMedications.setOnMouseClicked(event -> onSelect(pastMedications));
         pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        controls = new ArrayList<Control>() {{ add(newMedication); }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS);
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         } else if (user instanceof Clinician) {
             viewedPatient = userControl.getTargetPatient();
             loadProfile(viewedPatient.getNhiNumber());
         }
+        controls = new ArrayList<Control>() {{
+            add(pastMedications);
+            add(currentMedications);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS);
     }
 
     /**
@@ -205,7 +204,7 @@ public class GUIPatientMedications extends UndoableController {
                     textWatcher.afterTextChange(GUIPatientMedications.class.getMethod("autoComplete"), this); //start timer
 
                 } catch (NoSuchMethodException e) {
-                    userActions.log(Level.SEVERE, e.getMessage(), "");
+                    userActions.log(Level.SEVERE, "No method exists for autocomplete", "Attempted to make API call"); // MAJOR ISSUE HERE!
                 }
             }
         });
@@ -214,7 +213,6 @@ public class GUIPatientMedications extends UndoableController {
     /**
      * Runs the updating of UI elements and API call
      */
-    @SuppressWarnings("WeakerAccess")
     public void autoComplete() {
         Platform.runLater(() -> { // run this on the FX thread (next available)
             getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread
@@ -542,14 +540,6 @@ public class GUIPatientMedications extends UndoableController {
      */
     @FXML
     public void goToProfile() {
-        if (userControl.getLoggedInUser() instanceof Patient ) {
-            try {
-                screenControl.show(medicationPane,"/scene/patientProfile.fxml");
-            } catch (IOException e) {
-                new Alert((Alert.AlertType.ERROR), "Unable to load patient profile").show();
-                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
-            }
-        } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
                 ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader);

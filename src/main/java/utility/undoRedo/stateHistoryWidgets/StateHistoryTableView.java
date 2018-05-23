@@ -5,21 +5,16 @@ import java.util.ArrayList;
 
 public class StateHistoryTableView extends StateHistoryControl {
 
-    private TableView<String> tableView;
-
-    private boolean undone = false;
-
-
     /**
      * Constructor which adds the current (base) state of the tableView to the history
      *
      * @param tableView - tableView the object will be keeping history of
      */
 
-    public StateHistoryTableView(TableView<String> tableView) {
-        this.tableView = tableView;
-        states.add(tableView.getSelectionModel()
-                .getSelectedItem());
+    public StateHistoryTableView(TableView<Object> tableView) {
+        this.control = tableView;
+        states.add(new ArrayList<>(tableView.getItems()));
+        setUpUndoableStage();
     }
 
 
@@ -30,8 +25,7 @@ public class StateHistoryTableView extends StateHistoryControl {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(tableView.getSelectionModel()
-                .getSelectedItem());
+        states.add(new ArrayList<>(((TableView<Object>) control).getItems()));
     }
 
 
@@ -41,8 +35,10 @@ public class StateHistoryTableView extends StateHistoryControl {
     public boolean undo() {
         if (index != 0) {
             index -= 1;
-            tableView.getSelectionModel().select((String) states.get(index));
-            undone = true;
+            ((TableView<Object>) control).getItems().clear();
+            for (Object object : (ArrayList<Object>) states.get(index)) {
+                ((TableView<Object>) control).getItems().add(object);
+            }
             return true;
         }
         return false;
@@ -52,9 +48,12 @@ public class StateHistoryTableView extends StateHistoryControl {
      * Resets the tableView to the state immediately prior to an undo
      */
     public boolean redo() {
-        if (undone && index + 1 < states.size()) {
+        if (index + 1 < states.size()) {
             index += 1;
-            tableView.getSelectionModel().select((String) states.get(index));
+            ((TableView<Object>) control).getItems().clear();
+            for (Object object : (ArrayList<Object>) states.get(index)) {
+                ((TableView<Object>) control).getItems().add(object);
+            }
             return true;
         }
         return false;

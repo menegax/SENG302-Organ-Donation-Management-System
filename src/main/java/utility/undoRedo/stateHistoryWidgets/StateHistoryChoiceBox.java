@@ -8,8 +8,6 @@ import java.util.List;
 
 public class StateHistoryChoiceBox extends StateHistoryControl {
 
-    private boolean undone = false;
-
     /**
      * Constructor which adds the current (base) state of the choice box to the history
      *
@@ -20,6 +18,7 @@ public class StateHistoryChoiceBox extends StateHistoryControl {
         this.control = choiceBox;
         states.add(choiceBox.getSelectionModel()
                 .getSelectedItem());
+        setUpUndoableStage();
     }
 
 
@@ -44,7 +43,6 @@ public class StateHistoryChoiceBox extends StateHistoryControl {
             index -= 1;
             // Cast will always be safe
             ((ChoiceBox<String>) control).getSelectionModel().select((String) states.get(index));
-            undone = true;
             return true;
         }
         return false;
@@ -54,7 +52,7 @@ public class StateHistoryChoiceBox extends StateHistoryControl {
      * Resets the ChoiceBox to the state immediately prior to an undo
      */
     public boolean redo() {
-        if (undone && index + 1 < states.size()) {
+        if (index + 1 < states.size()) {
             index += 1;
             // Cast will always be safe
             ((ChoiceBox<String>) control).getSelectionModel().select((String) states.get(index));

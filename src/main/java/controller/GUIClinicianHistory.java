@@ -46,7 +46,6 @@ public class GUIClinicianHistory {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-
     public void initialize() {
         UserControl userControl = new UserControl();
         target = userControl.getLoggedInUser() instanceof Clinician ? (Clinician) userControl.getLoggedInUser() : null;

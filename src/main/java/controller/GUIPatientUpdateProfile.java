@@ -2,17 +2,15 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import model.Patient;
 import service.Database;
-import utility.GlobalEnums;
+import utility.GlobalEnums.*;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -36,6 +34,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private Label lastModifiedLbl;
 
     @FXML
+    private Button saveButton;
+
+    @FXML
     private TextField nhiTxt;
 
     @FXML
@@ -48,13 +49,22 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private TextField middlenameTxt;
 
     @FXML
-    private RadioButton genderMaleRadio;
+    private TextField preferrednameTxt;
 
     @FXML
-    private RadioButton genderFemaleRadio;
+    private RadioButton birthGenderMaleRadio;
 
     @FXML
-    private RadioButton genderOtherRadio;
+    private RadioButton birthGenderFemaleRadio;
+
+    @FXML
+    private RadioButton preferredGenderManRadio;
+
+    @FXML
+    private RadioButton preferredGenderWomanRadio;
+
+    @FXML
+    private RadioButton preferredGenderNonBinaryRadio;
 
     @FXML
     private DatePicker dobDate;
@@ -72,9 +82,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private TextField suburbTxt;
 
     @FXML
-    private ChoiceBox<String> regionDD;
-
-    @FXML
     private TextField zipTxt;
 
     @FXML
@@ -82,6 +89,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     @FXML
     private TextField heightTxt;
+
+    @FXML
+    private ChoiceBox<String> regionDD;
 
     @FXML
     private ChoiceBox<String> bloodGroupDD;
@@ -93,18 +103,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     public void initialize() {
-        nhiTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        firstnameTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        lastnameTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        middlenameTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        street1Txt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        street2Txt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        suburbTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        zipTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        weightTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        heightTxt.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        dobDate.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        dateOfDeath.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         populateDropdowns();
         userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
@@ -122,13 +120,16 @@ public class GUIPatientUpdateProfile extends UndoableController {
         });
     }
 
+
+
+
     /**
      * Populates drop down menus that represent enum data
      */
     private void populateDropdowns() {
         // Populate blood group drop down with values from the Blood groups enum
         List<String> bloodGroups = new ArrayList<>();
-        for (GlobalEnums.BloodGroup bloodgroup : GlobalEnums.BloodGroup.values()) {
+        for (BloodGroup bloodgroup : BloodGroup.values()) {
             bloodGroups.add(bloodgroup.getValue());
         }
         ObservableList<String> bloodGroupsOL = FXCollections.observableList(bloodGroups);
@@ -136,14 +137,12 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         // Populate region drop down with values from the Regions enum
         List<String> regions = new ArrayList<>();
-        for (GlobalEnums.Region region : GlobalEnums.Region.values()) {
+        for (Region region : Region.values()) {
             regions.add(region.getValue());
         }
         ObservableList<String> regionsOL = FXCollections.observableList(regions);
         regionDD.setItems(regionsOL);
-
     }
-
 
     /**
      * Loads the patient's profile into the gui
@@ -161,13 +160,16 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 add(firstnameTxt);
                 add(lastnameTxt);
                 add(middlenameTxt);
+                add(preferrednameTxt);
                 add(bloodGroupDD);
                 add(regionDD);
                 add(dobDate);
                 add(dateOfDeath);
-                add(genderMaleRadio);
-                add(genderFemaleRadio);
-                add(genderOtherRadio);
+                add(birthGenderMaleRadio);
+                add(birthGenderFemaleRadio);
+                add(preferredGenderManRadio);
+                add(preferredGenderWomanRadio);
+                add(preferredGenderNonBinaryRadio);
                 add(street1Txt);
                 add(street2Txt);
                 add(suburbTxt);
@@ -175,13 +177,12 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 add(heightTxt);
                 add(zipTxt);
             }};
-            statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEPROFILE);
+            statesHistoryScreen = new StatesHistoryScreen( controls, UndoableScreen.PATIENTUPDATEPROFILE);
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }
-
 
     /**
      * Populates the scene controls with values from the patient object
@@ -196,18 +197,25 @@ public class GUIPatientUpdateProfile extends UndoableController {
         for (String name : patient.getMiddleNames()) {
             middlenameTxt.setText(middlenameTxt.getText() + name + " ");
         }
-        if (patient.getGender() != null) {
-            switch (patient.getGender()
-                    .getValue()) {
-                case "male":
-                    genderMaleRadio.setSelected(true);
+        preferrednameTxt.setText(patient.getPreferredName());
+        if (patient.getBirthGender() != null) {
+            switch (patient.getBirthGender().getValue()) {
+                case "Male":
+                    birthGenderMaleRadio.setSelected(true);
                     break;
-                case "female":
-                    genderFemaleRadio.setSelected(true);
+                case "Female":
+                    birthGenderFemaleRadio.setSelected(true);
                     break;
-                case "other":
-                    genderOtherRadio.setSelected(true);
-                    break;
+            }
+        }
+        if (patient.getPreferredGender() != null) {
+            switch (patient.getPreferredGender().getValue()) {
+                case "Man":
+                    preferredGenderManRadio.setSelected(true); break;
+                case "Woman":
+                    preferredGenderWomanRadio.setSelected(true); break;
+                case "Non-binary":
+                    preferredGenderNonBinaryRadio.setSelected(true); break;
             }
         }
         dobDate.setValue(patient.getBirth());
@@ -239,7 +247,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
     }
 
-
     /**
      * Checks for invalidity of a double used for height or weight.
      * Returns true if input is not a valid double or the input is a valid double with a value of less than 0.
@@ -256,7 +263,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
             return true;
         }
     }
-
 
     /**
      * Saves profile changes after checking each field for validity
@@ -319,10 +325,18 @@ public class GUIPatientUpdateProfile extends UndoableController {
             setValid(middlenameTxt);
         }
 
+        // preferred name
+        if (!preferrednameTxt.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
+            valid = setInvalid(preferrednameTxt);
+        }
+        else {
+            setValid(preferrednameTxt);
+        }
+
         // region
         if (regionDD.getSelectionModel()
                 .getSelectedIndex() != -1) {
-            Enum region = GlobalEnums.Region.getEnumFromString(regionDD.getSelectionModel()
+            Enum region = Region.getEnumFromString(regionDD.getSelectionModel()
                     .getSelectedItem());
             if (region == null) {
                 valid = setInvalid(regionDD);
@@ -335,6 +349,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         else {
             setValid(regionDD);
         }
+
 
         // zip
         if (!zipTxt.getText()
@@ -392,7 +407,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         if (bloodGroupDD.getValue() != null) {
             String bgStr = bloodGroupDD.getValue()
                     .replace(' ', '_');
-            Enum bloodgroup = GlobalEnums.BloodGroup.getEnumFromString(bgStr);
+            Enum bloodgroup = BloodGroup.getEnumFromString(bgStr);
             if (bloodgroup == null) {
                 valid = setInvalid(bloodGroupDD);
                 invalidContent.append("Blood group must be a valid selection\n");
@@ -451,14 +466,21 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 ArrayList<String> middles = new ArrayList<>(middlenames);
                 target.setMiddleNames(middles);
             }
-            if (genderMaleRadio.isSelected()) {
-                target.setGender((GlobalEnums.Gender) GlobalEnums.Gender.getEnumFromString("male"));
+            target.setPreferredName( preferrednameTxt.getText() );
+            if (birthGenderMaleRadio.isSelected()) {
+                target.setBirthGender((BirthGender) BirthGender.getEnumFromString("male"));
             }
-            if (genderFemaleRadio.isSelected()) {
-                target.setGender((GlobalEnums.Gender) GlobalEnums.Gender.getEnumFromString("female"));
+            if (birthGenderFemaleRadio.isSelected()) {
+                target.setBirthGender((BirthGender) BirthGender.getEnumFromString("female"));
             }
-            if (genderOtherRadio.isSelected()) {
-                target.setGender((GlobalEnums.Gender) GlobalEnums.Gender.getEnumFromString("other"));
+            if (preferredGenderManRadio.isSelected()) {
+                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( "man" ) );
+            }
+            if (preferredGenderWomanRadio.isSelected()) {
+                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( "woman" ) );
+            }
+            if (preferredGenderNonBinaryRadio.isSelected()) {
+                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( "nonbinary" ) );
             }
             if (dobDate.getValue() != null) {
                 target.setBirth(dobDate.getValue());
@@ -479,7 +501,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 target.setSuburb(suburbTxt.getText());
             }
             if (regionDD.getValue() != null) {
-                target.setRegion((GlobalEnums.Region) GlobalEnums.Region.getEnumFromString(regionDD.getSelectionModel()
+                target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
                         .getSelectedItem()));
             }
             if (zipTxt.getText() != null) {
@@ -493,7 +515,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 target.setHeight(Double.parseDouble(heightTxt.getText()));
             }
             if (bloodGroupDD.getValue() != null) {
-                target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
+                target.setBloodGroup((BloodGroup) BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
                         .getSelectedItem()));
             }
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
@@ -508,7 +530,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
     }
 
-
     /***
      * Applies the invalid class to the target control
      * @param target The target to add the class to
@@ -519,7 +540,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 .add("invalid");
         return false;
     }
-
 
     /**
      * Removes the invalid class from the target control if it has it
@@ -533,7 +553,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
                     .remove("invalid");
         }
     }
-
 
     /**
      * Returns to patient profile screen
@@ -560,5 +579,4 @@ public class GUIPatientUpdateProfile extends UndoableController {
             }
         }
     }
-
 }

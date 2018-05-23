@@ -49,6 +49,11 @@ public class ControllerClinicianEdit extends ApplicationTest {
      */
     @Before
     public void Login() {
+        interact(() -> {
+            while(lookup("OK").queryAs(Button.class) != null) {
+                lookup("OK").queryAs(Button.class).fire();
+            }
+        });
         staffId = Integer.toString(clinicians.stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStaffID());
         //Check 'I am Clinician" checkbox to login as clinician
         interact(() -> {
@@ -337,24 +342,4 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
 
-
-    /**
-     * Tests the back and logout buttons work
-     */
-    @Test
-    public void logoutButtonTakesUserToLoginScreen() {
-        interact(() -> {
-            lookup("#back").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that back
-        // button has taken "user" to the profile panel
-        interact(() -> {
-            lookup("#back").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#clinicianHomePane", Node::isVisible); // Verify that back button has taken "user" to the home panel
-        interact(() -> {
-            lookup("#logoutButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#loginPane", Node::isVisible); // Verify that logout button has taken "user" to the login panel
-    }
 }

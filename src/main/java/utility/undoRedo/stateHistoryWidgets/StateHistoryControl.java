@@ -19,6 +19,8 @@ public abstract class StateHistoryControl {
 
     Control control;
 
+    private UndoableStage undoableStage;
+
     /**
      * Display the state of the object one action ahead
      * @return whether the stateHistory was successfully redone or not
@@ -37,7 +39,6 @@ public abstract class StateHistoryControl {
      * @return whether the stateHistory was successfully undone or not
      */
     abstract public boolean undo();
-
 
     /**
      * Gets the states of the object
@@ -68,8 +69,49 @@ public abstract class StateHistoryControl {
     }
 
     /**
+     * Sets the undoable stage that this control is on
+     */
+    void setUpUndoableStage() {
+        if (control.getScene() == null) {
+            control.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    if (newScene.getWindow() == null) {
+                        newScene.windowProperty().addListener((observable2, oldStage, newStage) -> {
+                            if (newStage != null) {
+                                undoableStage = (UndoableStage) newStage;
+                            }
+                        });
+                    } else {
+                        undoableStage = (UndoableStage) newScene.getWindow();
+                    }
+                }
+            });
+        } else if (control.getScene().getWindow() == null){
+            control.getScene().windowProperty().addListener((observable2, oldStage, newStage) -> {
+                if (newStage != null) {
+                    undoableStage = (UndoableStage) newStage;
+                }
+            });
+        } else {
+            undoableStage = (UndoableStage) control.getScene().getWindow();
+        }
+    }
+
+    /**
      * Gets the undoable stage that this stateHistoryControl is on
      * @return the undoableStage of this stateHistoryControl
      */
-    public UndoableStage getUndoableStage() { return (UndoableStage) control.getScene().getWindow(); }
+    public UndoableStage getUndoableStage() {
+        return undoableStage;
+    }
+
+    /**
+     * Sets the states in this StateHistoryControl to a copy of the provided StateHistoryControl
+     * @param stateHistoryControl the StateHistoryControl to copy the state of
+     */
+    public void setStates(StateHistoryControl stateHistoryControl) {
+        this.states = stateHistoryControl.getStates();
+        this.index = stateHistoryControl.getIndex();
+        this.undoableStage = stateHistoryControl.getUndoableStage();
+    }
 }

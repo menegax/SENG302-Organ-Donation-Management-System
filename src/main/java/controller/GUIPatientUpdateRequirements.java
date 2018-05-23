@@ -2,6 +2,8 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -9,25 +11,27 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
+import javafx.stage.Stage;
+import model.DrugInteraction;
 import model.Patient;
 import service.OrganWaitlist;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
  * This class is the controller for editing a patients required organs only accessible by the clinician
  */
-public class GUIPatientUpdateRequirements {
+public class GUIPatientUpdateRequirements extends UndoableController{
 
     @FXML
     private CheckBox liverCB;
@@ -69,23 +73,17 @@ public class GUIPatientUpdateRequirements {
     @FXML
     private AnchorPane patientRequirementsAnchorPane;
 
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
-
     private Patient target;
 
-    private StatesHistoryScreen statesHistoryScreen;
-
     private UserControl userControl;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private Set<GlobalEnums.Organ> initialRequirements = new HashSet<>();
+
+    private Set<GlobalEnums.Organ> finalRequirements = new HashSet<>();
+
+//    private boolean closed = false;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -103,12 +101,6 @@ public class GUIPatientUpdateRequirements {
             if (e.getCode() == KeyCode.ENTER) {
                 saveRequirements();
             }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
-                undo();
-            }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
-                redo();
-            }
         });
     }
 
@@ -125,7 +117,7 @@ public class GUIPatientUpdateRequirements {
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
         }
-        ArrayList<Control> controls = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(liverCB);
             add(kidneyCB);
             add(pancreasCB);
@@ -151,39 +143,51 @@ public class GUIPatientUpdateRequirements {
         if (organs != null) {
             if (organs.contains(GlobalEnums.Organ.LIVER)) {
                 liverCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.LIVER);
             }
             if (organs.contains(GlobalEnums.Organ.KIDNEY)) {
                 kidneyCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.KIDNEY);
             }
             if (organs.contains(GlobalEnums.Organ.PANCREAS)) {
                 pancreasCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.PANCREAS);
             }
             if (organs.contains(GlobalEnums.Organ.HEART)) {
                 heartCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.HEART);
             }
             if (organs.contains(GlobalEnums.Organ.LUNG)) {
                 lungCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.LUNG);
             }
             if (organs.contains(GlobalEnums.Organ.INTESTINE)) {
                 intestineCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.INTESTINE);
             }
             if (organs.contains(GlobalEnums.Organ.CORNEA)) {
                 corneaCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.CORNEA);
             }
             if (organs.contains(GlobalEnums.Organ.MIDDLEEAR)) {
                 middleearCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.MIDDLEEAR);
             }
             if (organs.contains(GlobalEnums.Organ.SKIN)) {
                 skinCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.SKIN);
             }
             if (organs.contains(GlobalEnums.Organ.BONE)) {
                 boneCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.BONE);
             }
             if (organs.contains(GlobalEnums.Organ.BONE_MARROW)) {
                 bonemarrowCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.BONE_MARROW);
             }
             if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) {
                 connectivetissueCB.setSelected(true);
+                initialRequirements.add(GlobalEnums.Organ.CONNECTIVETISSUE);
             }
         }
     }
@@ -194,79 +198,119 @@ public class GUIPatientUpdateRequirements {
     public void saveRequirements() {
         if (liverCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.LIVER);
+            finalRequirements.add(GlobalEnums.Organ.LIVER);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.LIVER);
         }
         if (kidneyCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.KIDNEY);
+            finalRequirements.add(GlobalEnums.Organ.KIDNEY);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.KIDNEY);
         }
         if (pancreasCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.PANCREAS);
+            finalRequirements.add(GlobalEnums.Organ.PANCREAS);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.PANCREAS);
         }
         if (heartCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.HEART);
+            finalRequirements.add(GlobalEnums.Organ.HEART);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.HEART);
         }
         if (lungCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.LUNG);
+            finalRequirements.add(GlobalEnums.Organ.LUNG);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.LUNG);
         }
         if (intestineCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.INTESTINE);
+            finalRequirements.add(GlobalEnums.Organ.INTESTINE);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.INTESTINE);
         }
         if (corneaCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.CORNEA);
+            finalRequirements.add(GlobalEnums.Organ.CORNEA);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.CORNEA);
         }
         if (middleearCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.MIDDLEEAR);
+            finalRequirements.add(GlobalEnums.Organ.MIDDLEEAR);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.MIDDLEEAR);
         }
         if (skinCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.SKIN);
+            finalRequirements.add(GlobalEnums.Organ.SKIN);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.SKIN);
         }
         if (boneCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.BONE);
+            finalRequirements.add(GlobalEnums.Organ.BONE);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.BONE);
         }
         if (bonemarrowCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.BONE_MARROW);
+            finalRequirements.add(GlobalEnums.Organ.BONE_MARROW);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.BONE_MARROW);
         }
         if (connectivetissueCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
+            finalRequirements.add(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
         else {
             target.removeRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
+        deregistrationReason();
         createOrganRequests();
         Database.saveToDisk();
         goToProfile();
+    }
+
+    private void deregistrationReason() {
+        Set<GlobalEnums.Organ> removedOrgans = initialRequirements;
+        removedOrgans.removeAll(finalRequirements);
+
+        for(GlobalEnums.Organ organ : removedOrgans) {
+            openReasonPopup(organ);
+            target.removeRequired(organ);
+        }
+    }
+
+    private void openReasonPopup(GlobalEnums.Organ organ) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/deregistrationReason.fxml"));
+            Parent root = fxmlLoader.load();
+            GUIRequiredOrganDeregistrationReason controller = fxmlLoader.getController();
+            controller.setOrgan(organ);
+            UndoableStage popUpStage = new UndoableStage();
+            screenControl.addStage(popUpStage.getUUID(), popUpStage);
+            screenControl.show(popUpStage.getUUID(), root);
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE,
+                    "Failed to open deregistration of required organ scene from required organs update scene",
+                    "attempted to open deregistration of required organ reason window from required organs update scene");
+            new Alert(Alert.AlertType.ERROR, "Unable to open deregistration of required organ reason window", ButtonType.OK).show();
+        }
     }
 
     private void createOrganRequests() {
@@ -291,7 +335,7 @@ public class GUIPatientUpdateRequirements {
             try {
                 screenControl.show(patientRequirementsAnchorPane, "/scene/patientProfile.fxml");
             } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
+                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the required organs page to the profile page");
                 new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
             }
         } else {

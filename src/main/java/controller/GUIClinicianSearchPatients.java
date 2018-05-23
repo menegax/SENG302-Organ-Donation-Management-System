@@ -10,11 +10,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+import model.DrugInteraction;
 import javafx.scene.input.ContextMenuEvent;
 import model.Patient;
 import utility.GlobalEnums;
@@ -29,7 +32,6 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
-
 public class GUIClinicianSearchPatients extends UndoableController implements Initializable {
 
     @FXML
@@ -42,7 +44,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     private TableColumn<Patient, String> columnAge;
 
     @FXML
-    private TableColumn<Patient, String> columnGender;
+    private TableColumn<Patient, String> columnBirthGender;
 
     @FXML
     private TableColumn<Patient, String> columnRegion;
@@ -62,9 +64,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
-        searchEntry.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         FilteredList<Patient> filteredData = setupTableColumnsAndData();
-
         setupSearchingListener(filteredData);
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
@@ -85,7 +85,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * Sets up double-click functionality for each row to open a patient profile update
      */
     private void setupDoubleClickToPatientEdit() {
-
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
@@ -109,10 +108,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     new Alert(Alert.AlertType.ERROR, "Unable to open patient edit window", ButtonType.OK).show();
                 }
             }
-
         });
     }
-
 
     /**
      * Sets the table columns to pull the correct data from the patient objects
@@ -126,9 +123,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 .getNameConcatenated()) : new SimpleStringProperty(""));
         columnAge.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue()
                 .getAge())));
-        columnGender.setCellValueFactory(d -> d.getValue()
-                .getGender() != null ? new SimpleStringProperty(d.getValue()
-                .getGender()
+        columnBirthGender.setCellValueFactory(d -> d.getValue()
+                .getBirthGender() != null ? new SimpleStringProperty(d.getValue()
+                .getBirthGender()
                 .toString()) : new SimpleStringProperty(""));
         columnRegion.setCellValueFactory(d -> d.getValue()
                 .getRegion() != null ? new SimpleStringProperty(d.getValue()
@@ -163,7 +160,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         return filteredData;
     }
 
-
     /**
      * Sets the search textfield to listen for any changes and search for the entry on change
      *
@@ -176,14 +172,14 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     // If filter text is empty, display all persons.
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
+                    } else if (newValue.toLowerCase().equals( "male" ) || newValue.toLowerCase().equals("female")) {
+                        //return SearchPatients.searchByGender(newValue).contains(patient);
+                        return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() ); // ------------------------------this is where it fails!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
-
                     return SearchPatients.searchByName(newValue)
                             .contains(patient);
-
                 }));
     }
-
 
     /**
      * Adds custom hover-over text to each row in the table
@@ -191,7 +187,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     private void setupRowHoverOverText() {
         patientDataTable.setRowFactory(tv -> new TableRow<Patient>() {
             private Tooltip tooltip = new Tooltip();
-
 
             @Override
             public void updateItem(Patient patient, boolean empty) {
@@ -218,14 +213,12 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         });
     }
 
-
     /**
      * Adds all db data via constructor
      */
     public GUIClinicianSearchPatients() {
         masterData.addAll(SearchPatients.getDefaultResults());
     }
-
 
     public void goToClinicianHome() {
         try {
@@ -235,7 +228,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
         }
     }
-
 
     /**
      * Refreshes the table data

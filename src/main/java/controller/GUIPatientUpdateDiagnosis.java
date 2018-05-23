@@ -26,7 +26,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller for diagnosis update popup window.
  */
-public class GUIPatientUpdateDiagnosis {
+public class GUIPatientUpdateDiagnosis extends UndoableController{
 
     @FXML
     public AnchorPane diagnosisUpdatePane;
@@ -58,8 +58,6 @@ public class GUIPatientUpdateDiagnosis {
      */
     private static Patient currentPatient;
     public Label titleLabel;
-
-    private StatesHistoryScreen statesHistoryScreen;
 
     private static boolean isAdd;
 
@@ -95,7 +93,7 @@ public class GUIPatientUpdateDiagnosis {
         }
         populateDropdown();
         populateForm();
-        ArrayList<Control> controls = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(diseaseNameTextField);
             add(diagnosisDate);
             add(tagsDD);
@@ -249,7 +247,7 @@ public class GUIPatientUpdateDiagnosis {
         try {
             d.setDateDiagnosed(diagnosisDate.getValue(), currentPatient);
         } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "The diagnosis date is not valid.");
+            userActions.log(Level.SEVERE, "The diagnosis date is not valid.", "Attempted to add an invalid diagnosis date");
         }
         for (Disease disease : currentPatient.getCurrentDiseases()) {
             if(disease != target && isDuplicate(disease, d)) {

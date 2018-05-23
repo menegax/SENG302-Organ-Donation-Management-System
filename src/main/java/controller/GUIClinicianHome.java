@@ -12,6 +12,10 @@ import service.Database;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import static utility.UserActionHistory.userActions;
+
+import java.io.IOException;
+
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
@@ -68,20 +72,19 @@ public class GUIClinicianHome {
             screenControl.show(clinicianHomePane, "/scene/clinicianHistory.fxml");
         }
         catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading history screen", "Attempted to navigate from the " +
-                    "home page to the history page");
             new Alert(Alert.AlertType.ERROR, "Unable load clinician history").show();
+            userActions.log(SEVERE, "Failed to load clinician history", "Attempted to load clinician history");
+
         }
     }
 
     public void goToClinicianWaitingList(ActionEvent event) {
         try {
             screenControl.show(clinicianHomePane, "/scene/clinicianWaitingList.fxml");
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading organ waiting list screen", "Attempted to navigate from the " +
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "ERROR loading organ waiting list page").show();
+            userActions.log(SEVERE, "Error loading organ waiting list screen", "attempted to navigate from the " +
                     "home page to the waiting list page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading organ waiting list page", ButtonType.OK).showAndWait();
         }
     }
 }

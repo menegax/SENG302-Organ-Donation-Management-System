@@ -1,8 +1,8 @@
 package controller;
 
-import javafx.event.Event;
 import static utility.UserActionHistory.userActions;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,24 +10,36 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
+
+import javafx.scene.input.KeyCode;
+import javafx.scene.control.CheckBox;
+import javafx.stage.Stage;
+import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.Patient;
 import service.Database;
+import utility.GlobalEnums;
 import utility.undoRedo.UndoableStage;
-
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
+import static java.util.logging.Level.SEVERE;
 
 public class GUILogin {
 
@@ -45,8 +57,8 @@ public class GUILogin {
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     public void initialize() {
-        nhiLogin.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         // Enter key triggers log in
+        nhiLogin.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         loginPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 logIn();
@@ -116,19 +128,6 @@ public class GUILogin {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
             }
-        }
-    }
-
-    private void setUpPatientHome() {
-
-        Stage primaryStage = new Stage();
-        try {
-            Scene home = FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml"));
-
-            primaryStage.setScene(home);
-        }
-        catch (IOException e) {
-            e.printStackTrace();//todo rm
         }
     }
 
