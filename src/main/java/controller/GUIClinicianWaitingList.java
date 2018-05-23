@@ -8,6 +8,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.DrugInteraction;
 import service.Database;
@@ -18,6 +19,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import utility.undoRedo.UndoableStage;
 
 import java.io.InvalidObjectException;
 import java.util.logging.Level;
@@ -29,7 +31,7 @@ import static utility.UserActionHistory.userActions;
  */
 public class GUIClinicianWaitingList {
 
-    public AnchorPane clinicianWaitingListAnchorPane;
+    public GridPane clinicianWaitingList;
     public TableView<OrganWaitlist.OrganRequest> waitingListTableView;
     public TableColumn<OrganWaitlist.OrganRequest, String> dateCol;
     public TableColumn<OrganWaitlist.OrganRequest, String> nameCol;
@@ -67,7 +69,7 @@ public class GUIClinicianWaitingList {
      * Sets up double-click functionality for each row to open a patient profile update, ensures no duplicate profiles
      */
     private void setupDoubleClickToPatientEdit() {
-
+        ScreenControl screenControl = ScreenControl.getScreenControl();
         // Add double-click event to rows
         waitingListTableView.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && waitingListTableView.getSelectionModel()
@@ -76,22 +78,15 @@ public class GUIClinicianWaitingList {
                 try {
                     userControl = new UserControl();
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
-                    DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
                     userControl.setTargetPatient(Database.getPatientByNhi(request.getReceiverNhi()));
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-                    Scene scene = new Scene(fxmlLoader.load());
-                    Stage popUpStage = new Stage();
-                    popUpStage.setX(ScreenControl.getMain()
-                            .getX()); //offset popup
-                    popUpStage.setScene(scene);
-                    openProfiles.add(request);  // add the patient to a list so its profile can be opened once at a time
-
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
+                    UndoableStage popUpStage = new UndoableStage();
+                    screenControl.addStage(popUpStage.getUUID(), popUpStage);
+                    screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
+                    openProfiles.add(request);
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request )));
 
-                    //Add and show the popup
-                    ScreenControl.addPopUp("searchPopup", popUpStage); //ADD to screen control
-                    ScreenControl.displayPopUp("searchPopup"); //display the popup
                 }
                 catch (Exception e) {
                     userActions.log(Level.SEVERE,
