@@ -166,6 +166,7 @@ public class GUIRequiredOrganDeregistrationReason {
      * saves the reason why the clinician removed a organ from the patient required organs list
      */
     public void saveReason() {
+        boolean confirmed = true;
         GlobalEnums.DeregistrationReason reason = reasons.getSelectionModel().getSelectedItem();
         if (reason == GlobalEnums.DeregistrationReason.ERROR) {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to error", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
@@ -176,14 +177,20 @@ public class GUIRequiredOrganDeregistrationReason {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to cure." + diseaseCuredString, new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
             curePatientDiseases(selected);
         } else if (reason == GlobalEnums.DeregistrationReason.DIED) {
+            if (dateOfDeath.getValue().isBefore(target.getBirth()) || dateOfDeath.getValue().isAfter(LocalDate.now())) {
+                confirmed = false;
+                dateOfDeath.getStyleClass().add("invalid");
+            }
             target.setRequiredOrgans(new ArrayList());
             target.setDeath(dateOfDeath.getValue());
             userActions.log(Level.INFO, "Deregistered " + organ + " due to death on this date: " + dateOfDeath.getValue(), new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         } else if (reason == GlobalEnums.DeregistrationReason.RECEIVED) {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         }
-        Stage reasonStage = (Stage)requiredOrganDeregistrationReasonPane.getScene().getWindow();
-        reasonStage.close();
+        if (confirmed){
+            Stage reasonStage = (Stage)requiredOrganDeregistrationReasonPane.getScene().getWindow();
+            reasonStage.close();
+        }
         //GUIPatientUpdateRequirements.setClosed(true);
     }
 
