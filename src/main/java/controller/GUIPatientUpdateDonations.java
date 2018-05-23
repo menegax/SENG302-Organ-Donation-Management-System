@@ -20,6 +20,7 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.INFO;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateDonations {
@@ -175,81 +176,103 @@ public class GUIPatientUpdateDonations {
 
 
     public void saveDonations() {
+
+        ArrayList<String> newDonations = new ArrayList<>();
+
         if (liverCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.LIVER);
+            newDonations.add(GlobalEnums.Organ.LIVER.toString());
         }
         else {
             target.removeDonation(GlobalEnums.Organ.LIVER);
-
         }
         if (kidneyCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.KIDNEY);
-
+            newDonations.add(GlobalEnums.Organ.KIDNEY.toString());
         }
         else {
             target.removeDonation(GlobalEnums.Organ.KIDNEY);
-
         }
         if (pancreasCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.PANCREAS);
+            newDonations.add(GlobalEnums.Organ.PANCREAS.toString());
         }
         else {
             target.removeDonation(GlobalEnums.Organ.PANCREAS);
+
         }
         if (heartCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.HEART);
+            newDonations.add(GlobalEnums.Organ.HEART.toString());
         }
         else {
             target.removeDonation(GlobalEnums.Organ.HEART);
         }
         if (lungCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.LUNG);
+            newDonations.add(GlobalEnums.Organ.LUNG.toString());
         }
         else {
             target.removeDonation(GlobalEnums.Organ.LUNG);
+
         }
         if (intestineCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.INTESTINE);
+            newDonations.add(GlobalEnums.Organ.INTESTINE.toString());
         }
         else {
             target.removeDonation(GlobalEnums.Organ.INTESTINE);
+
         }
         if (corneaCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.CORNEA);
+            newDonations.add(GlobalEnums.Organ.CORNEA.toString());
         }
         else {
             target.removeDonation(GlobalEnums.Organ.CORNEA);
+
         }
         if (middleearCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.MIDDLEEAR);
+            newDonations.add(GlobalEnums.Organ.MIDDLEEAR.toString());
         }
         else {
             target.removeDonation(GlobalEnums.Organ.MIDDLEEAR);
+
         }
         if (skinCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.SKIN);
+            newDonations.add(GlobalEnums.Organ.SKIN.toString());
         }
         else {
             target.removeDonation(GlobalEnums.Organ.SKIN);
+
         }
         if (boneCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.BONE);
+            newDonations.add(GlobalEnums.Organ.BONE.toString());
         }
         else {
             target.removeDonation(GlobalEnums.Organ.BONE);
+
         }
         if (bonemarrowCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.BONE_MARROW);
+            newDonations.add(GlobalEnums.Organ.BONE_MARROW.toString());
         }
         else {
             target.removeDonation(GlobalEnums.Organ.BONE_MARROW);
+
         }
         if (connectivetissueCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
+            newDonations.add(GlobalEnums.Organ.CONNECTIVETISSUE.toString());
         }
         else {
             target.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
+
         }
+        userActions.log(INFO, "Updated user donations to: " + newDonations, "Attempted to update donations");
         Database.saveToDisk();
         goToProfile();
     }

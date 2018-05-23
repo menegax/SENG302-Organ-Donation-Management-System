@@ -403,7 +403,7 @@ public class GUIPatientProfile {
             catch (IOException e) {
                 userActions.log(Level.SEVERE,
                         "Error loading contact details screen",
-                        "attempted to navigate from the profile page to the contact details page");
+                        "Attempted to navigate from the profile page to the contact details page");
                 new Alert(Alert.AlertType.ERROR, "Error loading contact details page", ButtonType.OK).show();
             }
         }
@@ -414,7 +414,7 @@ public class GUIPatientProfile {
             }
             catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading contacts screen in popup",
-                        "attempted to navigate from the profile page to the contacts page in popup");
+                        "Attempted to navigate from the profile page to the contacts page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading contacts page", ButtonType.OK).show();
             }
         }

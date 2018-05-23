@@ -8,42 +8,42 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import model.Clinician;
 import model.Patient;
+import utility.ClinicianActionRecord;
 import utility.PatientActionRecord;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
 
-public class GUIPatientHistory {
+public class GUIClinicianHistory {
 
-    private Patient target;
+    private Clinician target;
 
     @FXML
-    private TableColumn<PatientActionRecord, String> timeStampColumn;
+    private TableColumn<ClinicianActionRecord, String> timeStampColumn;
 
     @FXML
-    private TableColumn<PatientActionRecord, String> levelColumn;
+    private TableColumn<ClinicianActionRecord, String> levelColumn;
 
     @FXML
-    private TableColumn<PatientActionRecord, String> actionColumn;
+    private TableColumn<ClinicianActionRecord, String> actionColumn;
 
     @FXML
-    private TableColumn<PatientActionRecord, String> messageColumn;
+    private TableColumn<ClinicianActionRecord, String> messageColumn;
 
     @FXML
-    private TableView<PatientActionRecord> logHistoryTable;
+    private TableColumn<ClinicianActionRecord, String> targetColumn;
 
-    private ObservableList<PatientActionRecord> masterData = FXCollections.observableArrayList();
+    @FXML
+    private TableView<ClinicianActionRecord> logHistoryTable;
+
+    private ObservableList<ClinicianActionRecord> masterData = FXCollections.observableArrayList();
 
 
     public void initialize() {
         UserControl userControl = new UserControl();
-        target = userControl.getLoggedInUser() instanceof Patient ? (Patient) userControl.getLoggedInUser() : null;
-        masterData.addAll(target.getUserActionsList());
+        target = userControl.getLoggedInUser() instanceof Clinician ? (Clinician) userControl.getLoggedInUser() : null;
+        masterData.addAll(target.getClinicianActionsList());
         populateTable();
     }
 
@@ -51,8 +51,8 @@ public class GUIPatientHistory {
     /**
      * Go to home page action listener for back button
      */
-    public void goToPatientHome() {
-        ScreenControl.activate("patientHome");
+    public void goToClinicianHome() {
+        ScreenControl.activate("clinicianHome");
     }
 
 
@@ -66,14 +66,15 @@ public class GUIPatientHistory {
         levelColumn.setCellValueFactory(r -> new ReadOnlyStringWrapper(r.getValue().getLevel().toString()));
         messageColumn.setCellValueFactory(r -> new ReadOnlyStringWrapper(r.getValue().getMessage()));
         actionColumn.setCellValueFactory(r -> new ReadOnlyStringWrapper(r.getValue().getAction()));
+        targetColumn.setCellValueFactory(r -> new ReadOnlyStringWrapper(r.getValue().getTarget()));
 
         // wrap ObservableList in a FilteredList
-        FilteredList<PatientActionRecord> filteredData = new FilteredList<>(masterData, d -> true);
+        FilteredList<ClinicianActionRecord> filteredData = new FilteredList<>(masterData, d -> true);
 
         masterData.sort((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp())); //sort so timestamp most recent at top
 
         // wrap the FilteredList in a SortedList.
-        SortedList<PatientActionRecord> sortedData = new SortedList<>(filteredData);
+        SortedList<ClinicianActionRecord> sortedData = new SortedList<>(filteredData);
 
         timeStampColumn.setComparator(timeStampColumn.getComparator().reversed()); // reverses comparator
 
