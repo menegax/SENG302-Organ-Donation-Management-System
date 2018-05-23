@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import static utility.UserActionHistory.userActions;
 
@@ -98,9 +99,13 @@ public class GUIRequiredOrganDeregistrationReason {
             }
             Set<CustomMenuItem> diseaseItems = new HashSet<>();
             for (Disease disease : target.getCurrentDiseases()) {
-                CustomMenuItem menuItem = new CustomMenuItem(new CheckBox(disease.getDiseaseName()));
-                menuItem.setHideOnClick(false);
-                diseaseItems.add(menuItem);
+                if (disease.getDiseaseState() != GlobalEnums.DiseaseState.CURED) {
+                    CheckBox checkbox = new CheckBox(disease.getDiseaseName());
+                    checkbox.setUserData(disease);
+                    CustomMenuItem menuItem = new CustomMenuItem(checkbox);
+                    menuItem.setHideOnClick(false);
+                    diseaseItems.add(menuItem);
+                }
             }
             diseaseCured.getItems().setAll(diseaseItems);
         }
@@ -168,17 +173,11 @@ public class GUIRequiredOrganDeregistrationReason {
         if (reason == GlobalEnums.DeregistrationReason.ERROR) {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to error", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         } else if (reason == GlobalEnums.DeregistrationReason.CURED) {
-            List<String> selected = new ArrayList<>();
-            for (MenuItem menuItem : diseaseCured.getItems()) {
-                Node content = ((CustomMenuItem) menuItem).getContent();
-                if (content instanceof CheckBox) {
-                    if (((CheckBox) content).isSelected()) {
-                        selected.add(((CheckBox) content).getText());
-                    }
-                }
-            }
-            String diseaseCuredString = selected.size() == 0 ? "" : " Cured: " + String.join(",", selected);
+            List<Disease> selected = getSelectedDiseases();
+            List<String> selectedStrings = selected.stream().map(Disease::getDiseaseName).collect(Collectors.toList());
+            String diseaseCuredString = selected.size() == 0 ? "" : " Cured: " + String.join(",", selectedStrings);
             userActions.log(Level.INFO, "Deregistered " + organ + " due to cure." + diseaseCuredString, new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+            curePatientDiseases(selected);
         } else if (reason == GlobalEnums.DeregistrationReason.DIED) {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to death", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         } else if (reason == GlobalEnums.DeregistrationReason.RECEIVED) {
@@ -187,5 +186,32 @@ public class GUIRequiredOrganDeregistrationReason {
         Stage reasonStage = (Stage)requiredOrganDeregistrationReasonPane.getScene().getWindow();
         reasonStage.close();
         //GUIPatientUpdateRequirements.setClosed(true);
+    }
+
+    /**
+     * Fetches the list of diseases that have been selected within the dropdown menu
+     * @return The list of disease instances that are selected
+     */
+    private List<Disease> getSelectedDiseases() {
+        List<Disease> selected = new ArrayList<>();
+        for (MenuItem menuItem : diseaseCured.getItems()) {
+            Node content = ((CustomMenuItem) menuItem).getContent();
+            if (content instanceof CheckBox) {
+                CheckBox checkbox = (CheckBox) content;
+                if (checkbox.isSelected()) {
+                    selected.add((Disease) checkbox.getUserData());
+                }
+            }
+        }
+        return selected;
+    }
+
+    /**
+     * Sets the diseases in the patient to cured if their name matches a name in the selected diseases list
+     */
+    private void curePatientDiseases(List<Disease> selected) {
+        for (Disease disease : selected) {
+            disease.setDiseaseState(GlobalEnums.DiseaseState.CURED);
+        }
     }
 }
