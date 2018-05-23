@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import model.Clinician;
@@ -13,7 +14,11 @@ import model.Patient;
 import utility.ClinicianActionRecord;
 import utility.PatientActionRecord;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+
+import static java.util.logging.Level.SEVERE;
+import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianHistory {
 
@@ -39,6 +44,7 @@ public class GUIClinicianHistory {
 
     private ObservableList<ClinicianActionRecord> masterData = FXCollections.observableArrayList();
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     public void initialize() {
         UserControl userControl = new UserControl();
@@ -52,7 +58,12 @@ public class GUIClinicianHistory {
      * Go to home page action listener for back button
      */
     public void goToClinicianHome() {
-        ScreenControl.activate("clinicianHome");
+        try {
+            screenControl.show(logHistoryTable, "/scene/clinicianHome.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
+            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
+        }
     }
 
 
