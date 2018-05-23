@@ -325,7 +325,6 @@ public class GUIPatientUpdateRequirements {
             ScreenControl.addPopUp("deregistrationReason", popUpStage); //ADD to screen control
             ScreenControl.displayPopUp("deregistrationReason"); //display the popup
         } catch (IOException e) {
-            e.printStackTrace();
             userActions.log(Level.SEVERE,
                     "Failed to open deregistration of required organ scene from required organs update scene",
                     "attempted to open deregistration of required organ reason window from required organs update scene");

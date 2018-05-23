@@ -12,6 +12,7 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import jdk.nashorn.internal.scripts.JO;
 import service.Database;
+import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.SearchPatients;
@@ -667,25 +668,6 @@ public class Patient extends User {
             requiredOrgans.remove(organ);
             patientModified();
             setRemovedOrgan(organ);
-//            try {
-//                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/deregistrationReason.fxml"));
-//                Scene scene = new Scene(fxmlLoader.load());
-//
-//                Stage popUpStage = new Stage();
-//                popUpStage.setX(ScreenControl.getMain()
-//                        .getX()); //offset popup
-//                popUpStage.setScene(scene);
-//
-//                //Add and show the popup
-//                ScreenControl.addPopUp("deregistrationReason", popUpStage); //ADD to screen control
-//                ScreenControl.displayPopUp("deregistrationReason"); //display the popup
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                userActions.log(Level.SEVERE,
-//                        "Failed to open deregistration of required organ scene from required organs update scene",
-//                        "attempted to open deregistration of required organ reason window from required organs update scene");
-//                new Alert(Alert.AlertType.ERROR, "Unable to open deregistration of required organ reason window", ButtonType.OK).show();
-//            }
             return "Successfully removed " + organ + " from required organs";
         } else {
             return "Organ " + organ + " is not part of the patient's required organs, so could not be removed.";
