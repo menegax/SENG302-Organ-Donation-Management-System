@@ -5,9 +5,11 @@ import model.Clinician;
 import model.Disease;
 import model.Medication;
 import model.Patient;
+import utility.FormatterLog;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.SearchPatients;
+import utility.UserActionRecord;
 
 import java.io.*;
 import java.sql.*;
@@ -218,7 +220,7 @@ public class Database {
      * @param medication The medication used by the patient
      * @return String[] medication attributes
      */
-    public String[] getMedicationAtttributes(Patient patient, Medication medication) {
+    private String[] getMedicationAttributes(Patient patient, Medication medication) {
         String[] medAttr = new String[2];
         medAttr[0] = patient.getNhiNumber();
         medAttr[1] = medication.getMedicationName();
@@ -232,7 +234,7 @@ public class Database {
      * @param disease Disease to get attributes from
      * @return String[] disease attributes
      */
-    public String[] getDiseaseAttributes(Patient patient, Disease disease) {
+    private String[] getDiseaseAttributes(Patient patient, Disease disease) {
         String[] diseaseAttr = new String[4];
         diseaseAttr[0] = patient.getNhiNumber();
         diseaseAttr[1] = disease.getDiseaseName();
@@ -245,16 +247,26 @@ public class Database {
         return diseaseAttr;
     }
 
+    private String[] getLogAttributes(Patient patient, UserActionRecord record) {
+        String[] recordAttr = new String[5];
+        recordAttr[0] = patient.getNhiNumber();
+        recordAttr[1] = record.getTimestamp().toString();
+        recordAttr[2] = record.getLevel().toString();
+        recordAttr[3] = record.getMessage();
+        recordAttr[4] = record.getAction();
+        return recordAttr;
+    }
+
     private void addPatientMedications(Patient newPatient) throws SQLException {
         for(Medication medication : newPatient.getCurrentMedications()) {
-            String[] medAttr = getMedicationAtttributes(newPatient, medication);
+            String[] medAttr = getMedicationAttributes(newPatient, medication);
             String medQuery = "INSERT INTO tblMedications VALUES (?, ?, ?)";
             runQuery(medQuery, medAttr);
 
         }
 
         for(Medication medication : newPatient.getMedicationHistory()) {
-            String[] medAttr = getMedicationAtttributes(newPatient, medication);
+            String[] medAttr = getMedicationAttributes(newPatient, medication);
             String medQuery = "INSERT INTO tblMedications VALUES (?, ?, ?)";
             runQuery(medQuery, medAttr);
         }
@@ -268,6 +280,15 @@ public class Database {
             String diseaseQuery = "INSERT INTO tblDiseases VALUES (?, ?, ?, ?)";
             runQuery(diseaseQuery, diseaseAttr);
 
+        }
+    }
+
+    private void addPatientLogs(Patient patient) throws SQLException {
+        ArrayList<UserActionRecord> records = patient.getUserActionsList();
+        for (UserActionRecord record : records) {
+            String[] recordAttr = getLogAttributes(patient, record);
+            String recordQuery = "INSERT INTO tblPatientLogs VALUES (?, ?, ?, ?, ?)";
+            runQuery(recordQuery, recordAttr);
         }
     }
 
@@ -296,6 +317,8 @@ public class Database {
             addPatientMedications(newPatient);
 
             addPatientDiseases(newPatient);
+
+            addPatientLogs(newPatient);
 
             userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
         }
@@ -363,29 +386,54 @@ public class Database {
         return organArrayList;
     }
 
+    private ArrayList<UserActionRecord> loadPatientLogs(String nhi) {
+        ArrayList<UserActionRecord> patientLogs = new ArrayList<>();
+        try {
+            String[] nhiArray = {nhi};
+            ArrayList<String[]> logsRaw = runQuery("SELECT * FROM tblPatientLogs WHERE Patient = ?", nhiArray);
+            for (String[] attr : logsRaw) {
+                patientLogs.add(parseLog(attr));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return patientLogs;
+    }
+
+    private UserActionRecord parseLog(String[] attr) {
+        Timestamp timestamp = Timestamp.valueOf(attr[1]);
+        Level level = Level.parse(attr[2]);
+        String message = attr[3];
+        String action = attr[4];
+        return new UserActionRecord(timestamp, level, message, action);
+    }
+
     private Patient parsePatient(String[] attr) {
         String nhi = attr[0];
         String fName = attr[1];
-        ArrayList<String> middleNames = new ArrayList<>();
-        middleNames.addAll(Arrays.asList(attr[2].split(" ")));
+        ArrayList<String> mNames = new ArrayList<>();
+        mNames.addAll(Arrays.asList(attr[2].split(" ")));
         String lName = attr[3];
         LocalDate birth = LocalDate.parse(attr[4]);
-        Patient newPatient = new Patient(nhi, fName, middleNames, lName, birth);
-        newPatient.setCREATED(Timestamp.valueOf(attr[5]));
+        Timestamp created = Timestamp.valueOf(attr[5]);
         Timestamp modified = Timestamp.valueOf(attr[6]);
-        newPatient.setDeath(LocalDate.parse(attr[7]));
+        LocalDate death = LocalDate.parse(attr[7]);
+        GlobalEnums.Gender gender;
         switch (attr[8]) {
-            case "M": newPatient.setGender(GlobalEnums.Gender.MALE);break;
-            case "F": newPatient.setGender(GlobalEnums.Gender.FEMALE);break;
-            default: newPatient.setGender(GlobalEnums.Gender.OTHER);break;
+            case "M": gender = GlobalEnums.Gender.MALE;break;
+            case "F": gender = GlobalEnums.Gender.FEMALE;break;
+            default: gender = GlobalEnums.Gender.OTHER;break;
         }
         //todo: set pref gender and name here after story 29 is in
-        newPatient.setHeight(Double.parseDouble(attr[11]) / 100);
-        newPatient.setWeight(Double.parseDouble(attr[12]));
-        newPatient.setBloodGroup(GlobalEnums.BloodGroup.valueOf(attr[13]));
-        newPatient.setDonations(loadOrgans(attr[14]));
-        newPatient.setRequiredOrgans(loadOrgans(attr[15]));
-        newPatient.setModified(modified);
+        double height = Double.parseDouble(attr[11]) / 100;
+        double weight = Double.parseDouble(attr[12]);
+        GlobalEnums.BloodGroup bloodType = GlobalEnums.BloodGroup.valueOf(attr[13]);
+        ArrayList<GlobalEnums.Organ> donations = loadOrgans(attr[14]);
+        ArrayList<GlobalEnums.Organ> requested = loadOrgans(attr[15]);
+
+        ArrayList<UserActionRecord> records = loadPatientLogs(nhi);
+
+
         ArrayList<Disease> pastDiseases = new ArrayList<>();
         ArrayList<Disease> currentDiseases = new ArrayList<>();
         ArrayList<Medication> medHistory = new ArrayList<>();
@@ -404,10 +452,12 @@ public class Database {
         } catch (InvalidObjectException e) {
             e.printStackTrace();
         }
-        return newPatient;
+
+        return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, height, weight,
+                bloodType, donations, requested);
     }
 
-    private ArrayList<Medication> loadMedications(Patient patient) throws InvalidObjectException {
+    private ArrayList<Medication> loadMedications(Patient patient) throws InvalidObjectException, SQLException {
         ArrayList<String[]> medicationsRaw = runQuery("SELECT * FROM tblMedications WHERE Patient = " + patient.getNhiNumber(), null);
         ArrayList<Medication> patientMedications = new ArrayList<>();
         for(String[] attr : medicationsRaw) {
@@ -416,7 +466,7 @@ public class Database {
         return patientMedications;
     }
 
-    private ArrayList<Disease> loadDiseases(Patient patient) throws InvalidObjectException {
+    private ArrayList<Disease> loadDiseases(Patient patient) throws InvalidObjectException, SQLException {
         ArrayList<String[]> diseasesRaw = runQuery("SELECT * FROM tblDiseases WHERE Patient = " + patient.getNhiNumber(), null);
         ArrayList<Disease> patientDiseases = new ArrayList<>();
         for(String[] attr : diseasesRaw) {

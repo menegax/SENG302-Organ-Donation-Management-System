@@ -117,6 +117,51 @@ public class Patient extends User {
         this.requiredOrgans = new ArrayList<>();
     }
 
+    //TODO add pref name and gender. Add procedures.
+    public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
+                   Timestamp created, Timestamp modified, LocalDate death, double height, double weight,
+                   BloodGroup bloodType, ArrayList<Organ> donations, ArrayList<Organ> receiving, String street1,
+                   String street2, String suburb, Region region, int zip, String homePhone, String workPhone,
+                   String mobilePhone, String emailAddress, String contactName, String contactRelationship,
+                   String contactHomePhone, String contactWorkPhone, String contactMobilePhone, String contactEmailAddress,
+                   ArrayList<UserActionRecord> userActionsList, ArrayList<Disease> currentDiseases,
+                   ArrayList<Disease> pastDiseases, ArrayList<Medication> currentMedications,
+                   ArrayList<Medication> medicationHistory) {
+        this.nhiNumber = nhiNumber;
+        this.firstName = firstName;
+        this.middleNames = middleNames;
+        this.lastName = lastName;
+        this.birth = birth;
+        this.CREATED = created;
+        this.modified = modified;
+        this.death = death;
+        this.height = height;
+        this.weight = weight;
+        this.bloodGroup = bloodType;
+        this.donations = donations;
+        this.requiredOrgans = receiving;
+        this.street1 = street1;
+        this.street2 = street2;
+        this.suburb = suburb;
+        this.region = region;
+        this.zip = zip;
+        this.homePhone = homePhone;
+        this.workPhone = workPhone;
+        this.mobilePhone = mobilePhone;
+        this.emailAddress = emailAddress;
+        this.contactName = contactName;
+        this.contactRelationship = contactRelationship;
+        this.contactHomePhone = contactHomePhone;
+        this.contactWorkPhone = contactWorkPhone;
+        this.contactMobilePhone = contactMobilePhone;
+        this.contactEmailAddress = contactEmailAddress;
+        this.userActionsList = userActionsList;
+        this.currentDiseases = currentDiseases;
+        this.pastDiseases = pastDiseases;
+        this.currentMedications = currentMedications;
+        this.medicationHistory = medicationHistory;
+    }
+
 
     /**
      * Sets the attributes of the patient
@@ -302,8 +347,6 @@ public class Patient extends User {
     public Timestamp getCREATED() {
         return CREATED;
     }
-
-    public void setCREATED(Timestamp created) { this.CREATED = created; }
 
 
     public String getFirstName() {
