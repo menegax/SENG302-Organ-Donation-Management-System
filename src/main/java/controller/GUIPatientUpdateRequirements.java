@@ -9,6 +9,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
+import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.OrganWaitlist;
 import utility.undoRedo.StatesHistoryScreen;
@@ -18,7 +19,6 @@ import utility.GlobalEnums;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -67,7 +67,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
 
 
     @FXML
-    private AnchorPane patientRequirementsAnchorPane;
+    private GridPane patientRequirementsPane;
 
     @FXML
     private void redo() {
@@ -97,7 +97,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             loadProfile((userControl.getTargetPatient()).getNhiNumber());
         }
         // Enter key triggers log in
-        patientRequirementsAnchorPane.setOnKeyPressed(e -> {
+        patientRequirementsPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveRequirements();
             }
@@ -297,7 +297,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
-                ScreenControl.loadPopUpPane(patientRequirementsAnchorPane.getScene(), fxmlLoader);
+                ScreenControl.loadPopUpPane(patientRequirementsPane.getScene(), fxmlLoader);
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the requirements page to the profile page in popup");
                 new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();

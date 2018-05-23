@@ -94,8 +94,10 @@ public class GUIHome {
         createTab("Profile", "/scene/patientProfile.fxml");
         createTab("Update", "/scene/patientUpdateProfile.fxml");
         createTab("Donations", "/scene/patientUpdateDonations.fxml");
-        createTab("History", "/scene/patientHistory.fxml");
         createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
+        createTab("View Disease History","/scene/testClinicianDiagnosis.fxml");
+        createTab("History", "/scene/patientHistory.fxml");
+        //todo setUpMenuBar() call here
     }
 
 
@@ -109,6 +111,8 @@ public class GUIHome {
         createTab("Medications", "/scene/patientMedications.fxml");
         createTab("Donations", "/scene/patientUpdateDonations.fxml");
         createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
+        createTab("Requested Donations", "/scene/testPatientUpdateRequirements.fxml");
+        createTab("View Diseases","/scene/testClinicianDiagnosis.fxml");
     }
 
 
@@ -119,6 +123,8 @@ public class GUIHome {
     private void addTabsClinician() throws IOException {
         createTab("Profile", "/scene/clinicianProfile.fxml");
         createTab("Search Patients", "/scene/clinicianSearchPatients.fxml");
+        createTab("Transplant Waiting List","/scene/testClinicianWaitingList.fxml" );
+        createTab("History","/scene/testClinicianHistory.fxml" );
     }
 
 
