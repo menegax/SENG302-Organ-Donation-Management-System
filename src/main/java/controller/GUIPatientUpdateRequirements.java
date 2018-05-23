@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -11,11 +12,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import javafx.stage.Stage;
+import model.DrugInteraction;
 import model.Patient;
 import service.OrganWaitlist;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -294,19 +297,12 @@ public class GUIPatientUpdateRequirements extends UndoableController{
     private void openReasonPopup(GlobalEnums.Organ organ) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/deregistrationReason.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-
+            Parent root = fxmlLoader.load();
             GUIRequiredOrganDeregistrationReason controller = fxmlLoader.getController();
             controller.setOrgan(organ);
-
-            Stage popUpStage = new Stage();
-            popUpStage.setX(ScreenControl.getMain()
-                    .getX()); //offset popup
-            popUpStage.setScene(scene);
-
-            //Add and show the popup
-            ScreenControl.addPopUp("deregistrationReason", popUpStage); //ADD to screen control
-            ScreenControl.displayPopUp("deregistrationReason"); //display the popup
+            UndoableStage popUpStage = new UndoableStage();
+            screenControl.addStage(popUpStage.getUUID(), popUpStage);
+            screenControl.show(popUpStage.getUUID(), root);
         } catch (IOException e) {
             userActions.log(Level.SEVERE,
                     "Failed to open deregistration of required organ scene from required organs update scene",
