@@ -68,23 +68,20 @@ public class Database {
     }
 
     //ToDO Complete
-    public ArrayList<String[]> runQuery(String query, String[] params) {
-        try {
+    public ArrayList<String[]> runQuery(String query, String[] params) throws SQLException {
+//        try {
             String type = query.split(" ")[0].toUpperCase();
             PreparedStatement stmt = setupQuery(query, params);
             if (type.equals("SELECT")) {
                 return runSelectQuery(stmt);
             }
-            else if (type.equals("UPDATE")) {
+            else if (type.equals("UPDATE") || type.equals("INSERT")) {
                 runUpdateQuery(stmt);
             }
-//        else if (type.equals("INSERT")) {
-//
 //        }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
         return null;
     }
 
@@ -248,6 +245,32 @@ public class Database {
         return diseaseAttr;
     }
 
+    private void addPatientMedications(Patient newPatient) throws SQLException {
+        for(Medication medication : newPatient.getCurrentMedications()) {
+            String[] medAttr = getMedicationAtttributes(newPatient, medication);
+            String medQuery = "INSERT INTO tblMedications VALUES (?, ?, ?)";
+            runQuery(medQuery, medAttr);
+
+        }
+
+        for(Medication medication : newPatient.getMedicationHistory()) {
+            String[] medAttr = getMedicationAtttributes(newPatient, medication);
+            String medQuery = "INSERT INTO tblMedications VALUES (?, ?, ?)";
+            runQuery(medQuery, medAttr);
+        }
+    }
+
+    private void addPatientDiseases(Patient newPatient) throws SQLException {
+        ArrayList<Disease> allDiseases = newPatient.getCurrentDiseases();
+        allDiseases.addAll(newPatient.getPastDiseases());
+        for(Disease disease : allDiseases) {
+            String[] diseaseAttr = getDiseaseAttributes(newPatient, disease);
+            String diseaseQuery = "INSERT INTO tblDiseases VALUES (?, ?, ?, ?)";
+            runQuery(diseaseQuery, diseaseAttr);
+
+        }
+    }
+
     /**
      * Adds a patient to the database
      *
@@ -263,37 +286,16 @@ public class Database {
             String[] attr = getPatientAttributes(newPatient);
             String query = "INSERT INTO tblPatients " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement stmt = setupQuery(query, attr);
-            runUpdateQuery(stmt);
+            runQuery(query, attr);
 
             String[] contactAttr = getPatientContactAttributes(newPatient);
             String contactQuery = "INSERT INTO tblPatientContact " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement contactStmt = setupQuery(contactQuery, contactAttr);
-            runUpdateQuery(contactStmt);
+            runQuery(contactQuery, contactAttr);
 
-            for(Medication medication : newPatient.getCurrentMedications()) {
-                String[] medAttr = getMedicationAtttributes(newPatient, medication);
-                String medQuery = "INSERT INTO tblMedications VALUES (?, ?)";
-                PreparedStatement medStmt = setupQuery(medQuery, medAttr);
-                runUpdateQuery(medStmt);
-            }
+            addPatientMedications(newPatient);
 
-            for(Medication medication : newPatient.getMedicationHistory()) {
-                String[] medAttr = getMedicationAtttributes(newPatient, medication);
-                String medQuery = "INSERT INTO tblMedications VALUES (?, ?)";
-                PreparedStatement medStmt = setupQuery(medQuery, medAttr);
-                runUpdateQuery(medStmt);
-            }
-
-            ArrayList<Disease> allDiseases = newPatient.getCurrentDiseases();
-            allDiseases.addAll(newPatient.getPastDiseases());
-            for(Disease disease : allDiseases) {
-                String[] diseaseAttr = getDiseaseAttributes(newPatient, disease);
-                String diseaseQuery = "INSERT INTO tblDiseases VALUES (?, ?, ?, ?)";
-                PreparedStatement diseaseStmt = setupQuery(diseaseQuery, diseaseAttr);
-                runUpdateQuery(diseaseStmt);
-            }
+            addPatientDiseases(newPatient);
 
             userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
         }
@@ -349,7 +351,7 @@ public class Database {
     public void loadAll() {
         loadAllPatients();
         loadAllClinicians();
-        loadWaitingList();
+        loadTransplantWaitingList();
     }
 
     private ArrayList<GlobalEnums.Organ> loadOrgans(String organs) {
@@ -409,29 +411,51 @@ public class Database {
 	    newClinician.setModified(modified);
 		return newClinician;
 	}
-	
+
 	/**
 	 * Loads all patients into the application from the remote database.
 	 */
 	private void loadAllPatients() {
-	    ArrayList<String[]> patientsRaw = runQuery("SELECT * FROM tblPatients", null);
-	    for (String[] attr : patientsRaw) {
-	        patients.add(parsePatient(attr));
-	    }
+	    try {
+            ArrayList<String[]> patientsRaw = runQuery("SELECT * FROM tblPatients", null);
+            for (String[] attr : patientsRaw) {
+                patients.add(parsePatient(attr));
+            }
+        } catch (SQLException e) {
+	        e.printStackTrace();
+        }
 	}
 	
 	/**
 	 * Loads all clinicians into the application from the remote database.
 	 */
 	private void loadAllClinicians() {
-		ArrayList<String[]> clinicianRaw = runQuery("SELECT * FROM tblClincians", null);
-		for (String[] attr : clinicianRaw) {
-			clinicians.add(parseClinician(attr));
-		}
+	    try {
+            ArrayList<String[]> clinicianRaw = runQuery("SELECT * FROM tblClincians", null);
+            for (String[] attr : clinicianRaw) {
+                clinicians.add(parseClinician(attr));
+            }
+        } catch(SQLException e) {
+	        e.printStackTrace();
+        }
 	}
 
-    private void loadWaitingList() {
-
+    private void loadTransplantWaitingList() {
+        try {
+            ArrayList<String[]> waitlistRaw = runQuery("SELECT * FROM tblTransplantWaitList", null);
+            for (String[] attr : waitlistRaw) {
+                String nhi = attr[0];
+                LocalDate date = LocalDate.parse(attr[1]);
+                GlobalEnums.Organ organ = GlobalEnums.Organ.valueOf(attr[2]);
+                GlobalEnums.Region region = GlobalEnums.Region.valueOf(attr[3]);
+                String name = getPatientByNhi(nhi).getNameConcatenated();
+                organWaitingList.add(name, organ, date, region, nhi);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (InvalidObjectException ex) {
+            ex.printStackTrace();
+        }
     }
 
 ////TODO Local version remove?????
@@ -732,13 +756,17 @@ public class Database {
 
 
     public static void main(String[] argv) {
-        Database test = Database.getDatabase();
-        String stmt = "SELECT * FROM tblPatients WHERE LName = ?";
-        String[] params = {"Joeson"};
-        ArrayList<String[]> results = test.runQuery(stmt, params);
-        System.out.println("All Patients with last name Joeson");
-        for (String[] col: results) {
-            System.out.println(String.join(" ", col));
+        try {
+            Database test = Database.getDatabase();
+            String stmt = "SELECT * FROM tblPatients WHERE LName = ?";
+            String[] params = {"Joeson"};
+            ArrayList<String[]> results = test.runQuery(stmt, params);
+            System.out.println("All Patients with last name Joeson");
+            for (String[] col : results) {
+                System.out.println(String.join(" ", col));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
