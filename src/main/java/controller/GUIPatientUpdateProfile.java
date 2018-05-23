@@ -267,6 +267,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
     /**
      * Saves profile changes after checking each field for validity
      */
+    @FXML
     public void saveProfile() {
         Boolean valid = true;
 

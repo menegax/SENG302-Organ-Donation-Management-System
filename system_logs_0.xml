@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-05-23T19:59:29</date>
-  <millis>1527062369157</millis>
+  <date>2018-05-23T20:41:30</date>
+  <millis>1527064890062</millis>
   <sequence>7</sequence>
   <logger>utility.SystemLogger</logger>
   <level>INFO</level>
@@ -13,8 +13,8 @@
   <message>Default clinician not in database. Adding default clinician to database.</message>
 </record>
 <record>
-  <date>2018-05-23T19:59:29</date>
-  <millis>1527062369182</millis>
+  <date>2018-05-23T20:41:30</date>
+  <millis>1527064890083</millis>
   <sequence>10</sequence>
   <logger>utility.SystemLogger</logger>
   <level>INFO</level>
