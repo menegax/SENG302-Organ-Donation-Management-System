@@ -276,6 +276,7 @@ public class GUIPatientProfile {
             try {
                 ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
             } catch (IOException e) {
+                e.printStackTrace();
                 userActions.log(Level.SEVERE, "Error loading medication screen in popup", "attempted to navigate from the profile page to the medication page in popup");
                 new Alert(Alert.AlertType.ERROR, "Error loading medication page", ButtonType.OK).showAndWait();
             }

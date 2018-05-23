@@ -35,6 +35,8 @@ public class StatesHistoryScreen {
 
     private UndoableScreen undoableScreen;
 
+    private UndoableStage undoableStage;
+
     /**
      * Constructor for the StatesHistoryScreen, creates state objects of passed in control items to keep track of
      * Creates the list of stateHistories in its initialisation
@@ -66,6 +68,9 @@ public class StatesHistoryScreen {
             if (control instanceof TableView) {
                 createStateHistoriesTableView(control);
             }
+            if (control instanceof ListView) {
+                createStateHistoriesListView(control);
+            }
         }
     }
 
@@ -81,10 +86,12 @@ public class StatesHistoryScreen {
                         newScene.windowProperty().addListener((observable2, oldStage, newStage) -> {
                             if (newStage != null) {
                                 ((UndoableStage) newStage).addStatesHistoryScreen(this);
+                                undoableStage = (UndoableStage) newStage;
                             }
                         });
                     } else {
                         ((UndoableStage) newScene.getWindow()).addStatesHistoryScreen(this);
+                        undoableStage = (UndoableStage) newScene.getWindow();
                     }
                 }
             });
@@ -92,10 +99,12 @@ public class StatesHistoryScreen {
             control.getScene().windowProperty().addListener((observable2, oldStage, newStage) -> {
                 if (newStage != null) {
                     ((UndoableStage) newStage).addStatesHistoryScreen(this);
+                    undoableStage = (UndoableStage) newStage;
                 }
             });
         } else {
             ((UndoableStage) control.getScene().getWindow()).addStatesHistoryScreen(this);
+            undoableStage = (UndoableStage) control.getScene().getWindow();
         }
     }
 
@@ -186,15 +195,27 @@ public class StatesHistoryScreen {
      *
      * @param tableView - object which can be cast to an arraylist<TableView>
      */
-
     private void createStateHistoriesTableView(Object tableView) {
-        stateHistories.add(new StateHistoryTableView( (TableView<String>) tableView ));
-        ((TableView<String>) tableView).getSelectionModel().selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> {
+        stateHistories.add(new StateHistoryTableView( (TableView<Object>) tableView ));
+        ((TableView<Object>) tableView).itemsProperty().addListener((observable, oldValue, newValue) -> {
                     if (((oldValue == null || newValue == null) || !newValue.equals(oldValue))) {
                         store();
                     }
                 });
+    }
+
+    /**
+     * Creates state objects for every listView item in the passed in array
+     *
+     * @param listView - object which can be cast to an arraylist<ListView>
+     */
+    private void createStateHistoriesListView(Object listView) {
+        stateHistories.add(new StateHistoryListView( (ListView<Object>) listView ));
+        ((ListView<Object>) listView).itemsProperty().addListener((observable, oldValue, newValue) -> {
+            if (((oldValue == null || newValue == null) || !newValue.equals(oldValue))) {
+                store();
+            }
+        });
     }
 
 
@@ -234,11 +255,11 @@ public class StatesHistoryScreen {
      * Stores the current state of the screen
      */
     public void store() {
-        if (!undone && !redone && !stateHistories.get(0).getUndoableStage().isChangingStates()) {
+        if (!undone && !redone && !undoableStage.isChangingStates()) {
             for (StateHistoryControl stateHistory : stateHistories) {
                 stateHistory.store();
             }
-            stateHistories.get(0).getUndoableStage().store();
+            undoableStage.store();
         }
     }
 

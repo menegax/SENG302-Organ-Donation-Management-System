@@ -23,6 +23,7 @@ public class StateHistoryTextEntry extends StateHistoryControl {
         entry.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume); // removes right click menu which shows undo/redo
         this.control = entry;
         states.add(entry.getText());
+        setUpUndoableStage();
     }
 
 

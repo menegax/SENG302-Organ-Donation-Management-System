@@ -5,6 +5,7 @@ import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryControl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -75,6 +76,14 @@ public class UndoRedoControl {
             } else {
                 ((DatePicker) control).setValue(null);
             }
+        }
+        if (control instanceof TableView) {
+            // Unchecked type call will always be safe
+            ((TableView) control).getItems().setAll((ArrayList) state);
+        }
+        if (control instanceof ListView) {
+            // Unchecked type call will always be safe
+            ((ListView) control).getItems().setAll((ArrayList) state);
         }
     }
 

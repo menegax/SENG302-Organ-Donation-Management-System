@@ -5,18 +5,16 @@ import java.util.ArrayList;
 
 public class StateHistoryTableView extends StateHistoryControl {
 
-    private TableView<String> tableView;
-
     /**
      * Constructor which adds the current (base) state of the tableView to the history
      *
      * @param tableView - tableView the object will be keeping history of
      */
 
-    public StateHistoryTableView(TableView<String> tableView) {
-        this.tableView = tableView;
-        states.add(tableView.getSelectionModel()
-                .getSelectedItem());
+    public StateHistoryTableView(TableView<Object> tableView) {
+        this.control = tableView;
+        states.add(new ArrayList<>(tableView.getItems()));
+        setUpUndoableStage();
     }
 
 
@@ -27,8 +25,7 @@ public class StateHistoryTableView extends StateHistoryControl {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(tableView.getSelectionModel()
-                .getSelectedItem());
+        states.add(new ArrayList<>(((TableView<Object>) control).getItems()));
     }
 
 
@@ -38,7 +35,7 @@ public class StateHistoryTableView extends StateHistoryControl {
     public boolean undo() {
         if (index != 0) {
             index -= 1;
-            tableView.getSelectionModel().select((String) states.get(index));
+            ((TableView<Object>) control).getItems().setAll(states.get(index));
             return true;
         }
         return false;
@@ -50,7 +47,7 @@ public class StateHistoryTableView extends StateHistoryControl {
     public boolean redo() {
         if (index + 1 < states.size()) {
             index += 1;
-            tableView.getSelectionModel().select((String) states.get(index));
+            ((TableView<Object>) control).getItems().setAll(states.get(index));
             return true;
         }
         return false;

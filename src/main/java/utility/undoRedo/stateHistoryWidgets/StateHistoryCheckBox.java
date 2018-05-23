@@ -19,6 +19,7 @@ public class StateHistoryCheckBox extends StateHistoryControl {
     public StateHistoryCheckBox(CheckBox checkBox) {
         this.control = checkBox;
         states.add(checkBox.isSelected());
+        setUpUndoableStage();
     }
 
 

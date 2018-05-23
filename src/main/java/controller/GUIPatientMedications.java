@@ -56,8 +56,6 @@ public class GUIPatientMedications extends UndoableController {
     public Button addMed;
     public Button deleteMed;
     public Button saveMed;
-    public Button undoEdit;
-    public Button redoEdit;
     public Button compareMeds;
     public Button goBack;
     public Button clearMed;
@@ -185,14 +183,17 @@ public class GUIPatientMedications extends UndoableController {
         pastMedications.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> onSelect(pastMedications));
         pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        controls = new ArrayList<Control>() {{ add(newMedication); }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS);
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         } else if (user instanceof Clinician) {
             viewedPatient = userControl.getTargetPatient();
             loadProfile(viewedPatient.getNhiNumber());
         }
+        controls = new ArrayList<Control>() {{
+            add(pastMedications);
+            add(currentMedications);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS);
     }
 
     /**
@@ -247,7 +248,8 @@ public class GUIPatientMedications extends UndoableController {
     /**
      * Runs the updating of UI elements and API call
      */
-    private void autoComplete(){
+    @SuppressWarnings("WeakerAccess") //pls leave :)
+    public void autoComplete(){
         Platform.runLater(() -> { // run this on the FX thread (next available)
             getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread
             displayDrugSuggestions();//UPDATE UI

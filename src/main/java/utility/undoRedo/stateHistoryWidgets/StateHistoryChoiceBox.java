@@ -18,6 +18,7 @@ public class StateHistoryChoiceBox extends StateHistoryControl {
         this.control = choiceBox;
         states.add(choiceBox.getSelectionModel()
                 .getSelectedItem());
+        setUpUndoableStage();
     }
 
 

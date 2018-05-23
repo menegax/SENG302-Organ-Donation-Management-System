@@ -15,7 +15,7 @@ public class StateHistoryRadioButton extends StateHistoryControl {
     public StateHistoryRadioButton(RadioButton radioButton) {
         this.control = radioButton;
         states.add(radioButton.isSelected());
-
+        setUpUndoableStage();
     }
 
 
