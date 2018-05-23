@@ -40,9 +40,6 @@ public class GUIRequiredOrganDeregistrationReason {
     private Button okButton;
 
     @FXML
-    private Button okButton1;
-
-    @FXML
     private Label pleaseSpecify;
 
     @FXML
@@ -72,8 +69,6 @@ public class GUIRequiredOrganDeregistrationReason {
         dateOfDeath.setVisible(false);
         dateOfDeathLabel.setDisable(true);
         dateOfDeathLabel.setVisible(false);
-        okButton1.setDisable(true);
-        okButton1.setVisible(false);
         curedLabel.setDisable(true);
         curedLabel.setVisible(false);
         diseaseCured.setDisable(true);
@@ -143,6 +138,7 @@ public class GUIRequiredOrganDeregistrationReason {
             dateOfDeath.setVisible(true);
             dateOfDeathLabel.setDisable(false);
             dateOfDeathLabel.setVisible(true);
+            okButton.setLayoutY(169.0);
         } else if (reasons.getValue() == GlobalEnums.DeregistrationReason.CURED) {
             curedLabel.setDisable(false);
             curedLabel.setVisible(true);
@@ -152,6 +148,7 @@ public class GUIRequiredOrganDeregistrationReason {
             dateOfDeath.setVisible(false);
             dateOfDeathLabel.setDisable(true);
             dateOfDeathLabel.setVisible(false);
+            okButton.setLayoutY(169.0);
         } else {
             dateOfDeath.setDisable(true);
             dateOfDeath.setVisible(false);
@@ -161,6 +158,7 @@ public class GUIRequiredOrganDeregistrationReason {
             curedLabel.setVisible(false);
             diseaseCured.setDisable(true);
             diseaseCured.setVisible(false);
+            okButton.setLayoutY(100.0);
         }
     }
 
@@ -178,7 +176,9 @@ public class GUIRequiredOrganDeregistrationReason {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to cure." + diseaseCuredString, new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
             curePatientDiseases(selected);
         } else if (reason == GlobalEnums.DeregistrationReason.DIED) {
-            userActions.log(Level.INFO, "Deregistered " + organ + " due to death", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+            target.setRequiredOrgans(new ArrayList());
+            target.setDeath(dateOfDeath.getValue());
+            userActions.log(Level.INFO, "Deregistered " + organ + " due to death on this date: " + dateOfDeath.getValue(), new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         } else if (reason == GlobalEnums.DeregistrationReason.RECEIVED) {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         }
