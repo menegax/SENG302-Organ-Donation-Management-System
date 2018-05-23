@@ -44,10 +44,10 @@ public class GUIClinicianWaitingList {
     private ObservableList<OrganWaitlist.OrganRequest> masterData = FXCollections.observableArrayList();
 
     @FXML
-    private ChoiceBox organSelection;
+    private ChoiceBox<String> organSelection;
 
     @FXML
-    private ChoiceBox regionSelection;
+    private ChoiceBox<String> regionSelection;
 
     private UserControl userControl;
 
@@ -181,7 +181,7 @@ public class GUIClinicianWaitingList {
                     return true;
                 }
             }
-            if (OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(newValue.toString().toLowerCase())) {
+            if (OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(newValue.toLowerCase())) {
                 if (regionSelection.getValue() == null || regionSelection.getValue().equals("")) {
                     return true;
                 } else if (OrganRequest.getRequestRegion() != null) {
@@ -195,16 +195,16 @@ public class GUIClinicianWaitingList {
         regionSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
             if (newValue.equals("")){
                 if (organSelection.getValue() == null ||
-                        OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toString().toLowerCase()) ||
+                        OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()) ||
                         organSelection.getValue().equals("")){
                     return true;
                 }
             }
             Region requestedRegion = OrganRequest.getRequestRegion();
             if (requestedRegion != null) {
-                return requestedRegion.getValue().toLowerCase().equals(newValue.toString().toLowerCase()) &&
+                return requestedRegion.getValue().toLowerCase().equals(newValue.toLowerCase()) &&
                         (organSelection.getValue() == null || organSelection.getValue().equals("")||
-                                OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toString().toLowerCase()));
+                                OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()));
             }
             return false;
         }));
