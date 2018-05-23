@@ -58,12 +58,6 @@ public class GUIProfileTest extends ApplicationTest {
         Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
-//        try {
-//        Database.removePatient("TFX9999");
-//        Database.resetDatabase();
-//        } catch (InvalidObjectException e) {
-//            throw new InvalidObjectException(e.getMessage());
-//        }
     }
 
     @Test
@@ -89,15 +83,6 @@ public class GUIProfileTest extends ApplicationTest {
         verifyThat("#patientDonationsAnchorPane", Node::isVisible);
     }
 
-//    @Test
-//    public void should_have_correct_patient_details() {
-//        // Made around default patient in the system with NHI of ABC1238
-//        assertThat(lookup("#nhiLbl").queryAs(Label.class)).hasText("TFX9999");
-//        assertThat(lookup("#nameLbl").queryAs(Label.class)).hasText(ScreenControl.getLoggedInPatient().getNameConcatenated());
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-//        LocalDate birth = LocalDate.parse(lookup("#dobLbl").queryAs(Label.class).getText(), formatter);
-//        assertThat(birth == LocalDate.of(1990, 2, 9));
-//    }
 
     @Test
     public void should_have_correct_donations() {
@@ -107,28 +92,5 @@ public class GUIProfileTest extends ApplicationTest {
         assertThat(lookup("#corneaCB").queryAs(CheckBox.class).isSelected());
     }
 
-    @Test
-    public void check_receiver_donor_segregation() throws InvalidObjectException {
-        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.LIVER);
-        Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
-        Database.getPatientByNhi("TFX9999").setRequiredOrgans(new ArrayList<GlobalEnums.Organ>());
-        interact(() -> {
-            lookup("#donationsButton").queryAs(Button.class).fire();
-            lookup("#save").queryAs(Button.class).fire();
-        });
-        verifyThat("#donatingTitle", Node::isVisible);
-        verifyThat("#receivingList", Node::isDisabled);
-        Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.LIVER);
-        Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.CORNEA);
-        Database.getPatientByNhi("TFX9999").setDonations(new ArrayList<GlobalEnums.Organ>());
-        sleep(1000);
-        interact(() -> {
-            lookup("#donationsButton").queryAs(Button.class).fire();
-            lookup("#save").queryAs(Button.class).fire();
-        });
-        sleep(1000);
-        verifyThat("#receivingList", Node::isVisible);
-        verifyThat("#donationList", Node::isDisabled);
-    }
 
 }
