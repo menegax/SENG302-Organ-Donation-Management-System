@@ -35,7 +35,10 @@ public class StateHistoryTableView extends StateHistoryControl {
     public boolean undo() {
         if (index != 0) {
             index -= 1;
-            ((TableView<Object>) control).getItems().setAll(states.get(index));
+            ((TableView<Object>) control).getItems().clear();
+            for (Object object : (ArrayList<Object>) states.get(index)) {
+                ((TableView<Object>) control).getItems().add(object);
+            }
             return true;
         }
         return false;
@@ -47,7 +50,10 @@ public class StateHistoryTableView extends StateHistoryControl {
     public boolean redo() {
         if (index + 1 < states.size()) {
             index += 1;
-            ((TableView<Object>) control).getItems().setAll(states.get(index));
+            ((TableView<Object>) control).getItems().clear();
+            for (Object object : (ArrayList<Object>) states.get(index)) {
+                ((TableView<Object>) control).getItems().add(object);
+            }
             return true;
         }
         return false;

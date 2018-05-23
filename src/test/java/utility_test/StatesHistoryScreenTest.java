@@ -1,9 +1,10 @@
-package model_test;
+package utility_test;
 
 import com.sun.javafx.application.PlatformImpl;
 import javafx.collections.FXCollections;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import utility.undoRedo.UndoableStage;
 import utility.undoRedo.stateHistoryWidgets.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -68,6 +69,7 @@ public class StatesHistoryScreenTest {
      */
     @Before
     public void createStatesHistoryScreen() {
+        UndoableStage undoableStage = new UndoableStage();
         textField1.setText("");
         textField1.setText("");
         checkBox1.setSelected(false);
