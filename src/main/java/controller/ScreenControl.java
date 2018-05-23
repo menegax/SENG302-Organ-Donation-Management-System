@@ -6,9 +6,12 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
+import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ScreenControl {
 
@@ -18,11 +21,9 @@ public class ScreenControl {
 
     private static Scene main;
 
-
     public static Scene getMain() {
         return main;
     }
-
 
     /**
      * set initial screen to display
@@ -70,7 +71,7 @@ public class ScreenControl {
      * @param name  - name of the popup
      * @param stage - stage to display
      */
-    static void addPopUp(String name, Stage stage) {
+    public static void addPopUp(String name, Stage stage) {
         popMap.put(name, stage);
     }
 
@@ -90,7 +91,7 @@ public class ScreenControl {
      *
      * @param name - name of the pop up to display
      */
-    static void displayPopUp(String name) {
+    public static void displayPopUp(String name) {
         popMap.get(name).show();
     }
 

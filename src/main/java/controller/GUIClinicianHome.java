@@ -65,7 +65,6 @@ public class GUIClinicianHome {
             ScreenControl.activate("clinicianWaitingList");
         }
         catch (IOException e) {
-            e.printStackTrace();
             userActions.log(Level.SEVERE, "Error loading organ waiting list screen", "attempted to navigate from the " +
                     "home page to the waiting list page");
             new Alert(Alert.AlertType.WARNING, "ERROR loading organ waiting list page", ButtonType.OK).showAndWait();
