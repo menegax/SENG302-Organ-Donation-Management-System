@@ -91,14 +91,4 @@ public class GUIProfileTest extends ApplicationTest {
         assertThat(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
         assertThat(lookup("#corneaCB").queryAs(CheckBox.class).isSelected());
     }
-
-
-
-    @After
-    public void waitForEvents() throws InvalidObjectException {
-        Database.resetDatabase();
-        WaitForAsyncUtils.waitForFxEvents();
-        sleep(1000);
-    }
-
 }

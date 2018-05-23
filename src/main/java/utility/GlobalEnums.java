@@ -156,28 +156,6 @@ public class GlobalEnums {
         }
     }
 
-
-        public String getValue() {
-            return value;
-        }
-
-
-        @Override
-        public String toString() {
-            return this.getValue();
-        }
-
-
-        public static Enum getEnumFromString(String value) {
-            try {
-                return BloodGroup.valueOf(value.toUpperCase().replaceAll("\\s+", "_"));
-            }
-            catch (IllegalArgumentException e) {
-                return null;
-            }
-        }
-    }
-
     public enum DiseaseState {
         CURED ("cured"),
         CHRONIC ("chronic");

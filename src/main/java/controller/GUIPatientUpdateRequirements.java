@@ -85,8 +85,6 @@ public class GUIPatientUpdateRequirements extends UndoableController{
 
 //    private boolean closed = false;
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
-
     public void initialize() {
         userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
