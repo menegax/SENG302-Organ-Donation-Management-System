@@ -1,10 +1,13 @@
 package gui_test;
 
 import static java.util.logging.Level.OFF;
+import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static utility.UserActionHistory.userActions;
 
 import controller.Main;
+import controller.UserControl;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;

@@ -536,21 +536,27 @@ public class GUIPatientMedications extends UndoableController {
      */
     @FXML
     public void goToProfile() {
-        if (userControl.getLoggedInUser() instanceof Patient ) {
+        if (userControl.getLoggedInUser() instanceof Patient) {
             try {
-                screenControl.show(medicationPane,"/scene/patientProfile.fxml");
-            } catch (IOException e) {
+                screenControl.show(medicationPane, "/scene/patientProfile.fxml");
+            }
+            catch (IOException e) {
                 new Alert((Alert.AlertType.ERROR), "Unable to load patient profile").show();
                 userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
             }
-        } else {
+        }
+        else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
             try {
                 ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen in popup", new String[]{"Attempted to navigate from the edit page to the profile page in popup", target.getNhiNumber()});
+            }
+            catch (IOException e) {
+                userActions.log(Level.SEVERE,
+                        "Error loading profile screen in popup",
+                        new String[] { "Attempted to navigate from the edit page to the profile page in popup", target.getNhiNumber() });
                 new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
 
+            }
         }
     }
 

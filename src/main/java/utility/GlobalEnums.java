@@ -137,7 +137,7 @@ public class GlobalEnums {
     public enum UndoableScreen {
         CLINICIANSEARCHPATIENTS("clinicianSearchPatients"), CLINICIANPROFILEUPDATE("clinicianProfileUpdate"), PATIENTMEDICATIONS("patientMedications"),
         PATIENTREGISTER("patientRegister"), PATIENTUPDATECONTACTS("patientUpdateContacts"), PATIENTUPDATEDONATIONS("patientUpdateDonations"),
-        PATIENTUPDATEPROFILE("patientUpdateProfile");
+        PATIENTUPDATEPROFILE("patientUpdateProfile"), PATIENTUPDATEREQUIREMENTS("patientUpdateRequirements"), PATIENTUPDATEDIAGNOSIS("patientUpdateDiagnosis");
 
         private String value;
 

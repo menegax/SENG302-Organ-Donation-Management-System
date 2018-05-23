@@ -171,23 +171,23 @@ public class GUIPatientProfile {
      */
     public void initialize() throws InvalidObjectException{
         userControl = new UserControl();
-        Object user = null;
-        if (userControl.getLoggedInUser() instanceof  Patient ) {
-            requirementsButton.setDisable(true);
-            requirementsButton.setVisible(false);
-            medicationBtn.setDisable(true);
-            medicationBtn.setVisible(false);
-            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
-                receivingList.setDisable(true);
-                receivingList.setVisible(false);
-                receivingTitle.setDisable(true);
-                receivingTitle.setVisible(false);
-            } if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getDonations().size() == 0) {
-                donatingTitle.setDisable(true);
-                donatingTitle.setVisible(false);
-                donationList.setDisable(true);
-                donationList.setVisible(false);
-            }
+        Object user = null; //TODO
+      if (userControl.getLoggedInUser() instanceof  Patient ) {
+//            requirementsButton.setDisable(true);
+//            requirementsButton.setVisible(false);
+//            medicationBtn.setDisable(true);
+//            medicationBtn.setVisible(false);
+//            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
+//                receivingList.setDisable(true);
+//                receivingList.setVisible(false);
+//                receivingTitle.setDisable(true);
+//                receivingTitle.setVisible(false);
+//            } if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getDonations().size() == 0) {
+//                donatingTitle.setDisable(true);
+//                donatingTitle.setVisible(false);
+//                donationList.setDisable(true);
+//                donationList.setVisible(false);
+//            }
             user = userControl.getLoggedInUser();
         }
         if (userControl.getLoggedInUser() instanceof Clinician) {
@@ -200,15 +200,6 @@ public class GUIPatientProfile {
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Cannot load patient profile");
         }
-    }
-
-
-    /**
-     * Removes the back button from the scene
-     */
-    private void removeBack() {
-        back.setDisable(true);
-        back.setVisible(false);
     }
 
 //    /**
@@ -272,7 +263,7 @@ public class GUIPatientProfile {
         donatingListProperty.setValue(FXCollections.observableArrayList(organsMappedD));
         receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
         donationList.itemsProperty().bind(donatingListProperty);
-        receivingList.itemsProperty().bind(receivingListProperty);
+        //receivingList.itemsProperty().bind(receivingListProperty);
         //Populate current medication listview
         Collection<Medication> meds = patient.getCurrentMedications();
         List<String> medsMapped = meds.stream().map(Medication::getMedicationName).collect(Collectors.toList());
@@ -280,7 +271,7 @@ public class GUIPatientProfile {
         medList.itemsProperty().bind(medListProperty);
 //         list view styling/highlighting
         highlightListCell(donationList, true);
-        highlightListCell(receivingList, false);
+//        highlightListCell(receivingList, false);
     }
 
     /**
@@ -462,9 +453,9 @@ public class GUIPatientProfile {
      */
     public void openPatientDiagnoses() {
         if(userControl.getLoggedInUser() instanceof Patient) {
-            ScreenControl.removeScreen("patientDiagnoses");
+            ScreenControl.removeScreen("patientDiagnoses"); //TODO:
             try {
-                ScreenControl.addScreen("patientDiagnoses", FXMLLoader.load(getClass().getResource("/scene/clinicianDiagnosis.fxml")));
+                ScreenControl.addPopUp("patientDiagnoses", FXMLLoader.load(getClass().getResource("/scene/clinicianDiagnosis.fxml")));
                 ScreenControl.activate("patientDiagnoses");
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading diagnoses screen", "attempted to navigate from the profile page to the diagnoses page");

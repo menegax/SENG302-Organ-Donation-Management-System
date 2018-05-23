@@ -27,7 +27,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * This class is the controller for editing a patients required organs only accessible by the clinician
  */
-public class GUIPatientUpdateRequirements {
+public class GUIPatientUpdateRequirements extends UndoableController{
 
     @FXML
     private CheckBox liverCB;
@@ -123,7 +123,7 @@ public class GUIPatientUpdateRequirements {
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
         }
-        ArrayList<Control> controls = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(liverCB);
             add(kidneyCB);
             add(pancreasCB);
@@ -137,7 +137,7 @@ public class GUIPatientUpdateRequirements {
             add(bonemarrowCB);
             add(connectivetissueCB);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(patientRequirementsAnchorPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEREQUIREMENTS);
     }
 
     /**
@@ -288,7 +288,7 @@ public class GUIPatientUpdateRequirements {
         if (userControl.getLoggedInUser() instanceof Patient) {
             ScreenControl.removeScreen("patientProfile");
             try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
+                ScreenControl.addPopUp("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml"))); //TODO:
                 ScreenControl.activate("patientProfile");
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");

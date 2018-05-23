@@ -1,7 +1,10 @@
 package controller;
 
+import static java.util.logging.Level.ALL;
+import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static javafx.scene.control.Alert.AlertType.ERROR;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 import de.codecentric.centerdevice.MenuToolkit;
@@ -99,7 +102,7 @@ public class GUIHome {
         createTab("Update", "/scene/patientUpdateProfile.fxml");
         createTab("Donations", "/scene/patientUpdateDonations.fxml");
         createTab("History", "/scene/patientHistory.fxml");
-        createTab("Contact Details", "/scene/patientContactUpdate.fxml");
+        createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
         //todo setUpMenuBar() call here
     }
 
@@ -113,7 +116,7 @@ public class GUIHome {
         createTab("Update", "/scene/patientUpdateProfile.fxml");
         createTab("Medications", "/scene/patientMedications.fxml");
         createTab("Donations", "/scene/patientUpdateDonations.fxml");
-        createTab("Contact Details", "/scene/patientContactUpdate.fxml");
+        createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
     }
 
 
@@ -195,6 +198,8 @@ public class GUIHome {
             // Add the default application menu
             bar.getMenus().add(0, tk.createDefaultApplicationMenu(screenControl.getAppName())); // set leftmost MacOS system menu
             tk.setMenuBar(stage, bar);
+            systemLogger.setLevel(ALL);
+            systemLogger.log(FINE, "Set MacOS menubar");
         }
         else {// if windows
             menuBar.getMenus().clear();

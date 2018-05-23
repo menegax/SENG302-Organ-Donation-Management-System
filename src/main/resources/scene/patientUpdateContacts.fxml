@@ -3,41 +3,87 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="patientContactsPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientUpdateContacts">
-    <children>
-        <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToProfile" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-        <Label alignment="CENTER" layoutX="192.0" layoutY="23.0" prefHeight="55.0" prefWidth="217.0" styleClass="title" stylesheets="@../css/guiStyle.css" text="Contact Details" />
-        <Button layoutX="463.0" layoutY="341.0" mnemonicParsing="false" onAction="#saveContactDetails" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Save" />
-        <VBox layoutX="60.0" layoutY="100.0" prefHeight="230.0" prefWidth="230.0" spacing="1.0" stylesheets="@../css/guiStyle.css">
+<GridPane fx:id="patientContactsPane" prefHeight="333.0" prefWidth="731.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/9.0.1" fx:controller="controller.GUIPatientUpdateContacts">
+  <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="83.20001220703125" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="116.79998779296875" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="135.8" minHeight="10.0" prefHeight="135.8" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <GridPane GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
-            <Label alignment="CENTER" text="Patient Home Phone:" />
-            <TextField fx:id="homePhoneField" />
-            <Label text="Patient Mobile Phone:" />
-            <TextField fx:id="mobilePhoneField" />
-            <Label text="Patient Work Phone:" />
-            <TextField fx:id="workPhoneField" />
-            <Label text="Patient Email Address:" />
-            <TextField fx:id="emailAddressField" />
-            <Label text="Emergency Contact Relationship:" />
-            <TextField fx:id="contactRelationshipField" layoutX="10.0" layoutY="191.0" />
+            <TextField fx:id="homePhoneField" prefHeight="35.0" prefWidth="210.0" promptText="Home phone" GridPane.rowIndex="1" />
+            <TextField fx:id="mobilePhoneField" prefHeight="35.0" prefWidth="210.0" promptText="Mobile phone" GridPane.rowIndex="3" />
+            <TextField fx:id="workPhoneField" prefHeight="35.0" prefWidth="210.0" promptText="Work phone" GridPane.rowIndex="5" />
+            <TextField fx:id="emailAddressField" prefHeight="35.0" prefWidth="210.0" promptText="Email address" GridPane.rowIndex="7" />
+            <TextField fx:id="contactRelationshipField" prefHeight="35.0" prefWidth="210.0" promptText="Emergency contract relationship" GridPane.rowIndex="9" />
+            <Label text="Patient Home Phone:" GridPane.valignment="BOTTOM" />
+            <Label text="Patient Mobile Phone:" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <Label text="Patient Work Phone:" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
+            <Label text="Patient Email Address:" GridPane.rowIndex="6" GridPane.valignment="BOTTOM" />
+            <Label text="Emergency Contact Relationship:" GridPane.rowIndex="8" GridPane.valignment="BOTTOM" />
          </children>
-        </VBox>
-        <VBox layoutX="323.0" layoutY="100.0" prefHeight="230.0" prefWidth="230.0" spacing="1.0">
+      </GridPane>
+      <GridPane GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
-            <Label text="Emergency Contact Home Phone:" />
-            <TextField fx:id="contactHomePhoneField" />
-            <Label text="Emergency Contact Mobile Phone" />
-            <TextField fx:id="contactMobilePhoneField" />
-            <Label text="Emergency Contact Work Phone:" />
-            <TextField fx:id="contactWorkPhoneField" />
-            <Label text="Emergency Contact Email Address:" />
-            <TextField fx:id="contactEmailAddressField" />
-            <Label text="Emergency Contact Name:" />
-            <TextField fx:id="contactNameField" />
+            <TextField fx:id="contactHomePhoneField" prefHeight="35.0" prefWidth="210.0" promptText="Home phone" GridPane.rowIndex="1" />
+            <TextField fx:id="contactMobilePhoneField" prefHeight="35.0" prefWidth="210.0" promptText="Mobile phone" GridPane.rowIndex="3" />
+            <TextField fx:id="contactWorkPhoneField" prefHeight="35.0" prefWidth="210.0" promptText="Work phone" GridPane.rowIndex="5" />
+            <TextField fx:id="contactEmailAddressField" prefHeight="35.0" prefWidth="210.0" promptText="Email address" GridPane.rowIndex="7" />
+            <TextField fx:id="contactNameField" prefHeight="35.0" prefWidth="210.0" promptText="Name" GridPane.rowIndex="9" />
+            <Label text="Emergency Contact Home Phone:" GridPane.valignment="BOTTOM" />
+            <Label text="Emergency Contact Mobile Phone" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <Label text="Emergency Contact Work Phone:" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
+            <Label text="Emergency Contact Email Address:" GridPane.rowIndex="6" GridPane.valignment="BOTTOM" />
+            <Label text="Emergency Contact Name:" GridPane.rowIndex="8" GridPane.valignment="BOTTOM" />
          </children>
-        </VBox>
-    </children>
-</AnchorPane>
+      </GridPane>
+      <Button mnemonicParsing="false" onAction="#saveContactDetails" prefHeight="31.0" prefWidth="106.0" text="Save" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+   </children>
+</GridPane>
