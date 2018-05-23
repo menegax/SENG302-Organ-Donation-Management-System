@@ -1,5 +1,8 @@
 package controller;
 
+import static java.util.logging.Level.INFO;
+import static utility.SystemLogger.systemLogger;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -9,11 +12,14 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.User;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class ScreenControl {
@@ -30,12 +36,15 @@ public class ScreenControl {
     @Deprecated
     public static Map<String, Parent> scenes = new HashMap<>();
 
+    private static Map<User, Set<Stage>> userStages = new HashMap<>();
+
     @Deprecated
     private static Scene main;
 
     private static Map<UUID, Stage> applicationStages;
 
-    private boolean macOs = System.getProperty("os.name").startsWith("Mac");
+    private boolean macOs = System.getProperty("os.name")
+            .startsWith("Mac");
 
     private KeyCodeCombination logOut;
 
@@ -64,42 +73,49 @@ public class ScreenControl {
     }
 
 
-    /**
-     * @param key
-     * @param stage
-     */
-    public void addStage(UUID key, Stage stage){
+    public void addStage(UUID key, Stage stage) {
         applicationStages.put(key, stage);
+        if (new UserControl().isUserLoggedIn()) { // if scene belongs to a user
+            addUserStage(new UserControl().getLoggedInUser(), stage);
+        }
     }
 
 
-    /**
-     * @param root
-     */
     public void show(UUID stageName, Parent root) {
         Stage stage = applicationStages.get(stageName);
         stage.setScene(new Scene(root));
-      //  setUpMenuBar(stage); //TODO: breaks on my pc
         stage.show();
     }
 
-    public void show(Node node, String fxml) throws IOException{
-        Stage stage = applicationStages.get(((UndoableStage) node.getScene().getWindow()).getUUID());
+
+    public void show(Node node, String fxml) throws IOException {
+        Stage stage = applicationStages.get(((UndoableStage) node.getScene()
+                .getWindow()).getUUID());
         stage.setScene(new Scene(FXMLLoader.load(getClass().getResource(fxml))));
         stage.show();
     }
 
-    public void closeStage(UUID stageName) {
-        applicationStages.get(stageName).close();
+
+    void closeStage(UUID stageName) {
+        applicationStages.get(stageName)
+                .close();
         applicationStages.remove(stageName);
+        userStages.remove(new UserControl().getLoggedInUser(), stageName);
     }
 
-    public void closeStage(Node node) {
-        ((Stage) node.getScene().getWindow()).close();
-        if (node.getScene().getWindow() instanceof UndoableStage) {
-            applicationStages.remove(((UndoableStage) node.getScene().getWindow()).getUUID());
+
+    void closeStage(Node node) {
+        ((Stage) node.getScene()
+                .getWindow()).close();
+        if (node.getScene()
+                .getWindow() instanceof UndoableStage) {
+            applicationStages.remove(((UndoableStage) node.getScene()
+                    .getWindow()).getUUID());
         }
+        userStages.remove(new UserControl().getLoggedInUser(), node);
+
     }
+
 
     @Deprecated
     public static Scene getMain() {
@@ -129,13 +145,10 @@ public class ScreenControl {
         //create tab
         // load pane into tab
         // add tab to existing tab pane
-        //
         screenMap.put(name, pane);
     }
 
 
-
-    //todo
     /**
      * Remove screen from hash map
      *
@@ -257,7 +270,31 @@ public class ScreenControl {
         return macOs;
     }
 
+
     public String getAppName() {
         return appName;
+    }
+
+
+    public static void addUserStage(User user, Stage newStage) {
+
+        systemLogger.log(INFO, "Added user " + user.getUuid() + " and stage " + newStage.getTitle());
+
+        if (userStages.containsKey(user)) {
+            userStages.get(user)
+                    .add(newStage);
+        }
+        else {
+            Set<Stage> stages = new HashSet<>();
+            stages.add(newStage);
+            userStages.put(user, stages);
+        }
+    }
+
+
+    public static void closeAllUserStages(User user) {
+        Set<Stage> stages = userStages.get(user);
+        stages.forEach(Stage::close);
+        userStages.remove(user);
     }
 }

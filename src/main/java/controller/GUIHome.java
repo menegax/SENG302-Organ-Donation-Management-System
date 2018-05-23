@@ -1,6 +1,5 @@
 package controller;
 
-import static java.util.logging.Level.ALL;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.INFO;
@@ -24,7 +23,6 @@ import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
 import service.Database;
-import utility.undoRedo.UndoableStage;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,7 +67,7 @@ public class GUIHome {
 
 
     /**
-     * Creates and adds tab to the tabpane
+     * Creates and adds tab to the tab pane
      * @param title - title of the new tab
      * @param fxmlPath - path of the fxml to be loaded
      */
@@ -88,7 +86,7 @@ public class GUIHome {
     }
 
     /**
-     * Adds tabs to the home tabpane for a patient logged in
+     * Adds tabs to the home tab pane for a patient logged in
      * @throws IOException - if fxml cannot be located
      */
     private void addTabsPatient() throws IOException {
@@ -123,6 +121,12 @@ public class GUIHome {
     }
 
 
+    private void logOut() {
+        systemLogger.log(FINE, "User trying to log out");
+        ScreenControl.closeAllUserStages(new UserControl().getLoggedInUser());
+        new UserControl().rmLoggedInUserCache();
+    }
+
     /**
      * Creates a native-looking MacOS menu bar for the application
      */
@@ -136,8 +140,7 @@ public class GUIHome {
         MenuItem menu1Item1 = new MenuItem("Log out");
         menu1Item1.setAccelerator(screenControl.getLogOut());
         menu1Item1.setOnAction(event -> {
-//            new UserControl().rmLoggedInUserCache();
-            //Todo actually log out
+            logOut();
             userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
         });
         menu1.getItems().addAll(menu1Item1);

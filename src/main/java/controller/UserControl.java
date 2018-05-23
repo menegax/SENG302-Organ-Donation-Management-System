@@ -2,6 +2,7 @@ package controller;
 
 import model.Clinician;
 import model.Patient;
+import model.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +10,7 @@ import java.util.Map;
 public class UserControl {
 
 
-    private static final Map<String, Object> users = new HashMap<>();
+    private static final Map<String, User> users = new HashMap<>();
 
 
     /**
@@ -17,7 +18,7 @@ public class UserControl {
      * @param key - key to identify the value by
      * @param value - value to store
      */
-    private void add(String key, Object value) {
+    private void add(String key, User value) {
         if (key != null && value != null){
             users.put(key, value);
         }
@@ -38,7 +39,7 @@ public class UserControl {
      * @param key - key to identify the object value by
      * @return - object at the given key
      */
-    private Object get(String key) {
+    private User get(String key) {
         return users.get(key);
     }
 
@@ -46,7 +47,7 @@ public class UserControl {
      * Adds a user to the cache
      * @param user - user to be added
      */
-    void addLoggedInUserToCache(Object user) {
+    void addLoggedInUserToCache(User user) {
         add("user_logged_in", user);
     }
 
@@ -55,13 +56,12 @@ public class UserControl {
      *  Gets the logged in user
      * @return - user object
      */
-    public Object getLoggedInUser() {
+    public User getLoggedInUser() {
         return get("user_logged_in");
     }
 
     public boolean isUserLoggedIn() {
-        Object obj = getLoggedInUser();
-        return (obj instanceof Patient || obj instanceof Clinician);
+        return !users.isEmpty();
     }
 
     /**

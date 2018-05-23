@@ -2,7 +2,7 @@ package model;
 
 import java.util.UUID;
 
-abstract class User {
+public abstract class User {
 
     private final UUID uuid = UUID.randomUUID();
 
