@@ -151,7 +151,8 @@ sessions after the user saves changes using the standard save button on the home
 #### Undo/Redo
 We decided to reload the fxml on every undo and redo as it did not create significant processing time.  
 In addition it removed the necessity for the application to know whether it was on the screen it needed to undo or not.
-We created abstract classes UndoableStage and UndoableController to enable future implementations with ease as most methods and attributes would be inherited.
+We created abstract classes UndoableStage and UndoableController to enable future implementations with ease as most methods and attributes would be inherited.  
+It was decided that when undoing and redoing across multiple screens, any changes made would not be saved between screens as this was specifically revert functionality (a later story)
 
 #### Deregistering an Organ due to Cure
 When you deregister an organ due to a disease or collection of diseases being cured and mark a collection of selected diseases to cured in the dropdown, we considered how
