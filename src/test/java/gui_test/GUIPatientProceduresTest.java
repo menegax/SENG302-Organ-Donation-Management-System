@@ -54,7 +54,7 @@ public class GUIPatientProceduresTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
     }
 
-    /**@Test
+    /**
     public void verifyProceduresNonEditableAsPatient() {
         givenPatientLoggedIn();
         assertFalse(lookup("#addProcedureButton").queryAs(Button.class).isVisible());
