@@ -2,20 +2,20 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-05-23T18:46:15</date>
-  <millis>1527057975144</millis>
-  <sequence>8</sequence>
+  <date>2018-05-23T19:08:14</date>
+  <millis>1527059294916</millis>
+  <sequence>7</sequence>
   <logger>utility.SystemLogger</logger>
   <level>INFO</level>
   <class>controller.Main</class>
-  <method>ensureDefaultClinician</method>
+  <method>addDummyTestObjects</method>
   <thread>12</thread>
-  <message>Default clinician not in database. Adding default clinician to database.</message>
+  <message>Unable to add dummy patients</message>
 </record>
 <record>
-  <date>2018-05-23T18:46:15</date>
-  <millis>1527057975151</millis>
-  <sequence>11</sequence>
+  <date>2018-05-23T19:08:14</date>
+  <millis>1527059294927</millis>
+  <sequence>9</sequence>
   <logger>utility.SystemLogger</logger>
   <level>INFO</level>
   <class>controller.Main</class>

@@ -181,9 +181,11 @@ public class GUIRequiredOrganDeregistrationReason {
                 confirmed = false;
                 dateOfDeath.getStyleClass().add("invalid");
             }
+            for (GlobalEnums.Organ organ : target.getRequiredOrgans()) {
+                userActions.log(Level.INFO, "Deregistered " + organ + " due to death on this date: " + dateOfDeath.getValue(), new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+            }
             target.setRequiredOrgans(new ArrayList());
             target.setDeath(dateOfDeath.getValue());
-            userActions.log(Level.INFO, "Deregistered " + organ + " due to death on this date: " + dateOfDeath.getValue(), new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         } else if (reason == GlobalEnums.DeregistrationReason.RECEIVED) {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         }

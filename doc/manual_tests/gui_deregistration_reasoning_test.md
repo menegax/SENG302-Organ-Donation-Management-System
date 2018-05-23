@@ -74,6 +74,16 @@
 11. Click the `ok` button
 12. `Middle Ear` should have been removed from the required organs list
 
+##Deregistration of one organ due to death should log all other requested organs as due to death
+
+1. The clinician selects the `Manage Requested` button
+2. The manage required organs screen should be displayed
+3. The clinician deselects one required organ out of the rest that are left
+4. The deregistration reason popup scene should now be displayed
+5. select the reason being the patient dying
+6. select the date as the current date
+7. Check in the clinician history log that all of the rest of the required organs were removed for the patient dying as the reason
+
 ##After
 1. Open the main stage that is open on the `Search Donors` screen
 2. Click back to return to the clinician home page
