@@ -1,6 +1,5 @@
 package controller;
 
-import com.sun.xml.internal.ws.util.StringUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,9 +12,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
+import org.apache.commons.lang3.StringUtils;
 import utility.GlobalEnums;
 
-import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
