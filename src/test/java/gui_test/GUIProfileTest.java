@@ -118,14 +118,15 @@ public class GUIProfileTest extends ApplicationTest {
         });
         verifyThat("#donatingTitle", Node::isVisible);
         verifyThat("#receivingList", Node::isDisabled);
-//        System.out.println(patient.getDonations());
         Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.LIVER);
         Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.CORNEA);
         Database.getPatientByNhi("TFX9999").setDonations(new ArrayList<GlobalEnums.Organ>());
+        sleep(1000);
         interact(() -> {
             lookup("#donationsButton").queryAs(Button.class).fire();
             lookup("#save").queryAs(Button.class).fire();
         });
+        sleep(1000);
         verifyThat("#receivingList", Node::isVisible);
         verifyThat("#donationList", Node::isDisabled);
     }

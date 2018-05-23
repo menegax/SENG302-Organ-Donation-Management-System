@@ -2,9 +2,20 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-05-23T17:46:49</date>
-  <millis>1527054409648</millis>
-  <sequence>9</sequence>
+  <date>2018-05-23T18:16:51</date>
+  <millis>1527056211350</millis>
+  <sequence>7</sequence>
+  <logger>utility.SystemLogger</logger>
+  <level>INFO</level>
+  <class>controller.Main</class>
+  <method>ensureDefaultClinician</method>
+  <thread>14</thread>
+  <message>Default clinician not in database. Adding default clinician to database.</message>
+</record>
+<record>
+  <date>2018-05-23T18:16:51</date>
+  <millis>1527056211376</millis>
+  <sequence>10</sequence>
   <logger>utility.SystemLogger</logger>
   <level>INFO</level>
   <class>controller.Main</class>
@@ -12,4 +23,3 @@
   <thread>14</thread>
   <message>Finished the start method for the app. Beginning app</message>
 </record>
-</log>
