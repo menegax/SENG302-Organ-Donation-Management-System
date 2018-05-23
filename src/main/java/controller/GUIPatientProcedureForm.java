@@ -49,6 +49,9 @@ public class GUIPatientProcedureForm extends UndoableController {
     private boolean isEditInstance = false;
     private Procedure procedure; //The Procedure that is being edited (null in the case of adding a procedure)
 
+    /**
+     * Initial setup. Sets up undo/redo, Populates the affected organs dropdown
+     */
     public void initialize() {
         patient = new UserControl().getTargetPatient();
         setupDonations();
@@ -95,6 +98,9 @@ public class GUIPatientProcedureForm extends UndoableController {
         }
     }
 
+    /**
+     * Called when the form is submitted
+     */
     @FXML
     public void onSubmit() {
         if (isEditInstance) {
@@ -214,6 +220,9 @@ public class GUIPatientProcedureForm extends UndoableController {
         affectedInput.getItems().setAll(donations);
     }
 
+    /**
+     * Goes back to the patient procedure screen
+     */
     public void goBackToProcedures() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedures.fxml"));

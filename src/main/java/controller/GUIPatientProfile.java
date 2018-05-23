@@ -164,6 +164,7 @@ public class GUIPatientProfile {
                 donationList.setVisible(false);
             }
             user = userControl.getLoggedInUser();
+            proceduresButton.setText("View Procedures"); //Changing the button text for patients
         }
         if (userControl.getLoggedInUser() instanceof Clinician) {
             removeBack();

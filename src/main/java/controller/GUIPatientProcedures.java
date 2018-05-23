@@ -247,6 +247,9 @@ public class GUIPatientProcedures extends UndoableController {
         pendingProceduresView.refresh();
     }
 
+    /**
+     * Navigates back to the patients profile
+     */
     @FXML
     public void goToProfile() {
         if (userControl.getLoggedInUser() instanceof Patient ) {
