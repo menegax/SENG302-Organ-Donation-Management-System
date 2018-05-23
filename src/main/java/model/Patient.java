@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -76,6 +77,8 @@ public class Patient extends User {
     private ArrayList<Medication> currentMedications = new ArrayList<>();
 
     private ArrayList<Medication> medicationHistory = new ArrayList<>();
+
+    private List<Procedure> procedures = new ArrayList<>();
 
     private String homePhone;
 
@@ -777,6 +780,14 @@ public class Patient extends User {
         this.contactEmailAddress = contactEmailAddress;
     }
 
+    public List<Procedure> getProcedures() {
+        if (procedures == null) {
+            procedures = new ArrayList<>();
+        }
+        return procedures;
+    }
+
+
     /**
      * Gets the list of user action history logs
      * DO NOT USE UNLESS FROM LOGGER CLASS
@@ -823,6 +834,12 @@ public class Patient extends User {
     private void patientModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
+
+    public void addProcedure(Procedure procedure) {
+        procedures.add(procedure);
+    }
+
+    public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
 
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "

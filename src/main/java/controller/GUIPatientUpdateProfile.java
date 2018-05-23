@@ -22,9 +22,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientUpdateProfile {
+public class GUIPatientUpdateProfile extends UndoableController {
 
     @FXML
     private AnchorPane patientUpdateAnchorPane;
@@ -97,10 +98,9 @@ public class GUIPatientUpdateProfile {
 
     private Patient target;
 
-    private StatesHistoryScreen statesHistoryScreen;
-
     private UserControl userControl;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     public void initialize() {
         populateDropdowns();
@@ -117,24 +117,11 @@ public class GUIPatientUpdateProfile {
             if (e.getCode() == KeyCode.ENTER) {
                 saveProfile();
             }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
-                undo();
-            }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
-                redo();
-            }
         });
     }
 
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
 
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
+
 
     /**
      * Populates drop down menus that represent enum data
@@ -168,7 +155,7 @@ public class GUIPatientUpdateProfile {
             target = patient;
             populateForm(patient);
 
-            ArrayList<Control> controls = new ArrayList<Control>() {{
+            controls = new ArrayList<Control>() {{
                 add(nhiTxt);
                 add(firstnameTxt);
                 add(lastnameTxt);
@@ -190,7 +177,7 @@ public class GUIPatientUpdateProfile {
                 add(heightTxt);
                 add(zipTxt);
             }};
-            statesHistoryScreen = new StatesHistoryScreen(patientUpdateAnchorPane, controls);
+            statesHistoryScreen = new StatesHistoryScreen( controls, UndoableScreen.PATIENTUPDATEPROFILE);
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
@@ -572,14 +559,11 @@ public class GUIPatientUpdateProfile {
      */
     public void goBackToProfile() {
         if (userControl.getLoggedInUser() instanceof Patient) {
-            ScreenControl.removeScreen("patientProfile");
             try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
-            }
-            catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
-                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).show();
+                screenControl.show(patientUpdateAnchorPane, "/scene/patientProfile.fxml");
+            } catch (IOException e) {
+                new Alert((Alert.AlertType.ERROR), "Unable to patient profile").show();
+                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
             }
         }
         else {

@@ -11,6 +11,7 @@ import model.Disease;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -23,7 +24,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller class for clinician viewing and editing of a patient's diagnoses.
  */
-public class GUIClinicianDiagnosis {
+public class GUIClinicianDiagnosis extends UndoableController{
 
     @FXML
     public AnchorPane clinicianDiagnosesPane;
@@ -143,6 +144,11 @@ public class GUIClinicianDiagnosis {
             setUpDoubleClickEdit(currentDiagnosesView);
             setUpDoubleClickEdit(pastDiagnosesView);
         }
+        controls = new ArrayList<Control>(){{
+            add(currentDiagnosesView);
+            add(pastDiagnosesView);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANDIAGNOSIS);
     }
 
     /**

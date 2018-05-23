@@ -7,7 +7,6 @@ import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -23,22 +22,19 @@ import utility.UserActionHistory;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class Main extends Application {
 
+    private static final UUID uuid = UUID.randomUUID();
+
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-        Scene rootScene = new Scene(root, 600, 400);
-        primaryStage.setScene(rootScene); //set scene on primary stage
-        ScreenControl.setRootScene(rootScene); // set this scene in screen controller
-
-        // Add scenes
-        ScreenControl.addScreen("login", FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        ScreenControl.addScreen("patientRegister", FXMLLoader.load(getClass().getResource("/scene/patientRegister.fxml")));
-        ScreenControl.addScreen("clinicianHome", FXMLLoader.load(getClass().getResource("/scene/clinicianHome.fxml")));
-        ScreenControl.addScreen("patientHome", FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml")));
+        ScreenControl screenControl = ScreenControl.getScreenControl();
+        screenControl.addStage(uuid, primaryStage);
+        Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+        screenControl.show(uuid, loginScreen);
 
         // add objects
         Database.importFromDiskPatients("./patient.json");
@@ -47,12 +43,11 @@ public class Main extends Application {
         addDummyTestObjects();
         ensureDefaultClinician();
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
-
         setUpMenuBar(primaryStage);
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
-
         primaryStage.setResizable(false);
         primaryStage.show();
+
     }
 
     public static void main(String[] args) {
@@ -180,5 +175,13 @@ public class Main extends Application {
         // Use the menu bar for primary stage
         tk.setMenuBar(primaryStage, bar);
 
+    }
+
+    /**
+     * Gets the uuid hash key used for the primary stage
+     * @return the uuid hash key used in the primary stage
+     */
+    public static UUID getUuid() {
+        return uuid;
     }
 }

@@ -18,22 +18,24 @@ import model.DrugInteraction;
 import model.Medication;
 import model.Patient;
 import service.Database;
+import utility.GlobalEnums;
 import service.TextWatcher;
 import utility.undoRedo.StatesHistoryScreen;
+import service.TextWatcher;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.*;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientMedications {
+public class GUIPatientMedications extends UndoableController {
 
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
     private ListProperty<String> informationListProperty = new SimpleListProperty<>();
-    private StatesHistoryScreen stateHistoryScreen;
     private ArrayList<String> ingredients;
     private ArrayList<String> current;
     private ArrayList<String> history;
@@ -45,16 +47,16 @@ public class GUIPatientMedications {
     public Button removeMed;
     public Button addMed;
     public Button deleteMed;
-    public Button undoEdit;
-    public Button redoEdit;
+    public Button compareMeds;
     public Button goBack;
     public Button wipeReview;
-    public Button compareMeds;
     public Button clearMed;
     public ContextMenu contextMenu;
 
     private JsonObject suggestions;
     private boolean itemSelected = false;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
@@ -85,22 +87,6 @@ public class GUIPatientMedications {
     public void setViewedPatient(Patient patient) {
         viewedPatient = patient;
         loadProfile(viewedPatient.getNhiNumber());
-    }
-
-    /**
-     * Goes back one edit if any editing has been conducted
-     */
-    @FXML
-    public void undo() {
-        stateHistoryScreen.undo();
-    }
-
-    /**
-     * Goes forward one edit if editing had been undone at least once
-     */
-    @FXML
-    public void redo() {
-        stateHistoryScreen.redo();
     }
 
     /**
@@ -160,15 +146,17 @@ public class GUIPatientMedications {
         pastMedications.setOnMouseClicked(event -> onSelect(pastMedications));
         pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        stateHistoryScreen = new StatesHistoryScreen(medicationPane, new ArrayList<Control>() {{
-            add(newMedication);
-        }});
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         } else if (user instanceof Clinician) {
             viewedPatient = userControl.getTargetPatient();
             loadProfile(viewedPatient.getNhiNumber());
         }
+        controls = new ArrayList<Control>() {{
+            add(pastMedications);
+            add(currentMedications);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS);
     }
 
     /**
@@ -552,14 +540,12 @@ public class GUIPatientMedications {
      */
     @FXML
     public void goToProfile() {
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-            try {
-                ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen in popup", new String[]{"Attempted to navigate from the edit page to the profile page in popup", target.getNhiNumber()});
-                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
-
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+        try {
+            ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader);
+        } catch (IOException e) {
+            userActions.log( Level.SEVERE, "Error loading profile screen in popup", new String[]{"Attempted to navigate from the edit page to the profile page in popup", target.getNhiNumber()} );
+            new Alert( Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK ).showAndWait();
         }
     }
 

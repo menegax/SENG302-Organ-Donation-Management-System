@@ -1,36 +1,16 @@
 package utility.undoRedo.stateHistoryWidgets;
 
-import utility.undoRedo.IUndoRedo;
 import javafx.scene.control.ComboBox;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents the state history of a ComboBox field in the GUI
  * The ComboBox must have strings as it options
  */
-public class StateHistoryComboBox implements IUndoRedo {
-
-    /**
-     * The ComboBox this object holds the states for
-     */
-    private ComboBox<String> comboBox;
-
-    /**
-     * The states of the ComboBox
-     */
-    private ArrayList<String> states = new ArrayList<>();
-
-    /**
-     * The index of the current state in the ArrayList
-     */
-    private int index = 0;
-
-    /*
-     * True if an undo has been executed, false otherwise - could be reset at exit from each interface
-     */
-    private boolean undone = false;
-
+public class StateHistoryComboBox extends StateHistoryControl {
 
     /**
      * Constructor for the state history
@@ -38,9 +18,9 @@ public class StateHistoryComboBox implements IUndoRedo {
      * @param comboBox the ComboBox whose state we are storing
      */
     public StateHistoryComboBox(ComboBox<String> comboBox) {
-        this.comboBox = comboBox;
-        states.add(comboBox.getSelectionModel()
-                .getSelectedItem());
+        this.control = comboBox;
+        states.add(comboBox.getSelectionModel().getSelectedItem());
+        setUpUndoableStage();
     }
 
 
@@ -52,51 +32,33 @@ public class StateHistoryComboBox implements IUndoRedo {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(comboBox.getSelectionModel()
-                .getSelectedItem());
+        states.add(((ComboBox) control).getSelectionModel().getSelectedItem());
     }
 
 
     /**
      * Sets the ComboBox to the state before the current state
      */
-    public void undo() {
+    public boolean undo() {
         if (index != 0) {
             index -= 1;
-            comboBox.getSelectionModel()
-                    .select(states.get(index));
-            undone = true;
+            // Cast is always safe
+            ((ComboBox<String>) control).getSelectionModel().select((String) states.get(index));
+            return true;
         }
+        return false;
     }
 
-
-    public void redo() {
-        if (undone && index + 1 < states.size()) {
+    /**
+     * Resets the ComboBox to the state immediately prior to an undo
+     */
+    public boolean redo() {
+        if (index + 1 < states.size()) {
             index += 1;
-            comboBox.getSelectionModel()
-                    .select(states.get(index));
+            // Cast is always safe
+            ((ComboBox<String>) control).getSelectionModel().select((String) states.get(index));
+            return true;
         }
-    }
-
-
-    /**
-     * Gets the states of the Combo Box
-     * Currently only used in testing
-     *
-     * @return the states of the combo box
-     */
-    public ArrayList<Object> getStates() {
-        return new ArrayList<>(states);
-    }
-
-
-    /**
-     * Gets the index of the current state of the ComboBox
-     * currently only used in testing
-     *
-     * @return the index of the current state
-     */
-    public int getIndex() {
-        return index;
+        return false;
     }
 }

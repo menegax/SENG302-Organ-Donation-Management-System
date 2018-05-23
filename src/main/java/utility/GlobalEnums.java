@@ -143,6 +143,19 @@ public class GlobalEnums {
         }
     }
 
+    public enum UndoableScreen {
+        CLINICIANSEARCHPATIENTS("clinicianSearchPatients"), CLINICIANPROFILEUPDATE("clinicianProfileUpdate"), PATIENTMEDICATIONS("patientMedications"),
+        PATIENTREGISTER("patientRegister"), PATIENTUPDATECONTACTS("patientUpdateContacts"), PATIENTUPDATEDONATIONS("patientUpdateDonations"),
+        PATIENTUPDATEPROFILE("patientUpdateProfile"), PATIENTUPDATEDIAGNOSIS("patientUpdateDiagnosis"), PATIENTUPDATEREQUIREMENTS("patientUpdateRequirements"),
+        CLINICIANDIAGNOSIS("clinicianDiagnosis"),PATIENTPROCEDUREFORM( "patientProcedureForm" ),PATIENTPROCEDURES("patientProcedures");
+
+        private String value;
+
+        UndoableScreen( final String value ) {
+            this.value = value;
+        }
+    }
+
     public enum DiseaseState {
         CURED ("cured"),
         CHRONIC ("chronic");
@@ -202,5 +215,4 @@ public class GlobalEnums {
         }
 
     }
-
 }

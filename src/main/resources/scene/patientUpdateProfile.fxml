@@ -61,8 +61,6 @@
       <TextField fx:id="zipTxt" layoutX="510.0" layoutY="211.0" prefHeight="26.0" prefWidth="68.0" />
       <Label layoutX="188.0" layoutY="317.0" text="Gender identity" />
       <Label layoutX="58.0" layoutY="296.0" text="Preferred Name" />
-      <Button fx:id="redoButton" layoutX="556.0" layoutY="14.0" mnemonicParsing="false" onAction="#redo" prefHeight="36.0" prefWidth="31.0" styleClass="redo" stylesheets="@../css/guiStyle.css" />
-      <Button fx:id="undoButton" layoutX="520.0" layoutY="14.0" mnemonicParsing="false" onAction="#undo" prefHeight="36.0" prefWidth="31.0" styleClass="undo" stylesheets="@../css/guiStyle.css" />
    </children>
 </AnchorPane>
 

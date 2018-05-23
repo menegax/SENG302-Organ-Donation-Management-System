@@ -148,6 +148,11 @@ are visible within the new history table for clinicians. If a clinician alters m
 the standing log information, plus the NHI number of the 'target' patient that the changes are being made to. Logs (+ medication changes) will persist between 
 sessions after the user saves changes using the standard save button on the home screen.
 
+#### Undo/Redo
+We decided to reload the fxml on every undo and redo as it did not create significant processing time.  
+In addition it removed the necessity for the application to know whether it was on the screen it needed to undo or not.
+We created abstract classes UndoableStage and UndoableController to enable future implementations with ease as most methods and attributes would be inherited.
+
 #### Deregistering an Organ due to Cure
 When you deregister an organ due to a disease or collection of diseases being cured and mark a collection of selected diseases to cured in the dropdown, we considered how
 the program should handle chronic diseases. We decided that it makes most sense to be able to set chronic diseases to cured in this scenario as it is not

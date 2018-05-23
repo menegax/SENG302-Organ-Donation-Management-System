@@ -1,5 +1,6 @@
 package controller;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 import javafx.application.Platform;
@@ -12,23 +13,26 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.DrugInteraction;
+import javafx.scene.input.ContextMenuEvent;
 import model.Patient;
-import service.Database;
 import utility.GlobalEnums;
 import utility.SearchPatients;
+import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
-public class GUIClinicianSearchPatients implements Initializable {
+public class GUIClinicianSearchPatients extends UndoableController implements Initializable {
 
     @FXML
     private TableView<Patient> patientDataTable;
@@ -50,6 +54,8 @@ public class GUIClinicianSearchPatients implements Initializable {
 
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
     /**
      * Initialises the data within the table to all patients
      *
@@ -62,6 +68,17 @@ public class GUIClinicianSearchPatients implements Initializable {
         setupSearchingListener(filteredData);
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
+        setupUndoRedo();
+    }
+
+    /**
+     * Sets up undo redo for this screen
+     */
+    private void setupUndoRedo() {
+        controls = new ArrayList<Control>() {{
+            add(searchEntry);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANSEARCHPATIENTS);
     }
 
     /**
@@ -77,21 +94,12 @@ public class GUIClinicianSearchPatients implements Initializable {
                     userControl.setTargetPatient(patientDataTable.getSelectionModel()
                             .getSelectedItem());
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-                    Scene scene = new Scene(fxmlLoader.load());
-                    DrugInteraction.setViewedPatient(patientDataTable.getSelectionModel()
-                            .getSelectedItem());
-
-                    Stage popUpStage = new Stage();
-                    popUpStage.setX(ScreenControl.getMain()
-                            .getX()); //offset popup
-                    popUpStage.setScene(scene);
+                    UndoableStage popUpStage = new UndoableStage();
+                    screenControl.addStage(popUpStage.getUUID(), popUpStage);
+                    screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
 
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-
-                    //Add and show the popup
-                    ScreenControl.addPopUp("searchPopup", popUpStage); //ADD to screen control
-                    ScreenControl.displayPopUp("searchPopup"); //display the popup
                 }
                 catch (IOException e) {
                     userActions.log(Level.SEVERE,
@@ -213,7 +221,12 @@ public class GUIClinicianSearchPatients implements Initializable {
     }
 
     public void goToClinicianHome() {
-        ScreenControl.activate("clinicianHome");
+        try {
+            screenControl.show(patientDataTable, "/scene/clinicianHome.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
+            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
+        }
     }
 
     /**

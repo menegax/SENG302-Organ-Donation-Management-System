@@ -1,7 +1,10 @@
 package controller;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
@@ -17,6 +20,7 @@ import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.undoRedo.StatesHistoryScreen;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,6 +30,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 import javax.xml.crypto.Data;
@@ -52,46 +57,27 @@ public class GUIPatientRegister {
     @FXML
     private Pane patientRegisterAnchorPane;
 
+    private StringConverter<LocalDate> dateConverter;
 
-    private StatesHistoryScreen statesHistoryScreen;
-
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Sets up register page GUI elements
      */
     public void initialize() {
         setDateConverter();
-        ArrayList<Control> controls = new ArrayList<Control>() {{
-            add(firstnameRegister);
-            add(lastnameRegister);
-            add(middlenameRegister);
-            add(birthRegister);
-            add(nhiRegister);
-        }};
-        statesHistoryScreen = new StatesHistoryScreen(patientRegisterAnchorPane, controls);
+        firstnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        lastnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        middlenameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        nhiRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        birthRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
 
         // Enter key
         patientRegisterAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 register();
-            } else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
-                undo();
-            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
-                redo();
             }
         });
-    }
-
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
-
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
     }
 
 
@@ -101,7 +87,12 @@ public class GUIPatientRegister {
     @FXML
     public void goBackToLogin() {
         clearFields();
-        ScreenControl.activate("login");
+        try {
+            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
+            userActions.log(SEVERE, "Failed to load login", "Attempted to load login");
+        }
     }
 
 
@@ -243,7 +234,12 @@ public class GUIPatientRegister {
             Database.saveToDisk();
             clearFields();
             new Alert(Alert.AlertType.INFORMATION, "Successfully registered!").show();
-            ScreenControl.activate("login");
+            try {
+                screenControl.show(Main.getUuid(),FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+            } catch (IOException e) {
+                new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
+                userActions.log(SEVERE, "Failed to load login", "Attempted to load login");
+            }
         }
         else {
             userActions.log(Level.WARNING, "Failed to register patient profile due to invalid fields", "Attempted to register patient profile");

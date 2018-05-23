@@ -8,8 +8,6 @@ import javafx.scene.control.Control;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
-import javafx.scene.control.Control;
-import javafx.scene.input.KeyCodeCombination;
 import model.Patient;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
@@ -20,10 +18,11 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.INFO;
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientUpdateDonations {
+public class GUIPatientUpdateDonations extends UndoableController {
 
     @FXML
     private CheckBox liverCB;
@@ -64,24 +63,11 @@ public class GUIPatientUpdateDonations {
     @FXML
     private AnchorPane patientDonationsAnchorPane;
 
-
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
-
     private Patient target;
 
-    private StatesHistoryScreen statesHistoryScreen;
-
     private UserControl userControl;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     public void initialize() {
         userControl = new UserControl();
@@ -98,12 +84,6 @@ public class GUIPatientUpdateDonations {
             if (e.getCode() == KeyCode.ENTER) {
                 saveDonations();
             }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
-                undo();
-            }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
-                redo();
-            }
         });
     }
 
@@ -116,7 +96,7 @@ public class GUIPatientUpdateDonations {
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
         }
-        ArrayList<Control> controls = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(liverCB);
             add(kidneyCB);
             add(pancreasCB);
@@ -130,7 +110,7 @@ public class GUIPatientUpdateDonations {
             add(bonemarrowCB);
             add(connectivetissueCB);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(patientDonationsAnchorPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDONATIONS);
     }
 
 
@@ -280,13 +260,11 @@ public class GUIPatientUpdateDonations {
 
     public void goToProfile() {
         if (userControl.getLoggedInUser() instanceof Patient) {
-            ScreenControl.removeScreen("patientProfile");
             try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
+                screenControl.show(patientDonationsAnchorPane, "/scene/patientProfile.fxml");
             } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+                new Alert((Alert.AlertType.ERROR), "Unable to patient profile").show();
+                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));

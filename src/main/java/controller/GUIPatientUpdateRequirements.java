@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -11,23 +12,26 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import javafx.stage.Stage;
+import model.DrugInteraction;
 import model.Patient;
 import service.OrganWaitlist;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.*;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
  * This class is the controller for editing a patients required organs only accessible by the clinician
  */
-public class GUIPatientUpdateRequirements {
+public class GUIPatientUpdateRequirements extends UndoableController{
 
     @FXML
     private CheckBox liverCB;
@@ -69,23 +73,11 @@ public class GUIPatientUpdateRequirements {
     @FXML
     private AnchorPane patientRequirementsAnchorPane;
 
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
-
     private Patient target;
 
-    private StatesHistoryScreen statesHistoryScreen;
-
     private UserControl userControl;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private Set<GlobalEnums.Organ> initialRequirements = new HashSet<>();
 
@@ -107,12 +99,6 @@ public class GUIPatientUpdateRequirements {
             if (e.getCode() == KeyCode.ENTER) {
                 saveRequirements();
             }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
-                undo();
-            }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
-                redo();
-            }
         });
     }
 
@@ -129,7 +115,7 @@ public class GUIPatientUpdateRequirements {
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
         }
-        ArrayList<Control> controls = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(liverCB);
             add(kidneyCB);
             add(pancreasCB);
@@ -143,7 +129,7 @@ public class GUIPatientUpdateRequirements {
             add(bonemarrowCB);
             add(connectivetissueCB);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(patientRequirementsAnchorPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEREQUIREMENTS);
     }
 
     /**
@@ -311,19 +297,12 @@ public class GUIPatientUpdateRequirements {
     private void openReasonPopup(GlobalEnums.Organ organ) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/deregistrationReason.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-
+            Parent root = fxmlLoader.load();
             GUIRequiredOrganDeregistrationReason controller = fxmlLoader.getController();
             controller.setOrgan(organ);
-
-            Stage popUpStage = new Stage();
-            popUpStage.setX(ScreenControl.getMain()
-                    .getX()); //offset popup
-            popUpStage.setScene(scene);
-
-            //Add and show the popup
-            ScreenControl.addPopUp("deregistrationReason", popUpStage); //ADD to screen control
-            ScreenControl.displayPopUp("deregistrationReason"); //display the popup
+            UndoableStage popUpStage = new UndoableStage();
+            screenControl.addStage(popUpStage.getUUID(), popUpStage);
+            screenControl.show(popUpStage.getUUID(), root);
         } catch (IOException e) {
             userActions.log(Level.SEVERE,
                     "Failed to open deregistration of required organ scene from required organs update scene",
@@ -351,10 +330,8 @@ public class GUIPatientUpdateRequirements {
      */
     public void goToProfile() {
         if (userControl.getLoggedInUser() instanceof Patient) {
-            ScreenControl.removeScreen("patientProfile");
             try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
+                screenControl.show(patientRequirementsAnchorPane, "/scene/patientProfile.fxml");
             } catch (IOException e) {
                 userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the required organs page to the profile page");
                 new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();

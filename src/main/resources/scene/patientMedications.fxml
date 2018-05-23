@@ -33,7 +33,5 @@
         <Button fx:id="deleteMed" layoutX="29.0" layoutY="352.0" mnemonicParsing="false" onAction="#deleteMedication" prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Delete" />
         <Button fx:id="clearMed" layoutX="260.0" layoutY="349.0" mnemonicParsing="false" onAction="#clearSelections" prefHeight="25.0" prefWidth="80.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Clear" />
         <Button fx:id="goBack" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#goToProfile" prefHeight="27.0" prefWidth="68.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="〱 Back" />
-        <Button fx:id="undoEdit" layoutX="524.0" layoutY="5.0" mnemonicParsing="false" onAction="#undo" prefHeight="36.0" prefWidth="31.0" styleClass="undo" stylesheets="@../css/guiStyle.css" />
-        <Button fx:id="redoEdit" layoutX="560.0" layoutY="5.0" mnemonicParsing="false" onAction="#redo" prefHeight="36.0" prefWidth="31.0" styleClass="redo" stylesheets="@../css/guiStyle.css" />
     </children>
 </AnchorPane>

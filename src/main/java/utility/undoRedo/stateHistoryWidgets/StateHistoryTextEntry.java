@@ -1,34 +1,17 @@
 package utility.undoRedo.stateHistoryWidgets;
 
-import utility.undoRedo.IUndoRedo;
+import javafx.event.Event;
 import javafx.scene.control.TextField;
+import javafx.scene.input.ContextMenuEvent;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents the state history of a text entry field in the GUI
  */
-public class StateHistoryTextEntry implements IUndoRedo {
-
-    /**
-     * The TextField this object holds the states for
-     */
-    private TextField entry;
-
-    /**
-     * The states of the TextField
-     */
-    private ArrayList<String> states = new ArrayList<>();
-
-    /**
-     * The index of the current state in the ArrayList
-     */
-    private int index = 0;
-
-    /**
-     * True if an undo has been executed, false otherwise - could be reset at exit from each interface
-     */
-    private boolean undone = false;
+public class StateHistoryTextEntry extends StateHistoryControl {
 
 
     /**
@@ -37,8 +20,10 @@ public class StateHistoryTextEntry implements IUndoRedo {
      * @param entry the Text Field whose state we are storing
      */
     public StateHistoryTextEntry(TextField entry) {
-        this.entry = entry;
+        entry.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume); // removes right click menu which shows undo/redo
+        this.control = entry;
         states.add(entry.getText());
+        setUpUndoableStage();
     }
 
 
@@ -50,51 +35,32 @@ public class StateHistoryTextEntry implements IUndoRedo {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(entry.getText());
+        states.add(((TextField) control).getText());
     }
 
 
     /**
      * Sets the TextField to the state before the current state
      */
-    public void undo() {
+    public boolean undo() {
         if (index != 0) {
             index -= 1;
-            entry.setText(states.get(index));
-            undone = true;
+            ((TextField) control).setText((String) states.get(index));
+            return true;
         }
+        return false;
     }
 
 
     /**
      * Resets the TextField to the state immediately prior to an undo
      */
-    public void redo() {
-        if (undone && index + 1 < states.size()) {
+    public boolean redo() {
+        if (index + 1 < states.size()) {
             index += 1;
-            entry.setText(states.get(index));
+            ((TextField) control).setText((String) states.get(index));
+            return true;
         }
-    }
-
-
-    /**
-     * Gets the states of the Text Entry
-     * Currently only used in testing
-     *
-     * @return the states of the text entry
-     */
-    public ArrayList<Object> getStates() {
-        return new ArrayList<>(states);
-    }
-
-
-    /**
-     * Gets the index of the current state of the Text Entry
-     * currently only used in testing
-     *
-     * @return the index of the text entry
-     */
-    public int getIndex() {
-        return index;
+        return false;
     }
 }

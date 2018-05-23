@@ -50,7 +50,6 @@ public class Database {
         }
     }
 
-
     /**
      * Removes a patient from the database
      *
@@ -120,8 +119,7 @@ public class Database {
      *
      * @param staffID the staff ID to search clinicians by
      * @return Clinician object
-     *
-     * @exception InvalidObjectException when the object cannot be found
+     * @throws InvalidObjectException when the object cannot be found
      */
     public static Clinician getClinicianByID(int staffID) throws InvalidObjectException {
         for (Clinician c : getClinicians()) {
@@ -131,7 +129,6 @@ public class Database {
         }
         throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
     }
-
 
     /**
      * Adds a clinician to the database
@@ -165,7 +162,6 @@ public class Database {
         }
     }
 
-
     /**
      * Returns the next valid staffID based on IDs in the clinician list
      *
@@ -183,7 +179,6 @@ public class Database {
             return currentID + 1;
         }
     }
-
 
     /**
      * Calls all sub-methods to save data to disk
@@ -223,11 +218,10 @@ public class Database {
         writer.close();
     }
 
-
     /**
      * Writes database clinicians to file on disk
      *
-     * @exception IOException when the file cannot be found nor created
+     * @throws IOException when the file cannot be found nor created
      */
     private static void saveToDiskClinicians() throws IOException {
         Gson gson = new Gson();
@@ -307,7 +301,6 @@ public class Database {
             userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
         }
     }
-
 
     /**
      * Clears the database of all patients

@@ -1,4 +1,4 @@
-package model_test.stateHistoryWidgetTests;
+package utility_test.stateHistoryWidgetTests;
 
 import com.sun.javafx.application.PlatformImpl;
 import javafx.scene.control.CheckBox;

@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Patient;
 import service.Database;
+import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -25,7 +27,7 @@ import static utility.UserActionHistory.userActions;
  * Details are saved when the Save button is selected, and the user is returned to the patient profile view screen.
  * @author Maree Palmer
  */
-public class GUIPatientUpdateContacts  {
+public class GUIPatientUpdateContacts extends UndoableController {
 
     @FXML
     public AnchorPane patientContactsPane;
@@ -67,19 +69,13 @@ public class GUIPatientUpdateContacts  {
 
     private UserControl userControl;
 
-    private StatesHistoryScreen statesHistoryScreen;
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
+    public void setViewedPatient(Patient patient) {
+        target = patient;
+        loadProfile(target.getNhiNumber());
+        setContactFields();
     }
-
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
 
     /**
      * Saves changes to a patient's contact details by calling the Database saving method.
@@ -125,7 +121,7 @@ public class GUIPatientUpdateContacts  {
      * Sets up the variables needed for undo and redo functionality
      */
     private void setupUndoRedo() {
-        ArrayList<Control> controls = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(homePhoneField);
             add(mobilePhoneField);
             add(workPhoneField);
@@ -137,7 +133,7 @@ public class GUIPatientUpdateContacts  {
             add(contactWorkPhoneField);
             add(contactEmailAddressField);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(patientContactsPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATECONTACTS);
     }
 
     /**
@@ -187,20 +183,6 @@ public class GUIPatientUpdateContacts  {
     private void loadProfile(String nhi) {
         try {
             target = Database.getPatientByNhi(nhi);
-
-            ArrayList<Control> controls = new ArrayList<Control>() {{
-                add(homePhoneField);
-                add(mobilePhoneField);
-                add(workPhoneField);
-                add(emailAddressField);
-                add(contactNameField);
-                add(contactRelationshipField);
-                add(contactHomePhoneField);
-                add(contactMobilePhoneField);
-                add(contactWorkPhoneField);
-                add(contactEmailAddressField);
-            }};
-            statesHistoryScreen = new StatesHistoryScreen(patientContactsPane, controls);
         }
         catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
@@ -333,13 +315,11 @@ public class GUIPatientUpdateContacts  {
      */
     public void goToProfile() {
         if (userControl.getLoggedInUser() instanceof Patient) {
-            ScreenControl.removeScreen("patientProfile");
             try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
+                screenControl.show(patientContactsPane, "/scene/patientProfile.fxml");
             } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error returning to profile screen", "attempted to navigate from the donation page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+                new Alert((Alert.AlertType.ERROR), "Unable to patient profile").show();
+                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));

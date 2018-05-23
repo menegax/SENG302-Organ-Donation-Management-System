@@ -14,8 +14,14 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
+import java.io.IOException;
+
+import static java.util.logging.Level.SEVERE;
+import static utility.UserActionHistory.userActions;
+
 public class GUIClinicianHome {
 
+    @FXML
     public Button searchPatients;
 
     public AnchorPane clinicianHomePane;
@@ -26,18 +32,31 @@ public class GUIClinicianHome {
 
     public Button logoutButton;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     @FXML
-    public void goToClinicianProfile(){ ScreenControl.activate("clinicianProfile"); }
+    public void goToClinicianProfile(){
+        try {
+            screenControl.show(clinicianHomePane, "/scene/clinicianProfile.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load clinician profile").show();
+            userActions.log(SEVERE, "Failed to load clinician profile", "Attempted to load clinician profile");
+        }
+    }
 
     @FXML
     public void goToSearchPatients(){
-        ScreenControl.activate("clinicianSearchPatients");
+        try {
+            screenControl.show(clinicianHomePane, "/scene/clinicianSearchPatients.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load search patients").show();
+            userActions.log(SEVERE, "Failed to load search patients", "Attempted to load search patients");
+        }
     }
 
     @FXML
     public void logOutClinician() {
-        ScreenControl.activate("login");
+        screenControl.closeStage(clinicianHomePane);
     }
 
     @FXML
@@ -50,24 +69,22 @@ public class GUIClinicianHome {
     @FXML
     public void goToHistory() {
         try {
-            ScreenControl.addScreen("clinicianHistory", FXMLLoader.load(getClass().getResource("/scene/clinicianHistory.fxml")));
+            screenControl.show(clinicianHomePane, "/scene/clinicianHistory.fxml");
         }
         catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "Unable load clinician history").show();
+            userActions.log(SEVERE, "Failed to load clinician history", "Attempted to load clinician history");
+
         }
-        ScreenControl.activate("clinicianHistory");
     }
 
     public void goToClinicianWaitingList(ActionEvent event) {
-        ScreenControl.removeScreen("clinicianWaitingList");
         try {
-            ScreenControl.addScreen("clinicianWaitingList", FXMLLoader.load(getClass().getResource("/scene/clinicianWaitingList.fxml")));
-            ScreenControl.activate("clinicianWaitingList");
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading organ waiting list screen", "attempted to navigate from the " +
+            screenControl.show(clinicianHomePane, "/scene/clinicianWaitingList.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "ERROR loading organ waiting list page").show();
+            userActions.log(SEVERE, "Error loading organ waiting list screen", "attempted to navigate from the " +
                     "home page to the waiting list page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading organ waiting list page", ButtonType.OK).showAndWait();
         }
     }
 }
