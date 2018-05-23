@@ -1,6 +1,6 @@
-#GUI Clinician Deregistration Reasoning Manual Test
+# GUI Clinician Deregistration Reasoning Manual Test
 
-##Preconditions
+## Preconditions
 1. A clinician has logged in to the application.
 2. The clinician has navigated to the Search Patients screen.
 3. The clinician double clicks on a patient to open the patient's profile
@@ -13,7 +13,7 @@
 10. Go back to the patient profile
 11. The patient profile page should be displayed with all organs filled in the required organs list view
 
-##Deregistration of Heart due to an ERROR
+## Deregistration of Heart due to an ERROR
 1. The clinician selects the `Manage Requested` button
 2. The manage required organs screen should be displayed
 3. The clinician deselects the heart organ from required organs
@@ -24,7 +24,7 @@
 8. `Heart` should have been removed from the required organs list in the profile screen
 
 
-##Deregistration of Lung due to cure with a listed disease
+## Deregistration of Lung due to cure with a listed disease
 1. The clinician selects the `Manage Requested` button
 2. The manage required organs screen should be displayed
 3. The clinician deselects the lung organ from required organs
@@ -37,7 +37,7 @@
 10. Open the diseases page using the `View Disease History` button
 11. `Pox` should now be marked as `Cured`
 
-##Deregistration of Bone due to cure without listed diseases
+## Deregistration of Bone due to cure without listed diseases
 1. The clinician selects the `Manage Requested` button
 2. The manage required organs screen should be displayed
 3. The clinician deselects the bone organ from required organs
@@ -48,7 +48,7 @@
 8. Click the `ok` button
 9. `Bone` should have been removed from the required organs list in the profile
 
-##Deregistration of Cornea due to death with valid date
+## Deregistration of Cornea due to death with valid date
 1. The clinician selects the `Manage Requested` button
 2. The manage required organs screen should be displayed
 3. The clinician deselects the cornea organ from required organs
@@ -60,7 +60,7 @@
 9. The patient should now have their date of death listed on their profile
 10. The patient should have no organs listed in their receiving organs list
 
-##Deregistration of Middle Ear due to death with invalid date
+## Deregistration of Middle Ear due to death with invalid date
 1. The clinician selects the `Manage Requested` button
 2. The manage required organs screen should be displayed
 3. The clinician deselects the middle ear organ from required organs
@@ -74,7 +74,7 @@
 11. Click the `ok` button
 12. `Middle Ear` should have been removed from the required organs list
 
-##After
+## After
 1. Open the main stage that is open on the `Search Donors` screen
 2. Click back to return to the clinician home page
 3. The clinician selects the `History` button
