@@ -32,7 +32,7 @@ public class SystemLogger {
 
             // Console handler
             Handler console = new ConsoleHandler();
-            console.setLevel(Level.OFF); // TURN ON TO 'ALL' TO LOG ALL LEVELS TO CONSOLE
+            console.setLevel(Level.ALL); // TURN ON TO 'ALL' TO LOG ALL LEVELS TO CONSOLE
             console.setFormatter(new SimpleFormatter(){
                 @Override
                 public String format(LogRecord record){
@@ -44,14 +44,14 @@ public class SystemLogger {
 
 
             // File handler
-            try {
-                Handler file = new FileHandler("system_logs_%u.xml", false);
-                file.setLevel(Level.ALL);
-                systemLogger.addHandler(file);
-            }
-            catch (IOException e) {
-                systemLogger.log(Level.SEVERE, "Unable to write log to file");
-            }
+//            try {
+//                Handler file = new FileHandler("system_logs_%u.xml", false);
+//                file.setLevel(Level.ALL);
+//                systemLogger.addHandler(file);
+//            }
+//            catch (IOException e) {
+//                systemLogger.log(Level.SEVERE, "Unable to write log to file");
+//            }
 
         }
     }

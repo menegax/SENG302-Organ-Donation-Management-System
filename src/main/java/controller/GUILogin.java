@@ -84,10 +84,10 @@ public class GUILogin {
             try {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
                 login.clearCache(); //clear cache on user login
-                login.addLoggedInUserToCache(newPatient);
-                Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
                 UndoableStage stage = new UndoableStage();
+                login.addLoggedInUserToCache(newPatient);
                 screenControl.addStage(stage.getUUID(), stage);
+                Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
                 screenControl.show(stage.getUUID(), homeScreen);
                 screenControl.closeStage(Main.getUuid());
             }
@@ -98,7 +98,7 @@ public class GUILogin {
             }
             catch (IOException e) {
                 userActions.log(Level.WARNING, "Unable to load patient home page", "Attempted to log in");
-                systemLogger.log(Level.INFO, "Failed to find the .fxml file for login" + e.getStackTrace());
+                systemLogger.log(Level.INFO, "Failed to find the .fxml file for login", e);
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
             }
@@ -106,10 +106,10 @@ public class GUILogin {
         else {
             try {
                 Clinician newClinician = Database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
-                login.addLoggedInUserToCache(newClinician);
                 UndoableStage stage = new UndoableStage();
-                Parent clinicianHome = FXMLLoader.load((getClass().getResource("/scene/home.fxml")));
+                login.addLoggedInUserToCache(newClinician);
                 screenControl.addStage(stage.getUUID(), stage);
+                Parent clinicianHome = FXMLLoader.load((getClass().getResource("/scene/home.fxml")));
                 screenControl.show(stage.getUUID(), clinicianHome);
             }
             catch (InvalidObjectException e) {

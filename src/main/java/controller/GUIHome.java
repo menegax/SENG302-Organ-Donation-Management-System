@@ -136,6 +136,8 @@ public class GUIHome {
         MenuBar bar = new MenuBar();
 
         /* Build the menu bar with new menus and menu items */
+
+        // APP
         Menu menu1 = new Menu("App");
         MenuItem menu1Item1 = new MenuItem("Log out");
         menu1Item1.setAccelerator(screenControl.getLogOut());
@@ -145,6 +147,7 @@ public class GUIHome {
         });
         menu1.getItems().addAll(menu1Item1);
 
+        // FILE
         Menu menu2 = new Menu("File");
         MenuItem menu2Item1 = new MenuItem("Save");
         menu2Item1.setAccelerator(screenControl.getSave());
@@ -175,6 +178,7 @@ public class GUIHome {
         subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
         menu2.getItems().addAll(menu2Item1, subMenuImport);
 
+        // EDIT
 //        Menu menu3 = new Menu("Edit");
 //        MenuItem menu3Item1 = new MenuItem("Undo");
 //        menu3Item1.setAccelerator(screenControl.getUndo());

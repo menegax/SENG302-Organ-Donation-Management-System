@@ -1,6 +1,8 @@
 package controller;
 
+import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 
 import javafx.fxml.FXMLLoader;
@@ -76,6 +78,7 @@ public class ScreenControl {
     public void addStage(UUID key, Stage stage) {
         applicationStages.put(key, stage);
         if (new UserControl().isUserLoggedIn()) { // if scene belongs to a user
+            systemLogger.log(FINE, "User is logged in and a stage is being added");
             addUserStage(new UserControl().getLoggedInUser(), stage);
         }
     }
@@ -276,9 +279,9 @@ public class ScreenControl {
     }
 
 
-    public static void addUserStage(User user, Stage newStage) {
+    private static void addUserStage(User user, Stage newStage) {
 
-        systemLogger.log(INFO, "Added user " + user.getUuid() + " and stage " + newStage.getTitle());
+        systemLogger.log(FINE, "Added user " + user.getUuid() + " and stage " + newStage.getTitle());
 
         if (userStages.containsKey(user)) {
             userStages.get(user)
@@ -292,9 +295,18 @@ public class ScreenControl {
     }
 
 
-    public static void closeAllUserStages(User user) {
+    static void closeAllUserStages(User user) {
         Set<Stage> stages = userStages.get(user);
-        stages.forEach(Stage::close);
+        try {
+            for (Stage stage : stages) {
+                stage.close();
+            }
+        } catch (NullPointerException e) {
+            systemLogger.log(SEVERE, "Failed to close all user stages", e);
+            e.printStackTrace(); //todo rm
+        }
         userStages.remove(user);
     }
+
 }
+
