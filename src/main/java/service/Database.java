@@ -220,11 +220,15 @@ public class Database {
      * @param medication The medication used by the patient
      * @return String[] medication attributes
      */
-    private String[] getMedicationAttributes(Patient patient, Medication medication) {
-        String[] medAttr = new String[2];
+    private String[] getMedicationAttributes(Patient patient, Medication medication, boolean isCurrent) {
+        String[] medAttr = new String[3];
         medAttr[0] = patient.getNhiNumber();
         medAttr[1] = medication.getMedicationName();
-        medAttr[2] = "1";
+        if(isCurrent) {
+            medAttr[2] = "0";
+        } else {
+            medAttr[2] = "1";
+        }
         return medAttr;
     }
 
@@ -268,14 +272,14 @@ public class Database {
 
     private void addPatientMedications(Patient newPatient) throws SQLException {
         for(Medication medication : newPatient.getCurrentMedications()) {
-            String[] medAttr = getMedicationAttributes(newPatient, medication);
+            String[] medAttr = getMedicationAttributes(newPatient, medication, true);
             String medQuery = "INSERT INTO tblMedications VALUES (?, ?, ?)";
             runQuery(medQuery, medAttr);
 
         }
 
         for(Medication medication : newPatient.getMedicationHistory()) {
-            String[] medAttr = getMedicationAttributes(newPatient, medication);
+            String[] medAttr = getMedicationAttributes(newPatient, medication, false);
             String medQuery = "INSERT INTO tblMedications VALUES (?, ?, ?)";
             runQuery(medQuery, medAttr);
         }
@@ -451,23 +455,20 @@ public class Database {
 
         ArrayList<UserActionRecord> records = loadPatientLogs(nhi);
 
-
-        ArrayList<Disease> pastDiseases = new ArrayList<>();
         ArrayList<Disease> currentDiseases = new ArrayList<>();
-        ArrayList<Medication> medHistory = new ArrayList<>();
+        ArrayList<Disease> pastDiseases = new ArrayList<>();
         ArrayList<Medication> currentMeds = new ArrayList<>();
+        ArrayList<Medication> medHistory = new ArrayList<>();
         try {
             //TODO rewrite method to do medication history and current assigning within load method
-            loadMedications(newPatient);
-            ArrayList<Disease> allDiseases = loadDiseases(newPatient);
-            for(Disease disease : allDiseases) {
-                if(disease.getDiseaseState() == GlobalEnums.DiseaseState.CURED) {
-                    pastDiseases.add(disease);
-                } else {
-                    currentDiseases.add(disease);
-                }
-            }
-        } catch (InvalidObjectException e) {
+            ArrayList<Medication>[] meds = loadMedications(nhi);
+            currentMeds = meds[0];
+            medHistory = meds[1];
+            ArrayList<Disease>[] diseases = loadDiseases(birth, nhi);
+            currentDiseases = diseases[0];
+            pastDiseases = diseases[1];
+
+        } catch (InvalidObjectException | SQLException e) {
             e.printStackTrace();
         }
 
@@ -475,34 +476,53 @@ public class Database {
                 bloodType, donations, requested);
     }
 
-    private ArrayList<Medication> loadMedications(Patient patient) throws InvalidObjectException, SQLException {
-        ArrayList<String[]> medicationsRaw = runQuery("SELECT * FROM tblMedications WHERE Patient = " + patient.getNhiNumber(), null);
-        ArrayList<Medication> patientMedications = new ArrayList<>();
+    private ArrayList<Medication>[] loadMedications(String nhi) throws InvalidObjectException, SQLException {
+        ArrayList<String[]> medicationsRaw = runQuery("SELECT * FROM tblMedications WHERE Patient = " + nhi, null);
+        ArrayList<Medication> currentMedications = new ArrayList<>();
+        ArrayList<Medication> medicationHistory = new ArrayList<>();
+        ArrayList<Medication>[] medArray = new ArrayList[2];
+        medArray[0] = currentMedications;
+        medArray[1] = medicationHistory;
         for(String[] attr : medicationsRaw) {
-            patientMedications.add(addMedication(attr));
+            medArray = addMedication(attr, medArray);
         }
-        return patientMedications;
+        return medArray;
     }
 
-    private ArrayList<Disease> loadDiseases(Patient patient) throws InvalidObjectException, SQLException {
-        ArrayList<String[]> diseasesRaw = runQuery("SELECT * FROM tblDiseases WHERE Patient = " + patient.getNhiNumber(), null);
+    private ArrayList<Disease>[] loadDiseases(LocalDate birth, String nhi) throws InvalidObjectException, SQLException {
+        ArrayList<String[]> diseasesRaw = runQuery("SELECT * FROM tblDiseases WHERE Patient = " + nhi, null);
         ArrayList<Disease> patientDiseases = new ArrayList<>();
         for(String[] attr : diseasesRaw) {
-            patientDiseases.add(addDisease(attr));
+            patientDiseases.add(addDisease(attr, birth));
         }
-        return patientDiseases;
+        ArrayList<Disease>[] diseaseArray = new ArrayList[2];
+        ArrayList<Disease> pastDiseases = new ArrayList<>();
+        ArrayList<Disease> currentDiseases = new ArrayList<>();
+        for(Disease disease : patientDiseases) {
+            if(disease.getDiseaseState() == GlobalEnums.DiseaseState.CURED) {
+                pastDiseases.add(disease);
+            } else {
+                currentDiseases.add(disease);
+            }
+        }
+        diseaseArray[0] = currentDiseases;
+        diseaseArray[1] = pastDiseases;
+        return diseaseArray;
     }
 
 
-    private Medication addMedication(String[] attr) throws InvalidObjectException {
-        return new Medication(attr[1]);
+    private ArrayList<Medication>[] addMedication(String[] attr, ArrayList<Medication>[] meds) {
+        switch (attr[2]) {
+            case "0": meds[0].add(new Medication(attr[1])); break;
+            case "1": meds[1].add(new Medication(attr[1])); break;
+        }
+        return meds;
     }
 
-    private Disease addDisease(String[] attr) throws InvalidObjectException {
+    private Disease addDisease(String[] attr, LocalDate birthDate) throws InvalidObjectException {
         Disease disease = new Disease(null, null);
-        Patient patient = database.getPatientByNhi(attr[0]);
         disease.setDiseaseName(attr[1]);
-        disease.setDateDiagnosed(LocalDate.parse(attr[2]), patient);
+        disease.setDateDiagnosed(LocalDate.parse(attr[2]), birthDate);
         switch (attr[3]) {
             case "0":
                 disease.setDiseaseState(null);

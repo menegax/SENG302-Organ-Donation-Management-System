@@ -202,7 +202,7 @@ public class GUIPatientUpdateDiagnosis {
             diseaseNameTextField.setText(diseaseNameTextField.getText());
         }
         try {
-            if (target.isInvalidDiagnosisDate(diagnosisDate.getValue(), currentPatient)) {
+            if (target.isInvalidDiagnosisDate(diagnosisDate.getValue(), currentPatient.getBirth())) {
                 valid = false;
                 setInvalid(diagnosisDate);
             } else {
@@ -247,7 +247,7 @@ public class GUIPatientUpdateDiagnosis {
             }
         }
         try {
-            d.setDateDiagnosed(diagnosisDate.getValue(), currentPatient);
+            d.setDateDiagnosed(diagnosisDate.getValue(), currentPatient.getBirth());
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "The diagnosis date is not valid.");
         }
@@ -282,7 +282,7 @@ public class GUIPatientUpdateDiagnosis {
             GUIClinicianDiagnosis.setChanged(true);
             target.setDiseaseName(diseaseNameTextField.getText());
             try {
-                target.setDateDiagnosed(diagnosisDate.getValue(), currentPatient);
+                target.setDateDiagnosed(diagnosisDate.getValue(), currentPatient.getBirth());
             } catch (InvalidObjectException e) {
                 userActions.log(Level.SEVERE, "The date is not valid. This should never be called.");
             }
