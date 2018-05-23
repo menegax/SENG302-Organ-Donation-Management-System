@@ -86,7 +86,7 @@ All user actions require an NHI to be logged against the action and the correspo
 ## Sprint 3
 26th of March to the 3rd of May
 
-####Donor Contact Details
+#### Donor Contact Details
 Contact Details for a Donor are updated in a separate update method. This is because as contact details are implemented solely in the GUI application, and so will only need handling there.
 
 For viewing a Donor's contact details, a new window is shown for both editing and viewing contact details. This is to reduce clutter in the profile view screen.
@@ -115,3 +115,35 @@ We decided to use an external library, Lucene, to do our name searching of patie
 This term "fuzzy search" means that some of the character can be different from what is in the name and it will still be a result. In order to tell which results are "better" a "score" is included with the individual results, which symbolizes how close to the entered search the names are. The closer the name to the search, the higher the score.
 We thought this would be very useful when searching for patients, as the clinician may not know the exact spelling of a particular patient but knows roughly how it is spelt. Or in a much simpler case, the clincian may simply have a miss key press. 
 However we do not want every patient to be matched to any search, so we set the max number of the character difference between the search and the patient's name to two.
+
+
+##Sprint 4
+
+####Diagnosis Validation
+A diagnosis must have a name between 3 and 50 characters long, as this covers the length of the full names of most diseases and conditions. A diagnosis can not be made in the future or before the patient was born.
+
+####Diagnosis Adding
+A diagnosis can not be added to the current diagnoses list if the patient has a diagnosis of the same name and the same diagnosis date.
+
+####Setting past and current diagnoses lists
+Diagnoses lists for a patient are set entirely after all changes have been made before saving. This is to keep tracking changes made to a minimum to reduce operation complexity, and thus making the saving procedure quicker to execute.
+
+#### User Actions Logging
+User actions are now an attribute within the patient object. This way the patient is in charge of its own logs. However, to log a record to the user 
+history, the userActionHistory class needs to be used. This way the UserActionHistory class is responsible for all user action logs regardless of 
+the patient or where in the app the log was created. However, the logger class needs some sort of access to the patient's logs, so we created a getter
+. Unfortunately, the getter must return a modifiable list of records. This opens up the possibility of other classes getting a list of modifiable 
+records and modifying them inappropriately. This is the trade off between for having a separate logger class that implements the Java API logger class.
+
+#### System Logging
+Since a Java logger had already been implemented it was very easy to implement an internal logging solution. This systemLogger is very similar to the 
+userActions log. It will be used for only developer debugging purposes. There should never be a System.out.println() call ever again; even temporarily
+-- it should be a systemLog.log() and when done debugging the statement should be left there for future use. Please add logs as you go and never delete
+ logs (unless they're incorrectly written, of course).  
+ 
+#### Clinician Logging
+To keep consistency, the logging of medication actions and other clinician actions is now solely using the UserHistory logger. This allowed
+us to log actions that occur within the medications page (and other pages while a clinician is logged in) in a way that all actions, whether saved or unsaved,
+are visible within the new history table for clinicians. If a clinician alters medications for a patient, a ClinicianActionRecord is created that stores
+the standing log information, plus the NHI number of the 'target' patient that the changes are being made to. Logs (+ medication changes) will persist between 
+sessions after the user saves changes using the standard save button on the home screen.

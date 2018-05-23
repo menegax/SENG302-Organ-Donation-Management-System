@@ -24,7 +24,6 @@ public class ScreenControl {
 
     @Deprecated
     private static Scene main;
-
     private static Map<UUID, Stage> applicationStages;
 
 

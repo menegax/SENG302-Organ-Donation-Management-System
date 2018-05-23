@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import model.DrugInteraction;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
@@ -97,8 +98,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                             .getSelectedItem());
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
                     Parent root = fxmlLoader.load();
-                    GUIPatientProfile controller = fxmlLoader.getController();
-                    controller.setViewedPatient(patientDataTable.getSelectionModel().getSelectedItem());
+                    DrugInteraction.setViewedPatient(patientDataTable.getSelectionModel().getSelectedItem());
                     UndoableStage popUpStage = new UndoableStage();
                     screenControl.addStage(popUpStage.getUUID(), popUpStage);
                     screenControl.show(popUpStage.getUUID(), root);

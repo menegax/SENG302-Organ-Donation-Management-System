@@ -62,7 +62,6 @@ public class GUIPatientHome {
         screenControl.closeStage(homePane);
     }
 
-
     @FXML
     public void save() {
         Database.saveToDisk();

@@ -13,6 +13,11 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
+
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
@@ -27,9 +32,10 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
+import static java.util.logging.Level.SEVERE;
 
 public class GUILogin {
 
@@ -56,7 +62,6 @@ public class GUILogin {
         });
     }
 
-
     /**
      * Open the register screen
      */
@@ -69,7 +74,6 @@ public class GUILogin {
             userActions.log(SEVERE, "Failed to load patient register", "Attempted to load patient register");
         }
     }
-
 
     /**
      * Attempt to log the user in using the entered NHI
@@ -96,6 +100,7 @@ public class GUILogin {
             }
             catch (IOException e) {
                 userActions.log(Level.WARNING, "Unable to load patient home page", "Attempted to log in");
+                systemLogger.log(Level.INFO, "Failed to find the .fxml file for login" + e.getStackTrace());
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
             }
@@ -119,10 +124,8 @@ public class GUILogin {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
             }
-
         }
     }
-
 
     private void setUpPatientHome() {
 
@@ -154,5 +157,4 @@ public class GUILogin {
             nhiLogin.setPromptText("NHI");
         }
     }
-
 }

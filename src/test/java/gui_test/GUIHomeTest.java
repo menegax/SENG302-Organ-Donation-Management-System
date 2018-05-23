@@ -39,10 +39,8 @@ public class GUIHomeTest extends ApplicationTest {
 
         main.start(stage);
         interact(() -> {
-            lookup("#nhiLogin").queryAs(TextField.class)
-                    .setText("TFX9999");
-            lookup("#loginButton").queryAs(Button.class)
-                    .fire();
+            lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
+            lookup("#loginButton").queryAs(Button.class).fire();
         });
     }
 
@@ -82,8 +80,9 @@ public class GUIHomeTest extends ApplicationTest {
 
     @Test
     public void should_go_to_log() {
-        interact(() -> lookup("#historyButton").queryAs(Button.class)
-                .fire());
+        interact(() -> {
+            lookup("#historyButton").queryAs(Button.class).fire();
+        });
         verifyThat("#patientLogPane", Node::isVisible);
     }
 

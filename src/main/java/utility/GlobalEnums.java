@@ -168,4 +168,33 @@ public class GlobalEnums {
         }
     }
 
+    public enum DiseaseState {
+        CURED ("cured"),
+        CHRONIC ("chronic");
+
+        private String value;
+
+        DiseaseState(final String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue();
+        }
+
+        public static Enum getEnumFromString(String value) {
+            try {
+                return DiseaseState.valueOf(value.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
+
+    }
+
 }
