@@ -25,7 +25,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Form to add and edit patient procedures only accessible by a clinician
  */
-public class GUIPatientProcedureForm extends UndoableController {
+public class GUIPatientProcedureForm  {
 
     @FXML
     public Button doneButton;
@@ -58,18 +58,11 @@ public class GUIPatientProcedureForm extends UndoableController {
     public void initialize() {
         patient = new UserControl().getTargetPatient();
         setupDonations();
-        controls = new ArrayList<Control>() {{
-            add(summaryInput);
-            add(descriptionInput);
-            add(dateInput);
-        }};
         for (MenuItem menuItem : affectedInput.getItems()) { //Adding organ checkboxes to the undo/redo controls
             if (((CustomMenuItem) menuItem).getContent() instanceof CheckBox) {
             CheckBox checkbox = (CheckBox) ((CustomMenuItem) menuItem).getContent();
-            controls.add(checkbox);
             }
         }
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTPROCEDUREFORM);
     }
 
     /**
