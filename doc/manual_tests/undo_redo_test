@@ -1,0 +1,51 @@
+# Undo Redo Manual Tests
+
+### Test each individual control
+
+For each in:
+1. CheckBox(Patient Profile Edit)
+2. ChoiceBox(Patient Profile Edit)
+3. DatePicker(Patient Profile Edit)
+4. ListView (Medications)
+5. RadioButton (Patient Profile Edit)
+6. TableView (Diagnosis)
+7. TextField (Patient Profile Edit)
+
+1. Navigate to a screen with that control
+2. Make a change in that control
+3. Press undo (Ctrl + Z)
+-> Control should have changed state back to previous state
+4. Press redo (Ctrl + Y)
+-> Control should have changed back to changed state
+
+### Test only undo on current stage
+
+1. Login as a clinician
+2. Type a letter in the clinician's edit profile
+3. Open a Patient profile from search patients
+4. Type a letter in the patient's edit profile
+5. Press undo twice when on the clinician's profile
+-> Clinician letter should be undone
+-> Patient letter should not be undone
+6. Press redo twice when on the clinician's profile
+-> Clinician letter should be redone
+-> Patient letter should not be redone
+
+Repeat 1-4.
+5. Press undo twice when on patients profile
+-> Patient letter should be undone
+-> Clinician letter should not be undone
+6. Press redo twice when on the patient's profile
+-> Patient letter should be redone
+-> Clinician letter should not be redone
+
+### Test undo through multiple screens
+
+1. Login as a patient
+2. Make a change in the patient's profile
+3. Make a change in the patient's donation's
+4. Change to another screen
+5. Undo repeatedly until no change is observed
+-> The screen should have navigated to the donations page then the profile page undoing one action at a time  
+6. Redo repeatedly until no change is observed
+-> The screen should have navigated to the profile page then to the donations undoing one action at a time  

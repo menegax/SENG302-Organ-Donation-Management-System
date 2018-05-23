@@ -49,6 +49,11 @@ public class ControllerClinicianEdit extends ApplicationTest {
      */
     @Before
     public void Login() {
+        interact(() -> {
+            while(lookup("OK").queryAs(Button.class) != null) {
+                lookup("OK").queryAs(Button.class).fire();
+            }
+        });
         staffId = Integer.toString(clinicians.stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStaffID());
         //Check 'I am Clinician" checkbox to login as clinician
         interact(() -> {
