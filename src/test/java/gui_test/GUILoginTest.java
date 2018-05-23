@@ -6,6 +6,7 @@ import controller.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -14,6 +15,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.testfx.api.FxRobotException;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 import controller.UserControl;
@@ -98,6 +100,23 @@ public class GUILoginTest extends ApplicationTest {
     public void should_open_register_form() {
         interact(() -> lookup("#registerHyperlink").queryAs(Hyperlink.class).fire());
         verifyThat("#patientRegisterAnchorPane", Node::isVisible);
+    }
+
+    /**
+     * Tests the invalid login with wrong staffId
+     */
+    @Test
+    public void unsuccessfulClinicianLoginTest() {
+        interact(() -> {
+            lookup("#clinicianToggle").queryAs(CheckBox.class).setSelected(true);
+            lookup("#nhiLogin").queryAs(TextField.class).setText("111");
+        });
+        verifyThat("#nhiLogin", TextInputControlMatchers.hasText("111"));
+        interact(() -> {
+            lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
+            lookup("OK").queryAs(Button.class).fire();
+        });
+        verifyThat( "#loginPane", Node::isVisible ); // Verify that logout button has taken "user" to the login panel
     }
 
 

@@ -53,13 +53,6 @@ public class GUIProfileTest extends ApplicationTest {
         });
     }
 
-    @After
-    public void waitForEvents() throws InvalidObjectException {
-        Database.resetDatabase();
-        WaitForAsyncUtils.waitForFxEvents();
-        sleep(1000);
-    }
-
     @Test
     public void should_be_on_profile_screen() {
         verifyThat("#patientProfilePane", Node::isVisible);
@@ -112,7 +105,7 @@ public class GUIProfileTest extends ApplicationTest {
         });
         verifyThat("#donatingTitle", Node::isVisible);
         verifyThat("#receivingList", Node::isDisabled);
-//        System.out.println(patient.getDonations());
+
         Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.LIVER);
         Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.CORNEA);
         Database.getPatientByNhi("TFX9999").setDonations(new ArrayList<GlobalEnums.Organ>());
@@ -122,6 +115,14 @@ public class GUIProfileTest extends ApplicationTest {
         });
         verifyThat("#receivingList", Node::isVisible);
         verifyThat("#donationList", Node::isDisabled);
+    }
+
+
+    @After
+    public void waitForEvents() throws InvalidObjectException {
+        Database.resetDatabase();
+        WaitForAsyncUtils.waitForFxEvents();
+        sleep(1000);
     }
 
 }

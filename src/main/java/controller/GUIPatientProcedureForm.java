@@ -22,6 +22,9 @@ import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
+/**
+ * Form to add and edit patient procedures only accessible by a clinician
+ */
 public class GUIPatientProcedureForm extends UndoableController {
 
     @FXML
