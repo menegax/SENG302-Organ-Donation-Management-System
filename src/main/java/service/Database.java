@@ -257,6 +257,15 @@ public class Database {
         return recordAttr;
     }
 
+    private String[] getTransplantRequestAttributes(OrganWaitlist.OrganRequest request) {
+        String[] attr = new String[4];
+        attr[0] = request.getReceiverNhi();
+        attr[1] = request.getRequestDate().toString();
+        attr[2] = request.getRequestedOrgan().toString();
+        attr[3] = request.getRequestRegion().toString();
+        return attr;
+    }
+
     private void addPatientMedications(Patient newPatient) throws SQLException {
         for(Medication medication : newPatient.getCurrentMedications()) {
             String[] medAttr = getMedicationAttributes(newPatient, medication);
@@ -355,10 +364,8 @@ public class Database {
             String[] attr = getClinicianAttributes(newClinician);
             String query = "INSERT INTO tblClinicians " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement stmt;
 			try {
-				stmt = setupQuery(query, attr);
-				runUpdateQuery(stmt);
+				runQuery(query, attr);
 				userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
 			} catch (SQLException e) {
 	            userActions.log(Level.WARNING, "Couldn't add clinician due to database error", "Attempted to add a clinician");
@@ -370,7 +377,18 @@ public class Database {
             throw new IllegalArgumentException("staffID");
         }
     }
-    
+
+    public void saveTransplantRequest(OrganWaitlist.OrganRequest request) {
+        String[] attr = getTransplantRequestAttributes(request);
+        String query = "INSERT INTO tblTransplantWaitList " +
+                "VALUES (?, ?, ?, ?)";
+        try {
+            runQuery(query, attr);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void loadAll() {
         loadAllPatients();
         loadAllClinicians();
