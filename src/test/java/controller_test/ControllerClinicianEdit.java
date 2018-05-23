@@ -341,25 +341,5 @@ public class ControllerClinicianEdit extends ApplicationTest {
         assertThat(!Database.getClinicians().stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStreet1().equals("12 RD"));
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
-
-
-    /**
-     * Tests the back and logout buttons work
-     */
-    @Test
-    public void logoutButtonTakesUserToLoginScreen() {
-        interact(() -> {
-            lookup("#back").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that back
-        // button has taken "user" to the profile panel
-        interact(() -> {
-            lookup("#back").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#clinicianHomePane", Node::isVisible); // Verify that back button has taken "user" to the home panel
-        interact(() -> {
-            lookup("#logoutButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#loginPane", Node::isVisible); // Verify that logout button has taken "user" to the login panel
-    }
+    
 }
