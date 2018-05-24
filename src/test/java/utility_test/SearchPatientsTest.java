@@ -76,10 +76,9 @@ public class SearchPatientsTest {
 	
     /**
      * Tests the alphabetical ordering of patients that are equal close to the search result.
-     * @throws IOException
      */
     @Test
-    public void testEqualSearchOrdering() throws IOException {
+    public void testEqualSearchOrdering(){
     	
     	// For a name search of George
     	ArrayList<Patient> results = SearchPatients.searchByName("George");
@@ -98,10 +97,9 @@ public class SearchPatientsTest {
     
     /**
      * Tests that the search will not return more than 30 results.
-     * @throws IOException
      */
     @Test
-    public void testNumberOfResults() throws IOException {
+    public void testNumberOfResults(){
 
     	// Create more than 36 patients
     	String[] firstNames = {"A", "B", "C", "D", "E", "F"};
@@ -132,10 +130,9 @@ public class SearchPatientsTest {
     
     /**
      * Tests that a blank search will not return more than 30 results.
-     * @throws IOException
      */
     @Test
-    public void testNumberOfResultsBlankSearch() throws IOException {
+    public void testNumberOfResultsBlankSearch() {
 
     	// Create more than 36 patients
     	String[] firstNames = {"A", "B", "C", "D", "E", "F"};
@@ -166,7 +163,7 @@ public class SearchPatientsTest {
     
     /**
      * Tests a simple name search case.
-     * @throws IOException
+     * @throws IOException -
      */
     @Test
     public void testSearchByName() throws IOException {
@@ -219,7 +216,7 @@ public class SearchPatientsTest {
 
     /**
      * Tests a name search for after a patient's NHI has been updated.
-     * @throws IOException
+     * @throws IOException -
      */
     @Test
     public void testSearchAfterNhiUpdate() throws IOException {
@@ -250,10 +247,9 @@ public class SearchPatientsTest {
 
     /**
      * Tests weird edge cases for name search.
-     * @throws InvalidObjectException
      */
     @Test
-    public void testSearchUnusualNameResults() throws InvalidObjectException {
+    public void testSearchUnusualNameResults() {
         Database.resetDatabase();
 
         // Given patients in a db

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="patientProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProfile">
+<AnchorPane fx:id="patientProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProfile">
 
    <children>
       <Label layoutX="264.0" layoutY="16.0" styleClass="title" text="Profile">
@@ -16,12 +16,12 @@
             <Font size="40.0" />
          </font>
       </Label>
-      <VBox layoutX="37.0" layoutY="65.0" prefHeight="255.0" prefWidth="239.0">
+      <VBox layoutX="37.0" layoutY="65.0" prefHeight="272.0" prefWidth="277.0">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Label prefHeight="16.0" prefWidth="150.0" text="NHI: " />
-                  <Label fx:id="nhiLbl" prefHeight="16.0" prefWidth="168.0" text="Label" textAlignment="CENTER" />
+                  <Label fx:id="nhiLbl" prefHeight="17.0" prefWidth="201.0" text="Label" textAlignment="CENTER" />
                </children>
             </HBox>
             <HBox prefHeight="30.0" prefWidth="200.0">
@@ -32,7 +32,7 @@
             </HBox>
             <HBox prefHeight="30.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="genderDeclaration" prefHeight="16.0" prefWidth="112.0" />
+                  <Label fx:id="genderDeclaration" prefHeight="17.0" prefWidth="148.0" />
                   <Label fx:id="genderStatus" />
                </children>
             </HBox>
@@ -136,7 +136,7 @@
             <ListView fx:id="receivingList" prefHeight="200.0" prefWidth="200.0" />
          </children>
       </VBox>
-        <VBox layoutX="300.0" layoutY="81.0" prefHeight="200.0" prefWidth="129.0">
+        <VBox layoutX="323.0" layoutY="65.0" prefHeight="200.0" prefWidth="129.0">
            <children>
             <Label fx:id="medicationTitle" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Medications">
                <font>
@@ -147,12 +147,12 @@
            </children>
         </VBox>
       <Label fx:id="back" layoutX="14.0" layoutY="14.0" onMouseClicked="#goToPatientHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-      <Button fx:id="editPatientButton" layoutX="57.0" layoutY="40.0" mnemonicParsing="false" onAction="#goToEdit" prefHeight="25.0" prefWidth="101.0" text="Manage Profile" />
-      <Button fx:id="proceduresButton" layoutX="57.0" layoutY="10.0" mnemonicParsing="false" onAction="#goToPatientProcedures" text="Manage Procedures" />
-      <Button fx:id="donationsButton" layoutX="343.0" layoutY="315.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
-      <Button fx:id="medicationBtn" layoutX="30.0" layoutY="362.0" mnemonicParsing="false" onAction="#openMedication" text="Manage Medications" />
-      <Button fx:id="requirementsButton" layoutX="181.0" layoutY="362.0" mnemonicParsing="false" onAction="#goToRequirements" text="Manage Requested" />
-      <Button fx:id="diseaseHistoryButton" layoutX="323.0" layoutY="362.0" mnemonicParsing="false" onAction="#openPatientDiagnoses" text="View Disease History" />
+      <Button fx:id="editPatientButton" layoutX="222.0" layoutY="281.0" mnemonicParsing="false" onAction="#goToEdit" prefHeight="25.0" prefWidth="109.0" text="Manage Profile" />
+      <Button fx:id="proceduresButton" layoutX="210.0" layoutY="350.0" mnemonicParsing="false" onAction="#goToPatientProcedures" prefHeight="25.0" prefWidth="122.0" text="Manage Procedures" />
+      <Button fx:id="donationsButton" layoutX="338.0" layoutY="281.0" mnemonicParsing="false" onAction="#goToDonations" prefHeight="25.0" prefWidth="122.0" text="Manage Donations" />
+      <Button fx:id="medicationBtn" layoutX="74.0" layoutY="350.0" mnemonicParsing="false" onAction="#openMedication" prefHeight="25.0" prefWidth="129.0" text="Manage Medications" />
+      <Button fx:id="requirementsButton" layoutX="338.0" layoutY="350.0" mnemonicParsing="false" onAction="#goToRequirements" prefHeight="25.0" prefWidth="122.0" text="Manage Requested" />
+      <Button fx:id="diseaseHistoryButton" layoutX="338.0" layoutY="315.0" mnemonicParsing="false" onAction="#openPatientDiagnoses" prefHeight="25.0" prefWidth="122.0" text="Manage Diagnoses" />
       <Button fx:id="contactButton" layoutX="222.0" layoutY="315.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contacts" />
    </children>
 </AnchorPane>

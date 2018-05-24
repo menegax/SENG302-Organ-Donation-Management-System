@@ -20,6 +20,9 @@ import java.util.ArrayList;
 
 public class GUIPatientUpdateProfileTest extends ApplicationTest {
 
+    /**
+     * Application entry point
+     */
     private Main main = new Main();
 
 
@@ -59,6 +62,9 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
     }
 
 
+    /**
+     * Reset db to a clean state wait for 1000ms
+     */
     @After
     public void waitForEvents() {
         Database.resetDatabase();
@@ -67,10 +73,12 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
     }
 
 
+    /**
+     * Checks that a patients NHI cannot be updated to one with an invalid format
+     */
     @Test
     public void testInvalidNhi() {
         // try changing to an invalid nhi
-
         interact(() -> {
             lookup("#nhiTxt").queryAs(TextField.class).setText("999abcd");
             lookup("#saveButton").queryAs(Button.class).fire();
@@ -81,6 +89,9 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
 
     }
 
+    /**
+     * Checks that a patients NHI cannot be updated to an existing one
+     */
     @Test
     public void testDuplicateNhi() {
     // try editing to an nhi that's already taken

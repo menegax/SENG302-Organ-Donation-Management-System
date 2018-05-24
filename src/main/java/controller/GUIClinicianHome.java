@@ -27,6 +27,8 @@ public class GUIClinicianHome {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private UserControl userControl = new UserControl();
+
     @FXML
     public void goToClinicianProfile(){
         try {
@@ -50,6 +52,7 @@ public class GUIClinicianHome {
     @FXML
     public void logOutClinician() {
         screenControl.closeStage(clinicianHomePane);
+        userControl.setTargetPatient(null);
     }
 
     @FXML

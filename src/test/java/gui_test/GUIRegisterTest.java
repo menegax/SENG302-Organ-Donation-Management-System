@@ -26,6 +26,10 @@ public class GUIRegisterTest extends ApplicationTest {
     private Main main = new Main();
     private LocalDate d = LocalDate.of(1957,6,21);
 
+
+    /**
+     *Reset db to a clean state
+     */
     @Before
     public void setup() {
         Database.resetDatabase();
@@ -38,6 +42,9 @@ public class GUIRegisterTest extends ApplicationTest {
 
     }
 
+    /**
+     * Reset db to a clean state wait for 1000ms
+     */
     @After
     public void waitForEvents() {
         Database.resetDatabase();
@@ -45,11 +52,17 @@ public class GUIRegisterTest extends ApplicationTest {
         sleep(1000);
     }
 
+    /**
+     * Verify the register screen is visible
+     */
     @Test
-    public void verify_screen() {
+    public void verify_screen_register() {
         verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
+    /**
+     * Checks that the user has registered successfully register with a middle name
+     */
     @Test
     public void should_successfully_register_with_middle_name() {
         interact(() -> {
@@ -73,6 +86,10 @@ public class GUIRegisterTest extends ApplicationTest {
         verifyThat("#loginPane", Node::isVisible);
     }
 
+
+    /**
+     * Checks that the user has registered successfully register without a middle name
+     */
     @Test
     public void should_successfully_register_without_middle_name() {
         interact(() -> {
@@ -93,6 +110,9 @@ public class GUIRegisterTest extends ApplicationTest {
         verifyThat("#loginPane", Node::isVisible);
     }
 
+    /**
+     * Checks that the user has not been registered with no input
+     */
     @Test
     public void unsuccessful_register_no_input() {
         interact(() -> {
@@ -102,6 +122,10 @@ public class GUIRegisterTest extends ApplicationTest {
         verifyThat(lookup("#patientRegisterAnchorPane"), Node::isVisible);
     }
 
+
+    /**
+     * Checks that the user has not been registered with no nhi
+     */
     @Test
     public void unsuccessful_register_no_nhi() {
         interact(() -> {
@@ -115,6 +139,9 @@ public class GUIRegisterTest extends ApplicationTest {
         verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
+    /**
+     * Checks that the user has not been registered with invalid nhi
+     */
     @Test
     public void unsuccessful_register_invalid_nhi() {
         interact(() -> {
@@ -128,6 +155,10 @@ public class GUIRegisterTest extends ApplicationTest {
         verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
+
+    /**
+     * Checks that the user has not been registered with no firstname
+     */
     @Test
     public void unsuccessful_register_no_first_name() {
         interact(() -> {
@@ -140,6 +171,9 @@ public class GUIRegisterTest extends ApplicationTest {
         verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
+    /**
+     * Checks that the user has not been registered with no last name
+     */
     @Test
     public void unsuccessful_register_no_last_name() {
         interact(() -> {
@@ -152,6 +186,9 @@ public class GUIRegisterTest extends ApplicationTest {
         verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
+    /**
+     * Checks that the user has not been registered with no date of birth
+     */
     @Test
     public void unsuccessful_register_no_birth_date() {
         interact(() -> {
@@ -164,6 +201,9 @@ public class GUIRegisterTest extends ApplicationTest {
         verifyThat("#patientRegisterAnchorPane", Node::isVisible);
     }
 
+    /**
+     * Checks that the user has not been registered with duplicate nhi
+     */
     @Test
     public void unsuccessful_register_duplicate_nhi() throws InvalidObjectException {
 

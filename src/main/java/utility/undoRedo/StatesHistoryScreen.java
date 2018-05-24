@@ -250,12 +250,12 @@ public class StatesHistoryScreen {
      * Stores the current state of the screen
      */
     public void store() {
-        if (!undone && !redone && !undoableStage.isChangingStates()) {
-            for (StateHistoryControl stateHistory : stateHistories) {
-                stateHistory.store();
-            }
-            undoableStage.store();
-        }
+//        if (!undone && !redone && !undoableStage.isChangingStates()) {
+//            for (StateHistoryControl stateHistory : stateHistories) {
+//                stateHistory.store();
+//            }
+//            undoableStage.store();
+//        }
     }
 
 
