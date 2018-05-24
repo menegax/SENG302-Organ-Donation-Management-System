@@ -1,25 +1,19 @@
 package utility.undoRedo.stateHistoryWidgets;
 
-import utility.undoRedo.IUndoRedo;
 import javafx.scene.control.RadioButton;
 
 import java.util.ArrayList;
 
-public class StateHistoryRadioButton implements IUndoRedo {
+public class StateHistoryRadioButton extends StateHistoryControl {
 
-    private RadioButton radioButton;
-
-    private ArrayList<Boolean> states = new ArrayList<>();
-
-    private boolean undone = false;
-
-    private int index = 0;
-
-
+    /**
+     * Constructor for a StateHistoryRadioButton
+     * @param radioButton the radioButton this object stores the state of
+     */
     public StateHistoryRadioButton(RadioButton radioButton) {
-        this.radioButton = radioButton;
+        this.control = radioButton;
         states.add(radioButton.isSelected());
-
+        setUpUndoableStage();
     }
 
 
@@ -31,48 +25,32 @@ public class StateHistoryRadioButton implements IUndoRedo {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(radioButton.isSelected());
+        states.add(((RadioButton) control).isSelected());
     }
 
 
     /**
      * Sets the RadioButton to the state before the current state
      */
-    public void undo() {
+    public boolean undo() {
         if (index != 0) {
             index -= 1;
-            radioButton.setSelected(states.get(index));
-            undone = true;
+            ((RadioButton) control).setSelected((Boolean) states.get(index));
+            return true;
         }
+        return false;
     }
 
 
     /**
      * Resets the RadioButton to the state immediately prior to an undo
      */
-    public void redo() {
-        if (undone && index + 1 < states.size()) {
+    public boolean redo() {
+        if (index + 1 < states.size()) {
             index += 1;
-            radioButton.setSelected(states.get(index));
+            ((RadioButton) control).setSelected((Boolean) states.get(index));
+            return true;
         }
-    }
-
-
-    /**
-     * Gets the states of the RadioButton
-     * @return the states of the RadioButton
-     */
-    public ArrayList<Object> getStates() {
-        return new ArrayList<>(states);
-    }
-
-
-    /**
-     * Gets the index of the current state of the RadioButton
-     *
-     * @return the index of the current state
-     */
-    public int getIndex() {
-        return index;
+        return false;
     }
 }

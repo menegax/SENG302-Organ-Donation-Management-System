@@ -1,6 +1,5 @@
 package utility.undoRedo.stateHistoryWidgets;
 
-import utility.undoRedo.IUndoRedo;
 import javafx.scene.control.CheckBox;
 
 import java.util.ArrayList;
@@ -8,28 +7,7 @@ import java.util.ArrayList;
 /**
  * Represents the state history of a check box in the GUI
  */
-public class StateHistoryCheckBox implements IUndoRedo {
-
-    /**
-     * The CheckBox this object holds the states for
-     */
-    private CheckBox checkBox;
-
-    /**
-     * The states of the CheckBox
-     */
-    private ArrayList<Boolean> states = new ArrayList<>();
-
-    /**
-     * The index of the current state in the ArrayList
-     */
-    private int index = 0;
-
-    /**
-     * True if an undo has been executed, false otherwise - could be reset at exit from each interface
-     */
-    private boolean undone = false;
-
+public class StateHistoryCheckBox extends StateHistoryControl {
 
     /**
      * Constructor for the State History
@@ -37,8 +15,9 @@ public class StateHistoryCheckBox implements IUndoRedo {
      * @param checkBox the CheckBox whose state we are storing
      */
     public StateHistoryCheckBox(CheckBox checkBox) {
-        this.checkBox = checkBox;
+        this.control = checkBox;
         states.add(checkBox.isSelected());
+        setUpUndoableStage();
     }
 
 
@@ -50,52 +29,33 @@ public class StateHistoryCheckBox implements IUndoRedo {
     public void store() {
         index += 1;
         states = new ArrayList<>(states.subList(0, index));
-        states.add(checkBox.isSelected());
+        states.add(((CheckBox) control).isSelected());
     }
 
 
     /**
      * Sets the CheckBox to the state before the current state
      */
-    public void undo() {
+    public boolean undo() {
         if (index != 0) {
             index -= 1;
-            checkBox.setSelected(states.get(index));
-            undone = true;
+            ((CheckBox) control).setSelected((Boolean) states.get(index));
+            return true;
         }
+        return false;
     }
 
 
     /**
      * Resets the Checkbox to the state immediately prior to an undo
      */
-    public void redo() {
-        if (undone && index + 1 < states.size()) {
+    public boolean redo() {
+        if (index + 1 < states.size()) {
             index += 1;
-            checkBox.setSelected(states.get(index));
+            ((CheckBox) control).setSelected((Boolean) states.get(index));
+            return true;
         }
+        return false;
     }
 
-
-    /**
-     * Gets the states of the Check Box
-     * Currently only used in testing
-     *
-     * @return the states of the check box
-     */
-    public ArrayList<Object> getStates() {
-        ArrayList<Object> objectStates = new ArrayList<>(states);
-        return objectStates;
-    }
-
-
-    /**
-     * Gets the index of the current state of the checkbox
-     * currently only used in testing
-     *
-     * @return the index of the current state
-     */
-    public int getIndex() {
-        return index;
-    }
 }

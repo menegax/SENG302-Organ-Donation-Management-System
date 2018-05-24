@@ -1,6 +1,6 @@
 package controller_test;
 
-import controller.Main;
+import main.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -16,11 +16,10 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import testfx.GitLabTestFXConfiguration;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Set;
-import java.util.logging.Level;
 
 import static java.util.logging.Level.OFF;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -39,8 +38,12 @@ public class ControllerClinicianEdit extends ApplicationTest {
         main.start(stage);
     }
 
+    /**
+     * Sets the configuration to run in headless mode
+     */
     @BeforeClass
     public static void setUp() {
+        GitLabTestFXConfiguration.setHeadless();
         userActions.setLevel(OFF);
     }
 
@@ -49,6 +52,11 @@ public class ControllerClinicianEdit extends ApplicationTest {
      */
     @Before
     public void Login() {
+        interact(() -> {
+            while(lookup("OK").queryAs(Button.class) != null) {
+                lookup("OK").queryAs(Button.class).fire();
+            }
+        });
         staffId = Integer.toString(clinicians.stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStaffID());
         //Check 'I am Clinician" checkbox to login as clinician
         interact(() -> {
@@ -337,24 +345,4 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
 
-
-    /**
-     * Tests the back and logout buttons work
-     */
-    @Test
-    public void logoutButtonTakesUserToLoginScreen() {
-        interact(() -> {
-            lookup("#back").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that back
-        // button has taken "user" to the profile panel
-        interact(() -> {
-            lookup("#back").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#clinicianHomePane", Node::isVisible); // Verify that back button has taken "user" to the home panel
-        interact(() -> {
-            lookup("#logoutButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#loginPane", Node::isVisible); // Verify that logout button has taken "user" to the login panel
-    }
 }

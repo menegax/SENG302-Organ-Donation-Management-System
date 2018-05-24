@@ -86,7 +86,7 @@ All user actions require an NHI to be logged against the action and the correspo
 ## Sprint 3
 26th of March to the 3rd of May
 
-####Donor Contact Details
+#### Donor Contact Details
 Contact Details for a Donor are updated in a separate update method. This is because as contact details are implemented solely in the GUI application, and so will only need handling there.
 
 For viewing a Donor's contact details, a new window is shown for both editing and viewing contact details. This is to reduce clutter in the profile view screen.
@@ -127,3 +127,33 @@ A diagnosis can not be added to the current diagnoses list if the patient has a 
 
 ####Setting past and current diagnoses lists
 Diagnoses lists for a patient are set entirely after all changes have been made before saving. This is to keep tracking changes made to a minimum to reduce operation complexity, and thus making the saving procedure quicker to execute.
+
+#### User Actions Logging
+User actions are now an attribute within the patient object. This way the patient is in charge of its own logs. However, to log a record to the user 
+history, the userActionHistory class needs to be used. This way the UserActionHistory class is responsible for all user action logs regardless of 
+the patient or where in the app the log was created. However, the logger class needs some sort of access to the patient's logs, so we created a getter
+. Unfortunately, the getter must return a modifiable list of records. This opens up the possibility of other classes getting a list of modifiable 
+records and modifying them inappropriately. This is the trade off between for having a separate logger class that implements the Java API logger class.
+
+#### System Logging
+Since a Java logger had already been implemented it was very easy to implement an internal logging solution. This systemLogger is very similar to the 
+userActions log. It will be used for only developer debugging purposes. There should never be a System.out.println() call ever again; even temporarily
+-- it should be a systemLog.log() and when done debugging the statement should be left there for future use. Please add logs as you go and never delete
+ logs (unless they're incorrectly written, of course).  
+ 
+#### Clinician Logging
+To keep consistency, the logging of medication actions and other clinician actions is now solely using the UserHistory logger. This allowed
+us to log actions that occur within the medications page (and other pages while a clinician is logged in) in a way that all actions, whether saved or unsaved,
+are visible within the new history table for clinicians. If a clinician alters medications for a patient, a ClinicianActionRecord is created that stores
+the standing log information, plus the NHI number of the 'target' patient that the changes are being made to. Logs (+ medication changes) will persist between 
+sessions after the user saves changes using the standard save button on the home screen.
+
+#### Undo/Redo
+We decided to reload the fxml on every undo and redo as it did not create significant processing time.  
+In addition it removed the necessity for the application to know whether it was on the screen it needed to undo or not.
+We created abstract classes UndoableStage and UndoableController to enable future implementations with ease as most methods and attributes would be inherited.
+
+#### Deregistering an Organ due to Cure
+When you deregister an organ due to a disease or collection of diseases being cured and mark a collection of selected diseases to cured in the dropdown, we considered how
+the program should handle chronic diseases. We decided that it makes most sense to be able to set chronic diseases to cured in this scenario as it is not
+very user friendly to have to go back to the disease screen to 'complete' the cure of the disease

@@ -21,3 +21,11 @@
 ### Ensure that organs highlighted if patient is donating and receiving the same organ
 1. Use the same steps as provided in `Enusre that organs are listed on the donating listview` to add an organ that is already selected to be required/received by the patient (e.g. the patient is donating and receiving the same organ, Liver).
 2. Verify that the organs that is the same in both lists is highlighted
+
+### Ensure that donating list and receiving lists are segregated
+1. log into a patient profile without any required organs
+2. select the profile button
+3. the required list view should not be visible in the patient home page but the donating list view should be visible
+4. logout and log back in as a patient without any donating organs
+5. select the profile button
+6. the donating list view should not be visible in the patient home page but the required list view should be visible

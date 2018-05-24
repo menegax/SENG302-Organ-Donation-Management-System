@@ -4,12 +4,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import service.Database;
+import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -21,12 +21,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
  * Controller class to control GUI Clinician updating screen.
  */
-public class GUIClinicianUpdateProfile {
+public class GUIClinicianUpdateProfile extends UndoableController{
 
     @FXML
     public AnchorPane clinicianUpdateAnchorPane;
@@ -55,23 +56,7 @@ public class GUIClinicianUpdateProfile {
 
     private Clinician target;
 
-    private StatesHistoryScreen screenHistory;
-
-    /**
-     * Undoes an action taken when editing a clinician
-     */
-    @FXML
-    public void undo(){
-        screenHistory.undo();
-    }
-
-    /**
-     * Redoes an action taken when editing a clinician
-     */
-    @FXML
-    public void redo(){
-        screenHistory.redo();
-    }
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initializes the clinician editing screen.
@@ -117,7 +102,7 @@ public class GUIClinicianUpdateProfile {
      * the StateHistoryScreen used to undo or redo actions using the control elements
      */
     private void setUpStateHistory() {
-        ArrayList<Control> elements = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(staffId);
             add(firstnameTxt);
             add(lastnameTxt);
@@ -127,7 +112,7 @@ public class GUIClinicianUpdateProfile {
             add(suburbTxt);
             add(regionDD);
         }};
-        screenHistory = new StatesHistoryScreen(clinicianUpdateAnchorPane, elements);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPROFILEUPDATE);
     }
 
     /**
@@ -200,9 +185,9 @@ public class GUIClinicianUpdateProfile {
             middles.addAll(middlenames);
             target.setMiddleNames(middles);
 
-            if (street1Txt.getText().length() > 0) target.setStreet1(street1Txt.getText());
-            if (street2Txt.getText().length() > 0) target.setStreet2(street2Txt.getText());
-            if (suburbTxt.getText().length() > 0) target.setSuburb(suburbTxt.getText());
+            target.setStreet1(street1Txt.getText());
+            target.setStreet2(street2Txt.getText());
+            target.setSuburb(suburbTxt.getText());
             target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel().getSelectedItem().toString()));
             target.clinicianModified();
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Clinician successfully updated", ButtonType.OK);
@@ -250,13 +235,11 @@ public class GUIClinicianUpdateProfile {
      * Navigates back to the profile window
      */
     public void goBackToProfile() {
-        ScreenControl.removeScreen("clinicianProfile");
         try {
-            ScreenControl.addScreen("clinicianProfile", FXMLLoader.load(getClass().getResource("/scene/clinicianProfile.fxml")));
-            ScreenControl.activate("clinicianProfile");
+            screenControl.show(clinicianUpdateAnchorPane, "/scene/clinicianProfile.fxml");
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the edit page to the profile page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading profile page", ButtonType.OK).show();
+            new Alert((Alert.AlertType.ERROR), "Unable to load clinician profile").show();
+            userActions.log(SEVERE, "Failed to load clinician profile", "Attempted to load clinician profile");
         }
     }
 }
