@@ -21,6 +21,7 @@ import static utility.UserActionHistory.userActions;
 import java.util.logging.Level;
 
 public class ControllerClinicianTest extends ApplicationTest {
+
     private Main main = new Main();
 
     @Override
@@ -28,39 +29,24 @@ public class ControllerClinicianTest extends ApplicationTest {
         main.start(stage);
     }
 
+    /**
+     * Turn off logging
+     */
     @Before
     public void setUp() {
-        userActions.setLevel(Level.ALL);
+        userActions.setLevel(Level.OFF);
         main = new Main();
     }
 
+    /**
+     * Reset db to a clean state wait for 1000ms
+     */
     @After
     public void waitForEvents() {
         Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }
-
-//    /**
-//     * Tests logging in as a clinician successfully
-//     */
-//    @Test
-//    public void successfulLoginTestandGoToProfile() {
-//        //Check 'I am Clinician" checkbox to login as clinician
-//        interact(() -> {
-//            lookup("#clinicianToggle").queryAs(CheckBox.class).setSelected(true);
-//            lookup("#nhiLogin").queryAs(TextField.class).setText("0");
-//        });
-//        verifyThat("#nhiLogin", TextInputControlMatchers.hasText("0"));
-//        interact(() -> {
-//            lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-//        });
-//        verifyThat("#clinicianHomePane", Node::isVisible); // Verify that login has taken "user" to the clinician home panel
-//        interact(() -> {
-//            lookup("#profileButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-//        });
-//        verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that login has taken "user" to the clinician profile panel
-//    }
 
 
     /**

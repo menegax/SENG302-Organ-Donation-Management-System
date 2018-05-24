@@ -1,7 +1,5 @@
 package gui_test;
 
-
-
 import controller.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
@@ -29,8 +27,15 @@ import java.util.ArrayList;
 
 public class GUILoginTest extends ApplicationTest {
 
-
+    /**
+     * Application entry point
+     */
     private Main main = new Main();
+
+
+    /**
+     * Login helper for getting logged in users
+     */
     private UserControl loginHelper = new UserControl();
 
     @Override
@@ -46,6 +51,9 @@ public class GUILoginTest extends ApplicationTest {
         main.start(stage);
     }
 
+    /**
+     * Reset db to a clean state wait for 1000ms
+     */
     @After
     public void waitForEvents() {
         Database.resetDatabase();
@@ -53,16 +61,26 @@ public class GUILoginTest extends ApplicationTest {
         sleep(1000);
     }
 
+
+    /**
+     * Verifies the the loginPane is visible
+     */
     @Test
     public void should_open_on_login() {
         verifyThat("#loginPane", Node::isVisible);
     }
 
+    /**
+     * Clicks invalid button and expects exception to be thrown
+     */
     @Test(expected = FxRobotException.class)
     public void click_on_wrong_button() {
         clickOn("#login");
     }
 
+    /**
+     * Enter NHI and verifies that the UI has logged in
+     */
     @Test
     public void should_login() {
         interact(() -> {
@@ -74,6 +92,9 @@ public class GUILoginTest extends ApplicationTest {
         verifyThat("#homePane", Node::isVisible);
     }
 
+    /**
+     * Enter an incorrect NHI and verify that the login pane is still visible
+     */
     @Test
     public void should_fail_login() {
         interact(() -> {
@@ -85,6 +106,9 @@ public class GUILoginTest extends ApplicationTest {
         verifyThat("#loginPane", Node::isVisible);
     }
 
+    /**
+     * Enter no text and to the NHI field and verifies that the login screen is still visible
+     */
     @Test
     public void should_fail_login_blank() {
         interact(() -> {
@@ -96,6 +120,9 @@ public class GUILoginTest extends ApplicationTest {
         verifyThat("#loginPane", Node::isVisible);
     }
 
+    /**
+     * Verify that the register form is correctly displayed
+     */
     @Test
     public void should_open_register_form() {
         interact(() -> lookup("#registerHyperlink").queryAs(Hyperlink.class).fire());
