@@ -135,7 +135,7 @@ public class GUIPatientRegister {
 
 
     /**
-     * Check users inputs and registers the user patient profile
+     * Check users inputs for validity and registers the user patient profile
      */
     @FXML
     public void register() {

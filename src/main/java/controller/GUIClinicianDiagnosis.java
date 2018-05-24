@@ -159,7 +159,9 @@ public class GUIClinicianDiagnosis extends UndoableController{
     }
 
     /**
-     * Sets up double click action of opening full disease edit window
+     * Sets up double click action of opening full disease edit window.
+     * Opens an update window to edit the selected disease in the table, and marks the window as being for
+     * an update.
      */
     private void setUpDoubleClickEdit(TableView<Disease> tableView) {
         tableView.setOnMouseClicked(click -> {
@@ -189,7 +191,8 @@ public class GUIClinicianDiagnosis extends UndoableController{
 
 
     /**
-     * Registers a new diagnosis entry for a patient when 'Add diagnosis' is activated
+     * Opens the Patient update screen for the purpose of adding a diagnosis. Sets the update window to handle
+     * an addition of a disease rather than an update
      */
     private void addDiagnosis() {
         try {
@@ -212,7 +215,8 @@ public class GUIClinicianDiagnosis extends UndoableController{
     }
 
     /**
-     * Loads the current diseases table
+     * Loads the current diseases table, fills the table with disease values and sets up the sorting behaviour
+     * or the table to be in descending date order
      */
     private void loadCurrentDiseases() {
         ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(currentDiseases);
@@ -229,7 +233,8 @@ public class GUIClinicianDiagnosis extends UndoableController{
     }
 
     /**
-     * Loads the past diseases table
+     * Loads the past diseases table, fills the table with disease values and sets up the sorting behaviour
+     * or the table to be in descending date order
      */
     private void loadPastDiseases() {
         ObservableList <Disease> observablePastDiseases = FXCollections.observableArrayList( pastDiseases );
@@ -283,7 +288,8 @@ public class GUIClinicianDiagnosis extends UndoableController{
     }
 
     /**
-     * Returns to the patient profile page
+     * Returns to the patient profile page. If changes to the diagnoses have ben made but not saved, the user
+     * will be notified with a prompt to save changes
      */
     @FXML
     public void goToProfile() {
@@ -311,7 +317,8 @@ public class GUIClinicianDiagnosis extends UndoableController{
     }
 
     /**
-     * Saves the current diagnoses to the database
+     * Saves the current diagnoses to the database after setting the patient's past and current diagnoses to
+     * the edited lists in the screen
      */
     @FXML
     public void saveDiagnoses() {
@@ -371,7 +378,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
     }
 
     /**
-     * Deletes the selected diagnosis
+     * Deletes the selected diagnosis from the selected diagnoses list and updates the table.
      */
     @FXML
     public void deleteDiagnoses() {

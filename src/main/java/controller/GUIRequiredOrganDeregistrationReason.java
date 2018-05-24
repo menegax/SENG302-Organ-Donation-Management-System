@@ -60,6 +60,10 @@ public class GUIRequiredOrganDeregistrationReason {
     @FXML
     private AnchorPane requiredOrganDeregistrationReasonPane;
 
+    /**
+     * Initializes the organ deregistration screen. Gets the target patient and sets optional elements as
+     * disabled and not visible.
+     */
     public void initialize() {
         userControl = new UserControl();
         target = userControl.getTargetPatient();

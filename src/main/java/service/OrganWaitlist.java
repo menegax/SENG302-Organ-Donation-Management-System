@@ -31,7 +31,11 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	public boolean add(String name, Organ organ, LocalDate date, Region region, String nhi) {
 		return requests.add(new OrganRequest(name, organ, date, region, nhi));
 	}
-	
+
+	/**
+	 * Returns the number of OrganRequest objects in the waitlist
+	 * @return int size of waitlist
+	 */
 	public int size() {
 		return requests.size();
 	}

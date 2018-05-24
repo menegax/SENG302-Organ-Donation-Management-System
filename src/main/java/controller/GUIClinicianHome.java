@@ -29,6 +29,9 @@ public class GUIClinicianHome {
 
     private UserControl userControl = new UserControl();
 
+    /**
+     * Opens the clinician profile screen
+     */
     @FXML
     public void goToClinicianProfile(){
         try {
@@ -39,6 +42,9 @@ public class GUIClinicianHome {
         }
     }
 
+    /**
+     * Opens the patient search screen
+     */
     @FXML
     public void goToSearchPatients(){
         try {
@@ -49,12 +55,18 @@ public class GUIClinicianHome {
         }
     }
 
+    /**
+     * Logs out the clinician and closes the open window for the logged in clinician
+     */
     @FXML
     public void logOutClinician() {
         screenControl.closeStage(clinicianHomePane);
         userControl.setTargetPatient(null);
     }
 
+    /**
+     * Saves changes made to the clinician to the database
+     */
     @FXML
     public void saveClinician() {
         Database.saveToDisk();
@@ -62,6 +74,9 @@ public class GUIClinicianHome {
         alert.show();
     }
 
+    /**
+     * Opens the clinician history screen
+     */
     @FXML
     public void goToHistory() {
         try {
@@ -74,6 +89,9 @@ public class GUIClinicianHome {
         }
     }
 
+    /**
+     * Opens the receiver waiting list screen
+     */
     public void goToClinicianWaitingList() {
         try {
             screenControl.show(clinicianHomePane, "/scene/clinicianWaitingList.fxml");

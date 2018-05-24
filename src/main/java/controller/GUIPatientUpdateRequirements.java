@@ -80,6 +80,9 @@ public class GUIPatientUpdateRequirements extends UndoableController {
 
 //    private boolean closed = false;
 
+    /**
+     * Initializes the requirements screen by laoding in the current patient
+     */
     public void initialize() {
         userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
@@ -268,6 +271,10 @@ public class GUIPatientUpdateRequirements extends UndoableController {
         goToProfile();
     }
 
+    /**
+     * Creates a list of organs removed from the required organs for the patient, and opens a deregistration
+     * reason popup for each deregistered organ
+     */
     private void deregistrationReason() {
         Set<GlobalEnums.Organ> removedOrgans = initialRequirements;
         removedOrgans.removeAll(finalRequirements);
@@ -278,6 +285,10 @@ public class GUIPatientUpdateRequirements extends UndoableController {
         }
     }
 
+    /**
+     * Opens the popup to select a reason for organ deregistration
+     * @param organ organ being validated for reason of deregistration
+     */
     private void openReasonPopup(GlobalEnums.Organ organ) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/deregistrationReason.fxml"));
@@ -295,6 +306,10 @@ public class GUIPatientUpdateRequirements extends UndoableController {
         }
     }
 
+    /**
+     * Creates new organ requests for updated registered organs to receive, and adds them to the organ
+     * waiting list.
+     */
     private void createOrganRequests() {
         OrganWaitlist waitlist = Database.getWaitingList();
         Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();

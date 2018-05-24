@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class UndoRedoControl {
 
-    public String undoShortcut = "Ctrl+Z";
-    public String redoShortcut = "Ctrl+Y";
+//    public String undoShortcut = "Ctrl+Z";
+//    public String redoShortcut = "Ctrl+Y";
 
     private static UndoRedoControl undoRedoControl;
 
@@ -86,6 +86,10 @@ public class UndoRedoControl {
         }
     }
 
+    /**
+     * Gets the undoRedoControl instance. If the instance is null, undoRedoControl is initialized
+     * @return UndoRedoControl instance
+     */
     static public UndoRedoControl getUndoRedoControl() {
         if (undoRedoControl == null) {
             undoRedoControl = new UndoRedoControl();

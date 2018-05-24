@@ -77,7 +77,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     }
 
     /**
-     * Sets up double-click functionality for each row to open a patient profile update
+     * Sets up double-click functionality for each row to open a patient profile update. Opens the selected
+     * patient's profile view screen in a new window.
      */
     private void setupDoubleClickToPatientEdit() {
         // Add double-click event to rows

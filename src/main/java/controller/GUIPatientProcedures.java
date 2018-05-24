@@ -246,7 +246,8 @@ public class GUIPatientProcedures extends UndoableController {
     }
 
     /**
-     * Navigates back to the patients profile
+     * Navigates back to the patients profile in the main patient window if the patient is logged in, or back to the
+     * patient screen in the patient popup pane if a clinician is logged in
      */
     @FXML
     public void goToProfile() {
