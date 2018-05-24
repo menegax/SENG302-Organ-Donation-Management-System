@@ -38,9 +38,15 @@ public class Main extends Application {
         screenControl.show(uuid, loginScreen);
 
         // add objects
-        Database.importFromDiskPatients("./patient.json");
-        Database.importFromDiskClinicians("./clinician.json");
-        Database.importFromDiskWaitlist("./");
+
+        try {
+            Database.importFromDiskPatients("./patient.json");
+            Database.importFromDiskClinicians("./clinician.json");
+            Database.importFromDiskWaitlist("/waitlist.json");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         addDummyTestObjects();
         ensureDefaultClinician();
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients

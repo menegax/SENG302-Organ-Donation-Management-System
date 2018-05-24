@@ -261,14 +261,15 @@ public class Database {
 
     /**
      * Imports the organ waitlist from the selected directory
-     * @param directory directory to import from
-     * @throws FileNotFoundException file cannot be found
+     * @param filename file to import from
      */
-    public static void importFromDiskWaitlist(String directory) throws FileNotFoundException {
-    	String fileName = directory + "waitlist.json";
+    public static void importFromDiskWaitlist(String filename) {
         Gson gson = new Gson();
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        organWaitingList = gson.fromJson(br, OrganWaitlist.class);
+
+            InputStream in = ClassLoader.class.getResourceAsStream(filename);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            organWaitingList = gson.fromJson(br, OrganWaitlist.class);
+
     }
 
     /**
