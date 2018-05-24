@@ -131,6 +131,15 @@ public class SearchPatients {
         }
     }
 
+    /**
+     * Closes the index writer and ram directory freeing up the
+     * memory back to the operating system
+     * @throws IOException when the index or RAM memory cannot be accessed
+     */
+    public static void closeIndex() throws IOException {
+        ramDirectory.close();
+        indexWriter.close();
+    }
 
     /**
      * Searches through the index for any results of the given query.

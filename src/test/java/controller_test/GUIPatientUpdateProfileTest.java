@@ -1,8 +1,10 @@
-package gui_test;
+package controller_test;
 
+import static java.util.logging.Level.OFF;
 import static org.testfx.api.FxAssert.verifyThat;
+import static utility.UserActionHistory.userActions;
 
-import controller.Main;
+import main.Main;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -69,6 +71,14 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
     @BeforeClass
     static public void setHeadless() {
         GitLabTestFXConfiguration.setHeadless();
+    }
+
+    /**
+     * Turn off logging
+     */
+    @BeforeClass
+    public static void setUp() {
+        userActions.setLevel(OFF);
     }
 
     /**

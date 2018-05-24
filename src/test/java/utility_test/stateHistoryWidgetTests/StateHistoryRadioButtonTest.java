@@ -7,8 +7,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import static org.junit.Assert.*;
+import static utility.UserActionHistory.userActions;
 
 /**
  * Junit test class for the StateHistoryRadioButton
@@ -23,6 +25,7 @@ public class StateHistoryRadioButtonTest {
      */
     @BeforeClass
     public static void setup() throws InterruptedException{
+        userActions.setLevel(Level.OFF);
         PlatformImpl.startup(() -> {});
         radioButton = new RadioButton();
         radioButton.setSelected(false);

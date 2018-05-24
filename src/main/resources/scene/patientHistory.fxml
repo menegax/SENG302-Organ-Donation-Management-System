@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="patientLogPane" prefHeight="504.0" prefWidth="792.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientHistory">
+<AnchorPane fx:id="patientLogPane" prefHeight="504.0" prefWidth="792.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientHistory">
    <children>
       <TableView fx:id="logHistoryTable" layoutX="28.0" layoutY="69.0" prefHeight="366.0" prefWidth="736.0" AnchorPane.bottomAnchor="68.60000000000002" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="28.0" AnchorPane.topAnchor="69.0">
         <columns>

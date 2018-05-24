@@ -1,6 +1,6 @@
-package gui_test;
+package controller_test;
 
-import controller.Main;
+import main.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -20,8 +20,10 @@ import utility.GlobalEnums;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import static java.util.logging.Level.OFF;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
+import static utility.UserActionHistory.userActions;
 
 public class GUIProfileTest extends ApplicationTest {
 
@@ -52,13 +54,13 @@ public class GUIProfileTest extends ApplicationTest {
     }
 
     /**
-     * Sets the configuration to run in headless mode
+     * Turn off logging and set the configuration to run in headless mode
      */
     @BeforeClass
-    static public void setHeadless() {
+    public static void setUp() {
+        userActions.setLevel(OFF);
         GitLabTestFXConfiguration.setHeadless();
     }
-
     /**
      * Reset db to a clean state wait for 1000ms
      */

@@ -8,8 +8,10 @@ import utility.undoRedo.stateHistoryWidgets.StateHistoryDatePicker;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import static org.junit.Assert.assertEquals;
+import static utility.UserActionHistory.userActions;
 
 /**
  * Junit test class for the StateHistoryDatePicker
@@ -24,6 +26,7 @@ public class StateHistoryDatePickerTest {
      */
     @BeforeClass
     public static void setup() throws InterruptedException{
+        userActions.setLevel(Level.OFF);
         PlatformImpl.startup(() -> {});
         datePicker = new DatePicker();
     }

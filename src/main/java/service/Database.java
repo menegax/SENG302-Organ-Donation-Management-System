@@ -191,6 +191,10 @@ public class Database {
         }
     }
 
+    /**
+     * Saves the organ waitlist to the file waitlist.json
+     * @throws IOException the file cannot be found or created
+     */
     private static void saveToDiskWaitlist() throws IOException {
         Gson gson = new Gson();
         String json = gson.toJson(organWaitingList);
@@ -231,21 +235,6 @@ public class Database {
         writer.close();
     }
 
-//
-//    /**
-//     * Calls importFromDisk and handles any errors
-//     * @param fileName The file to import from
-//     */
-//    public static void importFromDisk(String fileName) {
-//        try {
-//            importFromDiskPatients(fileName);
-//            userActions.log(Level.INFO, "Imported patients from disk", "Attempted to import from disk");
-//            SearchPatients.createFullIndex();
-//        } catch (IOException e) {
-//            userActions.log(Level.WARNING, e.getMessage(), "attempted to import from disk");
-//        }
-//    }
-
     /**
      * Reads patient data from disk
      * @param fileName file to import from
@@ -270,6 +259,11 @@ public class Database {
         }
     }
 
+    /**
+     * Imports the organ waitlist from the selected directory
+     * @param directory directory to import from
+     * @throws FileNotFoundException file cannot be found
+     */
     public static void importFromDiskWaitlist(String directory) throws FileNotFoundException {
     	String fileName = directory + "waitlist.json";
         Gson gson = new Gson();

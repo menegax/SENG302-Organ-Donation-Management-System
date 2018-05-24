@@ -12,6 +12,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
+import main.Main;
 import model.Patient;
 import service.Database;
 
@@ -135,7 +136,7 @@ public class GUIPatientRegister {
 
 
     /**
-     * Check users inputs and registers the user patient profile
+     * Check users inputs for validity and registers the user patient profile
      */
     @FXML
     public void register() {

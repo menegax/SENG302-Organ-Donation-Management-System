@@ -9,8 +9,10 @@ import org.junit.Test;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryTableView;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import static org.junit.Assert.assertEquals;
+import static utility.UserActionHistory.userActions;
 
 /**
  * Junit test class for the StateHistoryTableView
@@ -25,6 +27,7 @@ public class StateHistoryTableViewTest {
      */
     @BeforeClass
     public static void setup() throws InterruptedException{
+        userActions.setLevel(Level.OFF);
         PlatformImpl.startup(() -> {});
         tableView = new TableView();
         tableView.getItems().clear();

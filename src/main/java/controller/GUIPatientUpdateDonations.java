@@ -69,6 +69,10 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    /**
+     * Initializes the donations screen by loading the profile of the patient logged in or viewed.
+     * Sets up enter key press event to save changes
+     */
     public void initialize() {
         userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
@@ -87,6 +91,10 @@ public class GUIPatientUpdateDonations extends UndoableController {
         });
     }
 
+    /**
+     * Loads the patient's donations
+     * @param nhi patient NHI
+     */
     private void loadProfile(String nhi) {
         try {
             Patient patient = Database.getPatientByNhi(nhi);
@@ -113,6 +121,10 @@ public class GUIPatientUpdateDonations extends UndoableController {
     }
 
 
+    /**
+     * Populates the donation checkboxes with the patient's donations
+     * @param patient patient with viewed donation
+     */
     private void populateForm(Patient patient) {
         ArrayList<GlobalEnums.Organ> organs = patient.getDonations();
         if (organs.contains(GlobalEnums.Organ.LIVER)) {
@@ -153,7 +165,9 @@ public class GUIPatientUpdateDonations extends UndoableController {
         }
     }
 
-
+    /**
+     * Saves selected donations to the patient's profile, and saves the patient to the database
+     */
     public void saveDonations() {
 
         ArrayList<String> newDonations = new ArrayList<>();
@@ -245,6 +259,9 @@ public class GUIPatientUpdateDonations extends UndoableController {
     }
 
 
+    /**
+     * Navigates to the patient profile screen
+     */
     public void goToProfile() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             try {

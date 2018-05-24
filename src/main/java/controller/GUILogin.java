@@ -15,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.TextField;
 
+import main.Main;
 import model.Clinician;
 import model.Patient;
 import service.Database;
@@ -43,6 +44,9 @@ public class GUILogin {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    /**
+     * Initializes the login window by adding key binding for login on enter and an event filter on the login field
+     */
     public void initialize() {
         // Enter key triggers log in
         nhiLogin.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);

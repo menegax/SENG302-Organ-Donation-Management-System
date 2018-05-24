@@ -8,8 +8,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import static org.junit.Assert.assertEquals;
+import static utility.UserActionHistory.userActions;
 
 /**
  * Junit test class for the StateHistoryChoiceBox
@@ -24,6 +26,7 @@ public class StateHistoryChoiceBoxTest {
      */
     @BeforeClass
     public static void setup() throws InterruptedException{
+        userActions.setLevel(Level.OFF);
         PlatformImpl.startup(() -> {});
         choiceBox = new ChoiceBox();
         ArrayList<String> items = new ArrayList<>();

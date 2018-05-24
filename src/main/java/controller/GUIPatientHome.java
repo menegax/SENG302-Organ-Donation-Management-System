@@ -24,6 +24,9 @@ public class GUIPatientHome {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    /**
+     * Navigates to the patient profile screen
+     */
     @FXML
     public void goToProfile() {
         try {
@@ -34,7 +37,9 @@ public class GUIPatientHome {
         }
     }
 
-
+    /**
+     * Navigates to the patient history screen
+     */
     @FXML
     public void goToHistory() {
         try {
@@ -46,7 +51,9 @@ public class GUIPatientHome {
         }
     }
 
-
+    /**
+     * Logs out the current patient and closes the patient window
+     */
     @FXML
     public void logOut() {
         UserControl userControl = new UserControl();
@@ -54,6 +61,9 @@ public class GUIPatientHome {
         screenControl.closeStage(homePane);
     }
 
+    /**
+     * Saves changes to the patient to the database
+     */
     @FXML
     public void save() {
         Database.saveToDisk();

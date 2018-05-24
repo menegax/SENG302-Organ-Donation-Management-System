@@ -137,8 +137,6 @@ public class GUIPatientProfile {
 
     private UserControl userControl;
 
-    //private ListProperty<String> organListProperty = new SimpleListProperty<>();
-
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
@@ -191,21 +189,6 @@ public class GUIPatientProfile {
         back.setDisable(true);
         back.setVisible(false);
     }
-
-//    /**
-//     * Sets the patient for the controller. This patient's attributes will be loaded
-//     * @param patient the patient to be viewed
-//     */
-//    void setViewedPatient(Patient patient) {
-//        viewedPatient = patient;
-//        removeBack();
-//        try {
-//            loadProfile(viewedPatient.getNhiNumber());
-//        }
-//        catch (InvalidObjectException e) {
-//            userActions.log(Level.SEVERE, "Failed to set the viewed patient", "Attempted to set the viewed patient");
-//        }
-//    }
 
     /**
      * Sets the patient's attributes for the scene's labels
@@ -308,7 +291,8 @@ public class GUIPatientProfile {
     }
 
     /**
-     * Takes the user to the edit patient profile scene and controller
+     * Takes the user to the edit patient profile scene and controller. The window is opened in the main patient
+     * window if a patient is logged in or in the patient popup window if a clinician is logged in
      */
     public void goToEdit() {
         if (userControl.getLoggedInUser() instanceof Patient) {
@@ -428,6 +412,9 @@ public class GUIPatientProfile {
         }
     }
 
+    /**
+     * Navigates to the patient procedures screen
+     */
     @FXML
     public void goToPatientProcedures() {
         if (userControl.getLoggedInUser() instanceof Patient) {

@@ -31,6 +31,9 @@ public class GUIClinicianProfile {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    /**
+     * Initializes the clinician profile view screen by loading the logged in clinician's profile
+     */
     public void initialize() {
         UserControl userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
@@ -39,10 +42,13 @@ public class GUIClinicianProfile {
         }
     }
 
+    /**
+     * Loads clinician attributes to display in the clinician profile screen
+     * @param clinician clinician logged in
+     */
     private void loadProfile(Clinician clinician) {
         idTxt.setText(String.valueOf(clinician.getStaffID()));
         nameTxt.setText(clinician.getConcatenatedName());
-        System.out.println(clinician.getStreet1());
         if (clinician.getStreet1() != null && clinician.getStreet1().length() > 0) {
             street1Txt.setText(clinician.getStreet1());
         } else {
@@ -61,6 +67,9 @@ public class GUIClinicianProfile {
         if (clinician.getRegion() != null) regionTxt.setText(clinician.getRegion().getValue());
     }
 
+    /**
+     * Opens the clinician edit screen
+     */
     public void goToEdit() {
         try {
             screenControl.show(idTxt, "/scene/clinicianProfileUpdate.fxml");
@@ -70,6 +79,9 @@ public class GUIClinicianProfile {
         }
     }
 
+    /**
+     * Opens the clinician home screen
+     */
     public void goToClinicianHome() {
         try {
             screenControl.show(idTxt, "/scene/clinicianHome.fxml");

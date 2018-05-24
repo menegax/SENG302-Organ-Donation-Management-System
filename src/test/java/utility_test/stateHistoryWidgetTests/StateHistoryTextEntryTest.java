@@ -7,8 +7,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import static org.junit.Assert.assertEquals;
+import static utility.UserActionHistory.userActions;
 
 /**
  * Junit test class for the StateHistoryTextEntry
@@ -23,6 +25,7 @@ public class StateHistoryTextEntryTest {
      */
     @BeforeClass
     public static void setup() throws InterruptedException{
+        userActions.setLevel(Level.OFF);
         PlatformImpl.startup(() -> {});
         textField = new TextField();
     }

@@ -42,6 +42,9 @@ public class GUIPatientHistory {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    /**
+     * Initializes the patient history screen by loading all logs for the logged in patient
+     */
     public void initialize() {
         UserControl userControl = new UserControl();
         target = userControl.getLoggedInUser() instanceof Patient ? (Patient) userControl.getLoggedInUser() : null;
