@@ -63,11 +63,11 @@ public class GUIClinicianWaitingList {
      */
     public void initialize() {
         OrganWaitlist waitingList = Database.getWaitingList();
-        for (OrganWaitlist.OrganRequest request: waitingList) {
-    		masterData.add(request);
-    	}
+        for (OrganWaitlist.OrganRequest request : waitingList) {
+            masterData.add(request);
+        }
         populateTable();
-    	setupDoubleClickToPatientEdit();
+        setupDoubleClickToPatientEdit();
         populateFilterChoiceBoxes();
     }
 
@@ -75,13 +75,13 @@ public class GUIClinicianWaitingList {
     /**
      * Populates the choice boxes for filter
      */
-    private void populateFilterChoiceBoxes(){
+    private void populateFilterChoiceBoxes() {
         regionSelection.getItems().add(""); //for empty selection
-        for (Region region : Region.values()){ //add values to region choice box
+        for (Region region : Region.values()) { //add values to region choice box
             regionSelection.getItems().add(StringUtils.capitalize(region.getValue()));
         }
         organSelection.getItems().add("");
-        for (Organ organ : Organ.values()){
+        for (Organ organ : Organ.values()) {
             organSelection.getItems().add(StringUtils.capitalize(organ.getValue()));
         }
 
@@ -89,11 +89,11 @@ public class GUIClinicianWaitingList {
 
     /**
      * Closes an opened profile, and removes patient from profile open list so profile can be reopened
+     *
      * @param index The index in the list of opened patient profiles
      */
     private void closeProfile(int index) {
         Platform.runLater(this::tableRefresh);
-        //openProfiles.remove( index );
     }
 
     /**
@@ -118,9 +118,8 @@ public class GUIClinicianWaitingList {
                     screenControl.show(popUpStage.getUUID(), root);
 
                     // When pop up is closed, refresh the table
-                    popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request )));
-                }
-                catch (IOException e) {
+                    popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf(request)));
+                } catch (IOException e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");
@@ -138,11 +137,11 @@ public class GUIClinicianWaitingList {
         nameCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getReceiverName()));
         dateCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
-        		.getRequestDate().toString()));
+                .getRequestDate().toString()));
         organCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getRequestedOrgan().toString()));
         regionCol.setCellValueFactory(r -> {
-            if(r.getValue().getRequestRegion() != null) {
+            if (r.getValue().getRequestRegion() != null) {
                 return new SimpleStringProperty(r.getValue()
                         .getRequestRegion().toString());
             }
@@ -165,19 +164,20 @@ public class GUIClinicianWaitingList {
 
     /**
      * Create and add predicates to filterList to filter master data
+     *
      * @return - filter list containing data that is filtered based on selections
      */
-    private FilteredList<OrganWaitlist.OrganRequest> filterMasterData(){
+    private FilteredList<OrganWaitlist.OrganRequest> filterMasterData() {
         FilteredList<OrganWaitlist.OrganRequest> filteredData = new FilteredList<>(masterData, d -> true);
 
         //add listener to organ choice box and add predicate
         organSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
-            if (newValue.equals("")){
+            if (newValue.equals("")) {
                 if (regionSelection.getValue() == null || regionSelection.getValue().equals("")) { //check if region selection is null or ""
                     return true;
-                } else if (OrganRequest.getRequestRegion() == null){ //if region is not given in donor
+                } else if (OrganRequest.getRequestRegion() == null) { //if region is not given in donor
                     return false;
-                }else if (OrganRequest.getRequestRegion().getValue().equals(regionSelection.getValue())){
+                } else if (OrganRequest.getRequestRegion().getValue().equals(regionSelection.getValue())) {
                     return true;
                 }
             }
@@ -193,17 +193,17 @@ public class GUIClinicianWaitingList {
 
         //add listener to organ choice box and add predicate
         regionSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
-            if (newValue.equals("")){
+            if (newValue.equals("")) {
                 if (organSelection.getValue() == null ||
                         OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()) ||
-                        organSelection.getValue().equals("")){
+                        organSelection.getValue().equals("")) {
                     return true;
                 }
             }
             Region requestedRegion = OrganRequest.getRequestRegion();
             if (requestedRegion != null) {
                 return requestedRegion.getValue().toLowerCase().equals(newValue.toLowerCase()) &&
-                        (organSelection.getValue() == null || organSelection.getValue().equals("")||
+                        (organSelection.getValue() == null || organSelection.getValue().equals("") ||
                                 OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()));
             }
             return false;
@@ -217,7 +217,7 @@ public class GUIClinicianWaitingList {
      */
     public void goToClinicianHome() {
         try {
-        screenControl.show(clinicianWaitingListAnchorPane, "/scene/clinicianHome.fxml");
+            screenControl.show(clinicianWaitingListAnchorPane, "/scene/clinicianHome.fxml");
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
             userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");

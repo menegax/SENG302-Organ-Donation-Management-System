@@ -3,16 +3,12 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
-import javafx.stage.Stage;
-import model.DrugInteraction;
 import model.Patient;
 import service.OrganWaitlist;
 import utility.undoRedo.StatesHistoryScreen;
@@ -25,13 +21,12 @@ import java.io.InvalidObjectException;
 import java.util.*;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
  * This class is the controller for editing a patients required organs only accessible by the clinician
  */
-public class GUIPatientUpdateRequirements extends UndoableController{
+public class GUIPatientUpdateRequirements extends UndoableController {
 
     @FXML
     private CheckBox liverCB;
@@ -104,6 +99,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
 
     /**
      * Load the patients details
+     *
      * @param nhi of the current patient being viewed
      */
     private void loadProfile(String nhi) {
@@ -111,8 +107,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             Patient patient = Database.getPatientByNhi(nhi);
             target = patient;
             populateForm(patient);
-        }
-        catch (InvalidObjectException e) {
+        } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
         }
         controls = new ArrayList<Control>() {{
@@ -134,6 +129,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
 
     /**
      * Loads the checkboxes with a tick if they already require them and the rest unchecked
+     *
      * @param patient currently being viewed
      */
     private void populateForm(Patient patient) {
@@ -197,85 +193,73 @@ public class GUIPatientUpdateRequirements extends UndoableController{
         if (liverCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.LIVER);
             finalRequirements.add(GlobalEnums.Organ.LIVER);
-        }
-        else {
+        } else {
             target.removeRequired(GlobalEnums.Organ.LIVER);
         }
         if (kidneyCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.KIDNEY);
             finalRequirements.add(GlobalEnums.Organ.KIDNEY);
-        }
-        else {
+        } else {
             target.removeRequired(GlobalEnums.Organ.KIDNEY);
         }
         if (pancreasCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.PANCREAS);
             finalRequirements.add(GlobalEnums.Organ.PANCREAS);
-        }
-        else {
+        } else {
             target.removeRequired(GlobalEnums.Organ.PANCREAS);
         }
         if (heartCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.HEART);
             finalRequirements.add(GlobalEnums.Organ.HEART);
-        }
-        else {
+        } else {
             target.removeRequired(GlobalEnums.Organ.HEART);
         }
         if (lungCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.LUNG);
             finalRequirements.add(GlobalEnums.Organ.LUNG);
-        }
-        else {
+        } else {
             target.removeRequired(GlobalEnums.Organ.LUNG);
         }
         if (intestineCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.INTESTINE);
             finalRequirements.add(GlobalEnums.Organ.INTESTINE);
-        }
-        else {
+        } else {
             target.removeRequired(GlobalEnums.Organ.INTESTINE);
         }
         if (corneaCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.CORNEA);
             finalRequirements.add(GlobalEnums.Organ.CORNEA);
-        }
-        else {
+        } else {
             target.removeRequired(GlobalEnums.Organ.CORNEA);
         }
         if (middleearCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.MIDDLEEAR);
             finalRequirements.add(GlobalEnums.Organ.MIDDLEEAR);
-        }
-        else {
+        } else {
             target.removeRequired(GlobalEnums.Organ.MIDDLEEAR);
         }
         if (skinCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.SKIN);
             finalRequirements.add(GlobalEnums.Organ.SKIN);
-        }
-        else {
+        } else {
             target.removeRequired(GlobalEnums.Organ.SKIN);
         }
         if (boneCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.BONE);
             finalRequirements.add(GlobalEnums.Organ.BONE);
-        }
-        else {
+        } else {
             target.removeRequired(GlobalEnums.Organ.BONE);
         }
         if (bonemarrowCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.BONE_MARROW);
             finalRequirements.add(GlobalEnums.Organ.BONE_MARROW);
-        }
-        else {
+        } else {
             target.removeRequired(GlobalEnums.Organ.BONE_MARROW);
         }
         if (connectivetissueCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
             finalRequirements.add(GlobalEnums.Organ.CONNECTIVETISSUE);
-        }
-        else {
+        } else {
             target.removeRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
         deregistrationReason();
@@ -288,7 +272,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
         Set<GlobalEnums.Organ> removedOrgans = initialRequirements;
         removedOrgans.removeAll(finalRequirements);
 
-        for(GlobalEnums.Organ organ : removedOrgans) {
+        for (GlobalEnums.Organ organ : removedOrgans) {
             openReasonPopup(organ);
             target.removeRequired(organ);
         }
@@ -314,13 +298,13 @@ public class GUIPatientUpdateRequirements extends UndoableController{
     private void createOrganRequests() {
         OrganWaitlist waitlist = Database.getWaitingList();
         Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             OrganWaitlist.OrganRequest next = iter.next();
-            if(next.getReceiverNhi().equals(target.getNhiNumber())) {
+            if (next.getReceiverNhi().equals(target.getNhiNumber())) {
                 iter.remove();
             }
         }
-        for(GlobalEnums.Organ organ : target.getRequiredOrgans()) {
+        for (GlobalEnums.Organ organ : target.getRequiredOrgans()) {
             waitlist.add(target, organ);
         }
     }

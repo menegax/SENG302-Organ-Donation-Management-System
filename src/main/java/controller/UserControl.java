@@ -22,16 +22,6 @@ public class UserControl {
     }
 
     /**
-     * Remove an entry from the map
-     * @param key - key value to be removed
-     */
-    private void remove(String key) {
-        if (cache.get(key) != null) {
-            cache.remove(key);
-        }
-    }
-
-    /**
      * Returns the object at the given key
      * @param key - key to identify the object value by
      * @return - object at the given key
@@ -54,13 +44,6 @@ public class UserControl {
      */
     public void addLoggedInUserToCache(Object user) {
         add("user_logged_in", user);
-    }
-
-    /**
-     * Removes the logged in user from the cache
-     */
-    public void rmLoggedInUserCache() {
-        remove("user_logged_in");
     }
 
     /**

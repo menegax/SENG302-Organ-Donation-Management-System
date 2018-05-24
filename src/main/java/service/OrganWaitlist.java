@@ -14,8 +14,8 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	private SortedSet<OrganRequest> requests;
 
 	
-	public OrganWaitlist() {
-		requests = new TreeSet<OrganRequest>();
+	OrganWaitlist() {
+		requests = new TreeSet<>();
 	}
 	
 	/**
@@ -56,7 +56,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		String name;
 		String nhi;
 		
-		public OrganRequest(Patient receiver, Organ organ) {
+		OrganRequest(Patient receiver, Organ organ) {
 			date = LocalDate.now();
 			region = receiver.getRegion();
 			this.organ = organ;
@@ -64,7 +64,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 			nhi = receiver.getNhiNumber();
 		}
 		
-		public OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi) {
+		OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi) {
 			this.date = date;
 			this.region = region;
 			this.organ = organ;

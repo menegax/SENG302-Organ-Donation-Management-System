@@ -25,8 +25,6 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.logging.Level;
 
-import static utility.UserActionHistory.userActions;
-
 public class SearchPatients {
 
     private static Analyzer analyzer = new StandardAnalyzer();
@@ -133,17 +131,6 @@ public class SearchPatients {
         }
     }
 
-
-    /**
-     * Closes the index writer and ram directory freeing up the
-     * memory back to the operating system.
-     *
-     * @throws IOException when the index or RAM memory cannot be accessed.
-     */
-    public static void closeIndex() throws IOException {
-        ramDirectory.close();
-        indexWriter.close();
-    }
 
     /**
      * Searches through the index for any results of the given query.

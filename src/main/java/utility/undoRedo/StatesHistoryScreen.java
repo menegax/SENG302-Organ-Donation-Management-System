@@ -167,9 +167,7 @@ public class StatesHistoryScreen {
                         store();
                     }
                 });
-        ((RadioButton) radioButton).setOnKeyPressed(event -> {
-            ((RadioButton) radioButton).getParent().requestFocus();
-        });
+        ((RadioButton) radioButton).setOnKeyPressed(event -> ((RadioButton) radioButton).getParent().requestFocus());
     }
 
 
@@ -244,9 +242,7 @@ public class StatesHistoryScreen {
                     }
                 });
         // Allows for parent screen to listen for Ctrl z, Ctrl y, undo and redo as DatePicker does not recognise letters
-        ((DatePicker) datePicker).setOnKeyPressed(event -> {
-            ((DatePicker) datePicker).getParent().requestFocus();
-        });
+        ((DatePicker) datePicker).setOnKeyPressed(event -> ((DatePicker) datePicker).getParent().requestFocus());
     }
 
 

@@ -1,23 +1,16 @@
 package controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import service.Database;
 
 import java.io.IOException;
-import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
-
-import java.io.IOException;
 
 import static java.util.logging.Level.SEVERE;
-import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianHome {
 
@@ -78,7 +71,7 @@ public class GUIClinicianHome {
         }
     }
 
-    public void goToClinicianWaitingList(ActionEvent event) {
+    public void goToClinicianWaitingList() {
         try {
             screenControl.show(clinicianHomePane, "/scene/clinicianWaitingList.fxml");
         } catch (IOException e) {

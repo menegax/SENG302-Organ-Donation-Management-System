@@ -14,7 +14,6 @@ import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;

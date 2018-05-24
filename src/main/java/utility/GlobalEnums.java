@@ -175,14 +175,6 @@ public class GlobalEnums {
             return this.getValue();
         }
 
-        public static Enum getEnumFromString(String value) {
-            try {
-                return DiseaseState.valueOf(value.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                return null;
-            }
-        }
-
     }
 
     public enum DeregistrationReason {
@@ -204,14 +196,6 @@ public class GlobalEnums {
         @Override
         public String toString() {
             return this.getValue();
-        }
-
-        public static Enum getEnumFromString(String value) {
-            try {
-                return DeregistrationReason.valueOf(value.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                return null;
-            }
         }
 
     }

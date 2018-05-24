@@ -4,13 +4,11 @@ import controller.ScreenControl;
 import controller.UndoRedoControl;
 import controller.UndoableController;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.util.ArrayList;

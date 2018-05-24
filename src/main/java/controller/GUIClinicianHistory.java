@@ -10,9 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import model.Clinician;
-import model.Patient;
 import utility.ClinicianActionRecord;
-import utility.PatientActionRecord;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;

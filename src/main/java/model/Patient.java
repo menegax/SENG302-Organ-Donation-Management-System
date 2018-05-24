@@ -1,24 +1,11 @@
 package model;
 
-import controller.ScreenControl;
-import controller.UserControl;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.stage.Stage;
-import jdk.nashorn.internal.scripts.JO;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.SearchPatients;
 
-import java.io.IOException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
@@ -376,7 +363,7 @@ public class Patient extends User {
     public String getPreferredName() { return preferredName; }
 
     public void setPreferredName(String preferredName) {
-        if (!preferredName.equals(this.preferredName) && preferredName != null) {
+        if (preferredName != null && !preferredName.equals(this.preferredName)) {
             this.preferredName = preferredName.substring(0, 1).toUpperCase() + preferredName.substring(1);
             patientModified();
         }
@@ -590,7 +577,7 @@ public class Patient extends User {
 
     /**
      * sets the required organs of the patient to the list parsed through
-     * @param requiredOrgans
+     * @param requiredOrgans organs the patient is to receive
      */
     public void setRequiredOrgans(ArrayList requiredOrgans) {
         this.requiredOrgans = requiredOrgans;

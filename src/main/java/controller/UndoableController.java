@@ -2,7 +2,6 @@ package controller;
 
 import javafx.scene.control.Control;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryControl;
 
 import java.util.Collections;

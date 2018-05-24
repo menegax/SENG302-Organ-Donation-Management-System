@@ -4,7 +4,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -13,7 +12,6 @@ import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -187,9 +185,9 @@ public class GUIClinicianUpdateProfile extends UndoableController{
             middles.addAll(middlenames);
             target.setMiddleNames(middles);
 
-            if (street1Txt.getText().length() > 0) target.setStreet1(street1Txt.getText());
-            if (street2Txt.getText().length() > 0) target.setStreet2(street2Txt.getText());
-            if (suburbTxt.getText().length() > 0) target.setSuburb(suburbTxt.getText());
+            target.setStreet1(street1Txt.getText());
+            target.setStreet2(street2Txt.getText());
+            target.setSuburb(suburbTxt.getText());
             target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel().getSelectedItem().toString()));
             target.clinicianModified();
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Clinician successfully updated", ButtonType.OK);

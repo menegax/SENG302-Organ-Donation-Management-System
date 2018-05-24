@@ -3,8 +3,6 @@ package service;
 import com.google.gson.Gson;
 import model.Clinician;
 import model.Patient;
-import org.omg.CORBA.DynAnyPackage.Invalid;
-import utility.GlobalEnums;
 import utility.SearchPatients;
 
 import java.io.*;

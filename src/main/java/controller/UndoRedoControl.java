@@ -2,7 +2,6 @@ package controller;
 
 import javafx.scene.control.*;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.stateHistoryWidgets.StateHistoryControl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

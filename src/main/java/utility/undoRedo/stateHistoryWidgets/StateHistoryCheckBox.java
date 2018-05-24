@@ -3,8 +3,6 @@ package utility.undoRedo.stateHistoryWidgets;
 import javafx.scene.control.CheckBox;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Represents the state history of a check box in the GUI

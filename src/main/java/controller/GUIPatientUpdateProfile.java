@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import model.Patient;
 import service.Database;
@@ -32,9 +31,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     @FXML
     private Label lastModifiedLbl;
-
-    @FXML
-    private Button saveButton;
 
     @FXML
     private TextField nhiTxt;
@@ -297,7 +293,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         // first name
         if (!firstnameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
+                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)+")) {
             valid = setInvalid(firstnameTxt);
             invalidContent.append("First name must be letters, ., or -.\n");
         }
@@ -307,7 +303,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         // last name
         if (!lastnameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
+                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)+")) {
             valid = setInvalid(lastnameTxt);
             invalidContent.append("Last name must be letters, ., or -.\n");
         }
@@ -317,7 +313,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         //middle names
         if (!middlenameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
+                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)*")) {
             valid = setInvalid(middlenameTxt);
             invalidContent.append("Middle name(s) must be letters, ., or -.\n");
         }
@@ -326,7 +322,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
 
         // preferred name
-        if (!preferrednameTxt.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
+        if (preferrednameTxt.getText() != null && !preferrednameTxt.getText().matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)*")) {
             valid = setInvalid(preferrednameTxt);
         }
         else {
@@ -466,7 +462,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 ArrayList<String> middles = new ArrayList<>(middlenames);
                 target.setMiddleNames(middles);
             }
-            target.setPreferredName( preferrednameTxt.getText() );
+            if(preferrednameTxt.getText() != null) {
+                target.setPreferredName(preferrednameTxt.getText());
+            }
             if (birthGenderMaleRadio.isSelected()) {
                 target.setBirthGender((BirthGender) BirthGender.getEnumFromString("male"));
             }
@@ -488,18 +486,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
             if (dateOfDeath.getValue() != null) {
                 target.setDeath(dateOfDeath.getValue());
             }
-            if (street1Txt.getText()
-                    .length() > 0) {
-                target.setStreet1(street1Txt.getText());
-            }
-            if (street2Txt.getText()
-                    .length() > 0) {
-                target.setStreet2(street2Txt.getText());
-            }
-            if (suburbTxt.getText()
-                    .length() > 0) {
-                target.setSuburb(suburbTxt.getText());
-            }
+            target.setStreet1(street1Txt.getText());
+            target.setStreet2(street2Txt.getText());
+            target.setSuburb(suburbTxt.getText());
             if (regionDD.getValue() != null) {
                 target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
                         .getSelectedItem()));

@@ -22,7 +22,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.stream.StreamSupport;
 
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -177,14 +176,6 @@ public class GUIPatientProcedures extends UndoableController {
     }
 
     /**
-     * Lets the current user edit the procedures of the viewed patient
-     */
-    private void enableEditing() {
-        addProcedureButton.setVisible(true);
-        deleteProcedureButton.setVisible(true);
-    }
-
-    /**
      * Brings up the add procedure pop-up that enables the user to add a procedure to the patient
      */
     @FXML
@@ -252,14 +243,6 @@ public class GUIPatientProcedures extends UndoableController {
             });
             alert.show();
         }
-    }
-
-    /**
-     * Refreshes the procedure tables
-     */
-    private void refreshTables() {
-        previousProceduresView.refresh();
-        pendingProceduresView.refresh();
     }
 
     /**

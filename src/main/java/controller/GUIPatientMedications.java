@@ -21,14 +21,12 @@ import service.Database;
 import utility.GlobalEnums;
 import service.TextWatcher;
 import utility.undoRedo.StatesHistoryScreen;
-import service.TextWatcher;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.*;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientMedications extends UndoableController {
@@ -56,7 +54,6 @@ public class GUIPatientMedications extends UndoableController {
     private JsonObject suggestions;
     private boolean itemSelected = false;
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
@@ -83,11 +80,6 @@ public class GUIPatientMedications extends UndoableController {
     private ListView<String> medicineInformation;
 
     private Patient viewedPatient;
-
-    public void setViewedPatient(Patient patient) {
-        viewedPatient = patient;
-        loadProfile(viewedPatient.getNhiNumber());
-    }
 
     /**
      * Removes a medication from the history or current ArrayList and listView
@@ -213,6 +205,7 @@ public class GUIPatientMedications extends UndoableController {
     /**
      * Runs the updating of UI elements and API call
      */
+    @SuppressWarnings("WeakerAccess")
     public void autoComplete() {
         Platform.runLater(() -> { // run this on the FX thread (next available)
             getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread
@@ -262,9 +255,7 @@ public class GUIPatientMedications extends UndoableController {
         menuLabel.setWrapText(true);
         MenuItem item = new MenuItem();
         item.setGraphic(menuLabel);
-        item.setOnAction((ae) -> {
-            selectFromAutoComplete(menuLabel.getText());
-        });
+        item.setOnAction((ae) -> selectFromAutoComplete(menuLabel.getText()));
         return item;
     }
 
@@ -315,7 +306,7 @@ public class GUIPatientMedications extends UndoableController {
             medication = medication.substring(0, 1).toUpperCase() + medication.substring(1).toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
-                target.getCurrentMedications().add( new Medication(medication));
+                target.getCurrentMedications().add(new Medication(medication));
                 userActions.log(Level.INFO, "Added medication: " + medication, new String[]{"Attempted to add medication: " + medication, target.getNhiNumber()});
                 viewCurrentMedications();
                 newMedication.clear();
@@ -353,12 +344,12 @@ public class GUIPatientMedications extends UndoableController {
      * Called when the user confirms the deletion of the selected medication(s) in the alert window.
      */
     private void performDelete(String medication) {
-        if (history.contains( medication )) {
-            target.getMedicationHistory().remove( history.indexOf( medication ) );
+        if (history.contains(medication)) {
+            target.getMedicationHistory().remove(history.indexOf(medication));
             userActions.log(Level.INFO, "Deleted medication: " + medication, new String[]{"Attempted to delete medication: " + medication, target.getNhiNumber()});
             viewPastMedications();
-        } else if (current.contains( medication )) {
-            target.getCurrentMedications().remove( current.indexOf( medication ) );
+        } else if (current.contains(medication)) {
+            target.getCurrentMedications().remove(current.indexOf(medication));
             userActions.log(Level.INFO, "Deleted medication: " + medication, new String[]{"Attempted to delete medication: " + medication, target.getNhiNumber()});
 
             viewCurrentMedications();
@@ -544,8 +535,8 @@ public class GUIPatientMedications extends UndoableController {
         try {
             ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader);
         } catch (IOException e) {
-            userActions.log( Level.SEVERE, "Error loading profile screen in popup", new String[]{"Attempted to navigate from the edit page to the profile page in popup", target.getNhiNumber()} );
-            new Alert( Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK ).showAndWait();
+            userActions.log(Level.SEVERE, "Error loading profile screen in popup", new String[]{"Attempted to navigate from the edit page to the profile page in popup", target.getNhiNumber()});
+            new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
         }
     }
 

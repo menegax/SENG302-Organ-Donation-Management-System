@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
 import service.Database;
-import service.OrganWaitlist;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 import utility.SystemLogger;

@@ -235,9 +235,9 @@ public class GUIPatientProfile {
         bmi.setText(String.valueOf(patient.getBmi()));
         bloodGroupLbl.setText(patient.getBloodGroup() == null ? "Not set" : patient.getBloodGroup()
                 .getValue());
-        addLbl1.setText(patient.getStreet1() == null ? "Not set" : patient.getStreet1());
-        addLbl2.setText(patient.getStreet2() == null ? "Not set" : patient.getStreet2());
-        addLbl3.setText(patient.getSuburb() == null ? "Not set" : patient.getSuburb());
+        addLbl1.setText((patient.getStreet1() == null || patient.getStreet1().length() == 0) ? "Not set" : patient.getStreet1());
+        addLbl2.setText((patient.getStreet2() == null || patient.getStreet2().length() == 0) ? "Not set" : patient.getStreet2());
+        addLbl3.setText((patient.getSuburb() == null || patient.getStreet1().length() == 0) ? "Not set" : patient.getSuburb());
         addLbl4.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
                 .getValue());
         if (patient.getZip() != 0) {

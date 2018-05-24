@@ -7,12 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import utility.undoRedo.UndoableStage;
-import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ScreenControl {
 
@@ -76,15 +73,6 @@ public class ScreenControl {
         Stage stage = applicationStages.get(((UndoableStage) node.getScene().getWindow()).getUUID());
         stage.setScene(new Scene(FXMLLoader.load(getClass().getResource(fxml))));
         stage.show();
-    }
-
-    /**
-     * Closes a stage based on the UUID of the stage
-     * @param stageName the UUID of the stage to close
-     */
-    public void closeStage(UUID stageName) {
-        applicationStages.get(stageName).close();
-        applicationStages.remove(stageName);
     }
 
     /**
