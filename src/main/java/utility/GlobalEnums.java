@@ -2,6 +2,9 @@ package utility;
 
 public class GlobalEnums {
 
+    /**
+     *
+     */
     public enum PreferredGender {
         MAN("Man"), WOMAN("Woman"), NONBINARY("Non-binary");
 
@@ -28,6 +31,9 @@ public class GlobalEnums {
         }
     }
 
+    /**
+     *
+     */
     public enum BirthGender {
         MALE("Male"), FEMALE("Female");
 
@@ -56,6 +62,9 @@ public class GlobalEnums {
         }
     }
 
+    /**
+     *
+     */
     public enum Region {
         NORTHLAND("Northland"), AUCKLAND("Auckland"), WAIKATO("Waikato"), BAYOFPLENTY("Bay of Plenty"), GISBORNE("Gisborne"), HAWKESBAY("Hawkes Bay"), TARANAKI(
                 "Taranaki"), MANAWATU("Manawatu"), WELLINGTON("Wellington"), TASMAN("Tasman"), NELSON("Nelson"), MARLBOROUGH("Marlborough"), WESTCOAST(
@@ -85,6 +94,9 @@ public class GlobalEnums {
         }
     }
 
+    /**
+     *
+     */
     public enum Organ {
         LIVER("liver"), KIDNEY("kidney"), PANCREAS("pancreas"), HEART("heart"), LUNG("lung"), INTESTINE("intestine"), CORNEA("cornea"), MIDDLEEAR(
                 "middle ear"), SKIN("skin"), BONE("bone"), BONE_MARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
@@ -114,6 +126,9 @@ public class GlobalEnums {
         }
     }
 
+    /**
+     *
+     */
     public enum BloodGroup {
         A_POSITIVE("A positive"), A_NEGATIVE("A negative"), B_POSITIVE("B positive"), B_NEGATIVE("B negative"), AB_POSITIVE("AB positive"), AB_NEGATIVE(
                 "AB negative"), O_POSITIVE("O positive"), O_NEGATIVE("O negative");
@@ -143,6 +158,9 @@ public class GlobalEnums {
         }
     }
 
+    /**
+     *
+     */
     public enum UndoableScreen {
         CLINICIANSEARCHPATIENTS("clinicianSearchPatients"), CLINICIANPROFILEUPDATE("clinicianProfileUpdate"), PATIENTMEDICATIONS("patientMedications"),
         PATIENTREGISTER("patientRegister"), PATIENTUPDATECONTACTS("patientUpdateContacts"), PATIENTUPDATEDONATIONS("patientUpdateDonations"),
@@ -177,6 +195,10 @@ public class GlobalEnums {
 
     }
 
+    /**
+     *
+     *
+     */
     public enum DeregistrationReason {
         ERROR ("Registering of the organ was an error"),
         CURED ("Treatment has cured the disease, no longer requiring an organ transplant"),

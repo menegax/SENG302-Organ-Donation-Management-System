@@ -1,12 +1,10 @@
 package utility.undoRedo;
 
-import controller.ScreenControl;
 import utility.GlobalEnums.UndoableScreen;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryControl;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.Pane;
 import utility.undoRedo.stateHistoryWidgets.*;
 
 import java.util.ArrayList;
@@ -167,7 +165,9 @@ public class StatesHistoryScreen {
                         store();
                     }
                 });
-        ((RadioButton) radioButton).setOnKeyPressed(event -> ((RadioButton) radioButton).getParent().requestFocus());
+        ((RadioButton) radioButton).setOnKeyPressed(event -> {
+            ((RadioButton) radioButton).getParent().requestFocus();
+        });
     }
 
 
@@ -242,7 +242,9 @@ public class StatesHistoryScreen {
                     }
                 });
         // Allows for parent screen to listen for Ctrl z, Ctrl y, undo and redo as DatePicker does not recognise letters
-        ((DatePicker) datePicker).setOnKeyPressed(event -> ((DatePicker) datePicker).getParent().requestFocus());
+        ((DatePicker) datePicker).setOnKeyPressed(event -> {
+            ((DatePicker) datePicker).getParent().requestFocus();
+        });
     }
 
 
