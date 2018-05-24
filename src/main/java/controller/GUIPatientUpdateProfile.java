@@ -108,8 +108,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         Object user = userControl.getLoggedInUser();
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
-        }
-        if (userControl.getTargetPatient() != null) {
+        } else if (userControl.getTargetPatient() != null) {
             loadProfile((userControl.getTargetPatient()).getNhiNumber());
         }
         // Enter key
