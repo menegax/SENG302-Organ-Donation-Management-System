@@ -18,6 +18,7 @@ import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 import controller.UserControl;
+import testfx.GitLabTestFXConfiguration;
 import utility.GlobalEnums;
 
 import static java.util.logging.Level.OFF;
@@ -55,11 +56,12 @@ public class GUILoginTest extends ApplicationTest {
     }
 
     /**
-     * Turn off logging
+     * Turn off logging and Sets the configuration to run in headless mode
      */
     @BeforeClass
     public static void setUp() {
         userActions.setLevel(OFF);
+        GitLabTestFXConfiguration.setHeadless();
     }
     /**
      * Reset db to a clean state wait for 1000ms

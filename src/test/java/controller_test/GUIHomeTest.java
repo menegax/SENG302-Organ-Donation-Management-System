@@ -12,6 +12,7 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 import controller.UserControl;
+import testfx.GitLabTestFXConfiguration;
 import utility.GlobalEnums;
 
 import static java.util.logging.Level.OFF;
@@ -63,6 +64,13 @@ public class GUIHomeTest extends ApplicationTest {
         });
     }
 
+    /**
+     * Sets the configuration to run in headless mode
+     */
+    @BeforeClass
+    static public void setHeadless() {
+        GitLabTestFXConfiguration.setHeadless();
+    }
 
     /**
      * Reset db to a clean state wait for 1000ms

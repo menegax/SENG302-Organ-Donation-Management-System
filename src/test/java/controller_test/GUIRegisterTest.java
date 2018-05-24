@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import testfx.GitLabTestFXConfiguration;
 import utility.GlobalEnums;
 
 import java.io.InvalidObjectException;
@@ -46,11 +47,12 @@ public class GUIRegisterTest extends ApplicationTest {
     }
 
     /**
-     * Turn off logging
+     * Turn off logging and sets the configuration to run in headless mode
      */
     @BeforeClass
     public static void setUp() {
         userActions.setLevel(OFF);
+        GitLabTestFXConfiguration.setHeadless();
     }
     /**
      * Reset db to a clean state wait for 1000ms

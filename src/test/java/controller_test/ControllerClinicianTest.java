@@ -9,11 +9,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import testfx.GitLabTestFXConfiguration;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static utility.UserActionHistory.userActions;
@@ -27,6 +29,14 @@ public class ControllerClinicianTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         main.start(stage);
+    }
+
+    /**
+     * Sets the configuration to run in headless mode
+     */
+    @BeforeClass
+    static public void setHeadless() {
+        GitLabTestFXConfiguration.setHeadless();
     }
 
     /**
