@@ -57,7 +57,7 @@ public class DrugInteraction {
      * @param donorAge - age of the patient
      * @return - JSONArray of the interactions for the given age
      */
-    private JsonArray getAgeInteractionsHelper(int donorAge){
+    public JsonArray getAgeInteractionsHelper(int donorAge){
         JsonElement ageInteraction =  response.get("age_interaction");
         Set<String> ageSets = ageInteraction.getAsJsonObject().keySet(); //get age sets
         JsonArray interactionsAgeGroup = new JsonArray();
@@ -75,7 +75,7 @@ public class DrugInteraction {
      * @param donorGender - Gender of the patient
      * @return - interactions based on the gender of the patient
      */
-    private JsonArray getGenderInteractionsHelper( BirthGender donorGender) {
+    public JsonArray getGenderInteractionsHelper( BirthGender donorGender) {
         JsonElement genderInteractions;
         JsonArray gender = new JsonArray();
         if (donorGender == null) { //gender is not set
