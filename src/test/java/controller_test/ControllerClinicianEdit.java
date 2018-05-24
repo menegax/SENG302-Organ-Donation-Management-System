@@ -16,6 +16,7 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import testfx.GitLabTestFXConfiguration;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -39,8 +40,12 @@ public class ControllerClinicianEdit extends ApplicationTest {
         main.start(stage);
     }
 
+    /**
+     * Sets the configuration to run in headless mode
+     */
     @BeforeClass
     public static void setUp() {
+        GitLabTestFXConfiguration.setHeadless();
         userActions.setLevel(OFF);
     }
 
