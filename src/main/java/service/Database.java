@@ -262,7 +262,6 @@ public class Database {
     /**
      * Imports the organ waitlist from the selected directory
      * @param filename file to import from
-     * @throws FileNotFoundException file cannot be found
      */
     public static void importFromDiskWaitlist(String filename) {
         Gson gson = new Gson();
