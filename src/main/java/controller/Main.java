@@ -147,24 +147,24 @@ public class Main extends Application {
         // Add some more Menus...
         Menu menu1 = new Menu("App");
         MenuItem menu1Item1 = new MenuItem("Log out");
-        menu1Item1.setOnAction(event -> System.out.println("Log out clicked"));
+//        menu1Item1.setOnAction(event -> System.out.println("Log out clicked"));
         MenuItem menu1Item2 = tk.createQuitMenuItem(appName);
         menu1.getItems()
                 .addAll(menu1Item1, menu1Item2);
 
         Menu menu2 = new Menu("File");
         MenuItem menu2Item1 = new MenuItem("Save");
-        menu2Item1.setOnAction(event -> System.out.println("Save clicked"));
+//        menu2Item1.setOnAction(event -> System.out.println("Save clicked"));
         MenuItem menu2Item2 = new MenuItem("Import...");
-        menu2Item2.setOnAction(event -> System.out.println("Import clicked"));
+//        menu2Item2.setOnAction(event -> System.out.println("Import clicked"));
         menu2.getItems()
                 .addAll(menu2Item1, menu2Item2);
 
         Menu menu3 = new Menu("Edit");
         MenuItem menu3Item1 = new MenuItem("Undo ⌃Z");
-        menu3Item1.setOnAction(event -> System.out.println("Undo clicked. Soon to be  ⌘⇧Y"));
+//        menu3Item1.setOnAction(event -> System.out.println("Undo clicked. Soon to be  ⌘⇧Y"));
         MenuItem menu3Item2 = new MenuItem("Redo ⌃Y");
-        menu3Item2.setOnAction(event -> System.out.println("Redo clicked. Soon to be ⌘Z"));
+//        menu3Item2.setOnAction(event -> System.out.println("Redo clicked. Soon to be ⌘Z"));
         menu3.getItems()
                 .addAll(menu3Item1, menu3Item2);
 

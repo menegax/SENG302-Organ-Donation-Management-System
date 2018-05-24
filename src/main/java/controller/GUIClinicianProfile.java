@@ -49,7 +49,6 @@ public class GUIClinicianProfile {
     private void loadProfile(Clinician clinician) {
         idTxt.setText(String.valueOf(clinician.getStaffID()));
         nameTxt.setText(clinician.getConcatenatedName());
-        System.out.println(clinician.getStreet1());
         if (clinician.getStreet1() != null && clinician.getStreet1().length() > 0) {
             street1Txt.setText(clinician.getStreet1());
         } else {
