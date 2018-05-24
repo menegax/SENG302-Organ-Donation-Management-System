@@ -41,13 +41,13 @@ public class UndoableStage extends Stage {
      */
     public UndoableStage() {
         super();
-        this.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (KeyCodeCombination.keyCombination(undoRedoControl.undoShortcut).match(event)) {
-                undo();
-            } else if (KeyCodeCombination.keyCombination(undoRedoControl.redoShortcut).match(event)) {
-                redo();
-            }
-        });
+//        this.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+//            if (KeyCodeCombination.keyCombination(undoRedoControl.undoShortcut).match(event)) {
+//                undo();
+//            } else if (KeyCodeCombination.keyCombination(undoRedoControl.redoShortcut).match(event)) {
+//                redo();
+//            }
+//        });
     }
 
     /**
