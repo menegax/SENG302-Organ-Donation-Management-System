@@ -2,10 +2,7 @@ package model;
 
 import service.Database;
 import utility.GlobalEnums;
-import utility.GlobalEnums.BloodGroup;
-import utility.GlobalEnums.Gender;
-import utility.GlobalEnums.Organ;
-import utility.GlobalEnums.Region;
+import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.SearchPatients;
 
@@ -13,7 +10,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -29,15 +27,19 @@ public class Patient extends User {
 
     private String lastName;
 
+    private String preferredName;
+
     private LocalDate birth;
 
     private LocalDate death;
 
-    private Gender gender;
+    private BirthGender birthGender;
 
-    private double height; //Height in meters
+    private PreferredGender preferredGender;
 
-    private double weight; //Weight in kilograms
+    private double height; // Height in meters
+
+    private double weight; // Weight in kilograms
 
     private BloodGroup bloodGroup;
 
@@ -53,6 +55,8 @@ public class Patient extends User {
 
     private ArrayList<Organ> donations;
 
+    private ArrayList<Organ> requiredOrgans;
+
     private Timestamp modified;
 
     private String nhiNumber;
@@ -60,6 +64,8 @@ public class Patient extends User {
     private ArrayList<Medication> currentMedications = new ArrayList<>();
 
     private ArrayList<Medication> medicationHistory = new ArrayList<>();
+
+    private List<Procedure> procedures = new ArrayList<>();
 
     private String homePhone;
 
@@ -83,42 +89,58 @@ public class Patient extends User {
 
     private ArrayList<PatientActionRecord> userActionsList;
 
+    private ArrayList<Disease> currentDiseases = new ArrayList<>();
 
-    public Patient(String nhiNumber, String firstName,
-                   ArrayList<String> middleNames, String lastName, LocalDate date) {
+    private ArrayList<Disease> pastDiseases = new ArrayList<>();
+
+    private GlobalEnums.Organ removedOrgan;
+
+    /**
+     * Constructor for the patient class. Initializes basic attributes
+     * @param nhiNumber unique number to identify the patient by
+     * @param firstName first name of the patient
+     * @param middleNames middle names of the patient
+     * @param lastName last name of the patient
+     * @param date date of birth of patient
+     */
+    public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
         this.firstName = firstName;
+        this.preferredName = firstName;
         this.middleNames = middleNames;
         this.lastName = lastName;
         this.birth = date;
         this.nhiNumber = nhiNumber.toUpperCase();
         this.donations = new ArrayList<>();
         this.userActionsList = new ArrayList<>();
+        this.requiredOrgans = new ArrayList<>();
     }
 
 
     /**
      * Sets the attributes of the patient
      *
-     * @param firstName   first name
-     * @param lastName    last name
-     * @param middleNames middle names
-     * @param birth       birth date
-     * @param death       death date
-     * @param street1     street 1 of address
-     * @param street2     street2 of address
-     * @param suburb      suburb of address
-     * @param region      region of address
-     * @param gender      gender of address
-     * @param bloodGroup  blood group
-     * @param height      height in meters
-     * @param weight      weight in kilograms
-     * @param nhi         nhi
+     * @param firstName         first name
+     * @param lastName          last name
+     * @param middleNames       middle names
+     * @param birth             birth date
+     * @param death             death date
+     * @param street1           street 1 of address
+     * @param street2           street2 of address
+     * @param suburb            suburb of address
+     * @param region            region of address
+     * @param birthGender       gender of patient at birth
+     * @param preferredGender   chosen gender of patient
+     * @param bloodGroup        blood group
+     * @param height            height in meters
+     * @param weight            weight in kilograms
+     * @param nhi               NHI
      */
-    public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, LocalDate birth, LocalDate death, String street1,
-                                 String street2, String suburb, String region, String gender, String bloodGroup, double height, double weight,
-                                 String nhi) throws IllegalArgumentException {
+    public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
+                                 LocalDate birth, LocalDate death, String street1, String street2, String suburb,
+                                 String region, String birthGender, String preferredGender, String bloodGroup,
+                                 double height, double weight, String nhi) throws IllegalArgumentException {
         Enum globalEnum;
         SearchPatients.removeIndex(this);
         if (firstName != null) {
@@ -129,6 +151,9 @@ public class Patient extends User {
         }
         if (middleNames != null) {
             setMiddleNames(middleNames);
+        }
+        if (preferredName != null) {
+            setPreferredName(preferredName);
         }
         if (birth != null) {
             setBirth(birth);
@@ -146,32 +171,40 @@ public class Patient extends User {
             setSuburb(suburb);
         }
         if (region != null) {
-            globalEnum = GlobalEnums.Region.getEnumFromString(region);
+            globalEnum = Region.getEnumFromString(region);
             if (globalEnum != null) {
-                setRegion((GlobalEnums.Region) globalEnum);
+                setRegion((Region) globalEnum);
             }
             else {
                 userActions.log(Level.WARNING, "Invalid region", "attempted to update patient attributes");
             }
         }
-        if (gender != null) {
-            globalEnum = GlobalEnums.Gender.getEnumFromString(gender);
+        if (birthGender != null) {
+            globalEnum = BirthGender.getEnumFromString(birthGender);
             if (globalEnum != null) {
-                setGender((GlobalEnums.Gender) globalEnum);
+                setBirthGender((BirthGender) globalEnum);
             }
             else {
-                userActions.log(Level.WARNING, "Invalid gender", "attempted to update patient attributes");
+                userActions.log(Level.WARNING, "Invalid birth gender", "attempted to update patient attributes");
+            }
+        }
+        if (preferredGender != null) {
+            globalEnum = PreferredGender.getEnumFromString(preferredGender);
+            if (globalEnum != null) {
+                setPreferredGender((PreferredGender) globalEnum);
+            }
+            else {
+                userActions.log(Level.WARNING, "Invalid preferred gender", "attempted to update patient attributes");
             }
         }
         if (bloodGroup != null) {
-            globalEnum = GlobalEnums.BloodGroup.getEnumFromString(bloodGroup);
+            globalEnum = BloodGroup.getEnumFromString(bloodGroup);
             if (globalEnum != null) {
-                setBloodGroup((GlobalEnums.BloodGroup) globalEnum);
+                setBloodGroup((BloodGroup) globalEnum);
             }
             else {
                 userActions.log(Level.WARNING, "Invalid blood group", "attempted to update patient attributes");
             }
-
         }
         if (height > 0) {
             setHeight(height);
@@ -218,7 +251,6 @@ public class Patient extends User {
         }
     }
 
-
     /**
      * Checks that the nhi number consists (only) of 3 letters then 4 numbers
      *
@@ -231,20 +263,18 @@ public class Patient extends User {
         }
     }
 
-
     /**
      * Checks the uniqueness of the nhi number
      *
      * @throws IllegalArgumentException when the nhi number given is already in use
      */
     public void ensureUniqueNhi() throws IllegalArgumentException {
-        for (Patient d : Database.getPatients()) {
-            if (d.nhiNumber.equals(nhiNumber.toUpperCase())) {
+        for (Patient p : Database.getPatients()) {
+            if (p.nhiNumber.equals(nhiNumber.toUpperCase())) {
                 throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
             }
         }
     }
-
 
     /**
      * Returns the name of the patient as a formatted concatenated string
@@ -252,7 +282,13 @@ public class Patient extends User {
      * @return string named
      */
     public String getNameConcatenated() {
-        StringBuilder concatName = new StringBuilder(firstName + " ");
+        StringBuilder concatName;
+
+        if (preferredName != null) {
+            concatName = new StringBuilder( preferredName + " " );
+        } else {
+            concatName = new StringBuilder( firstName + " " );
+        }
         if (middleNames != null && middleNames.size() > 0) {
             for (String middleName : middleNames) {
                 concatName.append(middleName)
@@ -263,12 +299,14 @@ public class Patient extends User {
         return concatName.toString();
     }
 
-
     public ArrayList<Organ> getDonations() {
         return donations == null ? new ArrayList<>() : donations;
     }
 
-
+    /**
+     * Sets the donation organs of the patient to the list parsed through
+     * @param donations The donations being set to the patient donations array list
+     */
     public void setDonations(ArrayList<Organ> donations) {
         if (this.donations != donations) {
             this.donations = donations;
@@ -276,55 +314,64 @@ public class Patient extends User {
         }
     }
 
-
     public Timestamp getCREATED() {
         return CREATED;
     }
-
 
     public String getFirstName() {
         return firstName;
     }
 
-
     public void setFirstName(String firstName) {
         if (this.firstName == null || (!firstName.equals(this.firstName))) {
+        	SearchPatients.removeIndex(this);
             this.firstName = firstName;
+            if (getPreferredName() == null) {
+                setPreferredName( firstName );
+            }
+            SearchPatients.addIndex(this);
             patientModified();
         }
     }
-
 
     public ArrayList<String> getMiddleNames() {
         return middleNames;
     }
 
-
     public void setMiddleNames(ArrayList<String> middleNames) {
         if (this.middleNames == null || (!middleNames.equals(this.middleNames))) {
+        	SearchPatients.removeIndex(this);
             this.middleNames = middleNames;
+            SearchPatients.addIndex(this);
             patientModified();
         }
     }
-
 
     public String getLastName() {
         return lastName;
     }
 
-
     public void setLastName(String lastName) {
         if (this.lastName == null || (!lastName.equals(this.lastName))) {
+        	SearchPatients.removeIndex(this);
             this.lastName = lastName;
+            SearchPatients.addIndex(this);
             patientModified();
         }
     }
 
+    public String getPreferredName() { return preferredName; }
+
+    public void setPreferredName(String preferredName) {
+        if (preferredName != null && !preferredName.equals(this.preferredName)) {
+            this.preferredName = preferredName.substring(0, 1).toUpperCase() + preferredName.substring(1);
+            patientModified();
+        }
+    }
 
     public LocalDate getBirth() {
         return birth;
     }
-
 
     public void setBirth(LocalDate birth) {
         if (this.birth == null || (!birth.equals(this.birth))) {
@@ -333,11 +380,9 @@ public class Patient extends User {
         }
     }
 
-
     public LocalDate getDeath() {
         return death;
     }
-
 
     public void setDeath(LocalDate death) {
         if (this.death == null || (!death.equals(this.death))) {
@@ -345,7 +390,6 @@ public class Patient extends User {
             patientModified();
         }
     }
-
 
     /**
      * Calculates the patients current age. If the patient is living, it is the difference between the current datetime
@@ -362,24 +406,39 @@ public class Patient extends User {
         }
     }
 
-
-    public Gender getGender() {
-        return gender;
+    public PreferredGender getPreferredGender() {
+        return preferredGender;
     }
 
-
-    public void setGender(Gender gender) {
-        if (this.gender != gender) {
-            this.gender = gender;
+    public void setPreferredGender(PreferredGender gender) {
+        if (this.preferredGender != gender) {
+            this.preferredGender = gender;
             patientModified();
         }
     }
 
+    public BirthGender getBirthGender() {
+        return birthGender;
+    }
+
+    public void setBirthGender(BirthGender gender) {
+        if (this.birthGender != gender) {
+            this.birthGender = gender;
+
+            if (getPreferredGender() == null) {
+                if (gender.getValue().equals("Male")) {
+                    setPreferredGender( PreferredGender.MAN );
+                } else {
+                    setPreferredGender( PreferredGender.WOMAN );
+                }
+            }
+            patientModified();
+        }
+    }
 
     public double getHeight() {
         return height;
     }
-
 
     public void setHeight(double height) {
         if (this.height != height) {
@@ -388,11 +447,9 @@ public class Patient extends User {
         }
     }
 
-
     public double getWeight() {
         return weight;
     }
-
 
     public void setWeight(double weight) {
         if (this.weight != weight) {
@@ -400,7 +457,6 @@ public class Patient extends User {
             patientModified();
         }
     }
-
 
     /**
      * Calculates the Body Mass Index of the patient
@@ -413,11 +469,9 @@ public class Patient extends User {
         else return Double.valueOf(df.format(this.weight / (Math.pow(this.height, 2))));
     }
 
-
     public BloodGroup getBloodGroup() {
         return bloodGroup;
     }
-
 
     public void setBloodGroup(BloodGroup bloodGroup) {
         if (this.bloodGroup != bloodGroup) {
@@ -426,11 +480,9 @@ public class Patient extends User {
         }
     }
 
-
     public String getStreet1() {
         return street1;
     }
-
 
     public void setStreet1(String street1) {
         if (this.street1 == null || (!street1.equals(this.street1))) {
@@ -439,11 +491,9 @@ public class Patient extends User {
         }
     }
 
-
     public String getStreet2() {
         return street2;
     }
-
 
     public void setStreet2(String street2) {
         if (this.street2 == null || (!street2.equals(this.street2))) {
@@ -452,11 +502,9 @@ public class Patient extends User {
         }
     }
 
-
     public String getSuburb() {
         return suburb;
     }
-
 
     public void setSuburb(String suburb) {
         if (this.suburb == null || !suburb.equals(this.suburb)) {
@@ -465,11 +513,9 @@ public class Patient extends User {
         }
     }
 
-
     public Region getRegion() {
         return region;
     }
-
 
     public void setRegion(Region region) {
         if (this.region != region) {
@@ -478,11 +524,9 @@ public class Patient extends User {
         }
     }
 
-
     public int getZip() {
         return zip;
     }
-
 
     /**
      * Gets the current medication list for a Patient
@@ -523,15 +567,29 @@ public class Patient extends User {
         }
     }
 
+    /**
+     * gets the current requred organs of the patient
+     * @return required organs of the patient
+     */
+    public ArrayList<Organ> getRequiredOrgans() {
+        return this.requiredOrgans;
+    }
+
+    /**
+     * sets the required organs of the patient to the list parsed through
+     * @param requiredOrgans organs the patient is to receive
+     */
+    public void setRequiredOrgans(ArrayList requiredOrgans) {
+        this.requiredOrgans = requiredOrgans;
+    }
+
     public String getFormattedAddress() {
         return street1 + " " + street2 + " " + suburb + " " + region + " " + zip;
     }
 
-
     public Timestamp getModified() {
         return modified;
     }
-
 
     /**
      * Add organs to patient donations list
@@ -546,10 +604,31 @@ public class Patient extends User {
         else {
             donations.add(organ);
             patientModified();
+            userActions.log(Level.INFO, "Added organ " + organ + " to patient donations", "Attempted to add organ " + organ + " to patient donations");
             return "Successfully added " + organ + " to donations";
         }
     }
 
+    /**
+     * Add organs to patient requirements list
+     *
+     * @param organ - organ to add to the patient required organs list
+     * @return string of message
+     */
+    public String addRequired(Organ organ) {
+        if (requiredOrgans != null) {
+            if (requiredOrgans.contains(organ)) {
+                return "Organ " + organ + " is already part of the patient's required organs, so was not added.";
+            }
+        }
+        if (requiredOrgans == null) {
+            requiredOrgans = new ArrayList<>();
+        }
+        requiredOrgans.add(organ);
+        patientModified();
+        userActions.log(Level.INFO, "Added organ " + organ + " to patient required organs", "Attempted to add organ " + organ + " to patient required organs");
+        return "Successfully added " + organ + " to required organs";
+    }
 
     /**
      * Remove organs from patients donations list
@@ -561,23 +640,49 @@ public class Patient extends User {
         if (donations.contains(organ)) {
             donations.remove(organ);
             patientModified();
+            userActions.log(Level.INFO, "Removed " + organ + " from patient donations", "Attempted to remove donation from a patient");
             return "Successfully removed " + organ + " from donations";
         } else {
             return "Organ " + organ + " is not part of the patients donations, so could not be removed.";
         }
     }
 
+    /**
+     * Remove organs from patients required organs list
+     *
+     * @param organ - organ to remove from the patients required organs list
+     * @return string of message
+     */
+    public String removeRequired(Organ organ) {
+        if (requiredOrgans.contains(organ)) {
+            requiredOrgans.remove(organ);
+            patientModified();
+            setRemovedOrgan(organ);
+            return "Successfully removed " + organ + " from required organs";
+        } else {
+            return "Organ " + organ + " is not part of the patient's required organs, so could not be removed.";
+        }
+    }
+
+    public GlobalEnums.Organ getRemovedOrgan() {
+        return removedOrgan;
+    }
+
+    public void setRemovedOrgan(GlobalEnums.Organ organ) {
+        removedOrgan = organ;
+    }
 
     public String getNhiNumber() {
         return nhiNumber;
     }
 
-
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
         ensureValidNhi();
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
-            this.nhiNumber = nhiNumber.toUpperCase();
-            patientModified();
+            SearchPatients.removeIndex(this);
+        	this.nhiNumber = nhiNumber.toUpperCase();
+            SearchPatients.addIndex(this);
+        	patientModified();
         }
     }
 
@@ -590,118 +695,84 @@ public class Patient extends User {
         this.homePhone = homePhone;
     }
 
-
     public String getMobilePhone() {
         return mobilePhone;
     }
-
 
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
     }
 
-
     public String getWorkPhone() {
         return workPhone;
     }
-
 
     public void setWorkPhone(String workPhone) {
         this.workPhone = workPhone;
     }
 
-
     public String getEmailAddress() {
         return emailAddress;
     }
-
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
 
-
     public String getContactName() {
         return contactName;
     }
-
 
     public void setContactName(String contactName) {
         this.contactName = contactName;
     }
 
-
     public String getContactRelationship() {
         return contactRelationship;
     }
-
 
     public void setContactRelationship(String contactRelationship) {
         this.contactRelationship = contactRelationship;
     }
 
-
     public String getContactHomePhone() {
         return contactHomePhone;
     }
-
 
     public void setContactHomePhone(String contactHomePhone) {
         this.contactHomePhone = contactHomePhone;
     }
 
-
     public String getContactMobilePhone() {
         return contactMobilePhone;
     }
-
 
     public void setContactMobilePhone(String contactMobilePhone) {
         this.contactMobilePhone = contactMobilePhone;
     }
 
-
     public String getContactWorkPhone() {
         return contactWorkPhone;
     }
-
 
     public void setContactWorkPhone(String contactWorkPhone) {
         this.contactWorkPhone = contactWorkPhone;
     }
 
-
     public String getContactEmailAddress() {
         return contactEmailAddress;
     }
-
 
     public void setContactEmailAddress(String contactEmailAddress) {
         this.contactEmailAddress = contactEmailAddress;
     }
 
-
-//    /**
-//     * Returns a converted medication log ArrayList to a PatientActionRecord OberservableList
-//     * @return The medication log as a PatientActionRecord ObservableList
-//     */
-//    public ObservableList<PatientActionRecord> getPatientLog() {
-//        ObservableList<PatientActionRecord> currentLog = FXCollections.observableArrayList();
-//        String time = null, level = null, message = null, action;
-//
-//        if (this.patientLog != null) {
-//            for (int i = 0; i < patientLog.size(); i++) {
-//                time = patientLog.get(i++);
-//                level = patientLog.get(i++);
-//                message = patientLog.get(i++);
-//                action = patientLog.get(i);
-//                currentLog.add(0, new PatientActionRecord(time, level, message, action, this.getUuid()) );
-//            }
-//        } else {
-//            return null;
-//        }
-//        return currentLog;
-//    }
+    public List<Procedure> getProcedures() {
+        if (procedures == null) {
+            procedures = new ArrayList<>();
+        }
+        return procedures;
+    }
 
 
     /**
@@ -714,39 +785,57 @@ public class Patient extends User {
     }
 
 
-//    /**
-//     * Sets the medicationLog as a HashMap converted from a PatientActionRecord ObservableList
-//     * @param log The PatientActionRecord ObservableList
-//     */
-//    public void setMedicationLog(ObservableList<PatientActionRecord> log) {
-//        ArrayList<String> newLog = new ArrayList<>();
-//
-//        for (PatientActionRecord record : log) {
-//            newLog.add(record.getTimestamp().toString());
-//            newLog.add(record.getLevel().toString());
-//            newLog.add(record.getMessage());
-//            newLog.add(record.getAction());
-//        }
-//        this.patientLog = newLog;
-//    }
+    /**
+     * Gets the current diseases infecting a donor
+     * @return ArrayList current diseases
+     */
+    public ArrayList<Disease> getCurrentDiseases() {
+        return this.currentDiseases;
+    }
+
+    /**
+     * Sets the donor's current diseases to the given list
+     * @param currentDiseases list of diseases currently infecting a donor
+     */
+    public void setCurrentDiseases(ArrayList<Disease> currentDiseases) { this.currentDiseases = currentDiseases; }
+
+    /**
+     * Gets the diseases the donor used to be infected with
+     * @return ArrayList past diseases
+     */
+    public ArrayList<Disease> getPastDiseases() {
+        return this.pastDiseases;
+    }
+
+    /**
+     * Set the donor's past diseases to the given list
+     * @param pastDiseases list of diseases that used to infect a donor
+     */
+    public void setPastDiseases(ArrayList<Disease> pastDiseases) { this.pastDiseases = pastDiseases; }
 
 
     /**
+     *
      * Updates the modified timestamp of the patient
      */
     private void patientModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
 
+    public void addProcedure(Procedure procedure) {
+        procedures.add(procedure);
+    }
+
+    public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
 
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
-                + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Gender: " + gender + "\n"
-                + "Date of birth: " + birth + "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + street1 + "\n" + "Street2: " + street2
-                + "\n" + "Suburb:" + suburb + "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: "
-                + height + "\n" + "Weight: " + weight + "\n" + "Blood group: " + bloodGroup + "\n";
+                + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Preferred name: " + preferredName +
+                "\n" + "Gender Assigned at Birth: " + birthGender + "\n" + "Gender Identity: " + preferredGender + "\n" + "Date of birth: " + birth +
+                "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + street1 + "\n" + "Street2: " + street2 + "\n" + "Suburb:" + suburb +
+                "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: " + height + "\n" + "Weight: "
+                + weight + "\n" + "Blood group: " + bloodGroup + "\n";
     }
-
 
     public boolean equals(Object obj) {
         Patient patient = (Patient) obj;

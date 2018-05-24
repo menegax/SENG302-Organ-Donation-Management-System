@@ -1,33 +1,29 @@
 package utility;
 
-@SuppressWarnings("unused")
 public class GlobalEnums {
 
-    public enum Gender {
-        MALE("male"), FEMALE("female"), OTHER("other");
+    /**
+     *
+     */
+    public enum PreferredGender {
+        MAN("Man"), WOMAN("Woman"), NONBINARY("Non-binary");
 
         private String value;
 
-
-        Gender(final String value) {
-            this.value = value;
-        }
-
+        PreferredGender(final String value) { this.value = value; }
 
         public String getValue() {
             return value != null ? value : "Not set";
         }
-
 
         @Override
         public String toString() {
             return this.getValue() != null ? this.getValue() : "Not set";
         }
 
-
         public static Enum getEnumFromString(String value) {
             try {
-                return Gender.valueOf(value.toUpperCase());
+                return PreferredGender.valueOf(value.toUpperCase());
             }
             catch (IllegalArgumentException e) {
                 return null;
@@ -35,6 +31,40 @@ public class GlobalEnums {
         }
     }
 
+    /**
+     *
+     */
+    public enum BirthGender {
+        MALE("Male"), FEMALE("Female");
+
+        private String value;
+
+        BirthGender(final String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value != null ? value : "Not set";
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue() != null ? this.getValue() : "Not set";
+        }
+
+        public static Enum getEnumFromString(String value) {
+            try {
+                return BirthGender.valueOf(value.toUpperCase());
+            }
+            catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
+    }
+
+    /**
+     *
+     */
     public enum Region {
         NORTHLAND("Northland"), AUCKLAND("Auckland"), WAIKATO("Waikato"), BAYOFPLENTY("Bay of Plenty"), GISBORNE("Gisborne"), HAWKESBAY("Hawkes Bay"), TARANAKI(
                 "Taranaki"), MANAWATU("Manawatu"), WELLINGTON("Wellington"), TASMAN("Tasman"), NELSON("Nelson"), MARLBOROUGH("Marlborough"), WESTCOAST(
@@ -42,22 +72,18 @@ public class GlobalEnums {
 
         private String value;
 
-
         Region(final String value) {
             this.value = value;
         }
-
 
         public String getValue() {
             return value;
         }
 
-
         @Override
         public String toString() {
             return this.getValue();
         }
-
 
         public static Enum getEnumFromString(String value) {
             try {
@@ -68,28 +94,27 @@ public class GlobalEnums {
         }
     }
 
+    /**
+     *
+     */
     public enum Organ {
         LIVER("liver"), KIDNEY("kidney"), PANCREAS("pancreas"), HEART("heart"), LUNG("lung"), INTESTINE("intestine"), CORNEA("cornea"), MIDDLEEAR(
                 "middle ear"), SKIN("skin"), BONE("bone"), BONE_MARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
 
         private String value;
 
-
         Organ(final String value) {
             this.value = value;
         }
-
 
         public String getValue() {
             return value;
         }
 
-
         @Override
         public String toString() {
             return this.getValue();
         }
-
 
         public static Enum getEnumFromString(String value) {
             try {
@@ -101,28 +126,27 @@ public class GlobalEnums {
         }
     }
 
+    /**
+     *
+     */
     public enum BloodGroup {
         A_POSITIVE("A positive"), A_NEGATIVE("A negative"), B_POSITIVE("B positive"), B_NEGATIVE("B negative"), AB_POSITIVE("AB positive"), AB_NEGATIVE(
                 "AB negative"), O_POSITIVE("O positive"), O_NEGATIVE("O negative");
 
         private String value;
 
-
         BloodGroup(final String value) {
             this.value = value;
         }
-
 
         public String getValue() {
             return value;
         }
 
-
         @Override
         public String toString() {
             return this.getValue();
         }
-
 
         public static Enum getEnumFromString(String value) {
             try {
@@ -134,4 +158,67 @@ public class GlobalEnums {
         }
     }
 
+    /**
+     *
+     */
+    public enum UndoableScreen {
+        CLINICIANSEARCHPATIENTS("clinicianSearchPatients"), CLINICIANPROFILEUPDATE("clinicianProfileUpdate"), PATIENTMEDICATIONS("patientMedications"),
+        PATIENTREGISTER("patientRegister"), PATIENTUPDATECONTACTS("patientUpdateContacts"), PATIENTUPDATEDONATIONS("patientUpdateDonations"),
+        PATIENTUPDATEPROFILE("patientUpdateProfile"), PATIENTUPDATEDIAGNOSIS("patientUpdateDiagnosis"), PATIENTUPDATEREQUIREMENTS("patientUpdateRequirements"),
+        CLINICIANDIAGNOSIS("clinicianDiagnosis"),PATIENTPROCEDUREFORM( "patientProcedureForm" ),PATIENTPROCEDURES("patientProcedures");
+
+        private String value;
+
+        UndoableScreen( final String value ) {
+            this.value = value;
+        }
+    }
+
+    public enum DiseaseState {
+        CURED ("cured"),
+        CHRONIC ("chronic");
+
+        private String value;
+
+        DiseaseState(final String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue();
+        }
+
+    }
+
+    /**
+     *
+     *
+     */
+    public enum DeregistrationReason {
+        ERROR ("Registering of the organ was an error"),
+        CURED ("Treatment has cured the disease, no longer requiring an organ transplant"),
+        DIED ("Receiver has died"),
+        RECEIVED ("Receiver has received an organ transplant");
+
+        private String value;
+
+        DeregistrationReason(final String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue();
+        }
+
+    }
 }

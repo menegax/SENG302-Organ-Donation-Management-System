@@ -1,6 +1,6 @@
 package controller_test;
 
-import controller.Main;
+import main.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -10,20 +10,25 @@ import javafx.stage.Stage;
 import model.Clinician;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import testfx.GitLabTestFXConfiguration;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Set;
 
+import static java.util.logging.Level.OFF;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
+import static utility.UserActionHistory.userActions;
 
 public class ControllerClinicianEdit extends ApplicationTest {
+
+
     private Main main = new Main();
     private Set<Clinician> clinicians = Database.getClinicians();
     private String staffId;
@@ -33,11 +38,25 @@ public class ControllerClinicianEdit extends ApplicationTest {
         main.start(stage);
     }
 
-    @Before
+    /**
+     * Sets the configuration to run in headless mode
+     */
+    @BeforeClass
+    public static void setUp() {
+        GitLabTestFXConfiguration.setHeadless();
+        userActions.setLevel(OFF);
+    }
+
     /**
      * Tests logging in as a clinician
      */
+    @Before
     public void Login() {
+        interact(() -> {
+            while(lookup("OK").queryAs(Button.class) != null) {
+                lookup("OK").queryAs(Button.class).fire();
+            }
+        });
         staffId = Integer.toString(clinicians.stream().min(Comparator.comparing(Clinician::getStaffID)).get().getStaffID());
         //Check 'I am Clinician" checkbox to login as clinician
         interact(() -> {
@@ -66,10 +85,10 @@ public class ControllerClinicianEdit extends ApplicationTest {
         sleep( 500 );
     }
 
-    @Test
-    /*
+    /**
      * Tests that the clinician can successfully edit their staff ID with a valid field
      */
+    @Test
     public void successfulUpdateClinicianId() {
         interact(() -> {
             lookup("#staffId").queryAs(TextField.class).setText("1");
@@ -100,10 +119,11 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that save button has taken the "user to the profile page
     }
 
-    @Test
-    /*
+
+    /**
      * Tests unsuccessful edit of clinician staff ID with an invalid field
      */
+    @Test
     public void unsuccessfulUpdateClinicianId() {
         interact(() -> {
             lookup("#staffId").queryAs(TextField.class).setText("A");
@@ -117,10 +137,11 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
     }
 
-    @Test
-    /*
+
+    /**
      * Tests that that the clinician can successfully edit their first name with a valid field
      */
+    @Test
     public void successfulUpdateClinicianFirstName() {
         interact(() -> {
             lookup("#firstnameTxt").queryAs(TextField.class).setText("James");
@@ -134,10 +155,10 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianProfilePane", Node::isVisible);  // Verify that save button has taken the "user to the profile page
     }
 
-    @Test
-    /*
+    /**
      * Tests unsuccessful edit of clinician first name with an invalid field
      */
+    @Test
     public void unsuccessfulUpdateClinicianFirstName() {
         interact(() -> {
             lookup("#firstnameTxt").queryAs(TextField.class).setText("122");
@@ -153,10 +174,10 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
     }
 
-    @Test
-    /*
+    /**
      * Tests that the clinician can successfully edit their last name with a valid field
      */
+    @Test
     public void successfulUpdateClinicianLastName() {
         interact(() -> {
             lookup("#lastnameTxt").queryAs(TextField.class).setText("Bond");
@@ -170,10 +191,11 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that profile button has taken "user" to the clinician profile panel
     }
 
-    @Test
-    /*
+
+    /**
      * Tests unsuccessful edit of clinician last name with an invalid field
      */
+    @Test
     public void unsuccessfulUpdateClinicianLastName() {
         interact(() -> {
             lookup("#lastnameTxt").queryAs(TextField.class).setText("122");
@@ -187,10 +209,10 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
     }
 
-    @Test
-    /*
+    /**
      * Tests that the clinician can successfully edit their middle name with a valid field
      */
+    @Test
     public void successfulUpdateClinicianMiddleName() {
         interact(() -> {
             lookup("#middlenameTxt").queryAs(TextField.class).setText("Andre");
@@ -204,10 +226,10 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that profile button has taken "user" to the clinician profile panel
     }
 
-    @Test
-    /*
+    /**
      * Tests unsuccessful edit of clinician middle name with an invalid field
      */
+    @Test
     public void unsuccessfulUpdateClinicianMiddleName() {
         interact(() -> {
             lookup("#middlenameTxt").queryAs(TextField.class).setText("122");
@@ -221,10 +243,10 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that the save button prompted an invalid field alert and did not leave the profile edit panel
     }
 
-    @Test
-    /*
+    /**
      * Tests that the clinician can successfully edit their street1 name with a valid field
      */
+    @Test
     public void successfulUpdateClinicianStreet1() {
         interact(() -> {
             lookup("#street1Txt").queryAs(TextField.class).setText("Riccarton RD");
@@ -238,10 +260,10 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that the save button has taken "user" to the profile panel
     }
 
-    @Test
-    /*
+    /**
      * Tests unsuccessful edit of clinician street1 with an invalid field
      */
+    @Test
     public void unsuccessfulUpdateClinicianStreet1() {
         interact(() -> {
             lookup("#street1Txt").queryAs(TextField.class).setText("122 RD");
@@ -255,10 +277,10 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
 
-    @Test
-    /*
+    /**
      * Tests that that the clinician can successfully edit their street2 name with a valid field
      */
+    @Test
     public void successfulUpdateClinicianStreet2() {
         interact(() -> {
             lookup("#street2Txt").queryAs(TextField.class).setText("Hanrahan RD");
@@ -272,10 +294,10 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that profile button has taken "user" to the clinician profile panel
     }
 
-    @Test
-    /*
+    /**
      * Tests unsuccessful edit of clinician street2 with an invalid field
      */
+    @Test
     public void unsuccessfulUpdateClinicianStreet2() {
         interact(() -> {
             lookup("#street2Txt").queryAs(TextField.class).setText("122 RD");
@@ -289,10 +311,10 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
 
-    @Test
-    /*
+    /**
      * Tests that that the clinician can successfully edit their suburb with a valid field
      */
+    @Test
     public void successfulUpdateClinicianSuburb() {
         interact(() -> {
             lookup("#suburbTxt").queryAs(TextField.class).setText("Fendalton");
@@ -306,10 +328,10 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that profile button has taken "user" to the clinician profile panel
     }
 
-    @Test
-    /*
+    /**
      * Tests unsuccessful edit of clinician suburb with an invalid field
      */
+    @Test
     public void unsuccessfulUpdateClinicianSuburb() {
         interact(() -> {
             lookup("#suburbTxt").queryAs(TextField.class).setText("122");
@@ -323,24 +345,4 @@ public class ControllerClinicianEdit extends ApplicationTest {
         verifyThat("#clinicianUpdateAnchorPane", Node::isVisible); // Verify that save button has prompted the "user" with an invalid field alert
     }
 
-
-    @Test
-    /*
-     * Tests the back and logout buttons work
-     */
-    public void logoutButtonTakesUserToLoginScreen() {
-        interact(() -> {
-            lookup("#back").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that back
-        // button has taken "user" to the profile panel
-        interact(() -> {
-            lookup("#back").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#clinicianHomePane", Node::isVisible); // Verify that back button has taken "user" to the home panel
-        interact(() -> {
-            lookup("#logoutButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#loginPane", Node::isVisible); // Verify that logout button has taken "user" to the login panel
-    }
 }

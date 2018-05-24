@@ -16,6 +16,12 @@ import static utility.UserActionHistory.userActions;
 
 public class Database {
 
+    private static OrganWaitlist organWaitingList = new OrganWaitlist();
+
+    public static OrganWaitlist getWaitingList() {
+    	return organWaitingList;
+    }
+    
     private static Set<Patient> patients = new HashSet<>();
 
     private static Set<Clinician> clinicians = new HashSet<>();
@@ -42,7 +48,6 @@ public class Database {
         }
     }
 
-
     /**
      * Removes a patient from the database
      *
@@ -64,10 +69,10 @@ public class Database {
      * @exception InvalidObjectException when the object cannot be found
      */
     public static Patient getPatientByNhi(String nhi) throws InvalidObjectException {
-        for (Patient d : getPatients()) {
-            if (d.getNhiNumber()
+        for (Patient p : getPatients()) {
+            if (p.getNhiNumber()
                     .equals(nhi.toUpperCase())) {
-                return d;
+                return p;
             }
         }
         throw new InvalidObjectException("Patient with NHI number " + nhi + " does not exist.");
@@ -112,8 +117,7 @@ public class Database {
      *
      * @param staffID the staff ID to search clinicians by
      * @return Clinician object
-     *
-     * @exception InvalidObjectException when the object cannot be found
+     * @throws InvalidObjectException when the object cannot be found
      */
     public static Clinician getClinicianByID(int staffID) throws InvalidObjectException {
         for (Clinician c : getClinicians()) {
@@ -123,7 +127,6 @@ public class Database {
         }
         throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
     }
-
 
     /**
      * Adds a clinician to the database
@@ -157,7 +160,6 @@ public class Database {
         }
     }
 
-
     /**
      * Returns the next valid staffID based on IDs in the clinician list
      *
@@ -176,21 +178,33 @@ public class Database {
         }
     }
 
-
     /**
      * Calls all sub-methods to save data to disk
      */
     public static void saveToDisk() {
         try {
             saveToDiskPatients();
+            saveToDiskWaitlist();
             saveToDiskClinicians();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
     }
 
+    /**
+     * Saves the organ waitlist to the file waitlist.json
+     * @throws IOException the file cannot be found or created
+     */
+    private static void saveToDiskWaitlist() throws IOException {
+        Gson gson = new Gson();
+        String json = gson.toJson(organWaitingList);
 
+        String PatientPath = "./";
+        Writer writer = new FileWriter(new File(PatientPath, "waitlist.json"));
+        writer.write(json);
+        writer.close();
+    }
+    
     /**
      * Writes database patients to file on disk
      *
@@ -206,11 +220,10 @@ public class Database {
         writer.close();
     }
 
-
     /**
      * Writes database clinicians to file on disk
      *
-     * @exception IOException when the file cannot be found nor created
+     * @throws IOException when the file cannot be found nor created
      */
     private static void saveToDiskClinicians() throws IOException {
         Gson gson = new Gson();
@@ -222,9 +235,9 @@ public class Database {
         writer.close();
     }
 
-
     /**
      * Reads patient data from disk
+     * @param fileName file to import from
      */
     public static void importFromDiskPatients(String fileName) {
         Gson gson = new Gson();
@@ -244,12 +257,24 @@ public class Database {
         catch (FileNotFoundException e) {
             userActions.log(Level.WARNING, "Patient import file not found", "Attempted to read patient file");
         }
+    }
+
+    /**
+     * Imports the organ waitlist from the selected directory
+     * @param filename file to import from
+     */
+    public static void importFromDiskWaitlist(String filename) {
+        Gson gson = new Gson();
+
+            InputStream in = ClassLoader.class.getResourceAsStream(filename);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            organWaitingList = gson.fromJson(br, OrganWaitlist.class);
 
     }
 
-
     /**
      * Reads clinician data from disk
+     * @param fileName file to import from
      */
     public static void importFromDiskClinicians(String fileName) {
         Gson gson = new Gson();
@@ -260,18 +285,15 @@ public class Database {
             for (Clinician c : clinician) {
                 try {
                     Database.addClinician(c);
-                }
-                catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
                 }
             }
         }
         catch (FileNotFoundException e) {
-            userActions.log(Level.WARNING, "Clinician import file not found", "Attempted to read clinician file");
+            userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
         }
-
     }
-
 
     /**
      * Clears the database of all patients

@@ -30,7 +30,10 @@
 }
 
 .back {
+    -fx-text-fill: black;
     -fx-font-size: 14px;
+    -fx-underline: false;
+    -fx-border-width: 0;
 }
 
 .tile {
@@ -81,4 +84,13 @@
     -fx-scale-y: 0.65;
 }
 
+.list-view .list-cell:even {
+    -fx-control-inner-background: WHITE;
+}
+.list-view .list-cell:odd {
+    -fx-control-inner-background: WHITE;
+}
 
+.list-cell:filled:selected {
+    -fx-text-fill: GREY;
+}

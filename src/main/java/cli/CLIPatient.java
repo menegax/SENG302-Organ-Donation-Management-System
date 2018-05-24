@@ -14,7 +14,7 @@ public class CLIPatient implements Runnable {
     private boolean helpRequested;
 
     public void run() {
-        userActions.log(Level.FINE, "use patient -h for help", "patient command invoked");
+        userActions.log(Level.FINE, "use donor -h for help", "donor command invoked");
     }
 
 }
