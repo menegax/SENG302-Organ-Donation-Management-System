@@ -4,16 +4,28 @@ import model.Disease;
 import model.Patient;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import utility.GlobalEnums;
 
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
 
+import static java.util.logging.Level.OFF;
+import static utility.UserActionHistory.userActions;
+
 public class DiseaseTest {
 
     private Disease disease;
     private Patient diseaseCarrier;
+
+    /**
+     * Turn off logging
+     */
+    @BeforeClass
+    public static void turnOff() {
+        userActions.setLevel(OFF);
+    }
 
     @Before
     public void setUp(){

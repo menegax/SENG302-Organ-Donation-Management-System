@@ -1,6 +1,6 @@
-package gui_test;
+package controller_test;
 
-import controller.Main;
+import main.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Patient;
 import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
@@ -18,8 +19,10 @@ import utility.GlobalEnums;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import static java.util.logging.Level.OFF;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
+import static utility.UserActionHistory.userActions;
 
 public class GUIProfileTest extends ApplicationTest {
 
@@ -49,6 +52,13 @@ public class GUIProfileTest extends ApplicationTest {
         });
     }
 
+    /**
+     * Turn off logging
+     */
+    @BeforeClass
+    public static void setUp() {
+        userActions.setLevel(OFF);
+    }
     /**
      * Reset db to a clean state wait for 1000ms
      */

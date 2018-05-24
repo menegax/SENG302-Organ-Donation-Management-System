@@ -30,7 +30,6 @@ public class SearchPatientsTest {
      */
     @BeforeClass
     public static void setUp() {
-
         userActions.setLevel(Level.OFF);
         Database.resetDatabase();
         

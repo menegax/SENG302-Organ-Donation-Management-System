@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 public class DrugInteractionTest {
 
@@ -26,6 +29,7 @@ public class DrugInteractionTest {
     @BeforeClass
     public static void setUp(){
         org.junit.Assume.assumeTrue(makeContactToAPI());
+        userActions.setLevel(Level.OFF);
     }
     @Before
     public void setLoggedInDonor() {

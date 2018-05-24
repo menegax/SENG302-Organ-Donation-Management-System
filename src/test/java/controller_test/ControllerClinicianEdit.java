@@ -1,6 +1,6 @@
 package controller_test;
 
-import controller.Main;
+import main.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -17,10 +17,8 @@ import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Set;
-import java.util.logging.Level;
 
 import static java.util.logging.Level.OFF;
 import static org.testfx.api.FxAssert.verifyThat;

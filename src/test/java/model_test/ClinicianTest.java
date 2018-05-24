@@ -4,6 +4,7 @@ package model_test;
 import model.Clinician;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import service.Database;
 import utility.GlobalEnums;
@@ -11,8 +12,11 @@ import utility.GlobalEnums;
 import javax.xml.crypto.Data;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
+import static java.util.logging.Level.OFF;
 import static junit.framework.TestCase.*;
+import static utility.UserActionHistory.userActions;
 
 /**
  * Tests valid and invalid controller creation, fetching clinicians from the database, as well as updating clinicians
@@ -29,6 +33,13 @@ public class ClinicianTest {
         clinician = new Clinician(0, "Joe", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND);
     }
 
+    /**
+     * Turn off logging
+     */
+    @BeforeClass
+    public static void turnOff() {
+        userActions.setLevel(OFF);
+    }
     /**
      *  verify the new staffID
      */

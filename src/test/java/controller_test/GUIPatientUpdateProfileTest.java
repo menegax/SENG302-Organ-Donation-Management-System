@@ -1,14 +1,17 @@
-package gui_test;
+package controller_test;
 
+import static java.util.logging.Level.OFF;
 import static org.testfx.api.FxAssert.verifyThat;
+import static utility.UserActionHistory.userActions;
 
-import controller.Main;
+import main.Main;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Patient;
 import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
@@ -61,6 +64,14 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
         verifyThat("#patientUpdateAnchorPane", Node::isVisible);
     }
 
+
+    /**
+     * Turn off logging
+     */
+    @BeforeClass
+    public static void setUp() {
+        userActions.setLevel(OFF);
+    }
 
     /**
      * Reset db to a clean state wait for 1000ms

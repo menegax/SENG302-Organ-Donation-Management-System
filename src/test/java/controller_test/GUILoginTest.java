@@ -1,6 +1,6 @@
-package gui_test;
+package controller_test;
 
-import controller.Main;
+import main.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Patient;
 import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.api.FxRobotException;
 import org.testfx.framework.junit.ApplicationTest;
@@ -19,8 +20,10 @@ import service.Database;
 import controller.UserControl;
 import utility.GlobalEnums;
 
+import static java.util.logging.Level.OFF;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
+import static utility.UserActionHistory.userActions;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -51,6 +54,13 @@ public class GUILoginTest extends ApplicationTest {
         main.start(stage);
     }
 
+    /**
+     * Turn off logging
+     */
+    @BeforeClass
+    public static void setUp() {
+        userActions.setLevel(OFF);
+    }
     /**
      * Reset db to a clean state wait for 1000ms
      */

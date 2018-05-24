@@ -15,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.TextField;
 
+import main.Main;
 import model.Clinician;
 import model.Patient;
 import service.Database;
