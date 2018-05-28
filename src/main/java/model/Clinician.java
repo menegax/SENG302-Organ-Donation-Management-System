@@ -3,7 +3,10 @@ package model;
 import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
 
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -23,7 +26,7 @@ public class Clinician extends User {
     private String street1;
     private String street2;
     private String suburb;
-    private Timestamp modified;
+    private Timestamp modified = Timestamp.valueOf(LocalDateTime.now());
 
     private GlobalEnums.Region region;
 
