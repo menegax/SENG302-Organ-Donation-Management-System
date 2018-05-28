@@ -1,9 +1,9 @@
 package gui_test.undoScreenTests;
 
-import controller.Main;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import main.Main;
 import model.Patient;
 import org.junit.After;
 import org.junit.Before;

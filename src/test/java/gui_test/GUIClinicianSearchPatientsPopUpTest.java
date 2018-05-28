@@ -3,7 +3,6 @@ package gui_test;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 
-import controller.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -11,6 +10,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import main.Main;
 import model.Clinician;
 import model.Patient;
 import org.assertj.core.api.Assertions;

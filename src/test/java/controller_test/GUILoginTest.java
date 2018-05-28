@@ -31,13 +31,11 @@ import java.util.ArrayList;
 
 public class GUILoginTest extends ApplicationTest {
 
-<<<<<<< HEAD:src/test/java/gui_test/GUILoginTest.java
     Database database = Database.getDatabase();
-=======
+
     /**
      * Application entry point
      */
->>>>>>> development:src/test/java/controller_test/GUILoginTest.java
     private Main main = new Main();
 
 

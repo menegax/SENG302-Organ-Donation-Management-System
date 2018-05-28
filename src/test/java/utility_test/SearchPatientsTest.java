@@ -249,13 +249,8 @@ public class SearchPatientsTest {
      * Tests weird edge cases for name search.
      */
     @Test
-<<<<<<< HEAD
-    public void testSearchUnusualNameResults() throws InvalidObjectException {
-        database.resetDatabase();
-=======
     public void testSearchUnusualNameResults() {
-        Database.resetDatabase();
->>>>>>> development
+        database.resetDatabase();
 
         // Given patients in a db
         d1 = new Patient("abc9876", "Joe", null, "Plaffer", LocalDate.now());

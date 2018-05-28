@@ -24,13 +24,11 @@ import java.util.ArrayList;
 
 public class GUIPatientUpdateProfileTest extends ApplicationTest {
 
-<<<<<<< HEAD:src/test/java/gui_test/GUIPatientUpdateProfileTest.java
     Database database = Database.getDatabase();
-=======
+
     /**
      * Application entry point
      */
->>>>>>> development:src/test/java/controller_test/GUIPatientUpdateProfileTest.java
     private Main main = new Main();
 
 

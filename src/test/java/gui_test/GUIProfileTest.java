@@ -1,6 +1,5 @@
 package gui_test;
 
-import controller.Main;
 import controller.ScreenControl;
 import controller.UserControl;
 import javafx.event.ActionEvent;
@@ -9,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import main.Main;
 import model.Patient;
 import org.junit.After;
 import org.junit.Test;

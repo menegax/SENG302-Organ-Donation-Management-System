@@ -1,6 +1,6 @@
 package gui_test.redoScreenTests;
 
-import controller.Main;
+import main.Main;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;

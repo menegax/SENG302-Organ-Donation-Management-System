@@ -27,6 +27,8 @@ import static utility.UserActionHistory.userActions;
 
 public class GUIProfileTest extends ApplicationTest {
 
+    Database database = Database.getDatabase();
+
     /**
      * Application entry point
      */
@@ -34,15 +36,15 @@ public class GUIProfileTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Database.resetDatabase();
+        database.resetDatabase();
 
         // add dummy patient
         ArrayList<String> dal = new ArrayList<>();
         dal.add("Middle");
-        Database.addPatient(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.getPatientByNhi("TFX9999")
+        database.add(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
+        database.getPatientByNhi("TFX9999")
                 .addDonation(GlobalEnums.Organ.LIVER);
-        Database.getPatientByNhi("TFX9999")
+        database.getPatientByNhi("TFX9999")
                 .addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
@@ -66,7 +68,7 @@ public class GUIProfileTest extends ApplicationTest {
      */
     @After
     public void waitForEvents(){
-        Database.resetDatabase();
+        database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }

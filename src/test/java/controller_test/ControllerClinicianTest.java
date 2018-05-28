@@ -23,11 +23,7 @@ import static utility.UserActionHistory.userActions;
 import java.util.logging.Level;
 
 public class ControllerClinicianTest extends ApplicationTest {
-<<<<<<< HEAD
     Database database = Database.getDatabase();
-=======
-
->>>>>>> development
     private Main main = new Main();
 
     @Override

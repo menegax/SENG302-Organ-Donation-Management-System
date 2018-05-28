@@ -25,14 +25,11 @@ import java.util.ArrayList;
 
 public class GUIHomeTest extends ApplicationTest {
 
-<<<<<<< HEAD:src/test/java/gui_test/GUIHomeTest.java
     Database database = Database.getDatabase();
-=======
 
     /**
      * Application entry point
      */
->>>>>>> development:src/test/java/controller_test/GUIHomeTest.java
     private Main main = new Main();
 
     /**
