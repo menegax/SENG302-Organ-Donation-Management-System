@@ -6,11 +6,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="clinicianProfilePane" prefHeight="370.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianProfile">
+<GridPane fx:id="clinicianProfilePane" prefHeight="370.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianProfile">
   <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="90.19998168945312" minWidth="10.0" prefWidth="33.399993896484375" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="258.19996337890626" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="89.199951171875" minWidth="10.0" prefWidth="70.0" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="220.33334350585938" />
+      <ColumnConstraints hgrow="SOMETIMES" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="255.33331298828125" />
   </columnConstraints>
   <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -20,11 +20,11 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="3">
+      <GridPane prefWidth="248.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="3">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="127.3999755859375" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="8.800036621093739" prefWidth="10.400012207031239" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="9.399967193603516" prefWidth="120.79998779296875" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="118.0" minWidth="73.3333740234375" prefWidth="118.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="129.66668701171875" minWidth="0.0" prefWidth="16.0" />
+          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="117.0" minWidth="56.33331298828125" prefWidth="117.0" />
         </columnConstraints>
         <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
