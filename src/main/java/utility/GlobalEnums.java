@@ -3,6 +3,38 @@ package utility;
 @SuppressWarnings("unused")
 public class GlobalEnums {
 
+	public enum dbFields {
+		FNAME("FName"), MNAMES("MName"), LNAME("LName"), STREET1("Street1"), STREET2("Street2"),
+		SUBURB("Suburb"), REGION("Region"), ZIP("Zip"), MODIFIED("Modified");
+		
+        private String value;
+
+        dbFields(final String value) {
+            this.value = value;
+        }
+
+
+        public String getValue() {
+            return value != null ? value : "Not set";
+        }
+
+
+        @Override
+        public String toString() {
+            return this.getValue() != null ? this.getValue() : "Not set";
+        }
+
+
+        public static Enum getEnumFromString(String value) {
+            try {
+                return dbFields.valueOf(value.toUpperCase());
+            }
+            catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
+	}
+	
     public enum Gender {
         MALE("male"), FEMALE("female"), OTHER("other");
 

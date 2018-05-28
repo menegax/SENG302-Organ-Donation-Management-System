@@ -8,6 +8,7 @@ import model.Patient;
 import utility.FormatterLog;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
+import utility.GlobalEnums.dbFields;
 import utility.SearchPatients;
 import utility.UserActionRecord;
 
@@ -359,6 +360,35 @@ public class Database {
         }
     }
 
+    public void update(Object object, dbFields[] fields, String[] newValues) {
+    	if (object instanceof Patient) {
+    		
+    	} else if (object instanceof Clinician) {
+    		Clinician clinician = (Clinician) object;
+    		updateClinician(clinician, fields, newValues);
+    	}
+    }
+    
+    private void updateClinician(Clinician clinician, dbFields[] fields, String[] newValues) {
+    	String query = "UPDATE tblClinicians SET " + fields[0] + " = ?";
+    	int count = 1;
+    	while (count < fields.length) {
+    		query += ", " + fields[count].toString() + " = ?";
+    		count += 1;
+    	}
+    	query += " WHERE StaffID = ?";
+    	String[] attr = new String[newValues.length + 1];
+    	for (int i = 0; i < newValues.length; i++) {
+    		attr[i] = newValues[i];
+    	}
+    	attr[newValues.length] = String.valueOf(clinician.getStaffID());
+    	try {
+			runQuerytest(query, attr);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
+    
     /**
      * Adds a patient to the database
      *
@@ -1031,16 +1061,24 @@ public class Database {
         return clinicians;
     }
 
+    
+    private void runQuerytest(String query, String[] params) throws SQLException {
+    	PreparedStatement stmt = setupQuery(query, params);
+    	System.out.println(stmt.toString());
+    }
 
     public static void main(String[] argv) {
         try {
             Database test = Database.getDatabase();
-            database.add(new Patient("ABC1238", "Joe", new ArrayList<String>(), "Joeson", LocalDate.now()));
-            String stmt = "UPDATE tblPatients SET Weight = 67 WHERE LName = ?";
-            String[] params = {"Joeson"};
-            ArrayList<String[]> results = test.runQuery(stmt, params);
+            Clinician clin = new Clinician(10, "First", new ArrayList<String>(), "Last", Region.CANTERBURY);
+            database.addClinician(clin);
+            database.update(clin, new dbFields[] {dbFields.FNAME}, new String[] {"newFirst"});
+//            database.add(new Patient("ABC1238", "Joe", new ArrayList<String>(), "Joeson", LocalDate.now()));
+//            String stmt = "UPDATE tblPatients SET Weight = 67 WHERE LName = ?";
+//            String[] params = {"Joeson"};
+//            ArrayList<String[]> results = test.runQuery(stmt, params);
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
