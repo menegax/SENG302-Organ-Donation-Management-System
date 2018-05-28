@@ -1,10 +1,7 @@
 package service;
 
 import com.google.gson.Gson;
-import model.Clinician;
-import model.Disease;
-import model.Medication;
-import model.Patient;
+import model.*;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.dbFields;
@@ -278,6 +275,24 @@ public class Database {
     }
 
     /**
+     * Gets all attributes for a procedure object
+     *
+     * @param patient Patient with disease
+     * @param procedure Procedure to get attributes from
+     * @return String[] procedure attributes
+     */
+    private String[] getProcedureAttributes(Patient patient, Procedure procedure) {
+        String[] procedureAttr = new String[5];
+        procedureAttr[0] = patient.getNhiNumber();
+        procedureAttr[1] = procedure.getSummary();
+        procedureAttr[2] = procedure.getDescription();
+        procedureAttr[3] = procedure.getDate().toString();
+        procedureAttr[4] = String.join(",", procedure.getAffectedDonations().toString())
+                .replaceAll("\\[", "").replaceAll("\\]", "");
+        return procedureAttr;
+    }
+
+    /**
      * Gets all attributes for a disease object
      *
      * @param patient Patient with disease
@@ -331,13 +346,21 @@ public class Database {
             String[] medAttr = getMedicationAttributes(newPatient, medication, true);
             String medQuery = "INSERT INTO tblMedications VALUES (?, ?, ?)";
             runQuery(medQuery, medAttr);
-
         }
 
         for (Medication medication : newPatient.getMedicationHistory()) {
             String[] medAttr = getMedicationAttributes(newPatient, medication, false);
             String medQuery = "INSERT INTO tblMedications VALUES (?, ?, ?)";
             runQuery(medQuery, medAttr);
+        }
+    }
+
+    private void addPatientProcedures(Patient newPatient) throws SQLException {
+        List<Procedure> allProcedures = newPatient.getProcedures();
+        for(Procedure procedure : allProcedures) {
+            String[] procedureAttr = getProcedureAttributes(newPatient, procedure);
+            String procedureQuery = "INSERT INTO tblProcedures VALUES (?,?,?,?)";
+            runQuery(procedureQuery, procedureAttr);
         }
     }
 
@@ -442,6 +465,8 @@ public class Database {
             addPatientDiseases(newPatient);
 
             addPatientLogs(newPatient);
+
+            addPatientProcedures(newPatient);
 
             userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
         } catch (SQLException o) {
@@ -628,7 +653,7 @@ public class Database {
                 bloodType, donations, requested, contactAttr[0], contactAttr[1], contactAttr[2], region, zip,
                 contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
                 contactAttr[11], contactAttr[12], contactAttr[13], contactAttr[14], null, currentDiseases,
-                pastDiseases, currentMeds, medHistory);
+                pastDiseases, currentMeds, medHistory, null);
     }
 
     /**

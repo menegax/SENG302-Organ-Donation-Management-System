@@ -129,7 +129,7 @@ public class Patient extends User {
                    String contactHomePhone, String contactWorkPhone, String contactMobilePhone, String contactEmailAddress,
                    ArrayList<PatientActionRecord> userActionsList, ArrayList<Disease> currentDiseases,
                    ArrayList<Disease> pastDiseases, ArrayList<Medication> currentMedications,
-                   ArrayList<Medication> medicationHistory) {
+                   ArrayList<Medication> medicationHistory, List<Procedure> procedures) {
         this.nhiNumber = nhiNumber;
         this.firstName = firstName;
         this.middleNames = middleNames;
@@ -165,6 +165,7 @@ public class Patient extends User {
         this.pastDiseases = pastDiseases;
         this.currentMedications = currentMedications;
         this.medicationHistory = medicationHistory;
+        this.procedures = procedures;
     }
 
 
@@ -824,6 +825,10 @@ public class Patient extends User {
             procedures = new ArrayList<>();
         }
         return procedures;
+    }
+
+    public void setProcedures(List<Procedure> procedures) {
+        this.procedures = procedures;
     }
 
 
