@@ -364,7 +364,8 @@ public class Database {
     public void update(Object object, dbFields[] fields, String[] newValues) {
     	if (fields.length == newValues.length) {
             if (object instanceof Patient) {
-
+                Patient patient = (Patient) object;
+                updatePatient(patient, fields, newValues);
             } else if (object instanceof Clinician) {
                 Clinician clinician = (Clinician) object;
                 updateClinician(clinician, fields, newValues);
@@ -373,7 +374,27 @@ public class Database {
     	    //TODO fields and new values must be same length
         }
     }
-    
+
+    private void updatePatient(Patient patient, dbFields[] fields, String[] newValues) {
+        String query = "UPDATE tblPatients SET " + fields[0] + " = ?";
+        int count = 1;
+        while (count < fields.length) {
+            query += ", " + fields[count].toString() + " = ?";
+            count += 1;
+        }
+        query += " WHERE Nhi = ?";
+        String[] attr = new String[newValues.length + 1];
+        for (int i = 0; i < newValues.length; i++) {
+            attr[i] = newValues[i];
+        }
+        attr[newValues.length] = patient.getNhiNumber();
+        try {
+            runQuery(query, attr);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void updateClinician(Clinician clinician, dbFields[] fields, String[] newValues) {
     	String query = "UPDATE tblClinicians SET " + fields[0] + " = ?";
     	int count = 1;
