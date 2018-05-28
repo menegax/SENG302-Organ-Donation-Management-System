@@ -361,12 +361,16 @@ public class Database {
     }
 
     public void update(Object object, dbFields[] fields, String[] newValues) {
-    	if (object instanceof Patient) {
-    		
-    	} else if (object instanceof Clinician) {
-    		Clinician clinician = (Clinician) object;
-    		updateClinician(clinician, fields, newValues);
-    	}
+    	if (fields.length == newValues.length) {
+            if (object instanceof Patient) {
+
+            } else if (object instanceof Clinician) {
+                Clinician clinician = (Clinician) object;
+                updateClinician(clinician, fields, newValues);
+            }
+        } else {
+    	    //TODO fields and new values must be same length
+        }
     }
     
     private void updateClinician(Clinician clinician, dbFields[] fields, String[] newValues) {
@@ -383,7 +387,7 @@ public class Database {
     	}
     	attr[newValues.length] = String.valueOf(clinician.getStaffID());
     	try {
-			runQuerytest(query, attr);
+			runQuery(query, attr);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -445,7 +449,7 @@ public class Database {
             throw new IllegalArgumentException("street1");
         }
 
-        if (newClinician.getStaffID() == getNextStaffID()) {
+//        if (newClinician.getStaffID() == getNextStaffID()) {
             clinicians.add(newClinician);
 
             String[] attr = getClinicianAttributes(newClinician);
@@ -457,10 +461,10 @@ public class Database {
             } catch (SQLException e) {
                 userActions.log(Level.WARNING, "Couldn't add clinician due to database error", "Attempted to add a clinician");
             }
-        } else {
-            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field staffID", "Attempted to add a clinician");
-            throw new IllegalArgumentException("staffID");
-        }
+//        } else {
+//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field staffID", "Attempted to add a clinician");
+//            throw new IllegalArgumentException("staffID");
+//        }
     }
 
     public void saveTransplantRequest(OrganWaitlist.OrganRequest request) {
@@ -1059,12 +1063,6 @@ public class Database {
 
     public Set<Clinician> getClinicians() {
         return clinicians;
-    }
-
-    
-    private void runQuerytest(String query, String[] params) throws SQLException {
-    	PreparedStatement stmt = setupQuery(query, params);
-    	System.out.println(stmt.toString());
     }
 
     public static void main(String[] argv) {
