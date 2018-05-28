@@ -615,6 +615,7 @@ public class Database {
         ArrayList<Disease> pastDiseases = new ArrayList<>();
         ArrayList<Medication> currentMeds = new ArrayList<>();
         ArrayList<Medication> medHistory = new ArrayList<>();
+        List<Procedure> procedures = new ArrayList<>();
         GlobalEnums.Region region = null;
         int zip = 0;
         String[] contactAttr = new String[15];
@@ -630,6 +631,7 @@ public class Database {
             ArrayList<Disease>[] diseases = loadDiseases(birth, nhi);
             currentDiseases = diseases[0];
             pastDiseases = diseases[1];
+            procedures = loadProcedures(nhi);
 
         } catch (InvalidObjectException | SQLException e) {
             e.printStackTrace();
@@ -639,7 +641,7 @@ public class Database {
                 bloodType, donations, requested, contactAttr[0], contactAttr[1], contactAttr[2], region, zip,
                 contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
                 contactAttr[11], contactAttr[12], contactAttr[13], contactAttr[14], null, currentDiseases,
-                pastDiseases, currentMeds, medHistory, null);
+                pastDiseases, currentMeds, medHistory, procedures);
     }
 
     /**
@@ -660,6 +662,29 @@ public class Database {
             medArray = addMedication(attr, medArray);
         }
         return medArray;
+    }
+
+    private List<Procedure> loadProcedures(String nhi) throws SQLException {
+        ArrayList<String[]> proceduresRaw = runQuery("SELECT * FROM tblProcedures WHERE Patient = " + nhi, null);
+        List<Procedure> procedureList = new ArrayList<>();
+        for(String[] attr : proceduresRaw) {
+            procedureList.add(parseProcedure(attr));
+        }
+        return procedureList;
+    }
+
+    private Procedure parseProcedure(String[] attr) {
+        Procedure procedure = new Procedure(null, null, null, null);
+        procedure.setSummary(attr[1]);
+        procedure.setDescription(attr[2]);
+        procedure.setDate(LocalDate.parse(attr[3]));
+        String[] organArray = attr[4].split(",");
+        Set<GlobalEnums.Organ> organSet = new HashSet<>();
+        for (String organ : organArray) {
+            organSet.add(GlobalEnums.Organ.valueOf(organ));
+        }
+        procedure.setAffectedDonations(organSet);
+        return procedure;
     }
 
     /**
