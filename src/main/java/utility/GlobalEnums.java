@@ -4,7 +4,16 @@ public class GlobalEnums {
 
 	public enum dbFields {
 		FNAME("FName"), MNAMES("MName"), LNAME("LName"), STREET1("Street1"), STREET2("Street2"),
-		SUBURB("Suburb"), REGION("Region"), ZIP("Zip"), MODIFIED("Modified");
+		SUBURB("Suburb"), REGION("Region"), ZIP("Zip"), MODIFIED("Modified"), BIRTHDATE("Birth"),
+        CREATED("Created"), DEATHDATE("Death"), BIRTHGENDER("BirthGender"), PREFGENDER("PrefGender"),
+        PREFNAME("PrefName"), HEIGHT("Height"), WEIGHT("Weight"), BLOODGROUP("BloodType"),
+        DONATINGORGANS("DonatingOrgans"), RECEIVINGORGANS("ReceivingOrgans"), HOMEPHONE("HomePhone"),
+        WORKPHONE("WorkPhone"), MOBILEPHONE("MobilePhone"), EMAIL("Email"), ECNAME("ECName"),
+        ECRELATIONSHIP("ECRelationship"), ECHOMEPHONE("ECHomePhone"), ECWORKPHONE("ECWorkPhone"),
+        ECMOBILEPHONE("ECMobilePhone"), ECEMAIL("ECEmail"), TIME("Time"), LEVEL("Level"),
+        MESSAGE("Message"), ACTION("Action"), NAME("Name"), DATEDIAGNOSED("DateDiagnosed"),
+        STATE("State"), SUMMARY("Summary"), DESCRIPTION("Description"), PROCEDUREDATE("ProDate"),
+        AFFECTEDORGANS("AffectedOrgans"), WAITLISTORGAN("Organ");
 		
         private String value;
 
