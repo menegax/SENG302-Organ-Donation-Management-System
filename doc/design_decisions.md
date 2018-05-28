@@ -163,3 +163,9 @@ sessions after the user saves changes using the standard save button on the home
 MenuBar has the ability to set and bind keyboard shortcuts to a stage. Therefore we will use MenuBars to set the keyboard shortcuts. 
 This means there should not be other action listeners for global or stage-level shortcuts. If it has a keyboard shortcut, it belongs as an item in the menubar.
  
+ 
+ ## Sprint 5
+ 
+ #### GUI
+ We have decided that tabs will not call methods to navigate between themselves on the home screen.  
+ This will remove the necessity to find the tabs of the home screen that a tab is on.
