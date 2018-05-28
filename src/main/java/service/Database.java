@@ -361,58 +361,44 @@ public class Database {
         }
     }
 
-    public void update(Object object, dbFields[] fields, String[] newValues) {
-    	if (fields.length == newValues.length) {
-            if (object instanceof Patient) {
-                Patient patient = (Patient) object;
-                updatePatient(patient, fields, newValues);
-            } else if (object instanceof Clinician) {
-                Clinician clinician = (Clinician) object;
-                updateClinician(clinician, fields, newValues);
-            }
-        } else {
-    	    //TODO fields and new values must be same length
+    public void update(Object object) {
+        if (object instanceof Patient) {
+            Patient patient = (Patient) object;
+            updatePatient(patient);
+        } else if (object instanceof Clinician) {
+            Clinician clinician = (Clinician) object;
+            updateClinician(clinician);
         }
     }
 
-    private void updatePatient(Patient patient, dbFields[] fields, String[] newValues) {
-        String query = "UPDATE tblPatients SET " + fields[0] + " = ?";
-        int count = 1;
-        while (count < fields.length) {
-            query += ", " + fields[count].toString() + " = ?";
-            count += 1;
-        }
-        query += " WHERE Nhi = ?";
-        String[] attr = new String[newValues.length + 1];
-        for (int i = 0; i < newValues.length; i++) {
-            attr[i] = newValues[i];
-        }
-        attr[newValues.length] = patient.getNhiNumber();
-        try {
-            runQuery(query, attr);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    private void updatePatient(Patient patient) {
+        String query = "UPDATE tblPatients SET " + " = ?";
+
     }
 
-    private void updateClinician(Clinician clinician, dbFields[] fields, String[] newValues) {
-    	String query = "UPDATE tblClinicians SET " + fields[0] + " = ?";
-    	int count = 1;
-    	while (count < fields.length) {
-    		query += ", " + fields[count].toString() + " = ?";
-    		count += 1;
-    	}
-    	query += " WHERE StaffID = ?";
-    	String[] attr = new String[newValues.length + 1];
-    	for (int i = 0; i < newValues.length; i++) {
-    		attr[i] = newValues[i];
-    	}
-    	attr[newValues.length] = String.valueOf(clinician.getStaffID());
+    private void updateClinician(Clinician clinician) {
+    	String query = "UPDATE tblClinicians SET " +
+                "FName = ?, MName = ?, Name = ?, " +
+                "Street1 = ?, Street2 = ?, Suburb = ?, " +
+                "Region = ?, Modified = ?" +
+                "WHERE StaffID = ?";
+    	String[] attr = getClinicianAttributes(clinician);
+    	attr = shiftLeft(attr);
     	try {
 			runQuery(query, attr);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+    }
+
+    private String[] shiftLeft(String[] array) {
+        if (array == null || array.length <= 1) {
+            return array;
+        }
+        String start = array[0];
+        System.arraycopy(array, 1, array, 0, array.length - 1);
+        array[array.length - 1] = start;
+        return array;
     }
     
     /**
@@ -1111,7 +1097,7 @@ public class Database {
             Database test = Database.getDatabase();
             Clinician clin = new Clinician(10, "First", new ArrayList<String>(), "Last", Region.CANTERBURY);
             database.addClinician(clin);
-            database.update(clin, new dbFields[] {dbFields.FNAME}, new String[] {"newFirst"});
+            database.update(clin);
 //            database.add(new Patient("ABC1238", "Joe", new ArrayList<String>(), "Joeson", LocalDate.now()));
 //            String stmt = "UPDATE tblPatients SET Weight = 67 WHERE LName = ?";
 //            String[] params = {"Joeson"};
