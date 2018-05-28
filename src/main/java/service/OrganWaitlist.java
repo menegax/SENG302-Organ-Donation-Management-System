@@ -19,7 +19,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	    requests = new TreeSet<OrganRequest>();
 	}
 
-	public void checkDatabase() {
+	private void checkDatabase() {
 		if(database == null) {
 			database = Database.getDatabase();
 		}
@@ -51,7 +51,11 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	public boolean add(String name, Organ organ, LocalDate date, Region region, String nhi) {
 		return requests.add(new OrganRequest(name, organ, date, region, nhi));
 	}
-	
+
+	/**
+	 * Returns the number of OrganRequest objects in the waitlist
+	 * @return int size of waitlist
+	 */
 	public int size() {
 		return requests.size();
 	}
@@ -76,7 +80,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		String name;
 		String nhi;
 		
-		public OrganRequest(Patient receiver, Organ organ) {
+		OrganRequest(Patient receiver, Organ organ) {
 			date = LocalDate.now();
 			region = receiver.getRegion();
 			this.organ = organ;
@@ -84,7 +88,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 			nhi = receiver.getNhiNumber();
 		}
 		
-		public OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi) {
+		OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi) {
 			this.date = date;
 			this.region = region;
 			this.organ = organ;

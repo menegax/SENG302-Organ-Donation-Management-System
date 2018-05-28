@@ -102,9 +102,7 @@ public class Disease {
         if(o instanceof Disease) {
             Disease d = (Disease) o;
             if(d.getDiseaseName().equals(this.diseaseName)) {
-                if(d.getDateDiagnosed().equals(this.dateDiagnosed)) {
-                    return true;
-                }
+                return d.getDateDiagnosed().equals(this.dateDiagnosed);
             }
         }
         return false;

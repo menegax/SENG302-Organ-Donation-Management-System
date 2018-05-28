@@ -5,10 +5,10 @@ import model.Clinician;
 import model.Disease;
 import model.Medication;
 import model.Patient;
-import utility.FormatterLog;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.dbFields;
+import utility.PatientActionRecord;
 import utility.SearchPatients;
 import utility.UserActionRecord;
 
@@ -191,9 +191,10 @@ public class Database {
         if (patient.getDeath() != null) {
             attr[7] = patient.getDeath().toString();
         }
-        if (patient.getGender() != null) {
-            attr[8] = patient.getGender().toString().substring(0, 1);
+        if (patient.getBirthGender() != null) {
+            attr[8] = patient.getBirthGender().toString().substring(0, 1);
         }
+        //todo preferred name and gender here
         attr[9] = null;
         attr[10] = null;
         attr[11] = String.valueOf(patient.getHeight() * 100);
@@ -301,7 +302,7 @@ public class Database {
         return diseaseAttr;
     }
 
-    private String[] getLogAttributes(Patient patient, UserActionRecord record) {
+    private String[] getLogAttributes(Patient patient, PatientActionRecord record) {
         String[] recordAttr = new String[5];
         recordAttr[0] = patient.getNhiNumber();
         recordAttr[1] = record.getTimestamp().toString();
@@ -352,8 +353,8 @@ public class Database {
     }
 
     private void addPatientLogs(Patient patient) throws SQLException {
-        ArrayList<UserActionRecord> records = patient.getUserActionsList();
-        for (UserActionRecord record : records) {
+        ArrayList<PatientActionRecord> records = patient.getUserActionsList();
+        for (PatientActionRecord record : records) {
             String[] recordAttr = getLogAttributes(patient, record);
             String recordQuery = "INSERT INTO tblPatientLogs VALUES (?, ?, ?, ?, ?)";
             runQuery(recordQuery, recordAttr);
@@ -556,16 +557,13 @@ public class Database {
         Timestamp created = Timestamp.valueOf(attr[5]);
         Timestamp modified = Timestamp.valueOf(attr[6]);
         LocalDate death = LocalDate.parse(attr[7]);
-        GlobalEnums.Gender gender;
+        GlobalEnums.BirthGender gender;
         switch (attr[8]) {
             case "M":
-                gender = GlobalEnums.Gender.MALE;
-                break;
-            case "F":
-                gender = GlobalEnums.Gender.FEMALE;
+                gender = GlobalEnums.BirthGender.MALE;
                 break;
             default:
-                gender = GlobalEnums.Gender.OTHER;
+                gender = GlobalEnums.BirthGender.FEMALE;
                 break;
         }
         //todo: set pref gender and name here after story 29 is in
@@ -601,7 +599,7 @@ public class Database {
             e.printStackTrace();
         }
 
-        return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, height, weight,
+        return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, null, height, weight,
                 bloodType, donations, requested, contactAttr[0], contactAttr[1], contactAttr[2], region, zip,
                 contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
                 contactAttr[11], contactAttr[12], contactAttr[13], contactAttr[14], null, currentDiseases,
@@ -821,7 +819,6 @@ public class Database {
 //            throw new IllegalArgumentException("staffID");
 //        }
 //    }
-
     /**
      * Removes a patient from the database
      *
@@ -901,6 +898,37 @@ public class Database {
         throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
     }
 
+//    /**
+//     * Adds a clinician to the database
+//     *
+//     * @param newClinician the new clinician to add
+//     */
+//    public static void addClinician(Clinician newClinician) throws IllegalArgumentException {
+//        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getFirstName())) {
+//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: first name", "Attempted to add a clinician");
+//            throw new IllegalArgumentException("firstname");
+//        }
+//
+//        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getLastName())) {
+//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: last name", "Attempted to add a clinician");
+//            throw new IllegalArgumentException("lastname");
+//        }
+//
+//        if (newClinician.getStreet1() != null && !Pattern.matches("^[- a-zA-Z0-9]+$", newClinician.getStreet1())) {
+//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: street1", "Attempted to add a clinician");
+//            throw new IllegalArgumentException("street1");
+//        }
+//
+//        if (newClinician.getStaffID() == Database.getNextStaffID()) {
+//            clinicians.add(newClinician);
+//            userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
+//        }
+//
+//        else {
+//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field staffID", "Attempted to add a clinician");
+//            throw new IllegalArgumentException("staffID");
+//        }
+//    }
 
     /**
      * Returns the next valid staffID based on IDs in the clinician list
@@ -919,29 +947,32 @@ public class Database {
         }
     }
 
-
     /**
      * Calls all sub-methods to save data to disk
      */
     public void saveToDisk() {
         try {
             saveToDiskPatients();
-            saveToDiskWaitlist();
+//            saveToDiskWaitlist();
             saveToDiskClinicians();
         } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
     }
-
-    private void saveToDiskWaitlist() throws IOException {
-        Gson gson = new Gson();
-        String json = gson.toJson(organWaitingList);
-
-        String PatientPath = "./";
-        Writer writer = new FileWriter(new File(PatientPath, "waitlist.json"));
-        writer.write(json);
-        writer.close();
-    }
+//
+//    /**
+//     * Saves the organ waitlist to the file waitlist.json
+//     * @throws IOException the file cannot be found or created
+//     */
+//    private static void saveToDiskWaitlist() throws IOException {
+//        Gson gson = new Gson();
+//        String json = gson.toJson(organWaitingList);
+//
+//        String PatientPath = "./";
+//        Writer writer = new FileWriter(new File(PatientPath, "waitlist.json"));
+//        writer.write(json);
+//        writer.close();
+//    }
 
     /**
      * Writes database patients to file on disk
@@ -958,7 +989,6 @@ public class Database {
         writer.close();
     }
 
-
     /**
      * Writes database clinicians to file on diskreturn null;
      *
@@ -973,21 +1003,6 @@ public class Database {
         writer.write(json);
         writer.close();
     }
-
-//
-//    /**
-//     * Calls importFromDisk and handles any errors
-//     * @param fileName The file to import from
-//     */
-//    public static void importFromDisk(String fileName) {
-//        try {
-//            importFromDiskPatients(fileName);
-//            userActions.log(Level.INFO, "Imported patients from disk", "Attempted to import from disk");
-//            SearchPatients.createFullIndex();
-//        } catch (IOException e) {
-//            userActions.log(Level.WARNING, e.getMessage(), "attempted to import from disk");
-//        }
-//    }
 
     /**
      * Reads patient data from disk
@@ -1011,13 +1026,19 @@ public class Database {
             userActions.log(Level.WARNING, "Patient import file not found", "Attempted to read patient file");
         }
     }
-
-    public void importFromDiskWaitlist(String directory) throws FileNotFoundException {
-        String fileName = directory + "waitlist.json";
-        Gson gson = new Gson();
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        organWaitingList = gson.fromJson(br, OrganWaitlist.class);
-    }
+//
+//    /**
+//     * Imports the organ waitlist from the selected directory
+//     * @param filename file to import from
+//     */
+//    public static void importFromDiskWaitlist(String filename) {
+//        Gson gson = new Gson();
+//
+//            InputStream in = ClassLoader.class.getResourceAsStream(filename);
+//            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+//            organWaitingList = gson.fromJson(br, OrganWaitlist.class);
+//
+//    }
 
     /**
      * Reads clinician data from disk
@@ -1041,7 +1062,6 @@ public class Database {
             userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
         }
     }
-
 
     /**
      * Clears the database of all patients

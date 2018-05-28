@@ -1,9 +1,11 @@
 package model;
 
+import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -25,6 +27,8 @@ public class Clinician extends User {
 
     private GlobalEnums.Region region;
 
+    private List<ClinicianActionRecord> clinicianActionsList = new ArrayList<>();
+
     /**
      * Creates a clinician instance without providing the workplace address details - as they are optional
      *
@@ -40,6 +44,7 @@ public class Clinician extends User {
         this.middleNames = middleNames;
         this.lastName = lastName;
         this.region = region;
+        clinicianModified();
     }
 
     /**
@@ -63,6 +68,7 @@ public class Clinician extends User {
         this.street2 = street2;
         this.suburb = suburb;
         this.region = region;
+        clinicianModified();
     }
 
     public int getStaffID() {
@@ -71,6 +77,7 @@ public class Clinician extends User {
 
     public void setStaffID(int staffID) {
         this.staffID = staffID;
+        clinicianModified();
     }
 
     public String getFirstName() {
@@ -87,6 +94,7 @@ public class Clinician extends User {
     public void setFirstName(String firstName) {
         if (firstName != null && firstName.length() > 0 && Pattern.matches("^[-a-zA-Z]+$", firstName)) {
             this.firstName = firstName;
+            clinicianModified();
         }
     }
 
@@ -96,6 +104,7 @@ public class Clinician extends User {
 
     public void setMiddleNames(ArrayList<String> middleNames) {
         this.middleNames = middleNames;
+        clinicianModified();
     }
 
     public String getLastName() {
@@ -112,6 +121,7 @@ public class Clinician extends User {
     public void setLastName(String lastName) {
         if (lastName != null && lastName.length() > 0 && Pattern.matches("^[-a-zA-Z]+$", lastName)) {
             this.lastName = lastName;
+            clinicianModified();
         }
     }
 
@@ -142,8 +152,9 @@ public class Clinician extends User {
      * @param street1 The new street1 value
      */
     public void setStreet1(String street1) {
-        if (street1 != null && street1.length() > 0 && Pattern.matches("^[- a-zA-Z0-9]+$", street1)) {
+        if (street1 != null && Pattern.matches("^[- a-zA-Z0-9]*$", street1)) {
             this.street1 = street1;
+            clinicianModified();
         }
     }
 
@@ -152,7 +163,10 @@ public class Clinician extends User {
     }
 
     public void setStreet2(String street2) {
-        this.street2 = street2;
+        if (street2 != null && Pattern.matches("^[- a-zA-Z0-9]*$", street2)) {
+            this.street2 = street2;
+            clinicianModified();
+        }
     }
 
     public String getSuburb() {
@@ -160,7 +174,10 @@ public class Clinician extends User {
     }
 
     public void setSuburb(String suburb) {
-        this.suburb = suburb;
+        if (suburb != null && Pattern.matches("^[- a-zA-Z0-9]*$", suburb)) {
+            this.suburb = suburb;
+            clinicianModified();
+        }
     }
 
     public GlobalEnums.Region getRegion() {
@@ -169,6 +186,7 @@ public class Clinician extends User {
 
     public void setRegion(GlobalEnums.Region region) {
         this.region = region;
+        clinicianModified();
     }
 
     public Timestamp getModified() { return this.modified; }
@@ -179,5 +197,13 @@ public class Clinician extends User {
 
     public void clinicianModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
+    }
+
+    /**
+     * Returns the list of this clinicians actions. This should only be modified within UserActionHistory
+     * @return the list of Clinician Action Records
+     */
+    public List<ClinicianActionRecord> getClinicianActionsList() {
+        return clinicianActionsList;
     }
 }

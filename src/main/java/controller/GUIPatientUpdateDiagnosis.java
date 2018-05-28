@@ -1,15 +1,11 @@
 package controller;
 
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import utility.GlobalEnums;
@@ -26,7 +22,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller for diagnosis update popup window.
  */
-public class GUIPatientUpdateDiagnosis {
+public class GUIPatientUpdateDiagnosis extends UndoableController{
 
     @FXML
     public AnchorPane diagnosisUpdatePane;
@@ -58,8 +54,6 @@ public class GUIPatientUpdateDiagnosis {
      */
     private static Patient currentPatient;
     public Label titleLabel;
-
-    private StatesHistoryScreen statesHistoryScreen;
 
     private static boolean isAdd;
 
@@ -95,12 +89,12 @@ public class GUIPatientUpdateDiagnosis {
         }
         populateDropdown();
         populateForm();
-        ArrayList<Control> controls = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(diseaseNameTextField);
             add(diagnosisDate);
             add(tagsDD);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(diagnosisUpdatePane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDIAGNOSIS);
     }
 
     /**
@@ -180,10 +174,7 @@ public class GUIPatientUpdateDiagnosis {
      * @return boolean is duplicate
      */
     private boolean isDuplicate(Disease disease, Disease d) {
-        if(disease.equals(d)) {
-            return true;
-        }
-        return false;
+        return disease.equals(d);
     }
 
     /**
@@ -249,7 +240,7 @@ public class GUIPatientUpdateDiagnosis {
         try {
             d.setDateDiagnosed(diagnosisDate.getValue(), currentPatient.getBirth());
         } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "The diagnosis date is not valid.");
+            userActions.log(Level.SEVERE, "The diagnosis date is not valid.", "Attempted to add an invalid diagnosis date");
         }
         for (Disease disease : currentPatient.getCurrentDiseases()) {
             if(disease != target && isDuplicate(disease, d)) {

@@ -170,7 +170,7 @@ public class PatientTest {
     @Test
     public void testGetNameConcatenatedWithMiddles() {
         setPatientNamesMultipleMiddle();
-        assertEquals("Joe Jane Jarred Bloggs", testPatient.getNameConcatenated());
+        assertEquals("James Jane Jarred Bloggs", testPatient.getNameConcatenated());
     }
 
 
@@ -180,7 +180,7 @@ public class PatientTest {
     @Test
     public void testGetNameConcatenatedWithoutMiddles() {
         setPatientNamesNoMiddle();
-        assertEquals("Joe Bloggs", testPatient.getNameConcatenated());
+        assertEquals("James Bloggs", testPatient.getNameConcatenated());
     }
 
     /**

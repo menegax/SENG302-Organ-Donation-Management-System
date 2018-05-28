@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="procedureAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProcedureForm">
+   <children>
+      <Label alignment="CENTER" layoutX="145.0" layoutY="25.0" prefHeight="55.0" prefWidth="311.0" styleClass="title" stylesheets="@../css/guiStyle.css" text="Add Procedure" />
+      <TextField fx:id="summaryInput" layoutX="145.0" layoutY="101.0" prefHeight="25.0" prefWidth="311.0" promptText="Summary" />
+      <TextArea fx:id="descriptionInput" layoutX="145.0" layoutY="136.0" prefHeight="129.0" prefWidth="311.0" promptText="Description" wrapText="true" />
+      <MenuButton fx:id="affectedInput" layoutX="226.0" layoutY="275.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="150.0" text="Affected Donations" />
+      <DatePicker fx:id="dateInput" editable="false" layoutX="226.0" layoutY="314.0" prefHeight="25.0" prefWidth="150.0" promptText="Date of procedure" />
+      <Button fx:id="doneButton" layoutX="463.0" layoutY="341.0" mnemonicParsing="false" onAction="#onSubmit" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Done" AnchorPane.rightAnchor="50.0" />
+      <Button fx:id="closePane" layoutX="55.0" layoutY="341.0" mnemonicParsing="false" onAction="#goBackToProcedures" prefHeight="27.0" prefWidth="90.0" text="Cancel" AnchorPane.leftAnchor="50.0" />
+   </children>
+</AnchorPane>

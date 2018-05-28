@@ -1,13 +1,15 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import service.Database;
 
 import java.io.IOException;
+
+import static java.util.logging.Level.SEVERE;
+import static utility.UserActionHistory.userActions;
 
 public class GUIPatientHome {
 
@@ -18,38 +20,51 @@ public class GUIPatientHome {
 
     public Button historyButton;
 
-    public Button saveButton;
-
     public Button logOutButton;
 
     Database database = Database.getDatabase();
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-
+    /**
+     * Navigates to the patient profile screen
+     */
     @FXML
     public void goToProfile() {
-        ScreenControl.activate("patientProfile");
+        try {
+            screenControl.show(homePane, "/scene/patientProfile.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load patient profile").show();
+            userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
+        }
     }
 
-
+    /**
+     * Navigates to the patient history screen
+     */
     @FXML
     public void goToHistory() {
         try {
-            ScreenControl.addScreen("patientHistory", FXMLLoader.load(getClass().getResource("/scene/patientHistory.fxml")));
+            screenControl.show(homePane, "/scene/patientHistory.fxml");
         }
         catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "Unable load patient history").show();
+            userActions.log(SEVERE, "Failed to load patient history", "Attempted to load patient history");
         }
-        ScreenControl.activate("patientHistory");
     }
 
-
+    /**
+     * Logs out the current patient and closes the patient window
+     */
     @FXML
     public void logOut() {
         UserControl userControl = new UserControl();
         userControl.clearCahce();
-        ScreenControl.activate("login");
+        screenControl.closeStage(homePane);
     }
 
+    /**
+     * Saves changes to the patient to the database
+     */
     @FXML
     public void save() {
         database.saveToDisk();
