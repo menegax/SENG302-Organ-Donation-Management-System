@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;
 
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -192,6 +194,7 @@ public class GUIClinicianDiagnosis {
             UndoableStage stage = new UndoableStage();
             screenControl.addStage(stage.getUUID(), stage);
             screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/testPatientUpdateDiagnosis.fxml")));
+            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE,
@@ -199,6 +202,11 @@ public class GUIClinicianDiagnosis {
                     "attempted to open diagnosis update window from the diagnoses page");
             new Alert(Alert.AlertType.ERROR, "Unable to open diagnosis update window", ButtonType.OK).show();
         }
+    }
+
+    private void tableRefresh() {
+        loadCurrentDiseases();
+        loadPastDiseases();
     }
 
     /**
