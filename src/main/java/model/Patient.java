@@ -537,7 +537,7 @@ public class Patient extends User {
 
     /**
      * sets the required organs of the patient to the list parsed through
-     * @param requiredOrgans
+     * @param requiredOrgans - organs required
      */
     public void setRequiredOrgans(ArrayList requiredOrgans) {
         this.requiredOrgans = requiredOrgans;

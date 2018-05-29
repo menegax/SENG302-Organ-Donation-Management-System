@@ -168,6 +168,7 @@ public class GUIPatientProfile {
 
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
+     * @throws InvalidObjectException -
      */
     public void initialize() throws InvalidObjectException{
         userControl = new UserControl();
@@ -277,8 +278,8 @@ public class GUIPatientProfile {
     /**
      * Highlights the listview cell if the organ donating is also required by the patient in clinician view. If in
      * patient view, the listview cells are just styled.
-     * @param listView
-     * @param isDonorList
+     * @param listView  -
+     * @param isDonorList -
      */
     public void highlightListCell(ListView<String> listView, boolean isDonorList) {
         listView.setCellFactory(column -> new ListCell<String>() {
