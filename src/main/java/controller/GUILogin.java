@@ -113,7 +113,7 @@ public class GUILogin {
                 screenControl.show(stage.getUUID(), clinicianHome);
                 screenControl.closeStage(Main.getUuid()); // close login scene after login
             }
-            catch (InvalidObjectException e) {
+            catch (InvalidObjectException | NumberFormatException e) {
                 userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
                 alert.show();
