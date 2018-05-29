@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import model.Clinician;
+import model.Administrator;
 
 import java.io.IOException;
 
@@ -31,14 +32,16 @@ public class GUIClinicianProfile {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private Boolean ifAdministrator = false; // TEMPORARY UNTIL WE HAVE ADMIN LOGIN FUNCIONALITY
+
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
     public void initialize() {
         UserControl userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
-        if (user instanceof Clinician){
-            loadProfile(((Clinician) user));
+        if (user instanceof Clinician) {
+            loadProfile( ((Clinician) user) );
         }
     }
 
