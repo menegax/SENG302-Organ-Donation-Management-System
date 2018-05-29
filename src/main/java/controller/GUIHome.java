@@ -122,6 +122,7 @@ public class GUIHome {
      */
     private void addTabsClinician() throws IOException {
         createTab("Profile", "/scene/clinicianProfile.fxml");
+        createTab("Update", "/scene/clinicianProfileUpdate.fxml");
         createTab("Search Patients", "/scene/clinicianSearchPatients.fxml");
         createTab("Transplant Waiting List","/scene/testClinicianWaitingList.fxml" );
         createTab("History","/scene/testClinicianHistory.fxml" );
