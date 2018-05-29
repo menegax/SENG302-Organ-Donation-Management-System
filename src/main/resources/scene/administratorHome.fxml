@@ -18,6 +18,7 @@
         <Button fx:id="history" layoutX="76.0" layoutY="230.0" mnemonicParsing="false" onAction="#goToHistory" prefHeight="79.0" prefWidth="110.0" text="History" />
         <Button fx:id="searchClinicians" layoutX="410.0" layoutY="136.0" mnemonicParsing="false" onAction="#goToSearchClinicians" prefHeight="79.0" prefWidth="110.0" text="Search Clinicians" />
         <Button fx:id="searchAdministrators" layoutX="410.0" layoutY="230.0" mnemonicParsing="false" onAction="#goToSearchAdministrators" prefHeight="79.0" prefWidth="110.0" text="Search Administrators" textAlignment="CENTER" wrapText="true" />
+        <Button fx:id="registerButton" layoutX="76.0" layoutY="36.0" mnemonicParsing="false" onAction="#registerNewUser" prefHeight="79.0" prefWidth="111.0" text="Register New User" textAlignment="CENTER" wrapText="true" />
         <Button fx:id="saveButton" layoutX="435.0" layoutY="338.0" mnemonicParsing="false" onAction="#saveAdministrator" prefHeight="25.0" prefWidth="57.0" text="Save" />
         <Button fx:id="logoutButton" layoutX="101.0" layoutY="338.0" mnemonicParsing="false" onAction="#logOutAdministrator" text="Log out" />
         <Button fx:id="importDataButton" layoutX="263.0" layoutY="338.0" mnemonicParsing="false" onAction="#importData" prefHeight="25.0" prefWidth="80.0" text="Import Data" />

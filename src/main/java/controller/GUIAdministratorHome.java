@@ -1,9 +1,11 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import main.Main;
 import service.Database;
 
 import java.io.IOException;
@@ -20,6 +22,7 @@ public class GUIAdministratorHome {
     public AnchorPane administratorHomePane;
     public Button importDataButton;
     public Button waitingListButton;
+    public Button registerButton;
     public Button profileButton;
     public Button saveButton;
     public Button logoutButton;
@@ -39,6 +42,19 @@ public class GUIAdministratorHome {
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load clinician profile").show();
             userActions.log(SEVERE, "Failed to load clinician profile", "Attempted to load clinician profile");
+        }
+    }
+
+    /**
+     * Opens the register user profile screen
+     */
+    @FXML
+    public void registerNewUser() {
+        try {
+            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/patientRegister.fxml")));
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load user register").show();
+            userActions.log(SEVERE, "Failed to load user register", "Attempted to load user register");
         }
     }
 
