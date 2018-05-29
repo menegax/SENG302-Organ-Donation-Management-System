@@ -32,8 +32,6 @@ public class GUIClinicianProfile {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private Boolean ifAdministrator = false; // TEMPORARY UNTIL WE HAVE ADMIN LOGIN FUNCIONALITY
-
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
