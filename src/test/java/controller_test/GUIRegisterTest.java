@@ -78,13 +78,13 @@ public class GUIRegisterTest extends ApplicationTest {
     @Test
     public void should_successfully_register_with_middle_name() {
         interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("BBB9922");
+            lookup("#userIdRegister").queryAs(TextField.class).setText("BBB9922");
             lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
             lookup("#middlenameRegister").queryAs(TextField.class).setText("Wil");
             lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB9922"));
+        assertThat(lookup("#userIdRegister").queryAs(TextField.class).getText().equals("BBB9922"));
         assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("William"));
         assertThat(lookup("#middlenameRegister").queryAs(TextField.class).getText().equals("Wil"));
         assertThat(lookup("#lastnameRegister").queryAs(TextField.class).getText().equals("Williamson"));
@@ -105,12 +105,12 @@ public class GUIRegisterTest extends ApplicationTest {
     @Test
     public void should_successfully_register_without_middle_name() {
         interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("BBB9782");
+            lookup("#userIdRegister").queryAs(TextField.class).setText("BBB9782");
             lookup("#firstnameRegister").queryAs(TextField.class).setText("Willis");
             lookup("#lastnameRegister").queryAs(TextField.class).setText("Brucie");
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
         });
-        assertThat(lookup("#nhiRegister").queryAs(TextField.class).getText().equals("BBB9752"));
+        assertThat(lookup("#userIdRegister").queryAs(TextField.class).getText().equals("BBB9752"));
         assertThat(lookup("#firstnameRegister").queryAs(TextField.class).getText().equals("Willis"));
         assertThat(lookup("#lastnameRegister").queryAs(TextField.class).getText().equals("Brucie"));
         assertThat(lookup("#birthRegister").queryAs(DatePicker.class).getValue() == d);
@@ -141,7 +141,7 @@ public class GUIRegisterTest extends ApplicationTest {
     @Test
     public void unsuccessful_register_no_nhi() {
         interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("");
+            lookup("#userIdRegister").queryAs(TextField.class).setText("");
             lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
             lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
@@ -157,7 +157,7 @@ public class GUIRegisterTest extends ApplicationTest {
     @Test
     public void unsuccessful_register_invalid_nhi() {
         interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("2222bbb");
+            lookup("#userIdRegister").queryAs(TextField.class).setText("2222bbb");
             lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
             lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
@@ -174,7 +174,7 @@ public class GUIRegisterTest extends ApplicationTest {
     @Test
     public void unsuccessful_register_no_first_name() {
         interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("BBB2222");
+            lookup("#userIdRegister").queryAs(TextField.class).setText("BBB2222");
             lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
             lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
@@ -189,7 +189,7 @@ public class GUIRegisterTest extends ApplicationTest {
     @Test
     public void unsuccessful_register_no_last_name() {
         interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("2222bbb");
+            lookup("#userIdRegister").queryAs(TextField.class).setText("2222bbb");
             lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
             lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
@@ -204,7 +204,7 @@ public class GUIRegisterTest extends ApplicationTest {
     @Test
     public void unsuccessful_register_no_birth_date() {
         interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("2222bbb");
+            lookup("#userIdRegister").queryAs(TextField.class).setText("2222bbb");
             lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
             lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
             lookup("#doneButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
@@ -226,7 +226,7 @@ public class GUIRegisterTest extends ApplicationTest {
         Database.getPatientByNhi("TFX9999").addDonation(GlobalEnums.Organ.CORNEA);
 
         interact(() -> {
-            lookup("#nhiRegister").queryAs(TextField.class).setText("TFX9999");
+            lookup("#userIdRegister").queryAs(TextField.class).setText("TFX9999");
             lookup("#firstnameRegister").queryAs(TextField.class).setText("William");
             lookup("#lastnameRegister").queryAs(TextField.class).setText("Williamson");
             lookup("#birthRegister").queryAs(DatePicker.class).setValue(LocalDate.of(1957,6,21));
