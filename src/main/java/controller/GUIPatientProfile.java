@@ -12,6 +12,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import model.Administrator;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
@@ -58,6 +59,9 @@ public class GUIPatientProfile {
 
     @FXML
     public Button requirementsButton;
+
+    @FXML
+    private Button deleteButton;
 
     @FXML
     private Label nhiLbl;
@@ -141,6 +145,8 @@ public class GUIPatientProfile {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private Object user = new UserControl();
+
     /**
         * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
      */
@@ -166,12 +172,18 @@ public class GUIPatientProfile {
             }
             user = userControl.getLoggedInUser();
             proceduresButton.setText("View Procedures"); //Changing the button text for patients
+            deleteButton.setVisible( false );
+            deleteButton.setDisable( true );
         }
         if (userControl.getLoggedInUser() instanceof Clinician) {
             removeBack();
+            deleteButton.setVisible( false );
+            deleteButton.setDisable( true );
+            user = userControl.getTargetPatient();
+        } else if (user instanceof Administrator) {
+            removeBack();
             user = userControl.getTargetPatient();
         }
-
         try {
             assert user != null;
             loadProfile(((Patient)user).getNhiNumber());
@@ -446,6 +458,27 @@ public class GUIPatientProfile {
                 new Alert((Alert.AlertType.ERROR), "Unable to load patient home").show();
                 userActions.log(SEVERE, "Failed to load patient home", "Attempted to load patient home");
             }
+        }
+    }
+
+    /**
+     * Deletes the current profile from the HashSet in Database, not from disk, not until saved
+     */
+    public void deleteProfile() {
+        Patient patient = (Patient) user;
+        Database.deletePatient( patient );
+        goToAdministratorHome();
+    }
+
+    /**
+     * Opens the administrator home screen
+     */
+    private void goToAdministratorHome() {
+        try {
+            screenControl.show(patientProfilePane, "/scene/administratorHome.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load administrator home").show();
+            userActions.log(SEVERE, "Failed to load administrator home", "Attempted to load administrator home");
         }
     }
 

@@ -154,5 +154,6 @@
       <Button fx:id="requirementsButton" layoutX="338.0" layoutY="350.0" mnemonicParsing="false" onAction="#goToRequirements" prefHeight="25.0" prefWidth="122.0" text="Manage Requested" />
       <Button fx:id="diseaseHistoryButton" layoutX="338.0" layoutY="315.0" mnemonicParsing="false" onAction="#openPatientDiagnoses" prefHeight="25.0" prefWidth="122.0" text="Manage Diagnoses" />
       <Button fx:id="contactButton" layoutX="222.0" layoutY="315.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contacts" />
+      <Button fx:id="deleteButton" layoutX="14.0" layoutY="344.0" onAction="#deleteProfile" mnemonicParsing="false" text="Delete Profile" />
    </children>
 </AnchorPane>

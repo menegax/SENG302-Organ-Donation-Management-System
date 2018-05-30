@@ -2,9 +2,12 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.Administrator;
+import service.Database;
 
 import java.io.IOException;
 
@@ -30,16 +33,25 @@ public class GUIClinicianProfile {
     @FXML
     private Label regionTxt;
 
+    @FXML
+    private Button deleteButton;
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+    private Object user = new UserControl().getLoggedInUser();
 
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
     public void initialize() {
-        UserControl userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
         if (user instanceof Clinician) {
+            deleteButton.setVisible( false );
+            deleteButton.setDisable( true );
             loadProfile( ((Clinician) user) );
+        } else if (user instanceof Administrator) {
+            loadProfile( ((Clinician) user));
+        } else {
+            deleteButton.setVisible( false );
+            deleteButton.setDisable( true );
         }
     }
 
@@ -81,6 +93,17 @@ public class GUIClinicianProfile {
     }
 
     /**
+     * Deletes the current profile from the HashSet in Database, not from disk, not until saved
+     */
+    public void deleteProfile() {
+        Clinician clinician = (Clinician) user;
+        if (clinician.getStaffID() != 0) {
+            Database.deleteClinician( clinician );
+            goToAdministratorHome();
+        }
+    }
+
+    /**
      * Opens the clinician home screen
      */
     public void goToClinicianHome() {
@@ -89,6 +112,18 @@ public class GUIClinicianProfile {
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
             userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
+        }
+    }
+
+    /**
+     * Opens the administrator home screen
+     */
+    private void goToAdministratorHome() {
+        try {
+            screenControl.show(idTxt, "/scene/administratorHome.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load administrator home").show();
+            userActions.log(SEVERE, "Failed to load administrator home", "Attempted to load administrator home");
         }
     }
 }

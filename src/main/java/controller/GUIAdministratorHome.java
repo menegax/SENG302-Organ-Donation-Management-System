@@ -38,10 +38,10 @@ public class GUIAdministratorHome {
     @FXML
     public void goToAdministratorProfile(){
         try {
-            screenControl.show(administratorHomePane, "/scene/administratorProfile.fxml");
+            screenControl.show(administratorHomePane, "/scene/clinicianProfile.fxml");
         } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load clinician profile").show();
-            userActions.log(SEVERE, "Failed to load clinician profile", "Attempted to load clinician profile");
+            new Alert((Alert.AlertType.ERROR), "Unable to load administrator profile").show();
+            userActions.log(SEVERE, "Failed to load administrator profile", "Attempted to load administrator profile");
         }
     }
 
@@ -92,8 +92,8 @@ public class GUIAdministratorHome {
         try {
             screenControl.show(administratorHomePane, "/scene/administratorSearchAdministrators.fxml");
         } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load search clinicians").show();
-            userActions.log(SEVERE, "Failed to load search clinicians", "Attempted to load search clinicians");
+            new Alert((Alert.AlertType.ERROR), "Unable to load search administrators").show();
+            userActions.log(SEVERE, "Failed to load search administrators", "Attempted to load search administrators");
         }
     }
 

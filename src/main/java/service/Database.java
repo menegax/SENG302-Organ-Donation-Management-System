@@ -32,8 +32,6 @@ public class Database {
     private static Boolean isAdministrator = false;
 
 
-
-
     /**
      * Adds a patient to the database
      *
@@ -311,6 +309,22 @@ public class Database {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             organWaitingList = gson.fromJson(br, OrganWaitlist.class);
 
+    }
+
+    /**
+     * Removes from the clinicians HashSet the given clinician
+     * @param clinician The clinician being removed from set
+     */
+    public static void deleteClinician(Clinician clinician) {
+        clinicians.remove( clinician );
+    }
+
+    /**
+     * Removes from the patients HashSet the given patient
+     * @param patient The patient being removed from set
+     */
+    public static void deletePatient(Patient patient) {
+        patients.remove( patient );
     }
 
     /**
