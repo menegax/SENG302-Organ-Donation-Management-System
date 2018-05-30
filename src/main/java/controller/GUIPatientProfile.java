@@ -148,9 +148,9 @@ public class GUIPatientProfile {
     private Object user = new UserControl();
 
     /**
-        * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
+     * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
+     * @throws InvalidObjectException throws exception when object is invalid
      */
-
     public void initialize() throws InvalidObjectException{
         userControl = new UserControl();
         Object user = null;

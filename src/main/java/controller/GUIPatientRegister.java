@@ -183,7 +183,7 @@ public class GUIPatientRegister {
         administratorButton.requestFocus();
         clinicianButton.setSelected( false );
         patientButton.setSelected( false );
-        userIdRegister.setPromptText( "Staff ID" );
+        userIdRegister.setPromptText( "Username" );
         regionRegister.setVisible( false );
         regionRegister.setDisable( true );
         birthRegister.setVisible( false );
@@ -276,10 +276,18 @@ public class GUIPatientRegister {
             } else {
                 setValid( userIdRegister );
             }
-        } else {
+        } else if (clinicianButton.isSelected()) {
             if (userIdRegister.getText() == null) {
                 valid = setInvalid(userIdRegister);
                 invalidContent.append("User ID must be an integer\n");
+            } else {
+                setValid(userIdRegister);
+            }
+        } else {
+            if (!userIdRegister.getText()
+                    .matches("([A-Za-z0-9]+[-]*[_]*)+")) {
+                valid = setInvalid(userIdRegister);
+                invalidContent.append("Username must be letters, -, or _.\n");
             } else {
                 setValid(userIdRegister);
             }
@@ -354,7 +362,7 @@ public class GUIPatientRegister {
                 Database.addClinician( new Clinician( Integer.parseInt(id), firstName, middles, lastName, (Region) Region.getEnumFromString(region) ));
                 userActions.log( Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile" );
             } else {
-                Database.addAdministrator( new Administrator( Integer.parseInt(id), firstName, middles, lastName ));
+                Database.addAdministrator( new Administrator( id, firstName, middles, lastName ));
                 userActions.log( Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile" );
             }
             Database.saveToDisk();

@@ -120,7 +120,8 @@ public class GUIRequiredOrganDeregistrationReason {
     }
 
     /**
-     * sets the label with organ name
+     * Sets the label with organ name
+     * @param organ the organ being set to label
      */
     public void setOrgan(GlobalEnums.Organ organ) {
         this.organ = organ;

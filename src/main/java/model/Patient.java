@@ -124,6 +124,7 @@ public class Patient extends User {
      * @param firstName         first name
      * @param lastName          last name
      * @param middleNames       middle names
+     * @param preferredName     preferred name
      * @param birth             birth date
      * @param death             death date
      * @param street1           street 1 of address

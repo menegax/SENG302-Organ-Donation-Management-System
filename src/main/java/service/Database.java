@@ -164,7 +164,6 @@ public class Database {
     }
 
     public static void addAdministrator(Administrator administrator) throws IllegalArgumentException {
-        isAdministrator = true;
         if (!Pattern.matches("^[-a-zA-Z]+$", administrator.getFirstName())) {
             userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field: first name", "Attempted to add a administrator");
             throw new IllegalArgumentException("firstname");
@@ -175,16 +174,14 @@ public class Database {
             throw new IllegalArgumentException("lastname");
         }
 
-        if (administrator.getStaffId() == Database.getNextStaffID()) {
-            administrators.add(administrator);
-            userActions.log(Level.INFO, "Successfully added administrator " + administrator.getStaffId(), "Attempted to add an administrator");
+        for (Administrator admin : administrators) {
+            if (admin.getUsername().equals(administrator.getUsername())) {
+                userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field staffID", "Attempted to add an administrator");
+                throw new IllegalArgumentException("staffID");
+            }
         }
-
-        else {
-            userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field staffID", "Attempted to add an administrator");
-            throw new IllegalArgumentException("staffID");
-        }
-        isAdministrator = false;
+        administrators.add(administrator);
+        userActions.log(Level.INFO, "Successfully added administrator " + administrator.getUsername(), "Attempted to add an administrator");
     }
 
     /**
@@ -193,27 +190,14 @@ public class Database {
      * @return the valid id
      */
     public static int getNextStaffID() {
-        if (isAdministrator) {
-            if (administrators.size() == 0) {
-                return 0;
-            }
-            else {
-                int currentID = administrators.stream()
-                        .max(Comparator.comparing(Administrator::getStaffId))
-                        .get()
-                        .getStaffId();
-                return currentID + 1;
-            }
+        if (clinicians.size() == 0) {
+            return 0;
         } else {
-            if (clinicians.size() == 0) {
-                return 0;
-            } else {
-                int currentID = clinicians.stream()
-                        .max( Comparator.comparing( Clinician::getStaffID ) )
-                        .get()
-                        .getStaffID();
-                return currentID + 1;
-            }
+            int currentID = clinicians.stream()
+                    .max( Comparator.comparing( Clinician::getStaffID ) )
+                    .get()
+                    .getStaffID();
+            return currentID + 1;
         }
     }
 
