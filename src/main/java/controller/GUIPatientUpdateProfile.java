@@ -483,9 +483,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 target.setBloodGroup((GlobalEnums.BloodGroup) GlobalEnums.BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
                         .getSelectedItem()));
             }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Patient successfully updated", ButtonType.OK);
+            alert.show();
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
             Database.saveToDisk();
-//            goBackToProfile();
         }
         else {
             userActions.log(Level.WARNING, "Failed to update patient profile due to invalid fields", "Attempted to update patient profile");
