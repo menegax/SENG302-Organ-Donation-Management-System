@@ -87,7 +87,7 @@ public class GUIPatientRegister {
         regionRegister.addEventFilter( ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume );
         regionRegister.setVisible( false );
         regionRegister.setDisable( true );
-        if (userControl.getLoggedInUser() instanceof Administrator) {
+        if (userControl.getLoggedInUser() instanceof Clinician) {
             ObservableList<String> regions = FXCollections.observableArrayList();
             for (Region region : Region.values()) {
                 regions.add(region.getValue());
@@ -183,10 +183,10 @@ public class GUIPatientRegister {
         clinicianButton.setSelected( false );
         patientButton.setSelected( false );
         userIdRegister.setPromptText( "Staff ID" );
-        regionRegister.setVisible( true );
-        regionRegister.setDisable( false );
-        birthRegister.setVisible( true );
-        birthRegister.setDisable( false );
+        regionRegister.setVisible( false );
+        regionRegister.setDisable( true );
+        birthRegister.setVisible( false );
+        birthRegister.setDisable( true );
     }
 
     /**
@@ -278,7 +278,7 @@ public class GUIPatientRegister {
         } else {
             if (userIdRegister.getText() == null) {
                 valid = setInvalid(userIdRegister);
-                invalidContent.append("First name must be letters, ., or -.\n");
+                invalidContent.append("User ID must be an integer\n");
             } else {
                 setValid(userIdRegister);
             }
@@ -325,12 +325,12 @@ public class GUIPatientRegister {
                 valid = setInvalid( birthRegister );
                 invalidContent.append( "Date of birth must be set.\n" );
             }
-        } else {
+        } else if (clinicianButton.isSelected()) {
             if (regionRegister.getValue() != null) {
                 setValid( birthRegister );
             } else {
                 valid = setInvalid( regionRegister );
-                invalidContent.append( "Date of birth must be set.\n" );
+                invalidContent.append( "Region must be set.\n" );
             }
         }
 
