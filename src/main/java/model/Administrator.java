@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * Administrators also have a password that is hashed and they are given a generated user salt
  */
 public class Administrator extends User {
-    private String username;
+    private int staffId;
 
     private String firstName;
     private List<String> middleNames;
@@ -26,8 +26,8 @@ public class Administrator extends User {
      * @param middleNames The Administrators middle names. This should should be a list of Strings where each string is a single middle name
      * @param lastName    The Administrators last name
      */
-    public Administrator(String username, String firstName, List<String> middleNames, String lastName) {
-        this.username = username;
+    public Administrator(int staffId, String firstName, List<String> middleNames, String lastName) {
+        this.staffId = staffId;
         this.firstName = firstName;
         this.middleNames = middleNames;
         this.lastName = lastName;
@@ -37,12 +37,12 @@ public class Administrator extends User {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
 
-    public String getUsername() {
-        return username;
+    public int getStaffId() {
+        return staffId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(int staffId) {
+        this.staffId = staffId;
     }
 
     public String getFirstName() {

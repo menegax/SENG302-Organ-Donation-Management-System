@@ -1,5 +1,9 @@
 package controller;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,8 +17,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import main.Main;
+import model.Administrator;
+import model.Clinician;
 import model.Patient;
 import service.Database;
+import utility.GlobalEnums.Region;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -45,23 +52,57 @@ public class GUIPatientRegister {
     private DatePicker birthRegister;
 
     @FXML
-    private TextField nhiRegister;
+    private TextField userIdRegister;
+
+    @FXML
+    private ChoiceBox regionRegister;
+
+    @FXML
+    private RadioButton patientButton;
+
+    @FXML
+    private RadioButton clinicianButton;
+
+    @FXML
+    private RadioButton administratorButton;
 
     @FXML
     private Pane patientRegisterAnchorPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private UserControl userControl = new UserControl();
+
     /**
      * Sets up register page GUI elements
      */
     public void initialize() {
+        patientButton.setSelected(true);
+        firstnameRegister.addEventFilter( ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume );
+        lastnameRegister.addEventFilter( ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume );
+        middlenameRegister.addEventFilter( ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume );
+        userIdRegister.addEventFilter( ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume );
         setDateConverter();
-        firstnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        lastnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        middlenameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        nhiRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        birthRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        birthRegister.addEventFilter( ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume );
+        regionRegister.addEventFilter( ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume );
+        regionRegister.setVisible( false );
+        regionRegister.setDisable( true );
+        if (userControl.getLoggedInUser() instanceof Administrator) {
+            ObservableList<String> regions = FXCollections.observableArrayList();
+            for (Region region : Region.values()) {
+                regions.add(region.getValue());
+            }
+            regionRegister.setItems(regions);
+            setUpRadioButtonListener();
+            administratorSelectPatientRegister();
+        } else {
+            patientButton.setDisable( true );
+            patientButton.setVisible( false );
+            clinicianButton.setDisable( true );
+            clinicianButton.setVisible( false );
+            administratorButton.setDisable( true );
+            administratorButton.setVisible( false );
+        }
 
         // Enter key
         patientRegisterAnchorPane.setOnKeyPressed(e -> {
@@ -71,6 +112,82 @@ public class GUIPatientRegister {
         });
     }
 
+    /**
+     * Sets listener for when radio buttons are selected
+     */
+    private void setUpRadioButtonListener() {
+        patientButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed( ObservableValue<? extends Boolean> obs, Boolean wasPreviouslySelected, Boolean isNowSelected) {
+                if (isNowSelected) {
+                    administratorSelectPatientRegister();
+                }
+            }
+        });
+
+        clinicianButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed( ObservableValue<? extends Boolean> obs, Boolean wasPreviouslySelected, Boolean isNowSelected) {
+                if (isNowSelected) {
+                    administratorSelectClinicianRegister();
+                }
+            }
+        });
+
+        administratorButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed( ObservableValue<? extends Boolean> obs, Boolean wasPreviouslySelected, Boolean isNowSelected) {
+                if (isNowSelected) {
+                    administratorSelectAdministratorRegister();
+                }
+            }
+        });
+    }
+
+    /**
+     * Sets the registry fields for registering a patient
+     */
+    private void administratorSelectPatientRegister() {
+        clearFields();
+        patientButton.requestFocus();
+        clinicianButton.setSelected( false );
+        administratorButton.setSelected( false );
+        userIdRegister.setPromptText( "NHI Number" );
+        regionRegister.setVisible( false );
+        regionRegister.setDisable( true );
+        birthRegister.setVisible( true );
+        birthRegister.setDisable( false );
+    }
+
+    /**
+     * Sets the registry fields for registering a clinician
+     */
+    private void administratorSelectClinicianRegister() {
+        clearFields();
+        clinicianButton.requestFocus();
+        patientButton.setSelected( false );
+        administratorButton.setSelected( false );
+        userIdRegister.setPromptText( "Staff ID" );
+        regionRegister.setVisible( true );
+        regionRegister.setDisable( false );
+        birthRegister.setVisible( false );
+        birthRegister.setDisable( true );
+    }
+
+    /**
+     * Sets the registry fields for registering an administrator
+     */
+    private void administratorSelectAdministratorRegister() {
+        clearFields();
+        administratorButton.requestFocus();
+        clinicianButton.setSelected( false );
+        patientButton.setSelected( false );
+        userIdRegister.setPromptText( "Staff ID" );
+        regionRegister.setVisible( true );
+        regionRegister.setDisable( false );
+        birthRegister.setVisible( true );
+        birthRegister.setDisable( false );
+    }
 
     /**
      * Back button listener to switch to the login screen
@@ -91,13 +208,14 @@ public class GUIPatientRegister {
      * Clears the data in the fields of the GUI
      */
     private void clearFields() {
-        nhiRegister.clear();
+        userIdRegister.clear();
         firstnameRegister.clear();
         lastnameRegister.clear();
         middlenameRegister.clear();
         birthRegister.getEditor().clear();
+        regionRegister.valueProperty().set(null);
 
-        setValid(nhiRegister);
+        setValid(userIdRegister);
         setValid(firstnameRegister);
         setValid(lastnameRegister);
         setValid(middlenameRegister);
@@ -134,7 +252,6 @@ public class GUIPatientRegister {
         birthRegister.setConverter(dateConverter);
     }
 
-
     /**
      * Check users inputs for validity and registers the user patient profile
      */
@@ -146,16 +263,25 @@ public class GUIPatientRegister {
         Alert invalidInfo = new Alert(Alert.AlertType.WARNING);
         StringBuilder invalidContent = new StringBuilder("Please fix the following errors:\n");
 
-        // nhi
-        if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", nhiRegister.getText().toUpperCase())) {
-            valid = setInvalid(nhiRegister);
-            invalidContent.append("NHI must be three letters followed by four numbers\n");
-        } else if (Database.isPatientInDb(nhiRegister.getText())) {
-            // checks to see if nhi already in use
-            valid = setInvalid(nhiRegister);
-            invalidContent.append("NHI is already in use\n");
+        if (patientButton.isSelected()) {
+            // nhi
+            if (!Pattern.matches( "[A-Za-z]{3}[0-9]{4}", userIdRegister.getText().toUpperCase() )) {
+                valid = setInvalid( userIdRegister );
+                invalidContent.append( "NHI must be three letters followed by four numbers\n" );
+            } else if (Database.isPatientInDb( userIdRegister.getText() )) {
+                // checks to see if nhi already in use
+                valid = setInvalid( userIdRegister );
+                invalidContent.append( "NHI is already in use\n" );
+            } else {
+                setValid( userIdRegister );
+            }
         } else {
-            setValid(nhiRegister);
+            if (userIdRegister.getText() == null) {
+                valid = setInvalid(userIdRegister);
+                invalidContent.append("First name must be letters, ., or -.\n");
+            } else {
+                setValid(userIdRegister);
+            }
         }
 
         // first name
@@ -185,34 +311,51 @@ public class GUIPatientRegister {
             setValid(middlenameRegister);
         }
 
-        // date of birth
-        if (birthRegister.getValue() != null) {
-            if (birthRegister.getValue()
-                    .isAfter(LocalDate.now())) {
-                valid = setInvalid(birthRegister);
-                invalidContent.append("Date of birth must be a valid date either today or earlier.\n");
+        if (patientButton.isSelected()) {
+            // date of birth
+            if (birthRegister.getValue() != null) {
+                if (birthRegister.getValue()
+                        .isAfter( LocalDate.now() )) {
+                    valid = setInvalid( birthRegister );
+                    invalidContent.append( "Date of birth must be a valid date either today or earlier.\n" );
+                } else {
+                    setValid( birthRegister );
+                }
             } else {
-                setValid(birthRegister);
+                valid = setInvalid( birthRegister );
+                invalidContent.append( "Date of birth must be set.\n" );
             }
         } else {
-            valid = setInvalid(birthRegister);
-            invalidContent.append("Date of birth must be set.\n");
+            if (regionRegister.getValue() != null) {
+                setValid( birthRegister );
+            } else {
+                valid = setInvalid( regionRegister );
+                invalidContent.append( "Date of birth must be set.\n" );
+            }
         }
 
         // if all are valid
         if (valid) {
-            String nhi = nhiRegister.getText();
+            String id = userIdRegister.getText();
             String firstName = firstnameRegister.getText();
             String lastName = lastnameRegister.getText();
             ArrayList<String> middles = new ArrayList<>();
-            if (!middlenameRegister.getText().equals("")) {
-                List<String> middleNames = Arrays.asList(middlenameRegister.getText().split(" "));
-                middles = new ArrayList<>(middleNames);
+            if (!middlenameRegister.getText().equals( "" )) {
+                List <String> middleNames = Arrays.asList( middlenameRegister.getText().split( " " ) );
+                middles = new ArrayList <>( middleNames );
             }
-            LocalDate birth = birthRegister.getValue();
-
-            Database.addPatient(new Patient(nhi, firstName, middles, lastName, birth));
-            userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
+            if (patientButton.isSelected()) {
+                LocalDate birth = birthRegister.getValue();
+                Database.addPatient( new Patient( id, firstName, middles, lastName, birth ) );
+                userActions.log( Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile" );
+            } else if (clinicianButton.isSelected()) {
+                String region = regionRegister.getValue().toString();
+                Database.addClinician( new Clinician( Integer.parseInt(id), firstName, middles, lastName, (Region) Region.getEnumFromString(region) ));
+                userActions.log( Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile" );
+            } else {
+                Database.addAdministrator( new Administrator( Integer.parseInt(id), firstName, middles, lastName ));
+                userActions.log( Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile" );
+            }
             Database.saveToDisk();
             clearFields();
             new Alert(Alert.AlertType.INFORMATION, "Successfully registered!").show();

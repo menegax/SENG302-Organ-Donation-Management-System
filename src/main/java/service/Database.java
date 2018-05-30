@@ -1,6 +1,7 @@
 package service;
 
 import com.google.gson.Gson;
+import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import utility.SearchPatients;
@@ -25,6 +26,10 @@ public class Database {
     private static Set<Patient> patients = new HashSet<>();
 
     private static Set<Clinician> clinicians = new HashSet<>();
+
+    private static Set<Administrator> administrators = new HashSet<>();
+
+    private static Boolean isAdministrator = false;
 
 
 
@@ -160,21 +165,57 @@ public class Database {
         }
     }
 
+    public static void addAdministrator(Administrator administrator) throws IllegalArgumentException {
+        isAdministrator = true;
+        if (!Pattern.matches("^[-a-zA-Z]+$", administrator.getFirstName())) {
+            userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field: first name", "Attempted to add a administrator");
+            throw new IllegalArgumentException("firstname");
+        }
+
+        if (!Pattern.matches("^[-a-zA-Z]+$", administrator.getLastName())) {
+            userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field: last name", "Attempted to add an administrator");
+            throw new IllegalArgumentException("lastname");
+        }
+
+        if (administrator.getStaffId() == Database.getNextStaffID()) {
+            administrators.add(administrator);
+            userActions.log(Level.INFO, "Successfully added administrator " + administrator.getStaffId(), "Attempted to add an administrator");
+        }
+
+        else {
+            userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field staffID", "Attempted to add an administrator");
+            throw new IllegalArgumentException("staffID");
+        }
+        isAdministrator = false;
+    }
+
     /**
      * Returns the next valid staffID based on IDs in the clinician list
      *
      * @return the valid id
      */
     public static int getNextStaffID() {
-        if (clinicians.size() == 0) {
-            return 0;
-        }
-        else {
-            int currentID = clinicians.stream()
-                    .max(Comparator.comparing(Clinician::getStaffID))
-                    .get()
-                    .getStaffID();
-            return currentID + 1;
+        if (isAdministrator) {
+            if (administrators.size() == 0) {
+                return 0;
+            }
+            else {
+                int currentID = administrators.stream()
+                        .max(Comparator.comparing(Administrator::getStaffId))
+                        .get()
+                        .getStaffId();
+                return currentID + 1;
+            }
+        } else {
+            if (clinicians.size() == 0) {
+                return 0;
+            } else {
+                int currentID = clinicians.stream()
+                        .max( Comparator.comparing( Clinician::getStaffID ) )
+                        .get()
+                        .getStaffID();
+                return currentID + 1;
+            }
         }
     }
 
