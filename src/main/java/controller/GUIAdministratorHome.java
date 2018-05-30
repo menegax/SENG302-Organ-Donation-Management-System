@@ -16,17 +16,33 @@ import static utility.UserActionHistory.userActions;
 public class GUIAdministratorHome {
 
     @FXML
-    public Button searchPatients;
-    public Button searchClinicians;
-    public Button searchAdministrators;
-    public AnchorPane administratorHomePane;
-    public Button importDataButton;
-    public Button waitingListButton;
-    public Button registerButton;
-    public Button profileButton;
-    public Button saveButton;
-    public Button logoutButton;
-    public Button history;
+    private Button searchPatients;
+    @FXML
+    private Button searchClinicians;
+    @FXML
+    private Button searchAdministrators;
+    @FXML
+    private AnchorPane administratorHomePane;
+    @FXML
+    private Button importDataButton;
+    @FXML
+    private Button waitingListButton;
+    @FXML
+    private Button registerButton;
+    @FXML
+    private Button profileButton;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button logoutButton;
+    @FXML
+    private Button history;
+    @FXML
+    private Button importPatientsButton;
+    @FXML
+    private Button importCliniciansButton;
+    @FXML
+    private Button importWaitListButton;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -144,10 +160,45 @@ public class GUIAdministratorHome {
     }
 
     /**
-     * Imports data from disk/DB..
+     * Imports patient data from disk
+     */
+    public void importPatients() {
+        try {
+            Database.importFromDiskPatients("./patient.json");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Imports clinician data from disk
+     */
+    public void importClinicians() {
+        try {
+            Database.importFromDiskClinicians("./clinician.json");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Imports wait list data from disk
+     */
+    public void importWaitList() {
+        try {
+            Database.importFromDiskWaitlist("/waitlist.json");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Imports data from disk
      */
     public void importData() {
-        ; // TO DO
+        importPatients();
+        importClinicians();
+        importWaitList();
     }
 }
 

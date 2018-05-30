@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import main.Main;
@@ -67,7 +68,7 @@ public class GUIPatientRegister {
     private RadioButton administratorButton;
 
     @FXML
-    private Pane patientRegisterAnchorPane;
+    private AnchorPane patientRegisterAnchorPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 

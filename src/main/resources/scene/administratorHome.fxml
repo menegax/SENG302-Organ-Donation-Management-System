@@ -22,5 +22,8 @@
         <Button fx:id="saveButton" layoutX="435.0" layoutY="338.0" mnemonicParsing="false" onAction="#saveAdministrator" prefHeight="25.0" prefWidth="57.0" text="Save" />
         <Button fx:id="logoutButton" layoutX="101.0" layoutY="338.0" mnemonicParsing="false" onAction="#logOutAdministrator" text="Log out" />
         <Button fx:id="importDataButton" layoutX="263.0" layoutY="338.0" mnemonicParsing="false" onAction="#importData" prefHeight="25.0" prefWidth="80.0" text="Import Data" />
+        <Button fx:id="importPatientsButton" layoutX="410.0" layoutY="36.0" mnemonicParsing="false" onAction="#importPatients" prefHeight="25.0" prefWidth="110.0" text="Import Patients" />
+        <Button fx:id="importCliniciansButton" layoutX="410.0" layoutY="63.0" mnemonicParsing="false" onAction="#importClinicians" prefHeight="25.0" prefWidth="110.0" text="Import Clinicians" />
+        <Button fx:id="importWaitListButton" layoutX="410.0" layoutY="90.0" mnemonicParsing="false" onAction="#importWaitList" prefHeight="25.0" prefWidth="110.0" text="Import Wait List" />
     </children>
 </AnchorPane>
