@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -16,21 +17,32 @@ public class Administrator extends User {
     private List<String> middleNames;
     private String lastName;
 
+    private final String salt;
+    private String password;
+
     private Timestamp modified;
 
     /**
      * Creates a new Administrator
      *
-     * @param username    The new Administrators username. This should be unique
-     * @param firstName   The Administrators first name
-     * @param middleNames The Administrators middle names. This should should be a list of Strings where each string is a single middle name
-     * @param lastName    The Administrators last name
+     * @param username    The new administrators username. This should be unique
+     * @param firstName   The administrators first name
+     * @param middleNames The administrators middle names. This should should be a list of Strings where each string is a single middle name
+     * @param lastName    The administrators last name
+     * @param password    The administrators password
+     * @throws IllegalArgumentException If the administrators password is too short (less than 6 characters)
      */
-    public Administrator(String username, String firstName, List<String> middleNames, String lastName) {
+    public Administrator(String username, String firstName, List<String> middleNames, String lastName, String password) throws IllegalArgumentException {
         this.username = username;
         this.firstName = firstName;
         this.middleNames = middleNames;
         this.lastName = lastName;
+
+        if (password.length() < 6) {
+            throw new IllegalArgumentException("Password must be at least 6 characters long");
+        }
+        this.salt = org.apache.commons.codec.digest.DigestUtils.sha256Hex(LocalDate.now().toString());
+        this.password = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password + salt);
     }
 
     private void adminModified() {
@@ -91,5 +103,13 @@ public class Administrator extends User {
 
     public Timestamp getModified() {
         return modified;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public String getHashedPassword() {
+        return password;
     }
 }
