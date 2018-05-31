@@ -394,16 +394,79 @@ public class Database {
         }
     }
 
+    //TODO complete
     private void updatePatient(Patient patient) {
-        String query = "UPDATE tblPatients SET " + " = ?";
-
+    	String[] queries = getPatientUpdateQueries();
+    	String[][] attrs = new String[6][];
+        attrs[0] = getPatientAttributes(patient);
+        attrs[1] = getPatientContactAttributes(patient);
+        //TODO Needs to run this for each log and store the results
+        //attrs[2] = getLogAttributes(patient, log);
+        //TODO Needs to run this for each disease and store the results
+        //attrs[3] = getDiseaseAttributes(patient, disease);
+        //TODO Needs to run this for each medication and store the results
+        //attrs[3] = getMedicationAttributes(patient, medication);
+        //TODO Needs to run this for each procedure and store the results
+        //attrs[3] = getProcedureAttributes(patient, procedure);
+        int count = 0;
+        while (count < queries.length) {
+        	try {
+				runQuery(queries[count], shiftLeft(attrs[count]));
+			} catch (SQLException e) {
+				System.out.println("Error with query: \n-------------------" 
+								+ queries[count] + "----------------\n"
+								+ "For patient: " + attrs[0][attrs.length - 1]);
+				e.printStackTrace();
+			}
+        	count += 1;
+        }
+    }
+    
+    private String[] getPatientUpdateQueries() {
+        String[] queries = new String[6];
+    	queries[0] = "UPDATE tblPatients SET "
+        		+ "FName = ?, MName = ?, LName = ?, "
+        		+ "Birth = ?, Created = ?, Modified = ?, "
+        		+ "Death = ?, BirthGender = ?, PrefGender = ?, "
+        		+ "PrefName = ?, Height = ?, Weight = ?, "
+        		+ "BloodType = ?, DonatingOrgans = ?, ReceivingOrgans = ? "
+        		+ "WHERE Nhi = ?";
+    	queries[1] = "UPDATE tblPatientContact SET "
+    			+ "Street1 = ?, Street2 = ?, Suburb = ?, "
+    			+ "Region = ?, Zip = ?, HomePhone = ?, "
+    			+ "WorkPhone = ?, MobilePhone = ?, Email = ?, "
+    			+ "ECName = ?, ECRelationship = ?, ECHomePhone = ?, "
+    			+ "ECWorkPhone = ?, ECMobilePhone = ?, ECEmail = ? "
+    			+ "WHERE Patient = ?";
+    	queries[2] = "INSERT INTO tblPatientLogs "
+    			+ "(Patient, Time, Level, Message, Action) "
+    			+ "VALUES (?, ?, ?, ?, ?) "
+    			+ "ON DUPLICATE KEY UPDATE "
+    			+ "Time = VALUES (Time)";
+    	queries[3] = "INSERT INTO tblDiseases "
+    			+ "(Patient, Name, DateDiagnosed, State) "
+    			+ "VALUES (?, ?, ?, ?) "
+    			+ "ON DUPLICATE KEY UPDATE "
+    			+ "State = VALUES (State)";
+    	queries[4] = "INSERT INTO tblMedications "
+    			+ "(Patient, Name) "
+    			+ "VALUES (?, ?) "
+    			+ "ON DUPLICATE KEY UPDATE "
+    			+ "Name = VALUES (Name)";
+    	queries[5] = "INSERT INTO tblProcedures "
+    			+ "(Patient, Summary, Description, ProDate, AffectedOrgans) "
+    			+ "VALUES (?, ?, ?, ?, ?) "
+    			+ "ON DUPLICATE KEY UPDATE "
+    			+ "Description = VALUES (Description) "
+    			+ "AffectedOrgans = VALUES (AffectedOrgans)";
+    	return queries;
     }
 
     private void updateClinician(Clinician clinician) {
     	String query = "UPDATE tblClinicians SET " +
-                "FName = ?, MName = ?, Name = ?, " +
+                "FName = ?, MName = ?, LName = ?, " +
                 "Street1 = ?, Street2 = ?, Suburb = ?, " +
-                "Region = ?, Modified = ?" +
+                "Region = ?, Modified = ? " +
                 "WHERE StaffID = ?";
     	String[] attr = getClinicianAttributes(clinician);
     	attr = shiftLeft(attr);
