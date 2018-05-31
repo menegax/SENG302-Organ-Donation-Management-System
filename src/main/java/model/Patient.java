@@ -94,6 +94,8 @@ public class Patient extends User {
 
     private ArrayList<Disease> pastDiseases = new ArrayList<>();
 
+    private boolean hasBeenModified = false;
+
     Database database = Database.getDatabase();
     private GlobalEnums.Organ removedOrgan;
 
@@ -119,10 +121,9 @@ public class Patient extends User {
         this.requiredOrgans = new ArrayList<>();
     }
 
-    //TODO add pref name and gender. Add procedures.
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
                    Timestamp created, Timestamp modified, LocalDate death, GlobalEnums.BirthGender gender,
-                   GlobalEnums.PreferredGender prefGender, double height, double weight,
+                   GlobalEnums.PreferredGender prefGender, String preferredName, double height, double weight,
                    BloodGroup bloodType, ArrayList<Organ> donations, ArrayList<Organ> receiving, String street1,
                    String street2, String suburb, Region region, int zip, String homePhone, String workPhone,
                    String mobilePhone, String emailAddress, String contactName, String contactRelationship,
@@ -140,6 +141,7 @@ public class Patient extends User {
         this.death = death;
         this.birthGender = gender;
         this.preferredGender = prefGender;
+        this.preferredName = preferredName;
         this.height = height;
         this.weight = weight;
         this.bloodGroup = bloodType;
@@ -601,6 +603,7 @@ public class Patient extends User {
      */
     public void setCurrentMedications(ArrayList<Medication> currentMedications) {
         this.currentMedications = currentMedications;
+        patientModified();
     }
 
     /**
@@ -609,6 +612,7 @@ public class Patient extends User {
      */
     public void setMedicationHistory(ArrayList<Medication> medicationHistory) {
         this.medicationHistory = medicationHistory;
+        patientModified();
     }
 
     public void setZip(int zip) {
@@ -632,6 +636,7 @@ public class Patient extends User {
      */
     public void setRequiredOrgans(ArrayList requiredOrgans) {
         this.requiredOrgans = requiredOrgans;
+        patientModified();
     }
 
     public String getFormattedAddress() {
@@ -723,6 +728,7 @@ public class Patient extends User {
 
     public void setRemovedOrgan(GlobalEnums.Organ organ) {
         removedOrgan = organ;
+        patientModified();
     }
 
     public String getNhiNumber() {
@@ -746,6 +752,7 @@ public class Patient extends User {
 
     public void setHomePhone(String homePhone) {
         this.homePhone = homePhone;
+        patientModified();
     }
 
     public String getMobilePhone() {
@@ -754,6 +761,7 @@ public class Patient extends User {
 
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
+        patientModified();
     }
 
     public String getWorkPhone() {
@@ -762,6 +770,7 @@ public class Patient extends User {
 
     public void setWorkPhone(String workPhone) {
         this.workPhone = workPhone;
+        patientModified();
     }
 
     public String getEmailAddress() {
@@ -770,6 +779,7 @@ public class Patient extends User {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+        patientModified();
     }
 
     public String getContactName() {
@@ -778,6 +788,7 @@ public class Patient extends User {
 
     public void setContactName(String contactName) {
         this.contactName = contactName;
+        patientModified();
     }
 
     public String getContactRelationship() {
@@ -786,6 +797,7 @@ public class Patient extends User {
 
     public void setContactRelationship(String contactRelationship) {
         this.contactRelationship = contactRelationship;
+        patientModified();
     }
 
     public String getContactHomePhone() {
@@ -794,6 +806,7 @@ public class Patient extends User {
 
     public void setContactHomePhone(String contactHomePhone) {
         this.contactHomePhone = contactHomePhone;
+        patientModified();
     }
 
     public String getContactMobilePhone() {
@@ -802,6 +815,7 @@ public class Patient extends User {
 
     public void setContactMobilePhone(String contactMobilePhone) {
         this.contactMobilePhone = contactMobilePhone;
+        patientModified();
     }
 
     public String getContactWorkPhone() {
@@ -810,6 +824,7 @@ public class Patient extends User {
 
     public void setContactWorkPhone(String contactWorkPhone) {
         this.contactWorkPhone = contactWorkPhone;
+        patientModified();
     }
 
     public String getContactEmailAddress() {
@@ -818,6 +833,7 @@ public class Patient extends User {
 
     public void setContactEmailAddress(String contactEmailAddress) {
         this.contactEmailAddress = contactEmailAddress;
+        patientModified();
     }
 
     public List<Procedure> getProcedures() {
@@ -829,6 +845,7 @@ public class Patient extends User {
 
     public void setProcedures(List<Procedure> procedures) {
         this.procedures = procedures;
+        patientModified();
     }
 
 
@@ -854,7 +871,10 @@ public class Patient extends User {
      * Sets the donor's current diseases to the given list
      * @param currentDiseases list of diseases currently infecting a donor
      */
-    public void setCurrentDiseases(ArrayList<Disease> currentDiseases) { this.currentDiseases = currentDiseases; }
+    public void setCurrentDiseases(ArrayList<Disease> currentDiseases) {
+        this.currentDiseases = currentDiseases;
+        patientModified();
+    }
 
     /**
      * Gets the diseases the donor used to be infected with
@@ -868,7 +888,10 @@ public class Patient extends User {
      * Set the donor's past diseases to the given list
      * @param pastDiseases list of diseases that used to infect a donor
      */
-    public void setPastDiseases(ArrayList<Disease> pastDiseases) { this.pastDiseases = pastDiseases; }
+    public void setPastDiseases(ArrayList<Disease> pastDiseases) {
+        this.pastDiseases = pastDiseases;
+        patientModified();
+    }
 
 
     /**
@@ -877,13 +900,22 @@ public class Patient extends User {
      */
     private void patientModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
+        this.hasBeenModified = true;
+    }
+
+    public void setNotModified() {
+        this.hasBeenModified = false;
     }
 
     public void addProcedure(Procedure procedure) {
         procedures.add(procedure);
+        patientModified();
     }
 
-    public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
+    public void removeProcedure(Procedure procedure) {
+        procedures.remove(procedure);
+        patientModified();
+    }
 
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "

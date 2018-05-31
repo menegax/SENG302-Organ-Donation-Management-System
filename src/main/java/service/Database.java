@@ -32,6 +32,47 @@ public class Database {
 
     private Connection conn;
 
+    private final String UPDATEPATIENTQUERYSTRING = "UPDATE tblPatients SET "
+            + "FName = ?, MName = ?, LName = ?, "
+            + "Birth = ?, Created = ?, Modified = ?, "
+            + "Death = ?, BirthGender = ?, PrefGender = ?, "
+            + "PrefName = ?, Height = ?, Weight = ?, "
+            + "BloodType = ?, DonatingOrgans = ?, ReceivingOrgans = ? "
+            + "WHERE Nhi = ?";
+
+    private final String UPDATEPATIENTCONTACTQUERYSTRING = "UPDATE tblPatientContact SET "
+            + "Street1 = ?, Street2 = ?, Suburb = ?, "
+            + "Region = ?, Zip = ?, HomePhone = ?, "
+            + "WorkPhone = ?, MobilePhone = ?, Email = ?, "
+            + "ECName = ?, ECRelationship = ?, ECHomePhone = ?, "
+            + "ECWorkPhone = ?, ECMobilePhone = ?, ECEmail = ? "
+            + "WHERE Patient = ?";
+
+    private final String UPDATEPATIENTLOGQUERYSTRING = "INSERT INTO tblPatientLogs "
+            + "(Patient, Time, Level, Message, Action) "
+            + "VALUES (?, ?, ?, ?, ?) "
+            + "ON DUPLICATE KEY UPDATE "
+            + "Time = VALUES (Time)";
+
+    private final String UPDATEPATIENTDISEASESQUERYSTRING = "INSERT INTO tblDiseases "
+            + "(Patient, Name, DateDiagnosed, State) "
+            + "VALUES (?, ?, ?, ?) "
+            + "ON DUPLICATE KEY UPDATE "
+            + "State = VALUES (State)";
+
+    private final String UPDATEPATIENTMEDICATIONQUERYSTRING = "INSERT INTO tblMedications "
+            + "(Patient, Name) "
+            + "VALUES (?, ?) "
+            + "ON DUPLICATE KEY UPDATE "
+            + "Name = VALUES (Name)";
+
+    private final String UPDATEPATIENTPROCEDURESQUERYSTRING = "INSERT INTO tblProcedures "
+            + "(Patient, Summary, Description, ProDate, AffectedOrgans) "
+            + "VALUES (?, ?, ?, ?, ?) "
+            + "ON DUPLICATE KEY UPDATE "
+            + "Description = VALUES (Description) "
+            + "AffectedOrgans = VALUES (AffectedOrgans)";
+
     /**
      * Private constructor for creating instance of Database for Singleton.
      */
@@ -192,8 +233,8 @@ public class Database {
             attr[8] = patient.getBirthGender().toString().substring(0, 1);
         }
         //todo preferred name and gender here
-        attr[9] = null;
-        attr[10] = null;
+        attr[9] = patient.getPreferredGender().toString().substring(0, 1);
+        attr[10] = patient.getPreferredName();
         attr[11] = String.valueOf(patient.getHeight() * 100);
         attr[12] = String.valueOf(patient.getWeight());
         if(patient.getBloodGroup() != null) {
@@ -405,9 +446,9 @@ public class Database {
         //TODO Needs to run this for each disease and store the results
         //attrs[3] = getDiseaseAttributes(patient, disease);
         //TODO Needs to run this for each medication and store the results
-        //attrs[3] = getMedicationAttributes(patient, medication);
+        //attrs[4] = getMedicationAttributes(patient, medication);
         //TODO Needs to run this for each procedure and store the results
-        //attrs[3] = getProcedureAttributes(patient, procedure);
+        //attrs[5] = getProcedureAttributes(patient, procedure);
         int count = 0;
         while (count < queries.length) {
         	try {
@@ -424,41 +465,12 @@ public class Database {
     
     private String[] getPatientUpdateQueries() {
         String[] queries = new String[6];
-    	queries[0] = "UPDATE tblPatients SET "
-        		+ "FName = ?, MName = ?, LName = ?, "
-        		+ "Birth = ?, Created = ?, Modified = ?, "
-        		+ "Death = ?, BirthGender = ?, PrefGender = ?, "
-        		+ "PrefName = ?, Height = ?, Weight = ?, "
-        		+ "BloodType = ?, DonatingOrgans = ?, ReceivingOrgans = ? "
-        		+ "WHERE Nhi = ?";
-    	queries[1] = "UPDATE tblPatientContact SET "
-    			+ "Street1 = ?, Street2 = ?, Suburb = ?, "
-    			+ "Region = ?, Zip = ?, HomePhone = ?, "
-    			+ "WorkPhone = ?, MobilePhone = ?, Email = ?, "
-    			+ "ECName = ?, ECRelationship = ?, ECHomePhone = ?, "
-    			+ "ECWorkPhone = ?, ECMobilePhone = ?, ECEmail = ? "
-    			+ "WHERE Patient = ?";
-    	queries[2] = "INSERT INTO tblPatientLogs "
-    			+ "(Patient, Time, Level, Message, Action) "
-    			+ "VALUES (?, ?, ?, ?, ?) "
-    			+ "ON DUPLICATE KEY UPDATE "
-    			+ "Time = VALUES (Time)";
-    	queries[3] = "INSERT INTO tblDiseases "
-    			+ "(Patient, Name, DateDiagnosed, State) "
-    			+ "VALUES (?, ?, ?, ?) "
-    			+ "ON DUPLICATE KEY UPDATE "
-    			+ "State = VALUES (State)";
-    	queries[4] = "INSERT INTO tblMedications "
-    			+ "(Patient, Name) "
-    			+ "VALUES (?, ?) "
-    			+ "ON DUPLICATE KEY UPDATE "
-    			+ "Name = VALUES (Name)";
-    	queries[5] = "INSERT INTO tblProcedures "
-    			+ "(Patient, Summary, Description, ProDate, AffectedOrgans) "
-    			+ "VALUES (?, ?, ?, ?, ?) "
-    			+ "ON DUPLICATE KEY UPDATE "
-    			+ "Description = VALUES (Description) "
-    			+ "AffectedOrgans = VALUES (AffectedOrgans)";
+    	queries[0] = UPDATEPATIENTQUERYSTRING;
+    	queries[1] = UPDATEPATIENTCONTACTQUERYSTRING;
+    	queries[2] = UPDATEPATIENTLOGQUERYSTRING;
+    	queries[3] = UPDATEPATIENTDISEASESQUERYSTRING;
+    	queries[4] = UPDATEPATIENTMEDICATIONQUERYSTRING;
+    	queries[5] = UPDATEPATIENTPROCEDURESQUERYSTRING;
     	return queries;
     }
 
@@ -665,7 +677,19 @@ public class Database {
                 gender = GlobalEnums.BirthGender.FEMALE;
                 break;
         }
-        //todo: set pref gender and name here after story 29 is in
+        GlobalEnums.PreferredGender preferredGender;
+        switch(attr[9]) {
+            case "M":
+                preferredGender = GlobalEnums.PreferredGender.MAN;
+                break;
+            case "F":
+                preferredGender = GlobalEnums.PreferredGender.WOMAN;
+                break;
+            default:
+                preferredGender = GlobalEnums.PreferredGender.NONBINARY;
+                break;
+        }
+        String prefName = attr[10];
         double height = Double.parseDouble(attr[11]) / 100;
         double weight = Double.parseDouble(attr[12]);
         GlobalEnums.BloodGroup bloodType = GlobalEnums.BloodGroup.valueOf(attr[13]);
@@ -700,7 +724,7 @@ public class Database {
             e.printStackTrace();
         }
 
-        return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, null, height, weight,
+        return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName, height, weight,
                 bloodType, donations, requested, contactAttr[0], contactAttr[1], contactAttr[2], region, zip,
                 contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
                 contactAttr[11], contactAttr[12], contactAttr[13], contactAttr[14], null, currentDiseases,
@@ -892,57 +916,6 @@ public class Database {
         }
     }
 
-////TODO Local version remove?????
-//    /**
-//     * Adds a patient to the database
-//     *
-//     * @param newPatient the new patient to add
-//     */
-//    public void addPatient(Patient newPatient) throws IllegalArgumentException {
-//        try {
-//            newPatient.ensureValidNhi();
-//            newPatient.ensureUniqueNhi();
-//            patients.add(newPatient);
-//            SearchPatients.addIndex(newPatient);
-//            userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
-//        }
-//        catch (IllegalArgumentException o) {
-//            userActions.log(Level.WARNING, "Failed to add patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
-//            throw new IllegalArgumentException(o.getMessage());
-//        }
-//    }
-//
-//    /**
-//     * Adds a clinician to the database
-//     *
-//     * @param newClinician the new clinician to add
-//     */
-//    private void addClinician(Clinician newClinician) throws IllegalArgumentException {
-//        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getFirstName())) {
-//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: first name", "Attempted to add a clinician");
-//            throw new IllegalArgumentException("firstname");
-//        }
-//
-//        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getLastName())) {
-//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: last name", "Attempted to add a clinician");
-//            throw new IllegalArgumentException("lastname");
-//        }
-//
-//        if (newClinician.getStreet1() != null && !Pattern.matches("^[- a-zA-Z0-9]+$", newClinician.getStreet1())) {
-//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: street1", "Attempted to add a clinician");
-//            throw new IllegalArgumentException("street1");
-//        }
-//
-//        if (newClinician.getStaffID() == getNextStaffID()) {
-//            clinicians.add(newClinician);
-//            userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
-//        }
-//
-//        else {
-//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field staffID", "Attempted to add a clinician");
-//            throw new IllegalArgumentException("staffID");
-//        }
-//    }
     /**
      * Removes a patient from the database
      *
@@ -1021,38 +994,6 @@ public class Database {
         }
         throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
     }
-
-//    /**
-//     * Adds a clinician to the database
-//     *
-//     * @param newClinician the new clinician to add
-//     */
-//    public static void addClinician(Clinician newClinician) throws IllegalArgumentException {
-//        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getFirstName())) {
-//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: first name", "Attempted to add a clinician");
-//            throw new IllegalArgumentException("firstname");
-//        }
-//
-//        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getLastName())) {
-//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: last name", "Attempted to add a clinician");
-//            throw new IllegalArgumentException("lastname");
-//        }
-//
-//        if (newClinician.getStreet1() != null && !Pattern.matches("^[- a-zA-Z0-9]+$", newClinician.getStreet1())) {
-//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: street1", "Attempted to add a clinician");
-//            throw new IllegalArgumentException("street1");
-//        }
-//
-//        if (newClinician.getStaffID() == Database.getNextStaffID()) {
-//            clinicians.add(newClinician);
-//            userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
-//        }
-//
-//        else {
-//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field staffID", "Attempted to add a clinician");
-//            throw new IllegalArgumentException("staffID");
-//        }
-//    }
 
     /**
      * Returns the next valid staffID based on IDs in the clinician list
