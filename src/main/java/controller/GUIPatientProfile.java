@@ -173,7 +173,7 @@ public class GUIPatientProfile {
 //                donationList.setVisible(false);
 //            }
             user = userControl.getLoggedInUser();
-            proceduresButton.setText("View Procedures"); //Changing the button text for patients
+//            proceduresButton.setText("View Procedures"); //Changing the button text for patients //TODO:
         }
         if (userControl.getLoggedInUser() instanceof Clinician) {
             user = userControl.getTargetPatient();
@@ -213,7 +213,7 @@ public class GUIPatientProfile {
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
         if (userControl.getLoggedInUser() instanceof Clinician) {
-            genderDeclaration.setText( "Gender assigned at birth: " );
+            genderDeclaration.setText( "Birth Gender: " );
             genderStatus.setText( patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue() );
         } else {
             genderDeclaration.setText( "Gender identity: " );
