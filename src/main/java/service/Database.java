@@ -29,9 +29,6 @@ public class Database {
 
     private static Set<Administrator> administrators = new HashSet<>();
 
-    private static Boolean isAdministrator = false;
-
-
     /**
      * Adds a patient to the database
      *
