@@ -6,10 +6,12 @@ If you are a developer seeking a code review, please follow the `story_definitio
 
 * Have the developers on the story gone through DoD? Ask them. If not, stop the review. Else continue questionnaire.
 * Has the story passed the story DoD?
-* It's (not?) in the DoD, but it's important: has the story passed the acceptance criteria?
+* It's in the DoP, but it's important: has the story passed the acceptance criteria?
 * Are classes named accordingly? (i.e. GUIPatientUpdateProfile not PatientProfileUpdate)
 * Are classes placed in the correct package? (i.e. undo/redo in utility)
+* How has the new features been tested? Are the tests documented? Is the test class name mirroring a GUI controller class name?
 * How does the code look? Can you read and understand what it does easily?
+* Are there "magic numbers" anywhere? Can they be removed or refactored to be more obvious?
 * Can SENG301 principles be followed more closely anywhere?
 
 

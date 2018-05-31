@@ -1,20 +1,15 @@
 package utility.undoRedo.stateHistoryWidgets;
 
+import javafx.event.Event;
 import javafx.scene.control.TextField;
+import javafx.scene.input.ContextMenuEvent;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Represents the state history of a text entry field in the GUI
  */
 public class StateHistoryTextEntry extends StateHistoryControl {
-
-    /**
-     * True if an undo has been executed, false otherwise - could be reset at exit from each interface
-     */
-    private boolean undone = false;
 
 
     /**
@@ -23,8 +18,10 @@ public class StateHistoryTextEntry extends StateHistoryControl {
      * @param entry the Text Field whose state we are storing
      */
     public StateHistoryTextEntry(TextField entry) {
+        entry.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume); // removes right click menu which shows undo/redo
         this.control = entry;
         states.add(entry.getText());
+        setUpUndoableStage();
     }
 
 
@@ -47,7 +44,6 @@ public class StateHistoryTextEntry extends StateHistoryControl {
         if (index != 0) {
             index -= 1;
             ((TextField) control).setText((String) states.get(index));
-            undone = true;
             return true;
         }
         return false;
@@ -58,7 +54,7 @@ public class StateHistoryTextEntry extends StateHistoryControl {
      * Resets the TextField to the state immediately prior to an undo
      */
     public boolean redo() {
-        if (undone && index + 1 < states.size()) {
+        if (index + 1 < states.size()) {
             index += 1;
             ((TextField) control).setText((String) states.get(index));
             return true;

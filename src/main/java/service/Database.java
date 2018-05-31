@@ -3,8 +3,6 @@ package service;
 import com.google.gson.Gson;
 import model.Clinician;
 import model.Patient;
-import org.omg.CORBA.DynAnyPackage.Invalid;
-import utility.GlobalEnums;
 import utility.SearchPatients;
 
 import java.io.*;
@@ -47,7 +45,6 @@ public class Database {
             throw new IllegalArgumentException(o.getMessage());
         }
     }
-
 
     /**
      * Removes a patient from the database
@@ -118,8 +115,7 @@ public class Database {
      *
      * @param staffID the staff ID to search clinicians by
      * @return Clinician object
-     *
-     * @exception InvalidObjectException when the object cannot be found
+     * @throws InvalidObjectException when the object cannot be found
      */
     public static Clinician getClinicianByID(int staffID) throws InvalidObjectException {
         for (Clinician c : getClinicians()) {
@@ -129,7 +125,6 @@ public class Database {
         }
         throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
     }
-
 
     /**
      * Adds a clinician to the database
@@ -163,7 +158,6 @@ public class Database {
         }
     }
 
-
     /**
      * Returns the next valid staffID based on IDs in the clinician list
      *
@@ -182,7 +176,6 @@ public class Database {
         }
     }
 
-
     /**
      * Calls all sub-methods to save data to disk
      */
@@ -196,6 +189,10 @@ public class Database {
         }
     }
 
+    /**
+     * Saves the organ waitlist to the file waitlist.json
+     * @throws IOException the file cannot be found or created
+     */
     private static void saveToDiskWaitlist() throws IOException {
         Gson gson = new Gson();
         String json = gson.toJson(organWaitingList);
@@ -221,11 +218,10 @@ public class Database {
         writer.close();
     }
 
-
     /**
      * Writes database clinicians to file on disk
      *
-     * @exception IOException when the file cannot be found nor created
+     * @throws IOException when the file cannot be found nor created
      */
     private static void saveToDiskClinicians() throws IOException {
         Gson gson = new Gson();
@@ -236,21 +232,6 @@ public class Database {
         writer.write(json);
         writer.close();
     }
-
-//
-//    /**
-//     * Calls importFromDisk and handles any errors
-//     * @param fileName The file to import from
-//     */
-//    public static void importFromDisk(String fileName) {
-//        try {
-//            importFromDiskPatients(fileName);
-//            userActions.log(Level.INFO, "Imported patients from disk", "Attempted to import from disk");
-//            SearchPatients.createFullIndex();
-//        } catch (IOException e) {
-//            userActions.log(Level.WARNING, e.getMessage(), "attempted to import from disk");
-//        }
-//    }
 
     /**
      * Reads patient data from disk
@@ -280,11 +261,17 @@ public class Database {
 
     }
 
-    public static void importFromDiskWaitlist(String directory) throws FileNotFoundException {
-    	String fileName = directory + "waitlist.json";
+    /**
+     * Imports the organ waitlist from the selected directory
+     * @param filename file to import from
+     */
+    public static void importFromDiskWaitlist(String filename) {
         Gson gson = new Gson();
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        organWaitingList = gson.fromJson(br, OrganWaitlist.class);
+
+            InputStream in = ClassLoader.class.getResourceAsStream(filename);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            organWaitingList = gson.fromJson(br, OrganWaitlist.class);
+
     }
 
     /**
@@ -313,7 +300,6 @@ public class Database {
         }
 
     }
-
 
     /**
      * Clears the database of all patients

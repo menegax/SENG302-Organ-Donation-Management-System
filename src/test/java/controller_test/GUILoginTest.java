@@ -1,11 +1,15 @@
-package gui_test;
+package controller_test;
 
-import controller.Main;
+
+
+import main.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -15,17 +19,21 @@ import model.Patient;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.api.FxRobotException;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 import controller.UserControl;
+import testfx.GitLabTestFXConfiguration;
 import utility.GlobalEnums;
 
 import static java.util.logging.Level.OFF;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
+import static java.util.logging.Level.OFF;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static utility.UserActionHistory.userActions;
@@ -40,8 +48,15 @@ import javax.xml.crypto.Data;
 
 public class GUILoginTest extends ApplicationTest {
 
+    /**
+     * Application entry point
+     */
     private Main main = new Main();
 
+
+    /**
+     * Login helper for getting logged in users
+     */
     private UserControl userControl = new UserControl();
 
     private String existingNhi = "TFX9999";
@@ -69,10 +84,23 @@ public class GUILoginTest extends ApplicationTest {
         main.start(stage);
     }
 
-
+    /**
+     * Turn off logging and Sets the configuration to run in headless mode
+     */
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUp() {
         userActions.setLevel(OFF);
+        GitLabTestFXConfiguration.setHeadless();
+    }
+
+    /**
+     * Reset db to a clean state wait for 1000ms
+     */
+    @After
+    public void waitForEvents() {
+        Database.resetDatabase();
+        WaitForAsyncUtils.waitForFxEvents();
+        sleep(1000);
     }
 
 
@@ -85,6 +113,10 @@ public class GUILoginTest extends ApplicationTest {
     }
 
 
+
+    /**
+     * Verifies the the loginPane is visible
+     */
     @Test
     public void PatientNonExistent() {
         givenCredentials("ABD1234");
@@ -94,7 +126,17 @@ public class GUILoginTest extends ApplicationTest {
         thenAlertIsWarning();
     }
 
+    /**
+     * Clicks invalid button and expects exception to be thrown
+     */
+    @Test(expected = FxRobotException.class)
+    public void click_on_wrong_button() {
+        clickOn("#login");
+    }
 
+    /**
+     * Enter NHI and verifies that the UI has logged in
+     */
     @Test
     public void PatientBlankInput() {
         givenCredentials("");
@@ -105,6 +147,9 @@ public class GUILoginTest extends ApplicationTest {
     }
 
 
+    /**
+     * Enter an incorrect NHI and verify that the login pane is still visible
+     */
     @Test
     public void ClinicianValidCredentials() {
         givenCredentials(String.valueOf(existingStaffId));
@@ -114,6 +159,9 @@ public class GUILoginTest extends ApplicationTest {
     }
 
 
+    /**
+     * Enter no text and to the NHI field and verifies that the login screen is still visible
+     */
     @Test
     public void ClinicianBlankInput() {
         givenCredentials(String.valueOf(""));
@@ -123,6 +171,9 @@ public class GUILoginTest extends ApplicationTest {
     }
 
 
+    /**
+     * Verify that the register form is correctly displayed
+     */
     @Test
     public void ClinicianNonExistent() {
         givenCredentials(String.valueOf(1234567890));

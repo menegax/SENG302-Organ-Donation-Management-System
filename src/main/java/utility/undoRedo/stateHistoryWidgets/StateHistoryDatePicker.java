@@ -4,15 +4,8 @@ import javafx.scene.control.DatePicker;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class StateHistoryDatePicker extends StateHistoryControl {
-
-    /**
-     * True if an undo has been executed, false otherwise - could be reset at exit from each interface
-     */
-    private boolean undone = false;
 
     /**
      * Constructor for the State History
@@ -25,6 +18,7 @@ public class StateHistoryDatePicker extends StateHistoryControl {
         } else {
             states.add(((DatePicker) control).getValue().toString());
         }
+        setUpUndoableStage();
     }
 
     /**
@@ -53,7 +47,6 @@ public class StateHistoryDatePicker extends StateHistoryControl {
             } else {
                 ((DatePicker) control).setValue(LocalDate.parse((String) states.get(index)));
             }
-            undone = true;
             return true;
         }
         return false;
@@ -63,7 +56,7 @@ public class StateHistoryDatePicker extends StateHistoryControl {
      * Resets the DatePicker to the state immediately prior to an undo
      */
     public boolean redo() {
-        if (undone && index + 1 < states.size()) {
+        if (index + 1 < states.size()) {
             index += 1;
             if (states.get(index) == null) {
                 ((DatePicker) control).setValue(null);

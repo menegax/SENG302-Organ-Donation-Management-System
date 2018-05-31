@@ -2,21 +2,20 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.TextField;
-import javafx.scene.control.*;
-
-import javafx.scene.input.KeyCode;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.input.KeyCode;
+import javafx.scene.control.TextField;
+
+import main.Main;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 import javafx.scene.layout.AnchorPane;
@@ -32,6 +31,8 @@ import java.util.logging.Level;
 import static utility.SystemLogger.systemLogger;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
+
+import static utility.SystemLogger.systemLogger;
 
 
 public class GUILogin {
@@ -49,8 +50,12 @@ public class GUILogin {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    /**
+     * Initializes the login window by adding key binding for login on enter and an event filter on the login field
+     */
     public void initialize() {
         // Enter key triggers log in
+        nhiLogin.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         loginPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 logIn();
@@ -125,7 +130,6 @@ public class GUILogin {
             }
         }
     }
-
 
     /**
      * Attempt to log the user in using the entered NHI

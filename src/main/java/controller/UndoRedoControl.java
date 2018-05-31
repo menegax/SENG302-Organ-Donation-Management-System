@@ -4,6 +4,7 @@ import javafx.scene.control.*;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,8 +12,14 @@ import java.util.List;
  */
 public class UndoRedoControl {
 
-    static public String undoShortcut = "Ctrl+Z";
-    static public String redoShortcut = "Ctrl+Y";
+//    public String undoShortcut = "Ctrl+Z";
+//    public String redoShortcut = "Ctrl+Y";
+
+    private static UndoRedoControl undoRedoControl;
+
+    private UndoRedoControl() {
+
+    }
 
     /**
      * Sets the states of a list of control objects to the current states of the equivalent objects of a StatesHistoryScreen
@@ -20,9 +27,20 @@ public class UndoRedoControl {
      * @param statesHistoryScreen stores the previous states of the screen that the controls were on
      * @param controlList the current control variables of the current screen to set the states of
      */
-    static public void setStates(StatesHistoryScreen statesHistoryScreen, List<Control> controlList) {
+    public void setStates(StatesHistoryScreen statesHistoryScreen, List<Control> controlList) {
         for (int i = 0; i < controlList.size(); i++) {
             setControl(controlList.get(i), statesHistoryScreen.getStateOfControl(i));
+        }
+    }
+
+    /**
+     * Sets the controller's statesHistoryScreen to the states in the provided statesHistoryScreen
+     * @param controller the controller of the current screen to set
+     * @param statesHistoryScreen the statesHistoryScreen to get the states from
+     */
+    public void setStatesHistoryScreen (UndoableController controller, StatesHistoryScreen statesHistoryScreen) {
+        for (int i = 0; i < statesHistoryScreen.getStateHistories().size(); i++) {
+            controller.setStateHistory(i, statesHistoryScreen.getStateHistories().get(i));
         }
     }
 
@@ -33,7 +51,7 @@ public class UndoRedoControl {
      * @param control the control object whose state you want to set
      * @param state the state to set the control object to
      */
-    static private void setControl(Control control, Object state) {
+    private void setControl(Control control, Object state) {
         if ((control instanceof TextField)) {
             ((TextField) control).setText((String) state);
         }
@@ -52,7 +70,30 @@ public class UndoRedoControl {
             ((ComboBox) control).getSelectionModel().select(state);
         }
         if (control instanceof DatePicker) {
-            ((DatePicker) control).setValue(LocalDate.parse((String) state));
+            if (state != null) {
+                ((DatePicker) control).setValue(LocalDate.parse((String) state));
+            } else {
+                ((DatePicker) control).setValue(null);
+            }
         }
+        if (control instanceof TableView) {
+            // Unchecked type call will always be safe
+            ((TableView) control).getItems().setAll((ArrayList) state);
+        }
+        if (control instanceof ListView) {
+            // Unchecked type call will always be safe
+            ((ListView) control).getItems().setAll((ArrayList) state);
+        }
+    }
+
+    /**
+     * Gets the undoRedoControl instance. If the instance is null, undoRedoControl is initialized
+     * @return UndoRedoControl instance
+     */
+    static public UndoRedoControl getUndoRedoControl() {
+        if (undoRedoControl == null) {
+            undoRedoControl = new UndoRedoControl();
+        }
+        return undoRedoControl;
     }
 }

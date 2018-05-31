@@ -8,8 +8,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import static org.junit.Assert.*;
+import static utility.UserActionHistory.userActions;
 
 /**
  * Junit test class for the StateHistoryComboBox
@@ -24,6 +26,7 @@ public class StateHistoryComboBoxTest {
      */
     @BeforeClass
     public static void setup() throws InterruptedException{
+        userActions.setLevel(Level.OFF);
         PlatformImpl.startup(() -> {});
         comboBox = new ComboBox();
         ArrayList<String> items = new ArrayList<>();

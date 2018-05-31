@@ -1,6 +1,6 @@
-package gui_test;
+package controller_test;
 
-import controller.Main;
+import main.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import testfx.GitLabTestFXConfiguration;
 import utility.GlobalEnums;
 
 import java.io.InvalidObjectException;
@@ -37,6 +38,15 @@ public class GUIRegisterTest extends ApplicationTest {
     private Main main = new Main();
 
 
+    /**
+     * Reset db to a clean state
+     */
+    @Before
+    public void setup() {
+        Database.resetDatabase();
+    }
+
+
     @Override
     public void start(Stage stage) throws Exception {
         main.start(stage);
@@ -48,19 +58,25 @@ public class GUIRegisterTest extends ApplicationTest {
     }
 
 
+    /**
+     * Turn off logging and sets the configuration to run in headless mode
+     */
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUp() {
         userActions.setLevel(OFF);
+        GitLabTestFXConfiguration.setHeadless();
     }
 
 
-    @Before
-    public void setup() {
-        Database.resetDatabase();
-    }
-
-
+    /**
+     * Verify the register screen is visible
+     */
     @Test
+    public void verify_screen_register() {
+        verifyThat("#patientRegisterAnchorPane", Node::isVisible);
+    }
+
+
     public void AllFields() {
         givenValidNhi();
         givenValidFirstName();
@@ -74,6 +90,9 @@ public class GUIRegisterTest extends ApplicationTest {
     }
 
 
+    /**
+     * Checks that the user has registered successfully register with a middle name
+     */
     @Test
     public void NoMiddleName() {
         givenValidNhi();
@@ -87,6 +106,9 @@ public class GUIRegisterTest extends ApplicationTest {
     }
 
 
+    /**
+     * Checks that the user has registered successfully register without a middle name
+     */
     @Test
     public void NoInput() {
         whenClickDone();
@@ -95,6 +117,9 @@ public class GUIRegisterTest extends ApplicationTest {
     }
 
 
+    /**
+     * Checks that the user has not been registered with no input
+     */
     @Test
     public void NoNhi() {
         givenValidFirstName();
@@ -107,6 +132,9 @@ public class GUIRegisterTest extends ApplicationTest {
     }
 
 
+    /**
+     * Checks that the user has not been registered with no nhi
+     */
     @Test
     public void InvalidNhi() {
         givenInvalidNhi();
@@ -120,6 +148,9 @@ public class GUIRegisterTest extends ApplicationTest {
     }
 
 
+    /**
+     * Checks that the user has not been registered with invalid nhi
+     */
     @Test
     public void NoFirstName() {
         givenValidNhi();
@@ -132,6 +163,9 @@ public class GUIRegisterTest extends ApplicationTest {
     }
 
 
+    /**
+     * Checks that the user has not been registered with no firstname
+     */
     @Test
     public void NoLastName() {
         givenValidNhi();
@@ -144,6 +178,9 @@ public class GUIRegisterTest extends ApplicationTest {
     }
 
 
+    /**
+     * Checks that the user has not been registered with no last name
+     */
     @Test
     public void NoBirthDate() {
         givenValidNhi();
@@ -155,10 +192,10 @@ public class GUIRegisterTest extends ApplicationTest {
         thenAlertHasHeader("Warning");
     }
 
-
     /**
      * Tests to ensure a patient cannot register with a birth date in the future
      */
+
     @Test
     public void InvalidBirthDate() {
         givenInvalidNhi();
@@ -172,11 +209,13 @@ public class GUIRegisterTest extends ApplicationTest {
     }
 
 
+    /**
+     * Checks that the user has not been registered with duplicate nhi
+     */
     @Test
     public void DuplicateNhi() {
 
-        Database.addPatient(new Patient("TFX9999", "Joe", new ArrayList<>(Collections.singletonList("Middle")),
-                "Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.addPatient(new Patient("TFX9999", "Joe", new ArrayList<>(Collections.singletonList("Middle")), "Bloggs", LocalDate.of(1990, 2, 9)));
 
         lookup("#nhiRegister").queryAs(TextField.class)
                 .setText("TFX9999");

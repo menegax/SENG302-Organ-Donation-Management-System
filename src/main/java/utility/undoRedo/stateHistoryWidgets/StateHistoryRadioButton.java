@@ -3,12 +3,8 @@ package utility.undoRedo.stateHistoryWidgets;
 import javafx.scene.control.RadioButton;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class StateHistoryRadioButton extends StateHistoryControl {
-
-    private boolean undone = false;
 
     /**
      * Constructor for a StateHistoryRadioButton
@@ -17,7 +13,7 @@ public class StateHistoryRadioButton extends StateHistoryControl {
     public StateHistoryRadioButton(RadioButton radioButton) {
         this.control = radioButton;
         states.add(radioButton.isSelected());
-
+        setUpUndoableStage();
     }
 
 
@@ -40,7 +36,6 @@ public class StateHistoryRadioButton extends StateHistoryControl {
         if (index != 0) {
             index -= 1;
             ((RadioButton) control).setSelected((Boolean) states.get(index));
-            undone = true;
             return true;
         }
         return false;
@@ -51,7 +46,7 @@ public class StateHistoryRadioButton extends StateHistoryControl {
      * Resets the RadioButton to the state immediately prior to an undo
      */
     public boolean redo() {
-        if (undone && index + 1 < states.size()) {
+        if (index + 1 < states.size()) {
             index += 1;
             ((RadioButton) control).setSelected((Boolean) states.get(index));
             return true;

@@ -1,10 +1,7 @@
 package controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import service.Database;
@@ -18,8 +15,11 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
+import static java.util.logging.Level.SEVERE;
+
 public class GUIClinicianHome {
 
+    @FXML
     public Button searchPatients;
 
     public AnchorPane clinicianHomePane;
@@ -32,6 +32,11 @@ public class GUIClinicianHome {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private UserControl userControl = new UserControl();
+
+    /**
+     * Opens the clinician profile screen
+     */
     @FXML
     public void goToClinicianProfile(){
         try {
@@ -42,6 +47,9 @@ public class GUIClinicianHome {
         }
     }
 
+    /**
+     * Opens the patient search screen
+     */
     @FXML
     public void goToSearchPatients(){
         try {
@@ -52,11 +60,18 @@ public class GUIClinicianHome {
         }
     }
 
+    /**
+     * Logs out the clinician and closes the open window for the logged in clinician
+     */
     @FXML
     public void logOutClinician() {
         screenControl.closeStage(clinicianHomePane);
+        userControl.setTargetPatient(null);
     }
 
+    /**
+     * Saves changes made to the clinician to the database
+     */
     @FXML
     public void saveClinician() {
         Database.saveToDisk();
@@ -64,6 +79,9 @@ public class GUIClinicianHome {
         alert.show();
     }
 
+    /**
+     * Opens the clinician history screen
+     */
     @FXML
     public void goToHistory() {
         try {
@@ -71,12 +89,15 @@ public class GUIClinicianHome {
         }
         catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "Unable load clinician history").show();
+            userActions.log(SEVERE, "Failed to load clinician history", "Attempted to load clinician history");
+
         }
-        ScreenControl.activate("clinicianHistory");
     }
 
-    public void goToClinicianWaitingList(ActionEvent event) {
-        ScreenControl.removeScreen("clinicianWaitingList");
+    /**
+     * Opens the receiver waiting list screen
+     */
+    public void goToClinicianWaitingList() {
         try {
             ScreenControl.addPopUp("clinicianWaitingList", FXMLLoader.load(getClass().getResource("/scene/clinicianWaitingList.fxml")));
             ScreenControl.activate("clinicianWaitingList");
@@ -85,7 +106,6 @@ public class GUIClinicianHome {
             e.printStackTrace();
             userActions.log(Level.SEVERE, "Error loading organ waiting list screen", "attempted to navigate from the " +
                     "home page to the waiting list page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading organ waiting list page", ButtonType.OK).showAndWait();
         }
     }
 }

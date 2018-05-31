@@ -19,6 +19,7 @@ import model.DrugInteraction;
 import model.Medication;
 import model.Patient;
 import service.Database;
+import utility.GlobalEnums;
 import service.TextWatcher;
 import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
@@ -28,7 +29,6 @@ import java.io.InvalidObjectException;
 import java.util.*;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientMedications extends UndoableController {
@@ -47,18 +47,15 @@ public class GUIPatientMedications extends UndoableController {
     public Button removeMed;
     public Button addMed;
     public Button deleteMed;
-    public Button undoEdit;
-    public Button redoEdit;
+    public Button compareMeds;
     public Button goBack;
     public Button wipeReview;
-    public Button compareMeds;
     public Button clearMed;
     public ContextMenu contextMenu;
 
     private JsonObject suggestions;
     private boolean itemSelected = false;
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
@@ -144,14 +141,17 @@ public class GUIPatientMedications extends UndoableController {
         pastMedications.setOnMouseClicked(event -> onSelect(pastMedications));
         pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        controls = new ArrayList<Control>() {{ add(newMedication); }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS);
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         } else if (user instanceof Clinician) {
             viewedPatient = userControl.getTargetPatient();
             loadProfile(viewedPatient.getNhiNumber());
         }
+        controls = new ArrayList<Control>() {{
+            add(pastMedications);
+            add(currentMedications);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS);
     }
 
     /**
@@ -199,7 +199,7 @@ public class GUIPatientMedications extends UndoableController {
                     textWatcher.afterTextChange(GUIPatientMedications.class.getMethod("autoComplete"), this); //start timer
 
                 } catch (NoSuchMethodException e) {
-                    userActions.log(Level.SEVERE,"" , ""); //TODO
+                    userActions.log(Level.SEVERE, "No method exists for autocomplete", "Attempted to make API call"); // MAJOR ISSUE HERE!
                 }
             }
         });
@@ -258,9 +258,7 @@ public class GUIPatientMedications extends UndoableController {
         menuLabel.setWrapText(true);
         MenuItem item = new MenuItem();
         item.setGraphic(menuLabel);
-        item.setOnAction((ae) -> {
-            selectFromAutoComplete(menuLabel.getText());
-        });
+        item.setOnAction((ae) -> selectFromAutoComplete(menuLabel.getText()));
         return item;
     }
 
@@ -311,7 +309,7 @@ public class GUIPatientMedications extends UndoableController {
             medication = medication.substring(0, 1).toUpperCase() + medication.substring(1).toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
-                target.getCurrentMedications().add( new Medication(medication));
+                target.getCurrentMedications().add(new Medication(medication));
                 userActions.log(Level.INFO, "Added medication: " + medication, new String[]{"Attempted to add medication: " + medication, target.getNhiNumber()});
                 viewCurrentMedications();
                 newMedication.clear();
@@ -349,12 +347,12 @@ public class GUIPatientMedications extends UndoableController {
      * Called when the user confirms the deletion of the selected medication(s) in the alert window.
      */
     private void performDelete(String medication) {
-        if (history.contains( medication )) {
-            target.getMedicationHistory().remove( history.indexOf( medication ) );
+        if (history.contains(medication)) {
+            target.getMedicationHistory().remove(history.indexOf(medication));
             userActions.log(Level.INFO, "Deleted medication: " + medication, new String[]{"Attempted to delete medication: " + medication, target.getNhiNumber()});
             viewPastMedications();
-        } else if (current.contains( medication )) {
-            target.getCurrentMedications().remove( current.indexOf( medication ) );
+        } else if (current.contains(medication)) {
+            target.getCurrentMedications().remove(current.indexOf(medication));
             userActions.log(Level.INFO, "Deleted medication: " + medication, new String[]{"Attempted to delete medication: " + medication, target.getNhiNumber()});
 
             viewCurrentMedications();
@@ -536,6 +534,12 @@ public class GUIPatientMedications extends UndoableController {
      */
     @FXML
     public void goToProfile() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+        try {
+            ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader);
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE, "Error loading profile screen in popup", new String[]{"Attempted to navigate from the edit page to the profile page in popup", target.getNhiNumber()});
+            new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
         if (userControl.getLoggedInUser() instanceof Patient) {
             try {
                 screenControl.show(medicationPane, "/scene/patientProfile.fxml");

@@ -1,7 +1,6 @@
 package utility.undoRedo.stateHistoryWidgets;
 
 import javafx.scene.control.Control;
-import utility.GlobalEnums;
 import utility.undoRedo.UndoableStage;
 
 import java.util.ArrayList;
@@ -18,6 +17,8 @@ public abstract class StateHistoryControl {
     List<Object> states = new ArrayList<>();
 
     Control control;
+
+    private UndoableStage undoableStage;
 
     /**
      * Display the state of the object one action ahead
@@ -38,7 +39,6 @@ public abstract class StateHistoryControl {
      */
     abstract public boolean undo();
 
-
     /**
      * Gets the states of the object
      * Currently only used in testing
@@ -57,7 +57,7 @@ public abstract class StateHistoryControl {
      */
     public int getIndex() {
         return index;
-    };
+    }
 
     /**
      * Gets the current state of the control
@@ -68,8 +68,49 @@ public abstract class StateHistoryControl {
     }
 
     /**
+     * Sets the undoable stage that this control is on
+     */
+    void setUpUndoableStage() {
+        if (control.getScene() == null) {
+            control.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    if (newScene.getWindow() == null) {
+                        newScene.windowProperty().addListener((observable2, oldStage, newStage) -> {
+                            if (newStage != null) {
+                                undoableStage = (UndoableStage) newStage;
+                            }
+                        });
+                    } else {
+                        undoableStage = (UndoableStage) newScene.getWindow();
+                    }
+                }
+            });
+        } else if (control.getScene().getWindow() == null){
+            control.getScene().windowProperty().addListener((observable2, oldStage, newStage) -> {
+                if (newStage != null) {
+                    undoableStage = (UndoableStage) newStage;
+                }
+            });
+        } else {
+            undoableStage = (UndoableStage) control.getScene().getWindow();
+        }
+    }
+
+    /**
      * Gets the undoable stage that this stateHistoryControl is on
      * @return the undoableStage of this stateHistoryControl
      */
-    public UndoableStage getUndoableStage() { return (UndoableStage) control.getScene().getWindow(); }
+    private UndoableStage getUndoableStage() {
+        return undoableStage;
+    }
+
+    /**
+     * Sets the states in this StateHistoryControl to a copy of the provided StateHistoryControl
+     * @param stateHistoryControl the StateHistoryControl to copy the state of
+     */
+    public void setStates(StateHistoryControl stateHistoryControl) {
+        this.states = stateHistoryControl.getStates();
+        this.index = stateHistoryControl.getIndex();
+        this.undoableStage = stateHistoryControl.getUndoableStage();
+    }
 }

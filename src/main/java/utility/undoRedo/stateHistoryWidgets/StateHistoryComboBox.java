@@ -3,20 +3,12 @@ package utility.undoRedo.stateHistoryWidgets;
 import javafx.scene.control.ComboBox;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Represents the state history of a ComboBox field in the GUI
  * The ComboBox must have strings as it options
  */
 public class StateHistoryComboBox extends StateHistoryControl {
-
-    /*
-     * True if an undo has been executed, false otherwise - could be reset at exit from each interface
-     */
-    private boolean undone = false;
-
 
     /**
      * Constructor for the state history
@@ -26,6 +18,7 @@ public class StateHistoryComboBox extends StateHistoryControl {
     public StateHistoryComboBox(ComboBox<String> comboBox) {
         this.control = comboBox;
         states.add(comboBox.getSelectionModel().getSelectedItem());
+        setUpUndoableStage();
     }
 
 
@@ -49,7 +42,6 @@ public class StateHistoryComboBox extends StateHistoryControl {
             index -= 1;
             // Cast is always safe
             ((ComboBox<String>) control).getSelectionModel().select((String) states.get(index));
-            undone = true;
             return true;
         }
         return false;
@@ -59,7 +51,7 @@ public class StateHistoryComboBox extends StateHistoryControl {
      * Resets the ComboBox to the state immediately prior to an undo
      */
     public boolean redo() {
-        if (undone && index + 1 < states.size()) {
+        if (index + 1 < states.size()) {
             index += 1;
             // Cast is always safe
             ((ComboBox<String>) control).getSelectionModel().select((String) states.get(index));

@@ -1,25 +1,22 @@
 package controller;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
+import main.Main;
 import model.Patient;
-import utility.GlobalEnums;
-import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
-import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -30,8 +27,6 @@ import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
-
-import javax.xml.crypto.Data;
 
 public class GUIPatientRegister {
 
@@ -55,8 +50,6 @@ public class GUIPatientRegister {
     @FXML
     private Pane patientRegisterAnchorPane;
 
-    private StringConverter<LocalDate> dateConverter;
-
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
@@ -64,6 +57,11 @@ public class GUIPatientRegister {
      */
     public void initialize() {
         setDateConverter();
+        firstnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        lastnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        middlenameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        nhiRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+        birthRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
 
         // Enter key
         patientRegisterAnchorPane.setOnKeyPressed(e -> {
@@ -92,7 +90,7 @@ public class GUIPatientRegister {
     /**
      * Clears the data in the fields of the GUI
      */
-    private void clearFields(){
+    private void clearFields() {
         nhiRegister.clear();
         firstnameRegister.clear();
         lastnameRegister.clear();
@@ -118,8 +116,7 @@ public class GUIPatientRegister {
             public String toString(LocalDate date) {
                 if (date != null) {
                     return dateFormatter.format(date);
-                }
-                else {
+                } else {
                     return "";
                 }
             }
@@ -129,8 +126,7 @@ public class GUIPatientRegister {
             public LocalDate fromString(String string) {
                 if (string != null && !string.isEmpty()) {
                     return LocalDate.parse(string, dateFormatter);
-                }
-                else {
+                } else {
                     return null;
                 }
             }
@@ -140,7 +136,7 @@ public class GUIPatientRegister {
 
 
     /**
-     * Check users inputs and registers the user patient profile
+     * Check users inputs for validity and registers the user patient profile
      */
     @FXML
     public void register() {
@@ -154,13 +150,11 @@ public class GUIPatientRegister {
         if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", nhiRegister.getText().toUpperCase())) {
             valid = setInvalid(nhiRegister);
             invalidContent.append("NHI must be three letters followed by four numbers\n");
-        }
-        else if (Database.isPatientInDb(nhiRegister.getText())) {
+        } else if (Database.isPatientInDb(nhiRegister.getText())) {
             // checks to see if nhi already in use
             valid = setInvalid(nhiRegister);
             invalidContent.append("NHI is already in use\n");
-        }
-        else {
+        } else {
             setValid(nhiRegister);
         }
 
@@ -169,8 +163,7 @@ public class GUIPatientRegister {
                 .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
             valid = setInvalid(firstnameRegister);
             invalidContent.append("First name must be letters, ., or -.\n");
-        }
-        else {
+        } else {
             setValid(firstnameRegister);
         }
 
@@ -179,8 +172,7 @@ public class GUIPatientRegister {
                 .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
             valid = setInvalid(lastnameRegister);
             invalidContent.append("Last name must be letters, ., or -.\n");
-        }
-        else {
+        } else {
             setValid(lastnameRegister);
         }
 
@@ -189,8 +181,7 @@ public class GUIPatientRegister {
                 .matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
             valid = setInvalid(middlenameRegister);
             invalidContent.append("Middle name(s) must be letters, ., or -.\n");
-        }
-        else {
+        } else {
             setValid(middlenameRegister);
         }
 
@@ -200,12 +191,10 @@ public class GUIPatientRegister {
                     .isAfter(LocalDate.now())) {
                 valid = setInvalid(birthRegister);
                 invalidContent.append("Date of birth must be a valid date either today or earlier.\n");
-            }
-            else {
+            } else {
                 setValid(birthRegister);
             }
-        }
-        else {
+        } else {
             valid = setInvalid(birthRegister);
             invalidContent.append("Date of birth must be set.\n");
         }
@@ -227,8 +216,13 @@ public class GUIPatientRegister {
             Database.saveToDisk();
             clearFields();
             new Alert(Alert.AlertType.INFORMATION, "Successfully registered!").show();
-        }
-        else {
+            try {
+                screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+            } catch (IOException e) {
+                new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
+                userActions.log(SEVERE, "Failed to load login", "Attempted to load login");
+            }
+        } else {
             userActions.log(Level.WARNING, "Failed to register patient profile due to invalid fields", "Attempted to register patient profile");
             invalidInfo.setContentText(invalidContent.toString());
             invalidInfo.show();

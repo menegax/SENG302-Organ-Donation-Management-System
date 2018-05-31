@@ -128,15 +128,15 @@ We thought this would be very useful when searching for patients, as the clinici
 However we do not want every patient to be matched to any search, so we set the max number of the character difference between the search and the patient's name to two.
 
 
-##Sprint 4
+## Sprint 4
 
-####Diagnosis Validation
+#### Diagnosis Validation
 A diagnosis must have a name between 3 and 50 characters long, as this covers the length of the full names of most diseases and conditions. A diagnosis can not be made in the future or before the patient was born.
 
-####Diagnosis Adding
+#### Diagnosis Adding
 A diagnosis can not be added to the current diagnoses list if the patient has a diagnosis of the same name and the same diagnosis date.
 
-####Setting past and current diagnoses lists
+#### Setting past and current diagnoses lists
 Diagnoses lists for a patient are set entirely after all changes have been made before saving. This is to keep tracking changes made to a minimum to reduce operation complexity, and thus making the saving procedure quicker to execute.
 
 #### User Actions Logging
@@ -158,6 +158,16 @@ us to log actions that occur within the medications page (and other pages while 
 are visible within the new history table for clinicians. If a clinician alters medications for a patient, a ClinicianActionRecord is created that stores
 the standing log information, plus the NHI number of the 'target' patient that the changes are being made to. Logs (+ medication changes) will persist between 
 sessions after the user saves changes using the standard save button on the home screen.
+
+#### Undo/Redo
+We decided to reload the fxml on every undo and redo as it did not create significant processing time.  
+In addition it removed the necessity for the application to know whether it was on the screen it needed to undo or not.
+We created abstract classes UndoableStage and UndoableController to enable future implementations with ease as most methods and attributes would be inherited.
+
+#### Deregistering an Organ due to Cure
+When you deregister an organ due to a disease or collection of diseases being cured and mark a collection of selected diseases to cured in the dropdown, we considered how
+the program should handle chronic diseases. We decided that it makes most sense to be able to set chronic diseases to cured in this scenario as it is not
+very user friendly to have to go back to the disease screen to 'complete' the cure of the disease
 
 #### Keyboard Shortcuts
 MenuBar has the ability to set and bind keyboard shortcuts to a stage. Therefore we will use MenuBars to set the keyboard shortcuts. 

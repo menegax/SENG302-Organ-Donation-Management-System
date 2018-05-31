@@ -7,8 +7,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import static org.junit.Assert.*;
+import static utility.UserActionHistory.userActions;
 
 /**
  * Junit test class for the StateHistoryCheckBox
@@ -22,7 +24,8 @@ public class StateHistoryCheckBoxTest {
      */
     @BeforeClass
     public static void setup() {
-        PlatformImpl.startup(() -> {});
+        userActions.setLevel(Level.OFF);
+        PlatformImpl.startup(() -> {}); //todo look at. does this do thangs?
         checkBox = new CheckBox();
         checkBox.setSelected(false);
     }

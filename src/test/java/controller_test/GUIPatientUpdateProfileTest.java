@@ -1,8 +1,10 @@
-package gui_test;
+package controller_test;
 
+import static java.util.logging.Level.OFF;
 import static org.testfx.api.FxAssert.verifyThat;
+import static utility.UserActionHistory.userActions;
 
-import controller.Main;
+import main.Main;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -10,10 +12,12 @@ import javafx.stage.Stage;
 import model.Patient;
 import org.junit.After;
 import org.junit.Ignore;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import testfx.GitLabTestFXConfiguration;
 import utility.GlobalEnums;
 
 import java.time.LocalDate;
@@ -21,6 +25,9 @@ import java.util.ArrayList;
 
 public class GUIPatientUpdateProfileTest extends ApplicationTest {
 
+    /**
+     * Application entry point
+     */
     private Main main = new Main();
 
     String existingPatientNhi1 = "TFX9999";
@@ -56,7 +63,25 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
         verifyThat("#patientUpdateAnchorPane", Node::isVisible);
     }
 
+    /**
+     * Sets the configuration to run in headless mode
+     */
+    @BeforeClass
+    static public void setHeadless() {
+        GitLabTestFXConfiguration.setHeadless();
+    }
 
+    /**
+     * Turn off logging
+     */
+    @BeforeClass
+    public static void setUp() {
+        userActions.setLevel(OFF);
+    }
+
+    /**
+     * Reset db to a clean state wait for 1000ms
+     */
     @After
     public void waitForEvents() {
         Database.resetDatabase();
@@ -65,11 +90,13 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
     }
 
 
+    /**
+     * Checks that a patients NHI cannot be updated to one with an invalid format
+     */
     @Ignore //Todo
     @Test
     public void testInvalidNhi() {
         // try changing to an invalid nhi
-
         interact(() -> {
             lookup("#nhiTxt").queryAs(TextField.class).setText("999abcd");
             lookup("#saveButton").queryAs(Button.class).fire();
@@ -80,7 +107,10 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
 
     }
 
-    @Ignore //Todo
+    /**
+     * Checks that a patients NHI cannot be updated to an existing one
+     */
+    @Ignore
     @Test
     public void testDuplicateNhi() {
     // try editing to an nhi that's already taken

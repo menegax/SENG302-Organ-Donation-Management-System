@@ -3,27 +3,15 @@ package controller;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import com.sun.glass.ui.View;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.control.Label;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
@@ -32,12 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Clinician;
-import model.Patient;
-import org.apache.commons.lang3.StringUtils;
 import model.Medication;
-import org.apache.commons.lang3.StringUtils;
-import model.Patient;
-import service.Database;
 import utility.GlobalEnums;
 
 import java.io.IOException;
@@ -46,9 +29,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -75,10 +55,13 @@ public class GUIPatientProfile {
 
     public Button contactButton;
 
-    public Button donationButton;
+    //public Button donationButton;
 
     @FXML
     public Button medicationBtn;
+
+    @FXML
+    public Button proceduresButton;
 
     @FXML
     public Button donationsButton;
@@ -91,9 +74,6 @@ public class GUIPatientProfile {
 
     @FXML
     private Label nameLbl;
-
-    @FXML
-    private Label genderLbl;
 
     @FXML
     public Label vitalLbl1;
@@ -135,7 +115,11 @@ public class GUIPatientProfile {
     private Label addLbl5;
 
     @FXML
-    private ListView<String> organList;
+    private Label genderDeclaration;
+
+    @FXML
+    private Label genderStatus;
+
     @FXML
     private ListView receivingList;
 
@@ -160,8 +144,6 @@ public class GUIPatientProfile {
 
     private UserControl userControl;
 
-    private ListProperty<String> organListProperty = new SimpleListProperty<>();
-
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
@@ -170,6 +152,7 @@ public class GUIPatientProfile {
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
      * @throws InvalidObjectException -
      */
+
     public void initialize() throws InvalidObjectException{
         userControl = new UserControl();
         Object user = null; //TODO
@@ -190,19 +173,21 @@ public class GUIPatientProfile {
 //                donationList.setVisible(false);
 //            }
             user = userControl.getLoggedInUser();
+            proceduresButton.setText("View Procedures"); //Changing the button text for patients
         }
         if (userControl.getLoggedInUser() instanceof Clinician) {
             user = userControl.getTargetPatient();
         }
 
         try {
+            assert user != null;
             loadProfile(((Patient)user).getNhiNumber());
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Cannot load patient profile");
         }
     }
-
+//todo
 //    /**
 //     * Sets the patient for the controller. This patient's attributes will be loaded
 //     * @param patient the patient to be viewed
@@ -219,16 +204,22 @@ public class GUIPatientProfile {
 //    }
 
     /**
-     * Loads the attributes and organs for the patient to be able to be viewed
-     * @param nhi of the patient
-     * @throws InvalidObjectException
+     * Sets the patient's attributes for the scene's labels
+     * @param nhi the nhi of the patient to be viewed
+     * @throws InvalidObjectException if the nhi of the patient does not exist in the database
      */
     private void loadProfile(String nhi) throws InvalidObjectException {
         Patient patient = Database.getPatientByNhi(nhi);
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
-        genderLbl.setText(patient.getGender() == null ? "Not set" : patient.getGender()
-                .toString());
+        if (userControl.getLoggedInUser() instanceof Clinician) {
+            genderDeclaration.setText( "Gender assigned at birth: " );
+            genderStatus.setText( patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue() );
+        } else {
+            genderDeclaration.setText( "Gender identity: " );
+            genderStatus.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender()
+                    .getValue());
+        }
         vitalLbl1.setText(patient.getDeath() == null ? "Alive" : "Deceased");
         dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
@@ -240,9 +231,9 @@ public class GUIPatientProfile {
         bmi.setText(String.valueOf(patient.getBmi()));
         bloodGroupLbl.setText(patient.getBloodGroup() == null ? "Not set" : patient.getBloodGroup()
                 .getValue());
-        addLbl1.setText(patient.getStreet1() == null ? "Not set" : patient.getStreet1());
-        addLbl2.setText(patient.getStreet2() == null ? "Not set" : patient.getStreet2());
-        addLbl3.setText(patient.getSuburb() == null ? "Not set" : patient.getSuburb());
+        addLbl1.setText((patient.getStreet1() == null || patient.getStreet1().length() == 0) ? "Not set" : patient.getStreet1());
+        addLbl2.setText((patient.getStreet2() == null || patient.getStreet2().length() == 0) ? "Not set" : patient.getStreet2());
+        addLbl3.setText((patient.getSuburb() == null || patient.getStreet1().length() == 0) ? "Not set" : patient.getSuburb());
         addLbl4.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
                 .getValue());
         if (patient.getZip() != 0) {
@@ -278,8 +269,8 @@ public class GUIPatientProfile {
     /**
      * Highlights the listview cell if the organ donating is also required by the patient in clinician view. If in
      * patient view, the listview cells are just styled.
-     * @param listView  -
-     * @param isDonorList -
+     * @param listView The listView that the cells being highlighted are in
+     * @param isDonorList boolean for if the receiving organ is also in the donating list
      */
     public void highlightListCell(ListView<String> listView, boolean isDonorList) {
         listView.setCellFactory(column -> new ListCell<String>() {
@@ -313,7 +304,8 @@ public class GUIPatientProfile {
     }
 
     /**
-     * Takes the user to the edit patient profile scene and controller
+     * Takes the user to the edit patient profile scene and controller. The window is opened in the main patient
+     * window if a patient is logged in or in the patient popup window if a clinician is logged in
      */
     public void goToEdit() {
         if (userControl.getLoggedInUser() instanceof Patient) {
@@ -337,7 +329,6 @@ public class GUIPatientProfile {
             }
         }
     }
-
 
     /**
      * Goes to the patient donations scene
@@ -434,6 +425,28 @@ public class GUIPatientProfile {
         }
     }
 
+    /**
+     * Navigates to the patient procedures screen
+     */
+    @FXML
+    public void goToPatientProcedures() {
+        if (userControl.getLoggedInUser() instanceof Patient) {
+            try {
+                screenControl.show(patientProfilePane, "/scene/patientProcedures.fxml");
+            } catch (IOException e) {
+                new Alert(Alert.AlertType.ERROR, "Unable to load patient procedures").show();
+                userActions.log(SEVERE, "Failed to load patient procedures", "Attempted to load patient procedures");
+            }
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedures.fxml"));
+            try {
+                ScreenControl.loadPopUpPane(patientProfilePane.getScene(), fxmlLoader);
+            } catch (IOException e) {
+                userActions.log(Level.SEVERE, "Error loading procedures screen in popup", "attempted to navigate from the profile page to the procedures page in popup");
+                new Alert(Alert.AlertType.ERROR, "Error loading procedures page", ButtonType.OK).showAndWait();
+            }
+        }
+    }
 
     /**
      * Goes to the patient home scene
@@ -459,8 +472,8 @@ public class GUIPatientProfile {
                 ScreenControl.addPopUp("patientDiagnoses", FXMLLoader.load(getClass().getResource("/scene/clinicianDiagnosis.fxml")));
                 ScreenControl.activate("patientDiagnoses");
             } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading diagnoses screen", "attempted to navigate from the profile page to the diagnoses page");
-                new Alert(Alert.AlertType.WARNING, "ERROR loading diagnoses page", ButtonType.OK).showAndWait();
+                new Alert((Alert.AlertType.ERROR), "ERROR loading diagnoses page").show();
+                userActions.log(SEVERE, "Error loading diagnoses screen", "attempted to navigate from the profile page to the diagnoses page");
             }
         }
         else {

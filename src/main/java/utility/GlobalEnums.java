@@ -1,15 +1,18 @@
 package utility;
 
-@SuppressWarnings("unused")
+//todo ALL JAVADOC
 public class GlobalEnums {
 
-    public enum Gender {
-        MALE("male"), FEMALE("female"), OTHER("other");
+    /**
+     *
+     */
+    public enum PreferredGender {
+        MAN("Man"), WOMAN("Woman"), NONBINARY("Non-binary");
 
         private String value;
 
 
-        Gender(final String value) {
+        PreferredGender(final String value) {
             this.value = value;
         }
 
@@ -27,7 +30,7 @@ public class GlobalEnums {
 
         public static Enum getEnumFromString(String value) {
             try {
-                return Gender.valueOf(value.toUpperCase());
+                return PreferredGender.valueOf(value.toUpperCase());
             }
             catch (IllegalArgumentException e) {
                 return null;
@@ -35,6 +38,44 @@ public class GlobalEnums {
         }
     }
 
+    /**
+     *
+     */
+    public enum BirthGender {
+        MALE("Male"), FEMALE("Female");
+
+        private String value;
+
+
+        BirthGender(final String value) {
+            this.value = value;
+        }
+
+
+        public String getValue() {
+            return value != null ? value : "Not set";
+        }
+
+
+        @Override
+        public String toString() {
+            return this.getValue() != null ? this.getValue() : "Not set";
+        }
+
+
+        public static Enum getEnumFromString(String value) {
+            try {
+                return BirthGender.valueOf(value.toUpperCase());
+            }
+            catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
+    }
+
+    /**
+     *
+     */
     public enum Region {
         NORTHLAND("Northland"), AUCKLAND("Auckland"), WAIKATO("Waikato"), BAYOFPLENTY("Bay of Plenty"), GISBORNE("Gisborne"), HAWKESBAY("Hawkes Bay"), TARANAKI(
                 "Taranaki"), MANAWATU("Manawatu"), WELLINGTON("Wellington"), TASMAN("Tasman"), NELSON("Nelson"), MARLBOROUGH("Marlborough"), WESTCOAST(
@@ -61,13 +102,19 @@ public class GlobalEnums {
 
         public static Enum getEnumFromString(String value) {
             try {
-                return Region.valueOf(value.toUpperCase().replaceAll("\\s+", ""));
-            } catch (IllegalArgumentException e) {
+                return Region.valueOf(value.toUpperCase()
+                        .replaceAll("\\s+", ""));
+            }
+            catch (IllegalArgumentException e) {
                 return null;
             }
         }
     }
 
+    //todo
+    /**
+     *
+     */
     public enum Organ {
         LIVER("liver"), KIDNEY("kidney"), PANCREAS("pancreas"), HEART("heart"), LUNG("lung"), INTESTINE("intestine"), CORNEA("cornea"), MIDDLEEAR(
                 "middle ear"), SKIN("skin"), BONE("bone"), BONE_MARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
@@ -101,6 +148,10 @@ public class GlobalEnums {
         }
     }
 
+    //todo
+    /**
+     *
+     */
     public enum BloodGroup {
         A_POSITIVE("A positive"), A_NEGATIVE("A negative"), B_POSITIVE("B positive"), B_NEGATIVE("B negative"), AB_POSITIVE("AB positive"), AB_NEGATIVE(
                 "AB negative"), O_POSITIVE("O positive"), O_NEGATIVE("O negative");
@@ -126,7 +177,8 @@ public class GlobalEnums {
 
         public static Enum getEnumFromString(String value) {
             try {
-                return BloodGroup.valueOf(value.toUpperCase().replaceAll("\\s+", "_"));
+                return BloodGroup.valueOf(value.toUpperCase()
+                        .replaceAll("\\s+", "_"));
             }
             catch (IllegalArgumentException e) {
                 return null;
@@ -134,10 +186,16 @@ public class GlobalEnums {
         }
     }
 
+    //todo
+
+    /**
+     *
+     */
     public enum UndoableScreen {
-        CLINICIANSEARCHPATIENTS("clinicianSearchPatients"), CLINICIANPROFILEUPDATE("clinicianProfileUpdate"), PATIENTMEDICATIONS("patientMedications"),
-        PATIENTREGISTER("patientRegister"), PATIENTUPDATECONTACTS("patientUpdateContacts"), PATIENTUPDATEDONATIONS("patientUpdateDonations"),
-        PATIENTUPDATEPROFILE("patientUpdateProfile"), PATIENTUPDATEREQUIREMENTS("patientUpdateRequirements"), PATIENTUPDATEDIAGNOSIS("patientUpdateDiagnosis");
+        CLINICIANSEARCHPATIENTS("clinicianSearchPatients"), CLINICIANPROFILEUPDATE("clinicianProfileUpdate"), PATIENTMEDICATIONS("patientMedications"), PATIENTREGISTER(
+                "patientRegister"), PATIENTUPDATECONTACTS("patientUpdateContacts"), PATIENTUPDATEDONATIONS("patientUpdateDonations"), PATIENTUPDATEPROFILE(
+                "patientUpdateProfile"), PATIENTUPDATEDIAGNOSIS("patientUpdateDiagnosis"), PATIENTUPDATEREQUIREMENTS("patientUpdateRequirements"), CLINICIANDIAGNOSIS(
+                "clinicianDiagnosis"), PATIENTPROCEDUREFORM("patientProcedureForm"), PATIENTPROCEDURES("patientProcedures");
 
         private String value;
 
@@ -145,56 +203,92 @@ public class GlobalEnums {
         UndoableScreen(final String value) {
             this.value = value;
         }
+    }
 
 
-        public String getValue() {
-            return value;
+    public String getValue() {
+        return value;
+    }
+
+
+    @Override
+    public String toString() {
+        return this.getValue();
+    }
+
+
+    public static Enum getEnumFromString(String value) {
+        try {
+            return BloodGroup.valueOf(value.toUpperCase()
+                    .replaceAll("\\s+", "_"));
         }
-
-
-        @Override
-        public String toString() {
-            return this.getValue();
+        catch (IllegalArgumentException e) {
+            return null;
         }
+    }
+}
+
+//todo
+public enum DiseaseState {
+    CURED("cured"), CHRONIC("chronic");
+
+    private String value;
 
 
-        public static Enum getEnumFromString(String value) {
-            try {
-                return BloodGroup.valueOf(value.toUpperCase().replaceAll("\\s+", "_"));
-            }
-            catch (IllegalArgumentException e) {
-                return null;
-            }
+    DiseaseState(final String value) {
+        this.value = value;
+    }
+
+
+    public String getValue() {
+        return value;
+    }
+
+
+    @Override
+    public String toString() {
+        return this.getValue();
+    }
+
+
+    public static Enum getEnumFromString(String value) {
+        try {
+            return DiseaseState.valueOf(value.toUpperCase());
+        }
+        catch (IllegalArgumentException e) {
+            return null;
         }
     }
 
-    public enum DiseaseState {
-        CURED ("cured"),
-        CHRONIC ("chronic");
+}
 
-        private String value;
+//todo
+/**
+ *
+ *
+ */
+public enum DeregistrationReason {
+    ERROR("Registering of the organ was an error"),
+    CURED("Treatment has cured the disease, no longer requiring an organ transplant"),
+    DIED("Receiver has died"),
+    RECEIVED("Receiver has received an organ transplant");
 
-        DiseaseState(final String value) {
-            this.value = value;
-        }
+    private String value;
 
-        public String getValue() {
-            return value;
-        }
 
-        @Override
-        public String toString() {
-            return this.getValue();
-        }
+    DeregistrationReason(final String value) {
+        this.value = value;
+    }
 
-        public static Enum getEnumFromString(String value) {
-            try {
-                return DiseaseState.valueOf(value.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                return null;
-            }
-        }
 
+    @Override
+    public String toString() {
+        return this.getValue();
+    }
+
+
+    public String getValue() {
+        return value;
     }
 
 }

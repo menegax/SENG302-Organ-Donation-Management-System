@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+//todo put javadoc bruh
 public class ScreenControl {
 
     //Todo remove all deprecated stuff
@@ -68,6 +69,10 @@ public class ScreenControl {
     }
 
 
+    /**
+     * Getter to enable this to be a singleton
+     * @return the single ScreenControl object
+     */
     public static ScreenControl getScreenControl() {
         if (screenControl == null) {
             screenControl = new ScreenControl();
@@ -75,8 +80,12 @@ public class ScreenControl {
         return screenControl;
     }
 
-
-    public void addStage(UUID key, Stage stage) {
+    /**
+     * Adds a stage to the hashmap
+     * @param key the uuid of the stage to add
+     * @param stage the stage object to add to the hashmap
+     */
+    public void addStage(UUID key, Stage stage){
         applicationStages.put(key, stage);
         if (new UserControl().isUserLoggedIn()) { // if scene belongs to a user
             systemLogger.log(FINE, "User is logged in and a stage is being added");
@@ -84,21 +93,33 @@ public class ScreenControl {
         }
     }
 
-
+    /**
+     * Shows the root(screen) on the given stage
+     * @param stageName the UUID of the stage
+     * @param root the screen to display on the stage
+     */
     public void show(UUID stageName, Parent root) {
         Stage stage = applicationStages.get(stageName);
         stage.setScene(new Scene(root));
         stage.show();
     }
 
-
-    public void show(Node node, String fxml) throws IOException {
-        Stage stage = applicationStages.get(((UndoableStage) node.getScene()
-                .getWindow()).getUUID());
+    /**
+     * shows the fxml (screen) on the stage that a node is on
+     * @param node a node on the appropriate stage
+     * @param fxml the fxml to display
+     * @throws IOException any issue in loading the fxml file
+     */
+    public void show(Node node, String fxml) throws IOException{
+        Stage stage = applicationStages.get(((UndoableStage) node.getScene().getWindow()).getUUID());
         stage.setScene(new Scene(FXMLLoader.load(getClass().getResource(fxml))));
         stage.show();
     }
 
+    /**
+     * Closes the stage that the provided node is on
+     * @param node a node which is on the stage to close
+     */
 
     void closeStage(UUID stageName) {
         applicationStages.get(stageName)
@@ -125,7 +146,6 @@ public class ScreenControl {
     public static Scene getMain() {
         return main;
     }
-
 
     /**
      * set initial screen to display

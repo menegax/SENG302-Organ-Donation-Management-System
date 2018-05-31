@@ -1,9 +1,10 @@
-package controller;
+package main;
 
 import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
+import controller.ScreenControl;
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,12 +16,10 @@ import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
 import service.Database;
-import service.OrganWaitlist;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 import utility.SystemLogger;
 import utility.UserActionHistory;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -42,19 +41,24 @@ public class Main extends Application {
 
 
         // add objects
-        Database.importFromDiskPatients("./patient.json");
-        Database.importFromDiskClinicians("./clinician.json");
-        Database.importFromDiskWaitlist("./");
+
+        try {
+            Database.importFromDiskPatients("./patient.json");
+            Database.importFromDiskClinicians("./clinician.json");
+            Database.importFromDiskWaitlist("/waitlist.json");
+        } catch (Exception e){
+            systemLogger.log(Level.SEVERE, "Unable to import from disk on startup")
+        }
+
         addDummyTestObjects();
         ensureDefaultClinician();
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
-
+        setUpMenuBar(primaryStage);
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
 
         primaryStage.show();
 
     }
-
 
     public static void main(String[] args) {
         UserActionHistory.setup(); // start user action logs
@@ -81,7 +85,7 @@ public class Main extends Application {
             Database.getPatientByNhi("ABC1238")
                     .setRegion(GlobalEnums.Region.AUCKLAND);
             Database.getPatientByNhi("ABC1238")
-                    .setGender(GlobalEnums.Gender.OTHER);
+                    .setBirthGender(GlobalEnums.BirthGender.MALE);
 
             Database.addPatient(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
             Database.getPatientByNhi("ABC1234")
@@ -91,13 +95,12 @@ public class Main extends Application {
             Database.getPatientByNhi("ABC1234")
                     .setRegion(GlobalEnums.Region.CANTERBURY);
             Database.getPatientByNhi("ABC1234")
-                    .setGender(GlobalEnums.Gender.FEMALE);
+                    .setBirthGender(GlobalEnums.BirthGender.FEMALE);
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
             systemLogger.log(INFO, "Unable to add dummy patients");
         }
-
     }
 
 
