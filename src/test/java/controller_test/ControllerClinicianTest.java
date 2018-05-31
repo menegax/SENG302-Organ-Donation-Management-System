@@ -1,6 +1,6 @@
 package controller_test;
 
-import controller.Main;
+import main.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -9,11 +9,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
+import testfx.GitLabTestFXConfiguration;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static utility.UserActionHistory.userActions;
@@ -21,6 +23,7 @@ import static utility.UserActionHistory.userActions;
 import java.util.logging.Level;
 
 public class ControllerClinicianTest extends ApplicationTest {
+
     private Main main = new Main();
 
     @Override
@@ -28,38 +31,31 @@ public class ControllerClinicianTest extends ApplicationTest {
         main.start(stage);
     }
 
+    /**
+     * Sets the configuration to run in headless mode
+     */
+    @BeforeClass
+    static public void setHeadless() {
+        GitLabTestFXConfiguration.setHeadless();
+    }
+
+    /**
+     * Turn off logging
+     */
     @Before
     public void setUp() {
-        userActions.setLevel(Level.ALL);
+        userActions.setLevel(Level.OFF);
         main = new Main();
     }
 
+    /**
+     * Reset db to a clean state wait for 1000ms
+     */
     @After
     public void waitForEvents() {
         Database.resetDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
-    }
-
-    /**
-     * Tests logging in as a clinician successfully
-     */
-    @Test
-    public void successfulLoginTestandGoToProfile() {
-        //Check 'I am Clinician" checkbox to login as clinician
-        interact(() -> {
-            lookup("#clinicianToggle").queryAs(CheckBox.class).setSelected(true);
-            lookup("#nhiLogin").queryAs(TextField.class).setText("0");
-        });
-        verifyThat("#nhiLogin", TextInputControlMatchers.hasText("0"));
-        interact(() -> {
-            lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#clinicianHomePane", Node::isVisible); // Verify that login has taken "user" to the clinician home panel
-        interact(() -> {
-            lookup("#profileButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
-        });
-        verifyThat("#clinicianProfilePane", Node::isVisible); // Verify that login has taken "user" to the clinician profile panel
     }
 
 

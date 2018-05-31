@@ -1,27 +1,35 @@
 package controller;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.DrugInteraction;
+import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import service.OrganWaitlist;
-import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import utility.undoRedo.UndoableStage;
 
-import java.io.InvalidObjectException;
+import java.io.IOException;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -39,28 +47,53 @@ public class GUIClinicianWaitingList {
     private ObservableList<OrganWaitlist.OrganRequest> openProfiles = FXCollections.observableArrayList();
     private ObservableList<OrganWaitlist.OrganRequest> masterData = FXCollections.observableArrayList();
 
+    @FXML
+    private ChoiceBox<String> organSelection;
+
+    @FXML
+    private ChoiceBox<String> regionSelection;
+
     private UserControl userControl;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initializes waiting list screen by populating table and initializing a double click action
      * to view a patient's profile.
      */
     public void initialize() {
-    	OrganWaitlist waitingList = Database.getWaitingList();
-        for (OrganWaitlist.OrganRequest request: waitingList) {
-    		masterData.add(request);
-    	}
+        OrganWaitlist waitingList = Database.getWaitingList();
+        for (OrganWaitlist.OrganRequest request : waitingList) {
+            masterData.add(request);
+        }
         populateTable();
-    	setupDoubleClickToPatientEdit();
+        setupDoubleClickToPatientEdit();
+        populateFilterChoiceBoxes();
+    }
+
+
+    /**
+     * Populates the choice boxes for filter
+     */
+    private void populateFilterChoiceBoxes() {
+        regionSelection.getItems().add(""); //for empty selection
+        for (Region region : Region.values()) { //add values to region choice box
+            regionSelection.getItems().add(StringUtils.capitalize(region.getValue()));
+        }
+        organSelection.getItems().add("");
+        for (Organ organ : Organ.values()) {
+            organSelection.getItems().add(StringUtils.capitalize(organ.getValue()));
+        }
+
     }
 
     /**
      * Closes an opened profile, and removes patient from profile open list so profile can be reopened
+     *
      * @param index The index in the list of opened patient profiles
      */
     private void closeProfile(int index) {
         Platform.runLater(this::tableRefresh);
-        openProfiles.remove( index );
     }
 
     /**
@@ -79,21 +112,14 @@ public class GUIClinicianWaitingList {
                     DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
                     userControl.setTargetPatient(Database.getPatientByNhi(request.getReceiverNhi()));
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-                    Scene scene = new Scene(fxmlLoader.load());
-                    Stage popUpStage = new Stage();
-                    popUpStage.setX(ScreenControl.getMain()
-                            .getX()); //offset popup
-                    popUpStage.setScene(scene);
-                    openProfiles.add(request);  // add the patient to a list so its profile can be opened once at a time
+                    Parent root = fxmlLoader.load();
+                    UndoableStage popUpStage = new UndoableStage();
+                    screenControl.addStage(popUpStage.getUUID(), popUpStage);
+                    screenControl.show(popUpStage.getUUID(), root);
 
                     // When pop up is closed, refresh the table
-                    popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request )));
-
-                    //Add and show the popup
-                    ScreenControl.addPopUp("searchPopup", popUpStage); //ADD to screen control
-                    ScreenControl.displayPopUp("searchPopup"); //display the popup
-                }
-                catch (Exception e) {
+                    popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf(request)));
+                } catch (IOException e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");
@@ -106,16 +132,16 @@ public class GUIClinicianWaitingList {
     /**
      * Populates waiting list table with all patients waiting to receive an organ
      */
-    public void populateTable() {
+    private void populateTable() {
         // initialize columns
         nameCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getReceiverName()));
         dateCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
-        		.getRequestDate().toString()));
+                .getRequestDate().toString()));
         organCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getRequestedOrgan().toString()));
         regionCol.setCellValueFactory(r -> {
-            if(r.getValue().getRequestRegion() != null) {
+            if (r.getValue().getRequestRegion() != null) {
                 return new SimpleStringProperty(r.getValue()
                         .getRequestRegion().toString());
             }
@@ -123,7 +149,7 @@ public class GUIClinicianWaitingList {
         });
 
         // wrap ObservableList in a FilteredList
-        FilteredList<OrganWaitlist.OrganRequest> filteredData = new FilteredList<>(masterData, d -> true);
+        FilteredList<OrganWaitlist.OrganRequest> filteredData = filterMasterData();
 
         // wrap the FilteredList in a SortedList.
         SortedList<OrganWaitlist.OrganRequest> sortedData = new SortedList<>(filteredData);
@@ -135,11 +161,68 @@ public class GUIClinicianWaitingList {
         waitingListTableView.setItems(sortedData);
 
     }
-    
+
+    /**
+     * Create and add predicates to filterList to filter master data
+     *
+     * @return - filter list containing data that is filtered based on selections
+     */
+    private FilteredList<OrganWaitlist.OrganRequest> filterMasterData() {
+        FilteredList<OrganWaitlist.OrganRequest> filteredData = new FilteredList<>(masterData, d -> true);
+
+        //add listener to organ choice box and add predicate
+        organSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
+            if (newValue.equals("")) {
+                if (regionSelection.getValue() == null || regionSelection.getValue().equals("")) { //check if region selection is null or ""
+                    return true;
+                } else if (OrganRequest.getRequestRegion() == null) { //if region is not given in donor
+                    return false;
+                } else if (OrganRequest.getRequestRegion().getValue().equals(regionSelection.getValue())) {
+                    return true;
+                }
+            }
+            if (OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(newValue.toLowerCase())) {
+                if (regionSelection.getValue() == null || regionSelection.getValue().equals("")) {
+                    return true;
+                } else if (OrganRequest.getRequestRegion() != null) {
+                    return OrganRequest.getRequestRegion().getValue().toLowerCase().equals(regionSelection.getValue().toString().toLowerCase());
+                }
+            }
+            return false;
+        }));
+
+        //add listener to organ choice box and add predicate
+        regionSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
+            if (newValue.equals("")) {
+                if (organSelection.getValue() == null ||
+                        OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()) ||
+                        organSelection.getValue().equals("")) {
+                    return true;
+                }
+            }
+            Region requestedRegion = OrganRequest.getRequestRegion();
+            if (requestedRegion != null) {
+                return requestedRegion.getValue().toLowerCase().equals(newValue.toLowerCase()) &&
+                        (organSelection.getValue() == null || organSelection.getValue().equals("") ||
+                                OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()));
+            }
+            return false;
+        }));
+
+        return filteredData;
+    }
+
     /**
      * Returns the user to the clinician home page
      */
-    public void goToClinicianHome() { ScreenControl.activate("clinicianHome"); }
+    public void goToClinicianHome() {
+        try {
+            screenControl.show(clinicianWaitingListAnchorPane, "/scene/clinicianHome.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
+            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
+        }
+    }
 
     /**
      * Refreshes the table data

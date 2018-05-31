@@ -1,21 +1,20 @@
 package controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import service.Database;
 
 import java.io.IOException;
-import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
+import static java.util.logging.Level.SEVERE;
+
 public class GUIClinicianHome {
 
+    @FXML
     public Button searchPatients;
 
     public AnchorPane clinicianHomePane;
@@ -26,20 +25,48 @@ public class GUIClinicianHome {
 
     public Button logoutButton;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private UserControl userControl = new UserControl();
+
+    /**
+     * Opens the clinician profile screen
+     */
     @FXML
-    public void goToClinicianProfile(){ ScreenControl.activate("clinicianProfile"); }
+    public void goToClinicianProfile(){
+        try {
+            screenControl.show(clinicianHomePane, "/scene/clinicianProfile.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load clinician profile").show();
+            userActions.log(SEVERE, "Failed to load clinician profile", "Attempted to load clinician profile");
+        }
+    }
 
+    /**
+     * Opens the patient search screen
+     */
     @FXML
     public void goToSearchPatients(){
-        ScreenControl.activate("clinicianSearchPatients");
+        try {
+            screenControl.show(clinicianHomePane, "/scene/clinicianSearchPatients.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load search patients").show();
+            userActions.log(SEVERE, "Failed to load search patients", "Attempted to load search patients");
+        }
     }
 
+    /**
+     * Logs out the clinician and closes the open window for the logged in clinician
+     */
     @FXML
     public void logOutClinician() {
-        ScreenControl.activate("login");
+        screenControl.closeStage(clinicianHomePane);
+        userControl.setTargetPatient(null);
     }
 
+    /**
+     * Saves changes made to the clinician to the database
+     */
     @FXML
     public void saveClinician() {
         Database.saveToDisk();
@@ -47,27 +74,31 @@ public class GUIClinicianHome {
         alert.show();
     }
 
+    /**
+     * Opens the clinician history screen
+     */
     @FXML
     public void goToHistory() {
         try {
-            ScreenControl.addScreen("clinicianHistory", FXMLLoader.load(getClass().getResource("/scene/clinicianHistory.fxml")));
+            screenControl.show(clinicianHomePane, "/scene/clinicianHistory.fxml");
         }
         catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "Unable load clinician history").show();
+            userActions.log(SEVERE, "Failed to load clinician history", "Attempted to load clinician history");
+
         }
-        ScreenControl.activate("clinicianHistory");
     }
 
-    public void goToClinicianWaitingList(ActionEvent event) {
-        ScreenControl.removeScreen("clinicianWaitingList");
+    /**
+     * Opens the receiver waiting list screen
+     */
+    public void goToClinicianWaitingList() {
         try {
-            ScreenControl.addScreen("clinicianWaitingList", FXMLLoader.load(getClass().getResource("/scene/clinicianWaitingList.fxml")));
-            ScreenControl.activate("clinicianWaitingList");
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading organ waiting list screen", "attempted to navigate from the " +
+            screenControl.show(clinicianHomePane, "/scene/clinicianWaitingList.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "ERROR loading organ waiting list page").show();
+            userActions.log(SEVERE, "Error loading organ waiting list screen", "attempted to navigate from the " +
                     "home page to the waiting list page");
-            new Alert(Alert.AlertType.WARNING, "ERROR loading organ waiting list page", ButtonType.OK).showAndWait();
         }
     }
 }

@@ -8,8 +8,6 @@ import javafx.scene.control.Control;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
-import javafx.scene.control.Control;
-import javafx.scene.input.KeyCodeCombination;
 import model.Patient;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
@@ -20,10 +18,11 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.INFO;
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientUpdateDonations {
+public class GUIPatientUpdateDonations extends UndoableController {
 
     @FXML
     private CheckBox liverCB;
@@ -64,25 +63,16 @@ public class GUIPatientUpdateDonations {
     @FXML
     private AnchorPane patientDonationsAnchorPane;
 
-
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
-
     private Patient target;
-
-    private StatesHistoryScreen statesHistoryScreen;
 
     private UserControl userControl;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    /**
+     * Initializes the donations screen by loading the profile of the patient logged in or viewed.
+     * Sets up enter key press event to save changes
+     */
     public void initialize() {
         userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
@@ -98,25 +88,22 @@ public class GUIPatientUpdateDonations {
             if (e.getCode() == KeyCode.ENTER) {
                 saveDonations();
             }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Z").match(e)) {
-                undo();
-            }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(e)) {
-                redo();
-            }
         });
     }
 
+    /**
+     * Loads the patient's donations
+     * @param nhi patient NHI
+     */
     private void loadProfile(String nhi) {
         try {
             Patient patient = Database.getPatientByNhi(nhi);
             target = patient;
             populateForm(patient);
-        }
-        catch (InvalidObjectException e) {
+        } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
         }
-        ArrayList<Control> controls = new ArrayList<Control>() {{
+        controls = new ArrayList<Control>() {{
             add(liverCB);
             add(kidneyCB);
             add(pancreasCB);
@@ -130,10 +117,14 @@ public class GUIPatientUpdateDonations {
             add(bonemarrowCB);
             add(connectivetissueCB);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(patientDonationsAnchorPane, controls);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDONATIONS);
     }
 
 
+    /**
+     * Populates the donation checkboxes with the patient's donations
+     * @param patient patient with viewed donation
+     */
     private void populateForm(Patient patient) {
         ArrayList<GlobalEnums.Organ> organs = patient.getDonations();
         if (organs.contains(GlobalEnums.Organ.LIVER)) {
@@ -174,7 +165,9 @@ public class GUIPatientUpdateDonations {
         }
     }
 
-
+    /**
+     * Saves selected donations to the patient's profile, and saves the patient to the database
+     */
     public void saveDonations() {
 
         ArrayList<String> newDonations = new ArrayList<>();
@@ -182,93 +175,81 @@ public class GUIPatientUpdateDonations {
         if (liverCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.LIVER);
             newDonations.add(GlobalEnums.Organ.LIVER.toString());
-        }
-        else {
+        } else {
             target.removeDonation(GlobalEnums.Organ.LIVER);
         }
         if (kidneyCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.KIDNEY);
             newDonations.add(GlobalEnums.Organ.KIDNEY.toString());
-        }
-        else {
+        } else {
             target.removeDonation(GlobalEnums.Organ.KIDNEY);
         }
         if (pancreasCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.PANCREAS);
             newDonations.add(GlobalEnums.Organ.PANCREAS.toString());
-        }
-        else {
+        } else {
             target.removeDonation(GlobalEnums.Organ.PANCREAS);
 
         }
         if (heartCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.HEART);
             newDonations.add(GlobalEnums.Organ.HEART.toString());
-        }
-        else {
+        } else {
             target.removeDonation(GlobalEnums.Organ.HEART);
         }
         if (lungCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.LUNG);
             newDonations.add(GlobalEnums.Organ.LUNG.toString());
-        }
-        else {
+        } else {
             target.removeDonation(GlobalEnums.Organ.LUNG);
 
         }
         if (intestineCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.INTESTINE);
             newDonations.add(GlobalEnums.Organ.INTESTINE.toString());
-        }
-        else {
+        } else {
             target.removeDonation(GlobalEnums.Organ.INTESTINE);
 
         }
         if (corneaCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.CORNEA);
             newDonations.add(GlobalEnums.Organ.CORNEA.toString());
-        }
-        else {
+        } else {
             target.removeDonation(GlobalEnums.Organ.CORNEA);
 
         }
         if (middleearCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.MIDDLEEAR);
             newDonations.add(GlobalEnums.Organ.MIDDLEEAR.toString());
-        }
-        else {
+        } else {
             target.removeDonation(GlobalEnums.Organ.MIDDLEEAR);
 
         }
         if (skinCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.SKIN);
             newDonations.add(GlobalEnums.Organ.SKIN.toString());
-        }
-        else {
+        } else {
             target.removeDonation(GlobalEnums.Organ.SKIN);
 
         }
         if (boneCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.BONE);
             newDonations.add(GlobalEnums.Organ.BONE.toString());
-        }
-        else {
+        } else {
             target.removeDonation(GlobalEnums.Organ.BONE);
 
         }
         if (bonemarrowCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.BONE_MARROW);
             newDonations.add(GlobalEnums.Organ.BONE_MARROW.toString());
-        }
-        else {
+        } else {
             target.removeDonation(GlobalEnums.Organ.BONE_MARROW);
 
         }
         if (connectivetissueCB.isSelected()) {
             target.addDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
             newDonations.add(GlobalEnums.Organ.CONNECTIVETISSUE.toString());
-        }
-        else {
+        } else {
             target.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
 
         }
@@ -278,15 +259,16 @@ public class GUIPatientUpdateDonations {
     }
 
 
+    /**
+     * Navigates to the patient profile screen
+     */
     public void goToProfile() {
         if (userControl.getLoggedInUser() instanceof Patient) {
-            ScreenControl.removeScreen("patientProfile");
             try {
-                ScreenControl.addScreen("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml")));
-                ScreenControl.activate("patientProfile");
+                screenControl.show(patientDonationsAnchorPane, "/scene/patientProfile.fxml");
             } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the donation page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
+                new Alert((Alert.AlertType.ERROR), "Unable to patient profile").show();
+                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
             }
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));

@@ -19,7 +19,7 @@
           <TableColumn fx:id="columnName" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="240.0" resizable="false" text="Name" />
           <TableColumn fx:id="columnStatus" editable="false" maxWidth="200" minWidth="80" prefWidth="80" resizable="false" text="Status" />
           <TableColumn fx:id="columnAge" editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="Age" />
-          <TableColumn fx:id="columnGender" editable="false" maxWidth="100.0" minWidth="80.0" prefWidth="80.0" resizable="false" text="Gender" />
+          <TableColumn fx:id="columnBirthGender" editable="false" maxWidth="100.0" minWidth="80.0" prefWidth="80.0" resizable="false" text="Birth Gender" />
          <TableColumn fx:id="columnRegion" editable="false" maxWidth="200.0" prefWidth="130.0" resizable="false" text="Region" />
       </columns>
     </TableView>

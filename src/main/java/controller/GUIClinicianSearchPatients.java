@@ -1,5 +1,6 @@
 package controller;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 import javafx.application.Platform;
@@ -12,22 +13,21 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
-import model.DrugInteraction;
 import model.Patient;
 import utility.GlobalEnums;
 import utility.SearchPatients;
+import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
-
-public class GUIClinicianSearchPatients implements Initializable {
+public class GUIClinicianSearchPatients extends UndoableController implements Initializable {
 
     private static final int X = 1; // Constant for the maximum default number of profiles returned in a search
 
@@ -46,7 +46,7 @@ public class GUIClinicianSearchPatients implements Initializable {
     private TableColumn<Patient, String> columnAge;
 
     @FXML
-    private TableColumn<Patient, String> columnGender;
+    private TableColumn<Patient, String> columnBirthGender;
 
     @FXML
     private TableColumn<Patient, String> columnRegion;
@@ -63,6 +63,7 @@ public class GUIClinicianSearchPatients implements Initializable {
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
     private ObservableList<Patient> filteredList = FXCollections.observableArrayList();
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initialises the data within the table to all patients
@@ -78,14 +79,24 @@ public class GUIClinicianSearchPatients implements Initializable {
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
         searchEntry.setPromptText( "There are " + getProfileCount() + " profiles" );
+        setupUndoRedo();
     }
 
+    /**
+     * Sets up undo redo for this screen
+     */
+    private void setupUndoRedo() {
+        controls = new ArrayList<Control>() {{
+            add(searchEntry);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANSEARCHPATIENTS);
+    }
 
     /**
-     * Sets up double-click functionality for each row to open a patient profile update
+     * Sets up double-click functionality for each row to open a patient profile update. Opens the selected
+     * patient's profile view screen in a new window.
      */
     private void setupDoubleClickToPatientEdit() {
-
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
@@ -95,21 +106,12 @@ public class GUIClinicianSearchPatients implements Initializable {
                     userControl.setTargetPatient(patientDataTable.getSelectionModel()
                             .getSelectedItem());
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-                    Scene scene = new Scene(fxmlLoader.load());
-                    DrugInteraction.setViewedPatient(patientDataTable.getSelectionModel()
-                            .getSelectedItem());
-
-                    Stage popUpStage = new Stage();
-                    popUpStage.setX(ScreenControl.getMain()
-                            .getX()); //offset popup
-                    popUpStage.setScene(scene);
+                    UndoableStage popUpStage = new UndoableStage();
+                    screenControl.addStage(popUpStage.getUUID(), popUpStage);
+                    screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
 
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-
-                    //Add and show the popup
-                    ScreenControl.addPopUp("searchPopup", popUpStage); //ADD to screen control
-                    ScreenControl.displayPopUp("searchPopup"); //display the popup
                 }
                 catch (IOException e) {
                     userActions.log(Level.SEVERE,
@@ -118,10 +120,8 @@ public class GUIClinicianSearchPatients implements Initializable {
                     new Alert(Alert.AlertType.ERROR, "Unable to open patient edit window", ButtonType.OK).show();
                 }
             }
-
         });
     }
-
 
     /**
      * Sets the table columns to pull the correct data from the patient objects
@@ -139,9 +139,9 @@ public class GUIClinicianSearchPatients implements Initializable {
                 .toString()) : new SimpleStringProperty(""));
         columnAge.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue()
                 .getAge())));
-        columnGender.setCellValueFactory(d -> d.getValue()
-                .getGender() != null ? new SimpleStringProperty(d.getValue()
-                .getGender()
+        columnBirthGender.setCellValueFactory(d -> d.getValue()
+                .getBirthGender() != null ? new SimpleStringProperty(d.getValue()
+                .getBirthGender()
                 .toString()) : new SimpleStringProperty(""));
         columnRegion.setCellValueFactory(d -> d.getValue()
                 .getRegion() != null ? new SimpleStringProperty(d.getValue()
@@ -187,7 +187,6 @@ public class GUIClinicianSearchPatients implements Initializable {
         return filteredData;
     }
 
-
     /**
      * Sets the search textfield to listen for any changes and search for the entry on change
      *
@@ -205,6 +204,9 @@ public class GUIClinicianSearchPatients implements Initializable {
                     // If filter text is empty, display all persons.
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
+                    } else if (newValue.toLowerCase().equals( "male" ) || newValue.toLowerCase().equals("female")) {
+                        //return SearchPatients.searchByGender(newValue).contains(patient);
+                        return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() ); // ------------------------------this is where it fails!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
                     return SearchPatients.searchByName(newValue)
                             .contains(patient);
@@ -258,14 +260,12 @@ public class GUIClinicianSearchPatients implements Initializable {
        return SearchPatients.totalResults.size();
     }
 
-
     /**
      * Adds custom hover-over text to each row in the table
      */
     private void setupRowHoverOverText() {
         patientDataTable.setRowFactory(tv -> new TableRow<Patient>() {
             private Tooltip tooltip = new Tooltip();
-
 
             @Override
             public void updateItem(Patient patient, boolean empty) {
@@ -292,7 +292,6 @@ public class GUIClinicianSearchPatients implements Initializable {
         });
     }
 
-
     /**
      * Adds all db data via constructor
      */
@@ -300,11 +299,14 @@ public class GUIClinicianSearchPatients implements Initializable {
         masterData.addAll(SearchPatients.getDefaultResults());
     }
 
-
     public void goToClinicianHome() {
-        ScreenControl.activate("clinicianHome");
+        try {
+            screenControl.show(patientDataTable, "/scene/clinicianHome.fxml");
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
+            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
+        }
     }
-
 
     /**
      * Refreshes the table data
