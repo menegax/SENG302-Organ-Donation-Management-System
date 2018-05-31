@@ -4,7 +4,7 @@ import static java.util.logging.Level.OFF;
 import static org.testfx.api.FxAssert.verifyThat;
 import static utility.UserActionHistory.userActions;
 
-import main.Main;
+import controller.Main;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -18,10 +18,8 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 import testfx.GitLabTestFXConfiguration;
-import utility.GlobalEnums;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class GUIPatientUpdateProfileTest extends ApplicationTest {
 

@@ -213,17 +213,6 @@ public class GUIClinicianWaitingList {
         return filteredData;
     }
 
-    /**
-     * Returns the user to the clinician home page
-     */
-    public void goToClinicianHome() {
-        try {
-            screenControl.show(clinicianWaitingListAnchorPane, "/scene/clinicianHome.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
-            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
-        }
-    }
 
     /**
      * Refreshes the table data

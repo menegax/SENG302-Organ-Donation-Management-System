@@ -112,6 +112,7 @@ public class GlobalEnums {
     }
 
     //todo
+
     /**
      *
      */
@@ -149,6 +150,7 @@ public class GlobalEnums {
     }
 
     //todo
+
     /**
      *
      */
@@ -205,90 +207,67 @@ public class GlobalEnums {
         }
     }
 
+    //todo
+    public enum DiseaseState {
+        CURED("cured"), CHRONIC("chronic");
 
-    public String getValue() {
-        return value;
-    }
-
-
-    @Override
-    public String toString() {
-        return this.getValue();
-    }
+        private String value;
 
 
-    public static Enum getEnumFromString(String value) {
-        try {
-            return BloodGroup.valueOf(value.toUpperCase()
-                    .replaceAll("\\s+", "_"));
+        DiseaseState(final String value) {
+            this.value = value;
         }
-        catch (IllegalArgumentException e) {
-            return null;
+
+
+        public String getValue() {
+            return value;
         }
-    }
-}
-
-//todo
-public enum DiseaseState {
-    CURED("cured"), CHRONIC("chronic");
-
-    private String value;
 
 
-    DiseaseState(final String value) {
-        this.value = value;
-    }
-
-
-    public String getValue() {
-        return value;
-    }
-
-
-    @Override
-    public String toString() {
-        return this.getValue();
-    }
-
-
-    public static Enum getEnumFromString(String value) {
-        try {
-            return DiseaseState.valueOf(value.toUpperCase());
+        @Override
+        public String toString() {
+            return this.getValue();
         }
-        catch (IllegalArgumentException e) {
-            return null;
+
+
+        public static Enum getEnumFromString(String value) {
+            try {
+                return DiseaseState.valueOf(value.toUpperCase());
+            }
+            catch (IllegalArgumentException e) {
+                return null;
+            }
         }
+
     }
 
-}
+    //todo
 
-//todo
-/**
- *
- *
- */
-public enum DeregistrationReason {
-    ERROR("Registering of the organ was an error"),
-    CURED("Treatment has cured the disease, no longer requiring an organ transplant"),
-    DIED("Receiver has died"),
-    RECEIVED("Receiver has received an organ transplant");
+    /**
+     *
+     *
+     */
+    public enum DeregistrationReason {
+        ERROR("Registering of the organ was an error"), CURED("Treatment has cured the disease, no longer requiring an organ transplant"), DIED(
+                "Receiver has died"), RECEIVED("Receiver has received an organ transplant");
 
-    private String value;
+        private String value;
 
 
-    DeregistrationReason(final String value) {
-        this.value = value;
+        DeregistrationReason(final String value) {
+            this.value = value;
+        }
+
+
+        @Override
+        public String toString() {
+            return this.getValue();
+        }
+
+
+        public String getValue() {
+            return value;
+        }
+
     }
-
-
-    @Override
-    public String toString() {
-        return this.getValue();
-    }
-
-
-    public String getValue() {
-        return value;
-    }
-
 }

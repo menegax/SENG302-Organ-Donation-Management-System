@@ -15,10 +15,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.TextField;
 
-import main.Main;
-import javafx.scene.control.CheckBox;
-import javafx.stage.Stage;
-import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.Patient;
 import service.Database;
@@ -30,10 +26,6 @@ import java.util.logging.Level;
 
 import static utility.SystemLogger.systemLogger;
 import static java.util.logging.Level.SEVERE;
-import static utility.UserActionHistory.userActions;
-
-import static utility.SystemLogger.systemLogger;
-
 
 public class GUILogin {
 

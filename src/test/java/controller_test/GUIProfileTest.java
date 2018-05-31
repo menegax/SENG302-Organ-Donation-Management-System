@@ -1,6 +1,6 @@
 package controller_test;
 
-import main.Main;
+import controller.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import model.Patient;
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
@@ -25,6 +26,9 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static utility.UserActionHistory.userActions;
 
+
+
+@Ignore
 public class GUIProfileTest extends ApplicationTest {
 
     /**

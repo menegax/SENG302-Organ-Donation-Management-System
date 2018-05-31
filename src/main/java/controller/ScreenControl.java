@@ -2,7 +2,6 @@ package controller;
 
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 
@@ -118,7 +117,7 @@ public class ScreenControl {
 
     /**
      * Closes the stage that the provided node is on
-     * @param node a node which is on the stage to close
+     * @param - node which is on the stage to close
      */
 
     void closeStage(UUID stageName) {
