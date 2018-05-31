@@ -55,10 +55,10 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     private TextField searchEntry;
 
     @FXML
-    private Button displayX;
+    private Label displayX;
 
     @FXML
-    private Button displayY;
+    private Label displayY;
 
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
     private ObservableList<Patient> filteredList = FXCollections.observableArrayList();
