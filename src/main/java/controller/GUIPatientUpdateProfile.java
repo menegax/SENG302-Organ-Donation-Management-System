@@ -489,6 +489,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 target.setBloodGroup((BloodGroup) BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
                         .getSelectedItem()));
             }
+            Database.saveToDisk(); //TODO: need to be kept consistent with old UI
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Patient successfully updated", ButtonType.OK);
             alert.show();
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");

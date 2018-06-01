@@ -2,6 +2,7 @@ package utility_test.stateHistoryWidgetTests;
 
 import com.sun.javafx.application.PlatformImpl;
 import javafx.scene.control.RadioButton;
+import org.junit.Ignore;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryRadioButton;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Junit test class for the StateHistoryRadioButton
  */
+@Ignore
 public class StateHistoryRadioButtonTest {
 
     private static RadioButton radioButton;

@@ -28,7 +28,7 @@
          <columns>
              <TableColumn fx:id="columnName" editable="false" minWidth="140.79998779296875" prefWidth="176.0" text="Name" />
              <TableColumn fx:id="columnAge" editable="false" minWidth="0.0" prefWidth="124.79998779296875" text="Age" />
-             <TableColumn fx:id="columnGender" editable="false" minWidth="100.0" prefWidth="100.0" text="Gender" />
+             <TableColumn fx:id="columnBirthGender" editable="false" minWidth="100.0" prefWidth="100.0" text="Gender" />
             <TableColumn fx:id="columnRegion" editable="false" prefWidth="180.0" text="Region" />
          </columns>
          <columnResizePolicy>

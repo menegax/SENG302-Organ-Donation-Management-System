@@ -2,25 +2,13 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-05-24T14:46:58</date>
-  <millis>1527130018108</millis>
-  <sequence>7</sequence>
-  <logger>utility.SystemLogger</logger>
-  <level>INFO</level>
-  <class>controller.Main</class>
-  <method>addDummyTestObjects</method>
-  <thread>14</thread>
-  <message>Unable to add dummy patients</message>
-</record>
-<record>
-  <date>2018-05-24T14:46:58</date>
-  <millis>1527130018134</millis>
+  <date>2018-05-31T21:44:20</date>
+  <millis>1527759860450</millis>
   <sequence>9</sequence>
   <logger>utility.SystemLogger</logger>
   <level>INFO</level>
-  <class>controller.Main</class>
+  <class>main.Main</class>
   <method>start</method>
   <thread>14</thread>
   <message>Finished the start method for the app. Beginning app</message>
 </record>
-</log>
