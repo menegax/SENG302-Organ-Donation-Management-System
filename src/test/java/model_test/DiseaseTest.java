@@ -19,13 +19,6 @@ public class DiseaseTest {
     private Disease disease;
     private Patient diseaseCarrier;
 
-    /**
-     * Turn off logging
-     */
-    @BeforeClass
-    public static void turnOff() {
-        userActions.setLevel(OFF);
-    }
 
     @Before
     public void setUp(){

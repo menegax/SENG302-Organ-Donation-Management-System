@@ -1,16 +1,12 @@
-package gui_test;
+package controller_component_test;
 
-import static java.util.logging.Level.OFF;
-import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.assertions.api.Assertions.assertThat;
-import static utility.UserActionHistory.userActions;
-
+import controller.Main;
+import javafx.event.ActionEvent;
 import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import controller.Main;
 import model.Patient;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -20,14 +16,20 @@ import org.testfx.framework.junit.ApplicationTest;
 import service.Database;
 import utility.GlobalEnums;
 
-import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 
-@Ignore //todo fix
+import static java.util.logging.Level.OFF;
+import static org.testfx.api.FxAssert.verifyThat;
+import static org.testfx.assertions.api.Assertions.assertThat;
+import static utility.UserActionHistory.userActions;
+
+
+
+@Ignore
 public class GUIProfileTest extends ApplicationTest {
 
     private Main main = new Main();
@@ -37,12 +39,29 @@ public class GUIProfileTest extends ApplicationTest {
     private Patient existingPatient = new Patient(existingNhi, "Joe", new ArrayList<>(Collections.singletonList("Mile")),"Bloggs", LocalDate.of(1989, 2, 9));
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws Exception {
+        Database.resetDatabase();
+
+        // add dummy patient
+        ArrayList<String> dal = new ArrayList<>();
+        dal.add("Middle");
+        Database.addPatient(new Patient("TFX9999", "Joe", dal, "Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.getPatientByNhi("TFX9999")
+                .addDonation(GlobalEnums.Organ.LIVER);
+        Database.getPatientByNhi("TFX9999")
+                .addDonation(GlobalEnums.Organ.CORNEA);
 
         main.start(stage);
-
+        interact(() -> {
+            lookup("#nhiLogin").queryAs(TextField.class).setText("TFX9999");
+            lookup("#loginButton").queryAs(Button.class).fire();
+            lookup("#profileButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
+        });
     }
 
+    /**
+     * Turn off logging and set the configuration to run in headless mode
+     */
     @BeforeClass
     public static void setUpClass() {
         userActions.setLevel(OFF);
@@ -107,7 +126,7 @@ public class GUIProfileTest extends ApplicationTest {
         });
         verifyThat("#donatingTitle", Node::isVisible);
         verifyThat("#receivingList", Node::isDisabled);
-//        System.out.println(patient.getDonations());
+        //        System.out.println(patient.getDonations());
         Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.LIVER);
         Database.getPatientByNhi("TFX9999").addRequired(GlobalEnums.Organ.CORNEA);
         Database.getPatientByNhi("TFX9999").setDonations(new ArrayList<GlobalEnums.Organ>());
@@ -119,4 +138,42 @@ public class GUIProfileTest extends ApplicationTest {
         verifyThat("#donationList", Node::isDisabled);
     }
 
+    /**
+     * Verify that the profile screen is displayed
+     */
+    @Test
+    public void should_be_on_profile_screen() {
+        verifyThat("#patientProfilePane", Node::isVisible);
+    }
+
+
+    /**
+     * Verify that the contacts screen displays when clicking the contacts button
+     */
+    @Test
+    public void should_enter_contact_details_pane() {
+        interact(() -> { lookup("#contactButton").queryAs(Button.class).fire();});
+        verifyThat("#patientContactsPane", Node::isVisible);
+    }
+
+    /**
+     * Verify that the donations screen displays when clicking the donations button
+     */
+    @Test
+    public void should_go_to_donations() {
+        interact(() -> { lookup("#donationsButton").queryAs(Button.class).fire();});
+        verifyThat("#patientDonationsAnchorPane", Node::isVisible);
+    }
+
+
+    /**
+     * Verify the donations of the patient
+     */
+    @Test
+    public void should_have_correct_donations() {
+        interact(() -> { lookup("#donationsButton").queryAs(Button.class).fire();});
+        verifyThat("#patientDonationsAnchorPane", Node::isVisible);
+        assertThat(lookup("#liverCB").queryAs(CheckBox.class).isSelected());
+        assertThat(lookup("#corneaCB").queryAs(CheckBox.class).isSelected());
+    }
 }

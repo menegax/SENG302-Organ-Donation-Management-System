@@ -1,4 +1,4 @@
-package controller_test;
+package controller_component_test;
 
 import controller.Main;
 import javafx.event.ActionEvent;
@@ -14,7 +14,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import service.Database;
-import testfx.GitLabTestFXConfiguration;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -60,7 +59,6 @@ public class GUIRegisterTest extends ApplicationTest {
     @BeforeClass
     public static void setUp() {
         userActions.setLevel(OFF);
-        GitLabTestFXConfiguration.setHeadless();
     }
 
 
