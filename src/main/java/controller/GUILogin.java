@@ -9,6 +9,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import main.Main;
+import model.Administrator;
 import service.Database;
 import utility.undoRedo.UndoableStage;
 
@@ -88,6 +89,7 @@ public class GUILogin {
                 login.addLoggedInUserToCache(Database.getClinicianByID(Integer.parseInt(nhiLogin.getText())));
                 home = FXMLLoader.load((getClass().getResource("/scene/clinicianHome.fxml")));
             } else {
+                checkAdminCredentials();
                 login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText()));
                 home = FXMLLoader.load((getClass().getResource("/scene/clinicianHome.fxml")));
             }
@@ -95,6 +97,7 @@ public class GUILogin {
             screenControl.addStage(stage.getUUID(), stage);
             screenControl.show(stage.getUUID(), home);
         } catch (InvalidObjectException e) {
+            password.setText(""); //Reset password field on invalid login
             userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
             Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
             alert.show();
@@ -108,6 +111,14 @@ public class GUILogin {
             userActions.log(Level.WARNING, "Non-numeric staff IDs are not permitted", "Attempted to log in");
             Alert alert = new Alert(Alert.AlertType.WARNING, "Non-numeric staff ID are not permitted");
             alert.show();
+        }
+    }
+
+    private void checkAdminCredentials() throws InvalidObjectException {
+        Administrator admin = Database.getAdministratorByUsername(nhiLogin.getText());
+        String hashedInput = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password.getText() + admin.getSalt());
+        if (!hashedInput.equals(admin.getHashedPassword())) {
+            throw new InvalidObjectException("Invalid username/password combination");
         }
     }
 

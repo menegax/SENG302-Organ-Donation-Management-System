@@ -1,10 +1,12 @@
 package controller_test;
 
-import javafx.scene.control.*;
-import main.Main;
+import controller.UserControl;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import main.Main;
+import model.Administrator;
 import model.Patient;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -14,17 +16,16 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
-import controller.UserControl;
 import testfx.GitLabTestFXConfiguration;
 import utility.GlobalEnums;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static java.util.logging.Level.OFF;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static utility.UserActionHistory.userActions;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class GUILoginTest extends ApplicationTest {
 
@@ -153,6 +154,38 @@ public class GUILoginTest extends ApplicationTest {
             lookup("OK").queryAs(Button.class).fire();
         });
         verifyThat( "#loginPane", Node::isVisible ); // Verify that logout button has taken "user" to the login panel
+    }
+
+    /**
+     * Tests that logging in to the default admin works with the correct password
+     */
+    @Test
+    public void successfulAdministratorLoginTest() {
+        interact(() -> {
+            lookup("#administrator").queryAs(RadioButton.class).setSelected(true);
+            lookup("#nhiLogin").queryAs(TextField.class).setText("admin");
+            lookup("#password").queryAs(PasswordField.class).setText("password");
+            lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
+        });
+        assertThat(((Administrator)loginHelper.getLoggedInUser()).getUsername().equals("admin"));
+        verifyThat("#clinicianHomePane", Node::isVisible); //todo temporary until we have admin home pane
+    }
+
+    /**
+     * Tests that logging in to the default admin doesnt work with an incorrect password
+     */
+    @Test
+    public void unsuccessfulAdministratorLoginTest() {
+        interact(() -> {
+            lookup("#administrator").queryAs(RadioButton.class).setSelected(true);
+            lookup("#nhiLogin").queryAs(TextField.class).setText("admin");
+            lookup("#password").queryAs(PasswordField.class).setText("qwerty");
+            lookup("#loginButton").queryAs(Button.class).getOnAction().handle(new ActionEvent());
+        });
+        interact(() -> {
+            lookup("OK").queryAs(Button.class).fire();
+        });
+        verifyThat( "#loginPane", Node::isVisible ); // Verify that the user remained on the login page
     }
 
 
