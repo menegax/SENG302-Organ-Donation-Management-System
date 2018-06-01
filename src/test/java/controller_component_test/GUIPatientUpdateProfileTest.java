@@ -1,4 +1,4 @@
-package controller_test;
+package controller_component_test;
 
 import static java.util.logging.Level.OFF;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -17,7 +17,6 @@ import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
-import testfx.GitLabTestFXConfiguration;
 
 import java.time.LocalDate;
 
@@ -59,14 +58,6 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
         interact(() -> lookup("#editPatientButton").queryAs(Button.class)
                 .fire());
         verifyThat("#patientUpdateAnchorPane", Node::isVisible);
-    }
-
-    /**
-     * Sets the configuration to run in headless mode
-     */
-    @BeforeClass
-    static public void setHeadless() {
-        GitLabTestFXConfiguration.setHeadless();
     }
 
     /**

@@ -33,13 +33,7 @@ public class ClinicianTest {
         clinician = new Clinician(0, "Joe", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND);
     }
 
-    /**
-     * Turn off logging
-     */
-    @BeforeClass
-    public static void turnOff() {
-        userActions.setLevel(OFF);
-    }
+
     /**
      *  verify the new staffID
      */

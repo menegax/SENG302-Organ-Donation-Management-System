@@ -21,7 +21,7 @@ import static utility.UserActionHistory.userActions;
 public class DrugInteractionTest {
 
     //NOTE: internet must be enabled when running these tests
-    //TEST might also be flaky, dependant on 3rd party API
+    //TEST might also be flaky, dependant on 3rd party API. Tests don't run without making successful contact
 
     private static DrugInteraction drugInteraction;
     private static Patient patient;
@@ -29,8 +29,8 @@ public class DrugInteractionTest {
     @BeforeClass
     public static void setUp(){
         org.junit.Assume.assumeTrue(makeContactToAPI());
-        userActions.setLevel(Level.OFF);
     }
+
     @Before
     public void setLoggedInDonor() {
         patient = new Patient("abc1239", "Bob", null, "Bobby", LocalDate.of(1990,9,11));
