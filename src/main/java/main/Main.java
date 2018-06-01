@@ -13,6 +13,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import service.Database;
@@ -49,6 +50,7 @@ public class Main extends Application {
 
         addDummyTestObjects();
         ensureDefaultClinician();
+        ensureDefaultAdministrator();
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         setUpMenuBar(primaryStage);
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
@@ -105,7 +107,6 @@ public class Main extends Application {
      * Adds the default clinician if there isn't one already
      */
     private void ensureDefaultClinician() {
-
         // if default clinician 0 not in db, add it
         if (!Database.isClinicianInDb(0)) {
             systemLogger.log(INFO, "Default clinician not in database. Adding default clinician to database.");
@@ -113,9 +114,20 @@ public class Main extends Application {
                 add("Middle");
             }}, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
         }
-
     }
 
+    /**
+     * Adds the default administrator if there isn't one already
+     */
+    private void ensureDefaultAdministrator() {
+        // if default administrator 'admin' not in db, add it
+        if (!Database.isAdministratorInDb("admin")) {
+            systemLogger.log(INFO, "Default admin not in database. Adding default admin to database.");
+            Database.addAdministrator(new Administrator("admin", "Bob", new ArrayList<String>(){{
+                add("The");
+            }}, "Builder", "password"));
+        }
+    }
 
     /**
      * Sets up the menu bar depending on the OS

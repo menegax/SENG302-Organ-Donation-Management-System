@@ -111,6 +111,21 @@ public class Database {
         return false;
     }
 
+    /**
+     * Checks if an administrator with the given username exists in the database
+     *
+     * @param username the username of the administrator to search for
+     * @return true if exists else false
+     */
+    public static boolean isAdministratorInDb(String username) {
+        for (Administrator a : getAdministrators()) {
+            if (a.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Searches clinicians by staffID
@@ -345,8 +360,9 @@ public class Database {
         return patients;
     }
 
-
     public static Set<Clinician> getClinicians() {
         return clinicians;
     }
+
+    public static Set<Administrator> getAdministrators() { return administrators; }
 }

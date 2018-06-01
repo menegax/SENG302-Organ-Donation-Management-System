@@ -362,8 +362,8 @@ public class GUIPatientRegister {
                 Database.addClinician( new Clinician( Integer.parseInt(id), firstName, middles, lastName, (Region) Region.getEnumFromString(region) ));
                 userActions.log( Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile" );
             } else {
-                Database.addAdministrator( new Administrator( id, firstName, middles, lastName ));
-                userActions.log( Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile" );
+                //Database.addAdministrator( new Administrator( id, firstName, middles, lastName ));
+                //userActions.log( Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile" );
             }
             Database.saveToDisk();
             clearFields();
