@@ -213,8 +213,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             target.setLastName(lastnameTxt.getText());
             List<String> middlenames = Arrays.asList(middlenameTxt.getText()
                     .split(" "));
-            ArrayList middles = new ArrayList();
-            middles.addAll(middlenames);
+            ArrayList<String> middles = new ArrayList<>(middlenames);
             target.setMiddleNames(middles);
 
             target.setStreet1(street1Txt.getText());

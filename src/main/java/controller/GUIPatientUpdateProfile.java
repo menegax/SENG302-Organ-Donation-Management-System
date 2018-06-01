@@ -192,8 +192,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
         nhiTxt.setText(patient.getNhiNumber());
         firstnameTxt.setText(patient.getFirstName());
         lastnameTxt.setText(patient.getLastName());
-        for (String name : patient.getMiddleNames()) {
-            middlenameTxt.setText(middlenameTxt.getText() + name + " ");
+        if (patient.getMiddleNames() != null) {
+            for (String name : patient.getMiddleNames()) {
+                middlenameTxt.setText(middlenameTxt.getText() + name + " ");
+            }
         }
         preferrednameTxt.setText(patient.getPreferredName());
         if (patient.getBirthGender() != null) {

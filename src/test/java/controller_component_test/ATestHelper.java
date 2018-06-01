@@ -5,6 +5,7 @@ import javafx.scene.control.DialogPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.testfx.framework.junit.ApplicationTest;
 
