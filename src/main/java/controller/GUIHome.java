@@ -97,6 +97,7 @@ public class GUIHome {
         createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
         createTab("View Disease History","/scene/testClinicianDiagnosis.fxml");
         createTab("History", "/scene/patientHistory.fxml");
+        createTab("Procedures", "/scene/testPatientProcedures.fxml");
         //todo setUpMenuBar() call here
     }
 
@@ -113,6 +114,7 @@ public class GUIHome {
         createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
         createTab("Requested Donations", "/scene/testPatientUpdateRequirements.fxml");
         createTab("View Diseases","/scene/testClinicianDiagnosis.fxml");
+        createTab("Procedures", "/scene/testPatientProcedures.fxml");
     }
 
 
