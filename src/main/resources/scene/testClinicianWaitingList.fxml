@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="clinicianWaitingList" prefHeight="303.0" prefWidth="418.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianWaitingList">
+<GridPane fx:id="clinicianWaitingList" prefHeight="400.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianWaitingList">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="210.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="208.0" />
@@ -36,29 +36,43 @@
       </TableView>
       <GridPane>
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="73.79998779296875" />
+          <ColumnConstraints hgrow="NEVER" minWidth="60.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="136.20001220703125" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ChoiceBox fx:id="regionSelection" prefWidth="150.0" GridPane.columnIndex="1" />
-            <Label text="Region" GridPane.halignment="CENTER" />
+            <ChoiceBox fx:id="regionSelection" maxWidth="300.0" prefWidth="150.0" GridPane.columnIndex="1" />
+            <Label text="Region" GridPane.halignment="RIGHT">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </Label>
          </children>
+         <GridPane.margin>
+            <Insets left="60.0" />
+         </GridPane.margin>
       </GridPane>
-      <GridPane GridPane.columnIndex="1">
+      <GridPane alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="74.4000244140625" />
+            <ColumnConstraints fillWidth="false" hgrow="NEVER" minWidth="60.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="133.5999755859375" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <ChoiceBox fx:id="organSelection" prefHeight="26.0" prefWidth="131.0" GridPane.columnIndex="1" />
-            <Label text="Organ" GridPane.halignment="CENTER" />
+            <ChoiceBox fx:id="organSelection" maxWidth="300.0" prefHeight="26.0" prefWidth="150.0" GridPane.columnIndex="1" />
+            <Label text="Organ" GridPane.halignment="RIGHT">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </Label>
          </children>
+         <GridPane.margin>
+            <Insets right="60.0" />
+         </GridPane.margin>
       </GridPane>
    </children>
 </GridPane>

@@ -178,6 +178,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
                 GUIPatientUpdateDiagnosis.setDisease(tableView.getSelectionModel().getSelectedItem());
                 GUIPatientUpdateDiagnosis.setIsAdd(false);
                 screenControl.addStage(stage.getUUID(), stage);
+                stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
                 try {
                     screenControl.show(stage.getUUID(), FXMLLoader.load(getClass().getResource("/scene/testPatientUpdateDiagnosis.fxml")));
                 } catch (IOException e) {
@@ -212,6 +213,9 @@ public class GUIClinicianDiagnosis extends UndoableController{
         }
     }
 
+    /**
+     * Refreshes the tables of past and current diseases
+     */
     private void tableRefresh() {
         loadCurrentDiseases();
         loadPastDiseases();
