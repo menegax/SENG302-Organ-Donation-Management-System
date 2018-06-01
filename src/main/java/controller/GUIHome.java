@@ -11,18 +11,15 @@ import static utility.UserActionHistory.userActions;
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
+import model.User;
 import service.Database;
+import utility.UserNameObserver;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,8 +36,13 @@ public class GUIHome {
     @FXML
     private MenuBar menuBar;
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    @FXML
+    private Label userNameDisplay;
 
+    @FXML
+    private Label userTypeDisplay;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     @FXML
     public void initialize() {
@@ -48,24 +50,32 @@ public class GUIHome {
         try {
             if (userControl.getLoggedInUser() instanceof Patient){
                 addTabsPatient();
+                setUpColouredBar(userControl.getLoggedInUser());
             } else if (userControl.getLoggedInUser() instanceof Clinician) {
                 if (userControl.getTargetPatient() != null) {
-                    addTabsForPatientClinician(); //if we are a clinician looking at a patient
+                    addTabsForPatientClinician(); // if we are a clinician looking at a patient
+                    setUpColouredBar(userControl.getTargetPatient());
                 } else {
                     addTabsClinician();
+                    setUpColouredBar(userControl.getLoggedInUser());
                 }
             }
-
             horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty().addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
-
-        } catch (Exception e) {
+        } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls", Arrays.toString(e.getStackTrace()));
             e.printStackTrace(); //todo rm
         }
-
     }
 
+    /**
+     * Sets to the coloured bar at top of GUI the user name and type
+     * @param user the currently logged in user, or observed patient
+     */
+    private void setUpColouredBar(User user) {
+        userNameDisplay.setText(user.getNameConcatenated());
+        userTypeDisplay.setText(user.getUserType());
+    }
 
     /**
      * Creates and adds tab to the tab pane
