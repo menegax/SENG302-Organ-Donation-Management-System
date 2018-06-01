@@ -119,14 +119,6 @@ public class GUILoginTest extends ApplicationTest {
     }
 
     /**
-     * Clicks invalid button and expects exception to be thrown
-     */
-    @Test(expected = FxRobotException.class)
-    public void click_on_wrong_button() {
-        clickOn("#login");
-    }
-
-    /**
      * Enter NHI and verifies that the UI has logged in
      */
     @Test

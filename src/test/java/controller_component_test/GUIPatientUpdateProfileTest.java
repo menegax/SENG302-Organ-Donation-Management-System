@@ -1,16 +1,20 @@
 package controller_component_test;
 
 import static java.util.logging.Level.OFF;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testfx.api.FxAssert.verifyThat;
 import static utility.UserActionHistory.userActions;
 
 import controller.Main;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Patient;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,18 +22,19 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 
+import java.io.InvalidObjectException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class GUIPatientUpdateProfileTest extends ApplicationTest {
 
-    /**
-     * Application entry point
-     */
     private Main main = new Main();
 
-    String existingPatientNhi1 = "TFX9999";
+    private int patientUpdateProfileTabIndex = 1;
 
-    String existingPatientNhi2 = "TFX9998";
+    private Patient existingPatient1 = new Patient("TFX9999", "Joe", null, "Bloggs", LocalDate.of(1990, 2, 9));
+
+    private String existingNhi1 = existingPatient1.getNhiNumber();
 
 
     @Override
@@ -38,80 +43,80 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
         Database.resetDatabase();
 
         // add dummy patients
-        Database.addPatient(new Patient(existingPatientNhi1, "Joe", null, "Bloggs", LocalDate.of(1990, 2, 9)));
-        Database.addPatient(new Patient(existingPatientNhi2, "Joe", null, "Bloggs", LocalDate.of(1990, 2, 9)));
+        Database.addPatient(existingPatient1);
 
 
         main.start(stage);
 
-        // log in
+        //Log in and navigate to profile update
         interact(() -> {
+            lookup("#clinicianToggle").queryAs(CheckBox.class)
+                    .setSelected(false);
             lookup("#nhiLogin").queryAs(TextField.class)
-                    .setText(existingPatientNhi1);
+                    .setText(String.valueOf(existingNhi1));
             lookup("#loginButton").queryButton()
                     .fire();
-            lookup("#profileButton").queryButton()
-                    .fire();
+            lookup("#horizontalTabPane").queryAs(TabPane.class)
+                    .getSelectionModel()
+                    .clearAndSelect(patientUpdateProfileTabIndex);
         });
-
-        // go to edit pane
-        interact(() -> lookup("#editPatientButton").queryAs(Button.class)
-                .fire());
-        verifyThat("#patientUpdateAnchorPane", Node::isVisible);
     }
 
     /**
      * Turn off logging
      */
     @BeforeClass
-    public static void setUp() {
-        userActions.setLevel(OFF);
-    }
-
-    /**
-     * Reset db to a clean state wait for 1000ms
-     */
-    @After
-    public void waitForEvents() {
+    public static void setUpClass() {
         Database.resetDatabase();
-        WaitForAsyncUtils.waitForFxEvents();
-        sleep(1000);
+        userActions.setLevel(OFF);
     }
 
 
     /**
      * Checks that a patients NHI cannot be updated to one with an invalid format
      */
-    @Ignore //Todo
     @Test
-    public void testInvalidNhi() {
-        // try changing to an invalid nhi
-        interact(() -> {
-            lookup("#nhiTxt").queryAs(TextField.class).setText("999abcd");
-            lookup("#saveButton").queryAs(Button.class).fire();
-            lookup("OK").queryAs(Button.class).fire(); // closes alert
-        });
+    public void testInvalidNhi() throws InvalidObjectException {
 
-        verifyThat("#patientUpdateAnchorPane", Node::isVisible);
+        givenNhi("999abcd");
+        whenSave();
+        thenDBPatientHasNhi(existingNhi1);
 
     }
+
 
     /**
      * Checks that a patients NHI cannot be updated to an existing one
      */
-    @Ignore
     @Test
-    public void testDuplicateNhi() {
-    // try editing to an nhi that's already taken
+    public void testDuplicateNhi() throws InvalidObjectException {
 
-        interact(() -> {
-            lookup("#nhiTxt").queryAs(TextField.class).setText("TFX9998"); // nhi already in use
-            lookup("#saveButton").queryAs(Button.class).fire();
-            lookup("OK").queryAs(Button.class).fire(); // closes alert
-        });
+        // add second patient to db
+        Database.addPatient(new Patient("TFX9998", "Jane", null, "ZEreraeDA", LocalDate.of(1876, 12, 31)));
 
-        verifyThat("#patientUpdateAnchorPane", Node::isVisible);
+        givenNhi("TFX998");
+        whenSave();
+        thenDBPatientHasNhi(existingNhi1);
 
+    }
+
+    //todo add test for valid nhi, firstname, last name...
+
+
+
+
+    private void thenDBPatientHasNhi(String nhi) throws InvalidObjectException {
+        assertThat(Database.getPatientByNhi(existingNhi1).getNhiNumber()).isEqualTo(nhi);
+    }
+
+
+    private void whenSave() {
+        interact(() -> lookup("#saveButton").queryAs(Button.class).fire());
+    }
+
+
+    private void givenNhi(String newNhi) {
+        interact(() -> lookup("#nhiTxt").queryAs(TextField.class).setText(newNhi));
     }
 
 }

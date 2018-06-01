@@ -97,7 +97,6 @@ public class GUIHome {
         createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
         createTab("View Disease History","/scene/testClinicianDiagnosis.fxml");
         createTab("History", "/scene/patientHistory.fxml");
-        //todo setUpMenuBar() call here
     }
 
 

@@ -23,6 +23,7 @@ import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 import utility.GlobalEnums;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,18 +37,18 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static utility.UserActionHistory.userActions;
 
-public class GUIClinicianUpdateProfileTest extends ApplicationTest {
+import javax.xml.crypto.Data;
 
-    private Main main = new Main();
+public class GUIClinicianUpdateProfileTest extends ApplicationTest {
 
     private int existingStaffId = Database.getNextStaffID();
 
-    private int clinicianUpdateProfileTabIndex = 2;
+    private int clinicianUpdateProfileTabIndex = 1;
 
 
     @Override
-    public void start(Stage stage) throws Exception {
-        main.start(stage);
+    public void start(Stage stage) throws IOException {
+        new Main().start(stage);
     }
 
 
@@ -61,6 +62,8 @@ public class GUIClinicianUpdateProfileTest extends ApplicationTest {
     public void setup() {
 
         Database.resetDatabase();
+
+        existingStaffId = Database.getNextStaffID();
 
         // add dummy clinician
         Database.addClinician(new Clinician(existingStaffId, "initial", new ArrayList<String>() {{
@@ -82,145 +85,143 @@ public class GUIClinicianUpdateProfileTest extends ApplicationTest {
     }
 
 
-    //todo rm
-    @After
-    public void waitForEvents() {
-        Database.resetDatabase();
-        WaitForAsyncUtils.waitForFxEvents();
-        sleep(500);
-    }
-
-
     /**
      * Tests that the clinician can successfully edit their staff ID with a valid field
      */
-    @Ignore //todo
+    @Ignore //todo figure out if clinician should be able to change staff id or not
     @Test
-    public void successfulUpdateClinicianId() {
+    public void successfulUpdateClinicianId() throws InvalidObjectException {
 
         // Set ID to 1234567890
         givenStaffId("1234567890");
         whenClickSaveAndOk();
-        thenOnClinicianProfilePane();
+        thenClinicianStaffIdIs(1234567890);
 
         //Set id back to what it was
         givenStaffId(String.valueOf(existingStaffId));
         whenClickSaveAndOk();
-        thenOnClinicianProfilePane();
+        thenClinicianStaffIdIs(existingStaffId);
     }
 
+    private void thenClinicianStaffIdIs(int newId) throws InvalidObjectException {
+        assertThat(Database.getClinicianByID(newId)
+                .getStaffID()).isEqualTo(newId);
+    }
+
+    private void thenClinicianFirstNameIs(String newName) throws InvalidObjectException {
+        assertThat(Database.getClinicianByID(existingStaffId)
+                .getFirstName()).isEqualTo(newName);
+    }
+
+    private void thenClinicianLastNameIs(String newName) throws InvalidObjectException {
+        assertThat(Database.getClinicianByID(existingStaffId)
+                .getLastName()).isEqualTo(newName);
+    }
+
+    private void thenClinicianStreet1Is(String newStreet) throws InvalidObjectException {
+        assertThat(Database.getClinicianByID(existingStaffId)
+                .getStreet1()).isEqualTo(newStreet);
+    }
+    private void thenClinicianStreet2Is(String newStreet) throws InvalidObjectException {
+        assertThat(Database.getClinicianByID(existingStaffId)
+                .getStreet2()).isEqualTo(newStreet);
+    }
+
+    private void thenClinicianSuburbIs(String newSuburb) throws InvalidObjectException {
+        assertThat(Database.getClinicianByID(existingStaffId)
+                .getSuburb()).isEqualTo(newSuburb);
+    }
+
+    private void thenClinicianRegionIs(String newRegion) throws InvalidObjectException {
+        assertThat(Database.getClinicianByID(existingStaffId)
+                .getRegion()).isEqualTo(newRegion);
+    }
+
+    private void thenClinicianMiddleNamesIs(ArrayList<String> newMiddles) throws InvalidObjectException {
+        assertThat(Database.getClinicianByID(existingStaffId)
+                .getMiddleNames()).isEqualTo(newMiddles);
+    }
 
     /**
      * Tests that that the clinician can successfully edit their street2 name with a valid field
      */
-    @Ignore //todo
     @Test
     public void successfulUpdateClinicianStreet2() throws InvalidObjectException {
-
-        String newStreet2 = "Hanrahan RD";
-
-        givenStreet2(newStreet2);
+        givenStreet2("Riccarton RD");
         whenClickSaveAndOk();
-        assertThat(Database.getClinicianByID(existingStaffId)
-                .getStreet2()
-                .equals(newStreet2)); //todo does nothing
-        thenOnClinicianProfilePane();
+        thenClinicianStreet2Is("Riccarton RD");
+
+        givenStreet2("122 Street");
+        whenClickSaveAndOk();
+        thenClinicianStreet2Is("122 Street");
     }
 
 
     /**
      * Tests unsuccessful edit of clinician staff ID with an invalid field
      */
-    @Ignore //todo
     @Test
-    public void unsuccessfulUpdateClinicianId() {
+    public void unsuccessfulUpdateClinicianId() throws InvalidObjectException {
         givenStaffId("A");
         whenClickSaveAndOk();
-        assertThat(Database.getClinicians()
-                .stream()
-                .min(Comparator.comparing(Clinician::getStaffID))
-                .get()
-                .getStaffID() == 1);
-        thenAlertIsWarning();
+        thenClinicianStaffIdIs(existingStaffId);
     }
 
 
     /**
      * Tests that that the clinician can successfully edit their first name with a valid field
      */
-    @Ignore //todo
     @Test
-    public void successfulUpdateClinicianFirstName() {
+    public void successfulUpdateClinicianFirstName() throws InvalidObjectException {
         givenFirstName("James");
         whenClickSaveAndOk();
-        assertThat(Database.getClinicians()
-                .stream()
-                .min(Comparator.comparing(Clinician::getStaffID))
-                .get()
-                .getFirstName()
-                .equals("James"));
-        thenOnClinicianProfilePane();
+        thenClinicianFirstNameIs("James");
     }
 
 
     /**
      * Tests unsuccessful edit of clinician first name with an invalid field
      */
-    @Ignore //todo
     @Test
-    public void unsuccessfulUpdateClinicianFirstName() {
+    public void unsuccessfulUpdateClinicianFirstName() throws InvalidObjectException {
+
+        String existingFirstName = Database.getClinicianByID(existingStaffId).getFirstName();
+
         givenFirstName("122");
         whenClickSaveAndOk();
-        assertThat(!Database.getClinicians()
-                .stream()
-                .min(Comparator.comparing(Clinician::getStaffID))
-                .get()
-                .getFirstName()
-                .equals("12"));
-        thenAlertIsWarning();
+        thenClinicianFirstNameIs(existingFirstName);
     }
 
 
     /**
      * Tests that the clinician can successfully edit their last name with a valid field
      */
-    @Ignore //todo
     @Test
-    public void successfulUpdateClinicianLastName() {
+    public void successfulUpdateClinicianLastName() throws InvalidObjectException {
         givenLastName("Bond");
         whenClickSaveAndOk();
-        assertThat(Database.getClinicians()
-                .stream()
-                .min(Comparator.comparing(Clinician::getStaffID))
-                .get()
-                .getLastName()
-                .equals("Bond"));
-        thenOnClinicianProfilePane();
+        thenClinicianLastNameIs("Bond");
     }
 
 
     /**
      * Tests unsuccessful edit of clinician last name with an invalid field
      */
-    @Ignore //todo
     @Test
-    public void unsuccessfulUpdateClinicianLastName() {
+    public void unsuccessfulUpdateClinicianLastName() throws InvalidObjectException {
+
+        String existingLastName = Database.getClinicianByID(existingStaffId).getLastName();
+
         givenLastName("122");
         whenClickSaveAndOk();
-        assertThat(!Database.getClinicians()
-                .stream()
-                .min(Comparator.comparing(Clinician::getStaffID))
-                .get()
-                .getLastName()
-                .equals("12"));
-        thenAlertIsWarning();
+        thenClinicianLastNameIs(existingLastName);
     }
 
 
     /**
      * Tests that the clinician can successfully edit their middle name with a valid field
      */
-    @Ignore //todo
+//    @Ignore //todo
     @Test
     public void successfulUpdateClinicianMiddleName() {
         givenMiddleName("Andre");
@@ -232,116 +233,179 @@ public class GUIClinicianUpdateProfileTest extends ApplicationTest {
                 .getMiddleNames()
                 .get(0)
                 .equals("Andre"));
-        thenOnClinicianProfilePane();
     }
 
 
     /**
      * Tests unsuccessful edit of clinician middle name with an invalid field
      */
-    @Ignore //todo
     @Test
-    public void unsuccessfulUpdateClinicianMiddleName() {
+    public void unsuccessfulUpdateClinicianMiddleName() throws InvalidObjectException {
+
+        ArrayList<String> existingMiddles = Database.getClinicianByID(existingStaffId).getMiddleNames();
+
         givenMiddleName("122");
-        verifyThat("#middlenameTxt", TextInputControlMatchers.hasText("122"));
         whenClickSaveAndOk();
-        assertThat(!Database.getClinicians()
-                .stream()
-                .min(Comparator.comparing(Clinician::getStaffID))
-                .get()
-                .getMiddleNames()
-                .get(0)
-                .equals("12"));
-        thenAlertIsWarning();
+        thenClinicianMiddleNamesIs(existingMiddles);
     }
 
 
     /**
      * Tests that the clinician can successfully edit their street1 name with a valid field
      */
-    @Ignore //todo
     @Test
-    public void successfulUpdateClinicianStreet1() {
+    public void successfulUpdateClinicianStreet1() throws InvalidObjectException {
         givenStreet1("Riccarton RD");
         whenClickSaveAndOk();
-        assertThat(Database.getClinicians()
-                .stream()
-                .min(Comparator.comparing(Clinician::getStaffID))
-                .get()
-                .getStreet1()
-                .equals("Riccarton RD"));
-        thenOnClinicianProfilePane();
+        thenClinicianStreet1Is("Riccarton RD");
+
+        givenStreet1("122 Street");
+        whenClickSaveAndOk();
+        thenClinicianStreet1Is("122 Street");
     }
 
 
     /**
      * Tests unsuccessful edit of clinician street1 with an invalid field
      */
-    @Ignore //todo
+//    @Ignore //todo
     @Test
-    public void unsuccessfulUpdateClinicianStreet1() {
-        givenStreet1("122 RD");
-        whenClickSaveAndOk();
-        assertThat(!Database.getClinicians()
-                .stream()
-                .min(Comparator.comparing(Clinician::getStaffID))
-                .get()
-                .getStreet1()
-                .equals("12 RD"));
-        thenAlertIsWarning();
-    }
+    public void unsuccessfulUpdateClinicianStreet1() throws InvalidObjectException {
 
+        String existingStreet1 = Database.getClinicianByID(existingStaffId).getStreet1();
+
+        givenStreet1("@");
+        whenClickSaveAndOk();
+        thenClinicianStreet1Is(existingStreet1);
+
+        givenStreet1("#");
+        whenClickSaveAndOk();
+        thenClinicianStreet1Is(existingStreet1);
+
+        givenStreet1("$");
+        whenClickSaveAndOk();
+        thenClinicianStreet1Is(existingStreet1);
+
+        givenStreet1("!");
+        whenClickSaveAndOk();
+        thenClinicianStreet1Is(existingStreet1);
+
+        givenStreet1("%");
+        whenClickSaveAndOk();
+        thenClinicianStreet1Is(existingStreet1);
+
+        givenStreet1("^");
+        whenClickSaveAndOk();
+        thenClinicianStreet1Is(existingStreet1);
+
+        givenStreet1("&");
+        whenClickSaveAndOk();
+        thenClinicianStreet1Is(existingStreet1);
+
+        givenStreet1("*");
+        whenClickSaveAndOk();
+        thenClinicianStreet1Is(existingStreet1);
+
+        givenStreet1("(");
+        whenClickSaveAndOk();
+        thenClinicianStreet1Is(existingStreet1);
+
+        givenStreet1(")");
+        whenClickSaveAndOk();
+        thenClinicianStreet1Is(existingStreet1);
+
+        givenStreet1("-");
+        whenClickSaveAndOk();
+        thenClinicianStreet1Is(existingStreet1);
+
+        givenStreet1("{}[]_+-=\\|?><';\":`~");
+        whenClickSaveAndOk();
+        thenClinicianStreet1Is(existingStreet1);
+    }
 
     /**
      * Tests unsuccessful edit of clinician street2 with an invalid field
      */
-    @Ignore //todo
+//    @Ignore //todo
     @Test
-    public void unsuccessfulUpdateClinicianStreet2() {
-        givenStreet2("122 RD");
+    public void unsuccessfulUpdateClinicianStreet2() throws InvalidObjectException {
+
+        String existingStreet2 = Database.getClinicianByID(existingStaffId).getStreet2();
+
+        givenStreet2("@");
         whenClickSaveAndOk();
-        assertThat(!Database.getClinicians()
-                .stream()
-                .min(Comparator.comparing(Clinician::getStaffID))
-                .get()
-                .getStreet1()
-                .equals("12 RD"));
-        thenAlertIsWarning();
+        thenClinicianStreet2Is(existingStreet2);
+
+        givenStreet2("#");
+        whenClickSaveAndOk();
+        thenClinicianStreet2Is(existingStreet2);
+
+        givenStreet2("$");
+        whenClickSaveAndOk();
+        thenClinicianStreet2Is(existingStreet2);
+
+        givenStreet2("!");
+        whenClickSaveAndOk();
+        thenClinicianStreet2Is(existingStreet2);
+
+        givenStreet2("%");
+        whenClickSaveAndOk();
+        thenClinicianStreet2Is(existingStreet2);
+
+        givenStreet2("^");
+        whenClickSaveAndOk();
+        thenClinicianStreet2Is(existingStreet2);
+
+        givenStreet2("&");
+        whenClickSaveAndOk();
+        thenClinicianStreet2Is(existingStreet2);
+
+        givenStreet2("*");
+        whenClickSaveAndOk();
+        thenClinicianStreet2Is(existingStreet2);
+
+        givenStreet2("(");
+        whenClickSaveAndOk();
+        thenClinicianStreet2Is(existingStreet2);
+
+        givenStreet2(")");
+        whenClickSaveAndOk();
+        thenClinicianStreet2Is(existingStreet2);
+
+        givenStreet2("-");
+        whenClickSaveAndOk();
+        thenClinicianStreet2Is(existingStreet2);
+
+        givenStreet2("{}[]_+-=\\|?><';\":`~");
+        whenClickSaveAndOk();
+        thenClinicianStreet2Is(existingStreet2);
     }
 
 
     /**
      * Tests that that the clinician can successfully edit their suburb with a valid field
      */
-    @Ignore //todo
+//    @Ignore //todo
     @Test
-    public void successfulUpdateClinicianSuburb() {
+    public void successfulUpdateClinicianSuburb() throws InvalidObjectException {
         givenSuburb("Fendalton");
         whenClickSaveAndOk();
-        assertThat(Database.getClinicians()
-                .stream()
-                .min(Comparator.comparing(Clinician::getStaffID))
-                .get()
-                .getSuburb()
-                .equals("Fendalton"));
-        thenOnClinicianProfilePane();
+        thenClinicianSuburbIs("Fendalton");
     }
 
 
     /**
      * Tests unsuccessful edit of clinician suburb with an invalid field
      */
-    @Ignore //todo
+//    @Ignore //todo
     @Test
-    public void unsuccessfulUpdateClinicianSuburb() {
+    public void unsuccessfulUpdateClinicianSuburb() throws InvalidObjectException {
+
+        String existingSuburb = Database.getClinicianByID(existingStaffId).getSuburb();
+
         givenSuburb("122");
         whenClickSaveAndOk();
-        assertThat(!Database.getClinicians()
-                .stream()
-                .min(Comparator.comparing(Clinician::getStaffID))
-                .get()
-                .getStreet1()
-                .equals("12 RD"));
+        thenClinicianSuburbIs(existingSuburb);
         thenAlertIsWarning();
     }
 
@@ -407,14 +471,7 @@ public class GUIClinicianUpdateProfileTest extends ApplicationTest {
             lookup("#saveProfile").queryAs(Button.class)
                     .getOnAction()
                     .handle(new ActionEvent());
-            lookup("OK").queryAs(Button.class)
-                    .fire();
         });
-    }
-
-
-    private void thenOnClinicianProfilePane() {
-        verifyThat("#clinicianProfilePane", Node::isVisible);
     }
 
 
