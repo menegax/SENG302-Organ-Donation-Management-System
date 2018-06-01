@@ -1,27 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="loginPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUILogin">
+<GridPane fx:id="loginPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUILogin">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="400.0" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <Label layoutX="224.0" layoutY="49.0" styleClass="title" text="Big Pharma">
+      <Label alignment="CENTER" prefHeight="33.0" styleClass="title" text="Big Pharma" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
          <font>
-            <Font size="27.0" />
+            <Font size="33.0" />
          </font>
       </Label>
-      <Button fx:id="loginButton" layoutX="207.0" layoutY="212.0" mnemonicParsing="false" onAction="#logIn" prefHeight="25.0" prefWidth="186.0" text="Log In" />
-      <TextField fx:id="nhiLogin" alignment="CENTER" layoutX="207.0" layoutY="170.0" prefHeight="25.0" prefWidth="186.0" promptText="NHI" />
-      <Hyperlink fx:id="registerHyperlink" layoutX="278.0" layoutY="237.0" onAction="#goToRegister" text="Register">
+      <Button fx:id="loginButton" maxWidth="250.0" mnemonicParsing="false" onAction="#logIn" prefHeight="35.0" prefWidth="250.0" text="Log In" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+      <Hyperlink fx:id="registerHyperlink" onAction="#goToRegister" text="Register" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP">
          <font>
             <Font size="10.0" />
          </font>
       </Hyperlink>
-      <CheckBox fx:id="clinicianToggle" layoutX="408.0" layoutY="174.0" mnemonicParsing="false" onAction="#toggleClinician" text="I am a clinician" />
+      <GridPane GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+         <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <RadioButton fx:id="patient" mnemonicParsing="false" onAction="#onRadioSelect" prefWidth="120.0" selected="true" text="Patient" GridPane.halignment="RIGHT">
+               <toggleGroup>
+                  <ToggleGroup fx:id="UserType" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="clinician" mnemonicParsing="false" onAction="#onRadioSelect" prefWidth="120.0" text="Clinician" toggleGroup="$UserType" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+            <RadioButton fx:id="administrator" mnemonicParsing="false" onAction="#onRadioSelect" prefWidth="120.0" text="Administrator" toggleGroup="$UserType" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+         </children>
+      </GridPane>
+      <VBox alignment="CENTER" spacing="5.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.vgrow="SOMETIMES">
+         <children>
+            <TextField fx:id="nhiLogin" alignment="CENTER" maxWidth="250.0" prefHeight="35.0" prefWidth="150.0" promptText="NHI" />
+            <PasswordField fx:id="password" alignment="CENTER" disable="true" maxWidth="250.0" prefHeight="35.0" prefWidth="150.0" promptText="Password" />
+         </children>
+      </VBox>
    </children>
-</AnchorPane>
+</GridPane>

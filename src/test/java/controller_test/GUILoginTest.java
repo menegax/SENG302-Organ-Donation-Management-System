@@ -1,12 +1,9 @@
 package controller_test;
 
+import javafx.scene.control.*;
 import main.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Patient;
 import org.junit.After;
@@ -147,7 +144,7 @@ public class GUILoginTest extends ApplicationTest {
     @Test
     public void unsuccessfulClinicianLoginTest() {
         interact(() -> {
-            lookup("#clinicianToggle").queryAs(CheckBox.class).setSelected(true);
+            lookup("#clinician").queryAs(RadioButton.class).setSelected(true);
             lookup("#nhiLogin").queryAs(TextField.class).setText("111");
         });
         verifyThat("#nhiLogin", TextInputControlMatchers.hasText("111"));

@@ -143,6 +143,15 @@ public class Database {
         throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
     }
 
+    public static Administrator getAdministratorByUsername(String username) throws InvalidObjectException {
+        for (Administrator a : getAdministrators()) {
+            if (a.getUsername().equals(username)) {
+                return a;
+            }
+        }
+        throw new InvalidObjectException("Administrator with username " + " does not exist");
+    }
+
     /**
      * Adds a clinician to the database
      *
