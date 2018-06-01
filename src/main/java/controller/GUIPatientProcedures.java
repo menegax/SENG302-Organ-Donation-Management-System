@@ -16,6 +16,7 @@ import model.Procedure;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ import java.util.logging.Level;
 
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -157,6 +159,8 @@ public class GUIPatientProcedures extends UndoableController {
         //Registers event for when an item is selected in either table
         previousProceduresView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> onItemSelect());
         pendingProceduresView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> onItemSelect());
+        previousProceduresView.refresh();
+        pendingProceduresView.refresh();
     }
 
     /**
@@ -181,9 +185,12 @@ public class GUIPatientProcedures extends UndoableController {
     @FXML
     public void addProcedure() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
-            ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader);
-        } catch (IOException e) {
+            UndoableStage stage = new UndoableStage();
+            screenControl.addStage(stage.getUUID(), stage);
+            screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/testPatientProcedureForm.fxml")));
+            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
+        }
+        catch (IOException e) {
             userActions.log(Level.SEVERE,
                     "Failed to open add procedure popup from patient procedures",
                     "Attempted to open add procedure popup from patient procedures");
@@ -208,16 +215,28 @@ public class GUIPatientProcedures extends UndoableController {
             return;
         }
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
-            ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader);
+            UndoableStage stage = new UndoableStage();
+            screenControl.addStage(stage.getUUID(), stage);
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/testPatientProcedureForm.fxml"));
+            screenControl.show(stage.getUUID(),fxmlLoader.load());
             GUIPatientProcedureForm controller = fxmlLoader.getController();
             controller.setupEditing(selectedProcedure);
-        } catch (IOException e) {
+            systemLogger.log(Level.FINE, "set up event");
+            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
+        }
+        catch (IOException e) {
             userActions.log(Level.SEVERE,
                     "Failed to load edit procedure scene from patient procedures popup",
                     "Attempted to load edit procedure scene from patient procedures popup");
             new Alert(Alert.AlertType.ERROR, "Unable to load procedures page", ButtonType.OK).show();
         }
+    }
+
+    /**
+     * Refreshes the tables shown
+     */
+    private void tableRefresh() {
+        setupTables();
     }
 
     /**
