@@ -87,6 +87,8 @@ public class Patient extends User {
 
     private String contactEmailAddress;
 
+    private Status status; // Whether patient is receiving/donating/both/neither
+
     private ArrayList<PatientActionRecord> userActionsList;
 
     private ArrayList<Disease> currentDiseases = new ArrayList<>();
@@ -404,6 +406,37 @@ public class Patient extends User {
         else {
             return (int) ChronoUnit.YEARS.between(this.birth, LocalDate.now());
         }
+    }
+
+    /**
+     * Gets the status of the patient; donating, receiving, both, neither (null)
+     * @return The patient's status
+     */
+    public Status getStatus() {
+        if (this.donations.size() == 0 && this.requiredOrgans.size() == 0) {
+            setStatus( null );
+        }
+        if (this.donations.size() > 0) {
+            setStatus( (Status) Status.getEnumFromString( "donating" ) );
+        }
+        if (this.requiredOrgans.size() > 0) {
+            setStatus( (Status) Status.getEnumFromString( "receiving" ) );
+        }
+        if (this.donations.size() > 0 && this.requiredOrgans.size() > 0) {
+            setStatus( (Status) Status.getEnumFromString( "both" ) );
+        }
+        return status;
+    }
+
+    /**
+     * Sets the status of the patient; donating, receiving, both, neither (null)
+     * @param status The status of the patient
+     */
+    public void setStatus(Status status) {
+        if (this.status != status) {
+            this.status = status;
+        }
+        patientModified();
     }
 
     public PreferredGender getPreferredGender() {
@@ -813,7 +846,9 @@ public class Patient extends User {
      */
     public void setPastDiseases(ArrayList<Disease> pastDiseases) { this.pastDiseases = pastDiseases; }
 
-
+    public String getUserType() {
+        return "Patient - " + getStatus();
+    }
     /**
      *
      * Updates the modified timestamp of the patient

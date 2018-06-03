@@ -19,7 +19,6 @@ import model.Clinician;
 import model.Patient;
 import model.User;
 import service.Database;
-import utility.UserNameObserver;
 
 import java.io.File;
 import java.io.IOException;

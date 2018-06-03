@@ -24,7 +24,6 @@
 }
 
 .title {
-    -fx-text-fill: color1;
     -fx-font-weight: bold;
     -fx-font-size: 28px;
 }

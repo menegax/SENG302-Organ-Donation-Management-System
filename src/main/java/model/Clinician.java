@@ -19,7 +19,6 @@ public class Clinician extends User {
     private String firstName;
     private ArrayList<String> middleNames;
     private String lastName;
-
     private String street1;
     private String street2;
     private String suburb;
@@ -129,7 +128,7 @@ public class Clinician extends User {
      * Concatenates a clinician's first, middle and last names, and returns the full name as a String
      * @return String concatenated name
      */
-    public String getConcatenatedName() {
+    public String getNameConcatenated() {
         String name = this.firstName;
         if(this.middleNames != null) {
             for(String middleName : this.middleNames) {
@@ -187,6 +186,14 @@ public class Clinician extends User {
     public void setRegion(GlobalEnums.Region region) {
         this.region = region;
         clinicianModified();
+    }
+
+    /**
+     * Gets the user type; Clinician
+     * @return Clinician as the user type
+     */
+    public String getUserType() {
+        return "Clinician";
     }
 
     public Timestamp getModified() { return this.modified; }
