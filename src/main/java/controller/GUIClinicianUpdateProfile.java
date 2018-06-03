@@ -39,7 +39,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
     private TextField staffId;
 
     @FXML
-    private TextField firstnameTxt;
+    private TextField firstnameUpdateTxt;
 
     @FXML
     private TextField lastnameTxt;
@@ -116,7 +116,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
     private void setUpStateHistory() {
         controls = new ArrayList<Control>() {{
             add(staffId);
-            add(firstnameTxt);
+            add(firstnameUpdateTxt);
             add(lastnameTxt);
             add(middlenameTxt);
             add(street1Txt);
@@ -143,7 +143,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             lastModifiedLbl.setText("Last Updated: n/a");
         }
         staffId.setText(Integer.toString(clinician.getStaffID()));
-        firstnameTxt.setText(clinician.getFirstName());
+        firstnameUpdateTxt.setText(clinician.getFirstName());
         lastnameTxt.setText(clinician.getLastName());
         for (String name : clinician.getMiddleNames()) {
             middlenameTxt.setText(middlenameTxt.getText() + name + " ");
@@ -175,10 +175,11 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             valid = false;
             setInvalid(staffId);
         }
-        if (firstnameTxt.getText()
-                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", firstnameTxt.getText())) {
+        String newName = firstnameUpdateTxt.getText();
+        if (firstnameUpdateTxt.getText()
+                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", newName)) {
             valid = false;
-            setInvalid(firstnameTxt);
+            setInvalid(firstnameUpdateTxt);
         }
         if (lastnameTxt.getText()
                 .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", lastnameTxt.getText())) {
@@ -209,7 +210,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
         // If all the fields are entered correctly
         if (valid) {
             target.setStaffID(Integer.parseInt(staffId.getText()));
-            target.setFirstName(firstnameTxt.getText());
+            target.setFirstName(firstnameUpdateTxt.getText());
             target.setLastName(lastnameTxt.getText());
             List<String> middlenames = Arrays.asList(middlenameTxt.getText()
                     .split(" "));

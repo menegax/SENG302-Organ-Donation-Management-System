@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="clinicianLogPane" prefHeight="295.0" prefWidth="491.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianHistory">
+<GridPane fx:id="clinicianLogPane" prefHeight="295.0" prefWidth="491.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianHistory">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="191.9999746322632" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="189.60003662109375" />

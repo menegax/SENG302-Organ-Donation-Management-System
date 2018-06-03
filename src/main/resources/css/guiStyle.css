@@ -24,7 +24,7 @@
 }
 
 .title {
-    -fx-text-fill: color1;
+    -fx-text-fill: #163a67; /* color1 */
     -fx-font-weight: bold;
     -fx-font-size: 28px;
 }
@@ -50,7 +50,7 @@
 
 /* For invalid text-fields within forms */
 .invalid {
-    -fx-background-color: invalid;
+    -fx-background-color: #e6b3b3; /* color1 */
     -fx-border-color: red;
     -fx-border-width: 2px;
     -fx-border-radius: 3px;

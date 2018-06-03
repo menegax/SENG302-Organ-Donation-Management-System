@@ -25,7 +25,6 @@ import static utility.UserActionHistory.userActions;
 //todo make it used and add javadoc
 public class TestHelper extends ApplicationTest {
 
-
     /**
      * Click the button on an the alert pop up
      * @param buttonText - text of the button e.g. OK, CANCEL
@@ -100,8 +99,7 @@ public class TestHelper extends ApplicationTest {
      */
     @BeforeAll
     public static void setTestFXHeadless() {
-        {
-            System.setProperty("prism.verbose", "true");
+//            System.setProperty("prism.verbose", "true");
             System.setProperty("java.awt.headless", "true");
             System.setProperty("testfx.robot", "glass");
             System.setProperty("testfx.headless", "true");
@@ -110,7 +108,6 @@ public class TestHelper extends ApplicationTest {
             System.setProperty("prism.order", "sw");
             System.setProperty("prism.text", "t2k");
             System.setProperty("testfx.setup.timeout", "2500");
-        }
     }
 
     /**

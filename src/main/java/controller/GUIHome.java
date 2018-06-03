@@ -203,20 +203,27 @@ public class GUIHome {
         bar.getMenus()
                 .addAll(menu1, menu2); //Todo add menu3 with undo/redo
 
+        boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless")
+                .equals("true");
         // Use the menu bar for primary stage
-        if (screenControl.isMacOs()) {
-            // Get the toolkit THIS IS MAC OS ONLY
-            MenuToolkit tk = MenuToolkit.toolkit();
+        if (!headless) { // make sure it isn't testing
+            if (screenControl.isMacOs()) {
+                // Get the toolkit THIS IS MAC OS ONLY
+                MenuToolkit tk = MenuToolkit.toolkit();
 
-            // Add the default application menu
-            bar.getMenus().add(0, tk.createDefaultApplicationMenu(screenControl.getAppName())); // set leftmost MacOS system menu
-            tk.setMenuBar(stage, bar);
-            systemLogger.log(FINER, "Set MacOS menu bar");
-        }
-        else {// if windows
-            menuBar.getMenus().clear();
-            menuBar.getMenus().addAll(menu1, menu2); //todo add menu3 with undo/redo
-            systemLogger.log(FINER, "Set non-MacOS menu bar");
+                // Add the default application menu
+                bar.getMenus()
+                        .add(0, tk.createDefaultApplicationMenu(screenControl.getAppName())); // set leftmost MacOS system menu
+                tk.setMenuBar(stage, bar);
+                systemLogger.log(FINER, "Set MacOS menu bar");
+            }
+            else {// if windows
+                menuBar.getMenus()
+                        .clear();
+                menuBar.getMenus()
+                        .addAll(menu1, menu2); //todo add menu3 with undo/redo
+                systemLogger.log(FINER, "Set non-MacOS menu bar");
+            }
         }
 
 

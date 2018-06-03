@@ -152,7 +152,7 @@ public class Clinician extends User {
      * @param street1 The new street1 value
      */
     public void setStreet1(String street1) {
-        if (street1 != null && Pattern.matches("^[- a-zA-Z0-9]*$", street1)) {
+        if (street1 != null && Pattern.matches("^[- 0-9a-zA-Z]*$", street1)) {
             this.street1 = street1;
             clinicianModified();
         }
@@ -163,7 +163,7 @@ public class Clinician extends User {
     }
 
     public void setStreet2(String street2) {
-        if (street2 != null && Pattern.matches("^[- a-zA-Z0-9]*$", street2)) {
+        if (street2 != null && Pattern.matches("^[- 0-9a-zA-Z]*$", street2)) { //todo
             this.street2 = street2;
             clinicianModified();
         }
@@ -174,7 +174,7 @@ public class Clinician extends User {
     }
 
     public void setSuburb(String suburb) {
-        if (suburb != null && Pattern.matches("^[- a-zA-Z0-9]*$", suburb)) {
+        if (suburb != null && Pattern.matches("^[- a-zA-Z]*$", suburb)) {
             this.suburb = suburb;
             clinicianModified();
         }
