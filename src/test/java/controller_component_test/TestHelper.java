@@ -23,7 +23,7 @@ import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 //todo make it used and add javadoc
-public class ATestHelper extends ApplicationTest {
+public class TestHelper extends ApplicationTest {
 
 
     /**
