@@ -1,49 +1,29 @@
-package helper;
+package controller_component_test;
 
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
-import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.testfx.framework.junit.ApplicationTest;
-import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 
 import static javafx.scene.input.KeyCode.CONTROL;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
 
-public class General extends ApplicationTest {
-
-    /**
-     * Helper method to login via UI
-     * @param nhi - NHI number to login with
-     */
-    public void loginDonor(String nhi){
-        interact( () -> {
-            lookup( "#nhiLogin" ).queryAs( TextField.class ).setText( nhi );
-            assertThat( lookup( "#nhiLogin" ).queryAs( TextField.class ) ).hasText( nhi );
-            lookup( "#loginButton" ).queryAs( Button.class ).fire();
-            verifyThat( "#homePane", Node::isVisible ); // Verify that login has taken "user" to home panel
-        } );
-    }
-
-
-    /**
-     * Helper method to wait for events
-     */
-    public void waitForEvents(){
-        WaitForAsyncUtils.waitForFxEvents();
-        sleep( 1000 );
-    }
-
+//todo make it used and add javadoc
+public class TestHelper extends ApplicationTest {
 
     /**
      * Click the button on an the alert pop up
@@ -114,10 +94,29 @@ public class General extends ApplicationTest {
                 .findFirst().orElse(null);
     }
 
+    /**
+     * Sets the TestFx tests to run in headless mode so that they can pass the runner
+     */
+    @BeforeAll
+    public static void setTestFXHeadless() {
+//            System.setProperty("prism.verbose", "true");
+            System.setProperty("java.awt.headless", "true");
+            System.setProperty("testfx.robot", "glass");
+            System.setProperty("testfx.headless", "true");
+            System.setProperty("glass.platform", "Monocle");
+            System.setProperty("monocle.platform", "Headless");
+            System.setProperty("prism.order", "sw");
+            System.setProperty("prism.text", "t2k");
+            System.setProperty("testfx.setup.timeout", "2500");
+    }
 
-
-
-
-
+    /**
+     * Turns off user action logging
+     */
+    @BeforeAll
+    public static void setLoggingFalse() {
+        userActions.setLevel(Level.OFF);
+        systemLogger.setLevel(Level.OFF);
+    }
 
 }

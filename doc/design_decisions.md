@@ -179,3 +179,8 @@ This means there should not be other action listeners for global or stage-level 
  #### GUI
  We have decided that tabs will not call methods to navigate between themselves on the home screen.  
  This will remove the necessity to find the tabs of the home screen that a tab is on.
+ 
+ ### GUI Testing
+ TestFX has been essentially component testing the application instead of performing small-scale unit tests. We debated making each GUI controller 
+ runnable for the purpose of unit testing single controllers, but realized the unit tests would have minimal meaning without the backend supporting 
+ it. Therefore we will be using TestFX controller tests more sparingly and for larger-scale component testing for the entire application. 

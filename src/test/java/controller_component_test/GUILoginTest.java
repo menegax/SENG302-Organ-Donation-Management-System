@@ -1,4 +1,4 @@
-package controller_test;
+package controller_component_test;
 
 
 
@@ -23,7 +23,6 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 import service.Database;
 import controller.UserControl;
-import testfx.GitLabTestFXConfiguration;
 import utility.GlobalEnums;
 
 import static java.util.logging.Level.OFF;
@@ -84,7 +83,6 @@ public class GUILoginTest extends ApplicationTest {
     @BeforeClass
     public static void setUp() {
         userActions.setLevel(OFF);
-        GitLabTestFXConfiguration.setHeadless();
     }
 
     /**
@@ -118,14 +116,6 @@ public class GUILoginTest extends ApplicationTest {
         whenClickLogIn();
         thenNoPatientLoggedIn();
         thenAlertIsWarning();
-    }
-
-    /**
-     * Clicks invalid button and expects exception to be thrown
-     */
-    @Test(expected = FxRobotException.class)
-    public void click_on_wrong_button() {
-        clickOn("#login");
     }
 
     /**

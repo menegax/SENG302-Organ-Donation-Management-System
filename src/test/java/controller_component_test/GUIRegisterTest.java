@@ -1,4 +1,4 @@
-package controller_test;
+package controller_component_test;
 
 import controller.Main;
 import javafx.event.ActionEvent;
@@ -10,25 +10,20 @@ import javafx.stage.Window;
 import model.Patient;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import service.Database;
-import testfx.GitLabTestFXConfiguration;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.logging.Level.OFF;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
-import static utility.UserActionHistory.userActions;
 
-@Ignore
 public class GUIRegisterTest extends ApplicationTest {
 
     private Main main = new Main();
@@ -59,8 +54,8 @@ public class GUIRegisterTest extends ApplicationTest {
      */
     @BeforeClass
     public static void setUp() {
-        userActions.setLevel(OFF);
-        GitLabTestFXConfiguration.setHeadless();
+        TestHelper.setLoggingFalse();
+        TestHelper.setTestFXHeadless();
     }
 
 
@@ -73,8 +68,9 @@ public class GUIRegisterTest extends ApplicationTest {
     }
 
 
+    @Test
     public void AllFields() {
-        givenValidNhi();
+        givenNhi("BBB2222");
         givenValidFirstName();
         givenValidMiddleNames();
         givenValidLastName();
@@ -83,6 +79,7 @@ public class GUIRegisterTest extends ApplicationTest {
         whenClickDone();
 
         thenAlertHasHeader("Message");
+        thenPatientInDb("BBB2222", true);
     }
 
 
@@ -91,7 +88,7 @@ public class GUIRegisterTest extends ApplicationTest {
      */
     @Test
     public void NoMiddleName() {
-        givenValidNhi();
+        givenNhi("BBB2222");
         givenValidFirstName();
         givenValidLastName();
         givenValidBirthDate();
@@ -99,6 +96,7 @@ public class GUIRegisterTest extends ApplicationTest {
         whenClickDone();
 
         thenAlertHasHeader("Message");
+        thenPatientInDb("BBB2222", true);
     }
 
 
@@ -110,6 +108,7 @@ public class GUIRegisterTest extends ApplicationTest {
         whenClickDone();
 
         thenAlertHasHeader("Warning");
+        thenPatientInDb("BBB2222", false);
     }
 
 
@@ -125,6 +124,7 @@ public class GUIRegisterTest extends ApplicationTest {
         whenClickDone();
 
         thenAlertHasHeader("Warning");
+        thenPatientInDb("BBB2222", false);
     }
 
 
@@ -141,6 +141,7 @@ public class GUIRegisterTest extends ApplicationTest {
         whenClickDone();
 
         thenAlertHasHeader("Warning");
+        thenPatientInDb("BBB2222", false);
     }
 
 
@@ -149,13 +150,14 @@ public class GUIRegisterTest extends ApplicationTest {
      */
     @Test
     public void NoFirstName() {
-        givenValidNhi();
+        givenNhi("BBB2222");
         givenValidLastName();
         givenValidBirthDate();
 
         whenClickDone();
 
         thenAlertHasHeader("Warning");
+        thenPatientInDb("BBB2222", false);
     }
 
 
@@ -164,13 +166,14 @@ public class GUIRegisterTest extends ApplicationTest {
      */
     @Test
     public void NoLastName() {
-        givenValidNhi();
+        givenNhi("BBB2222");
         givenValidFirstName();
         givenValidBirthDate();
 
         whenClickDone();
 
         thenAlertHasHeader("Warning");
+        thenPatientInDb("BBB2222", false);
     }
 
 
@@ -179,13 +182,14 @@ public class GUIRegisterTest extends ApplicationTest {
      */
     @Test
     public void NoBirthDate() {
-        givenValidNhi();
+        givenNhi("BBB2222");
         givenValidFirstName();
         givenValidLastName();
 
         whenClickDone();
 
         thenAlertHasHeader("Warning");
+        thenPatientInDb("BBB2222", false);
     }
 
     /**
@@ -202,6 +206,7 @@ public class GUIRegisterTest extends ApplicationTest {
         whenClickDone();
 
         thenAlertHasHeader("Warning");
+        thenPatientInDb("BBB2222", false);
     }
 
 
@@ -211,22 +216,28 @@ public class GUIRegisterTest extends ApplicationTest {
     @Test
     public void DuplicateNhi() {
 
-        Database.addPatient(new Patient("TFX9999", "Joe", new ArrayList<>(Collections.singletonList("Middle")), "Bloggs", LocalDate.of(1990, 2, 9)));
+        Patient existingPatient = new Patient("TFX9999", "Joe", new ArrayList<>(Collections.singletonList("Middle")), "Bloggs", LocalDate.of(1990, 2, 9));
+        Database.addPatient(existingPatient);
 
-        lookup("#nhiRegister").queryAs(TextField.class)
-                .setText("TFX9999");
-
+        givenNhi("TFX9999");
         givenValidFirstName();
         givenValidLastName();
         givenValidBirthDate();
         whenClickDone();
         thenAlertHasHeader("Warning");
+
+        thenPatientInDb("TFX9999", true); // just the first one
+
+        assertThat(Collections.frequency(Database.getPatients(), existingPatient)).isEqualTo(1); // exactly one occurrence of existing patient in db
     }
 
 
+    /**
+     * Ensures an invalid first name is not used to register a new patient
+     */
     @Test
     public void InvalidFirstName() {
-        givenValidNhi();
+        givenNhi("BBB2222");
         givenInvalidFirstName();
         givenValidMiddleNames();
         givenValidLastName();
@@ -235,6 +246,7 @@ public class GUIRegisterTest extends ApplicationTest {
         whenClickDone();
 
         thenAlertHasHeader("Warning");
+        thenPatientInDb("BBB2222", false);
     }
 
 
@@ -244,9 +256,9 @@ public class GUIRegisterTest extends ApplicationTest {
     }
 
 
-    private void givenValidNhi() {
+    private void givenNhi(String nhi) {
         interact(() -> lookup("#nhiRegister").queryAs(TextField.class)
-                .setText("BBB9922"));
+                .setText(nhi));
     }
 
 
@@ -291,6 +303,10 @@ public class GUIRegisterTest extends ApplicationTest {
         interact(() -> lookup("#doneButton").queryAs(Button.class)
                 .getOnAction()
                 .handle(new ActionEvent()));
+    }
+
+    private void thenPatientInDb(String nhi, boolean isIn) {
+        assertThat(Database.isPatientInDb(nhi)).isEqualTo(isIn);
     }
 
 

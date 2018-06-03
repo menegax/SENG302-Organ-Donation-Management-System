@@ -24,6 +24,7 @@
 }
 
 .title {
+    -fx-text-fill: #163a67; /* color1 */
     -fx-font-weight: bold;
     -fx-font-size: 28px;
 }
@@ -47,13 +48,9 @@
     -fx-font-size: 16px;
 }
 
-.customButton {
-
-}
-
 /* For invalid text-fields within forms */
 .invalid {
-    -fx-background-color: invalid;
+    -fx-background-color: #e6b3b3; /* color1 */
     -fx-border-color: red;
     -fx-border-width: 2px;
     -fx-border-radius: 3px;
@@ -96,4 +93,41 @@
     -fx-font-weight: bold;
 }
 
+Button {
+    -fx-background-radius: 6;
+}
+
+
+.save-button {
+    -fx-background-color: linear-gradient(#52BE80, #27AE60);
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 16;
+    -fx-min-height: 30;
+    -fx-max-height: 40;
+    -fx-min-width: 80;
+    -fx-max-width: 115;
+}
+
+.save-button:hover {
+    -fx-background-color: linear-gradient(#329E60, #078E40);
+}
+
+.form TextField, .form ChoiceBox, .form DatePicker {
+    -fx-min-height: 40;
+}
+
+.form Label, .form CheckBox {
+    -fx-font-size: 14;
+}
+
+#loginButton {
+    -fx-background-color: linear-gradient(#5DADE2, #3498DB);
+    -fx-text-fill: #FFFFFF;
+    -fx-min-height: 30;
+    -fx-max-height: 40;
+}
+
+#loginButton:hover {
+    -fx-background-color: linear-gradient(#3D8DC2, #1478BB);
+}
 
