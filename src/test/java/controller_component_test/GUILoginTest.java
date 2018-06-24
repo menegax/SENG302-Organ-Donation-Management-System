@@ -1,7 +1,5 @@
 package controller_component_test;
 
-
-
 import controller.Main;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
@@ -15,6 +13,7 @@ import javafx.stage.Window;
 import model.Clinician;
 import model.Patient;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -30,22 +29,23 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
-@Ignore
 public class GUILoginTest extends ApplicationTest {
 
     /**
      * Application entry point
      */
     private Main main = new Main();
-
 
     /**
      * Login helper for getting logged in users
@@ -77,93 +77,91 @@ public class GUILoginTest extends ApplicationTest {
         main.start(stage);
     }
 
-    /**
-     * Turn off logging and Sets the configuration to run in headless mode
-     */
+
     @BeforeClass
     public static void setUp() {
         userActions.setLevel(OFF);
+        systemLogger.setLevel(OFF);
     }
 
-    /**
-     * Reset db to a clean state wait for 1000ms
-     */
+
     @After
     public void waitForEvents() {
         Database.resetDatabase();
-        WaitForAsyncUtils.waitForFxEvents();
-        sleep(1000);
+        userControl.rmLoggedInUserCache(); // log out
     }
-
-
-    @Test
-    public void PatientValidCredentials() {
-        givenCredentials(existingNhi);
-        givenClinicianToggle(false);
-        whenClickLogIn();
-        thenHomePaneVisible();
-    }
-
 
 
     /**
-     * Verifies the the loginPane is visible
+     * Ensures valid patient credentials results in successful login
+     */
+    @Test
+    public void PatientValidCredentials() throws InvalidObjectException {
+        givenCredentials(existingNhi);
+        givenClinicianToggle(false);
+        whenClickLogIn();
+        thenLoggedInUserIs(Database.getPatientByNhi(existingNhi).getUuid());
+    }
+
+
+    /**
+     * Ensures non-existent patient cannot be logged into
      */
     @Test
     public void PatientNonExistent() {
         givenCredentials("ABD1234");
         givenClinicianToggle(false);
         whenClickLogIn();
-        thenNoPatientLoggedIn();
-        thenAlertIsWarning();
+        thenNoUserLoggedIn();
     }
 
+
     /**
-     * Enter NHI and verifies that the UI has logged in
+     * Ensures blank input cannot be used to log in with
      */
     @Test
     public void PatientBlankInput() {
         givenCredentials("");
         givenClinicianToggle(false);
         whenClickLogIn();
-        thenNoPatientLoggedIn();
-        thenAlertIsWarning();
+        thenNoUserLoggedIn();
     }
 
 
     /**
-     * Enter an incorrect NHI and verify that the login pane is still visible
+     * Ensure valid clinician login credentials result in successful log in
      */
     @Test
-    public void ClinicianValidCredentials() {
+    public void ClinicianValidCredentials() throws InvalidObjectException {
         givenCredentials(String.valueOf(existingStaffId));
         givenClinicianToggle(true);
         whenClickLogIn();
         thenHomePaneVisible();
+        thenLoggedInUserIs(Database.getClinicianByID(existingStaffId).getUuid());
     }
 
 
     /**
-     * Enter no text and to the NHI field and verifies that the login screen is still visible
+     * Blank input considered invalid and no logging in
      */
     @Test
     public void ClinicianBlankInput() {
         givenCredentials(String.valueOf(""));
         givenClinicianToggle(true);
         whenClickLogIn();
-        thenAlertIsWarning();
+        thenNoUserLoggedIn();
     }
 
 
     /**
-     * Verify that the register form is correctly displayed
+     * Ensures invalid clinician credentials result in no logged in user
      */
     @Test
     public void ClinicianNonExistent() {
         givenCredentials(String.valueOf(1234567890));
         givenClinicianToggle(true);
         whenClickLogIn();
-        thenAlertIsWarning();
+        thenNoUserLoggedIn();
     }
 
 
@@ -186,9 +184,8 @@ public class GUILoginTest extends ApplicationTest {
     }
 
 
-    private void thenNoPatientLoggedIn() {
-        assertThat(userControl.isUserLoggedIn());
-        //        assertThat(((Patient) userControl.getLoggedInUser()).getNhiNumber() == null);
+    private void thenNoUserLoggedIn() {
+        assertThat(userControl.isUserLoggedIn()).isFalse();
     }
 
 
@@ -196,34 +193,8 @@ public class GUILoginTest extends ApplicationTest {
         verifyThat("#homePane", Node::isVisible);
     }
 
-
-    /**
-     * Ensures an alert exists with the title "Warning"
-     *
-     * <p>
-     * The Alert is then closed by clicking a button with string "OK"
-     * </p>
-     */
-    private void thenAlertIsWarning() {
-        final Stage actualAlertDialog = getTopModalStage();
-        assertNotNull(actualAlertDialog);
-        final DialogPane dialogPane = (DialogPane) actualAlertDialog.getScene()
-                .getRoot();
-        assertEquals("Warning", dialogPane.getHeaderText());
-        interact(() -> clickOn("OK"));
-    }
-
-
-    //todo doc
-    private Stage getTopModalStage() {
-        final List<Window> allWindows = new ArrayList<>(robotContext().getWindowFinder()
-                .listWindows());
-        Collections.reverse(allWindows);
-        return (Stage) allWindows.stream()
-                .filter(window -> window instanceof Stage)
-                .filter(window -> ((Stage) window).getModality() == Modality.APPLICATION_MODAL)
-                .findFirst()
-                .orElse(null);
+    private void thenLoggedInUserIs(UUID existingUuid) {
+        assertThat(userControl.getLoggedInUser().getUuid()).isEqualByComparingTo(existingUuid);
     }
 
 }
