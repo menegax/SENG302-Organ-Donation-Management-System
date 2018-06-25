@@ -31,14 +31,41 @@ public class Database {
     private static Database database = null;
 
     private Connection conn;
-
-    private final String UPDATEPATIENTQUERYSTRING = "UPDATE tblPatients SET "
-            + "FName = ?, MName = ?, LName = ?, "
-            + "Birth = ?, Created = ?, Modified = ?, "
-            + "Death = ?, BirthGender = ?, PrefGender = ?, "
-            + "PrefName = ?, Height = ?, Weight = ?, "
-            + "BloodType = ?, DonatingOrgans = ?, ReceivingOrgans = ? "
-            + "WHERE Nhi = ?";
+    
+    private final String UPDATEPATIENTQUERYSTRING = "INSERT INTO tblPatients "
+            + "(Nhi, FName, MName, LName, Birth, Created, Modified, Death, BirthGender, "
+            + "PrefGender, PrefName, Height, Weight, BloodType, DonatingOrgans, ReceivingOrgans) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+            + "ON DUPLICATE KEY UPDATE "
+            + "FName = VALUES (FName) "
+            + "MName = VALUES (MName) "
+            + "LName = VALUES (LName) "
+            + "Birth = VALUES (Birth) "
+            + "Created = VALUES (Created) "
+            + "Modified = VALUES (Modified) "
+            + "BirhGender = VALUES (BirthGender) "
+            + "Death = VALUES (Death) "
+            + "BirthGender = VALUES (BirthGender) "
+            + "PrefGender = VALUES (PrefGender) "
+            + "PrefName = VALUES (PrefName) "
+            + "Height = VALUES (Height) "
+            + "Weight = VALUES (Weight) "
+            + "BloodType = VALUES (BloodType) "
+            + "DonatedOrgans = VALUES (DonatedOrgans) "
+            + "ReceivingOrgans = VALUES (ReceivingOrgans)";
+    
+    private final String UPDATECLINICIANQUERYSTRING = "INSERT INTO tblClinicians "
+    		+ "(StaffID, FName, MName, LName, Street1, Street2, Suburb, Region, Modified) "
+    		+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) "
+    		+ "ON DUPLICATE KEY UPDATE "
+    		+ "FName = VALUES (FName), "
+    		+ "MName = VALUES (MName), "
+    		+ "LName = VALUES (LName), "
+    		+ "Street1 = VALUES (Street1), "
+    		+ "Street2 = VALUES (Street2), "
+    		+ "Suburb = VALUES (Suburb), "
+    		+ "Region = VALUES (Region), "
+    		+ "Modified = VALUES (Modified)";
 
     private final String UPDATEPATIENTCONTACTQUERYSTRING = "UPDATE tblPatientContact SET "
             + "Street1 = ?, Street2 = ?, Suburb = ?, "
@@ -425,7 +452,7 @@ public class Database {
         }
     }
 
-    public void update(Object object) {
+    public void update(Object object) throws SQLException {
         if (object instanceof Patient) {
             Patient patient = (Patient) object;
             updatePatient(patient);
@@ -474,18 +501,14 @@ public class Database {
     	return queries;
     }
 
-    private void updateClinician(Clinician clinician) {
-    	String query = "UPDATE tblClinicians SET " +
-                "FName = ?, MName = ?, LName = ?, " +
-                "Street1 = ?, Street2 = ?, Suburb = ?, " +
-                "Region = ?, Modified = ? " +
-                "WHERE StaffID = ?";
+    private void updateClinician(Clinician clinician) throws SQLException {
     	String[] attr = getClinicianAttributes(clinician);
-    	attr = shiftLeft(attr);
+    	//attr = shiftLeft(attr);
     	try {
-			runQuery(query, attr);
+			runQuery(UPDATECLINICIANQUERYSTRING, attr);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw e;
 		}
     }
 
@@ -560,11 +583,8 @@ public class Database {
 //        if (newClinician.getStaffID() == getNextStaffID()) {
             clinicians.add(newClinician);
 
-            String[] attr = getClinicianAttributes(newClinician);
-            String query = "INSERT INTO tblClinicians " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try {
-                runQuery(query, attr);
+                updateClinician(newClinician);
                 userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
             } catch (SQLException e) {
                 userActions.log(Level.WARNING, "Couldn't add clinician due to database error", "Attempted to add a clinician");
@@ -1149,8 +1169,8 @@ public class Database {
     public static void main(String[] argv) {
         try {
             Database test = Database.getDatabase();
-            Clinician clin = new Clinician(10, "First", new ArrayList<String>(), "Last", Region.CANTERBURY);
-            database.addClinician(clin);
+            Clinician clin = new Clinician(11, "First", new ArrayList<String>(), "Lastly But Second", Region.CANTERBURY);
+            //database.addClinician(clin);
             database.update(clin);
 //            database.add(new Patient("ABC1238", "Joe", new ArrayList<String>(), "Joeson", LocalDate.now()));
 //            String stmt = "UPDATE tblPatients SET Weight = 67 WHERE LName = ?";
