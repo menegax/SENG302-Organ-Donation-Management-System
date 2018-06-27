@@ -3,6 +3,7 @@ package service;
 import com.google.gson.Gson;
 import model.*;
 import utility.GlobalEnums;
+import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.dbFields;
 import utility.PatientActionRecord;
@@ -17,6 +18,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.ArrayUtils;
 
 import static utility.UserActionHistory.userActions;
 
@@ -67,13 +69,27 @@ public class Database {
     		+ "Region = VALUES (Region), "
     		+ "Modified = VALUES (Modified)";
 
-    private final String UPDATEPATIENTCONTACTQUERYSTRING = "UPDATE tblPatientContact SET "
-            + "Street1 = ?, Street2 = ?, Suburb = ?, "
-            + "Region = ?, Zip = ?, HomePhone = ?, "
-            + "WorkPhone = ?, MobilePhone = ?, Email = ?, "
-            + "ECName = ?, ECRelationship = ?, ECHomePhone = ?, "
-            + "ECWorkPhone = ?, ECMobilePhone = ?, ECEmail = ? "
-            + "WHERE Patient = ?";
+    private final String UPDATEPATIENTCONTACTQUERYSTRING = "INSERT INTO tblPatientContact "
+    		+ "(Patient, Street1, Street2, Suburb, Region, Zip, HomePhone, WorkPhone, "
+    		+ "MobilePhone, Email, ECName, ECRelationship, ECHomePhone, ECWorkPhone, "
+    		+ "ECMobilePhone, ECEmail) "
+    		+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+    		+ "ON DUPLICATE KEY UPDATE "
+    		+ "Street1 = VALUES (Street1), "
+    		+ "Street2 = VALUES (Street2), "
+    		+ "Suburb = VALUES (Suburb), "
+    		+ "Region = VALUES (Region), "
+    		+ "Zip = VALUES (Zip), "
+    		+ "HomePhone = VALUES (HomePhone), "
+    		+ "WorkPhone = VALUES (WorkPhone), "
+    		+ "MobilePhone = VALUES (MobilePhone), "
+    		+ "Email = VALUES (Email), "
+    		+ "ECName = VALUES (ECName), "
+    		+ "ECRelationship = VALUES (ECRelationship), "
+    		+ "ECHomePhone = VALUES (ECHomePhone), "
+    		+ "ECWorkPhone = VALUES (ECWorkPhone), "
+    		+ "ECMobilePhone = VALUES (ECMobilePhone), "
+    		+ "ECEmail = VALUES (ECEmail)";
 
     private final String UPDATEPATIENTLOGQUERYSTRING = "INSERT INTO tblPatientLogs "
             + "(Patient, Time, Level, Message, Action) "
@@ -132,16 +148,16 @@ public class Database {
     private void initializeConnection() {
         try {
             //TODO Uncomment for final product
-            conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test",
-                    "seng302-team800", "ScornsGammas5531");
+//            conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true",
+//                    "seng302-team800", "ScornsGammas5531");
 
             //TODO Uncomment for outside Patricks network
-//            conn = DriverManager.getConnection("jdbc:mysql://122.62.50.128:3306/seng302-2018-team800-test",
+//            conn = DriverManager.getConnection("jdbc:mysql://122.62.50.128:3306/seng302-2018-team800-test?allowMultiQueries=true",
 //                    "seng302-team800", "ScornsGammas5531");
 
             //TODO Uncomment for inside Patricks network
-//            conn = DriverManager.getConnection("jdbc:mysql://192.168.1.70:3306/seng302-2018-team800-test",
-//                    "seng302-team800", "ScornsGammas5531");
+            conn = DriverManager.getConnection("jdbc:mysql://192.168.1.70:3306/seng302-2018-team800-test?allowMultiQueries=true",
+                    "seng302-team800", "ScornsGammas5531");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -503,7 +519,6 @@ public class Database {
 
     private void updateClinician(Clinician clinician) throws SQLException {
     	String[] attr = getClinicianAttributes(clinician);
-    	//attr = shiftLeft(attr);
     	try {
 			runQuery(UPDATECLINICIANQUERYSTRING, attr);
 		} catch (SQLException e) {
@@ -522,6 +537,20 @@ public class Database {
         return array;
     }
     
+    public boolean NhiInDatabase(Patient patient) {
+    	String query = "SELECT * FROM tblPatients WHERE Nhi = ?";
+    	String[] attr = {patient.getNhiNumber()};
+    	try {
+			ArrayList<String[]> results = runQuery(query, attr);
+			if (results.size() != 0) {
+				return true;
+			}
+		} catch (SQLException e) {
+            userActions.log(Level.SEVERE, "Failed to query database.", "Attempted to check uniqueness of NHI.");
+		}
+    	return false;
+    }
+    
     /**
      * Adds a patient to the database
      *
@@ -529,29 +558,49 @@ public class Database {
      */
     private void addPatient(Patient newPatient) throws IllegalArgumentException {
         try {
-            newPatient.ensureValidNhi();
-            newPatient.ensureUniqueNhi();
-            patients.add(newPatient);
-            SearchPatients.addIndex(newPatient);
+            if (!NhiInDatabase(newPatient)) {
+            	//Add Patient to application
+                patients.add(newPatient);
+                //Add Patient to search index
+                SearchPatients.addIndex(newPatient);
+                //Query to add base patient attributes to database 
+                String[] attr = getPatientAttributes(newPatient);
+                String query = UPDATEPATIENTQUERYSTRING;
+                //Query to add patient contact details to database                
+                query += ";" + UPDATEPATIENTCONTACTQUERYSTRING;
+                attr = ArrayUtils.addAll(attr, getPatientContactAttributes(newPatient));
+                //Queries to add patient medication details to database 
+                for (Medication medication : newPatient.getCurrentMedications()) {
+                    attr = ArrayUtils.addAll(attr, getMedicationAttributes(newPatient, medication, true));
+                    query += ";" + UPDATEPATIENTMEDICATIONQUERYSTRING;
+                }
 
-            String[] attr = getPatientAttributes(newPatient);
-            String query = "INSERT INTO tblPatients " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            runQuery(query, attr);
-
-            String[] contactAttr = getPatientContactAttributes(newPatient);
-            String contactQuery = "INSERT INTO tblPatientContact " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            runQuery(contactQuery, contactAttr);
-
-            addPatientMedications(newPatient);
-
-            addPatientDiseases(newPatient);
-
-            addPatientLogs(newPatient);
-
-            addPatientProcedures(newPatient);
-
+                for (Medication medication : newPatient.getMedicationHistory()) {
+                    attr = ArrayUtils.addAll(attr, getMedicationAttributes(newPatient, medication, false));
+                    query += ";" + UPDATEPATIENTMEDICATIONQUERYSTRING;
+                }
+                //Queries to add patient diseases details to database 
+                ArrayList<Disease> allDiseases = newPatient.getCurrentDiseases();
+                allDiseases.addAll(newPatient.getPastDiseases());
+                for (Disease disease : allDiseases) {
+                    attr = ArrayUtils.addAll(attr, getDiseaseAttributes(newPatient, disease));
+                    query += ";" + UPDATEPATIENTDISEASESQUERYSTRING;
+                 }
+                //Queries to add patient logs details to database
+                for (PatientActionRecord record : newPatient.getUserActionsList()) {
+                    attr = ArrayUtils.addAll(attr, getLogAttributes(newPatient, record));
+                    query += ";" + UPDATEPATIENTLOGQUERYSTRING;
+                }
+                //Queries to add patient procedures details to database
+                for(Procedure procedure : newPatient.getProcedures()) {
+                    attr = ArrayUtils.addAll(attr, getProcedureAttributes(newPatient, procedure));
+                    query += ";" + UPDATEPATIENTPROCEDURESQUERYSTRING;
+                }
+                //Run all queries
+                runQuery(query, attr);
+            } else {
+                userActions.log(Level.SEVERE, "Failed to add patient to database, NHI Already exisits.", "Attempted to add new patient to database.");
+            }
             userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
         } catch (SQLException o) {
             userActions.log(Level.WARNING, "Failed to add patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
@@ -1170,8 +1219,9 @@ public class Database {
         try {
             Database test = Database.getDatabase();
             Clinician clin = new Clinician(11, "First", new ArrayList<String>(), "Lastly But Second", Region.CANTERBURY);
+
             //database.addClinician(clin);
-            database.update(clin);
+            //database.update(clin);
 //            database.add(new Patient("ABC1238", "Joe", new ArrayList<String>(), "Joeson", LocalDate.now()));
 //            String stmt = "UPDATE tblPatients SET Weight = 67 WHERE LName = ?";
 //            String[] params = {"Joeson"};
