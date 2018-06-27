@@ -479,42 +479,42 @@ public class Database {
     }
 
     //TODO complete
-    private void updatePatient(Patient patient) {
-    	String[] queries = getPatientUpdateQueries();
-    	String[][] attrs = new String[6][];
-        attrs[0] = getPatientAttributes(patient);
-        attrs[1] = getPatientContactAttributes(patient);
-        //TODO Needs to run this for each log and store the results
-        //attrs[2] = getLogAttributes(patient, log);
-        //TODO Needs to run this for each disease and store the results
-        //attrs[3] = getDiseaseAttributes(patient, disease);
-        //TODO Needs to run this for each medication and store the results
-        //attrs[4] = getMedicationAttributes(patient, medication);
-        //TODO Needs to run this for each procedure and store the results
-        //attrs[5] = getProcedureAttributes(patient, procedure);
-        int count = 0;
-        while (count < queries.length) {
-        	try {
-				runQuery(queries[count], shiftLeft(attrs[count]));
-			} catch (SQLException e) {
-				System.out.println("Error with query: \n-------------------" 
-								+ queries[count] + "----------------\n"
-								+ "For patient: " + attrs[0][attrs.length - 1]);
-				e.printStackTrace();
-			}
-        	count += 1;
+    private void updatePatient(Patient patient) throws SQLException {
+        //Query to add base patient attributes to database 
+        String[] attr = getPatientAttributes(patient);
+        String query = UPDATEPATIENTQUERYSTRING;
+        //Query to add patient contact details to database                
+        query += ";" + UPDATEPATIENTCONTACTQUERYSTRING;
+        attr = ArrayUtils.addAll(attr, getPatientContactAttributes(patient));
+        //Queries to add patient medication details to database 
+        for (Medication medication : patient.getCurrentMedications()) {
+            attr = ArrayUtils.addAll(attr, getMedicationAttributes(patient, medication, true));
+            query += ";" + UPDATEPATIENTMEDICATIONQUERYSTRING;
         }
-    }
-    
-    private String[] getPatientUpdateQueries() {
-        String[] queries = new String[6];
-    	queries[0] = UPDATEPATIENTQUERYSTRING;
-    	queries[1] = UPDATEPATIENTCONTACTQUERYSTRING;
-    	queries[2] = UPDATEPATIENTLOGQUERYSTRING;
-    	queries[3] = UPDATEPATIENTDISEASESQUERYSTRING;
-    	queries[4] = UPDATEPATIENTMEDICATIONQUERYSTRING;
-    	queries[5] = UPDATEPATIENTPROCEDURESQUERYSTRING;
-    	return queries;
+
+        for (Medication medication : patient.getMedicationHistory()) {
+            attr = ArrayUtils.addAll(attr, getMedicationAttributes(patient, medication, false));
+            query += ";" + UPDATEPATIENTMEDICATIONQUERYSTRING;
+        }
+        //Queries to add patient diseases details to database 
+        ArrayList<Disease> allDiseases = patient.getCurrentDiseases();
+        allDiseases.addAll(patient.getPastDiseases());
+        for (Disease disease : allDiseases) {
+            attr = ArrayUtils.addAll(attr, getDiseaseAttributes(patient, disease));
+            query += ";" + UPDATEPATIENTDISEASESQUERYSTRING;
+         }
+        //Queries to add patient logs details to database
+        for (PatientActionRecord record : patient.getUserActionsList()) {
+            attr = ArrayUtils.addAll(attr, getLogAttributes(patient, record));
+            query += ";" + UPDATEPATIENTLOGQUERYSTRING;
+        }
+        //Queries to add patient procedures details to database
+        for(Procedure procedure : patient.getProcedures()) {
+            attr = ArrayUtils.addAll(attr, getProcedureAttributes(patient, procedure));
+            query += ";" + UPDATEPATIENTPROCEDURESQUERYSTRING;
+        }
+        //Run all queries
+        runQuery(query, attr);
     }
 
     private void updateClinician(Clinician clinician) throws SQLException {
@@ -563,41 +563,8 @@ public class Database {
                 patients.add(newPatient);
                 //Add Patient to search index
                 SearchPatients.addIndex(newPatient);
-                //Query to add base patient attributes to database 
-                String[] attr = getPatientAttributes(newPatient);
-                String query = UPDATEPATIENTQUERYSTRING;
-                //Query to add patient contact details to database                
-                query += ";" + UPDATEPATIENTCONTACTQUERYSTRING;
-                attr = ArrayUtils.addAll(attr, getPatientContactAttributes(newPatient));
-                //Queries to add patient medication details to database 
-                for (Medication medication : newPatient.getCurrentMedications()) {
-                    attr = ArrayUtils.addAll(attr, getMedicationAttributes(newPatient, medication, true));
-                    query += ";" + UPDATEPATIENTMEDICATIONQUERYSTRING;
-                }
-
-                for (Medication medication : newPatient.getMedicationHistory()) {
-                    attr = ArrayUtils.addAll(attr, getMedicationAttributes(newPatient, medication, false));
-                    query += ";" + UPDATEPATIENTMEDICATIONQUERYSTRING;
-                }
-                //Queries to add patient diseases details to database 
-                ArrayList<Disease> allDiseases = newPatient.getCurrentDiseases();
-                allDiseases.addAll(newPatient.getPastDiseases());
-                for (Disease disease : allDiseases) {
-                    attr = ArrayUtils.addAll(attr, getDiseaseAttributes(newPatient, disease));
-                    query += ";" + UPDATEPATIENTDISEASESQUERYSTRING;
-                 }
-                //Queries to add patient logs details to database
-                for (PatientActionRecord record : newPatient.getUserActionsList()) {
-                    attr = ArrayUtils.addAll(attr, getLogAttributes(newPatient, record));
-                    query += ";" + UPDATEPATIENTLOGQUERYSTRING;
-                }
-                //Queries to add patient procedures details to database
-                for(Procedure procedure : newPatient.getProcedures()) {
-                    attr = ArrayUtils.addAll(attr, getProcedureAttributes(newPatient, procedure));
-                    query += ";" + UPDATEPATIENTPROCEDURESQUERYSTRING;
-                }
-                //Run all queries
-                runQuery(query, attr);
+                //Adds patient to the database
+                updatePatient(newPatient);
             } else {
                 userActions.log(Level.SEVERE, "Failed to add patient to database, NHI Already exisits.", "Attempted to add new patient to database.");
             }
