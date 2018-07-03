@@ -85,6 +85,6 @@
             <Label text="Emergency Contact Name:" GridPane.rowIndex="8" GridPane.valignment="BOTTOM" />
          </children>
       </GridPane>
-      <Button mnemonicParsing="false" onAction="#saveContactDetails" prefHeight="31.0" prefWidth="106.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Save" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+      <Button mnemonicParsing="false" onAction="#saveContactDetails" prefHeight="31.0" prefWidth="106.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Set" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
    </children>
 </GridPane>

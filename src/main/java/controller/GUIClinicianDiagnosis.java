@@ -305,7 +305,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
         target.setPastDiseases(pastDiseases);
         Database.saveToDisk();
         userActions.log( Level.FINE, "Successfully saved patient diseases", "Successfully saved patient " + target.getNhiNumber() + "diseases");
-        new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis saved successfully", ButtonType.OK).show();
+        new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
         changed = false;
     }
 

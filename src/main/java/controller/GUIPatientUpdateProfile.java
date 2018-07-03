@@ -492,8 +492,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                         .getSelectedItem()));
             }
             Database.saveToDisk(); //TODO: need to be kept consistent with old UI
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Patient successfully updated", ButtonType.OK);
-            alert.show();
+            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
         }
         else {

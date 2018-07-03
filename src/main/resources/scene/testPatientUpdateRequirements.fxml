@@ -39,6 +39,6 @@
         <CheckBox fx:id="middleearCB" mnemonicParsing="false" text="Middle ear" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
         <CheckBox fx:id="boneCB" mnemonicParsing="false" text="Bone" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="5" />
         <CheckBox fx:id="connectivetissueCB" mnemonicParsing="false" text="Connective tissue" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="6" />
-        <Button mnemonicParsing="false" onAction="#saveRequirements" prefHeight="33.0" prefWidth="120.0" styleClass="save-button" text="Save" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
+        <Button mnemonicParsing="false" onAction="#saveRequirements" prefHeight="33.0" prefWidth="120.0" styleClass="save-button" text="Set" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
     </children>
 </GridPane>

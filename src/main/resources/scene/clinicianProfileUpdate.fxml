@@ -106,6 +106,6 @@
             <ChoiceBox fx:id="regionDD" maxWidth="1.7976931348623157E308" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
-      <Button fx:id="saveProfile" mnemonicParsing="false" onAction="#saveProfile" prefHeight="37.0" prefWidth="90.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Save" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+      <Button fx:id="saveProfile" mnemonicParsing="false" onAction="#saveProfile" prefHeight="37.0" prefWidth="90.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Set" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

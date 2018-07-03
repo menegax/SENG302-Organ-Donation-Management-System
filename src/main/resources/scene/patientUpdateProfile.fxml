@@ -90,7 +90,7 @@
             <TextField fx:id="preferrednameTxt" prefHeight="40.0" prefWidth="320.0" promptText="Preferred Name" GridPane.columnIndex="2" GridPane.rowIndex="5" />
          </children>
       </GridPane>
-      <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveProfile" prefHeight="39.0" prefWidth="115.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Save" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+      <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveProfile" prefHeight="39.0" prefWidth="115.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Set" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
       <Label fx:id="lastModifiedLbl" prefHeight="18.0" prefWidth="239.0" text="Last Modified:" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets left="10.0" />
