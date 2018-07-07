@@ -2,14 +2,18 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.RotateEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.input.KeyCode;
@@ -19,6 +23,7 @@ import main.Main;
 import model.Clinician;
 import model.Patient;
 import service.Database;
+import utility.TouchscreenCapable;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
@@ -29,7 +34,7 @@ import static utility.SystemLogger.systemLogger;
 
 import static java.util.logging.Level.SEVERE;
 
-public class GUILogin {
+public class GUILogin implements TouchscreenCapable {
 
     @FXML
     public AnchorPane loginPane;
@@ -55,6 +60,8 @@ public class GUILogin {
                 logIn();
             }
         });
+        loginPane.setOnZoom(e-> zoomWindow(e));
+//        loginPane.setOnRotate(e -> rotateWindow(e));
     }
 
     /**
@@ -142,5 +149,21 @@ public class GUILogin {
             clinicianToggle.setSelected(false);
             nhiLogin.setPromptText("NHI");
         }
+    }
+
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        loginPane.setScaleX(loginPane.getScaleX() * zoomEvent.getZoomFactor());
+        ((Node)zoomEvent.getTarget()).getScene().getWindow().setWidth(
+                ((Node)zoomEvent.getTarget()).getScene().getWindow().getWidth() * zoomEvent.getZoomFactor());
+        loginPane.setScaleY(loginPane.getScaleY() * zoomEvent.getZoomFactor());
+        ((Node)zoomEvent.getTarget()).getScene().getWindow().setHeight(
+                ((Node)zoomEvent.getTarget()).getScene().getWindow().getHeight() * zoomEvent.getZoomFactor());
+    }
+
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        loginPane.setRotate(loginPane.getRotate() + rotateEvent.getAngle());
+//        ((Node)rotateEvent.getTarget()).getScene().getWindow();
     }
 }

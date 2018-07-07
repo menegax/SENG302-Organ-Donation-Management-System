@@ -157,3 +157,9 @@ We created abstract classes UndoableStage and UndoableController to enable futur
 When you deregister an organ due to a disease or collection of diseases being cured and mark a collection of selected diseases to cured in the dropdown, we considered how
 the program should handle chronic diseases. We decided that it makes most sense to be able to set chronic diseases to cured in this scenario as it is not
 very user friendly to have to go back to the disease screen to 'complete' the cure of the disease
+
+##Sprint 5
+
+####Touch Screen Controls
+We decided to use the built in touch commands for zooming and rotating functions, as they are built in events and handlers
+that are simple to grasp and intuitive control schemes.
