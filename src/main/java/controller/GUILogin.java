@@ -11,14 +11,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.RotateEvent;
-import javafx.scene.input.ZoomEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 
-import javafx.scene.input.KeyCode;
 import javafx.scene.control.TextField;
 
+import javafx.stage.Window;
 import main.Main;
 import model.Clinician;
 import model.Patient;
@@ -60,8 +58,9 @@ public class GUILogin implements TouchscreenCapable {
                 logIn();
             }
         });
-        loginPane.setOnZoom(e-> zoomWindow(e));
-//        loginPane.setOnRotate(e -> rotateWindow(e));
+        loginPane.setOnZoom(this::zoomWindow);
+        loginPane.setOnRotate(this::rotateWindow);
+        loginPane.setOnScroll(this::scrollWindow);
     }
 
     /**
@@ -153,17 +152,27 @@ public class GUILogin implements TouchscreenCapable {
 
     @Override
     public void zoomWindow(ZoomEvent zoomEvent) {
+        Window currentWindow = ((Node)zoomEvent.getTarget()).getScene().getWindow();
         loginPane.setScaleX(loginPane.getScaleX() * zoomEvent.getZoomFactor());
-        ((Node)zoomEvent.getTarget()).getScene().getWindow().setWidth(
-                ((Node)zoomEvent.getTarget()).getScene().getWindow().getWidth() * zoomEvent.getZoomFactor());
+        currentWindow.setWidth(currentWindow.getWidth() * zoomEvent.getZoomFactor() - 0.1);
         loginPane.setScaleY(loginPane.getScaleY() * zoomEvent.getZoomFactor());
-        ((Node)zoomEvent.getTarget()).getScene().getWindow().setHeight(
-                ((Node)zoomEvent.getTarget()).getScene().getWindow().getHeight() * zoomEvent.getZoomFactor());
+        currentWindow.setHeight(currentWindow.getHeight() * zoomEvent.getZoomFactor() - 0.1);
+
+        loginPane.setTranslateX(0);
+        loginPane.setTranslateY(0);
     }
 
     @Override
     public void rotateWindow(RotateEvent rotateEvent) {
         loginPane.setRotate(loginPane.getRotate() + rotateEvent.getAngle());
 //        ((Node)rotateEvent.getTarget()).getScene().getWindow();
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        if(!scrollEvent.isInertia()) {
+            loginPane.setTranslateX(loginPane.getTranslateX() + scrollEvent.getDeltaX());
+            loginPane.setTranslateY(loginPane.getTranslateY() + scrollEvent.getDeltaY());
+        }
     }
 }
