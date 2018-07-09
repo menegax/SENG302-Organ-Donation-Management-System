@@ -39,21 +39,20 @@ public class Database {
             + "PrefGender, PrefName, Height, Weight, BloodType, DonatingOrgans, ReceivingOrgans) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
             + "ON DUPLICATE KEY UPDATE "
-            + "FName = VALUES (FName) "
-            + "MName = VALUES (MName) "
-            + "LName = VALUES (LName) "
-            + "Birth = VALUES (Birth) "
-            + "Created = VALUES (Created) "
-            + "Modified = VALUES (Modified) "
-            + "BirhGender = VALUES (BirthGender) "
-            + "Death = VALUES (Death) "
-            + "BirthGender = VALUES (BirthGender) "
-            + "PrefGender = VALUES (PrefGender) "
-            + "PrefName = VALUES (PrefName) "
-            + "Height = VALUES (Height) "
-            + "Weight = VALUES (Weight) "
-            + "BloodType = VALUES (BloodType) "
-            + "DonatedOrgans = VALUES (DonatedOrgans) "
+            + "FName = VALUES (FName), "
+            + "MName = VALUES (MName), "
+            + "LName = VALUES (LName), "
+            + "Birth = VALUES (Birth), "
+            + "Created = VALUES (Created), "
+            + "Modified = VALUES (Modified), "
+            + "Death = VALUES (Death), "
+            + "BirthGender = VALUES (BirthGender), "
+            + "PrefGender = VALUES (PrefGender), "
+            + "PrefName = VALUES (PrefName), "
+            + "Height = VALUES (Height), "
+            + "Weight = VALUES (Weight), "
+            + "BloodType = VALUES (BloodType), "
+            + "DonatingOrgans = VALUES (DonatingOrgans), "
             + "ReceivingOrgans = VALUES (ReceivingOrgans)";
     
     private final String UPDATECLINICIANQUERYSTRING = "INSERT INTO tblClinicians "
@@ -113,7 +112,7 @@ public class Database {
             + "(Patient, Summary, Description, ProDate, AffectedOrgans) "
             + "VALUES (?, ?, ?, ?, ?) "
             + "ON DUPLICATE KEY UPDATE "
-            + "Description = VALUES (Description) "
+            + "Description = VALUES (Description), "
             + "AffectedOrgans = VALUES (AffectedOrgans)";
 
     /**
@@ -1182,18 +1181,44 @@ public class Database {
         return clinicians;
     }
 
+    public int showPatients() throws SQLException {
+    	String query = "SELECT * FROM tblPatients";
+    	ArrayList<String[]> results = runQuery(query, new String[0]);
+    	System.out.println("Patients: ");
+    	for (String[] result : results) {
+    		for (String param : result) {
+    			System.out.print(param + ", ");
+    		}	
+    		System.out.println();
+    	}
+     	return results.size();
+    }
+    
+    public int showClinicians() throws SQLException {
+    	String query = "SELECT * FROM tblClinicians";
+    	ArrayList<String[]> results = runQuery(query, new String[0]);
+    	System.out.println("Clinicians: ");
+    	for (String[] result : results) {
+    		for (String param : result) {
+    			System.out.print(param + ", ");
+    		}	
+    		System.out.println();
+    	}
+    	return results.size();
+    }
+    
     public static void main(String[] argv) {
         try {
             Database test = Database.getDatabase();
-            Clinician clin = new Clinician(11, "First", new ArrayList<String>(), "Lastly But Second", Region.CANTERBURY);
+            Clinician clin = new Clinician(11, "First", new ArrayList<String>(), "LastlyButSecond", Region.CANTERBURY);
+            Patient pat = new Patient("YGH4562", "Pat", new ArrayList<String>(), "Laffety", LocalDate.of(1998, 1, 8), new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), null, GlobalEnums.BirthGender.MALE, GlobalEnums.PreferredGender.MAN, "Pat", 1.7, 56.0, GlobalEnums.BloodGroup.O_POSITIVE, new ArrayList<Organ>(), new ArrayList<Organ>(), "Street 1", "Street 2", "Suburb", GlobalEnums.Region.CANTERBURY, 7020, "035441143", "0", "0220918384", "plaffey@mail.com", "EC", "Relationship", "0", "0", "0", "Email@email.com", new ArrayList<PatientActionRecord>(), new ArrayList<Disease>(), new ArrayList<Disease>(), new ArrayList<Medication>(), new ArrayList<Medication>(), new ArrayList<Procedure>());
 
-            //database.addClinician(clin);
-            //database.update(clin);
-//            database.add(new Patient("ABC1238", "Joe", new ArrayList<String>(), "Joeson", LocalDate.now()));
-//            String stmt = "UPDATE tblPatients SET Weight = 67 WHERE LName = ?";
-//            String[] params = {"Joeson"};
-//            ArrayList<String[]> results = test.runQuery(stmt, params);
-
+            int patients = test.showPatients();
+            int clinicians = test.showClinicians();
+            
+            System.out.println("\nNumber of patients: " + String.valueOf(patients));
+            System.out.println("Number of clinicians: " + String.valueOf(clinicians));
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
