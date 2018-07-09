@@ -164,7 +164,6 @@ public class Database {
 		}
     }
 
-    //ToDO Complete
 
     /**
      * Runs a SQL query on the database.
@@ -186,8 +185,6 @@ public class Database {
         }
         return null;
     }
-
-    //TODO Complete
 
     /**
      * @param query The select query to run on the database.
@@ -212,7 +209,6 @@ public class Database {
         return results;
     }
 
-    //TODO Complete
 
     /**
      * Adds a object to the database.
@@ -278,7 +274,6 @@ public class Database {
         if (patient.getBirthGender() != null) {
             attr[8] = patient.getBirthGender().toString().substring(0, 1);
         }
-        //todo preferred name and gender here
         attr[9] = patient.getPreferredGender().toString().substring(0, 1);
         attr[10] = patient.getPreferredName();
         attr[11] = String.valueOf(patient.getHeight() * 100);
@@ -428,61 +423,27 @@ public class Database {
         return attr;
     }
 
-    private void addPatientMedications(Patient newPatient) throws SQLException {
-        for (Medication medication : newPatient.getCurrentMedications()) {
-            String[] medAttr = getMedicationAttributes(newPatient, medication, true);
-            String medQuery = "INSERT INTO tblMedications VALUES (?, ?, ?)";
-            runQuery(medQuery, medAttr);
-        }
-
-        for (Medication medication : newPatient.getMedicationHistory()) {
-            String[] medAttr = getMedicationAttributes(newPatient, medication, false);
-            String medQuery = "INSERT INTO tblMedications VALUES (?, ?, ?)";
-            runQuery(medQuery, medAttr);
-        }
-    }
-
-    private void addPatientProcedures(Patient newPatient) throws SQLException {
-        List<Procedure> allProcedures = newPatient.getProcedures();
-        for(Procedure procedure : allProcedures) {
-            String[] procedureAttr = getProcedureAttributes(newPatient, procedure);
-            String procedureQuery = "INSERT INTO tblProcedures VALUES (?,?,?,?)";
-            runQuery(procedureQuery, procedureAttr);
-        }
-    }
-
-    private void addPatientDiseases(Patient newPatient) throws SQLException {
-        ArrayList<Disease> allDiseases = newPatient.getCurrentDiseases();
-        allDiseases.addAll(newPatient.getPastDiseases());
-        for (Disease disease : allDiseases) {
-            String[] diseaseAttr = getDiseaseAttributes(newPatient, disease);
-            String diseaseQuery = "INSERT INTO tblDiseases VALUES (?, ?, ?, ?)";
-            runQuery(diseaseQuery, diseaseAttr);
-
-        }
-    }
-
-    private void addPatientLogs(Patient patient) throws SQLException {
-        ArrayList<PatientActionRecord> records = patient.getUserActionsList();
-        for (PatientActionRecord record : records) {
-            String[] recordAttr = getLogAttributes(patient, record);
-            String recordQuery = "INSERT INTO tblPatientLogs VALUES (?, ?, ?, ?, ?)";
-            runQuery(recordQuery, recordAttr);
-        }
-    }
-
-    public void update(Object object) throws SQLException {
+    
+    /**
+     * Update an object in the database. If it does not exist in the database it will create it.
+     * @param object The object to be updated in the database.
+     * @return True if the object was update or created, false otherwise.
+     */
+    public boolean update(Object object) {
         if (object instanceof Patient) {
-            Patient patient = (Patient) object;
-            updatePatient(patient);
+			return updatePatient((Patient) object);
         } else if (object instanceof Clinician) {
-            Clinician clinician = (Clinician) object;
-            updateClinician(clinician);
+        	return updateClinician((Clinician) object);
         }
+        return false;
     }
 
-    //TODO complete
-    private void updatePatient(Patient patient) throws SQLException {
+    /**
+     * Updates a patient in the database.
+     * @param patient The patient to update.
+     * @return True if patient updated in database, false otherwise.
+     */
+    private boolean updatePatient(Patient patient) {
         //Query to add base patient attributes to database 
         String[] attr = getPatientAttributes(patient);
         String query = UPDATEPATIENTQUERYSTRING;
@@ -517,30 +478,38 @@ public class Database {
             query += ";" + UPDATEPATIENTPROCEDURESQUERYSTRING;
         }
         //Run all queries
-        runQuery(query, attr);
+        try {
+			runQuery(query, attr);
+			userActions.log(Level.INFO, "Updated patient attributes in database.", "Attempted to update patient attributes in database.");
+			return true;
+		} catch (SQLException e) {
+			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to update patient in database.");
+		}
+        return false;
     }
 
-    private void updateClinician(Clinician clinician) throws SQLException {
+    /**
+     * Updates a clinician in the database.
+     * @param clinician The clinician to update.
+     */
+    private boolean updateClinician(Clinician clinician) {
     	String[] attr = getClinicianAttributes(clinician);
     	try {
 			runQuery(UPDATECLINICIANQUERYSTRING, attr);
+			userActions.log(Level.INFO, "Updated patient attributes in database.", "Attempted to update clinician attributes in database.");
+			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			throw e;
+			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to update clinician in database.");
 		}
+    	return false;
     }
 
-    private String[] shiftLeft(String[] array) {
-        if (array == null || array.length <= 1) {
-            return array;
-        }
-        String start = array[0];
-        System.arraycopy(array, 1, array, 0, array.length - 1);
-        array[array.length - 1] = start;
-        return array;
-    }
-    
-    public boolean NhiInDatabase(String nhi) {
+    /**
+     * Checks if the given NHI exists in the database.
+     * @param nhi The NHI to check.
+     * @return True if NHI in database, false otherwise.
+     */
+    public boolean nhiInDatabase(String nhi) {
     	String query = "SELECT * FROM tblPatients WHERE Nhi = ?";
     	String[] attr = {nhi};
     	try {
@@ -549,7 +518,7 @@ public class Database {
 				return true;
 			}
 		} catch (SQLException e) {
-            userActions.log(Level.SEVERE, "Failed to query database.", "Attempted to check uniqueness of NHI.");
+            userActions.log(Level.SEVERE, "Failed to query database " + e.getMessage(), "Attempted to check if NHI exists in database.");
 		}
     	return false;
     }
@@ -559,26 +528,25 @@ public class Database {
      *
      * @param newPatient the new patient to add
      * @return True if added patient to database, false otherwise.
+     * @throws IllegalArgumentException Throws if NHI already in use.
      */
     private boolean addPatient(Patient newPatient) throws IllegalArgumentException {
-        try {
-            if (inDatabase(newPatient)) {
-            	//Add Patient to application
+        if (inDatabase(newPatient)) {
+            userActions.log(Level.SEVERE, "Failed to add patient to database, NHI already exisits.", "Attempted to add new patient to database.");
+            throw new IllegalArgumentException("NHI " + newPatient.getNhiNumber() + " already in use.");
+        } else {
+        	//Adds Patient to the database
+            if (updatePatient(newPatient)) {
+                //Add Patient to application
                 patients.add(newPatient);
                 //Add Patient to search index
                 SearchPatients.addIndex(newPatient);
-                //Adds patient to the database
-                updatePatient(newPatient);
-                userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
-                return true;
-            } else {
-                userActions.log(Level.SEVERE, "Failed to add patient to database, NHI Already exisits.", "Attempted to add new patient to database.");
-                throw new IllegalArgumentException("NHI " + newPatient.getNhiNumber() + " already in use.");
+            	userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
+            	return true;
             }
-        } catch (SQLException o) {
-            userActions.log(Level.WARNING, "Failed to add patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
+            userActions.log(Level.SEVERE, "Failed to add patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
+            return false;
         }
-        return false;
     }
 
     /**
@@ -589,20 +557,25 @@ public class Database {
      */
     private boolean addClinician(Clinician newClinician) throws IllegalArgumentException {
     	if (inDatabase(newClinician)) {
+            userActions.log(Level.SEVERE, "Failed to add clinician to database, staff ID already exisits.", "Attempted to add new clinician to database.");
     		throw new IllegalArgumentException("StaffID " + String.valueOf(newClinician.getStaffID()) + "already in use.");
     	} else {
-    		try {
-				updateClinician(newClinician);
+			if (updateClinician(newClinician)) {
 				clinicians.add(newClinician);
 				userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
 				return true;
-    		} catch (SQLException e) {
-				userActions.log(Level.WARNING, "Couldn't add clinician due to database error", "Attempted to add a clinician");
 			}
+			userActions.log(Level.SEVERE, "Failed added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");				
+			return false;
     	}
-    	return false;
     }
 
+    /**
+     * Checks if patient exists in the database.
+     * @param patient The patient to check.
+     * @return True if the patient is found, false otherwise.
+     * @throws SQLException Throws if there is an error querying the database.
+     */
     private boolean patientInDatabase(Patient patient) throws SQLException {
     	String query = "SELECT * FROM tblPatients WHERE Nhi = ?";
     	String[] param = {patient.getNhiNumber()};
@@ -612,6 +585,12 @@ public class Database {
     	return false;
     }
     
+    /**
+     * Checks if clinician exists in the database.
+     * @param clinician The clinician to check.
+     * @return True if the clinician is found, false otherwise.
+     * @throws SQLException Throws if there is an error querying the database.
+     */
     private boolean clinicianInDatabase(Clinician clinician) throws SQLException {
     	String query = "SELECT * FROM tblClinicians WHERE StaffID = ?";
     	String[] param = {String.valueOf(clinician.getStaffID())};
@@ -621,6 +600,11 @@ public class Database {
     	return false;
     }
     
+    /**
+     * Checks if an object exists in the database.
+     * @param object The object to check.
+     * @return True if the object is found, false otherwise.
+     */
     public boolean inDatabase(Object object) {
     	try {
     		if (object instanceof Patient) {
@@ -634,19 +618,27 @@ public class Database {
     	return false;
     }
     
-    public void saveTransplantRequest(OrganWaitlist.OrganRequest request) {
+    /**
+     * Saves a transplant request into the database.
+     * @param request The transplant request to save.
+     * @return True if saved, false otherwise.
+     */
+    public boolean saveTransplantRequest(OrganWaitlist.OrganRequest request) {
         String[] attr = getTransplantRequestAttributes(request);
         String query = "INSERT INTO tblTransplantWaitList " +
                 "VALUES (?, ?, ?, ?)";
         try {
             runQuery(query, attr);
+			userActions.log(Level.INFO, "Successfully added transplant request to database.", "Attempted to add a transplant request to database.");
+            return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+			userActions.log(Level.SEVERE, "Failure to add transplant request to database " + e.getMessage(), "Attempted to add a transplant request.");
         }
+        return false;
     }
 
     /**
-     * loads all data from databae into application
+     * loads all data from database into application.
      */
     public void loadAll() {
         loadAllPatients();
@@ -655,9 +647,9 @@ public class Database {
     }
 
     /**
-     * Loads all organs for a patient and stores them in an ArrayList
-     * @param organs arraylist of loaded organs
-     * @return
+     * Loads all organs for a patient and stores them in an ArrayList.
+     * @param organs String of the patients organs.
+     * @return ArrayList of the patients organs.
      */
     private ArrayList<GlobalEnums.Organ> loadOrgans(String organs) {
         String[] organArray = organs.split(",");
@@ -665,13 +657,14 @@ public class Database {
         for (String organ : organArray) {
             organArrayList.add(GlobalEnums.Organ.valueOf(organ));
         }
+		userActions.log(Level.INFO, "Successfully loaded all organs for patient.", "Attempted load all organs for patient.");
         return organArrayList;
     }
 
     /**
-     * Loads user action logs for a patient
-     * @param nhi Patient nhi
-     * @return ArrayList all logs for the patient
+     * Loads user action logs for a patient.
+     * @param nhi Patients NHI.
+     * @return ArrayList of all logs for the patient.
      */
     private ArrayList<UserActionRecord> loadPatientLogs(String nhi) {
         ArrayList<UserActionRecord> patientLogs = new ArrayList<>();
@@ -681,8 +674,9 @@ public class Database {
             for (String[] attr : logsRaw) {
                 patientLogs.add(parseLog(attr));
             }
+			userActions.log(Level.INFO, "Successfully loaded all logs for patient " + nhi, "Attempted to load all logs for patient " + nhi);
         } catch (SQLException e) {
-            e.printStackTrace();
+			userActions.log(Level.SEVERE, "Failed to load all logs for patient " + nhi, "Attempted to load all logs for patient " + nhi);
         }
         return patientLogs;
     }
@@ -703,7 +697,7 @@ public class Database {
     /**
      * Gets the contact details for a patient from the database and returns all attributes except the patient's NHI in a
      * String array
-     * @param nhi Patient's nhi number
+     * @param nhi Patient's NHI number
      * @return String array of patient contacts
      * @throws SQLException returned if SELECT operation from database fails
      */
@@ -712,6 +706,7 @@ public class Database {
         return Arrays.copyOfRange(contactsRaw, 1, contactsRaw.length);
     }
 
+    //TODO Talk to Maree
     /**
      * Creates a patient object from a string array of attributes retrieved from the server
      * @param attr String array of attributes
@@ -754,7 +749,7 @@ public class Database {
         GlobalEnums.BloodGroup bloodType = GlobalEnums.BloodGroup.valueOf(attr[13]);
         ArrayList<GlobalEnums.Organ> donations = loadOrgans(attr[14]);
         ArrayList<GlobalEnums.Organ> requested = loadOrgans(attr[15]);
-
+//TODO assign logs to the patient
         ArrayList<UserActionRecord> records = loadPatientLogs(nhi);
 
         ArrayList<Disease> currentDiseases = new ArrayList<>();
@@ -782,7 +777,7 @@ public class Database {
         } catch (InvalidObjectException | SQLException e) {
             e.printStackTrace();
         }
-
+        
         return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName, height, weight,
                 bloodType, donations, requested, contactAttr[0], contactAttr[1], contactAttr[2], region, zip,
                 contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
@@ -790,18 +785,20 @@ public class Database {
                 pastDiseases, currentMeds, medHistory, procedures);
     }
 
+    //TODO make it handle the exception itself to be more descriptive
     /**
-     * Gets all diseases for a patient and sorts them into two arraylists of past and current medications.
-     * Returns an ArrayList array of current and past medications
-     * @param nhi Patient nhi
-     * @return ArrayList array of current and past medications
-     * @throws SQLException returned if SELECT operation from database fails
+     * Gets all diseases for a patient and sorts them into two ArrayLists of past and current medications.
+     * Returns an ArrayList array of current and past medications.
+     * @param nhi Patient NHI.
+     * @return ArrayList array of current and past medications.
+     * @throws SQLException returned if SELECT operation from database fails.
      */
     private ArrayList<Medication>[] loadMedications(String nhi) throws SQLException {
         ArrayList<String[]> medicationsRaw = runQuery("SELECT * FROM tblMedications WHERE Patient = " + nhi, null);
         ArrayList<Medication> currentMedications = new ArrayList<>();
         ArrayList<Medication> medicationHistory = new ArrayList<>();
-        ArrayList<Medication>[] medArray = new ArrayList[2];
+        @SuppressWarnings("unchecked")
+		ArrayList<Medication>[] medArray = new ArrayList[2];
         medArray[0] = currentMedications;
         medArray[1] = medicationHistory;
         for (String[] attr : medicationsRaw) {
@@ -810,6 +807,13 @@ public class Database {
         return medArray;
     }
 
+    //TODO make it handle the exception itself to make it more descriptive
+    /**
+     * Loads all procedures for a patient.
+     * @param nhi The NHI of the patient.
+     * @return A List of the procedures.
+     * @throws SQLException Throws if there is an error querying the database.
+     */
     private List<Procedure> loadProcedures(String nhi) throws SQLException {
         ArrayList<String[]> proceduresRaw = runQuery("SELECT * FROM tblProcedures WHERE Patient = " + nhi, null);
         List<Procedure> procedureList = new ArrayList<>();
@@ -819,6 +823,11 @@ public class Database {
         return procedureList;
     }
 
+    /**
+     * Parses a String of a procedure into a Procedure object.
+     * @param attr The String representation of the procedure.
+     * @return The Procedure object.
+     */
     private Procedure parseProcedure(String[] attr) {
         Procedure procedure = new Procedure(null, null, null, null);
         procedure.setSummary(attr[1]);
@@ -833,14 +842,15 @@ public class Database {
         return procedure;
     }
 
+    //TODO Make deal with exception itself to allow for more descriptive
     /**
-     * Gets all diseases for a patient and sorts them into two arraylists of past and current diseases.
-     * Returns an ArrayList array of current and past diseases
-     * @param birth Patient birth date
-     * @param nhi Patient nhi
-     * @return ArrayList array of current and past diseases
-     * @throws InvalidObjectException returned if diagnosis date is invalid
-     * @throws SQLException returned if SELECT operation from database fails
+     * Gets all diseases for a patient and sorts them into two ArrayLists of past and current diseases.
+     * Returns an ArrayList array of current and past diseases.
+     * @param birth Patient birth date.
+     * @param nhi Patient NHI.
+     * @return ArrayList array of current and past diseases.
+     * @throws InvalidObjectException returned if diagnosis date is invalid.
+     * @throws SQLException returned if SELECT operation from database fails.
      */
     private ArrayList<Disease>[] loadDiseases(LocalDate birth, String nhi) throws InvalidObjectException, SQLException {
         ArrayList<String[]> diseasesRaw = runQuery("SELECT * FROM tblDiseases WHERE Patient = " + nhi, null);
@@ -848,7 +858,8 @@ public class Database {
         for (String[] attr : diseasesRaw) {
             patientDiseases.add(addDisease(attr, birth));
         }
-        ArrayList<Disease>[] diseaseArray = new ArrayList[2];
+        @SuppressWarnings("unchecked")
+		ArrayList<Disease>[] diseaseArray = new ArrayList[2];
         ArrayList<Disease> pastDiseases = new ArrayList<>();
         ArrayList<Disease> currentDiseases = new ArrayList<>();
         for (Disease disease : patientDiseases) {
@@ -864,10 +875,10 @@ public class Database {
     }
 
     /**
-     * Adds a medication to the current or psat medications for a patient
-     * @param attr String array of attributes of a medication
-     * @param meds ArrayList array of current and past medication lists
-     * @return
+     * Adds a medication to the current or past medications for a patient.
+     * @param attr String array of attributes of a medication.
+     * @param meds ArrayList array of current and past medication.
+     * @return The updated ArrayList arry of current and past medication.
      */
     private ArrayList<Medication>[] addMedication(String[] attr, ArrayList<Medication>[] meds) {
         switch (attr[2]) {
@@ -881,11 +892,12 @@ public class Database {
         return meds;
     }
 
+//TODO Should this be parse disease not add?
     /**
-     * Adds a medication to the current or past diseases for a patient
-     * @param attr String array of attributes of a disease
-     * @param birthDate birth date of the patient
-     * @return
+     * Adds a disease to the current or past diseases for a patient.
+     * @param attr String array of attributes of a disease.
+     * @param birthDate birth date of the patient.
+     * @return The parsed disease.
      */
     private Disease addDisease(String[] attr, LocalDate birthDate) throws InvalidObjectException {
         Disease disease = new Disease(null, null);
@@ -929,6 +941,7 @@ public class Database {
         return newClinician;
     }
 
+    //TODO should this return true for success and false otherwise
     /**
      * Loads all patients into the application from the remote database.
      */
@@ -939,10 +952,11 @@ public class Database {
                 patients.add(parsePatient(attr));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+			userActions.log(Level.SEVERE, "Failed to read all patients from the database.", "Attempted to read all patients from database.");
         }
     }
 
+    //TODO should this return true for success and false otherwise
     /**
      * Loads all clinicians into the application from the remote database.
      */
@@ -953,10 +967,14 @@ public class Database {
                 clinicians.add(parseClinician(attr));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+			userActions.log(Level.SEVERE, "Failed to read all clinicians from the database.", "Attempted to read all clinicians from the database.");
         }
     }
 
+    //TODO should this return true for success and false otherwise?
+    /**
+     * Loads the transplant waiting list from the database.
+     */
     private void loadTransplantWaitingList() {
         try {
             ArrayList<String[]> waitlistRaw = runQuery("SELECT * FROM tblTransplantWaitList", null);
@@ -969,12 +987,14 @@ public class Database {
                 organWaitingList.add(name, organ, date, region, nhi);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+			userActions.log(Level.SEVERE, "Failed to read transplant waiting list from the database.", "Attempted to read the transplant waiting list from the database.");
         } catch (InvalidObjectException ex) {
+        	//TODO what is this? when does it occur?
             ex.printStackTrace();
         }
     }
 
+    //TODO Needs to reworked to involve remote database
     /**
      * Removes a patient from the database
      *
@@ -986,24 +1006,24 @@ public class Database {
         userActions.log(Level.INFO, "Successfully removed patient " + nhi, "attempted to remove a patient");
     }
 
-
+//TODO Really want to redo this cause its not the best really. Can actually use the patient name search for this.
     /**
-     * Searches patients by nhi
+     * Searches patients by NHI
      *
-     * @param nhi the nhi to search patients by
+     * @param nhi The NHI to search patients by
      * @return Patient object
      * @throws InvalidObjectException when the object cannot be found
      */
     public Patient getPatientByNhi(String nhi) throws InvalidObjectException {
         for (Patient p : getPatients()) {
-            if (p.getNhiNumber()
-                    .equals(nhi.toUpperCase())) {
+            if (p.getNhiNumber().equals(nhi.toUpperCase())) {
                 return p;
             }
         }
         throw new InvalidObjectException("Patient with NHI number " + nhi + " does not exist.");
     }
 
+    //TODO same said for this
     /**
      * Searches clinicians by staffID
      *
@@ -1020,6 +1040,7 @@ public class Database {
         throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
     }
 
+    //TODO This is not a good idea and did it ever actually work properly?
     /**
      * Returns the next valid staffID based on IDs in the clinician list
      *
@@ -1037,6 +1058,7 @@ public class Database {
         }
     }
 
+    //TODO change this to save to remote database
     /**
      * Calls all sub-methods to save data to disk
      */
@@ -1049,7 +1071,7 @@ public class Database {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
     }
-//
+//TODO change
 //    /**
 //     * Saves the organ waitlist to the file waitlist.json
 //     * @throws IOException the file cannot be found or created
@@ -1063,7 +1085,7 @@ public class Database {
 //        writer.write(json);
 //        writer.close();
 //    }
-
+//TODO change
     /**
      * Writes database patients to file on disk
      *
@@ -1078,7 +1100,7 @@ public class Database {
         writer.write(json);
         writer.close();
     }
-
+//TODO change
     /**
      * Writes database clinicians to file on diskreturn null;
      *
@@ -1093,7 +1115,7 @@ public class Database {
         writer.write(json);
         writer.close();
     }
-
+//TODO what to we do with this?
     /**
      * Reads patient data from disk
      *
@@ -1116,7 +1138,7 @@ public class Database {
             userActions.log(Level.WARNING, "Patient import file not found", "Attempted to read patient file");
         }
     }
-//
+//TODO what do we do with this?
 //    /**
 //     * Imports the organ waitlist from the selected directory
 //     * @param filename file to import from
@@ -1129,7 +1151,7 @@ public class Database {
 //            organWaitingList = gson.fromJson(br, OrganWaitlist.class);
 //
 //    }
-
+//TODO What do we do with this
     /**
      * Reads clinician data from disk
      *
@@ -1152,7 +1174,7 @@ public class Database {
             userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
         }
     }
-
+//TODO should this also do a reimport
     /**
      * Clears the database of all patients
      */
@@ -1170,7 +1192,7 @@ public class Database {
     public Set<Clinician> getClinicians() {
         return clinicians;
     }
-
+//TODO what is this used for?
     public int showPatients() throws SQLException {
     	String query = "SELECT * FROM tblPatients";
     	ArrayList<String[]> results = runQuery(query, new String[0]);
@@ -1183,7 +1205,7 @@ public class Database {
     	}
      	return results.size();
     }
-    
+//TODO What is this used for?
     public int showClinicians() throws SQLException {
     	String query = "SELECT * FROM tblClinicians";
     	ArrayList<String[]> results = runQuery(query, new String[0]);
@@ -1197,6 +1219,25 @@ public class Database {
     	return results.size();
     }
     
+    /**
+     * Checks if the Staff ID is already in the database
+     * @param staffID Staff ID to check
+     * @return True if Staff ID found, false otherwise.
+     */
+    public boolean staffIDInDatabase(int staffID) {
+    	String query = "SELECT * FROM tblClinicians WHERE StaffID = ?";
+    	String[] param = {String.valueOf(staffID)};
+    	try {
+			if (runQuery(query, param).size() > 0) {
+				return true;
+			}	
+		} catch (SQLException e) {
+			userActions.log(Level.SEVERE, "Couldn't query database" + e.getMessage(), "Attempted to check if Staff ID existed in database");
+		}
+    	return false;
+    }
+    
+    //TODO for testing only
     public static void main(String[] argv) {
         try {
             Database test = Database.getDatabase();

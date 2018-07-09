@@ -154,7 +154,7 @@ public class GUIPatientRegister {
             valid = setInvalid(nhiRegister);
             invalidContent.append("NHI must be three letters followed by four numbers\n");
         }
-        else if (database.isPatientInDb(nhiRegister.getText())) {
+        else if (database.nhiInDatabase(nhiRegister.getText())) {
             // checks to see if nhi already in use
             valid = setInvalid(nhiRegister);
             invalidContent.append("NHI is already in use\n");
