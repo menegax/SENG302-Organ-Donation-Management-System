@@ -191,10 +191,10 @@ public class GUIPatientUpdateContacts extends UndoableController {
      * @param nhi The nhi of the patient to load
      */
     private void loadProfile(String nhi) {
-        try {
-            target = database.getPatientByNhi(nhi);
-        }
-        catch (InvalidObjectException e) {
+    	Patient patient = database.getPatientByNhi(nhi);
+    	if (patient != null) {
+            target = patient;
+        } else {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
         }
     }

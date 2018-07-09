@@ -26,11 +26,7 @@ public class CLIPatientView implements Runnable {
 
     public void run() {
         if (searchNhi != null) {
-            try {
-                userActions.log(Level.INFO, database.getPatientByNhi(searchNhi).toString(), "attempted to view a particular patient");
-            } catch (InvalidObjectException e) {
-                userActions.log(Level.SEVERE, e.getMessage(), "attempted to view a particular patient");
-            }
+            userActions.log(Level.INFO, database.getPatientByNhi(searchNhi).toString(), "attempted to view a particular patient");
         }
         if (searchAll) {
             if (database.getPatients().size() == 0) {

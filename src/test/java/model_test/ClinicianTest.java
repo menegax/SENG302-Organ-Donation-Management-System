@@ -66,11 +66,7 @@ public class ClinicianTest {
     public void testGettingClinicianById() {
         int id = database.getNextStaffID();
         database.add(new Clinician(id, "Joeseph", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND));
-        try {
-            assertEquals(database.getClinicianByID(id).getFirstName(), "Joeseph");
-        } catch (InvalidObjectException e) {
-            Assert.fail();
-        }
+        assertEquals(database.getClinicianByID(id).getFirstName(), "Joeseph");
     }
 
     /**
@@ -80,11 +76,7 @@ public class ClinicianTest {
     public void testCreationWithAddress() {
         int id = database.getNextStaffID();
         database.add(new Clinician(id, "Lorem", new ArrayList<>(), "Ipsum", "123 some street", "This place", "Ilam", GlobalEnums.Region.GISBORNE));
-        try {
-            assertNotNull(database.getClinicianByID(id).getStreet1());
-        } catch (InvalidObjectException e) {
-            Assert.fail();
-        }
+        assertNotNull(database.getClinicianByID(id).getStreet1());
     }
 
     /**

@@ -23,13 +23,8 @@ class CLIPatientRemove implements Runnable {
     Database database = Database.getDatabase();
 
     public void run() {
-        try {
-            Patient patient = database.getPatientByNhi(nhi);
-            database.removePatient(nhi);
-            userActions.log(Level.INFO, "Successfully removed patient " + patient.getNhiNumber(), "attempted to remove patient");
-        } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, e.getMessage(), "attempted to remove patient");
-        }
+        Patient patient = database.getPatientByNhi(nhi);
+        database.delete(patient);
     }
 
 }

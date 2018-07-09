@@ -56,16 +56,16 @@ public class CLIPatientDonations implements Runnable {
     }
 
     public void run() {
-        try {
-            Patient patient = database.getPatientByNhi(searchNhi);
+        Patient patient = database.getPatientByNhi(searchNhi);
+        if (patient != null) {
             if (donationsRequested) {
                 displayPatientDonations(patient);
             }
             else {
                patient.updateDonations(newDonations, rmDonations);
             }
-        } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, e.getMessage(), "attempted to view or update patient donations");
+        } else {
+            userActions.log(Level.SEVERE, "Patient " + searchNhi + " not found.", "attempted to view or update patient donations");
         }
     }
 

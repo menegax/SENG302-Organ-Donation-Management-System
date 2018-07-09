@@ -158,8 +158,9 @@ public class GUIPatientMedications extends UndoableController {
      * @param nhi The NHI number of the logged-in patient
      */
     private void loadProfile(String nhi) {
-        try {
-            target = database.getPatientByNhi(nhi);
+    	Patient patient = database.getPatientByNhi(nhi);
+        if (patient != null) {
+            target = patient;
 
             if (target.getCurrentMedications() == null) {
                 target.setCurrentMedications(new ArrayList<>());
@@ -173,7 +174,7 @@ public class GUIPatientMedications extends UndoableController {
             refreshReview();
             addActionListeners();
             refreshReview();
-        } catch (InvalidObjectException e) {
+        } else {
             userActions.log(Level.SEVERE, "Error loading logged in user", new String[]{"Attempted to load patient profile", target.getNhiNumber()});
         }
     }

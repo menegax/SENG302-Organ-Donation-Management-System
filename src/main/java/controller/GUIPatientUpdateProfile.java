@@ -149,8 +149,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
      * @param nhi the NHI of the patient to load
      */
     private void loadProfile(String nhi) {
-        try {
-            Patient patient = database.getPatientByNhi(nhi);
+       Patient patient = database.getPatientByNhi(nhi);
+       if (patient != null) {
             target = patient;
             populateForm(patient);
 
@@ -177,7 +177,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 add(zipTxt);
             }};
             statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.PATIENTUPDATEPROFILE);
-        } catch (InvalidObjectException e) {
+        } else {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }
@@ -281,17 +281,15 @@ public class GUIPatientUpdateProfile extends UndoableController {
             invalidContent.append("NHI must be three letters followed by four numbers\n");
         }
 
-        try {
-            // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
-            if (database.getPatientByNhi(nhiTxt.getText()).getUuid() != target.getUuid()) {
-                valid = setInvalid(nhiTxt);
-                invalidContent.append("NHI is already in use\n");
-            } else {
-                setValid(nhiTxt);
-            }
-        } catch (InvalidObjectException e) {
-            setInvalid(nhiTxt);
+
+        // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
+        if (database.nhiInDatabase(nhiTxt.getText())) {
+            valid = setInvalid(nhiTxt);
+            invalidContent.append("NHI is already in use\n");
+        } else {
+            setValid(nhiTxt);
         }
+
 
         // first name
         if (!firstnameTxt.getText()

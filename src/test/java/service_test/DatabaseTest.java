@@ -173,12 +173,7 @@ public class DatabaseTest {
 	@Test
 	public void testUpdateClinician() {
 		clinician.setFirstName("Testing");
-		try {
-			testDb.update(clinician);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		testDb.update(clinician);
 	}
 
 	@Test

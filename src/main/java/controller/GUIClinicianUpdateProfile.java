@@ -107,11 +107,11 @@ public class GUIClinicianUpdateProfile extends UndoableController{
      * @param staffId ID of clinician to load
      */
     private void loadProfile(int staffId) {
-        try {
-            Clinician clinician = database.getClinicianByID(staffId);
+        Clinician clinician = database.getClinicianByID(staffId);
+        if (clinician != null) {
             target = clinician;
             populateForm(clinician);
-        } catch (InvalidObjectException e) {
+        } else {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }

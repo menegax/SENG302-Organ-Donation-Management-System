@@ -111,11 +111,11 @@ public class GUIPatientUpdateDonations extends UndoableController {
      * @param nhi patient NHI
      */
     private void loadProfile(String nhi) {
-        try {
-            Patient patient = database.getPatientByNhi(nhi);
+        Patient patient = database.getPatientByNhi(nhi);
+        if (patient != null) {
             target = patient;
             populateForm(patient);
-        } catch (InvalidObjectException e) {
+        } else {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
         }
         controls = new ArrayList<Control>() {{
