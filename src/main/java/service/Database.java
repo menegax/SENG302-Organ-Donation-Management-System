@@ -145,21 +145,23 @@ public class Database {
      * Initialize the connection to the remote database.
      */
     private void initializeConnection() {
-        try {
-            //TODO Uncomment for final product
-//            conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true",
-//                    "seng302-team800", "ScornsGammas5531");
-
-            //TODO Uncomment for outside Patricks network
-//            conn = DriverManager.getConnection("jdbc:mysql://122.62.50.128:3306/seng302-2018-team800-test?allowMultiQueries=true",
-//                    "seng302-team800", "ScornsGammas5531");
-
-            //TODO Uncomment for inside Patricks network
-            conn = DriverManager.getConnection("jdbc:mysql://192.168.1.70:3306/seng302-2018-team800-test?allowMultiQueries=true",
-                    "seng302-team800", "ScornsGammas5531");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+		} catch (SQLException e1) {
+			System.err.println("Failed to connect to UC database server.");
+			try {
+				conn = DriverManager.getConnection("jdbc:mysql://122.62.50.128:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+			} catch (SQLException e2) {
+				System.err.println("Failed to connect to database mimic from external source.");
+				try {
+					conn = DriverManager.getConnection("jdbc:mysql://192.168.1.70:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");					
+				} catch (SQLException e3) {
+					System.err.println("Failed to connect to database mimic from internal source.");
+					System.err.println("All database connections failed.");
+					conn = null;
+				}
+			}
+		}
     }
 
     //ToDO Complete
@@ -215,13 +217,15 @@ public class Database {
     /**
      * Adds a object to the database.
      * @param object Object to add to the database.
+     * @return True if added object to database, false otherwise.
      */
-    public void add(Object object) {
+    public boolean add(Object object) {
         if (object instanceof Patient) {
-            addPatient((Patient) object);
+            return addPatient((Patient) object);
         } else if (object instanceof Clinician) {
-            addClinician((Clinician) object);
+            return addClinician((Clinician) object);
         }
+        return false;
     }
 
     /**
@@ -536,12 +540,12 @@ public class Database {
         return array;
     }
     
-    public boolean NhiInDatabase(Patient patient) {
+    public boolean NhiInDatabase(String nhi) {
     	String query = "SELECT * FROM tblPatients WHERE Nhi = ?";
-    	String[] attr = {patient.getNhiNumber()};
+    	String[] attr = {nhi};
     	try {
 			ArrayList<String[]> results = runQuery(query, attr);
-			if (results.size() != 0) {
+			if (results.size() > 0) {
 				return true;
 			}
 		} catch (SQLException e) {
@@ -554,62 +558,82 @@ public class Database {
      * Adds a patient to the database
      *
      * @param newPatient the new patient to add
+     * @return True if added patient to database, false otherwise.
      */
-    private void addPatient(Patient newPatient) throws IllegalArgumentException {
+    private boolean addPatient(Patient newPatient) throws IllegalArgumentException {
         try {
-            if (!NhiInDatabase(newPatient)) {
+            if (inDatabase(newPatient)) {
             	//Add Patient to application
                 patients.add(newPatient);
                 //Add Patient to search index
                 SearchPatients.addIndex(newPatient);
                 //Adds patient to the database
                 updatePatient(newPatient);
+                userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
+                return true;
             } else {
                 userActions.log(Level.SEVERE, "Failed to add patient to database, NHI Already exisits.", "Attempted to add new patient to database.");
+                throw new IllegalArgumentException("NHI " + newPatient.getNhiNumber() + " already in use.");
             }
-            userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
         } catch (SQLException o) {
             userActions.log(Level.WARNING, "Failed to add patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
-            throw new IllegalArgumentException(o.getMessage());
         }
+        return false;
     }
 
     /**
-     * Adds a clinician to the database
-     *
-     * @param newClinician the new clinician to add
+     * Adds a clinician to the database.
+     * @param newClinician the new clinician to add.
+     * @return True if the clinician was added, false otherwise.
+	 * @throws IllegalArgumentException Throws if Staff ID already in use.
      */
-    private void addClinician(Clinician newClinician) throws IllegalArgumentException {
-        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getFirstName())) {
-            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: first name", "Attempted to add a clinician");
-            throw new IllegalArgumentException("firstname");
-        }
-
-        if (!Pattern.matches("^[-a-zA-Z]+$", newClinician.getLastName())) {
-            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: last name", "Attempted to add a clinician");
-            throw new IllegalArgumentException("lastname");
-        }
-
-        if (newClinician.getStreet1() != null && !Pattern.matches("^[- a-zA-Z0-9]+$", newClinician.getStreet1())) {
-            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field: street1", "Attempted to add a clinician");
-            throw new IllegalArgumentException("street1");
-        }
-
-//        if (newClinician.getStaffID() == getNextStaffID()) {
-            clinicians.add(newClinician);
-
-            try {
-                updateClinician(newClinician);
-                userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
-            } catch (SQLException e) {
-                userActions.log(Level.WARNING, "Couldn't add clinician due to database error", "Attempted to add a clinician");
-            }
-//        } else {
-//            userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field staffID", "Attempted to add a clinician");
-//            throw new IllegalArgumentException("staffID");
-//        }
+    private boolean addClinician(Clinician newClinician) throws IllegalArgumentException {
+    	if (inDatabase(newClinician)) {
+    		throw new IllegalArgumentException("StaffID " + String.valueOf(newClinician.getStaffID()) + "already in use.");
+    	} else {
+    		try {
+				updateClinician(newClinician);
+				clinicians.add(newClinician);
+				userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
+				return true;
+    		} catch (SQLException e) {
+				userActions.log(Level.WARNING, "Couldn't add clinician due to database error", "Attempted to add a clinician");
+			}
+    	}
+    	return false;
     }
 
+    private boolean patientInDatabase(Patient patient) throws SQLException {
+    	String query = "SELECT * FROM tblPatients WHERE Nhi = ?";
+    	String[] param = {patient.getNhiNumber()};
+    	if (runQuery(query, param).size() > 0) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    private boolean clinicianInDatabase(Clinician clinician) throws SQLException {
+    	String query = "SELECT * FROM tblClinicians WHERE StaffID = ?";
+    	String[] param = {String.valueOf(clinician.getStaffID())};
+    	if (runQuery(query, param).size() > 0) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    public boolean inDatabase(Object object) {
+    	try {
+    		if (object instanceof Patient) {
+				return patientInDatabase((Patient) object);
+    		} else if (object instanceof Clinician) {
+    			return clinicianInDatabase((Clinician) object);
+    		}
+		} catch (SQLException e) {
+			userActions.log(Level.WARNING, "Couldn't query database", "Attempted to check if object existed in database");
+		}
+    	return false;
+    }
+    
     public void saveTransplantRequest(OrganWaitlist.OrganRequest request) {
         String[] attr = getTransplantRequestAttributes(request);
         String query = "INSERT INTO tblTransplantWaitList " +
@@ -979,40 +1003,6 @@ public class Database {
         }
         throw new InvalidObjectException("Patient with NHI number " + nhi + " does not exist.");
     }
-
-
-    /**
-     * Checks if a patient with the given nhi exists in the database
-     *
-     * @param nhi the nhi of the patient to search
-     * @return true if exists else false
-     */
-    public boolean isPatientInDb(String nhi) {
-        for (Patient d : getPatients()) {
-            if (d.getNhiNumber()
-                    .equals(nhi.toUpperCase())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    /**
-     * Checks if a clinician with the given staffID exists in the database
-     *
-     * @param staffID the staffID of the clinician to search for
-     * @return true if exists else false
-     */
-    public boolean isClinicianInDb(int staffID) {
-        for (Clinician c : getClinicians()) {
-            if (c.getStaffID() == staffID) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     /**
      * Searches clinicians by staffID
