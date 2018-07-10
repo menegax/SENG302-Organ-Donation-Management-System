@@ -74,7 +74,7 @@ public class GUIRedoPatientRegisterTest extends ApplicationTest{
      */
     @After
     public void waitForEvents() {
-        database.resetDatabase();
+        database.resetLocalDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }

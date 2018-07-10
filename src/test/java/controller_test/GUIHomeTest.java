@@ -47,7 +47,7 @@ public class GUIHomeTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
-        database.resetDatabase();
+        database.resetLocalDatabase();
 
         // add dummy patient
         ArrayList<String> dal = new ArrayList<>();
@@ -78,7 +78,7 @@ public class GUIHomeTest extends ApplicationTest {
      */
     @After
     public void waitForEvents() {
-        database.resetDatabase();
+        database.resetLocalDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }

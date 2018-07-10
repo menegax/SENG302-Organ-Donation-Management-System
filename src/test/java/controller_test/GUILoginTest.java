@@ -70,7 +70,7 @@ public class GUILoginTest extends ApplicationTest {
      */
     @After
     public void waitForEvents() {
-        database.resetDatabase();
+        database.resetLocalDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }

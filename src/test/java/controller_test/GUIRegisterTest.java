@@ -37,7 +37,7 @@ public class GUIRegisterTest extends ApplicationTest {
      */
     @Before
     public void setup() {
-        database.resetDatabase();
+        database.resetLocalDatabase();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class GUIRegisterTest extends ApplicationTest {
      */
     @After
     public void waitForEvents() {
-        database.resetDatabase();
+        database.resetLocalDatabase();
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
     }

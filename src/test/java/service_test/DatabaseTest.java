@@ -50,6 +50,14 @@ public class DatabaseTest {
         testDb.add(patient);
 	}
 	
+	private static void resetTestData() {
+		patient = new Patient("TST1234", "Test", new ArrayList<String>(), "Tester", LocalDate.of(1998, 1, 8), new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), null, GlobalEnums.BirthGender.MALE, GlobalEnums.PreferredGender.MAN, "Pat", 1.7, 56.0, GlobalEnums.BloodGroup.O_POSITIVE, new ArrayList<Organ>(), new ArrayList<Organ>(), "Street 1", "Street 2", "Suburb", GlobalEnums.Region.CANTERBURY, 7020, "035441143", "0", "0220918384", "plaffey@mail.com", "EC", "Relationship", "0", "0", "0", "Email@email.com", new ArrayList<PatientActionRecord>(), new ArrayList<Disease>(), new ArrayList<Disease>(), new ArrayList<Medication>(), new ArrayList<Medication>(), new ArrayList<Procedure>());
+		clinician = new Clinician(1234, "Test", new ArrayList<String>(), "Tester", Region.CANTERBURY);
+		testDb.update(clinician);
+		testDb.update(patient);
+		testDb.loadAll();
+	}
+	
 	private static boolean validateConnection() {
 		Connection conn = null;
 		try {
@@ -81,6 +89,7 @@ public class DatabaseTest {
 	@Before
 	public void setUp() throws Exception {
 		Assume.assumeTrue(validConnection);
+		resetTestData();
 	}
 
 	@After
@@ -116,7 +125,7 @@ public class DatabaseTest {
 	
 	@Test
 	public void testRunQueryWithUpdateOnClinician() {
-		String query = "UPDATE tblPatients SET LName = 'Bober' WHERE StaffID = '1234'";
+		String query = "UPDATE tblPatients SET LName = 'Bober' WHERE StaffID = 1234";
 		try {
 			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
 			assertTrue(results == null);
@@ -174,96 +183,119 @@ public class DatabaseTest {
 	public void testUpdateClinician() {
 		clinician.setFirstName("Testing");
 		testDb.update(clinician);
+		String query = "SELECT FName FROM tblClinicians WHERE StaffID = 1234";
+		try {
+			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
+			assertTrue(results.get(0)[0] == "Testing");
+		} catch (SQLException e2) {
+			fail("Error communicating with database: " + e2.getMessage());
+		}
 	}
 
 	@Test
-	public void testNhiInDatabase() {
-		fail("Not yet implemented");
+	public void testNhiInDatabase1() {
+		boolean testResult = testDb.nhiInDatabase("TST1234");
+		String query = "SELECT * FROM tblPatient WHERE Nhi = 'TST1234'";
+		try {
+			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
+			boolean manualTest = results.size() > 0;
+			assertTrue(manualTest == testResult);
+		} catch (SQLException e) {
+			fail("Error communicating with database: " + e.getMessage());
+		}
 	}
 
 	@Test
-	public void testSaveTransplantRequest() {
-		fail("Not yet implemented");
+	public void testNhiInDatabase2() {
+		boolean testResult = testDb.nhiInDatabase("VRG1234");
+		String query = "SELECT * FROM tblPatient WHERE Nhi = 'VRG1234'";
+		try {
+			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
+			boolean manualTest = results.size() > 0;
+			assertTrue(manualTest == testResult);
+		} catch (SQLException e) {
+			fail("Error communicating with database: " + e.getMessage());
+		}
 	}
 
 	@Test
 	public void testLoadAll() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testRemovePatient() {
-		fail("Not yet implemented");
+		testDb.resetLocalDatabase();
+		assertTrue(testDb.getPatients().size() == 0);
+		assertTrue(testDb.getClinicians().size() == 0);
+		testDb.loadAll();
+		assertTrue(testDb.getPatients().size() > 0);
+		assertTrue(testDb.getClinicians().size() > 0);
 	}
 
 	@Test
 	public void testGetPatientByNhi() {
-		fail("Not yet implemented");
+		Patient testResult = testDb.getPatientByNhi("TST1234");
+		assertTrue(testDb.getPatients().contains(testResult));
+		assertTrue(testResult.getNhiNumber().equals("TST1234"));
 	}
 
 	@Test
-	public void testIsPatientInDb() {
-		fail("Not yet implemented");
+	public void testInDatabasePatientTrue() {
+		assertTrue(testDb.inDatabase(patient));
 	}
 
 	@Test
-	public void testIsClinicianInDb() {
-		fail("Not yet implemented");
+	public void testInDatabasePatientFalse() {
+		testDb.delete(patient);
+		assertFalse(testDb.inDatabase(patient));
 	}
-
+	
+	@Test
+	public void testInDatabaseClinicianTrue() {
+		assertTrue(testDb.inDatabase(clinician));
+	}
+	
+	@Test
+	public void testInDatabaseClinicianFalse() {
+		testDb.delete(clinician);
+		assertFalse(testDb.inDatabase(clinician));
+	}
+	
 	@Test
 	public void testGetClinicianByID() {
-		fail("Not yet implemented");
+		Clinician testResult = testDb.getClinicianByID(1234);
+		assertTrue(testDb.getClinicians().contains(testResult));
+		assertTrue(testResult.getStaffID() == 1234);
 	}
 
 	@Test
-	public void testGetNextStaffID() {
-		fail("Not yet implemented");
+	public void testResetLocalDatabase() {
+		assertTrue(testDb.getPatients().size() > 0);
+		assertTrue(testDb.getClinicians().size() > 0);
+		testDb.resetLocalDatabase();
+		assertTrue(testDb.getPatients().size() == 0);
+		assertTrue(testDb.getClinicians().size() == 0);
 	}
-
+	
 	@Test
-	public void testSaveToDisk() {
-		fail("Not yet implemented");
+	public void testDeletePatient() {
+		testDb.delete(patient);
+		assertFalse(testDb.getPatients().contains(patient));
+		String query = "SELECT * FROM tblPatient WHERE Nhi = 'TST1234'";
+		try {
+			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
+			assertTrue(results.size() == 0);
+		} catch (SQLException e) {
+			fail("Error communicating with database " + e.getMessage());
+		}
 	}
-
+	
 	@Test
-	public void testImportFromDiskPatients() {
-		fail("Not yet implemented");
+	public void testDeleteClinician() {
+		testDb.delete(clinician);
+		assertFalse(testDb.getClinicians().contains(clinician));
+		String query = "SELECT * FROM tblClinicians WHERE StaffID = 1234";
+		try {
+			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
+			assertTrue(results.size() == 0);
+		} catch (SQLException e) {
+			fail("Error communicating with database " + e.getMessage());
+		}
 	}
-
-	@Test
-	public void testImportFromDiskClinicians() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testResetDatabase() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetPatients() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetClinicians() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testShowPatients() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testShowClinicians() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testMain() {
-		fail("Not yet implemented");
-	}
-
 }

@@ -32,7 +32,7 @@ public class SearchPatientsTest {
     @BeforeClass
     public static void setUp() {
         userActions.setLevel(Level.OFF);
-        database.resetDatabase();
+        database.resetLocalDatabase();
         
         // Given patients in a db
         d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
@@ -168,7 +168,7 @@ public class SearchPatientsTest {
     @Test
     public void testSearchByName() throws IOException {
     	//Bug with setup() means it has to be copied here or wont work
-        database.resetDatabase();
+        database.resetLocalDatabase();
 
         // Given patients in a db
         d1 = new Patient("abc1234", "Pat", null, "Laff", LocalDate.now());
@@ -221,7 +221,7 @@ public class SearchPatientsTest {
     @Test
     public void testSearchAfterNhiUpdate() throws IOException {
     	//Bug with setup() means it has to be copied here or wont work
-        database.resetDatabase();
+        database.resetLocalDatabase();
 
         // Given patients in a db
         d1 = new Patient("abc1234", "Pat", null, "Laff", LocalDate.now());
@@ -250,7 +250,7 @@ public class SearchPatientsTest {
      */
     @Test
     public void testSearchUnusualNameResults() {
-        database.resetDatabase();
+        database.resetLocalDatabase();
 
         // Given patients in a db
         d1 = new Patient("abc9876", "Joe", null, "Plaffer", LocalDate.now());

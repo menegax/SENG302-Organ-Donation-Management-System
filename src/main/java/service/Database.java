@@ -120,6 +120,9 @@ public class Database {
         clinicians = new HashSet<>();
         organWaitingList = new OrganWaitlist();
         initializeConnection();
+        if (conn != null) {
+        	loadAll();
+        }
     }
 
     /**
@@ -615,6 +618,7 @@ public class Database {
     	return false;
     }
     
+    //TODO shouldnt be used
     /**
      * Saves a transplant request into the database.
      * @param request The transplant request to save.
@@ -718,7 +722,10 @@ public class Database {
         LocalDate birth = LocalDate.parse(attr[4]);
         Timestamp created = Timestamp.valueOf(attr[5]);
         Timestamp modified = Timestamp.valueOf(attr[6]);
-        LocalDate death = LocalDate.parse(attr[7]);
+        System.out.println(attr[7]);
+        LocalDate death = null;
+        //TODO Error here
+        //LocalDate death = LocalDate.parse(attr[7]);
         GlobalEnums.BirthGender gender;
         switch (attr[8]) {
             case "M":
@@ -1248,13 +1255,14 @@ public class Database {
             userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
         }
     }
-//TODO should this also do a reimport
+
     /**
      * Clears the database of all patients
      */
-    public void resetDatabase() {
+    public void resetLocalDatabase() {
         patients = new HashSet<>();
         clinicians = new HashSet<>();
+        organWaitingList = new OrganWaitlist();
     }
 
 
