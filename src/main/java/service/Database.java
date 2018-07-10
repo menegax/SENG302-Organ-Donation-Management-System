@@ -653,8 +653,12 @@ public class Database {
      * @return ArrayList of the patients organs.
      */
     private ArrayList<GlobalEnums.Organ> loadOrgans(String organs) {
-        String[] organArray = organs.split(",");
         ArrayList<GlobalEnums.Organ> organArrayList = new ArrayList<>();
+        if (organs.equals("")) {
+    		userActions.log(Level.INFO, "Patient had no organs to load.", "Attempted load all organs for patient.");
+    		return organArrayList;
+        }
+        String[] organArray = organs.split(",");
         for (String organ : organArray) {
             organArrayList.add(GlobalEnums.Organ.valueOf(organ));
         }
@@ -667,8 +671,8 @@ public class Database {
      * @param nhi Patients NHI.
      * @return ArrayList of all logs for the patient.
      */
-    private ArrayList<UserActionRecord> loadPatientLogs(String nhi) {
-        ArrayList<UserActionRecord> patientLogs = new ArrayList<>();
+    private ArrayList<PatientActionRecord> loadPatientLogs(String nhi) {
+        ArrayList<PatientActionRecord> patientLogs = new ArrayList<>();
         try {
             String[] nhiArray = {nhi};
             ArrayList<String[]> logsRaw = runQuery("SELECT * FROM tblPatientLogs WHERE Patient = ?", nhiArray);
@@ -687,12 +691,12 @@ public class Database {
      * @param attr log attributes from database
      * @return UserActionRecord user action log entry
      */
-    private UserActionRecord parseLog(String[] attr) {
+    private PatientActionRecord parseLog(String[] attr) {
         Timestamp timestamp = Timestamp.valueOf(attr[1]);
         Level level = Level.parse(attr[2]);
         String message = attr[3];
         String action = attr[4];
-        return new UserActionRecord(timestamp, level, message, action);
+        return new PatientActionRecord(timestamp, level, message, action);
     }
 
     /**
@@ -702,9 +706,17 @@ public class Database {
      * @return String array of patient contacts
      * @throws SQLException returned if SELECT operation from database fails
      */
-    private String[] parsePatientContacts(String nhi) throws SQLException {
-        String[] contactsRaw = runQuery("SELECT * FROM tblPatientContact WHERE Patient = " + nhi, null).get(0);
-        return Arrays.copyOfRange(contactsRaw, 1, contactsRaw.length);
+    private String[] parsePatientContacts(String nhi) {
+    	String query = "SELECT * FROM tblPatientContact WHERE Patient = ?";
+    	String[] param = {nhi};
+        String[] contactsRaw;
+		try {
+			contactsRaw = runQuery(query, param).get(0);
+			return Arrays.copyOfRange(contactsRaw, 1, contactsRaw.length);
+		} catch (SQLException e) {
+			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to read patient contact attributes.");
+		}
+        return new String[14];
     }
 
     //TODO Talk to Maree
@@ -722,12 +734,12 @@ public class Database {
         LocalDate birth = LocalDate.parse(attr[4]);
         Timestamp created = Timestamp.valueOf(attr[5]);
         Timestamp modified = Timestamp.valueOf(attr[6]);
-        System.out.println(attr[7]);
         LocalDate death = null;
-        //TODO Error here
-        //LocalDate death = LocalDate.parse(attr[7]);
+        if (attr[7] != null) {
+        	death = LocalDate.parse(attr[7]);
+        }
         GlobalEnums.BirthGender gender;
-        switch (attr[8]) {
+        switch (String.valueOf((Object)attr[8])) {
             case "M":
                 gender = GlobalEnums.BirthGender.MALE;
                 break;
@@ -736,7 +748,7 @@ public class Database {
                 break;
         }
         GlobalEnums.PreferredGender preferredGender;
-        switch(attr[9]) {
+        switch(String.valueOf((Object)attr[9])) {
             case "M":
                 preferredGender = GlobalEnums.PreferredGender.MAN;
                 break;
@@ -750,42 +762,35 @@ public class Database {
         String prefName = attr[10];
         double height = Double.parseDouble(attr[11]) / 100;
         double weight = Double.parseDouble(attr[12]);
-        GlobalEnums.BloodGroup bloodType = GlobalEnums.BloodGroup.valueOf(attr[13]);
+        GlobalEnums.BloodGroup bloodType = null;
+        if (attr[13] != null) {
+        	bloodType = GlobalEnums.BloodGroup.valueOf(attr[13]);
+        }
         ArrayList<GlobalEnums.Organ> donations = loadOrgans(attr[14]);
         ArrayList<GlobalEnums.Organ> requested = loadOrgans(attr[15]);
 //TODO assign logs to the patient
-        ArrayList<UserActionRecord> records = loadPatientLogs(nhi);
+        ArrayList<PatientActionRecord> records = loadPatientLogs(nhi);
 
-        ArrayList<Disease> currentDiseases = new ArrayList<>();
-        ArrayList<Disease> pastDiseases = new ArrayList<>();
-        ArrayList<Medication> currentMeds = new ArrayList<>();
-        ArrayList<Medication> medHistory = new ArrayList<>();
-        List<Procedure> procedures = new ArrayList<>();
-        GlobalEnums.Region region = null;
-        int zip = 0;
         String[] contactAttr = new String[15];
-        try {
-            //TODO rewrite method to do medication history and current assigning within load method
-            contactAttr = parsePatientContacts(nhi);
-            //3 and 4 need parsing
-            region = GlobalEnums.Region.valueOf(contactAttr[3]);
-            zip = Integer.parseInt(contactAttr[4]);
-            ArrayList<Medication>[] meds = loadMedications(nhi);
-            currentMeds = meds[0];
-            medHistory = meds[1];
-            ArrayList<Disease>[] diseases = loadDiseases(birth, nhi);
-            currentDiseases = diseases[0];
-            pastDiseases = diseases[1];
-            procedures = loadProcedures(nhi);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        //TODO rewrite method to do medication history and current assigning within load method
+        contactAttr = parsePatientContacts(nhi);
+        GlobalEnums.Region region = null;
+        if (contactAttr[3] != null) {
+        	region = GlobalEnums.Region.valueOf(contactAttr[3]);
         }
-        
+        int zip = Integer.parseInt(contactAttr[4]);
+        ArrayList<Medication>[] meds = loadMedications(nhi);
+        ArrayList<Medication> currentMeds = meds[0];
+        ArrayList<Medication> medHistory = meds[1];
+        ArrayList<Disease>[] diseases = loadDiseases(birth, nhi);
+        ArrayList<Disease> currentDiseases = diseases[0];
+        ArrayList<Disease> pastDiseases = diseases[1];
+        List<Procedure> procedures = loadProcedures(nhi);
+		userActions.log(Level.INFO, "Successfully loaded patient " + nhi + " from the database.", "Attempted to load a patient from the database.");	
         return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName, height, weight,
                 bloodType, donations, requested, contactAttr[0], contactAttr[1], contactAttr[2], region, zip,
                 contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
-                contactAttr[11], contactAttr[12], contactAttr[13], contactAttr[14], null, currentDiseases,
+                contactAttr[11], contactAttr[12], contactAttr[13], contactAttr[14], records, currentDiseases,
                 pastDiseases, currentMeds, medHistory, procedures);
     }
 
@@ -871,7 +876,9 @@ public class Database {
         ArrayList<Disease> pastDiseases = new ArrayList<>();
         ArrayList<Disease> currentDiseases = new ArrayList<>();
 		try {
-			diseasesRaw = runQuery("SELECT * FROM tblDiseases WHERE Patient = " + nhi, null);
+			String query = "SELECT * FROM tblDiseases WHERE Patient = ?";
+			String[] param = {nhi};
+			diseasesRaw = runQuery(query, param);
 	        for (String[] attr : diseasesRaw) {
 	            try {
 					patientDiseases.add(parseDisease(attr, birth));
@@ -972,6 +979,7 @@ public class Database {
             for (String[] attr : patientsRaw) {
                 patients.add(parsePatient(attr));
             }
+			userActions.log(Level.INFO, "Successfully imported all patients from the database.", "Attempted to read all patients from database.");	
             return true;
         } catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to read all patients from the database.", "Attempted to read all patients from database.");	
