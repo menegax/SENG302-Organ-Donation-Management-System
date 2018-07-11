@@ -42,12 +42,6 @@ public class DatabaseTest {
 		userActions.setLevel(OFF);
 		validConnection = validateConnection();
 		testDb = Database.getDatabase();
-		addTestData();
-	}
-	
-	private static void addTestData() {
-        testDb.add(clinician);
-        testDb.add(patient);
 	}
 	
 	private static void resetTestData() {
@@ -97,11 +91,6 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testGetDatabase() {
-		assertTrue(Database.getDatabase() != null);
-	}
-
-	@Test
 	public void testRunQueryWithSelectOnClinician() {
 		String query = "SELECT * FROM tblClinicians";
 		try {
@@ -147,7 +136,7 @@ public class DatabaseTest {
 	
 	@Test
 	public void testAddClinician() {
-		//TODO add remove here
+		testDb.delete(clinician);
 		try {
 			testDb.add(clinician);
 		} catch (IllegalArgumentException e1) {
@@ -166,7 +155,7 @@ public class DatabaseTest {
 	public void testAddExistingClinician() {
 		try {
 			testDb.add(clinician);
-
+			fail("Didn't catch clinician already existing when adding.");
 		} catch (IllegalArgumentException e1) {
 			String query = "SELECT * FROM tblClinicians WHERE StaffID = 1234";
 			try {
@@ -176,7 +165,6 @@ public class DatabaseTest {
 				fail("Error communicating with database: " + e2.getMessage());
 			}
 		}
-		fail("Didn't catch clinician already existing when adding.");
 	}
 
 	@Test
@@ -184,18 +172,21 @@ public class DatabaseTest {
 		clinician.setFirstName("Testing");
 		testDb.update(clinician);
 		String query = "SELECT FName FROM tblClinicians WHERE StaffID = 1234";
+		ArrayList<String[]> results = new ArrayList<String[]>();
 		try {
-			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
-			assertTrue(results.get(0)[0] == "Testing");
-		} catch (SQLException e2) {
-			fail("Error communicating with database: " + e2.getMessage());
+			 results = testDb.runQuery(query, new String[0]);
+			assertTrue(results.get(0)[0].equals("Testing"));
+		} catch (SQLException e1) {
+			fail("Error communicating with database: " + e1.getMessage());
+		} catch (AssertionError e2) {
+			fail("First name should be assigned to Testing but is " + results.get(0)[0]);
 		}
 	}
 
 	@Test
 	public void testNhiInDatabase1() {
 		boolean testResult = testDb.nhiInDatabase("TST1234");
-		String query = "SELECT * FROM tblPatient WHERE Nhi = 'TST1234'";
+		String query = "SELECT * FROM tblPatients WHERE Nhi = 'TST1234'";
 		try {
 			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
 			boolean manualTest = results.size() > 0;
@@ -208,7 +199,7 @@ public class DatabaseTest {
 	@Test
 	public void testNhiInDatabase2() {
 		boolean testResult = testDb.nhiInDatabase("VRG1234");
-		String query = "SELECT * FROM tblPatient WHERE Nhi = 'VRG1234'";
+		String query = "SELECT * FROM tblPatients WHERE Nhi = 'VRG1234'";
 		try {
 			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
 			boolean manualTest = results.size() > 0;
@@ -277,7 +268,7 @@ public class DatabaseTest {
 	public void testDeletePatient() {
 		testDb.delete(patient);
 		assertFalse(testDb.getPatients().contains(patient));
-		String query = "SELECT * FROM tblPatient WHERE Nhi = 'TST1234'";
+		String query = "SELECT * FROM tblPatients WHERE Nhi = 'TST1234'";
 		try {
 			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
 			assertTrue(results.size() == 0);

@@ -96,7 +96,6 @@ public class Patient extends User {
 
     private boolean hasBeenModified = false;
 
-    Database database = Database.getDatabase();
     private GlobalEnums.Organ removedOrgan;
 
     /**
@@ -316,18 +315,18 @@ public class Patient extends User {
         }
     }
 
-    /**
-     * Checks the uniqueness of the nhi number
-     *
-     * @throws IllegalArgumentException when the nhi number given is already in use
-     */
-    public void ensureUniqueNhi() throws IllegalArgumentException {
-        for (Patient p : database.getPatients()) {
-            if (p.nhiNumber.equals(nhiNumber.toUpperCase())) {
-                throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
-            }
-        }
-    }
+//    /**
+//     * Checks the uniqueness of the nhi number
+//     *
+//     * @throws IllegalArgumentException when the nhi number given is already in use
+//     */
+//    public void ensureUniqueNhi() throws IllegalArgumentException {
+//        for (Patient p : database.getPatients()) {
+//            if (p.nhiNumber.equals(nhiNumber.toUpperCase())) {
+//                throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
+//            }
+//        }
+//    }
 
     /**
      * Returns the name of the patient as a formatted concatenated string
