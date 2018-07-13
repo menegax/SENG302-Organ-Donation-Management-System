@@ -1147,6 +1147,24 @@ public class Database {
         }
     }
 
+    public boolean updateAllPatients() {
+    	boolean success = true;
+    	for (Patient patient : getPatients()) {
+    		if (patient.getChanged()) {
+    			if (!update(patient)) {
+    				success = false;
+    			}
+    		}
+    	}
+    	return success;
+    }
+    
+    public boolean updateDatabase() {
+    	boolean patientUpdate = updateAllPatients();
+    	
+    	return false;
+    }
+    
     //TODO change this to save to remote database
     /**
      * Calls all sub-methods to save data to disk

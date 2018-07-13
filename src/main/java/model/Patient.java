@@ -94,7 +94,7 @@ public class Patient extends User {
 
     private ArrayList<Disease> pastDiseases = new ArrayList<>();
 
-    private boolean hasBeenModified = false;
+    private boolean changed = false;
 
     Database database = Database.getDatabase();
     private GlobalEnums.Organ removedOrgan;
@@ -269,7 +269,7 @@ public class Patient extends User {
             setNhiNumber(nhi);
         }
         userActions.log(Level.INFO, "Successfully updated patient " + getNhiNumber(), "attempted to update patient attributes");
-        patientModified();
+        setChanged();
         SearchPatients.addIndex(this);
     }
 
@@ -287,7 +287,7 @@ public class Patient extends User {
                     userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to patient donations");
                 } else {
                     userActions.log(Level.INFO, addDonation(organEnum), "attempted to update patient donations");
-                    patientModified();
+                    setChanged();
                 }
             }
         }
@@ -298,7 +298,7 @@ public class Patient extends User {
                     userActions.log(Level.SEVERE,"Invalid organ \"" + organ + "\" given and not removed", "attempted to remove from patient donations");}
                  else {
                     userActions.log(Level.INFO, removeDonation(organEnum), "attempted to remove from patient donations");
-                    patientModified();
+                    setChanged();
                 }
             }
         }
@@ -363,7 +363,7 @@ public class Patient extends User {
     public void setDonations(ArrayList<Organ> donations) {
         if (this.donations != donations) {
             this.donations = donations;
-            patientModified();
+            setChanged();
         }
     }
 
@@ -383,7 +383,7 @@ public class Patient extends User {
                 setPreferredName( firstName );
             }
             SearchPatients.addIndex(this);
-            patientModified();
+            setChanged();
         }
     }
 
@@ -396,7 +396,7 @@ public class Patient extends User {
         	SearchPatients.removeIndex(this);
             this.middleNames = middleNames;
             SearchPatients.addIndex(this);
-            patientModified();
+            setChanged();
         }
     }
 
@@ -409,7 +409,7 @@ public class Patient extends User {
         	SearchPatients.removeIndex(this);
             this.lastName = lastName;
             SearchPatients.addIndex(this);
-            patientModified();
+            setChanged();
         }
     }
 
@@ -418,7 +418,7 @@ public class Patient extends User {
     public void setPreferredName(String preferredName) {
         if (preferredName != null && !preferredName.equals(this.preferredName)) {
             this.preferredName = preferredName.substring(0, 1).toUpperCase() + preferredName.substring(1);
-            patientModified();
+            setChanged();
         }
     }
 
@@ -429,7 +429,7 @@ public class Patient extends User {
     public void setBirth(LocalDate birth) {
         if (this.birth == null || (!birth.equals(this.birth))) {
             this.birth = birth;
-            patientModified();
+            setChanged();
         }
     }
 
@@ -440,7 +440,7 @@ public class Patient extends User {
     public void setDeath(LocalDate death) {
         if (this.death == null || (!death.equals(this.death))) {
             this.death = death;
-            patientModified();
+            setChanged();
         }
     }
 
@@ -466,7 +466,7 @@ public class Patient extends User {
     public void setPreferredGender(PreferredGender gender) {
         if (this.preferredGender != gender) {
             this.preferredGender = gender;
-            patientModified();
+            setChanged();
         }
     }
 
@@ -485,7 +485,7 @@ public class Patient extends User {
                     setPreferredGender( PreferredGender.WOMAN );
                 }
             }
-            patientModified();
+            setChanged();
         }
     }
 
@@ -496,7 +496,7 @@ public class Patient extends User {
     public void setHeight(double height) {
         if (this.height != height) {
             this.height = height;
-            patientModified();
+            setChanged();
         }
     }
 
@@ -507,7 +507,7 @@ public class Patient extends User {
     public void setWeight(double weight) {
         if (this.weight != weight) {
             this.weight = weight;
-            patientModified();
+            setChanged();
         }
     }
 
@@ -529,7 +529,7 @@ public class Patient extends User {
     public void setBloodGroup(BloodGroup bloodGroup) {
         if (this.bloodGroup != bloodGroup) {
             this.bloodGroup = bloodGroup;
-            patientModified();
+            setChanged();
         }
     }
 
@@ -540,7 +540,7 @@ public class Patient extends User {
     public void setStreet1(String street1) {
         if (this.street1 == null || (!street1.equals(this.street1))) {
             this.street1 = street1;
-            patientModified();
+            setChanged();
         }
     }
 
@@ -551,7 +551,7 @@ public class Patient extends User {
     public void setStreet2(String street2) {
         if (this.street2 == null || (!street2.equals(this.street2))) {
             this.street2 = street2;
-            patientModified();
+            setChanged();
         }
     }
 
@@ -562,7 +562,7 @@ public class Patient extends User {
     public void setSuburb(String suburb) {
         if (this.suburb == null || !suburb.equals(this.suburb)) {
             this.suburb = suburb;
-            patientModified();
+            setChanged();
         }
     }
 
@@ -573,7 +573,7 @@ public class Patient extends User {
     public void setRegion(Region region) {
         if (this.region != region) {
             this.region = region;
-            patientModified();
+            setChanged();
         }
     }
 
@@ -603,7 +603,7 @@ public class Patient extends User {
      */
     public void setCurrentMedications(ArrayList<Medication> currentMedications) {
         this.currentMedications = currentMedications;
-        patientModified();
+        setChanged();
     }
 
     /**
@@ -612,13 +612,13 @@ public class Patient extends User {
      */
     public void setMedicationHistory(ArrayList<Medication> medicationHistory) {
         this.medicationHistory = medicationHistory;
-        patientModified();
+        setChanged();
     }
 
     public void setZip(int zip) {
         if (this.zip != zip) {
             this.zip = zip;
-            patientModified();
+            setChanged();
         }
     }
 
@@ -634,9 +634,9 @@ public class Patient extends User {
      * sets the required organs of the patient to the list parsed through
      * @param requiredOrgans organs the patient is to receive
      */
-    public void setRequiredOrgans(ArrayList requiredOrgans) {
+    public void setRequiredOrgans(ArrayList<Organ> requiredOrgans) {
         this.requiredOrgans = requiredOrgans;
-        patientModified();
+        setChanged();
     }
 
     public String getFormattedAddress() {
@@ -661,7 +661,7 @@ public class Patient extends User {
         }
         else {
             donations.add(organ);
-            patientModified();
+            setChanged();
             userActions.log(Level.INFO, "Added organ " + organ + " to patient donations", "Attempted to add organ " + organ + " to patient donations");
             return "Successfully added " + organ + " to donations";
         }
@@ -683,7 +683,7 @@ public class Patient extends User {
             requiredOrgans = new ArrayList<>();
         }
         requiredOrgans.add(organ);
-        patientModified();
+        setChanged();
         userActions.log(Level.INFO, "Added organ " + organ + " to patient required organs", "Attempted to add organ " + organ + " to patient required organs");
         return "Successfully added " + organ + " to required organs";
     }
@@ -697,7 +697,7 @@ public class Patient extends User {
     public String removeDonation(Organ organ) {
         if (donations.contains(organ)) {
             donations.remove(organ);
-            patientModified();
+            setChanged();
             userActions.log(Level.INFO, "Removed " + organ + " from patient donations", "Attempted to remove donation from a patient");
             return "Successfully removed " + organ + " from donations";
         } else {
@@ -714,7 +714,7 @@ public class Patient extends User {
     public String removeRequired(Organ organ) {
         if (requiredOrgans.contains(organ)) {
             requiredOrgans.remove(organ);
-            patientModified();
+            setChanged();
             setRemovedOrgan(organ);
             return "Successfully removed " + organ + " from required organs";
         } else {
@@ -728,7 +728,7 @@ public class Patient extends User {
 
     public void setRemovedOrgan(GlobalEnums.Organ organ) {
         removedOrgan = organ;
-        patientModified();
+        setChanged();
     }
 
     public String getNhiNumber() {
@@ -741,7 +741,7 @@ public class Patient extends User {
             SearchPatients.removeIndex(this);
         	this.nhiNumber = nhiNumber.toUpperCase();
             SearchPatients.addIndex(this);
-        	patientModified();
+        	setChanged();
         }
     }
 
@@ -752,7 +752,7 @@ public class Patient extends User {
 
     public void setHomePhone(String homePhone) {
         this.homePhone = homePhone;
-        patientModified();
+        setChanged();
     }
 
     public String getMobilePhone() {
@@ -761,7 +761,7 @@ public class Patient extends User {
 
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
-        patientModified();
+        setChanged();
     }
 
     public String getWorkPhone() {
@@ -770,7 +770,7 @@ public class Patient extends User {
 
     public void setWorkPhone(String workPhone) {
         this.workPhone = workPhone;
-        patientModified();
+        setChanged();
     }
 
     public String getEmailAddress() {
@@ -779,7 +779,7 @@ public class Patient extends User {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
-        patientModified();
+        setChanged();
     }
 
     public String getContactName() {
@@ -788,7 +788,7 @@ public class Patient extends User {
 
     public void setContactName(String contactName) {
         this.contactName = contactName;
-        patientModified();
+        setChanged();
     }
 
     public String getContactRelationship() {
@@ -797,7 +797,7 @@ public class Patient extends User {
 
     public void setContactRelationship(String contactRelationship) {
         this.contactRelationship = contactRelationship;
-        patientModified();
+        setChanged();
     }
 
     public String getContactHomePhone() {
@@ -806,7 +806,7 @@ public class Patient extends User {
 
     public void setContactHomePhone(String contactHomePhone) {
         this.contactHomePhone = contactHomePhone;
-        patientModified();
+        setChanged();
     }
 
     public String getContactMobilePhone() {
@@ -815,7 +815,7 @@ public class Patient extends User {
 
     public void setContactMobilePhone(String contactMobilePhone) {
         this.contactMobilePhone = contactMobilePhone;
-        patientModified();
+        setChanged();
     }
 
     public String getContactWorkPhone() {
@@ -824,7 +824,7 @@ public class Patient extends User {
 
     public void setContactWorkPhone(String contactWorkPhone) {
         this.contactWorkPhone = contactWorkPhone;
-        patientModified();
+        setChanged();
     }
 
     public String getContactEmailAddress() {
@@ -833,7 +833,7 @@ public class Patient extends User {
 
     public void setContactEmailAddress(String contactEmailAddress) {
         this.contactEmailAddress = contactEmailAddress;
-        patientModified();
+        setChanged();
     }
 
     public List<Procedure> getProcedures() {
@@ -845,7 +845,7 @@ public class Patient extends User {
 
     public void setProcedures(List<Procedure> procedures) {
         this.procedures = procedures;
-        patientModified();
+        setChanged();
     }
 
 
@@ -873,7 +873,7 @@ public class Patient extends User {
      */
     public void setCurrentDiseases(ArrayList<Disease> currentDiseases) {
         this.currentDiseases = currentDiseases;
-        patientModified();
+        setChanged();
     }
 
     /**
@@ -890,7 +890,7 @@ public class Patient extends User {
      */
     public void setPastDiseases(ArrayList<Disease> pastDiseases) {
         this.pastDiseases = pastDiseases;
-        patientModified();
+        setChanged();
     }
 
 
@@ -898,23 +898,23 @@ public class Patient extends User {
      *
      * Updates the modified timestamp of the patient
      */
-    private void patientModified() {
+    private void setChanged() {
         this.modified = new Timestamp(System.currentTimeMillis());
-        this.hasBeenModified = true;
+        this.changed = true;
     }
 
-    public void setNotModified() {
-        this.hasBeenModified = false;
+    public boolean getChanged() {
+    	return changed;
     }
 
     public void addProcedure(Procedure procedure) {
         procedures.add(procedure);
-        patientModified();
+        setChanged();
     }
 
     public void removeProcedure(Procedure procedure) {
         procedures.remove(procedure);
-        patientModified();
+        setChanged();
     }
 
     public String toString() {
