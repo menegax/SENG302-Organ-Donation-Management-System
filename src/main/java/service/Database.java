@@ -3,11 +3,11 @@ package service;
 import com.google.gson.Gson;
 import model.*;
 import utility.GlobalEnums;
-import utility.GlobalEnums.Organ;
-import utility.GlobalEnums.Region;
+
+
 import utility.PatientActionRecord;
 import utility.SearchPatients;
-import utility.UserActionRecord;
+
 
 import java.io.*;
 import java.sql.*;
@@ -186,7 +186,7 @@ public class Database {
         return null;
     }
 
-    /**
+    /**x
      * @param query The select query to run on the database.
      * @return ArrayList of String arrays with the ArrayList being the full set of results and each internal String
      * array being a row of the queried table.
@@ -480,6 +480,7 @@ public class Database {
         //Run all queries
         try {
 			runQuery(query, attr);
+			SearchPatients.addIndex(patient);
 			userActions.log(Level.INFO, "Updated patient attributes in database.", "Attempted to update patient attributes in database.");
 			return true;
 		} catch (SQLException e) {
@@ -764,7 +765,7 @@ public class Database {
         double weight = Double.parseDouble(attr[12]);
         GlobalEnums.BloodGroup bloodType = null;
         if (attr[13] != null) {
-        	bloodType = GlobalEnums.BloodGroup.valueOf(attr[13]);
+        	bloodType = GlobalEnums.BloodGroup.getEnumFromString(attr[13]);
         }
         ArrayList<GlobalEnums.Organ> donations = loadOrgans(attr[14]);
         ArrayList<GlobalEnums.Organ> requested = loadOrgans(attr[15]);
@@ -776,7 +777,7 @@ public class Database {
         contactAttr = parsePatientContacts(nhi);
         GlobalEnums.Region region = null;
         if (contactAttr[3] != null) {
-        	region = GlobalEnums.Region.valueOf(contactAttr[3]);
+        	region = GlobalEnums.Region.getEnumFromString(contactAttr[3]);
         }
         int zip = Integer.parseInt(contactAttr[4]);
         ArrayList<Medication>[] meds = loadMedications(nhi);
@@ -960,7 +961,10 @@ public class Database {
         String street1 = attr[4];
         String street2 = attr[5];
         String suburb = attr[6];
-        Region region = GlobalEnums.Region.valueOf(attr[7]);
+        GlobalEnums.Region region = null;
+        if (attr[7] != null) {
+        	region = GlobalEnums.Region.getEnumFromString(attr[7]);
+        }
         Timestamp modified = Timestamp.valueOf(attr[8]);
 
         Clinician newClinician = new Clinician(staffID, fName, mNames, lName, street1, street2, suburb, region);
@@ -993,14 +997,14 @@ public class Database {
      */
     private boolean loadAllClinicians() {
         try {
-        	String query = "SELECT * FROM tblClincians";
+        	String query = "SELECT * FROM tblClinicians";
             ArrayList<String[]> clinicianRaw = runQuery(query, new String[0]);
             for (String[] attr : clinicianRaw) {
                 clinicians.add(parseClinician(attr));
             }
             return true;
         } catch (SQLException e) {
-			userActions.log(Level.SEVERE, "Failed to read all clinicians from the database.", "Attempted to read all clinicians from the database.");
+			userActions.log(Level.SEVERE, "Failed to read all clinicians from the database." + e.getMessage(), "Attempted to read all clinicians from the database.");
         }
         return false;
     }
@@ -1075,9 +1079,9 @@ public class Database {
     private boolean deletePatient(Patient patient) {
     	String nhi = patient.getNhiNumber();
     	String query = "";
-    	String[] params = new String[6];
+    	String[] params = new String[7];
     	String[] tables = {"tblTransplantWaitList", "tblProcedures", "tblMedications", 
-    			"tblDiseases", "tblPatientLogs", "tblPatientContact", "tblPatient"};
+    			"tblDiseases", "tblPatientLogs", "tblPatientContact", "tblPatients"};
     	int counter = 0;
     	while (counter < tables.length - 1) {
     		query += "DELETE FROM " + tables[counter] + " WHERE Patient = ?;";
@@ -1345,21 +1349,39 @@ public class Database {
     	return false;
     }
     
-    //TODO for testing only
-    public static void main(String[] argv) {
-        try {
-            Database test = Database.getDatabase();
-            Clinician clin = new Clinician(11, "First", new ArrayList<String>(), "LastlyButSecond", Region.CANTERBURY);
-            Patient pat = new Patient("YGH4562", "Pat", new ArrayList<String>(), "Laffety", LocalDate.of(1998, 1, 8), new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), null, GlobalEnums.BirthGender.MALE, GlobalEnums.PreferredGender.MAN, "Pat", 1.7, 56.0, GlobalEnums.BloodGroup.O_POSITIVE, new ArrayList<Organ>(), new ArrayList<Organ>(), "Street 1", "Street 2", "Suburb", GlobalEnums.Region.CANTERBURY, 7020, "035441143", "0", "0220918384", "plaffey@mail.com", "EC", "Relationship", "0", "0", "0", "Email@email.com", new ArrayList<PatientActionRecord>(), new ArrayList<Disease>(), new ArrayList<Disease>(), new ArrayList<Medication>(), new ArrayList<Medication>(), new ArrayList<Procedure>());
-
-            int patients = test.showPatients();
-            int clinicians = test.showClinicians();
-            
-            System.out.println("\nNumber of patients: " + String.valueOf(patients));
-            System.out.println("Number of clinicians: " + String.valueOf(clinicians));
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public int showPatients2() {
+    	for (Patient patient : getPatients()) {
+    		System.out.println(patient);
+    	}
+    	return getPatients().size(); 
     }
+    
+    public int showClinicians2() {
+    	for (Clinician clinician : getClinicians()) {
+    		System.out.println(clinician);
+    	}
+    	return getClinicians().size(); 
+    }
+    
+//    //TODO for testing only
+//    public static void main(String[] argv) {
+//        try {
+//            Database test = Database.getDatabase();
+//            Clinician clin = new Clinician(11, "First", new ArrayList<String>(), "LastlyButSecond", Region.CANTERBURY);
+//            Patient pat = new Patient("YGH4562", "Pat", new ArrayList<String>(), "Laffety", LocalDate.of(1998, 1, 8), new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), null, GlobalEnums.BirthGender.MALE, GlobalEnums.PreferredGender.MAN, "Pat", 1.7, 56.0, GlobalEnums.BloodGroup.O_POSITIVE, new ArrayList<Organ>(), new ArrayList<Organ>(), "Street 1", "Street 2", "Suburb", GlobalEnums.Region.CANTERBURY, 7020, "035441143", "0", "0220918384", "plaffey@mail.com", "EC", "Relationship", "0", "0", "0", "Email@email.com", new ArrayList<PatientActionRecord>(), new ArrayList<Disease>(), new ArrayList<Disease>(), new ArrayList<Medication>(), new ArrayList<Medication>(), new ArrayList<Procedure>());
+//
+//            int patientsDb = test.showPatients();
+//            int cliniciansDb = test.showClinicians();
+//            int patientsApp = test.showPatients2();
+//            int cliniciansApp = test.showClinicians2();
+//            
+//            System.out.println("\nNumber of patients in database: " + String.valueOf(patientsDb));
+//            System.out.println("Number of clinicians in database: " + String.valueOf(cliniciansDb));
+//            System.out.println("\nNumber of patients in app: " + String.valueOf(patientsApp));
+//            System.out.println("Number of clinicians in app: " + String.valueOf(cliniciansApp));
+//            
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

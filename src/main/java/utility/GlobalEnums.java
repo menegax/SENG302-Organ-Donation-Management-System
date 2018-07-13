@@ -33,7 +33,7 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static dbFields getEnumFromString(String value) {
             try {
                 return dbFields.valueOf(value.toUpperCase());
             }
@@ -62,7 +62,7 @@ public class GlobalEnums {
             return this.getValue() != null ? this.getValue() : "Not set";
         }
 
-        public static Enum getEnumFromString(String value) {
+        public static PreferredGender getEnumFromString(String value) {
             try {
                 return PreferredGender.valueOf(value.toUpperCase());
             }
@@ -93,7 +93,7 @@ public class GlobalEnums {
             return this.getValue() != null ? this.getValue() : "Not set";
         }
 
-        public static Enum getEnumFromString(String value) {
+        public static BirthGender getEnumFromString(String value) {
             try {
                 return BirthGender.valueOf(value.toUpperCase());
             }
@@ -126,7 +126,7 @@ public class GlobalEnums {
             return this.getValue();
         }
 
-        public static Enum getEnumFromString(String value) {
+        public static Region getEnumFromString(String value) {
             try {
                 return Region.valueOf(value.toUpperCase().replaceAll("\\s+", ""));
             } catch (IllegalArgumentException e) {
@@ -157,7 +157,7 @@ public class GlobalEnums {
             return this.getValue();
         }
 
-        public static Enum getEnumFromString(String value) {
+        public static Organ getEnumFromString(String value) {
             try {
                 return Organ.valueOf(value.toUpperCase());
             }
@@ -189,7 +189,7 @@ public class GlobalEnums {
             return this.getValue();
         }
 
-        public static Enum getEnumFromString(String value) {
+        public static BloodGroup getEnumFromString(String value) {
             try {
                 return BloodGroup.valueOf(value.toUpperCase().replaceAll("\\s+", "_"));
             }
