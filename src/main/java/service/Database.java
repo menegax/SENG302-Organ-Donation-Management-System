@@ -769,7 +769,6 @@ public class Database {
         }
         ArrayList<GlobalEnums.Organ> donations = loadOrgans(attr[14]);
         ArrayList<GlobalEnums.Organ> requested = loadOrgans(attr[15]);
-//TODO assign logs to the patient
         ArrayList<PatientActionRecord> records = loadPatientLogs(nhi);
 
         String[] contactAttr = new String[15];
@@ -1163,6 +1162,7 @@ public class Database {
     	return success;
     }
     
+    //TODO is this needed?
     public boolean updateDatabase() {
     	boolean patientUpdate = updateAllPatients();
     	
@@ -1173,6 +1173,7 @@ public class Database {
     /**
      * Calls all sub-methods to save data to disk
      */
+    @Deprecated 
     public void saveToDisk() {
         try {
             saveToDiskPatients();
@@ -1182,26 +1183,29 @@ public class Database {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
     }
-//TODO change
-//    /**
-//     * Saves the organ waitlist to the file waitlist.json
-//     * @throws IOException the file cannot be found or created
-//     */
-//    private static void saveToDiskWaitlist() throws IOException {
-//        Gson gson = new Gson();
-//        String json = gson.toJson(organWaitingList);
-//
-//        String PatientPath = "./";
-//        Writer writer = new FileWriter(new File(PatientPath, "waitlist.json"));
-//        writer.write(json);
-//        writer.close();
-//    }
-//TODO change
+
+    /**
+     * Saves the organ waitlist to the file waitlist.json
+     * @throws IOException the file cannot be found or created
+     */
+    @SuppressWarnings("unused")
+	@Deprecated
+    private static void saveToDiskWaitlist() throws IOException {
+        Gson gson = new Gson();
+        //String json = gson.toJson(organWaitingList);
+
+        String PatientPath = "./";
+        Writer writer = new FileWriter(new File(PatientPath, "waitlist.json"));
+        //writer.write(json);
+        writer.close();
+    }
+
     /**
      * Writes database patients to file on disk
      *
      * @throws IOException when the file cannot be found nor created
      */
+    @Deprecated
     private void saveToDiskPatients() throws IOException {
         Gson gson = new Gson();
         String json = gson.toJson(patients);
@@ -1211,12 +1215,13 @@ public class Database {
         writer.write(json);
         writer.close();
     }
-//TODO change
+
     /**
      * Writes database clinicians to file on diskreturn null;
      *
      * @throws IOException when the file cannot be found nor created
      */
+    @Deprecated
     private void saveToDiskClinicians() throws IOException {
         Gson gson = new Gson();
         String json = gson.toJson(clinicians);
@@ -1249,25 +1254,28 @@ public class Database {
             userActions.log(Level.WARNING, "Patient import file not found", "Attempted to read patient file");
         }
     }
-//TODO what do we do with this?
-//    /**
-//     * Imports the organ waitlist from the selected directory
-//     * @param filename file to import from
-//     */
-//    public static void importFromDiskWaitlist(String filename) {
-//        Gson gson = new Gson();
-//
-//            InputStream in = ClassLoader.class.getResourceAsStream(filename);
-//            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-//            organWaitingList = gson.fromJson(br, OrganWaitlist.class);
-//
-//    }
-//TODO What do we do with this
+
+    /**
+     * Imports the organ waitlist from the selected directory
+     * @param filename file to import from
+     */
+    @SuppressWarnings("unused")
+	@Deprecated
+    public static void importFromDiskWaitlist(String filename) {
+        Gson gson = new Gson();
+
+            InputStream in = ClassLoader.class.getResourceAsStream(filename);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            //organWaitingList = gson.fromJson(br, OrganWaitlist.class);
+
+    }
+
     /**
      * Reads clinician data from disk
      *
      * @param fileName file to import from
      */
+    @Deprecated
     public void importFromDiskClinicians(String fileName) {
         Gson gson = new Gson();
         BufferedReader br;
@@ -1304,7 +1312,7 @@ public class Database {
     public Set<Clinician> getClinicians() {
         return clinicians;
     }
-//TODO what is this used for?
+//TODO remove
     public int showPatients() throws SQLException {
     	String query = "SELECT * FROM tblPatients";
     	ArrayList<String[]> results = runQuery(query, new String[0]);
