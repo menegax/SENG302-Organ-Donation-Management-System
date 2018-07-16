@@ -35,7 +35,11 @@ public class Database {
     	}	
     }
     
-    
+    public static void removeAdmin(Administrator admin) {
+    	if (usernameInDatabase(admin.getUsername())) {
+    		administrators.remove(admin);
+    	}
+    }
     
     private static boolean usernameInDatabase(String username) {
     	boolean inDatabase = false;
