@@ -28,6 +28,24 @@ public class Database {
     private static Set<Clinician> clinicians = new HashSet<>();
 
     private static Set<Administrator> administrators = new HashSet<>();
+    
+    public static void addAdmin(Administrator admin) {
+    	if (!usernameInDatabase(admin.getUsername())) {
+    		administrators.add(admin);
+    	}	
+    }
+    
+    
+    
+    private static boolean usernameInDatabase(String username) {
+    	boolean inDatabase = false;
+    	for (Administrator admin : getAdministrators()) {
+    		if (username.equals(admin.getUsername())) {
+    			inDatabase = true;
+    		}
+    	}
+    	return inDatabase;
+    }
 
     /**
      * Adds a patient to the database
@@ -47,7 +65,7 @@ public class Database {
             throw new IllegalArgumentException(o.getMessage());
         }
     }
-
+    
     /**
      * Removes a patient from the database
      *
