@@ -1,6 +1,6 @@
 package controller;
 
-import api.APIHelper;
+import service.APIHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
