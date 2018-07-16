@@ -6,29 +6,22 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import model.Patient;
-import org.apache.commons.lang3.StringUtils;
-import service.Database;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Clinician;
 import model.Medication;
+import model.Patient;
+import org.apache.commons.lang3.StringUtils;
+import service.Database;
 import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -43,7 +36,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIPatientProfile {
 
     @FXML
-    private AnchorPane patientProfilePane;
+    private GridPane patientProfilePane;
 
     @FXML
     private VBox testInfo;
@@ -161,11 +154,17 @@ public class GUIPatientProfile {
 //            requirementsButton.setVisible(false);
 //            medicationBtn.setDisable(true);
 //            medicationBtn.setVisible(false);
-//            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
-//                receivingList.setDisable(true);
-//                receivingList.setVisible(false);
-//                receivingTitle.setDisable(true);
-//                receivingTitle.setVisible(false);
+            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
+                receivingList.setDisable(true);
+                receivingList.setVisible(false);
+                receivingTitle.setDisable(true);
+                receivingTitle.setVisible(false);
+                /* Hide the columns that would hold the receiving listview - this results in the visible nodes filling
+                   up the whole width of the scene */
+                for (int i=9; i<=11; i++) {
+                    patientProfilePane.getColumnConstraints().get(i).setMaxWidth(0);
+                }
+            }
 //            } if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getDonations().size() == 0) {
 //                donatingTitle.setDisable(true);
 //                donatingTitle.setVisible(false);
@@ -255,7 +254,7 @@ public class GUIPatientProfile {
         donatingListProperty.setValue(FXCollections.observableArrayList(organsMappedD));
         receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
         donationList.itemsProperty().bind(donatingListProperty);
-        //receivingList.itemsProperty().bind(receivingListProperty);
+        receivingList.itemsProperty().bind(receivingListProperty);
         //Populate current medication listview
         Collection<Medication> meds = patient.getCurrentMedications();
         List<String> medsMapped = meds.stream().map(Medication::getMedicationName).collect(Collectors.toList());
@@ -263,7 +262,7 @@ public class GUIPatientProfile {
         medList.itemsProperty().bind(medListProperty);
 //         list view styling/highlighting
         highlightListCell(donationList, true);
-//        highlightListCell(receivingList, false);
+        highlightListCell(receivingList, false);
     }
 
     /**
