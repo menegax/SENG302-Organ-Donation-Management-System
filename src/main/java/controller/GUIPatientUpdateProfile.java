@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateProfile extends UndoableController {
@@ -116,7 +117,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
-                saveProfile();
+                saveProfileUpdater();
             }
         });
     }
@@ -269,7 +270,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
     /**
      * Saves profile changes after checking each field for validity
      */
-    public void saveProfile() {
+    public void saveProfileUpdater() {
+        systemLogger.log(Level.FINEST, "Saving patient profile for update...");
         Boolean valid = true;
 
         Alert invalidInfo = new Alert(Alert.AlertType.WARNING);
@@ -496,6 +498,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
         }
         else {
+            systemLogger.log(Level.WARNING, "Failed to update patient profile due to invalid fields:\n" + invalidContent);
             userActions.log(Level.WARNING, "Failed to update patient profile due to invalid fields", "Attempted to update patient profile");
             invalidContent.append("\nYour changes have not been saved.");
             invalidInfo.setContentText(invalidContent.toString());

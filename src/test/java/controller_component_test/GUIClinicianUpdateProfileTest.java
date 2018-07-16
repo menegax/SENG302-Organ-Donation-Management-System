@@ -42,6 +42,7 @@ import static utility.UserActionHistory.userActions;
 
 import javax.xml.crypto.Data;
 
+@Ignore
 public class GUIClinicianUpdateProfileTest extends ApplicationTest {
 
     private int existingStaffId;

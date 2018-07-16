@@ -113,7 +113,7 @@ public class TestHelper extends ApplicationTest {
     /**
      * Turns off user action logging
      */
-    @BeforeAll
+//    @BeforeAll
     public static void setLoggingFalse() {
         userActions.setLevel(Level.OFF);
         systemLogger.setLevel(Level.OFF);

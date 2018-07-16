@@ -14,6 +14,7 @@ import model.Medication;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import service.Database;
@@ -39,6 +40,12 @@ public class GUIPatientProfileTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         userActions.setLevel(OFF);
         new Main().start(stage);
+    }
+
+    @BeforeClass
+    public static void setup() {
+        TestHelper.setTestFXHeadless();
+        TestHelper.setLoggingFalse();
     }
 
 

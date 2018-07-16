@@ -56,7 +56,6 @@ public class Main extends Application {
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
 
         primaryStage.show();
-
     }
 
     public static void main(String[] args) {

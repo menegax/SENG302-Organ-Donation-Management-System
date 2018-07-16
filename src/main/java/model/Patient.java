@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
@@ -855,6 +856,7 @@ public class Patient extends User {
      */
     private void patientModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
+        systemLogger.log(Level.FINER, "Patient with NHI " + this.nhiNumber + " has been modified to " + this);
     }
 
     public void addProcedure(Procedure procedure) {

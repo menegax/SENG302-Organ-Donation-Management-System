@@ -1,7 +1,10 @@
 package controller_component_test;
 
+import static java.util.logging.Level.ALL;
+import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.OFF;
 import static org.assertj.core.api.Assertions.assertThat;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 import controller.Main;
@@ -18,19 +21,20 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import service.Database;
+import utility.SystemLogger;
 
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-@Ignore //todo
+@Ignore
 public class GUIPatientUpdateProfileTest extends ApplicationTest {
 
     private Main main = new Main();
 
     private int patientUpdateProfileTabIndex = 1;
 
-    private Patient existingPatient1 = new Patient("TFX9999", "Joe", null, "Bloggs", LocalDate.of(1990, 2, 9));
+    private Patient existingPatient1 = new Patient("TFX9999", "Joe", new ArrayList<>(), "Bloggs", LocalDate.of(1990, 2, 9));
 
     private String existingNhi1 = existingPatient1.getNhiNumber();
 
@@ -42,6 +46,7 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
 
     @Before
     public void setUp() {
+        systemLogger.setLevel(ALL);
         Database.resetDatabase();
         Database.addPatient(existingPatient1);
 
@@ -65,7 +70,21 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
     @BeforeClass
     public static void setUpClass() {
         Database.resetDatabase();
-        userActions.setLevel(OFF);
+        systemLogger.setLevel(ALL);
+        TestHelper.setLoggingFalse();
+        TestHelper.setTestFXHeadless();
+    }
+
+
+    @Test
+    public void testValidStreet1() throws InvalidObjectException {
+        givenStreet1("Waireiki Streeteders");
+        whenSave();
+        thenDBPatientHasStreet1("Waireiki Streeteders");
+
+        givenStreet1("122 Rd");
+        whenSave();
+        thenDBPatientHasStreet1("122 Rd");
     }
 
 
@@ -78,7 +97,6 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
         whenSave();
         thenDBPatientHasNhi(existingNhi1);
     }
-
 
     /**
      * Checks that a patients NHI cannot be updated to an existing one
@@ -275,7 +293,7 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
 
         givenPreferredName("AnD y ");
         whenSave();
-        thenDBPatientHasPreferredtName("Andy");
+        thenDBPatientHasPreferredtName("And Y");
 
         givenPreferredName("SummEr");
         whenSave();
@@ -318,17 +336,6 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
         givenPreferredName("*");
         whenSave();
         thenDBPatientHasFirstName(existingPreferredName);
-    }
-
-    @Test
-    public void testValidStreet1() throws InvalidObjectException {
-        givenStreet1("Waireiki Streeteders");
-        whenSave();
-        thenDBPatientHasStreet1("Waireiki Streeteders");
-
-        givenStreet1("122 Rd");
-        whenSave();
-        thenDBPatientHasStreet1("122 Rd");
     }
 
     @Test
@@ -597,7 +604,7 @@ public class GUIPatientUpdateProfileTest extends ApplicationTest {
     }
 
     private void whenSave() {
-        interact(() -> lookup("#saveButton").queryAs(Button.class).fire());
+        interact(() -> lookup("#saveButtonForUpdate").queryAs(Button.class).fire());
     }
 
 
