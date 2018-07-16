@@ -268,7 +268,6 @@ public class GUIPatientUpdateDonations extends UndoableController {
             target.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
 
         }
-        database.saveToDisk();
         userActions.log(INFO, "Updated user donations to: " + newDonations, "Attempted to update donations");
         goToProfile();
     }

@@ -274,9 +274,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         StringBuilder invalidContent = new StringBuilder("Please fix the following errors:\n");
 
         // nhi
-        if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}",
-                nhiTxt.getText()
-                        .toUpperCase())) {
+        if (!Pattern.matches(UIRegex.NHI.getValue(), nhiTxt.getText().toUpperCase())) {
             valid = setInvalid(nhiTxt);
             invalidContent.append("NHI must be three letters followed by four numbers\n");
         }
@@ -292,8 +290,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
 
         // first name
-        if (!firstnameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)+")) {
+        if (!Pattern.matches(UIRegex.FNAME.getValue(), firstnameTxt.getText())) {
             valid = setInvalid(firstnameTxt);
             invalidContent.append("First name must be letters, ., or -.\n");
         } else {
@@ -301,8 +298,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
 
         // last name
-        if (!lastnameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)+")) {
+        if (!Pattern.matches(UIRegex.LNAME.getValue(), lastnameTxt.getText())) {
             valid = setInvalid(lastnameTxt);
             invalidContent.append("Last name must be letters, ., or -.\n");
         } else {
@@ -310,8 +306,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
 
         //middle names
-        if (!middlenameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)*")) {
+        if (!Pattern.matches(UIRegex.MNAME.getValue(), middlenameTxt.getText())) {
             valid = setInvalid(middlenameTxt);
             invalidContent.append("Middle name(s) must be letters, ., or -.\n");
         } else {
@@ -319,7 +314,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
 
         // preferred name
-        if (preferrednameTxt.getText() != null && !preferrednameTxt.getText().matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)*")) {
+        if (!Pattern.matches(UIRegex.FNAME.getValue(), preferrednameTxt.getText())) {
             valid = setInvalid(preferrednameTxt);
         } else {
             setValid(preferrednameTxt);
@@ -342,49 +337,32 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
 
         // zip
-        if (!zipTxt.getText()
-                .equals("")) {
-            try {
-                if (zipTxt.getText()
-                        .length() != 4 && !(zipTxt.getText()
-                        .equals(""))) {
-                    valid = setInvalid(zipTxt);
-                    invalidContent.append("Zip must be four digits\n");
-                } else {
-                    Integer.parseInt(zipTxt.getText());
-                    setValid(zipTxt);
-                }
-            } catch (NumberFormatException e) {
-                valid = setInvalid(zipTxt);
-                invalidContent.append("Zip must be four digits\n");
-            }
+        if (!Pattern.matches(UIRegex.ZIP.getValue(), zipTxt.getText())) {
+            valid = setInvalid(zipTxt);
+            invalidContent.append("Zip must be four digits\n");
         } else {
+        	Integer.parseInt(zipTxt.getText());
             setValid(zipTxt);
         }
 
+
         // weight
-        if (weightTxt.getText() != null) {
-            if (isInvalidDouble(weightTxt.getText())) {
-                valid = setInvalid(weightTxt);
-                invalidContent.append("Weight must be a valid decimal number\n");
-            } else {
-                setValid(weightTxt);
-            }
+        if (!Pattern.matches(UIRegex.WEIGHT.getValue(), weightTxt.getText())) {
+            valid = setInvalid(weightTxt);
+            invalidContent.append("Weight must be a valid decimal number\n");
         } else {
             setValid(weightTxt);
         }
 
+
         // height
-        if (heightTxt.getText() != null) {
-            if (isInvalidDouble(heightTxt.getText())) {
-                valid = setInvalid(heightTxt);
-                invalidContent.append("Height must be a valid decimal number\n");
-            } else {
-                setValid(heightTxt);
-            }
+        if (!Pattern.matches(UIRegex.HEIGHT.getValue(), heightTxt.getText())) {
+            valid = setInvalid(heightTxt);
+            invalidContent.append("Height must be a valid decimal number\n");
         } else {
             setValid(heightTxt);
         }
+
 
         // blood group
         if (bloodGroupDD.getValue() != null) {
@@ -403,8 +381,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         // date of birth
         if (dobDate.getValue() != null) {
-            if (dobDate.getValue()
-                    .isAfter(LocalDate.now())) {
+            if (dobDate.getValue().isAfter(LocalDate.now())) {
                 valid = setInvalid(dobDate);
                 invalidContent.append("Date of birth must be a valid date either today or earlier and must be before date of death\n");
             } else {

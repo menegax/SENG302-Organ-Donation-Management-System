@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import utility.GlobalEnums.UIRegex;
+
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
@@ -150,7 +152,7 @@ public class GUIPatientRegister {
         StringBuilder invalidContent = new StringBuilder("Please fix the following errors:\n");
 
         // nhi
-        if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", nhiRegister.getText().toUpperCase())) {
+        if (!Pattern.matches(UIRegex.NHI.getValue(), nhiRegister.getText().toUpperCase())) {
             valid = setInvalid(nhiRegister);
             invalidContent.append("NHI must be three letters followed by four numbers\n");
         }
@@ -163,8 +165,7 @@ public class GUIPatientRegister {
         }
 
         // first name
-        if (!firstnameRegister.getText()
-                .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
+        if (!Pattern.matches(UIRegex.FNAME.getValue(), firstnameRegister.getText())) {
             valid = setInvalid(firstnameRegister);
             invalidContent.append("First name must be letters, ., or -.\n");
         } else {
@@ -172,8 +173,7 @@ public class GUIPatientRegister {
         }
 
         // last name
-        if (!lastnameRegister.getText()
-                .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
+        if (!Pattern.matches(UIRegex.LNAME.getValue(), lastnameRegister.getText())) {
             valid = setInvalid(lastnameRegister);
             invalidContent.append("Last name must be letters, ., or -.\n");
         } else {
@@ -181,8 +181,7 @@ public class GUIPatientRegister {
         }
 
         //middle names
-        if (!middlenameRegister.getText()
-                .matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
+        if (!Pattern.matches(UIRegex.MNAME.getValue(), middlenameRegister.getText())) {
             valid = setInvalid(middlenameRegister);
             invalidContent.append("Middle name(s) must be letters, ., or -.\n");
         } else {
@@ -191,8 +190,7 @@ public class GUIPatientRegister {
 
         // date of birth
         if (birthRegister.getValue() != null) {
-            if (birthRegister.getValue()
-                    .isAfter(LocalDate.now())) {
+            if (birthRegister.getValue().isAfter(LocalDate.now())) {
                 valid = setInvalid(birthRegister);
                 invalidContent.append("Date of birth must be a valid date either today or earlier.\n");
             } else {

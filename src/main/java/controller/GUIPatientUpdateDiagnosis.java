@@ -9,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import model.Disease;
 import model.Patient;
 import utility.GlobalEnums;
+import utility.GlobalEnums.UIRegex;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
@@ -185,7 +187,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
      */
     private boolean isValidUpdate() {
         boolean valid = true;
-        if(!diseaseNameTextField.getText().matches("[A-Z|a-z0-9.]{3,50}")) {
+        if(!Pattern.matches(UIRegex.DISEASENAME.getValue(), diseaseNameTextField.getText())) {
             valid = false;
             setInvalid(diseaseNameTextField);
         } else {

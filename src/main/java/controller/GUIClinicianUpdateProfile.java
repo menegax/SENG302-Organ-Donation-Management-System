@@ -11,6 +11,7 @@ import model.Clinician;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
+import utility.GlobalEnums.UIRegex;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -162,31 +163,31 @@ public class GUIClinicianUpdateProfile extends UndoableController{
      */
     public void saveProfile() {
         Boolean valid = true;
-        if (!Pattern.matches("[0-9]{1,3}", staffId.getText())) {
+        if (!Pattern.matches(UIRegex.STAFFID.getValue(), staffId.getText())) {
             valid = false;
             setInvalid(staffId);
         }
-        if (firstnameTxt.getText().length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", firstnameTxt.getText())) {
+        if (!Pattern.matches(UIRegex.FNAME.getValue(), firstnameTxt.getText())) {
             valid = false;
             setInvalid(firstnameTxt);
         }
-        if (lastnameTxt.getText().length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", lastnameTxt.getText())) {
+        if (!Pattern.matches(UIRegex.LNAME.getValue(), lastnameTxt.getText())) {
             valid = false;
             setInvalid(lastnameTxt);
         }
-        if (!Pattern.matches("[a-z|A-Z ]{0,50}", middlenameTxt.getText())) {
+        if (!Pattern.matches(UIRegex.MNAME.getValue(), middlenameTxt.getText())) {
             valid = false;
             setInvalid(middlenameTxt);
         }
-        if (!Pattern.matches("[a-z|A-Z ]{0,50}", street1Txt.getText())) {
+        if (!Pattern.matches(UIRegex.STREET.getValue(), street1Txt.getText())) {
             valid = false;
             setInvalid(street1Txt);
         }
-        if (!Pattern.matches("[a-z|A-Z ]{0,50}", street2Txt.getText())) {
+        if (!Pattern.matches(UIRegex.STREET.getValue(), street2Txt.getText())) {
             valid = false;
             setInvalid(street2Txt);
         }
-        if (!Pattern.matches("[a-z|A-Z ]{0,50}", suburbTxt.getText())) {
+        if (!Pattern.matches(UIRegex.SUBURB.getValue(), suburbTxt.getText())) {
             valid = false;
             setInvalid(suburbTxt);
         }
