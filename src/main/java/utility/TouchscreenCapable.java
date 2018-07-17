@@ -2,6 +2,7 @@ package utility;
 
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.input.ZoomEvent;
 
 public interface TouchscreenCapable {
@@ -11,5 +12,4 @@ public interface TouchscreenCapable {
     void rotateWindow(RotateEvent rotateEvent);
 
     void scrollWindow(ScrollEvent scrollEvent);
-
 }

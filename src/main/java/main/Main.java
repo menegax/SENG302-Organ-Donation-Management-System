@@ -9,6 +9,7 @@ import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -54,6 +55,7 @@ public class Main extends Application {
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
         primaryStage.setResizable(false);
         primaryStage.show();
+        openKeyboard();
 
     }
 
@@ -190,5 +192,17 @@ public class Main extends Application {
      */
     public static UUID getUuid() {
         return uuid;
+    }
+
+    public void openKeyboard() {
+        try {
+            Runtime.getRuntime().exec("cmd /c osk");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error");
+            alert.setContentText("System keyboard could not be opened");
+            alert.show();
+        }
     }
 }

@@ -3,18 +3,20 @@ package controller;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCode;
+import javafx.scene.input.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.stage.Window;
 import javafx.util.StringConverter;
 import main.Main;
 import model.Patient;
 import service.Database;
+import utility.TouchscreenCapable;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -28,7 +30,7 @@ import java.util.regex.Pattern;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientRegister {
+public class GUIPatientRegister implements TouchscreenCapable {
 
     public Button doneButton;
 
@@ -69,6 +71,9 @@ public class GUIPatientRegister {
                 register();
             }
         });
+        patientRegisterAnchorPane.setOnZoom(this::zoomWindow);
+        patientRegisterAnchorPane.setOnRotate(this::rotateWindow);
+        patientRegisterAnchorPane.setOnScroll(this::scrollWindow);
     }
 
 
@@ -249,6 +254,31 @@ public class GUIPatientRegister {
     private void setValid(Control target) {
         target.getStyleClass()
                 .remove("invalid");
+    }
+
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        Window currentWindow = ((Node)zoomEvent.getTarget()).getScene().getWindow();
+        patientRegisterAnchorPane.setScaleX(patientRegisterAnchorPane.getScaleX() * zoomEvent.getZoomFactor());
+        currentWindow.setWidth(currentWindow.getWidth() * zoomEvent.getZoomFactor() - 0.1);
+        patientRegisterAnchorPane.setScaleY(patientRegisterAnchorPane.getScaleY() * zoomEvent.getZoomFactor());
+        currentWindow.setHeight(currentWindow.getHeight() * zoomEvent.getZoomFactor() - 0.1);
+
+        patientRegisterAnchorPane.setTranslateX(0);
+        patientRegisterAnchorPane.setTranslateY(0);
+    }
+
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        patientRegisterAnchorPane.setRotate(patientRegisterAnchorPane.getRotate() + rotateEvent.getAngle());
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        if(!scrollEvent.isInertia()) {
+            patientRegisterAnchorPane.setTranslateX(patientRegisterAnchorPane.getTranslateX() + scrollEvent.getDeltaX());
+            patientRegisterAnchorPane.setTranslateY(patientRegisterAnchorPane.getTranslateY() + scrollEvent.getDeltaY());
+        }
     }
 
 }

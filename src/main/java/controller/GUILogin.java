@@ -64,7 +64,6 @@ public class GUILogin implements TouchscreenCapable {
         loginPane.setOnZoom(this::zoomWindow);
         loginPane.setOnRotate(this::rotateWindow);
         loginPane.setOnScroll(this::scrollWindow);
-        loginPane.setOnTouchPressed(this::openKeyboard);
     }
 
     /**
@@ -180,18 +179,4 @@ public class GUILogin implements TouchscreenCapable {
         }
     }
 
-
-    public void openKeyboard(TouchEvent touchEvent) {
-        if(touchEvent.getTouchPoint().getPickResult().getIntersectedNode() == nhiLogin) {
-            try {
-                Runtime.getRuntime().exec("cmd /c osk");
-            } catch (IOException e) {
-                e.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Error");
-                alert.setContentText("System keyboard could not be opened");
-                alert.show();
-            }
-        }
-    }
 }
