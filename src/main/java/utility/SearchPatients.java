@@ -40,11 +40,11 @@ public class SearchPatients {
 
     private static IndexSearcher indexSearcher = null;
 
-    public static ArrayList<Patient> totalResults = new ArrayList<>();
+    private static ArrayList<Patient> totalResults = new ArrayList<>();
 
-    public static ArrayList<Patient> filteredResults = new ArrayList <>();
+    private static ArrayList<Patient> filteredResults = new ArrayList <>();
 
-    private static final int NUM_RESULTS = 30; // The default number of results to display if more than 30 results
+    private static int numResults = 30; // The default number of results to display if more than 30 results
 
 
     /**
@@ -158,7 +158,7 @@ public class SearchPatients {
     private static TopDocs searchQuery(FuzzyQuery query) throws IOException {
         IndexReader indexReader = DirectoryReader.open(ramDirectory);
         indexSearcher = new IndexSearcher(indexReader);
-        return indexSearcher.search(query, NUM_RESULTS);
+        return indexSearcher.search(query, numResults);
     }
 
     /**
@@ -169,25 +169,15 @@ public class SearchPatients {
     public static ArrayList<Patient> getDefaultResults() {
         totalResults = new ArrayList<>(Database.getPatients());
         totalResults.sort((o1, o2) -> { // sort by concatenated name
-//=======
-//        ArrayList<Patient> default_patients = new ArrayList<>(Database.getPatients());
-//        default_patients.sort((o1, o2) -> { // sort by concatenated name
-//>>>>>>> development
             int comparison;
             comparison = o1.getNameConcatenated()
                     .compareTo(o2.getNameConcatenated());
             return comparison;
         });
 		if (totalResults.size() > 30) {
-            totalResults = new ArrayList<>(totalResults.subList(0, NUM_RESULTS)); // truncate into size num_results
+            totalResults = new ArrayList<>(totalResults.subList(0, numResults)); // truncate into size num_results
         }
     	return totalResults;
-//=======
-//        if (default_patients.size() > 30) {
-//            default_patients = new ArrayList<>(default_patients.subList(0, NUM_RESULTS)); // truncate into size num_results
-//        }
-//        return default_patients;
-//>>>>>>> development
     }
 
     /**
@@ -203,33 +193,24 @@ public class SearchPatients {
         return Database.getPatientByNhi(nhi);
     }
 
-    /**
-     * Filters the number of patient profiles to the selected search number
-     * @param numResults The number of profiles selected to be displayed
-     * @return Number of profiles equal to the number selected for displaying
-     */
-    public static ArrayList<Patient> filterNumberSearchResults(int numResults) {
-        filteredResults = new ArrayList <>();
-        for (int i = 0; i < numResults && i < totalResults.size(); i++) {
-            filteredResults.add(totalResults.get( i ));
-        }
-        return filteredResults;
+    public static ArrayList<Patient> getAllResults() {
+    	return totalResults;
     }
-
+    
     /**
      * Searches through the index for patients by full name.
      *
      * @param input The name you want to search for.
      * @return ArrayList of the patients it found as a result of the search.
      */
-    public static ArrayList<Patient> searchByName(String input) {
+    public static ArrayList<Patient> searchByName(String input, int numberResults) {
+    	numResults = numberResults;
         if (input.isEmpty()) {
             return getDefaultResults();
         }
         String[] names = input.split(" ");
 
-    	totalResults = new ArrayList<>();
-        ArrayList<Patient> results = new ArrayList<>();
+    	totalResults.clear();
         ArrayList<FuzzyQuery> queries = new ArrayList<>();
         for (String name : names) {
             queries.add(new FuzzyQuery(new Term("fName", name.toUpperCase()), 2));
@@ -240,84 +221,48 @@ public class SearchPatients {
 
         TopDocs docs;
         ArrayList<ScoreDoc> allDocs = new ArrayList<ScoreDoc>();
-		try {
-			Patient patient;
-			for (FuzzyQuery query : queries) {
-				docs = searchQuery(query);
-				for (ScoreDoc doc : docs.scoreDocs) {
-					allDocs.add(doc);
-	        	}
-			}
-			
-			Collections.sort(allDocs, new Comparator<ScoreDoc>() {
-	            @Override
-	            public int compare(ScoreDoc o1, ScoreDoc o2) {
-	                int comparison = new Float(o2.score).compareTo(o1.score);
-	                if (comparison == 0) {
-	                	try {
-							comparison = fetchPatient(o1).getNameConcatenated()
-									.compareTo(fetchPatient(o2).getNameConcatenated());
-						} catch (IOException e) {
-				            userActions.log(Level.SEVERE, "Unable to get patient from database", "Attempted to get patient from database");
-						}
-	                }
-	                return comparison;
-	            }
-	        });
-			
-			int docCount = 0;
-			//int patientCount = 0;
-			while (docCount < allDocs.size()) { //&& patientCount <= NUM_RESULTS) {
-				patient = fetchPatient(allDocs.get(docCount));
-				if (!totalResults.contains(patient)) {
-                    totalResults.add(patient);
-					//patientCount += 1;
-				}
-				docCount += 1;
-			}
-		} catch (IOException e) {
-			userActions.log(Level.SEVERE, "Unable to search patients by name", "Attempted to search patients by name");
-		}
-        return filterNumberSearchResults(NUM_RESULTS);
 
-//        try {
-//            Patient patient;
-//            for (FuzzyQuery query : queries) {
-//                docs = searchQuery(query);
-//                for (ScoreDoc doc : docs.scoreDocs) {
-//                    allDocs.add(doc);
-//                }
-//            }
-//
-//            Collections.sort(allDocs, new Comparator<ScoreDoc>() {
-//                @Override
-//                public int compare(ScoreDoc o1, ScoreDoc o2) {
-//                    int comparison = new Float(o2.score).compareTo(o1.score);
-//                    if (comparison == 0) {
-//                        try {
-//                            comparison = fetchPatient(o1).getNameConcatenated()
-//                                    .compareTo(fetchPatient(o2).getNameConcatenated());
-//                        } catch (IOException e) {
-//                            userActions.log(Level.SEVERE, "Unable to get patient from database", "Attempted to get patient from database");
-//                        }
-//                    }
-//                    return comparison;
-//                }
-//            });
-//
-//            int docCount = 0;
-//            int patientCount = 0;
-//            while (docCount < allDocs.size() && patientCount < NUM_RESULTS) {
-//                patient = fetchPatient(allDocs.get(docCount));
-//                if (!results.contains(patient)) {
-//                    results.add(patient);
-//                    patientCount += 1;
-//                }
-//                docCount += 1;
-//            }
-//        } catch (IOException e) {
-//            userActions.log(Level.SEVERE, "Unable to search patients by name", "Attempted to search patients by name");
-//        }
-//        return results;
+        try {
+            Patient patient;
+            for (FuzzyQuery query : queries) {
+                docs = searchQuery(query);
+                for (ScoreDoc doc : docs.scoreDocs) {
+                    allDocs.add(doc);
+                }
+            }
+
+            Collections.sort(allDocs, new Comparator<ScoreDoc>() {
+                @Override
+                public int compare(ScoreDoc o1, ScoreDoc o2) {
+                    int comparison = new Float(o2.score).compareTo(o1.score);
+                    if (comparison == 0) {
+                        try {
+                            comparison = fetchPatient(o1).getNameConcatenated()
+                                    .compareTo(fetchPatient(o2).getNameConcatenated());
+                        } catch (IOException e) {
+                            userActions.log(Level.SEVERE, "Unable to get patient from database", "Attempted to get patient from database");
+                        }
+                    }
+                    return comparison;
+                }
+            });
+
+            int docCount = 0;
+            int patientCount = 0;
+            //TODO talk about this with group
+            //Add && patientCount < numResults to make only search until reaches the entered number
+            //of search results to speed up search but cant find total number of results
+            while (docCount < allDocs.size()) {
+                patient = fetchPatient(allDocs.get(docCount));
+                if (!totalResults.contains(patient)) {
+                    totalResults.add(patient);
+                    //patientCount += 1;
+                }
+                docCount += 1;
+            }
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE, "Unable to search patients by name", "Attempted to search patients by name");
+        }
+        return new ArrayList<Patient>(totalResults.subList(0, Math.min(totalResults.size(), numResults)));
     }
 }

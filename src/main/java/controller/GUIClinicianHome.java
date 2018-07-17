@@ -52,6 +52,7 @@ public class GUIClinicianHome {
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load search patients").show();
             userActions.log(SEVERE, "Failed to load search patients", "Attempted to load search patients");
+            e.printStackTrace();
         }
     }
 

@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
 <?import javafx.scene.control.Button?>
-<AnchorPane fx:id="clinicianSearchPatientsPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
-    <Label alignment="CENTER" layoutX="81.0" layoutY="14.0" prefHeight="57.0" prefWidth="439.0" styleClass="title" text="Search Patients" textAlignment="CENTER">
-        <font>
-          <Font name="Calibri" size="56.0" />
-        </font>
-    </Label>
-    <TableView fx:id="patientDataTable" layoutX="10.0" layoutY="111.0" prefHeight="275.0" prefWidth="580.0">
-      <columns>
-          <TableColumn fx:id="columnName" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="240.0" resizable="false" text="Name" />
-          <TableColumn fx:id="columnStatus" editable="false" maxWidth="200" minWidth="80" prefWidth="80" resizable="false" text="Status" />
-          <TableColumn fx:id="columnAge" editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="Age" />
-          <TableColumn fx:id="columnBirthGender" editable="false" maxWidth="100.0" minWidth="80.0" prefWidth="80.0" resizable="false" text="Birth Gender" />
-         <TableColumn fx:id="columnRegion" editable="false" maxWidth="200.0" prefWidth="130.0" resizable="false" text="Region" />
-      </columns>
-    </TableView>
-    <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToClinicianHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-    <TextField fx:id="searchEntry" layoutX="10.0" layoutY="71.0" prefHeight="27.0" prefWidth="251.0" />
-    <Label fx:id="displayX" layoutX="290.0" layoutY="71.0" onMouseClicked="#displayDefaultProfiles" styleClass="back" stylesheets="@../css/guiStyle.css" text="Display top 30 profiles" />
-    <Label fx:id="displayY" layoutX="450.0" layoutY="71.0" onMouseClicked="#displayCustomProfiles" styleClass="back" stylesheets="@../css/guiStyle.css" />
+
+<AnchorPane fx:id="clinicianSearchPatientsPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
+   <children>
+       <Label alignment="CENTER" layoutX="81.0" layoutY="14.0" prefHeight="57.0" prefWidth="439.0" styleClass="title" text="Search Patients" textAlignment="CENTER">
+           <font>
+             <Font name="Calibri" size="56.0" />
+           </font>
+       </Label>
+       <TableView fx:id="patientDataTable" layoutX="10.0" layoutY="111.0" prefHeight="275.0" prefWidth="580.0">
+         <columns>
+             <TableColumn fx:id="columnName" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="240.0" resizable="false" text="Name" />
+             <TableColumn fx:id="columnStatus" editable="false" maxWidth="200" minWidth="80" prefWidth="80" resizable="false" text="Status" />
+             <TableColumn fx:id="columnAge" editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="Age" />
+             <TableColumn fx:id="columnBirthGender" editable="false" maxWidth="100.0" minWidth="80.0" prefWidth="80.0" resizable="false" text="Birth Gender" />
+            <TableColumn fx:id="columnRegion" editable="false" maxWidth="200.0" prefWidth="130.0" resizable="false" text="Region" />
+         </columns>
+       </TableView>
+       <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToClinicianHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
+       <TextField fx:id="searchEntry" layoutX="10.0" layoutY="71.0" onKeyReleased="#updateSearch" prefHeight="27.0" prefWidth="251.0" />
+       <Label fx:id="displayX" layoutX="290.0" layoutY="71.0" styleClass="back" stylesheets="@../css/guiStyle.css" text="Display top:" />
+       <Label fx:id="displayY" layoutX="450.0" layoutY="71.0" styleClass="back" stylesheets="@../css/guiStyle.css" />
+      <TextField fx:id="valueX" layoutX="377.0" layoutY="68.0" onKeyReleased="#updateSearch" prefHeight="28.0" prefWidth="53.0" styleClass="back" stylesheets="@../css/guiStyle.css" text="30" />
+   </children>
 </AnchorPane>
