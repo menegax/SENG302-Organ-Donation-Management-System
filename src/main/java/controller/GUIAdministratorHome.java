@@ -14,13 +14,8 @@ import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIAdministratorHome {
-
     @FXML
-    private Button searchPatients;
-    @FXML
-    private Button searchClinicians;
-    @FXML
-    private Button searchAdministrators;
+    private Button searchUsers;
     @FXML
     private AnchorPane administratorHomePane;
     @FXML
@@ -54,7 +49,7 @@ public class GUIAdministratorHome {
     @FXML
     public void goToAdministratorProfile(){
         try {
-            screenControl.show(administratorHomePane, "/scene/clinicianProfile.fxml");
+            screenControl.show(administratorHomePane, "/scene/administratorProfile.fxml");
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load administrator profile").show();
             userActions.log(SEVERE, "Failed to load administrator profile", "Attempted to load administrator profile");
@@ -75,41 +70,16 @@ public class GUIAdministratorHome {
     }
 
     /**
-     * Opens the patient search screen
+     * Opens the user search screen
      */
     @FXML
-    public void goToSearchPatients(){
+    public void goToSearchUsers() {
         try {
-            screenControl.show(administratorHomePane, "/scene/clinicianSearchPatients.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load search patients").show();
-            userActions.log(SEVERE, "Failed to load search patients", "Attempted to load search patients");
-        }
-    }
-
-    /**
-     * Opens the clinician search screen
-     */
-    @FXML
-    public void goToSearchClinicians() {
-        try {
+            //todo
             screenControl.show(administratorHomePane, "/scene/administratorSearchClinicians.fxml");
         } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load search clinicians").show();
-            userActions.log(SEVERE, "Failed to load search clinicians", "Attempted to load search clinicians");
-        }
-    }
-
-    /**
-     * Opens the clinician search screen
-     */
-    @FXML
-    public void goToSearchAdministrators() {
-        try {
-            screenControl.show(administratorHomePane, "/scene/administratorSearchAdministrators.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load search administrators").show();
-            userActions.log(SEVERE, "Failed to load search administrators", "Attempted to load search administrators");
+            new Alert((Alert.AlertType.ERROR), "Unable to load search users").show();
+            userActions.log(SEVERE, "Failed to load search users", "Attempted to load search users");
         }
     }
 

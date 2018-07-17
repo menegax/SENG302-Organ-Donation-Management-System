@@ -91,7 +91,7 @@ public class GUILogin {
             } else {
                 checkAdminCredentials();
                 login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText()));
-                home = FXMLLoader.load((getClass().getResource("/scene/clinicianHome.fxml")));
+                home = FXMLLoader.load((getClass().getResource("/scene/administratorHome.fxml")));
             }
             UndoableStage stage = new UndoableStage();
             screenControl.addStage(stage.getUUID(), stage);

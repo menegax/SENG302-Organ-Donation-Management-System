@@ -45,7 +45,7 @@ public class Administrator extends User {
         this.password = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password + salt);
     }
 
-    private void adminModified() {
+    public void adminModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
 
@@ -81,6 +81,7 @@ public class Administrator extends User {
 
     public void setMiddleNames(List<String> middleNames) {
         this.middleNames = middleNames;
+        adminModified();
     }
 
     public String getLastName() {
@@ -99,6 +100,33 @@ public class Administrator extends User {
             this.lastName = lastName;
             adminModified();
         }
+    }
+
+    /**
+     * Updates the administrators password
+     * @param password the administrators new password
+     */
+    public void setPassword(String password) {
+        if (password.length() < 6) {
+            throw new IllegalArgumentException("Password must be at least 6 characters long");
+        }
+        this.password = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password + salt);
+        adminModified();
+    }
+
+    /**
+     * Concatenates a admin's first, middle and last names, and returns the full name as a String
+     * @return String concatenated name
+     */
+    public String getConcatenatedName() {
+        String name = this.firstName;
+        if(this.middleNames != null) {
+            for(String middleName : this.middleNames) {
+                name = name + " " + middleName;
+            }
+        }
+        name = name + " " + this.lastName;
+        return name;
     }
 
     public Timestamp getModified() {

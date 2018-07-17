@@ -14,16 +14,12 @@
         </Label>
         <Button fx:id="profileButton" layoutX="76.0" layoutY="136.0" mnemonicParsing="false" onAction="#goToAdministratorProfile" prefHeight="79.0" prefWidth="111.0" text="Profile" />
         <Button fx:id="waitingListButton" layoutX="248.0" layoutY="230.0" mnemonicParsing="false" onAction="#goToClinicianWaitingList" prefHeight="79.0" prefWidth="111.0" text="Organ Waiting List" textAlignment="CENTER" wrapText="true" />
-        <Button fx:id="searchPatients" layoutX="248.0" layoutY="135.0" mnemonicParsing="false" onAction="#goToSearchPatients" prefHeight="79.0" prefWidth="110.0" text="Search Patients" />
+        <Button fx:id="searchUsers" layoutX="248.0" layoutY="135.0" mnemonicParsing="false" onAction="#goToSearchUsers" prefHeight="79.0" prefWidth="110.0" text="Search Users" />
         <Button fx:id="history" layoutX="76.0" layoutY="230.0" mnemonicParsing="false" onAction="#goToHistory" prefHeight="79.0" prefWidth="110.0" text="History" />
-        <Button fx:id="searchClinicians" layoutX="410.0" layoutY="136.0" mnemonicParsing="false" onAction="#goToSearchClinicians" prefHeight="79.0" prefWidth="110.0" text="Search Clinicians" />
-        <Button fx:id="searchAdministrators" layoutX="410.0" layoutY="230.0" mnemonicParsing="false" onAction="#goToSearchAdministrators" prefHeight="79.0" prefWidth="110.0" text="Search Administrators" textAlignment="CENTER" wrapText="true" />
-        <Button fx:id="registerButton" layoutX="76.0" layoutY="36.0" mnemonicParsing="false" onAction="#registerNewUser" prefHeight="79.0" prefWidth="111.0" text="Register New User" textAlignment="CENTER" wrapText="true" />
+        <Button fx:id="registerButton" layoutX="408.0" layoutY="230.0" mnemonicParsing="false" onAction="#registerNewUser" prefHeight="79.0" prefWidth="111.0" text="Register User" textAlignment="CENTER" wrapText="true" />
         <Button fx:id="saveButton" layoutX="435.0" layoutY="338.0" mnemonicParsing="false" onAction="#saveAdministrator" prefHeight="25.0" prefWidth="57.0" text="Save" />
         <Button fx:id="logoutButton" layoutX="101.0" layoutY="338.0" mnemonicParsing="false" onAction="#logOutAdministrator" text="Log out" />
         <Button fx:id="importDataButton" layoutX="263.0" layoutY="338.0" mnemonicParsing="false" onAction="#importData" prefHeight="25.0" prefWidth="80.0" text="Import Data" />
-        <Button fx:id="importPatientsButton" layoutX="410.0" layoutY="36.0" mnemonicParsing="false" onAction="#importPatients" prefHeight="25.0" prefWidth="110.0" text="Import Patients" />
-        <Button fx:id="importCliniciansButton" layoutX="410.0" layoutY="63.0" mnemonicParsing="false" onAction="#importClinicians" prefHeight="25.0" prefWidth="110.0" text="Import Clinicians" />
-        <Button fx:id="importWaitListButton" layoutX="410.0" layoutY="90.0" mnemonicParsing="false" onAction="#importWaitList" prefHeight="25.0" prefWidth="110.0" text="Import Wait List" />
+      <Button fx:id="importButton" layoutX="408.0" layoutY="135.0" mnemonicParsing="false" onAction="#importData" prefHeight="79.0" prefWidth="111.0" text="Import Data" textAlignment="CENTER" wrapText="true" />
     </children>
 </AnchorPane>
