@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="patientDonationsAnchorPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/9.0.1" fx:controller="controller.GUIPatientUpdateDonations">
+<GridPane fx:id="patientDonationsAnchorPane" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientUpdateDonations">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -39,6 +39,6 @@
       <CheckBox fx:id="middleearCB" mnemonicParsing="false" text="Middle ear" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
       <CheckBox fx:id="boneCB" mnemonicParsing="false" text="Bone" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="5" />
       <CheckBox fx:id="connectivetissueCB" mnemonicParsing="false" text="Connective tissue" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="6" />
-      <Button mnemonicParsing="false" onAction="#saveDonations" prefHeight="33.0" prefWidth="120.0" text="Save" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
+      <Button mnemonicParsing="false" onAction="#saveDonations" prefHeight="33.0" prefWidth="120.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Set" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
    </children>
 </GridPane>

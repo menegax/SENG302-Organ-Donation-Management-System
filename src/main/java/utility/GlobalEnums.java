@@ -270,4 +270,34 @@ public class GlobalEnums {
         }
 
     }
+
+    /**
+     * Enum for a patient status; whether donating, receiving, or both
+     */
+    public enum Status {
+        RECEIVING ("receiving"),
+        DONATING ("donating"),
+        BOTH ("both");
+
+        private String value;
+
+        Status(final String value) { this.value = value; }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue();
+        }
+
+        public static Enum getEnumFromString(String value) {
+            try {
+                return Status.valueOf(value.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
+    }
 }

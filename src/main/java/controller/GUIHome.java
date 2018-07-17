@@ -11,17 +11,13 @@ import static utility.UserActionHistory.userActions;
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
+import model.User;
 import service.Database;
 
 import java.io.File;
@@ -39,8 +35,13 @@ public class GUIHome {
     @FXML
     private MenuBar menuBar;
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    @FXML
+    private Label userNameDisplay;
 
+    @FXML
+    private Label userTypeDisplay;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     @FXML
     public void initialize() {
@@ -48,24 +49,32 @@ public class GUIHome {
         try {
             if (userControl.getLoggedInUser() instanceof Patient){
                 addTabsPatient();
+                setUpColouredBar(userControl.getLoggedInUser());
             } else if (userControl.getLoggedInUser() instanceof Clinician) {
                 if (userControl.getTargetPatient() != null) {
-                    addTabsForPatientClinician(); //if we are a clinician looking at a patient
+                    addTabsForPatientClinician(); // if we are a clinician looking at a patient
+                    setUpColouredBar(userControl.getTargetPatient());
                 } else {
                     addTabsClinician();
+                    setUpColouredBar(userControl.getLoggedInUser());
                 }
             }
-
             horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty().addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
-
-        } catch (Exception e) {
+        } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls", Arrays.toString(e.getStackTrace()));
             e.printStackTrace(); //todo rm
         }
-
     }
 
+    /**
+     * Sets to the coloured bar at top of GUI the user name and type
+     * @param user the currently logged in user, or observed patient
+     */
+    private void setUpColouredBar(User user) {
+        userNameDisplay.setText(user.getNameConcatenated());
+        userTypeDisplay.setText(user.getUserType());
+    }
 
     /**
      * Creates and adds tab to the tab pane
@@ -98,7 +107,6 @@ public class GUIHome {
         createTab("View Disease History","/scene/testClinicianDiagnosis.fxml");
         createTab("History", "/scene/patientHistory.fxml");
         createTab("Procedures", "/scene/testPatientProcedures.fxml");
-        //todo setUpMenuBar() call here
     }
 
 
@@ -204,20 +212,27 @@ public class GUIHome {
         bar.getMenus()
                 .addAll(menu1, menu2); //Todo add menu3 with undo/redo
 
+        boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless")
+                .equals("true");
         // Use the menu bar for primary stage
-        if (screenControl.isMacOs()) {
-            // Get the toolkit THIS IS MAC OS ONLY
-            MenuToolkit tk = MenuToolkit.toolkit();
+        if (!headless) { // make sure it isn't testing
+            if (screenControl.isMacOs()) {
+                // Get the toolkit THIS IS MAC OS ONLY
+                MenuToolkit tk = MenuToolkit.toolkit();
 
-            // Add the default application menu
-            bar.getMenus().add(0, tk.createDefaultApplicationMenu(screenControl.getAppName())); // set leftmost MacOS system menu
-            tk.setMenuBar(stage, bar);
-            systemLogger.log(FINER, "Set MacOS menu bar");
-        }
-        else {// if windows
-            menuBar.getMenus().clear();
-            menuBar.getMenus().addAll(menu1, menu2); //todo add menu3 with undo/redo
-            systemLogger.log(FINER, "Set non-MacOS menu bar");
+                // Add the default application menu
+                bar.getMenus()
+                        .add(0, tk.createDefaultApplicationMenu(screenControl.getAppName())); // set leftmost MacOS system menu
+                tk.setMenuBar(stage, bar);
+                systemLogger.log(FINER, "Set MacOS menu bar");
+            }
+            else {// if windows
+                menuBar.getMenus()
+                        .clear();
+                menuBar.getMenus()
+                        .addAll(menu1, menu2); //todo add menu3 with undo/redo
+                systemLogger.log(FINER, "Set non-MacOS menu bar");
+            }
         }
 
 

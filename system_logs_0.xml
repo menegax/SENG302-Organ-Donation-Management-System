@@ -2,13 +2,13 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-05-31T21:44:20</date>
-  <millis>1527759860450</millis>
+  <date>2018-07-01T21:33:37</date>
+  <millis>1530437617613</millis>
   <sequence>9</sequence>
   <logger>utility.SystemLogger</logger>
   <level>INFO</level>
   <class>main.Main</class>
   <method>start</method>
-  <thread>14</thread>
+  <thread>12</thread>
   <message>Finished the start method for the app. Beginning app</message>
 </record>

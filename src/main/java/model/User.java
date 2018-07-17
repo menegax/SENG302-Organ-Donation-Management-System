@@ -10,4 +10,8 @@ public abstract class User {
         return uuid;
     }
 
+    public abstract String getNameConcatenated();
+
+    public abstract String getUserType();
+
 }

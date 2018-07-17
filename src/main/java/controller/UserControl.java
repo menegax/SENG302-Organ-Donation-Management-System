@@ -101,7 +101,7 @@ public class UserControl {
     /**
      * Removes the logged in user from the cache
      */
-    void rmLoggedInUserCache() {
+    public void rmLoggedInUserCache() {
         remove("user_logged_in");
     }
 

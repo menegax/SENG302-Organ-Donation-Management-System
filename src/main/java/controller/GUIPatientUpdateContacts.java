@@ -81,7 +81,8 @@ public class GUIPatientUpdateContacts extends UndoableController {
         boolean valid = setPatientContactDetails();
         if (valid) {
             Database.saveToDisk();
-            goToProfile();
+            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+//            goToProfile();
         } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }

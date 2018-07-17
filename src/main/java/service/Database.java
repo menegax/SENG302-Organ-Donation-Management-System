@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class Database {
@@ -256,7 +257,7 @@ public class Database {
             userActions.log(Level.WARNING, "Patient import file not found", "Attempted to read patient file");
         }
         catch (Exception e) {
-            userActions.log(Level.WARNING, "Failed to import from file", "Attempted to read patient file");
+            userActions.log(Level.WARNING, "Failed to import from patient file", "Attempted to read patient file");
         }
 
     }
@@ -267,10 +268,17 @@ public class Database {
      */
     public static void importFromDiskWaitlist(String filename) {
         Gson gson = new Gson();
-
-            InputStream in = ClassLoader.class.getResourceAsStream(filename);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(filename));
             organWaitingList = gson.fromJson(br, OrganWaitlist.class);
+        }
+        catch (FileNotFoundException e) {
+            userActions.log(Level.WARNING, "Waitlist import file not found", "Attempted to read waitlist file");
+        }
+        catch (Exception e) {
+            userActions.log(Level.WARNING, "Failed to import from waitlist file", "Attempted to read watilist file");
+        }
 
     }
 

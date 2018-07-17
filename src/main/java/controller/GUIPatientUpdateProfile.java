@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateProfile extends UndoableController {
@@ -116,7 +117,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
-                saveProfile();
+                saveProfileUpdater();
             }
         });
     }
@@ -192,8 +193,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
         nhiTxt.setText(patient.getNhiNumber());
         firstnameTxt.setText(patient.getFirstName());
         lastnameTxt.setText(patient.getLastName());
-        for (String name : patient.getMiddleNames()) {
-            middlenameTxt.setText(middlenameTxt.getText() + name + " ");
+        if (patient.getMiddleNames() != null) {
+            for (String name : patient.getMiddleNames()) {
+                middlenameTxt.setText(middlenameTxt.getText() + name + " ");
+            }
         }
         preferrednameTxt.setText(patient.getPreferredName());
         if (patient.getBirthGender() != null) {
@@ -267,7 +270,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
     /**
      * Saves profile changes after checking each field for validity
      */
-    public void saveProfile() {
+    public void saveProfileUpdater() {
+        systemLogger.log(Level.FINEST, "Saving patient profile for update...");
         Boolean valid = true;
 
         Alert invalidInfo = new Alert(Alert.AlertType.WARNING);
@@ -490,11 +494,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
                         .getSelectedItem()));
             }
             Database.saveToDisk(); //TODO: need to be kept consistent with old UI
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Patient successfully updated", ButtonType.OK);
-            alert.show();
+            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
         }
         else {
+            systemLogger.log(Level.WARNING, "Failed to update patient profile due to invalid fields:\n" + invalidContent);
             userActions.log(Level.WARNING, "Failed to update patient profile due to invalid fields", "Attempted to update patient profile");
             invalidContent.append("\nYour changes have not been saved.");
             invalidInfo.setContentText(invalidContent.toString());

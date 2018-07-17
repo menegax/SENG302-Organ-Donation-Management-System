@@ -10,13 +10,15 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="TOP_CENTER" prefHeight="399.0" prefWidth="783.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianUpdateProfile">
+<!--//todo RENAME TO CLINICIANUPDATEPROFILE!!!!-->
+
+<GridPane alignment="TOP_CENTER" prefHeight="399.0" prefWidth="783.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianUpdateProfile">
   <columnConstraints>
-      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="61.40001602172852" />
-      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="329.0" />
-    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="68.80003662109374" />
-      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="329.8000122070313" />
-      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="61.00002441406252" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="60.0" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="330.0" />
+    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="60.0" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="330.0" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="60.0" />
   </columnConstraints>
   <rowConstraints>
       <RowConstraints />
@@ -27,7 +29,6 @@
       <RowConstraints minHeight="5.0" prefHeight="99.40000000000003" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Button fx:id="saveProfile" mnemonicParsing="false" onAction="#saveProfile" prefHeight="37.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Save" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
       <Label fx:id="lastModifiedLbl" alignment="CENTER" prefHeight="17.0" prefWidth="253.0" text="Last Modified: yada yada" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
          <font>
             <Font name="System Bold" size="12.0" />
@@ -36,29 +37,7 @@
             <Insets bottom="10.0" />
          </GridPane.margin>
       </Label>
-      <GridPane GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="2">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="88.20001220703125" minWidth="10.0" prefWidth="60.200008392333984" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="239.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Label text="Street 1:" />
-            <Label text="Suburb:" GridPane.rowIndex="2" />
-            <Label text="Region:" GridPane.rowIndex="3" />
-            <Label text="Street 2:" GridPane.rowIndex="1" />
-            <TextField fx:id="street1Txt" prefHeight="32.0" prefWidth="320.0" promptText="Street 1" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-            <TextField fx:id="suburbTxt" prefHeight="32.0" prefWidth="320.0" promptText="Suburb" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="street2Txt" prefHeight="32.0" prefWidth="320.0" promptText="Street 2" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-            <ChoiceBox fx:id="regionDD" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-         </children>
-      </GridPane>
-      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="2">
+      <GridPane prefHeight="246.0" prefWidth="322.0" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="2">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="108.39999389648438" />
           <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="239.60000610351562" />
@@ -70,15 +49,63 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Staff ID:" />
-            <TextField fx:id="staffId" focusTraversable="false" prefHeight="32.0" prefWidth="320.0" promptText="Staff ID" GridPane.columnIndex="1" />
-            <Label text="First Name:" GridPane.rowIndex="1" />
-            <TextField fx:id="firstnameTxt" focusTraversable="false" prefHeight="32.0" prefWidth="320.0" promptText="First name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Last Name:" GridPane.rowIndex="3" />
-            <TextField fx:id="lastnameTxt" focusTraversable="false" prefHeight="32.0" prefWidth="320.0" promptText="Last name" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Middle Name(s):" GridPane.rowIndex="2" />
-            <TextField fx:id="middlenameTxt" focusTraversable="false" prefHeight="32.0" prefWidth="320.0" promptText="Middle name(s)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Staff ID:" GridPane.halignment="RIGHT">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Label>
+            <TextField fx:id="staffId" focusTraversable="false" prefWidth="320.0" promptText="Staff ID" GridPane.columnIndex="1" />
+            <Label text="First Name:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Label>
+            <TextField fx:id="firstnameUpdateTxt" focusTraversable="false" prefWidth="320.0" promptText="First name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label ellipsisString=".." text="Middle Name(s):" textAlignment="RIGHT" wrapText="true" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Label>
+            <TextField fx:id="middlenameTxt" focusTraversable="false" prefWidth="320.0" promptText="Middle name(s)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Last Name:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Label>
+            <TextField fx:id="lastnameTxt" focusTraversable="false" prefWidth="320.0" promptText="Last name" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
+      <GridPane GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="2">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="88.20001220703125" minWidth="10.0" prefWidth="60.200008392333984" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="239.0" />
+            <ColumnConstraints />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Street 1:" GridPane.halignment="RIGHT">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Label>
+            <Label text="Suburb:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Label>
+            <Label text="Region:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Label>
+            <Label text="Street 2:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Label>
+            <TextField fx:id="street1Txt" prefWidth="320.0" promptText="Street 1" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+            <TextField fx:id="street2Txt" prefWidth="320.0" promptText="Street 2" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+            <TextField fx:id="suburbTxt" prefWidth="320.0" promptText="Suburb" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ChoiceBox fx:id="regionDD" maxWidth="1.7976931348623157E308" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+      <Button fx:id="saveProfile" mnemonicParsing="false" onAction="#saveProfile" prefHeight="37.0" prefWidth="90.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Set" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

@@ -39,16 +39,10 @@ public class Main extends Application {
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
         screenControl.show(uuid, loginScreen);
 
-
         // add objects
-
-        try {
-            Database.importFromDiskPatients("./patient.json");
-            Database.importFromDiskClinicians("./clinician.json");
-            Database.importFromDiskWaitlist("/waitlist.json");
-        } catch (Exception e){
-            systemLogger.log(Level.SEVERE, "Unable to import from disk on startup");
-        }
+        Database.importFromDiskPatients("./patient.json");
+        Database.importFromDiskClinicians("./clinician.json");
+        Database.importFromDiskWaitlist("./waitlist.json");
 
         addDummyTestObjects();
         ensureDefaultClinician();
@@ -56,7 +50,6 @@ public class Main extends Application {
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
 
         primaryStage.show();
-
     }
 
     public static void main(String[] args) {
