@@ -36,7 +36,7 @@ public class GUIClinicianSearchPatientsPopUpTest extends ApplicationTest {
 
         ArrayList<String> mid = new ArrayList<>();
         mid.add("Middle");
-        database.add(new Clinician(database.getNextStaffID(), "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
+        database.add(new Clinician(99, "initial", mid, "clinician", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
 
 
     }
