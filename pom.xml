@@ -79,6 +79,7 @@
             <artifactId>lucene-sandbox</artifactId>
             <version>7.3.0</version>
         </dependency>
+        <!--todo remove testfx if not used-->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
