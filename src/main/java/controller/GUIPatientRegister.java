@@ -196,12 +196,7 @@ public class GUIPatientRegister {
     @FXML
     public void goBackToLogin() {
         clearFields();
-        try {
-            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
-            userActions.log(SEVERE, "Failed to load login", "Attempted to load login");
-        }
+        returnToPreviousPage();
     }
 
 
@@ -368,12 +363,7 @@ public class GUIPatientRegister {
             Database.saveToDisk();
             clearFields();
             new Alert(Alert.AlertType.INFORMATION, "Successfully registered!").show();
-            try {
-                screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-            } catch (IOException e) {
-                new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
-                userActions.log(SEVERE, "Failed to load login", "Attempted to load login");
-            }
+            returnToPreviousPage();
         } else {
             userActions.log(Level.WARNING, "Failed to register patient profile due to invalid fields", "Attempted to register patient profile");
             invalidInfo.setContentText(invalidContent.toString());
@@ -392,6 +382,18 @@ public class GUIPatientRegister {
         return false;
     }
 
+    private void returnToPreviousPage() {
+        try {
+            if (userControl.getLoggedInUser() != null && userControl.getLoggedInUser() instanceof Administrator) {
+                screenControl.show(patientRegisterAnchorPane, "/scene/administratorCreateUser.fxml");
+            } else {
+                screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+            }
+        } catch (IOException e) {
+            new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
+            userActions.log(SEVERE, "Failed to load login", "Attempted to load login");
+        }
+    }
 
     /**
      * Removes the invalid class from the target control if it has it

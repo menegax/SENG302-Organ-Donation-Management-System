@@ -1,11 +1,9 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import main.Main;
 import service.Database;
 
 import java.io.IOException;
@@ -47,7 +45,7 @@ public class GUIAdministratorHome {
      * Opens the administrator profile screen
      */
     @FXML
-    public void goToAdministratorProfile(){
+    public void goToAdministratorProfile() {
         try {
             screenControl.show(administratorHomePane, "/scene/administratorProfile.fxml");
         } catch (IOException e) {
@@ -62,7 +60,7 @@ public class GUIAdministratorHome {
     @FXML
     public void registerNewUser() {
         try {
-            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/patientRegister.fxml")));
+            screenControl.show(administratorHomePane, "/scene/administratorCreateUser.fxml");
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load user register").show();
             userActions.log(SEVERE, "Failed to load user register", "Attempted to load user register");
@@ -109,8 +107,7 @@ public class GUIAdministratorHome {
     public void goToHistory() {
         try {
             screenControl.show(administratorHomePane, "/scene/administratorHome.fxml");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "Unable load administrator history").show();
             userActions.log(SEVERE, "Failed to load administrator history", "Attempted to load administrator history");
         }
@@ -135,7 +132,7 @@ public class GUIAdministratorHome {
     public void importPatients() {
         try {
             Database.importFromDiskPatients("./patient.json");
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -146,7 +143,7 @@ public class GUIAdministratorHome {
     public void importClinicians() {
         try {
             Database.importFromDiskClinicians("./clinician.json");
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -157,7 +154,7 @@ public class GUIAdministratorHome {
     public void importWaitList() {
         try {
             Database.importFromDiskWaitlist("/waitlist.json");
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
