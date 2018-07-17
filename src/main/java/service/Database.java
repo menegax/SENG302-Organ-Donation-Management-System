@@ -444,6 +444,29 @@ public class Database {
      * @return True if patient updated in database, false otherwise.
      */
     private boolean updatePatient(Patient patient) {
+    	String[][] info = getPreparedUpdatePatientQuery(patient);
+    	String query = info[0][0];
+    	String[] attr = info[1];
+        //Run all queries
+        try {
+			runQuery(query, attr);
+			SearchPatients.addIndex(patient);
+			userActions.log(Level.INFO, "Updated patient attributes in database.", "Attempted to update patient attributes in database.");
+			return true;
+		} catch (SQLException e) {
+			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to update patient in database.");
+		}
+        return false;
+    }
+
+    /**
+     * Gets the query and parameters for the query to update a patient.
+     * The query will be the first index of the first index in the returned array of arrays eg. [0][0]
+     * The parameters will be the second index of the returned array of arrays eg. [1]
+     * @param patient The patient to create the query for.
+     * @return Array of String arrays with the first index used for the query and the second used for the parameters.
+     */
+    private String[][] getPreparedUpdatePatientQuery(Patient patient) {
         //Query to add base patient attributes to database 
         String[] attr = getPatientAttributes(patient);
         String query = UPDATEPATIENTQUERYSTRING;
@@ -477,18 +500,10 @@ public class Database {
             attr = ArrayUtils.addAll(attr, getProcedureAttributes(patient, procedure));
             query += ";" + UPDATEPATIENTPROCEDURESQUERYSTRING;
         }
-        //Run all queries
-        try {
-			runQuery(query, attr);
-			SearchPatients.addIndex(patient);
-			userActions.log(Level.INFO, "Updated patient attributes in database.", "Attempted to update patient attributes in database.");
-			return true;
-		} catch (SQLException e) {
-			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to update patient in database.");
-		}
-        return false;
+        String[] packagedQuery = {query};
+        return new String[][] {packagedQuery, attr};
     }
-
+    
     /**
      * Updates a clinician in the database.
      * @param clinician The clinician to update.
@@ -966,9 +981,7 @@ public class Database {
         }
         Timestamp modified = Timestamp.valueOf(attr[8]);
 
-        Clinician newClinician = new Clinician(staffID, fName, mNames, lName, street1, street2, suburb, region);
-        newClinician.setModified(modified);
-        return newClinician;
+        return new Clinician(staffID, fName, mNames, lName, street1, street2, suburb, region, modified);
     }
 
     /**
@@ -1132,41 +1145,62 @@ public class Database {
         return null;
     }
 
-    //TODO This is not a good idea and did it ever actually work properly?
     /**
-     * Returns the next valid staffID based on IDs in the clinician list
-     *
-     * @return the valid id
+     * Pushes all local changes to patients to the database.
+     * @return True if successfully updated all patients, otherwise false.
      */
-    public int getNextStaffID() {
-        if (clinicians.size() == 0) {
-            return 0;
-        } else {
-            int currentID = clinicians.stream()
-                    .max(Comparator.comparing(Clinician::getStaffID))
-                    .get()
-                    .getStaffID();
-            return currentID + 1;
-        }
-    }
-
-    public boolean updateAllPatients() {
-    	boolean success = true;
+    private boolean updateAllPatients() {
+    	String[][] info;
+    	String[] params = new String[0];
+    	String query = new String();
     	for (Patient patient : getPatients()) {
     		if (patient.getChanged()) {
-    			if (!update(patient)) {
-    				success = false;
-    			}
+    			info = getPreparedUpdatePatientQuery(patient);
+    			query += info[0][0];
+    			params = ArrayUtils.addAll(params, info[1]);
     		}
     	}
-    	return success;
+    	try {
+			runQuery(query, params);
+			userActions.log(Level.INFO, "Successfully updated all patients in database.", "Attempted to update all patients in database.");
+			return true;
+		} catch (SQLException e) {
+			userActions.log(Level.SEVERE, "Failed to update all patients in database." + e.getMessage(), "Attempted to update all patients in database.");
+		}
+    	return false;
     }
     
-    //TODO is this needed?
+    /**
+     * Pushes all local changes to clinicians to the database.
+     * @return True if successfully updated all clinicians, otherwise false.
+     */
+    private boolean updateAllClinicians() {
+    	String[] params = new String[0];
+    	String query = new String();
+    	for (Clinician clinician : getClinicians()) {
+    		if (clinician.getChanged()) {
+    			query += UPDATECLINICIANQUERYSTRING;
+    			params = ArrayUtils.addAll(params, getClinicianAttributes(clinician));
+    		}
+    	}
+    	try {
+			runQuery(query, params);
+			userActions.log(Level.INFO, "Successfully updated all clinicians in database.", "Attempted to update all clinicians in database.");
+			return true;
+		} catch (SQLException e) {
+			userActions.log(Level.SEVERE, "Failed to update all clinicians in database." + e.getMessage(), "Attempted to update all clinicians in database.");
+		}
+    	return false;
+    }
+    
+    /**
+     * Pushes all local changes to the database.
+     * @return True if everything was successfully updated, false otherwise.
+     */
     public boolean updateDatabase() {
     	boolean patientUpdate = updateAllPatients();
-    	
-    	return false;
+    	boolean clinicianUpdate = updateAllClinicians();
+    	return patientUpdate && clinicianUpdate;
     }
     
     //TODO change this to save to remote database

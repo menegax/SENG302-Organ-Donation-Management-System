@@ -58,8 +58,6 @@ public class Patient extends User {
 
     private ArrayList<Organ> requiredOrgans;
 
-    private Timestamp modified;
-
     private String nhiNumber;
 
     private ArrayList<Medication> currentMedications = new ArrayList<>();
@@ -93,8 +91,6 @@ public class Patient extends User {
     private ArrayList<Disease> currentDiseases = new ArrayList<>();
 
     private ArrayList<Disease> pastDiseases = new ArrayList<>();
-
-    private boolean changed = false;
 
     private GlobalEnums.Organ removedOrgan;
 
@@ -646,8 +642,6 @@ public class Patient extends User {
         return modified;
     }
 
-    public void setModified(Timestamp modified) { this.modified = modified; }
-
     /**
      * Add organs to patient donations list
      *
@@ -890,20 +884,6 @@ public class Patient extends User {
     public void setPastDiseases(ArrayList<Disease> pastDiseases) {
         this.pastDiseases = pastDiseases;
         setChanged();
-    }
-
-
-    /**
-     *
-     * Updates the modified timestamp of the patient
-     */
-    private void setChanged() {
-        this.modified = new Timestamp(System.currentTimeMillis());
-        this.changed = true;
-    }
-
-    public boolean getChanged() {
-    	return changed;
     }
 
     public void addProcedure(Procedure procedure) {
