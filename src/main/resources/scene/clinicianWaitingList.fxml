@@ -27,6 +27,6 @@
         <ChoiceBox fx:id="regionSelection" layoutX="400.0" layoutY="350.0" prefHeight="26.0" prefWidth="122.0" />
       <Label layoutX="82.0" layoutY="350.0" text="Organ" />
       <Label layoutX="350.0" layoutY="350.0" text="Region" />
-      <Hyperlink fx:id="backButton" layoutX="14.0" layoutY="27.0" onAction="#goToClinicianHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
+      <Hyperlink fx:id="backButton" layoutX="14.0" layoutY="27.0" onAction="#goToHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
     </children>
 </AnchorPane>

@@ -23,6 +23,9 @@ public class GUIAdministratorProfile {
     @FXML
     private Label modifiedLbl;
 
+    @FXML
+    private Button deleteButton;
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
     private Object user = new UserControl().getLoggedInUser();
 
@@ -30,6 +33,9 @@ public class GUIAdministratorProfile {
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
     public void initialize() {
+        if (((Administrator) user).getUsername().equals("admin")) {
+            deleteButton.setVisible(false);
+        }
         loadProfile((Administrator) user);
     }
 

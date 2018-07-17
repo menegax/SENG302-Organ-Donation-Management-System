@@ -13,6 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Administrator;
+import model.Clinician;
 import model.DrugInteraction;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
@@ -53,7 +55,7 @@ public class GUIClinicianWaitingList {
     @FXML
     private ChoiceBox<String> regionSelection;
 
-    private UserControl userControl;
+    private UserControl userControl = new UserControl();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -215,12 +217,16 @@ public class GUIClinicianWaitingList {
     /**
      * Returns the user to the clinician home page
      */
-    public void goToClinicianHome() {
+    public void goToHome() {
         try {
-            screenControl.show(clinicianWaitingListAnchorPane, "/scene/clinicianHome.fxml");
+            if (userControl.getLoggedInUser() instanceof Clinician) {
+                screenControl.show(clinicianWaitingListAnchorPane, "/scene/clinicianHome.fxml");
+            } else if (userControl.getLoggedInUser() instanceof Administrator) {
+                screenControl.show(clinicianWaitingListAnchorPane, "/scene/administratorHome.fxml");
+            }
         } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
-            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
+            new Alert((Alert.AlertType.ERROR), "Unable to load home screen").show();
+            userActions.log(SEVERE, "Failed to load home", "Attempted to load home");
         }
     }
 
