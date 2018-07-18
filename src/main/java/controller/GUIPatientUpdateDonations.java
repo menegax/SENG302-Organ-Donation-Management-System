@@ -258,7 +258,6 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
         }
         userActions.log(INFO, "Updated user donations to: " + newDonations, "Attempted to update donations");
-        Database.saveToDisk();
         new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
     }
 }
