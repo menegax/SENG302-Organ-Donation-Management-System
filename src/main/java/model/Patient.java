@@ -96,12 +96,10 @@ public class Patient extends User {
      * @param date date of birth of patient
      */
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate date) {
+        super(firstName, middleNames, lastName);
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
-        this.firstName = firstName;
         this.preferredName = firstName;
-        this.middleNames = middleNames;
-        this.lastName = lastName;
         this.birth = date;
         this.nhiNumber = nhiNumber.toUpperCase();
         this.donations = new ArrayList<>();
@@ -550,10 +548,6 @@ public class Patient extends User {
 
     public String getFormattedAddress() {
         return street1 + " " + street2 + " " + suburb + " " + region + " " + zip;
-    }
-
-    public Timestamp getModified() {
-        return modified;
     }
 
     /**
