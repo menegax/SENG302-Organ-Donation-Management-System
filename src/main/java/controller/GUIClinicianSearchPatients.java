@@ -220,15 +220,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         masterData.addAll(SearchPatients.getDefaultResults());
     }
 
-    public void goToClinicianHome() {
-        try {
-            screenControl.show(patientDataTable, "/scene/clinicianHome.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
-            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
-        }
-    }
-
     /**
      * Refreshes the table data
      */

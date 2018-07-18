@@ -29,8 +29,6 @@ public class GUIClinicianProfile {
     @FXML
     private Label regionTxt;
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
-
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
@@ -65,29 +63,5 @@ public class GUIClinicianProfile {
             suburbTxt.setText("Not Set");
         }
         if (clinician.getRegion() != null) regionTxt.setText(clinician.getRegion().getValue());
-    }
-
-    /**
-     * Opens the clinician edit screen
-     */
-    public void goToEdit() {
-        try {
-            screenControl.show(idTxt, "/scene/clinicianProfileUpdate.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load update clinician profile").show();
-            userActions.log(SEVERE, "Failed to load update clinician profile", "Attempted to load update clinician profile");
-        }
-    }
-
-    /**
-     * Opens the clinician home screen
-     */
-    public void goToClinicianHome() {
-        try {
-            screenControl.show(idTxt, "/scene/clinicianHome.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
-            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
-        }
     }
 }

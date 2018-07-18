@@ -36,6 +36,7 @@ public class Main extends Application {
         // setup GUI
         ScreenControl screenControl = ScreenControl.getScreenControl();
         screenControl.addStage(uuid, primaryStage);
+        primaryStage.setResizable(false);
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
         screenControl.show(uuid, loginScreen);
 

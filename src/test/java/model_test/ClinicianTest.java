@@ -30,6 +30,7 @@ public class ClinicianTest {
      */
     @Before
     public void setUp() {
+        userActions.setLevel(Level.OFF);
         clinician = new Clinician(0, "Joe", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND);
     }
 

@@ -163,7 +163,7 @@ public class Clinician extends User {
     }
 
     public void setStreet2(String street2) {
-        if (street2 != null && Pattern.matches("^[- 0-9a-zA-Z]*$", street2)) { //todo
+        if (street2 != null && Pattern.matches("^[- 0-9a-zA-Z]*$", street2)) {
             this.street2 = street2;
             clinicianModified();
         }

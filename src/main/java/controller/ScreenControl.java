@@ -24,10 +24,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-//todo put javadoc bruh
+/**
+ * Maintains a collection of screens for the application
+ */
 public class ScreenControl {
 
-    //Todo remove all deprecated stuff
     private static ScreenControl screenControl;
 
     @Deprecated
@@ -84,7 +85,7 @@ public class ScreenControl {
      * @param key the uuid of the stage to add
      * @param stage the stage object to add to the hashmap
      */
-    public void addStage(UUID key, Stage stage){
+    void addStage(UUID key, Stage stage){
         applicationStages.put(key, stage);
         if (new UserControl().isUserLoggedIn()) { // if scene belongs to a user
             systemLogger.log(FINE, "User is logged in and a stage is being added");
@@ -117,9 +118,8 @@ public class ScreenControl {
 
     /**
      * Closes the stage that the provided node is on
-     * @param - node which is on the stage to close
+     * @param stageName - node which is on the stage to close
      */
-
     void closeStage(UUID stageName) {
         applicationStages.get(stageName)
                 .close();
@@ -128,6 +128,10 @@ public class ScreenControl {
     }
 
 
+    /**
+     * Closes (terminates) a stage
+     * @param node the stage to be closed
+     */
     void closeStage(Node node) {
         ((Stage) node.getScene()
                 .getWindow()).close();
@@ -284,21 +288,26 @@ public class ScreenControl {
     }
 
 
-    public KeyCodeCombination getLogOut() {
+    KeyCodeCombination getLogOut() {
         return logOut;
     }
 
 
-    public boolean isMacOs() {
+    boolean isMacOs() {
         return macOs;
     }
 
 
-    public String getAppName() {
+    String getAppName() {
         return appName;
     }
 
 
+    /**
+     * Adds a stage to the collection of stages with a connection the user responsible for the stage
+     * @param user the user responsible for the stage
+     * @param newStage the new stage to be tied to the user
+     */
     private static void addUserStage(User user, Stage newStage) {
 
         systemLogger.log(FINE, "Added user and stage");
@@ -315,6 +324,10 @@ public class ScreenControl {
     }
 
 
+    /**
+     * Closes all the stages related to a given user
+     * @param user the user whose stages will be closed
+     */
     static void closeAllUserStages(User user) {
         systemLogger.log(FINER, "Attempting to close all user stages...");
         Set<Stage> stages = userStages.get(user);
@@ -336,7 +349,7 @@ public class ScreenControl {
      *
      * To be used when the user has logged out and a new login scene needs to be instantiated
      */
-    public void setUpNewLogin() {
+    void setUpNewLogin() {
         // UNTIL WE SUPPORT MULTI USER LOGIN
         try {
             ScreenControl screenControl = ScreenControl.getScreenControl();

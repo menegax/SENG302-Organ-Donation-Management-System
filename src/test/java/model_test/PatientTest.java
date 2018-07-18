@@ -29,6 +29,8 @@ public class PatientTest {
     @BeforeClass
     public static void setUp() {
 
+        userActions.setLevel(Level.OFF);
+
         testPatient = new Patient("ABC1234", "James", null, "Wallace",
                 LocalDate.of(1970, 2, 12));
 

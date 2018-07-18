@@ -28,6 +28,7 @@ public class DrugInteractionTest {
 
     @BeforeClass
     public static void setUp(){
+        userActions.setLevel(Level.OFF);
         org.junit.Assume.assumeTrue(makeContactToAPI());
     }
 

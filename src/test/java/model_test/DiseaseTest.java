@@ -10,6 +10,7 @@ import utility.GlobalEnums;
 
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
+import java.util.logging.Level;
 
 import static java.util.logging.Level.OFF;
 import static utility.UserActionHistory.userActions;
@@ -22,6 +23,7 @@ public class DiseaseTest {
 
     @Before
     public void setUp(){
+        userActions.setLevel(Level.OFF);
         disease = new Disease("Aids", GlobalEnums.DiseaseState.CHRONIC);
         diseaseCarrier = new Patient("ABC1239", "Joe",null,"Bloggs",LocalDate.of(2018,01,01));
     }
