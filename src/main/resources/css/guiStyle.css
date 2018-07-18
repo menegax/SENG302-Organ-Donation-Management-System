@@ -84,7 +84,7 @@
 }
 
 .colouredBar {
-    -fx-background-color: #ff0505;
+    -fx-background-color: linear-gradient(#5DADE2, #3498DB);
 }
 
 .colouredBarText {
