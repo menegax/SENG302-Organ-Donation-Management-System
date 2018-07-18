@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
-import utility.SearchPatients;
+import utility.Searcher;
 
 import java.io.*;
 import java.util.Comparator;
@@ -29,7 +29,7 @@ public class Database {
 
     private static Set<Administrator> administrators = new HashSet<>();
     
-    private static SearchPatients searcher = SearchPatients.getSearcher();
+    private static Searcher searcher = Searcher.getSearcher();
     
     public static void addAdmin(Administrator admin) {
     	if (!usernameInDatabase(admin.getUsername())) {

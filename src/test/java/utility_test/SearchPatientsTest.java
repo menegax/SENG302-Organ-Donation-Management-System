@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import static utility.UserActionHistory.userActions;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -16,7 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import service.Database;
-import utility.SearchPatients;
+import utility.Searcher;
 
 public class SearchPatientsTest {
 
@@ -43,10 +42,10 @@ public class SearchPatientsTest {
         Database.addPatient(d2);
         Database.addPatient(d1);
 
-        SearchPatients.clearIndex();
+        Searcher.clearIndex();
         
         // Given an index
-        SearchPatients.createFullIndex();
+        Searcher.createFullIndex();
     }
 
 	/**
@@ -59,7 +58,7 @@ public class SearchPatientsTest {
 		d3.setLastName("Addington");
 		
 		// For a name search of George
-    	ArrayList<Patient> results = SearchPatients.searchByName("George");
+    	ArrayList<Patient> results = Searcher.searchByName("George");
 
     	// Get indices of the two Georges
     	int d3index = results.indexOf(d3); 
@@ -80,7 +79,7 @@ public class SearchPatientsTest {
     public void testEqualSearchOrdering(){
     	
     	// For a name search of George
-    	ArrayList<Patient> results = SearchPatients.searchByName("George");
+    	ArrayList<Patient> results = Searcher.searchByName("George");
     	
     	// Get indices of the two Georges
     	int d3index = results.indexOf(d3); 
@@ -121,7 +120,7 @@ public class SearchPatientsTest {
     	assertTrue(Database.getPatients().size() > 30);
     	
         // Search to match all 36 added patients.
-        ArrayList<Patient> results = SearchPatients.searchByName("A B C D E F Z Y X W V U");
+        ArrayList<Patient> results = Searcher.searchByName("A B C D E F Z Y X W V U");
 
         // The returned result should be exactly 30
         assertTrue(results.size() == 30);
@@ -154,7 +153,7 @@ public class SearchPatientsTest {
     	assertTrue(Database.getPatients().size() > 30);
     	
         // Blank search to return maximum number of results. EG every patient.
-        ArrayList<Patient> results = SearchPatients.searchByName("");
+        ArrayList<Patient> results = Searcher.searchByName("");
 
         // The returned result should be less than or equal to 30
         assertTrue(results.size() <= 30);
@@ -179,13 +178,13 @@ public class SearchPatientsTest {
         Database.addPatient(d2);
         Database.addPatient(d1);
 
-        SearchPatients.clearIndex();
+        Searcher.clearIndex();
 
         // Given an index
-        SearchPatients.createFullIndex();
+        Searcher.createFullIndex();
 
         // When index searched for a single specific patient
-        ArrayList<Patient> results = SearchPatients.searchByName("Pat Bobinton");
+        ArrayList<Patient> results = Searcher.searchByName("Pat Bobinton");
 
         // Should contain Pat Laff
         assertTrue(results.contains(Database.getPatientByNhi("abc1234")));
@@ -208,7 +207,7 @@ public class SearchPatientsTest {
         Database.getPatientByNhi("abc1234").setFirstName("Andrew");
 
         // Then searching by new first name returns correct results
-        ArrayList<Patient> results = SearchPatients.searchByName("Ande Lafey");
+        ArrayList<Patient> results = Searcher.searchByName("Ande Lafey");
  
         assertTrue(results.contains(Database.getPatientByNhi("abc1234")));
     }
@@ -232,14 +231,14 @@ public class SearchPatientsTest {
         Database.addPatient(d2);
         Database.addPatient(d1);
 
-        SearchPatients.clearIndex();
+        Searcher.clearIndex();
 
         // Given an index
-        SearchPatients.createFullIndex();
+        Searcher.createFullIndex();
     	String name = Database.getPatientByNhi("def1234").getFirstName();
     	Database.getPatientByNhi("def1234").setNhiNumber("def5678");
 
-    	ArrayList<Patient> results = SearchPatients.searchByName(name);
+    	ArrayList<Patient> results = Searcher.searchByName(name);
 
     	assertTrue(results.contains(Database.getPatientByNhi("def5678")));
     }
@@ -261,13 +260,13 @@ public class SearchPatientsTest {
         Database.addPatient(d2);
         Database.addPatient(d1);
 
-        SearchPatients.clearIndex();
+        Searcher.clearIndex();
 
         // Given an index
-        SearchPatients.createFullIndex();
+        Searcher.createFullIndex();
 
         // When searching patients
-    	ArrayList<Patient> results = SearchPatients.searchByName("Jone");
+    	ArrayList<Patient> results = Searcher.searchByName("Jone");
 
     	// Should contain Joe Plaffer, remove 'n' for Joe
     	assertTrue(results.contains(d1));

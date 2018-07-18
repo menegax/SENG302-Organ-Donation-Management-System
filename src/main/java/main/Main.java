@@ -18,7 +18,7 @@ import model.Clinician;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
-import utility.SearchPatients;
+import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class Main extends Application {
         addDummyTestObjects();
         ensureDefaultClinician();
         ensureDefaultAdministrator();
-        SearchPatients.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
+        Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         setUpMenuBar(primaryStage);
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
         primaryStage.setResizable(false);

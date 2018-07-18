@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
-import utility.SearchPatients;
+import utility.Searcher;
 
 public abstract class User {
 
@@ -30,9 +30,9 @@ public abstract class User {
 
     public void setFirstName(String firstName) {
         if (this.firstName == null || (!firstName.equals(this.firstName))) {
-        	SearchPatients.getSearcher().removeIndex(this);
+        	Searcher.getSearcher().removeIndex(this);
             this.firstName = firstName;
-            SearchPatients.getSearcher().addIndex(this);
+            Searcher.getSearcher().addIndex(this);
             userModified();
         }
     }
@@ -43,9 +43,9 @@ public abstract class User {
 
     public void setMiddleNames(List<String> middleNames) {
         if (!middleNames.equals(this.middleNames)) {
-        	SearchPatients.getSearcher().removeIndex(this);
+        	Searcher.getSearcher().removeIndex(this);
             this.middleNames = middleNames;
-            SearchPatients.getSearcher().addIndex(this);
+            Searcher.getSearcher().addIndex(this);
             userModified();
         }
     }
@@ -56,9 +56,9 @@ public abstract class User {
 
     public void setLastName(String lastName) {
         if (this.lastName == null || (!lastName.equals(this.lastName))) {
-        	SearchPatients.getSearcher().removeIndex(this);
+        	Searcher.getSearcher().removeIndex(this);
             this.lastName = lastName;
-            SearchPatients.getSearcher().addIndex(this);
+            Searcher.getSearcher().addIndex(this);
             userModified();
         }
     }

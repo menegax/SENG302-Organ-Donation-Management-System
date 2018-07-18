@@ -18,7 +18,7 @@ import model.Patient;
 import model.User;
 import utility.GlobalEnums;
 import utility.GlobalEnums.UserTypes;
-import utility.SearchPatients;
+import utility.Searcher;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
 
@@ -56,7 +56,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private SearchPatients searcher = SearchPatients.getSearcher();
+    private Searcher searcher = Searcher.getSearcher();
     
     /**
      * Initialises the data within the table to all patients
@@ -178,7 +178,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     } else if (newValue.toLowerCase().equals( "male" ) || newValue.toLowerCase().equals("female")) {
-                        //return SearchPatients.searchByGender(newValue).contains(patient);
+                        //return Searcher.searchByGender(newValue).contains(patient);
                         return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() ); // ------------------------------this is where it fails!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
                     List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT}, NUMRESULTS);

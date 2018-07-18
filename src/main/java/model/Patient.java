@@ -4,7 +4,7 @@ import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
-import utility.SearchPatients;
+import utility.Searcher;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -133,7 +133,7 @@ public class Patient extends User {
                                  String region, String birthGender, String preferredGender, String bloodGroup,
                                  double height, double weight, String nhi) throws IllegalArgumentException {
         Enum globalEnum;
-        SearchPatients.getSearcher().removeIndex(this);
+        Searcher.getSearcher().removeIndex(this);
         if (firstName != null) {
             setFirstName(firstName);
         }
@@ -208,7 +208,7 @@ public class Patient extends User {
         }
         userActions.log(Level.INFO, "Successfully updated patient " + getNhiNumber(), "attempted to update patient attributes");
         userModified();
-        SearchPatients.getSearcher().addIndex(this);
+        Searcher.getSearcher().addIndex(this);
     }
 
     /**
@@ -309,12 +309,12 @@ public class Patient extends User {
     @Override
     public void setFirstName(String firstName) {
         if (this.firstName == null || (!firstName.equals(this.firstName))) {
-        	SearchPatients.getSearcher().removeIndex(this);
+        	Searcher.getSearcher().removeIndex(this);
             this.firstName = firstName;
             if (getPreferredName() == null) {
                 setPreferredName( firstName );
             }
-            SearchPatients.getSearcher().addIndex(this);
+            Searcher.getSearcher().addIndex(this);
             userModified();
         }
     }
@@ -638,9 +638,9 @@ public class Patient extends User {
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
         ensureValidNhi();
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
-            SearchPatients.getSearcher().removeIndex(this);
+            Searcher.getSearcher().removeIndex(this);
         	this.nhiNumber = nhiNumber.toUpperCase();
-            SearchPatients.getSearcher().addIndex(this);
+            Searcher.getSearcher().addIndex(this);
         	userModified();
         }
     }
