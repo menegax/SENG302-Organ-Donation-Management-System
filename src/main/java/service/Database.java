@@ -252,6 +252,7 @@ public class Database {
                     userActions.log(Level.WARNING, "Error importing donor from file", "Attempted to import donor from file");
                 }
             }
+            systemLogger.log(Level.INFO, "Successfully imported patients from file");
         }
         catch (FileNotFoundException e) {
             userActions.log(Level.WARNING, "Patient import file not found", "Attempted to read patient file");
@@ -272,6 +273,7 @@ public class Database {
         try {
             br = new BufferedReader(new FileReader(filename));
             organWaitingList = gson.fromJson(br, OrganWaitlist.class);
+            systemLogger.log(Level.INFO, "Successfully imported organ waiting list from file");
         }
         catch (FileNotFoundException e) {
             userActions.log(Level.WARNING, "Waitlist import file not found", "Attempted to read waitlist file");
@@ -299,6 +301,7 @@ public class Database {
                     userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
                 }
             }
+            systemLogger.log(Level.INFO, "Successfully imported clinician from file");
         }
         catch (FileNotFoundException e) {
             userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
