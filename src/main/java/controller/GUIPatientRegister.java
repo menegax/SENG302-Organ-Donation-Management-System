@@ -212,7 +212,6 @@ public class GUIPatientRegister {
 
             Database.addPatient(new Patient(nhi, firstName, middles, lastName, birth));
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
-            Database.saveToDisk();
             clearFields();
             new Alert(Alert.AlertType.INFORMATION, "Successfully registered!").show();
             try {
