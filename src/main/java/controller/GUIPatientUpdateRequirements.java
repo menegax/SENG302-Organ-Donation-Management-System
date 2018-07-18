@@ -272,7 +272,6 @@ public class GUIPatientUpdateRequirements extends UndoableController{
         createOrganRequests();
         Database.saveToDisk();
         new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
-//        goToProfile();
     }
 
     /**
@@ -295,7 +294,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      */
     private void openReasonPopup(GlobalEnums.Organ organ) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/deregistrationReason.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/testDeregistrationReason.fxml"));
             Parent root = fxmlLoader.load();
             GUIRequiredOrganDeregistrationReason controller = fxmlLoader.getController();
             controller.setOrgan(organ);
