@@ -385,6 +385,7 @@ public class GUIPatientRegister {
             String lastName = lastnameRegister.getText();
             String password = passwordTxt.getText();
             ArrayList<String> middles = new ArrayList<>();
+            String alertMsg;
             if (!middlenameRegister.getText().equals( "" )) {
                 List <String> middleNames = Arrays.asList( middlenameRegister.getText().split( " " ) );
                 middles = new ArrayList <>( middleNames );
@@ -393,17 +394,21 @@ public class GUIPatientRegister {
                 LocalDate birth = birthRegister.getValue();
                 Database.addPatient( new Patient( id, firstName, middles, lastName, birth ) );
                 userActions.log( Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile" );
+                alertMsg = "Successfully registered patient with NHI " + id + "!";
             } else if (clinicianButton.isSelected()) {
                 String region = regionRegister.getValue().toString();
-                Database.addClinician( new Clinician( Database.getNextStaffID(), firstName, middles, lastName, (Region) Region.getEnumFromString(region) ));
+                int staffID = Database.getNextStaffID();
+                Database.addClinician( new Clinician( staffID, firstName, middles, lastName, (Region) Region.getEnumFromString(region) ));
                 userActions.log( Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile" );
+                alertMsg = "Successfully registered clinician with staff ID " + staffID + "!";
             } else {
                 Database.addAdministrator( new Administrator( id, firstName, middles, lastName, password ));
                 userActions.log( Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile" );
+                alertMsg = "Successfully registered administrator with username " + id + "!";
             }
             Database.saveToDisk();
             clearFields();
-            new Alert(Alert.AlertType.INFORMATION, "Successfully registered!").show();
+            new Alert(Alert.AlertType.INFORMATION, alertMsg).showAndWait();
             returnToPreviousPage();
         } else {
             userActions.log(Level.WARNING, "Failed to register patient profile due to invalid fields", "Attempted to register patient profile");
