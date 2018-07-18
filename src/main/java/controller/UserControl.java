@@ -1,5 +1,8 @@
 package controller;
 
+import static java.util.logging.Level.INFO;
+import static utility.SystemLogger.systemLogger;
+
 import model.Clinician;
 import model.Patient;
 import model.User;
@@ -102,7 +105,9 @@ public class UserControl {
      * Removes the logged in user from the cache
      */
     public void rmLoggedInUserCache() {
-        remove("user_logged_in");
+//        remove("user_logged_in");
+        users.clear();
+        systemLogger.log(INFO, "All users have been logged out");
     }
 
 }

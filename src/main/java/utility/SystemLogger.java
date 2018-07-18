@@ -42,16 +42,5 @@ public class SystemLogger {
             });
             systemLogger.addHandler(console);
 
-
-            // File handler
-//            try {
-//                Handler file = new FileHandler("system_logs_%u.xml", false);
-//                file.setLevel(Level.ALL);
-//                systemLogger.addHandler(file);
-//            }
-//            catch (IOException e) {
-//                systemLogger.log(Level.SEVERE, "Unable to write log to file");
-//            }
-
         }
     }
