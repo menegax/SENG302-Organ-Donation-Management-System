@@ -6,7 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import javafx.scene.layout.GridPane;
@@ -294,7 +293,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      */
     private void openReasonPopup(GlobalEnums.Organ organ) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/testDeregistrationReason.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/deregistrationReason.fxml"));
             Parent root = fxmlLoader.load();
             GUIRequiredOrganDeregistrationReason controller = fxmlLoader.getController();
             controller.setOrgan(organ);

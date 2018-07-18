@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
@@ -187,7 +186,7 @@ public class GUIPatientProcedures extends UndoableController {
         try {
             UndoableStage stage = new UndoableStage();
             screenControl.addStage(stage.getUUID(), stage);
-            screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/testPatientProcedureForm.fxml")));
+            screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/patientProcedureForm.fxml")));
             stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
         }
         catch (IOException e) {
@@ -217,7 +216,7 @@ public class GUIPatientProcedures extends UndoableController {
         try {
             UndoableStage stage = new UndoableStage();
             screenControl.addStage(stage.getUUID(), stage);
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/testPatientProcedureForm.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
             screenControl.show(stage.getUUID(),fxmlLoader.load());
             GUIPatientProcedureForm controller = fxmlLoader.getController();
             controller.setupEditing(selectedProcedure);

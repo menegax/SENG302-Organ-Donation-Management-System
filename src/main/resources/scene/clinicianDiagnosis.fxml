@@ -4,30 +4,73 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="clinicianDiagnosesPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianDiagnosis">
-    <children>
-        <Label alignment="CENTER" layoutX="179.5" layoutY="6.0" styleClass="title" text="Disease Diagnoses" />
-        <TableView fx:id="pastDiagnosesView" layoutX="49.0" layoutY="140.0" prefHeight="219.0" prefWidth="227.0">
-            <columns>
-                <TableColumn fx:id="pastDateCol" prefWidth="75.0" text="Date" />
-                <TableColumn fx:id="pastDiagnosisCol" prefWidth="75.0" text="Diagnosis" />
-                <TableColumn fx:id="pastTagsCol" prefWidth="75.0" text="Tags" />
-            </columns>
-        </TableView>
-        <TableView fx:id="currentDiagnosesView" layoutX="324.0" layoutY="140.0" prefHeight="219.0" prefWidth="227.0">
-            <columns>
-                <TableColumn fx:id="currentDateCol" prefWidth="75.0" text="Date" />
-                <TableColumn fx:id="currentDiagnosisCol" prefWidth="75.0" text="Diagnosis" />
-                <TableColumn fx:id="currentTagsCol" prefWidth="75.0" text="Tags" />
-            </columns>
-        </TableView>
-      <Button fx:id="saveButton" layoutX="545.0" layoutY="361.0" mnemonicParsing="false" onAction="#saveDiagnoses" text="Save" />
-      <Button fx:id="deleteButton" layoutX="248.0" layoutY="90.0" mnemonicParsing="false" onAction="#deleteDiagnoses" text="Delete Diagnosis" />
-      <Button fx:id="addDiagnosisButton" layoutX="254.0" layoutY="55.0" mnemonicParsing="false" onAction="#registerDiagnosis" text="Add Diagnosis" />
-      <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToProfile" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-      <Label layoutX="122.0" layoutY="115.0" text="Past Diagnoses" />
-      <Label layoutX="389.0" layoutY="115.0" text="Current Diagnoses" />
-    </children>
-</AnchorPane>
+<GridPane fx:id="clinicianDiagnosesPane" prefHeight="282.0" prefWidth="683.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianDiagnosis">
+  <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="22.199983596801758" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="135.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="138.99999999999997" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="142.79995727539062" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="122.00004272460933" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="27.60003662109375" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <TableView fx:id="pastDiagnosesView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+        <columns>
+          <TableColumn fx:id="pastDateCol" prefWidth="75.0" text="Date" />
+          <TableColumn fx:id="pastDiagnosisCol" prefWidth="75.0" text="Diagnosis" />
+            <TableColumn fx:id="pastTagsCol" prefWidth="75.0" text="Tags" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <TableView fx:id="currentDiagnosesView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+        <columns>
+          <TableColumn fx:id="currentDateCol" prefWidth="75.0" text="Date" />
+          <TableColumn fx:id="currentDiagnosisCol" prefWidth="75.0" text="Diagnosis" />
+            <TableColumn fx:id="currentTagsCol" prefWidth="75.0" text="Tags" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <Label text="Past Diagnoses" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label text="Current Diagnoses" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveDiagnoses" prefHeight="30.0" prefWidth="109.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Set" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+      <GridPane GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.rowSpan="2">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteDiagnoses" prefHeight="30.0" prefWidth="154.0" text="Delete Diagnosis" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Button fx:id="addDiagnosisButton" mnemonicParsing="false" onAction="#registerDiagnosis" prefHeight="30.0" prefWidth="154.0" text="Add Diagnosis" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+   </children>
+</GridPane>
