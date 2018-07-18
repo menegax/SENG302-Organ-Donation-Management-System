@@ -17,7 +17,7 @@ public abstract class User {
 
     public abstract String getNameConcatenated();
 
-    PropertyChangeSupport propertyChangeSupport;
+    transient PropertyChangeSupport propertyChangeSupport;
 
     /**
      * Adds a listener to the propertyChangeSupport to be notified on user modification
