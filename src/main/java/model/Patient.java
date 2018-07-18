@@ -6,6 +6,7 @@ import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.SearchPatients;
 
+import java.beans.PropertyChangeEvent;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
@@ -99,7 +100,7 @@ public class Patient extends User {
     private GlobalEnums.Organ removedOrgan;
 
     /**
-     * Constructor for the patient class. Initializes basic attributes
+     * Constructor for the patient class. Initializes basic attributes and adds listeners for status changes
      * @param nhiNumber unique number to identify the patient by
      * @param firstName first name of the patient
      * @param middleNames middle names of the patient
@@ -118,6 +119,9 @@ public class Patient extends User {
         this.donations = new ArrayList<>();
         this.userActionsList = new ArrayList<>();
         this.requiredOrgans = new ArrayList<>();
+        propertyChangeSupport.addPropertyChangeListener(evt -> {
+            refreshStatus();
+        });
     }
 
 
@@ -414,18 +418,6 @@ public class Patient extends User {
      * @return The patient's status
      */
     public Status getStatus() {
-        if (this.donations.size() == 0 && this.requiredOrgans.size() == 0) {
-            setStatus( null );
-        }
-        if (this.donations.size() > 0) {
-            setStatus( (Status) Status.getEnumFromString( "donating" ) );
-        }
-        if (this.requiredOrgans.size() > 0) {
-            setStatus( (Status) Status.getEnumFromString( "receiving" ) );
-        }
-        if (this.donations.size() > 0 && this.requiredOrgans.size() > 0) {
-            setStatus( (Status) Status.getEnumFromString( "both" ) );
-        }
         return status;
     }
 
@@ -438,6 +430,26 @@ public class Patient extends User {
             this.status = status;
         }
         patientModified();
+    }
+
+    /**
+     * Refreshes the status of the patient to the correct status
+     * Always called after patient is modified
+     */
+    private void refreshStatus() {
+        Status newStatus = null;
+        if (this.donations.size() > 0 && this.requiredOrgans.size() > 0) {
+            newStatus = (Status) Status.getEnumFromString( "both" );
+        }
+        else if (this.donations.size() > 0) {
+            newStatus = (Status) Status.getEnumFromString( "donating" );
+        }
+        else if (this.requiredOrgans.size() > 0) {
+            newStatus = (Status) Status.getEnumFromString( "receiving" );
+        }
+        if (getStatus() != newStatus) {
+            setStatus(newStatus);
+        }
     }
 
     public PreferredGender getPreferredGender() {
@@ -847,15 +859,12 @@ public class Patient extends User {
      */
     public void setPastDiseases(ArrayList<Disease> pastDiseases) { this.pastDiseases = pastDiseases; }
 
-    public String getUserType() {
-        return "Patient - " + getStatus();
-    }
     /**
-     *
-     * Updates the modified timestamp of the patient
+     * Updates the modified timestamp of the patient and notifies propertyChangeListeners
      */
     private void patientModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "Patient Modified", null, null));
         systemLogger.log(Level.FINER, "Patient with NHI " + this.nhiNumber + " has been modified to " + this);
     }
 

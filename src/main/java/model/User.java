@@ -1,6 +1,11 @@
 package model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.UUID;
+import java.util.logging.Level;
+
+import static utility.SystemLogger.systemLogger;
 
 public abstract class User {
 
@@ -12,6 +17,16 @@ public abstract class User {
 
     public abstract String getNameConcatenated();
 
-    public abstract String getUserType();
+    PropertyChangeSupport propertyChangeSupport;
 
+    /**
+     * Adds a listener to the propertyChangeSupport to be notified on user modification
+     * @param propertyChangeListener the propertyChangeListener to be notified
+     */
+    public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+        if (propertyChangeSupport == null) {
+            propertyChangeSupport = new PropertyChangeSupport(this);
+        }
+        propertyChangeSupport.addPropertyChangeListener(propertyChangeListener);
+    }
 }

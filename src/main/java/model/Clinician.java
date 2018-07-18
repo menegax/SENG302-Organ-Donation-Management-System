@@ -3,6 +3,7 @@ package model;
 import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
 
+import java.beans.PropertyChangeEvent;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -188,18 +189,11 @@ public class Clinician extends User {
         clinicianModified();
     }
 
-    /**
-     * Gets the user type; Clinician
-     * @return Clinician as the user type
-     */
-    public String getUserType() {
-        return "Clinician";
-    }
-
     public Timestamp getModified() { return this.modified; }
 
     public void clinicianModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "Clinician Modified", null, null));
     }
 
     /**

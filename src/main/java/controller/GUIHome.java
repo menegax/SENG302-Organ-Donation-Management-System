@@ -20,6 +20,9 @@ import model.Patient;
 import model.User;
 import service.Database;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -49,21 +52,20 @@ public class GUIHome {
         try {
             if (userControl.getLoggedInUser() instanceof Patient){
                 addTabsPatient();
-                setUpColouredBar(userControl.getLoggedInUser());
+                setUpColouredBar(userControl.getLoggedInUser(), "Patient");
             } else if (userControl.getLoggedInUser() instanceof Clinician) {
                 if (userControl.getTargetPatient() != null) {
                     addTabsForPatientClinician(); // if we are a clinician looking at a patient
-                    setUpColouredBar(userControl.getTargetPatient());
+                    setUpColouredBar(userControl.getTargetPatient(), "Patient");
                 } else {
                     addTabsClinician();
-                    setUpColouredBar(userControl.getLoggedInUser());
+                    setUpColouredBar(userControl.getLoggedInUser(), "Clinician");
                 }
             }
             horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty().addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls", Arrays.toString(e.getStackTrace()));
-            e.printStackTrace(); //todo rm
         }
     }
 
@@ -71,9 +73,13 @@ public class GUIHome {
      * Sets to the coloured bar at top of GUI the user name and type
      * @param user the currently logged in user, or observed patient
      */
-    private void setUpColouredBar(User user) {
+    private void setUpColouredBar(User user, String userType) {
+        user.addPropertyChangeListener(e -> {
+            userNameDisplay.setText(user.getNameConcatenated());
+            userTypeDisplay.setText(userType);
+        });
         userNameDisplay.setText(user.getNameConcatenated());
-        userTypeDisplay.setText(user.getUserType());
+        userTypeDisplay.setText(userType);
     }
 
     /**
