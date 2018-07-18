@@ -92,6 +92,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     userControl.setTargetPatient(patientDataTable.getSelectionModel().getSelectedItem());
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     UndoableStage popUpStage = new UndoableStage();
+                    //Set initial popup dimensions
+                    popUpStage.setWidth(1000);
+                    popUpStage.setHeight(700);
                     screenControl.addStage(popUpStage.getUUID(), popUpStage);
                     screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
 
