@@ -218,8 +218,8 @@ public class Database {
         }
 
         for (Administrator admin : administrators) {
-            if (admin.getUsername().equals(administrator.getUsername())) {
-                userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field staffID", "Attempted to add an administrator");
+            if (admin.getUsername().toLowerCase().equals(administrator.getUsername().toLowerCase())) {
+                userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field username", "Attempted to add an administrator");
                 throw new IllegalArgumentException("staffID");
             }
         }
