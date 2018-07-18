@@ -12,15 +12,8 @@ import java.util.regex.Pattern;
  */
 public class Administrator extends User {
     private String username;
-
-    private String firstName;
-    private List<String> middleNames;
-    private String lastName;
-
     private final String salt;
     private String password;
-
-    private Timestamp modified;
 
     /**
      * Creates a new Administrator
@@ -33,10 +26,8 @@ public class Administrator extends User {
      * @throws IllegalArgumentException If the administrators password is too short (less than 6 characters)
      */
     public Administrator(String username, String firstName, List<String> middleNames, String lastName, String password) throws IllegalArgumentException {
+        super(firstName, middleNames, lastName);
         this.username = username;
-        this.firstName = firstName;
-        this.middleNames = middleNames;
-        this.lastName = lastName;
 
         if (password.length() < 6) {
             throw new IllegalArgumentException("Password must be at least 6 characters long");
@@ -53,14 +44,6 @@ public class Administrator extends User {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
     /**
      * Updates the administrators last name if the provided new value is valid.
      * The last name must be non-null and have non-zero length. The last name can only
@@ -75,31 +58,12 @@ public class Administrator extends User {
         }
     }
 
-    public List<String> getMiddleNames() {
-        return middleNames;
+    public String getSalt() {
+        return salt;
     }
 
-    public void setMiddleNames(List<String> middleNames) {
-        this.middleNames = middleNames;
-        adminModified();
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    /**
-     * Updates the administrators last name if the provided new value is valid.
-     * The last name must be non-null and have non-zero length. The last name can only
-     * contain alphabetic characters and hyphens
-     *
-     * @param lastName The new last name
-     */
-    public void setLastName(String lastName) {
-        if (lastName != null && lastName.length() > 0 && Pattern.matches("^[-a-zA-Z]+$", lastName)) {
-            this.lastName = lastName;
-            adminModified();
-        }
+    public String getHashedPassword() {
+        return password;
     }
 
     /**
@@ -112,32 +76,5 @@ public class Administrator extends User {
         }
         this.password = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password + salt);
         adminModified();
-    }
-
-    /**
-     * Concatenates a admin's first, middle and last names, and returns the full name as a String
-     * @return String concatenated name
-     */
-    public String getConcatenatedName() {
-        String name = this.firstName;
-        if(this.middleNames != null) {
-            for(String middleName : this.middleNames) {
-                name = name + " " + middleName;
-            }
-        }
-        name = name + " " + this.lastName;
-        return name;
-    }
-
-    public Timestamp getModified() {
-        return modified;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public String getHashedPassword() {
-        return password;
     }
 }

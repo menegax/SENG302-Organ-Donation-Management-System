@@ -51,7 +51,7 @@ public class Main extends Application {
         addDummyTestObjects();
         ensureDefaultClinician();
         ensureDefaultAdministrator();
-        SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
+        SearchPatients.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         setUpMenuBar(primaryStage);
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
         primaryStage.setResizable(false);

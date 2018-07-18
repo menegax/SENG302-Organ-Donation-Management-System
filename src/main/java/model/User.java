@@ -1,7 +1,7 @@
 package model;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import utility.SearchPatients;
@@ -12,11 +12,17 @@ public abstract class User {
     
     protected String firstName;
 
-    protected ArrayList<String> middleNames;
+    protected List<String> middleNames;
 
     protected String lastName;
     
     protected Timestamp modified;
+
+    public User(String firstName, List<String> middleNames, String lastName) {
+        this.firstName = firstName;
+        this.middleNames = middleNames;
+        this.lastName = lastName;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -34,12 +40,12 @@ public abstract class User {
         }
     }
 
-    public ArrayList<String> getMiddleNames() {
+    public List<String> getMiddleNames() {
         return middleNames;
     }
 
-    public void setMiddleNames(ArrayList<String> middleNames) {
-        if (this.middleNames == null || (!middleNames.equals(this.middleNames))) {
+    public void setMiddleNames(List<String> middleNames) {
+        if (!middleNames.equals(this.middleNames)) {
         	SearchPatients.getSearcher().removeIndex(this);
             this.middleNames = middleNames;
             SearchPatients.getSearcher().addIndex(this);
@@ -61,7 +67,7 @@ public abstract class User {
     }
     
     /**
-     * Returns the name of the patient as a formatted concatenated string
+     * Returns the name of the user as a formatted concatenated string
      *
      * @return string named
      */
@@ -78,7 +84,11 @@ public abstract class User {
         concatName.append(lastName);
         return concatName.toString();
     }
-    
+
+    public Timestamp getModified() {
+        return modified;
+    }
+
     /**
     *
     * Updates the modified timestamp of the patient
