@@ -74,7 +74,7 @@ public class GUIAdministratorHome {
     public void goToSearchUsers() {
         try {
             //todo
-            screenControl.show(administratorHomePane, "/scene/administratorSearchClinicians.fxml");
+            screenControl.show(administratorHomePane, "/scene/administratorSearchUsers.fxml");
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load search users").show();
             userActions.log(SEVERE, "Failed to load search users", "Attempted to load search users");
@@ -87,7 +87,7 @@ public class GUIAdministratorHome {
     @FXML
     public void logOutAdministrator() {
         screenControl.closeStage(administratorHomePane);
-        userControl.setTargetPatient(null);
+        userControl.setTargetUser(null);
     }
 
     /**

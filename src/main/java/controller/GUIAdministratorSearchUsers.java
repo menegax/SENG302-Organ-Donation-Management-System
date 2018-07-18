@@ -1,8 +1,5 @@
 package controller;
 
-import static java.util.logging.Level.SEVERE;
-import static utility.UserActionHistory.userActions;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -14,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import model.Clinician;
 import model.Patient;
 import model.User;
 import utility.GlobalEnums;
@@ -30,45 +28,48 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
-public class GUIClinicianSearchPatients extends UndoableController implements Initializable {
+import static java.util.logging.Level.SEVERE;
+import static utility.UserActionHistory.userActions;
+
+public class GUIAdministratorSearchUsers extends UndoableController implements Initializable {
 
     @FXML
-    private TableView<Patient> patientDataTable;
+    private TableView<User> userDataTable;
 
     @FXML
-    private TableColumn<Patient, String> columnName;
+    private TableColumn<User, String> columnName;
 
     @FXML
-    private TableColumn<Patient, String> columnAge;
+    private TableColumn<User, String> columnAge;
 
     @FXML
-    private TableColumn<Patient, String> columnBirthGender;
+    private TableColumn<User, String> columnBirthGender;
 
     @FXML
-    private TableColumn<Patient, String> columnRegion;
+    private TableColumn<User, String> columnRegion;
 
     private final int NUMRESULTS = 30;
-    
+
     @FXML
     private TextField searchEntry;
 
-    private ObservableList<Patient> masterData = FXCollections.observableArrayList();
+    private ObservableList<User> masterData = FXCollections.observableArrayList();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private Searcher searcher = Searcher.getSearcher();
-    
+
     /**
-     * Initialises the data within the table to all patients
+     * Initialises the data within the table to all users
      *
      * @param url URL not used
      * @param rb  Resource bundle not used
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
-        FilteredList<Patient> filteredData = setupTableColumnsAndData();
+        FilteredList<User> filteredData = setupTableColumnsAndData();
         setupSearchingListener(filteredData);
-        setupDoubleClickToPatientEdit();
+        setupDoubleClickToUserEdit();
         setupRowHoverOverText();
         setupUndoRedo();
     }
@@ -84,19 +85,26 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     }
 
     /**
-     * Sets up double-click functionality for each row to open a patient profile update. Opens the selected
-     * patient's profile view screen in a new window.
+     * Sets up double-click functionality for each row to open a user profile update. Opens the selected
+     * users's profile view screen in a new window.
      */
-    private void setupDoubleClickToPatientEdit() {
+    private void setupDoubleClickToUserEdit() {
         // Add double-click event to rows
-        patientDataTable.setOnMouseClicked(click -> {
-            if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
+        userDataTable.setOnMouseClicked(click -> {
+            if (click.getClickCount() == 2 && userDataTable.getSelectionModel()
                     .getSelectedItem() != null) {
                 try {
                     UserControl userControl = new UserControl();
-                    userControl.setTargetUser(patientDataTable.getSelectionModel()
-                            .getSelectedItem());
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+                    User selected = userDataTable.getSelectionModel().getSelectedItem();
+                    userControl.setTargetUser(selected);
+                    FXMLLoader fxmlLoader;
+                    if (selected instanceof Patient) {
+                        fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+                    } else if (selected instanceof Clinician) {
+                        fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianProfile.fxml"));
+                    } else {
+                        fxmlLoader = new FXMLLoader(getClass().getResource("/scene/administratorProfile.fxml"));
+                    }
                     UndoableStage popUpStage = new UndoableStage();
                     screenControl.addStage(popUpStage.getUUID(), popUpStage);
                     screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
@@ -106,20 +114,20 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 }
                 catch (IOException e) {
                     userActions.log(Level.SEVERE,
-                            "Failed to open patient profile scene from search patients table",
-                            "attempted to open patient edit window from search patients table");
-                    new Alert(Alert.AlertType.ERROR, "Unable to open patient edit window", ButtonType.OK).show();
+                            "Failed to open user profile scene from search users table",
+                            "attempted to open user edit window from search users table");
+                    new Alert(Alert.AlertType.ERROR, "Unable to open user edit window", ButtonType.OK).show();
                 }
             }
         });
     }
 
     /**
-     * Sets the table columns to pull the correct data from the patient objects
+     * Sets the table columns to pull the correct data from the user objects
      *
-     * @return a filtered list of patients
+     * @return a filtered list of users
      */
-    private FilteredList<Patient> setupTableColumnsAndData() {
+    private FilteredList<User> setupTableColumnsAndData() {
         // initialize columns
         columnName.setCellValueFactory(d -> d.getValue()
                 .getNameConcatenated() != null ? new SimpleStringProperty(d.getValue()
@@ -136,9 +144,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 .toString()) : new SimpleStringProperty(""));
 
         // wrap ObservableList in a FilteredList
-        FilteredList<Patient> filteredData = new FilteredList<>(masterData, new Predicate<Patient>() {
+        FilteredList<User> filteredData = new FilteredList<>(masterData, new Predicate<User>() {
             @Override
-            public boolean test(Patient d) {
+            public boolean test(User d) {
                 return true;
             }
         });
@@ -146,31 +154,29 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             masterData.clear();
-            List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT}, NUMRESULTS);
-            for (User user : results) {
-            	masterData.add((Patient)user);
-            }
+            List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, NUMRESULTS);
+            masterData.addAll(results);
             filteredData.setPredicate(patient -> true);
         });
 
         // wrap the FilteredList in a SortedList.
-        SortedList<Patient> sortedData = new SortedList<>(filteredData);
+        SortedList<User> sortedData = new SortedList<>(filteredData);
 
         // bind the SortedList comparator to the TableView comparator.
         sortedData.comparatorProperty()
-                .bind(patientDataTable.comparatorProperty());
+                .bind(userDataTable.comparatorProperty());
 
         // add sorted (and filtered) data to the table.
-        patientDataTable.setItems(sortedData);
+        userDataTable.setItems(sortedData);
         return filteredData;
     }
 
     /**
      * Sets the search textfield to listen for any changes and search for the entry on change
      *
-     * @param filteredData the patients to be filtered/searched through
+     * @param filteredData the users to be filtered/searched through
      */
-    private void setupSearchingListener(FilteredList<Patient> filteredData) {
+    private void setupSearchingListener(FilteredList<User> filteredData) {
         // set the filter Predicate whenever the filter changes.
         searchEntry.textProperty()
                 .addListener((observable, oldValue, newValue) -> filteredData.setPredicate(patient -> {
@@ -194,21 +200,22 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * Adds custom hover-over text to each row in the table
      */
     private void setupRowHoverOverText() {
-        patientDataTable.setRowFactory(tv -> new TableRow<Patient>() {
+        userDataTable.setRowFactory(tv -> new TableRow<User>() {
             private Tooltip tooltip = new Tooltip();
 
             @Override
-            public void updateItem(Patient patient, boolean empty) {
-                super.updateItem(patient, empty);
-                if (patient == null) {
+            public void updateItem(User user, boolean empty) {
+                super.updateItem(user, empty);
+                if (user == null || !(user instanceof Patient)) {
                     setTooltip(null);
                 }
-                else if (patient.getDonations().isEmpty()) {
-
+                else if (((Patient)user).getDonations().isEmpty()) {
+                    Patient patient = (Patient) user;
                     tooltip.setText(patient.getNameConcatenated() + ". No donations.");
                     setTooltip(tooltip);
                 }
                 else {
+                    Patient patient = (Patient) user;
                     StringBuilder tooltipText = new StringBuilder(patient.getNameConcatenated() + ". Donations: ");
                     for (GlobalEnums.Organ organ : patient.getDonations()) {
                         tooltipText.append(organ)
@@ -225,16 +232,16 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     /**
      * Adds all db data via constructor
      */
-    public GUIClinicianSearchPatients() {
+    public GUIAdministratorSearchUsers() {
         masterData.addAll(searcher.getDefaultResults());
     }
 
-    public void goToClinicianHome() {
+    public void goToAdministratorHome() {
         try {
-            screenControl.show(patientDataTable, "/scene/clinicianHome.fxml");
+            screenControl.show(userDataTable, "/scene/administratorHome.fxml");
         } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
-            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
+            new Alert((Alert.AlertType.ERROR), "Unable to load administrator home").show();
+            userActions.log(SEVERE, "Failed to load administrator home", "Attempted to load administrator home");
         }
     }
 
@@ -242,6 +249,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * Refreshes the table data
      */
     private void tableRefresh() {
-        patientDataTable.refresh();
+        userDataTable.refresh();
     }
 }

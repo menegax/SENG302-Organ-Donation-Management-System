@@ -66,7 +66,7 @@ public class GUIRequiredOrganDeregistrationReason {
      */
     public void initialize() {
         userControl = new UserControl();
-        target = userControl.getTargetPatient();
+        target = (Patient) userControl.getTargetUser();
         populateDropdown();
         populateForm();
         dateOfDeath.setDisable(true);

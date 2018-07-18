@@ -61,7 +61,7 @@ public class GUIClinicianHome {
     @FXML
     public void logOutClinician() {
         screenControl.closeStage(clinicianHomePane);
-        userControl.setTargetPatient(null);
+        userControl.setTargetUser(null);
     }
 
     /**

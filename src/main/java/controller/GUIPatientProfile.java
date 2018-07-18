@@ -179,10 +179,10 @@ public class GUIPatientProfile {
             removeBack();
             deleteButton.setVisible( false );
             deleteButton.setDisable( true );
-            user = userControl.getTargetPatient();
+            user = userControl.getTargetUser();
         } else if (user instanceof Administrator) {
             removeBack();
-            user = userControl.getTargetPatient();
+            user = userControl.getTargetUser();
         }
         try {
             assert user != null;

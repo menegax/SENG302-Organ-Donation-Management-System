@@ -89,8 +89,8 @@ public class GUIPatientUpdateRequirements extends UndoableController {
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         }
-        if (userControl.getTargetPatient() != null) {
-            loadProfile((userControl.getTargetPatient()).getNhiNumber());
+        if (userControl.getTargetUser() != null) {
+            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
         }
         // Enter key triggers log in
         patientRequirementsAnchorPane.setOnKeyPressed(e -> {

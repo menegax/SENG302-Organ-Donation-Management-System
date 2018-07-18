@@ -1,18 +1,11 @@
 package controller;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.DrugInteraction;
@@ -28,7 +21,6 @@ import javafx.collections.transformation.SortedList;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
@@ -112,7 +104,7 @@ public class GUIClinicianWaitingList {
                     userControl = new UserControl();
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
                     DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
-                    userControl.setTargetPatient(Database.getPatientByNhi(request.getReceiverNhi()));
+                    userControl.setTargetUser(Database.getPatientByNhi(request.getReceiverNhi()));
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
                     Parent root = fxmlLoader.load();
                     UndoableStage popUpStage = new UndoableStage();

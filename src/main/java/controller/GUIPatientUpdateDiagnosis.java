@@ -80,7 +80,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
      */
     public void initialize() {
         userControl = new UserControl();
-        currentPatient = userControl.getTargetPatient();
+        currentPatient = (Patient) userControl.getTargetUser();
         if(isAdd) {
             titleLabel.setText("Add Diagnosis");
             target = new Disease(null, null);
