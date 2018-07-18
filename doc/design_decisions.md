@@ -183,4 +183,10 @@ This means there should not be other action listeners for global or stage-level 
  ### GUI Testing
  TestFX has been essentially component testing the application instead of performing small-scale unit tests. We debated making each GUI controller 
  runnable for the purpose of unit testing single controllers, but realized the unit tests would have minimal meaning without the backend supporting 
- it. Therefore we will be using TestFX controller tests more sparingly and for larger-scale component testing for the entire application. 
+ it. Therefore we will be using TestFX controller tests more sparingly and for larger-scale component testing for the entire application.
+ 
+ ### GUI Testing (again)
+ TestFX has been a huge drain on effort and time from the developers. We've decided to entirely remove all TestFX tests in favor of the more 
+ human-intensive manual testing method. In truth, we seem to believe manual testing will take less time and effort than TestFX at this point. This 
+ will and has led to 0% test coverage on the `controller` package. We expect that. With comprehensive manual testing in addition to smoke testing we 
+ will effectively have 100% test coverage through manual testing.

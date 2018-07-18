@@ -92,7 +92,7 @@ public class UserControl {
      */
     void clearCache(){
         clear();
-    } //Todo fix typo
+    }
 
     /**
      * Clears the map of all entries
