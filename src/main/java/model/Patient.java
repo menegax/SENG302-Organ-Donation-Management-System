@@ -7,6 +7,7 @@ import utility.PatientActionRecord;
 import utility.SearchPatients;
 
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
@@ -119,6 +120,9 @@ public class Patient extends User {
         this.donations = new ArrayList<>();
         this.userActionsList = new ArrayList<>();
         this.requiredOrgans = new ArrayList<>();
+        if (propertyChangeSupport == null) {
+            propertyChangeSupport = new PropertyChangeSupport(this);
+        }
         propertyChangeSupport.addPropertyChangeListener(evt -> {
             refreshStatus();
         });

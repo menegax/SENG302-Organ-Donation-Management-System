@@ -4,6 +4,7 @@ import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
 
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -193,6 +194,9 @@ public class Clinician extends User {
 
     public void clinicianModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
+        if (propertyChangeSupport == null) {
+            propertyChangeSupport = new PropertyChangeSupport(this);
+        }
         propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "Clinician Modified", null, null));
     }
 

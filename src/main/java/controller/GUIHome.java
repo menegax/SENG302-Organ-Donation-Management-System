@@ -20,9 +20,6 @@ import model.Patient;
 import model.User;
 import service.Database;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -110,9 +107,9 @@ public class GUIHome {
         createTab("Update", "/scene/patientUpdateProfile.fxml");
         createTab("Donations", "/scene/patientUpdateDonations.fxml");
         createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
-        createTab("View Disease History","/scene/testClinicianDiagnosis.fxml");
+        createTab("View Disease History", "/scene/clinicianDiagnosis.fxml");
         createTab("History", "/scene/patientHistory.fxml");
-        createTab("Procedures", "/scene/testPatientProcedures.fxml");
+        createTab("Procedures", "/scene/patientProcedures.fxml");
     }
 
 
@@ -126,9 +123,9 @@ public class GUIHome {
         createTab("Medications", "/scene/patientMedications.fxml");
         createTab("Donations", "/scene/patientUpdateDonations.fxml");
         createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
-        createTab("Requested Donations", "/scene/testPatientUpdateRequirements.fxml");
-        createTab("View Diseases","/scene/testClinicianDiagnosis.fxml");
-        createTab("Procedures", "/scene/testPatientProcedures.fxml");
+        createTab("Requested Donations", "/scene/patientUpdateRequirements.fxml");
+        createTab("View Diseases", "/scene/clinicianDiagnosis.fxml");
+        createTab("Procedures", "/scene/patientProcedures.fxml");
     }
 
 
@@ -140,8 +137,8 @@ public class GUIHome {
         createTab("Profile", "/scene/clinicianProfile.fxml");
         createTab("Update", "/scene/clinicianProfileUpdate.fxml");
         createTab("Search Patients", "/scene/clinicianSearchPatients.fxml");
-        createTab("Transplant Waiting List","/scene/testClinicianWaitingList.fxml" );
-        createTab("History","/scene/testClinicianHistory.fxml" );
+        createTab("Transplant Waiting List", "/scene/clinicianWaitingList.fxml");
+        createTab("History", "/scene/clinicianHistory.fxml");
     }
 
 
