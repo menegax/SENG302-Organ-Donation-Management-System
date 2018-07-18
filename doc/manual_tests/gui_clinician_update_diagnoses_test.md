@@ -63,30 +63,35 @@
 2. The clinician selects the done button
 3. An alert is shown stating the diagnosis name must be valid. The diagnosis name field is highlighted in red.
 
-###Add a valid diagnosis
-
-1. The clinician selects the add button from the viewing screen
-2. The clinician enters a valid addition of a diagnosis (Not duplicated)
-3. The clinician selects the done button
-4. The diagnosis is added to the patient's list of diagnoses
-
-###Add a diagnosis already in current diagnoses
-
-1. The clinician selects the add button from the viewing screen
-2. The clinician enters a disease name that is currently in the patient's current diagnoses, and sets the disease state to chronic or none.
-3. The clinician selects the done button
-4. An alert is shown stating the patient can not be diagnosed with a disease they are already infected with
-
-###Add a diagnosis already in past diagnoses
-
-1. The clinician selects the add button from the viewing screen
-2. The clinician enters a disease name that is currently in the patient's past diagnoses, and sets the disease state to chronic or none.
-3. The clinician selects the done button
-4. An alert is shown stating the patient can not be diagnosed with a disease they are already infected with
-
 ###Update a diagnosis to be equal to another diagnosis
 
 1. The clinician double clicks an existing diagnosis from the viewing screen
 2. The clinician enters a disease name and diagnosis date that are both the same as another of the patient's diagnoses
 3. The clinician selects the done button
 4. An alert is shown stating diseases must be unique
+
+##Test History
+
+###18/07/2018 - Maree
+
+Preconditions: Pass
+
+Cancel update with no changes: Pass
+
+Cancel update with changes made: Pass
+
+Make valid diagnosis updates: Pass
+
+Change past diagnosis to not cured: Fail - the window does not automatically refresh
+
+Change current non-chronic diagnosis to cured: Fail - the window does not automatically refresh
+
+Change current chronic diagnosis to cured: Fail - field not highlighted
+
+Invalid diagnosis date entered: Fail - field not highlighted
+
+Invalid diagnosis name entered: Fail - field not highlighted
+
+Update a diagnosis to be equal to another diagnosis: Pass
+
+

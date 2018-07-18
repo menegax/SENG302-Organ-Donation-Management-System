@@ -89,3 +89,23 @@
 3. The clinician selects the `History` button
 4. The history screen should now be displayed
 5. The most recent log should state that organ was removed from required organs, with relevant data (eg. diseases cured, date of death)
+
+##Test History
+
+###18/07/2018 - Maree
+
+Preconditions: Pass
+
+Deregistration of Heart due to an ERROR: Pass
+
+Deregistration of Lung due to cure with a listed disease: Pass
+
+Deregistration of Bone due to cure without listed diseases: Pass
+
+Deregistration of Cornea due to death with valid date: Pass
+
+Deregistration of Middle Ear due to death with invalid date: Pass
+
+Deregistration of one organ due to death should log all other requested organs as due to death: Pass
+
+After: Pass
