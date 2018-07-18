@@ -29,6 +29,8 @@ public class Database {
 
     private static Set<Administrator> administrators = new HashSet<>();
     
+    private static SearchPatients searcher = SearchPatients.getSearcher();
+    
     public static void addAdmin(Administrator admin) {
     	if (!usernameInDatabase(admin.getUsername())) {
     		administrators.add(admin);
@@ -61,7 +63,7 @@ public class Database {
             newPatient.ensureValidNhi();
             newPatient.ensureUniqueNhi();
             patients.add(newPatient);
-            SearchPatients.addIndex(newPatient);
+            searcher.addIndex(newPatient);
             userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
         }
         catch (IllegalArgumentException o) {

@@ -21,6 +21,7 @@ import org.apache.lucene.store.RAMDirectory;
 import service.Database;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -185,13 +186,21 @@ public class SearchPatients {
      *
      * @param patient patient to remove index for.
      */
-    public  void removeIndex(Patient patient) {
-        Term toDel = new Term("nhi", patient.getNhiNumber().toUpperCase());
+    public  void removeIndex(User user) {
+    	Term toDel = null;
+    	if (user instanceof Patient) {
+    		toDel = new Term("nhi", ((Patient)user).getNhiNumber().toUpperCase());
+    	} else if (user instanceof Clinician) {
+    		toDel = new Term("staffid", String.valueOf(((Clinician)user).getStaffID()));
+    	} else if (user instanceof Administrator) {
+    		toDel = new Term("username", ((Administrator)user).getUsername().toUpperCase());
+    	}
+        
         try {
             indexWriter.deleteDocuments(toDel);
-            UserActionHistory.userActions.log(Level.INFO, "Successfully removed patient: " + patient.getNhiNumber() + " from the search index", "Attempted to remove patient " + patient.getNhiNumber() + " from the search index");
+            UserActionHistory.userActions.log(Level.INFO, "Successfully removed user from the search index", "Attempted to remove user from the search index");
         } catch (IOException e) {
-        	UserActionHistory.userActions.log(Level.SEVERE, "Unable to remove patient index", "Attempted to remove patient index");
+        	UserActionHistory.userActions.log(Level.SEVERE, "Unable to remove user index", "Attempted to remove user index");
         }
     }
 
@@ -231,9 +240,8 @@ public class SearchPatients {
     }
 
     /**
-     * Returns the first num_results patients in alphabetical order.
-     *
-     * @return First num_results patients from a alphabetical ordering.
+     * Returns the default set of patient search results.
+     * @return The default set of patient search results.
      */
     public ArrayList<Patient> getDefaultResults() {
         ArrayList<Patient> default_patients = new ArrayList<>(Database.getPatients());
@@ -250,109 +258,71 @@ public class SearchPatients {
     }
 
     /**
-     * Fetches a patient from the database from its respective score document and returns it.
-     *
-     * @param doc The patients score document.
-     * @return The patient who the score document belongs to.
-     * @throws IOException Occurs when index searcher cannot be found.
+     * Gets the Patient from the database that the ScoreDoc belongs to.
+     * @param doc The ScoreDoc of the Patient.
+     * @return The Patient object.
+     * @throws InvalidObjectException
      */
-    private Patient fetchPatient(Document doc) {
+    private Patient fetchPatient(Document doc) throws InvalidObjectException {
         String nhi = doc.get("nhi");
         return Database.getPatientByNhi(nhi);
     }
     
-    private Clinician fetchClinician(Document doc) {
+    /**
+     * Gets the Clinician from the database that the ScoreDoc belongs to.
+     * @param doc The ScoreDoc of the Clinician.
+     * @return The Clinician object.
+     * @throws InvalidObjectException
+     */
+    private Clinician fetchClinician(Document doc) throws InvalidObjectException {
     	int staffID = Integer.valueOf(doc.get("staffid"));
     	return Database.getClinicianByID(staffID);
     }
     
-    private Administrator fetchAdmin(Document doc) {
+    /**
+     * Gets the Admin from the database that the ScoreDoc belongs to.
+     * @param doc The ScoreDoc of the Admin.
+     * @return The Administrator object.
+     * @throws InvalidObjectException This does not occur.
+     */
+    private Administrator fetchAdmin(Document doc) throws InvalidObjectException {
     	String username = doc.get("username");
     	return Database.getAdministratorByUsername(username);
     }
     
+    /**
+     * Gets the User from the database that the ScoreDoc belongs to.
+     * @param doc The ScoreDoc of the User.
+     * @return The User object.
+     */
     private User fetchUser(ScoreDoc doc) {
-    	Document thisDoc = indexSearcher.doc(doc.doc);
-    	UserTypes type = UserTypes.getEnumFromString(thisDoc.get("type"));
-    	switch(type) {
-    	case PATIENT:
-    		return fetchPatient(thisDoc);
-    	case CLINICIAN:
-    		return fetchClinician(thisDoc);
-    	case ADMIN:
-    		return fetchAdmin(thisDoc);
-    	}
+    	Document thisDoc;
+		try {
+			thisDoc = indexSearcher.doc(doc.doc);
+	    	UserTypes type = UserTypes.getEnumFromString(thisDoc.get("type"));
+	    	switch(type) {
+	    	case PATIENT:
+	    		return fetchPatient(thisDoc);
+	    	case CLINICIAN:
+	    		return fetchClinician(thisDoc);
+	    	case ADMIN:
+	    		return fetchAdmin(thisDoc);
+	    	default:
+	        	return null;
+	    	}
+		} catch (IOException e) {
+        	UserActionHistory.userActions.log(Level.SEVERE, "Unable to query search index.", "Attempted to retrieve document from index.");
+		}
+		return null;
     }
     
     /**
-     * Searches through the index for patients by full name.
-     *
-     * @param input The name you want to search for.
-     * @return ArrayList of the patients it found as a result of the search.
+     * Creates List of FuzzyQuery on the field with the distance, once for each item in criteria.
+     * @param field The index field to search on.
+     * @param criteria A String array of search items to search for.
+     * @param distance The max character difference a criteria can be away.
+     * @return List of FuzzyQuery based off the parameters.
      */
-    public ArrayList<Patient> searchPatientByName(String input) {
-
-        if (input.isEmpty()) {
-            return getDefaultResults();
-        }
-
-        String[] names = input.split(" ");
-
-        ArrayList<Patient> results = new ArrayList<>();
-        ArrayList<FuzzyQuery> queries = new ArrayList<>();
-        for (String name : names) {
-        	
-            queries.add(new FuzzyQuery(new Term("fName", name.toUpperCase()), 2));
-            queries.add(new FuzzyQuery(new Term("mName", name.toUpperCase()), 2));
-            queries.add(new FuzzyQuery(new Term("lName", name.toUpperCase()), 2));
-            queries.add(new FuzzyQuery(new Term("birthGender", name.toUpperCase()), 0));
-        }
-
-        TopDocs docs;
-        ArrayList<ScoreDoc> allDocs = new ArrayList<ScoreDoc>();
-        try {
-            Patient patient;
-            for (FuzzyQuery query : queries) {
-                docs = searchQuery(query);
-                for (ScoreDoc doc : docs.scoreDocs) {
-                	if (indexSearcher.doc(doc.doc).get("type").equals(UserTypes.PATIENT.getValue())) {
-                		allDocs.add(doc);
-                	}       
-                }
-            }
-
-            Collections.sort(allDocs, new Comparator<ScoreDoc>() {
-                @Override
-                public int compare(ScoreDoc o1, ScoreDoc o2) {
-                    int comparison = new Float(o2.score).compareTo(o1.score);
-                    if (comparison == 0) {
-                        try {
-                            comparison = ((Patient)fetchUser(o1)).getNameConcatenated()
-                                    .compareTo(((Patient)fetchUser(o2)).getNameConcatenated());
-                        } catch (IOException e) {
-                        	UserActionHistory.userActions.log(Level.SEVERE, "Unable to get patient from database", "Attempted to get patient from database");
-                        }
-                    }
-                    return comparison;
-                }
-            });
-
-            int docCount = 0;
-            int patientCount = 0;
-            while (docCount < allDocs.size() && patientCount < NUM_RESULTS) {
-                patient = (Patient)fetchUser(allDocs.get(docCount));
-                if (!results.contains(patient)) {
-                    results.add(patient);
-                    patientCount += 1;
-                }
-                docCount += 1;
-            }
-        } catch (IOException e) {
-        	UserActionHistory.userActions.log(Level.SEVERE, "Unable to search patients by name", "Attempted to search patients by name");
-        }
-        return results;
-    }
-    
     private List<FuzzyQuery> createQueries(String field, String[] criteria, int distance) {
     	List<FuzzyQuery> queries = new ArrayList<FuzzyQuery>();
     	for (String param : criteria) {
@@ -361,6 +331,12 @@ public class SearchPatients {
     	return queries;
     }
     
+    /**
+     * Gets a List of ScoreDoc from the search index from the queries that are within the entered UserTypes.
+     * @param queries A List of FuzzyQuery objects to query the search index against.
+     * @param types An array of the types of users the search is looking to return.
+     * @return List of ScoreDoc returned from running the queries on the search index.
+     */
     private List<ScoreDoc> getScoreDocs(List<FuzzyQuery> queries, UserTypes[] types) {
     	TopDocs docs;
         List<ScoreDoc> allDocs = new ArrayList<ScoreDoc>();
@@ -378,23 +354,25 @@ public class SearchPatients {
 	            }
 	        }
         } catch (IOException e) {
-        	UserActionHistory.userActions.log(Level.SEVERE, "Unable to get patient from database", "Attempted to search for users.");
+        	UserActionHistory.userActions.log(Level.SEVERE, "Unable to query search index.", "Attempted to search for users.");
         }
 	    return allDocs;
     }
     
+    /**
+     * Sorts a List of ScoreDoc objects by their relative score. 
+     * In the case of a tie they are ordered by concatenated names alphabetically.
+     * @param allDocs The List of ScoreDoc objects.
+     * @return The sorted List of ScoreDoc objects.
+     */
     private List<ScoreDoc> sortScoreDocs(List<ScoreDoc> allDocs) {
         Collections.sort(allDocs, new Comparator<ScoreDoc>() {
             @Override
             public int compare(ScoreDoc o1, ScoreDoc o2) {
                 int comparison = new Float(o2.score).compareTo(o1.score);
                 if (comparison == 0) {
-                    try {
-                        comparison = fetchUser(o1).getNameConcatenated()
-                                .compareTo(fetchUser(o2).getNameConcatenated());
-                    } catch (IOException e) {
-                    	UserActionHistory.userActions.log(Level.SEVERE, "Unable to get patient from database", "Attempted to get patient from database");
-                    }
+                    comparison = fetchUser(o1).getNameConcatenated()
+                            .compareTo(fetchUser(o2).getNameConcatenated());
                 }
                 return comparison;
             }
@@ -402,6 +380,12 @@ public class SearchPatients {
         return allDocs;
     }
     
+    /**
+     * Creates the User objects from their relevant ScoreDoc objects.
+     * @param allDocs The List of ScoreDoc objects.
+     * @param numResults The maximum number of search results to retrieve.
+     * @return A List of User objects.
+     */
     private List<User> createUsers(List<ScoreDoc> allDocs, int numResults) {
     	List<User> results = new ArrayList<User>();
     	User user;
@@ -419,10 +403,11 @@ public class SearchPatients {
     }
     
     /**
-     * Searches through the index for patients by full name.
-     *
-     * @param input The name you want to search for.
-     * @return ArrayList of the patients it found as a result of the search.
+     * Searches the search index for the input String.
+     * @param input The String to search by.
+     * @param types The types of users to be included in the search.
+     * @param numResults The maximum number of search results to find.
+     * @return The search results as a List of User objects. 
      */
     public List<User> search(String input, UserTypes[] types, int numResults) {
         List<User> results = new ArrayList<>();
@@ -436,6 +421,7 @@ public class SearchPatients {
         queries.addAll(createQueries("fName", params, 2));
         queries.addAll(createQueries("mName", params, 2));
         queries.addAll(createQueries("lName", params, 2));
+        queries.addAll(createQueries("birthGender", params, 2));
         queries.addAll(createQueries("nhi", params, 0));
         queries.addAll(createQueries("staffid", params, 0));
         queries.addAll(createQueries("username", params, 0)); 
