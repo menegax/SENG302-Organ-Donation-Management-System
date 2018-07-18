@@ -26,7 +26,7 @@ public class UserActionHistory {
      * Sets up custom logger class.
      * Disables parent inheritance and adds custom console and file handlers.
      */
-    static public void setup() {
+    public static void setup() {
 
         userActions.setUseParentHandlers(false); // disables default console userActions in parent
 

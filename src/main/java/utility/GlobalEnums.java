@@ -31,6 +31,27 @@ public class GlobalEnums {
         }
     }
 
+    public enum UserTypes {
+    	PATIENT("PATIENT"), CLINICIAN("CLINICIAN"), ADMIN("ADMIN");
+    	
+        private String value;
+
+        UserTypes(final String value) { this.value = value; }
+
+        public String getValue() {
+            return value != null ? value : "Not set";
+        }
+        
+        public static UserTypes getEnumFromString(String value) {
+            try {
+                return UserTypes.valueOf(value.toUpperCase());
+            }
+            catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
+    }
+    
     /**
      *
      */
