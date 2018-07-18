@@ -32,9 +32,6 @@ public abstract class User {
         if (this.firstName == null || (!firstName.equals(this.firstName))) {
         	SearchPatients.getSearcher().removeIndex(this);
             this.firstName = firstName;
-            if (getPreferredName() == null) {
-                setPreferredName( firstName );
-            }
             SearchPatients.getSearcher().addIndex(this);
             userModified();
         }
