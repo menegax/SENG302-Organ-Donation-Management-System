@@ -77,13 +77,14 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
-        setDisplaySearchResultsButton( true, false );
+    	displayY.setText( "Display all " + SearchPatients.getAllResults().size() + " profiles" );
         FilteredList<Patient> filteredData = setupTableColumnsAndData();
         setupSearchingListener(filteredData);
         setupNumResultsListener(filteredData);
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
         searchEntry.setPromptText( "There are " + getProfileCount() + " profiles" );
+
         setupUndoRedo();
     }
 
@@ -180,12 +181,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
         // add sorted (and filtered) data to the table.
         patientDataTable.setItems(sortedData);
-
-        if (masterData.size() < X) {
-            setDisplaySearchResultsButton( true, false );
-        } else {
-            setDisplaySearchResultsButton( false, true );
-        }
         return filteredData;
     }
 
@@ -216,7 +211,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             	        }
                     }
                     filteredData.setPredicate(patientCheck -> true);
-                    setDisplaySearchResultsButton( true, false );
                     if (numResults > 0) {
                     	return SearchPatients.searchByName(newValue, numResults)
                     			.contains(patient);
@@ -247,7 +241,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             	        }
                     }
                     filteredData.setPredicate(patientCheck -> true);
-                    setDisplaySearchResultsButton( true, false );
                     if (numResults > 0) {
                     	return SearchPatients.searchByName(search, numResults)
                     			.contains(patient);
@@ -273,46 +266,17 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         	masterData.addAll(SearchPatients.searchByName(search, numResults));
         	patientDataTable.setItems(masterData);
         }
+        displayY.setText( "Display all " + SearchPatients.getAllResults().size() + " profiles" );
     }
 
     /**
      * Displays only the first X profiles to the search patients table if more than X results from search
      */
     @FXML
-    private void displayCustomProfiles() {
+    private void displayAllResults() {
     	masterData.clear();
-        int numResults = 30;
-        String search = searchEntry.getText();
-        String numResultsString = valueX.getText();
-        if (!numResultsString.equals("")) {
-	        try {
-	        	numResults = Integer.parseInt(numResultsString);
-	        } catch (NumberFormatException e) {
-	        	new Alert((Alert.AlertType.ERROR), valueX.getText() + " is not a valid number. \nPlease enter a valid number for the number of search results.").show();
-	        }
-        }
-        if (numResults > 0) {
-        	masterData.addAll(SearchPatients.searchByName(search, numResults));
-        	patientDataTable.setItems(masterData);
-        }
-    }
-
-    @FXML
-    private void displayDefaultProfiles() {
-
-    }
-
-    /**
-     * Sets disable/visible for the buttons displaying X or Y number of profiles from a search
-     * @param a The boolean for whether the button is disabled
-     * @param b The boolean for whether the button is visible
-     */
-    private void setDisplaySearchResultsButton(boolean a, boolean b) {
-        displayX.setDisable( a );
-        displayX.setVisible( b );
-        displayY.setDisable( a );
-        displayY.setVisible( b );
-        displayY.setText( "Display total " + SearchPatients.getAllResults().size() + " profiles" );
+        masterData.addAll(SearchPatients.getAllResults());
+        patientDataTable.setItems(masterData);
     }
 
     /**
