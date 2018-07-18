@@ -220,6 +220,9 @@ public class GUIHome {
                 // Get the toolkit THIS IS MAC OS ONLY
                 MenuToolkit tk = MenuToolkit.toolkit();
 
+                menuBar.getMenus()
+                        .clear();
+
                 // Add the default application menu
                 bar.getMenus()
                         .add(0, tk.createDefaultApplicationMenu(screenControl.getAppName())); // set leftmost MacOS system menu
