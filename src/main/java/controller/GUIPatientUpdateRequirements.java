@@ -327,27 +327,4 @@ public class GUIPatientUpdateRequirements extends UndoableController{
         }
     }
 
-    /**
-     * Goes back to the profile view
-     */
-    public void goToProfile() {
-        if (userControl.getLoggedInUser() instanceof Patient) {
-            try {
-                ScreenControl.addPopUp("patientProfile", FXMLLoader.load(getClass().getResource("/scene/patientProfile.fxml"))); //TODO:
-                ScreenControl.activate("patientProfile");
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the required organs page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
-            }
-        } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-            try {
-                ScreenControl.loadPopUpPane(patientRequirementsPane.getScene(), fxmlLoader);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the requirements page to the profile page in popup");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
-            }
-        }
-    }
-
 }

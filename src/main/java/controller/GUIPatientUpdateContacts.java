@@ -82,7 +82,6 @@ public class GUIPatientUpdateContacts extends UndoableController {
         if (valid) {
             Database.saveToDisk();
             new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
-//            goToProfile();
         } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }
@@ -317,29 +316,6 @@ public class GUIPatientUpdateContacts extends UndoableController {
     private void setValid(Control target) {
         if (target.getStyleClass().contains("invalid")) {
             target.getStyleClass().remove("invalid");
-        }
-    }
-
-
-    /**
-     * Closes the contact details screen and returns the user to the profile window without saving changes.
-     */
-    public void goToProfile() {
-        if (userControl.getLoggedInUser() instanceof Patient) {
-            try {
-                screenControl.show(patientContactsPane, "/scene/patientProfile.fxml");
-            } catch (IOException e) {
-                new Alert((Alert.AlertType.ERROR), "Unable to patient profile").show();
-                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
-            }
-        } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-            try {
-                ScreenControl.loadPopUpPane(patientContactsPane.getScene(), fxmlLoader);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error returning to profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
-            }
         }
     }
 

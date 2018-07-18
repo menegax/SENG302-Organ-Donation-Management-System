@@ -63,7 +63,6 @@ public class GUIHome {
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls", Arrays.toString(e.getStackTrace()));
-            e.printStackTrace(); //todo rm
         }
     }
 
@@ -202,15 +201,15 @@ public class GUIHome {
 //        Menu menu3 = new Menu("Edit");
 //        MenuItem menu3Item1 = new MenuItem("Undo");
 //        menu3Item1.setAccelerator(screenControl.getUndo());
-//        menu3Item1.setOnAction(event -> ((UndoableStage) stage).undo()); //Todo undo doesn't work yet
+//        menu3Item1.setOnAction(event -> ((UndoableStage) stage).undo());
 //        MenuItem menu3Item2 = new MenuItem("Redo");
 //        menu3Item2.setAccelerator(screenControl.getRedo());
-//        menu3Item2.setOnAction(event -> System.out.println("Redo clicked")); //Todo add functionality
+//        menu3Item2.setOnAction(event -> System.out.println("Redo clicked"));
 //        menu3.getItems()
 //                .addAll(menu3Item1, menu3Item2);
 
         bar.getMenus()
-                .addAll(menu1, menu2); //Todo add menu3 with undo/redo
+                .addAll(menu1, menu2);
 
         boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless")
                 .equals("true");
@@ -233,7 +232,7 @@ public class GUIHome {
                 menuBar.getMenus()
                         .clear();
                 menuBar.getMenus()
-                        .addAll(menu1, menu2); //todo add menu3 with undo/redo
+                        .addAll(menu1, menu2);
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
             }
         }

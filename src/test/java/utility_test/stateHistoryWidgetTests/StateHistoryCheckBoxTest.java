@@ -27,7 +27,7 @@ public class StateHistoryCheckBoxTest {
     @BeforeClass
     public static void setup() {
         userActions.setLevel(Level.OFF);
-        PlatformImpl.startup(() -> {}); //todo look at. does this do thangs?
+        PlatformImpl.startup(() -> {});
         checkBox = new CheckBox();
         checkBox.setSelected(false);
     }

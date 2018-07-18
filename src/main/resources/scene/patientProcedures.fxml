@@ -17,7 +17,6 @@
             <TableColumn fx:id="previousAffectedCol" prefWidth="78.0" text="Affected &#10;Donation(s)" />
          </columns>
       </TableView>
-      <Label layoutX="24.0" layoutY="24.0" onMouseClicked="#goToProfile" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
       <Label alignment="CENTER" layoutX="35.0" layoutY="120.0" prefHeight="18.0" prefWidth="254.0" text="Previous Procedures" />
       <Label alignment="CENTER" layoutX="311.0" layoutY="120.0" prefHeight="18.0" prefWidth="254.0" text="Pending Procedures" />
       <Button fx:id="addProcedureButton" layoutX="235.0" layoutY="50.0" mnemonicParsing="false" onAction="#addProcedure" prefWidth="130.0" text="Add Procedure" />
