@@ -234,7 +234,7 @@
             <Insets left="40.0" />
          </GridPane.margin>
       </GridPane>
-      <Label fx:id="nameLbl" wrapText="true" GridPane.columnSpan="9" GridPane.halignment="CENTER">
+      <Label fx:id="nameLbl" wrapText="true" GridPane.columnSpan="11" GridPane.halignment="CENTER">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
