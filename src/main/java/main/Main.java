@@ -195,14 +195,16 @@ public class Main extends Application {
     }
 
     public void openKeyboard() {
-        try {
-            Runtime.getRuntime().exec("cmd /c osk");
-        } catch (IOException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error");
-            alert.setContentText("System keyboard could not be opened");
-            alert.show();
+        if(System.getProperty("os.name")
+                .startsWith("Windows")) {
+            try {
+                Runtime.getRuntime().exec("cmd /c osk");
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("Error");
+                alert.setContentText("System keyboard could not be opened");
+                alert.show();
+            }
         }
     }
 }
