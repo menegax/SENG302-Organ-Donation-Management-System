@@ -46,7 +46,7 @@ public class GUIAdministratorProfile {
      */
     private void loadProfile(Administrator administrator) {
         usernameTxt.setText(administrator.getUsername());
-        nameTxt.setText(administrator.getConcatenatedName());
+        nameTxt.setText(administrator.getNameConcatenated());
         modifiedLbl.setText(administrator.getModified() == null ? "--" : administrator.getModified().toString());
     }
 
