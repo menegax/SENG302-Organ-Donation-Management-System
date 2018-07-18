@@ -33,7 +33,8 @@ public class GUIAdministratorProfile {
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
     public void initialize() {
-        if (((Administrator) user).getUsername().equals("admin")) {
+        Administrator current = (Administrator) user;
+        if (current.getUsername().equals("admin")) {
             deleteButton.setVisible(false);
         }
         loadProfile((Administrator) user);
@@ -67,7 +68,7 @@ public class GUIAdministratorProfile {
     public void deleteProfile() {
         Administrator administrator = (Administrator) user;
         if (!administrator.getUsername().equals("admin")) {
-            //Database.deleteAdministrator(administrator);
+            Database.deleteAdministrator(administrator);
             goToAdministratorHome();
         }
     }

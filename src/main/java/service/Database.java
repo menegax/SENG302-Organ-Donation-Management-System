@@ -252,6 +252,7 @@ public class Database {
             saveToDiskPatients();
             saveToDiskWaitlist();
             saveToDiskClinicians();
+            saveToDiskAdministrators();
         } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
@@ -297,6 +298,21 @@ public class Database {
 
         String clinicianPath = "./";
         Writer writer = new FileWriter(new File(clinicianPath, "clinician.json"));
+        writer.write(json);
+        writer.close();
+    }
+
+    /**
+     * Writes database administrators to file on disk
+     *
+     * @throws IOException when the file cannot be found nor created
+     */
+    private static void saveToDiskAdministrators() throws IOException {
+        Gson gson = new Gson();
+        String json = gson.toJson(administrators);
+
+        String adminPath = "./";
+        Writer writer = new FileWriter(new File(adminPath, "admin.json"));
         writer.write(json);
         writer.close();
     }
@@ -355,6 +371,14 @@ public class Database {
     }
 
     /**
+     * Removes from the administrators HashSet the given administrator
+     * @param administrator The administrator being removed from set
+     */
+    public static void deleteAdministrator(Administrator administrator) {
+        administrators.remove( administrator );
+    }
+
+    /**
      * Reads clinician data from disk
      * @param fileName file to import from
      */
@@ -374,6 +398,29 @@ public class Database {
         }
         catch (FileNotFoundException e) {
             userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
+        }
+    }
+
+    /**
+     * Reads administrator data from disk
+     * @param fileName file to import from
+     */
+    public static void importFromDiskAdministrators(String fileName) {
+        Gson gson = new Gson();
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(fileName));
+            Administrator[] administrators = gson.fromJson(br, Administrator[].class);
+            for (Administrator a : administrators) {
+                try {
+                    Database.addAdministrator(a);
+                } catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Error importing administrator from file", "Attempted to import administrator from file");
+                }
+            }
+        }
+        catch (FileNotFoundException e) {
+            userActions.log(Level.WARNING, "Failed to import administrators", "Attempted to import administrators");
         }
     }
 

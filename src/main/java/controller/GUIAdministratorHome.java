@@ -60,7 +60,7 @@ public class GUIAdministratorHome {
     @FXML
     public void registerNewUser() {
         try {
-            screenControl.show(administratorHomePane, "/scene/administratorCreateUser.fxml");
+            screenControl.show(administratorHomePane, "/scene/patientRegister.fxml");
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load user register").show();
             userActions.log(SEVERE, "Failed to load user register", "Attempted to load user register");

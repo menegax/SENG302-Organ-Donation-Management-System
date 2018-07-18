@@ -59,6 +59,12 @@ public class GUIPatientRegister {
     private ChoiceBox regionRegister;
 
     @FXML
+    private PasswordField passwordTxt;
+
+    @FXML
+    private PasswordField verifyPasswordTxt;
+
+    @FXML
     private RadioButton patientButton;
 
     @FXML
@@ -88,7 +94,11 @@ public class GUIPatientRegister {
         regionRegister.addEventFilter( ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume );
         regionRegister.setVisible( false );
         regionRegister.setDisable( true );
-        if (userControl.getLoggedInUser() instanceof Clinician) {
+        passwordTxt.setVisible( false );
+        passwordTxt.setDisable( true );
+        verifyPasswordTxt.setVisible( false );
+        verifyPasswordTxt.setDisable( true );
+        if (userControl.getLoggedInUser() instanceof Administrator) {
             ObservableList<String> regions = FXCollections.observableArrayList();
             for (Region region : Region.values()) {
                 regions.add(region.getValue());
@@ -158,6 +168,12 @@ public class GUIPatientRegister {
         regionRegister.setDisable( true );
         birthRegister.setVisible( true );
         birthRegister.setDisable( false );
+        passwordTxt.setVisible(false);
+        passwordTxt.setDisable(true);
+        verifyPasswordTxt.setVisible(false);
+        verifyPasswordTxt.setDisable(true);
+        userIdRegister.setVisible(true);
+        userIdRegister.setDisable(false);
     }
 
     /**
@@ -173,6 +189,12 @@ public class GUIPatientRegister {
         regionRegister.setDisable( false );
         birthRegister.setVisible( false );
         birthRegister.setDisable( true );
+        passwordTxt.setVisible(false);
+        passwordTxt.setDisable(true);
+        verifyPasswordTxt.setVisible(false);
+        verifyPasswordTxt.setDisable(true);
+        userIdRegister.setVisible(false);
+        userIdRegister.setDisable(true);
     }
 
     /**
@@ -188,6 +210,12 @@ public class GUIPatientRegister {
         regionRegister.setDisable( true );
         birthRegister.setVisible( false );
         birthRegister.setDisable( true );
+        passwordTxt.setVisible(true);
+        passwordTxt.setDisable(false);
+        verifyPasswordTxt.setVisible(true);
+        verifyPasswordTxt.setDisable(false);
+        userIdRegister.setVisible(true);
+        userIdRegister.setDisable(false);
     }
 
     /**
@@ -286,6 +314,18 @@ public class GUIPatientRegister {
             } else {
                 setValid(userIdRegister);
             }
+            if (passwordTxt.getText().length() < 6) {
+                valid = setInvalid(passwordTxt);
+                invalidContent.append("Password must be 6 characters or longer.\n");
+            } else {
+                setValid(passwordTxt);
+            }
+            if (!verifyPasswordTxt.getText().equals(passwordTxt.getText())) {
+                valid = setInvalid(verifyPasswordTxt);
+                invalidContent.append("Passwords do not match.\n");
+            } else {
+                setValid(verifyPasswordTxt);
+            }
         }
 
         // first name
@@ -343,6 +383,7 @@ public class GUIPatientRegister {
             String id = userIdRegister.getText();
             String firstName = firstnameRegister.getText();
             String lastName = lastnameRegister.getText();
+            String password = passwordTxt.getText();
             ArrayList<String> middles = new ArrayList<>();
             if (!middlenameRegister.getText().equals( "" )) {
                 List <String> middleNames = Arrays.asList( middlenameRegister.getText().split( " " ) );
@@ -354,11 +395,11 @@ public class GUIPatientRegister {
                 userActions.log( Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile" );
             } else if (clinicianButton.isSelected()) {
                 String region = regionRegister.getValue().toString();
-                Database.addClinician( new Clinician( Integer.parseInt(id), firstName, middles, lastName, (Region) Region.getEnumFromString(region) ));
+                Database.addClinician( new Clinician( Database.getNextStaffID(), firstName, middles, lastName, (Region) Region.getEnumFromString(region) ));
                 userActions.log( Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile" );
             } else {
-                //Database.addAdministrator( new Administrator( id, firstName, middles, lastName ));
-                //userActions.log( Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile" );
+                Database.addAdministrator( new Administrator( id, firstName, middles, lastName, password ));
+                userActions.log( Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile" );
             }
             Database.saveToDisk();
             clearFields();
@@ -385,7 +426,7 @@ public class GUIPatientRegister {
     private void returnToPreviousPage() {
         try {
             if (userControl.getLoggedInUser() != null && userControl.getLoggedInUser() instanceof Administrator) {
-                screenControl.show(patientRegisterAnchorPane, "/scene/administratorCreateUser.fxml");
+                screenControl.show(patientRegisterAnchorPane, "/scene/administratorHome.fxml");
             } else {
                 screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
             }
