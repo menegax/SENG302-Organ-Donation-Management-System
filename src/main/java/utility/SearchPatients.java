@@ -175,7 +175,7 @@ public class SearchPatients {
             return comparison;
         });
 		if (totalResults.size() > 30) {
-            totalResults = new ArrayList<>(totalResults.subList(0, numResults)); // truncate into size num_results
+            totalResults = new ArrayList<>(totalResults.subList(0, 30)); // truncate into size num_results
         }
     	return totalResults;
     }
