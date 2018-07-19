@@ -85,6 +85,7 @@ public class GUILogin {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
                 login.clearCache(); //clear cache on user login
                 UndoableStage stage = new UndoableStage();
+                stage.setTitle("bro"); //todo rm
                 login.addLoggedInUserToCache(newPatient);
                 screenControl.addStage(stage.getUUID(), stage);
                 Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));

@@ -43,28 +43,93 @@ public class GUIHome {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private UserControl userControl = new UserControl();
+
+    private Stage homeStage;
+
+    /** The user that the home controller is viewing. If it is a clinician viewing a patient it is the patient */
+    private User homeTarget;
+
     @FXML
     public void initialize() {
-        UserControl userControl = new UserControl();
         try {
+            // Patient viewing themself
             if (userControl.getLoggedInUser() instanceof Patient){
+                homeTarget = userControl.getLoggedInUser();
                 addTabsPatient();
                 setUpColouredBar(userControl.getLoggedInUser(), "Patient");
-            } else if (userControl.getLoggedInUser() instanceof Clinician) {
+            }
+            else if (userControl.getLoggedInUser() instanceof Clinician) {
+                // Clinician viewing a patient
                 if (userControl.getTargetPatient() != null) {
+                    homeTarget = userControl.getTargetPatient();
                     addTabsForPatientClinician(); // if we are a clinician looking at a patient
                     setUpColouredBar(userControl.getTargetPatient(), "Patient");
-                } else {
+                }
+                // Clinician viewing themself
+                else {
+                    homeTarget = userControl.getLoggedInUser();
                     addTabsClinician();
                     setUpColouredBar(userControl.getLoggedInUser(), "Clinician");
                 }
             }
+
+            addStageListener();
+
             horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty().addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls", Arrays.toString(e.getStackTrace()));
         }
     }
+
+
+    private void addStageListener() {
+
+        // The following code waits for the stage to be loaded
+        if (homePane.getScene() == null) {
+            homePane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    if (newScene.getWindow() == null) {
+                        newScene.windowProperty().addListener((observable2, oldStage, newStage) -> {
+                            if (newStage != null) {
+                                homeStage = (Stage) newStage;
+                                // Methods to call after initialize
+                                setStageTitle();
+                            }
+                        });
+                    } else {
+                        homeStage = (Stage) newScene.getWindow();
+                        // Methods to call after initialize
+                        setStageTitle();
+                    }
+                }
+            });
+        } else if (homePane.getScene().getWindow() == null){
+            homePane.getScene().windowProperty().addListener((observable2, oldStage, newStage) -> {
+                if (newStage != null) {
+                    homeStage = (Stage) newStage;
+                    // Methods to call after initialize
+                    setStageTitle();
+                }
+            });
+        } else {
+            homeStage = (Stage) homePane.getScene().getWindow();
+            // Methods to call after initialize
+            setStageTitle();
+        }
+    }
+
+    private void setStageTitle() {
+        homeStage.setTitle("Home");
+
+        // If clinician viewing patient
+        if (userControl.getLoggedInUser() instanceof Clinician && userControl.getTargetPatient() != null) {
+            homeStage.setTitle("Viewing patient " + ((Patient) homeTarget).getNhiNumber());
+        }
+
+    }
+
 
     /**
      * Sets to the coloured bar at top of GUI the user name and type
