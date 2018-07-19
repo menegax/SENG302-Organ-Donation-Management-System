@@ -1,5 +1,6 @@
 package model;
 
+import org.apache.commons.lang3.StringUtils;
 import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
 
@@ -131,14 +132,18 @@ public class Clinician extends User {
      * @return String concatenated name
      */
     public String getNameConcatenated() {
-        String name = this.firstName;
-        if(this.middleNames != null) {
-            for(String middleName : this.middleNames) {
-                name = name + " " + middleName;
+
+        String firstNameFormatted = StringUtils.capitalize(getFirstName());
+
+        StringBuilder middleNamesFormatted = new StringBuilder();
+        if(getMiddleNames() != null) {
+            for(String middleName : getMiddleNames()) {
+                 middleNamesFormatted.append(StringUtils.capitalize(middleName))
+                         .append(" ");
             }
         }
-        name = name + " " + this.lastName;
-        return name;
+        String lastNameFormatted = StringUtils.capitalize(getLastName());
+        return firstNameFormatted + " " + middleNamesFormatted + lastNameFormatted;
     }
 
     public String getStreet1() {

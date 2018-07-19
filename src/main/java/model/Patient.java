@@ -1,5 +1,6 @@
 package model;
 
+import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
@@ -296,17 +297,17 @@ public class Patient extends User {
         StringBuilder concatName;
 
         if (preferredName != null) {
-            concatName = new StringBuilder( preferredName + " " );
+            concatName = new StringBuilder(StringUtils.capitalize(preferredName) + " " );
         } else {
-            concatName = new StringBuilder( firstName + " " );
+            concatName = new StringBuilder(StringUtils.capitalize(firstName) + " " );
         }
         if (middleNames != null && middleNames.size() > 0) {
             for (String middleName : middleNames) {
-                concatName.append(middleName)
+                concatName.append(StringUtils.capitalize(middleName))
                         .append(" ");
             }
         }
-        concatName.append(lastName);
+        concatName.append(StringUtils.capitalize(lastName));
         return concatName.toString();
     }
 
