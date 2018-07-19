@@ -34,21 +34,6 @@ public class UndoableStage extends Stage {
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
     /**
-     * Constructor for the undoable stage
-     * Sets up the action listeners for undo and redo
-     */
-    public UndoableStage() {
-        super();
-//        this.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-//            if (KeyCodeCombination.keyCombination(undoRedoControl.undoShortcut).match(event)) {
-//                undo();
-//            } else if (KeyCodeCombination.keyCombination(undoRedoControl.redoShortcut).match(event)) {
-//                redo();
-//            }
-//        });
-    }
-
-    /**
      * Undoes the previous action and navigates to the appropriate screen where applicable
      */
     public void undo() {

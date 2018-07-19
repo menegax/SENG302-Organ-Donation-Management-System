@@ -72,6 +72,24 @@ public class Clinician extends User {
         clinicianModified();
     }
 
+    /**
+     * Sets the attributes of the clinician to the attributes of the provided clinician
+     * TODO desgin better
+     * @param newUserAttributes a user whose attributes this function copies
+     */
+    public void setAttributes(User newUserAttributes) {
+        Clinician newClinicianAttributes = (Clinician) newUserAttributes.deepClone();
+
+        setFirstName(newClinicianAttributes.getFirstName());
+        setLastName(newClinicianAttributes.getLastName());
+        setMiddleNames(newClinicianAttributes.getMiddleNames());
+        setStreet1(newClinicianAttributes.getStreet1());
+        setStreet2(newClinicianAttributes.getStreet2());
+        setSuburb(newClinicianAttributes.getSuburb());
+        setRegion(newClinicianAttributes.getRegion());
+        setStaffID(newClinicianAttributes.getStaffID());
+    }
+
     public int getStaffID() {
         return staffID;
     }

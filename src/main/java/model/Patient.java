@@ -5,9 +5,11 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.SearchPatients;
+import utility.SystemLogger;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
+import java.io.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
@@ -229,6 +231,51 @@ public class Patient extends User {
         userActions.log(Level.INFO, "Successfully updated patient " + getNhiNumber(), "attempted to update patient attributes");
         patientModified();
         SearchPatients.addIndex(this);
+    }
+
+    /**
+     * Sets the attributes of the patient to the attributes of the provided patient
+     * TODO desgin better
+     * @param newUserAttributes a user whose attributes this function copies
+     */
+    public void setAttributes(User newUserAttributes) {
+        Patient newPatientAttributes = (Patient) newUserAttributes.deepClone();
+
+        setFirstName(newPatientAttributes.getFirstName());
+        setLastName(newPatientAttributes.getLastName());
+        setMiddleNames(newPatientAttributes.getMiddleNames());
+        setPreferredName(newPatientAttributes.getPreferredName());
+        setBirth(newPatientAttributes.getBirth());
+        setDeath(newPatientAttributes.getDeath());
+        setStreet1(newPatientAttributes.getStreet1());
+        setStreet2(newPatientAttributes.getStreet2());
+        setSuburb(newPatientAttributes.getSuburb());
+        setRegion(newPatientAttributes.getRegion());
+        setBirthGender(newPatientAttributes.getBirthGender());
+        setPreferredGender(newPatientAttributes.getPreferredGender());
+        setBloodGroup(newPatientAttributes.getBloodGroup());
+        setHeight(newPatientAttributes.getHeight());
+        setWeight(newPatientAttributes.getWeight());
+        setNhiNumber(newPatientAttributes.getNhiNumber());
+        setCurrentDiseases(newPatientAttributes.getCurrentDiseases());
+        setPastDiseases(newPatientAttributes.getPastDiseases());
+        setStatus(newPatientAttributes.getStatus());
+        setContactEmailAddress(newPatientAttributes.getContactEmailAddress());
+        setContactHomePhone(newPatientAttributes.getContactHomePhone());
+        setContactMobilePhone(newPatientAttributes.getContactMobilePhone());
+        setContactName(newPatientAttributes.getContactName());
+        setContactRelationship(newPatientAttributes.getContactRelationship());
+        setContactWorkPhone(newPatientAttributes.getContactWorkPhone());
+        setCurrentMedications(newPatientAttributes.getCurrentMedications());
+        setDonations(newPatientAttributes.getDonations());
+        setMedicationHistory(newPatientAttributes.getMedicationHistory());
+        setRemovedOrgan(newPatientAttributes.getRemovedOrgan());
+        setEmailAddress(newPatientAttributes.getEmailAddress());
+        setHomePhone(newPatientAttributes.getHomePhone());
+        setMobilePhone(newPatientAttributes.getMobilePhone());
+        setRequiredOrgans(newPatientAttributes.getRequiredOrgans());
+        setWorkPhone(newPatientAttributes.getWorkPhone());
+        setZip(newPatientAttributes.getZip());
     }
 
     /**
