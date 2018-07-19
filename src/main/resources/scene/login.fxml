@@ -30,12 +30,12 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Label layoutX="227.0" layoutY="60.0" styleClass="title" text="Big Pharma">
+      <Label layoutX="227.0" layoutY="60.0" styleClass="title" text="Big Pharma" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER">
          <font>
             <Font size="33.0" />
          </font>
       </Label>
-      <Button fx:id="loginButton" maxWidth="250.0" mnemonicParsing="false" onAction="#logIn" prefHeight="35.0" prefWidth="250.0" text="Log In" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+      <Button fx:id="loginButton" maxWidth="250.0" mnemonicParsing="false" onAction="#logIn" prefHeight="35.0" prefWidth="250.0" stylesheets="@../css/guiStyle.css" text="Log In" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
       <Hyperlink fx:id="registerHyperlink" onAction="#goToRegister" text="Register" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP">
          <font>
             <Font size="10.0" />

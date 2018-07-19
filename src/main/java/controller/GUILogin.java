@@ -125,6 +125,7 @@ public class GUILogin {
      */
     @FXML
     public void onRadioSelect() {
+        nhiLogin.setText("");
         password.setText("");
         if (patient.isSelected()) {
             nhiLogin.setPromptText("NHI");
