@@ -789,7 +789,10 @@ public class Patient extends User {
     }
 
     public boolean equals(Object obj) {
+        if (!(obj instanceof Patient)) {
+            return false;
+        }
         Patient patient = (Patient) obj;
-        return this.nhiNumber.equals(patient.nhiNumber) && obj.getClass() == this.getClass();
+        return this.nhiNumber.equals(patient.nhiNumber);
     }
 }

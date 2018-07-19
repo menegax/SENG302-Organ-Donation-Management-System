@@ -79,13 +79,13 @@ public class Searcher {
     private Document createPatientDocument(Patient patient) {
         Document patientDoc = new Document();
         patientDoc.add(new StringField("nhi", patient.getNhiNumber().toUpperCase(), Field.Store.YES));
-        patientDoc.add(new StringField("fName", patient.getFirstName().toUpperCase(), Field.Store.NO));
+        patientDoc.add(new StringField("fName", patient.getFirstName().toUpperCase(), Field.Store.YES));
         if (patient.getMiddleNames() != null) {
             for (String mName : patient.getMiddleNames()) {
-                patientDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.NO));
+                patientDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.YES));
             }
         }
-        patientDoc.add(new StringField("lName", patient.getLastName().toUpperCase(), Field.Store.NO));
+        patientDoc.add(new StringField("lName", patient.getLastName().toUpperCase(), Field.Store.YES));
         if (patient.getBirthGender() != null) {
             patientDoc.add(new StringField("birthGender", patient.getBirthGender().toString().toUpperCase(), Field.Store.YES));
         }
@@ -96,13 +96,13 @@ public class Searcher {
     private Document createClinicianDocument(Clinician clinician) {
     	Document clinicianDoc = new Document();
     	clinicianDoc.add(new StringField("staffid", String.valueOf(clinician.getStaffID()), Field.Store.YES));
-    	clinicianDoc.add(new StringField("fname", clinician.getFirstName().toUpperCase(), Field.Store.NO));
+    	clinicianDoc.add(new StringField("fname", clinician.getFirstName().toUpperCase(), Field.Store.YES));
         if (clinician.getMiddleNames() != null) {
             for (String mName : clinician.getMiddleNames()) {
-                clinicianDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.NO));
+                clinicianDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.YES));
             }
         }
-        clinicianDoc.add(new StringField("lname", clinician.getLastName().toUpperCase(), Field.Store.NO));
+        clinicianDoc.add(new StringField("lname", clinician.getLastName().toUpperCase(), Field.Store.YES));
         clinicianDoc.add(new StringField("type", UserTypes.CLINICIAN.getValue(), Field.Store.YES));
         return clinicianDoc;
     }
@@ -110,13 +110,13 @@ public class Searcher {
     private Document createAdminDocument(Administrator admin) {
     	Document adminDoc = new Document();
     	adminDoc.add(new StringField("username", admin.getUsername(), Field.Store.YES));
-    	adminDoc.add(new StringField("fname", admin.getFirstName().toUpperCase(), Field.Store.NO));
+    	adminDoc.add(new StringField("fname", admin.getFirstName().toUpperCase(), Field.Store.YES));
         if (admin.getMiddleNames() != null) {
             for (String mName : admin.getMiddleNames()) {
-                adminDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.NO));
+                adminDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.YES));
             }
         }
-        adminDoc.add(new StringField("lname", admin.getLastName().toUpperCase(), Field.Store.NO));
+        adminDoc.add(new StringField("lname", admin.getLastName().toUpperCase(), Field.Store.YES));
         adminDoc.add(new StringField("type", UserTypes.ADMIN.getValue(), Field.Store.YES));
     	return adminDoc;
     }
@@ -179,11 +179,7 @@ public class Searcher {
         }
     }
 
-    /**
-     * Removes indices of patients via the index writer.
-     *
-     * @param patient patient to remove index for.
-     */
+
     public  void removeIndex(User user) {
     	Term toDel = null;
     	if (user instanceof Patient) {

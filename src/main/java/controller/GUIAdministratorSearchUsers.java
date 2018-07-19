@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
@@ -40,13 +41,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     private TableColumn<User, String> columnName;
 
     @FXML
-    private TableColumn<User, String> columnAge;
-
-    @FXML
-    private TableColumn<User, String> columnBirthGender;
-
-    @FXML
-    private TableColumn<User, String> columnRegion;
+    private TableColumn<User, String> columnID;
 
     private final int NUMRESULTS = 30;
 
@@ -132,16 +127,18 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         columnName.setCellValueFactory(d -> d.getValue()
                 .getNameConcatenated() != null ? new SimpleStringProperty(d.getValue()
                 .getNameConcatenated()) : new SimpleStringProperty(""));
-        columnAge.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue()
-                .getAge())));
-        columnBirthGender.setCellValueFactory(d -> d.getValue()
-                .getBirthGender() != null ? new SimpleStringProperty(d.getValue()
-                .getBirthGender()
-                .toString()) : new SimpleStringProperty(""));
-        columnRegion.setCellValueFactory(d -> d.getValue()
-                .getRegion() != null ? new SimpleStringProperty(d.getValue()
-                .getRegion()
-                .toString()) : new SimpleStringProperty(""));
+        columnID.setCellValueFactory(d -> {
+            String ident;
+            User user = d.getValue();
+            if (user instanceof Patient) {
+                ident = ((Patient) user).getNhiNumber();
+            } else if (user instanceof Clinician) {
+                ident = String.valueOf(((Clinician) user).getStaffID());
+            } else {
+                ident = ((Administrator) user).getUsername();
+            }
+            return new SimpleStringProperty(ident);
+        });
 
         // wrap ObservableList in a FilteredList
         FilteredList<User> filteredData = new FilteredList<>(masterData, new Predicate<User>() {
@@ -179,20 +176,14 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     private void setupSearchingListener(FilteredList<User> filteredData) {
         // set the filter Predicate whenever the filter changes.
         searchEntry.textProperty()
-                .addListener((observable, oldValue, newValue) -> filteredData.setPredicate(patient -> {
+                .addListener((observable, oldValue, newValue) -> filteredData.setPredicate(user -> {
                     // If filter text is empty, display all persons.
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
-                    } else if (newValue.toLowerCase().equals( "male" ) || newValue.toLowerCase().equals("female")) {
-                        //return Searcher.searchByGender(newValue).contains(patient);
-                        return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() ); // ------------------------------this is where it fails!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
-                    List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT}, NUMRESULTS);
-                    List<Patient> patients = new ArrayList<Patient>();
-                    for (User user : results) {
-                    	patients.add((Patient)user);
-                    }
-                    return patients.contains(patient);
+                    List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, NUMRESULTS);
+                    List<User> users = new ArrayList<>(results);
+                    return users.contains(user);
                 }));
     }
 
