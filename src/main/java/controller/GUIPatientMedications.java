@@ -586,15 +586,19 @@ public class GUIPatientMedications extends UndoableController {
      * When activated displays the interactions between the two most recently selected medications
      */
     private void displayInteractions(HashMap<String, Set<String>> interactions, String drugOne, String drugTwo) {
-        Set<String> keys = interactions.keySet();
-        ingredients.clear();
-        ingredients.add("Interactions for " + drugOne + " & " + drugTwo);
-        ingredients.add("");
-        for (String key : keys) {
-            interactions.get(key)
-                    .forEach((interaction) -> ingredients.add(interaction.replace("\"", "") + "  (" + key + ")"));
+        if (interactions != null) {
+            Set<String> keys = interactions.keySet();
+            ingredients.clear();
+            ingredients.add("Interactions for " + drugOne + " & " + drugTwo);
+            ingredients.add("");
+            for (String key : keys) {
+                interactions.get(key)
+                        .forEach((interaction) -> ingredients.add(interaction.replace("\"", "") + "  (" + key + ")"));
+            }
+            displayIngredients(ingredients);
+        } else {
+            new Alert(Alert.AlertType.ERROR, "Unable to retrieve interactions between selected medications", ButtonType.OK).show();
         }
-        displayIngredients(ingredients);
     }
 
 
@@ -648,13 +652,13 @@ public class GUIPatientMedications extends UndoableController {
                 .clearSelection();
         medicineInformation.getSelectionModel()
                 .clearSelection();
+        refreshReview();
     }
 
 
     /**
-     * Button for clearing the information being currently displayed on the medicine information ListView on activation
+     * Clears the information being currently displayed on the medicine information ListView on activation
      */
-    @FXML
     private void refreshReview() {
         ingredients = new ArrayList<>();
         displayIngredients(ingredients);
