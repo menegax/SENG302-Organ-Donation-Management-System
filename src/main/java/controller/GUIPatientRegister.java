@@ -227,142 +227,166 @@ public class GUIPatientRegister {
     }
 
     /**
-     * Check users inputs for validity and registers the user patient profile
+     * Validates the name fields that are common to each account type
+     *
+     * @return Whether the fields are valid
      */
-    @FXML
-    public void register() {
-
-        Boolean valid = true;
-
-        Alert invalidInfo = new Alert(Alert.AlertType.WARNING);
-        StringBuilder invalidContent = new StringBuilder("Please fix the following errors:\n");
-
-        if (patientButton.isSelected()) {
-            // nhi
-            if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", userIdRegister.getText().toUpperCase())) {
-                valid = setInvalid(userIdRegister);
-                invalidContent.append("NHI must be three letters followed by four numbers\n");
-            } else if (Database.isPatientInDb(userIdRegister.getText())) {
-                // checks to see if nhi already in use
-                valid = setInvalid(userIdRegister);
-                invalidContent.append("NHI is already in use\n");
-            } else {
-                setValid(userIdRegister);
-            }
-        } else if (clinicianButton.isSelected()) {
-            if (userIdRegister.getText() == null) {
-                valid = setInvalid(userIdRegister);
-                invalidContent.append("User ID must be an integer\n");
-            } else {
-                setValid(userIdRegister);
-            }
-        } else {
-            if (!userIdRegister.getText()
-                    .matches("([A-Za-z0-9]+[-]*[_]*)+")) {
-                valid = setInvalid(userIdRegister);
-                invalidContent.append("Username must be letters, -, or _.\n");
-            } else {
-                setValid(userIdRegister);
-            }
-            if (passwordTxt.getText().length() < 6) {
-                valid = setInvalid(passwordTxt);
-                invalidContent.append("Password must be 6 characters or longer.\n");
-            } else {
-                setValid(passwordTxt);
-            }
-            if (!verifyPasswordTxt.getText().equals(passwordTxt.getText())) {
-                valid = setInvalid(verifyPasswordTxt);
-                invalidContent.append("Passwords do not match.\n");
-            } else {
-                setValid(verifyPasswordTxt);
-            }
-        }
-
+    private boolean validateNames() {
+        boolean valid = true;
         // first name
         if (!firstnameRegister.getText()
                 .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
             valid = setInvalid(firstnameRegister);
-            invalidContent.append("First name must be letters, ., or -.\n");
         } else {
             setValid(firstnameRegister);
         }
-
         // last name
         if (!lastnameRegister.getText()
                 .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
             valid = setInvalid(lastnameRegister);
-            invalidContent.append("Last name must be letters, ., or -.\n");
         } else {
             setValid(lastnameRegister);
         }
-
         //middle names
         if (!middlenameRegister.getText()
                 .matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
             valid = setInvalid(middlenameRegister);
-            invalidContent.append("Middle name(s) must be letters, ., or -.\n");
         } else {
             setValid(middlenameRegister);
         }
+        return valid;
+    }
 
-        if (patientButton.isSelected()) {
-            // date of birth
-            if (birthRegister.getValue() != null) {
-                if (birthRegister.getValue()
-                        .isAfter(LocalDate.now())) {
-                    valid = setInvalid(birthRegister);
-                    invalidContent.append("Date of birth must be a valid date either today or earlier.\n");
-                } else {
-                    setValid(birthRegister);
-                }
-            } else {
+    /**
+     * Validates the input fields for a new patient account
+     *
+     * @return Whether the fields are valid
+     */
+    private boolean validatePatient() {
+        boolean valid = true;
+        // nhi
+        if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", userIdRegister.getText().toUpperCase())) {
+            valid = setInvalid(userIdRegister);
+            new Alert(Alert.AlertType.ERROR, "NHI must be 3 characters followed by 4 numbers").showAndWait();
+        } else if (Database.isPatientInDb(userIdRegister.getText())) {
+            // checks to see if nhi already in use
+            valid = setInvalid(userIdRegister);
+            new Alert(Alert.AlertType.ERROR, "Patient with the given NHI already exists").showAndWait();
+        } else {
+            setValid(userIdRegister);
+        }
+        // date of birth
+        if (birthRegister.getValue() != null) {
+            if (birthRegister.getValue()
+                    .isAfter(LocalDate.now())) {
                 valid = setInvalid(birthRegister);
-                invalidContent.append("Date of birth must be set.\n");
+            } else {
+                setValid(birthRegister);
+            }
+        } else {
+            valid = setInvalid(birthRegister);
+        }
+        return valid;
+    }
+
+    /**
+     * Validates the input fields for a new clinician account
+     *
+     * @return Whether the fields are valid
+     */
+    private boolean validateClinician() {
+        boolean valid = true;
+        if (regionRegister.getValue() != null) {
+            setValid(birthRegister);
+        } else {
+            valid = setInvalid(regionRegister);
+        }
+        return valid;
+    }
+
+    /**
+     * Validates the input fields for a new administrator account
+     *
+     * @return Whether the fields are valid
+     */
+    private boolean validateAdministrator() {
+        boolean valid = validateNames();
+        if (!userIdRegister.getText()
+                .matches("([A-Za-z0-9]+[-]*[_]*)+")) {
+            valid = setInvalid(userIdRegister);
+        } else {
+            setValid(userIdRegister);
+        }
+        if (passwordTxt.getText().length() < 6) {
+            valid = setInvalid(passwordTxt);
+            new Alert(Alert.AlertType.ERROR, "Password must be 6 or more characters").showAndWait();
+        } else {
+            setValid(passwordTxt);
+        }
+        if (!verifyPasswordTxt.getText().equals(passwordTxt.getText())) {
+            valid = setInvalid(verifyPasswordTxt);
+            if (passwordTxt.getText().length() >= 6) {
+                new Alert(Alert.AlertType.ERROR, "Passwords do not match").showAndWait();
+            }
+        } else {
+            setValid(verifyPasswordTxt);
+        }
+        return valid;
+    }
+
+    /**
+     * Check users inputs for validity and registers the user patient profile
+     */
+    @FXML
+    public void register() {
+        if (patientButton.isSelected()) {
+            if (!validatePatient()) {
+                userActions.log(Level.WARNING, "Failed to register patient profile due to invalid fields", "Attempted to register patient profile");
+                return;
             }
         } else if (clinicianButton.isSelected()) {
-            if (regionRegister.getValue() != null) {
-                setValid(birthRegister);
-            } else {
-                valid = setInvalid(regionRegister);
-                invalidContent.append("Region must be set.\n");
+            if (!validateClinician()) {
+                userActions.log(Level.WARNING, "Failed to register clinician profile due to invalid fields", "Attempted to register clinician profile");
+                return;
+            }
+        } else {
+            if (!validateAdministrator()) {
+                userActions.log(Level.WARNING, "Failed to register administrator profile due to invalid fields", "Attempted to register administrator profile");
+                return;
             }
         }
 
         // if all are valid
-        if (valid) {
-            String id = userIdRegister.getText();
-            String firstName = firstnameRegister.getText();
-            String lastName = lastnameRegister.getText();
-            String password = passwordTxt.getText();
-            ArrayList<String> middles = new ArrayList<>();
-            String alertMsg;
-            if (!middlenameRegister.getText().equals("")) {
-                List<String> middleNames = Arrays.asList(middlenameRegister.getText().split(" "));
-                middles = new ArrayList<>(middleNames);
-            }
-            if (patientButton.isSelected()) {
-                LocalDate birth = birthRegister.getValue();
-                Database.addPatient(new Patient(id, firstName, middles, lastName, birth));
-                userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
-                alertMsg = "Successfully registered patient with NHI " + id;
-            } else if (clinicianButton.isSelected()) {
-                String region = regionRegister.getValue().toString();
-                int staffID = Database.getNextStaffID();
-                Database.addClinician(new Clinician(staffID, firstName, middles, lastName, (Region) Region.getEnumFromString(region)));
-                userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
-                alertMsg = "Successfully registered clinician with staff ID " + staffID;
-            } else {
-                Database.addAdministrator(new Administrator(id, firstName, middles, lastName, password));
-                userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
-                alertMsg = "Successfully registered administrator with username " + id;
-            }
-            clearFields();
-            new Alert(Alert.AlertType.INFORMATION, alertMsg).showAndWait();
-            returnToPreviousPage();
+        String id = userIdRegister.getText();
+        String firstName = firstnameRegister.getText();
+        String lastName = lastnameRegister.getText();
+        String password = passwordTxt.getText();
+        ArrayList<String> middles = new ArrayList<>();
+        String alertMsg;
+        if (!middlenameRegister.getText().equals("")) {
+            List<String> middleNames = Arrays.asList(middlenameRegister.getText().split(" "));
+            middles = new ArrayList<>(middleNames);
+        }
+        if (patientButton.isSelected()) {
+            LocalDate birth = birthRegister.getValue();
+            Database.addPatient(new Patient(id, firstName, middles, lastName, birth));
+            userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
+            alertMsg = "Successfully registered patient with NHI " + id;
+        } else if (clinicianButton.isSelected()) {
+            String region = regionRegister.getValue().toString();
+            int staffID = Database.getNextStaffID();
+            Database.addClinician(new Clinician(staffID, firstName, middles, lastName, (Region) Region.getEnumFromString(region)));
+            userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
+            alertMsg = "Successfully registered clinician with staff ID " + staffID;
         } else {
-            userActions.log(Level.WARNING, "Failed to register patient profile due to invalid fields", "Attempted to register patient profile");
-            invalidInfo.setContentText(invalidContent.toString());
-            invalidInfo.show();
+            Database.addAdministrator(new Administrator(id, firstName, middles, lastName, password));
+            userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
+            alertMsg = "Successfully registered administrator with username " + id;
+        }
+        clearFields();
+        new Alert(Alert.AlertType.INFORMATION, alertMsg).showAndWait();
+        if (userControl.getLoggedInUser() == null) {
+            returnToPreviousPage();
         }
     }
 
@@ -371,7 +395,6 @@ public class GUIPatientRegister {
      * @param target The target to add the class to
      */
     private boolean setInvalid(Control target) {
-
         target.getStyleClass()
                 .add("invalid");
         return false;
