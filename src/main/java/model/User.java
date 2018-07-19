@@ -7,6 +7,7 @@ import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public abstract class User {
 
@@ -31,7 +32,7 @@ public abstract class User {
     }
 
     public void setFirstName(String firstName) {
-        if (this.firstName == null || (!firstName.equals(this.firstName))) {
+        if (Pattern.matches("[a-z|A-Z|-]{1,35}", firstName)) {
         	Searcher.getSearcher().removeIndex(this);
             this.firstName = firstName;
             Searcher.getSearcher().addIndex(this);
