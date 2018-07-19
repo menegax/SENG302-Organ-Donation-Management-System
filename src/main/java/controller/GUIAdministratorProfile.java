@@ -5,7 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import model.Administrator;
-import model.Clinician;
+import model.User;
 import service.Database;
 
 import java.io.IOException;
@@ -26,6 +26,8 @@ public class GUIAdministratorProfile {
     @FXML
     private Button deleteButton;
 
+    private Administrator target;
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
     private UserControl userControl = new UserControl();
 
@@ -33,11 +35,17 @@ public class GUIAdministratorProfile {
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
     public void initialize() {
-        Administrator current = (Administrator) userControl.getLoggedInUser();
-        if (current.getUsername().equals("admin")) {
-            deleteButton.setVisible(false);
+        User loggedIn = userControl.getLoggedInUser();
+        if (userControl.getTargetUser() instanceof Administrator) {
+            target = (Administrator) userControl.getTargetUser();
+        } else {
+            target = (Administrator) loggedIn;
         }
-        loadProfile((Administrator) userControl.getLoggedInUser());
+        if (target.getUsername().toLowerCase().equals("admin")) {
+            deleteButton.setVisible(false);
+            deleteButton.setDisable(true);
+        }
+        loadProfile(target);
     }
 
     /**
@@ -66,9 +74,8 @@ public class GUIAdministratorProfile {
      * Deletes the current profile from the HashSet in Database, not from disk, not until saved
      */
     public void deleteProfile() {
-        Administrator administrator = (Administrator) userControl.getTargetUser();
-        if (!administrator.getUsername().equals("admin")) {
-            Database.deleteAdministrator(administrator);
+        if (!target.getUsername().toLowerCase().equals("admin")) {
+            Database.deleteAdministrator(target);
             goToAdministratorHome();
         }
     }

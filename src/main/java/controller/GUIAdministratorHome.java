@@ -13,29 +13,7 @@ import static utility.UserActionHistory.userActions;
 
 public class GUIAdministratorHome {
     @FXML
-    private Button searchUsers;
-    @FXML
     private AnchorPane administratorHomePane;
-    @FXML
-    private Button importDataButton;
-    @FXML
-    private Button waitingListButton;
-    @FXML
-    private Button registerButton;
-    @FXML
-    private Button profileButton;
-    @FXML
-    private Button saveButton;
-    @FXML
-    private Button logoutButton;
-    @FXML
-    private Button history;
-    @FXML
-    private Button importPatientsButton;
-    @FXML
-    private Button importCliniciansButton;
-    @FXML
-    private Button importWaitListButton;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -101,19 +79,6 @@ public class GUIAdministratorHome {
     }
 
     /**
-     * Opens the administrator history screen
-     */
-    @FXML
-    public void goToHistory() {
-        try {
-            screenControl.show(administratorHomePane, "/scene/administratorHome.fxml");
-        } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR, "Unable load administrator history").show();
-            userActions.log(SEVERE, "Failed to load administrator history", "Attempted to load administrator history");
-        }
-    }
-
-    /**
      * Opens the receiver waiting list screen
      */
     public void goToClinicianWaitingList() {
@@ -126,46 +91,5 @@ public class GUIAdministratorHome {
         }
     }
 
-    /**
-     * Imports patient data from disk
-     */
-    public void importPatients() {
-        try {
-            Database.importFromDiskPatients("./patient.json");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Imports clinician data from disk
-     */
-    public void importClinicians() {
-        try {
-            Database.importFromDiskClinicians("./clinician.json");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Imports wait list data from disk
-     */
-    public void importWaitList() {
-        try {
-            Database.importFromDiskWaitlist("/waitlist.json");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Imports data from disk
-     */
-    public void importData() {
-        importPatients();
-        importClinicians();
-        importWaitList();
-    }
 }
 
