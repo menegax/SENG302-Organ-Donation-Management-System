@@ -140,6 +140,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController{
             }
 
             target.adminModified();
+            userActions.log(Level.INFO, "Successfully updated admin profile", "Attempted to update admin profile");
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Admin successfully updated", ButtonType.OK);
             final Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
             dialogOK.addEventFilter(ActionEvent.ACTION, event -> goBackToProfile());

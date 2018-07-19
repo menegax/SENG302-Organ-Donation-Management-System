@@ -465,6 +465,7 @@ public class GUIPatientProfile {
      */
     public void deleteProfile() {
         Patient patient = (Patient) userControl.getTargetUser();
+        userActions.log(Level.INFO, "Successfully deleted patient profile", "Attempted to delete patient profile");
         Database.deletePatient( patient );
         goToAdministratorHome();
     }

@@ -193,6 +193,7 @@ public class GUIClinicianUpdateProfile extends UndoableController{
             target.setStreet2(street2Txt.getText());
             target.setSuburb(suburbTxt.getText());
             target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel().getSelectedItem().toString()));
+            userActions.log(Level.INFO, "Successfully updated clinician profile", "Attempted to update clinician profile");
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Clinician successfully updated", ButtonType.OK);
             final Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
             dialogOK.addEventFilter(ActionEvent.ACTION, event -> goBackToProfile());

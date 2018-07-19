@@ -9,6 +9,7 @@ import model.User;
 import service.Database;
 
 import java.io.IOException;
+import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
@@ -75,6 +76,7 @@ public class GUIAdministratorProfile {
      */
     public void deleteProfile() {
         if (!target.getUsername().toLowerCase().equals("admin")) {
+            userActions.log(Level.INFO, "Successfully deleted admin profile", "Attempted to delete admin profile");
             Database.deleteAdministrator(target);
             goToAdministratorHome();
         }

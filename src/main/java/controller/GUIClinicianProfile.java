@@ -10,6 +10,7 @@ import model.User;
 import service.Database;
 
 import java.io.IOException;
+import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
@@ -104,6 +105,7 @@ public class GUIClinicianProfile {
     public void deleteProfile() {
         Clinician clinician = (Clinician) userControl.getTargetUser();
         if (clinician.getStaffID() != 0) {
+            userActions.log(Level.INFO, "Successfully deleted clinician profile", "Attempted to delete clinician profile");
             Database.deleteClinician( clinician );
             goToAdministratorHome();
         }
