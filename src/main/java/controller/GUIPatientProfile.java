@@ -303,4 +303,14 @@ public class GUIPatientProfile {
         });
     }
 
+    /**
+     * Deletes the current profile from the HashSet in Database, not from disk, not until saved
+     */
+    public void deleteProfile() {
+        Patient patient = (Patient) userControl.getTargetUser();
+        userActions.log(Level.INFO, "Successfully deleted patient profile", "Attempted to delete patient profile");
+        Database.deletePatient( patient );
+        ((Stage) patientProfilePane.getScene().getWindow()).close();
+    }
+
 }

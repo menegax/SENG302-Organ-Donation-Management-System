@@ -81,7 +81,6 @@ public class GUILogin {
         UserControl login = new UserControl();
         ScreenControl screenControl = ScreenControl.getScreenControl();
         try {
-            Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
             if (patient.isSelected()) {
                 login.addLoggedInUserToCache(Database.getPatientByNhi(nhiLogin.getText()));
             } else if (clinician.isSelected()) {
@@ -90,6 +89,7 @@ public class GUILogin {
                 checkAdminCredentials();
                 login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
+            Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
             UndoableStage stage = new UndoableStage();
             screenControl.addStage(stage.getUUID(), stage);
             screenControl.show(stage.getUUID(), home);

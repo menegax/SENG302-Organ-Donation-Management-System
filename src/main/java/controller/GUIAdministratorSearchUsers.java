@@ -92,22 +92,17 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
                     UserControl userControl = new UserControl();
                     User selected = userDataTable.getSelectionModel().getSelectedItem();
                     userControl.setTargetUser(selected);
-                    FXMLLoader fxmlLoader;
-                    if (selected instanceof Patient) {
-                        fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-                    } else if (selected instanceof Clinician) {
-                        fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianProfile.fxml"));
-                    } else {
-                        fxmlLoader = new FXMLLoader(getClass().getResource("/scene/administratorProfile.fxml"));
-                    }
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     UndoableStage popUpStage = new UndoableStage();
+                    //Set initial popup dimensions
+                    popUpStage.setWidth(1000);
+                    popUpStage.setHeight(700);
                     screenControl.addStage(popUpStage.getUUID(), popUpStage);
                     screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
 
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open user profile scene from search users table",
                             "attempted to open user edit window from search users table");
@@ -151,13 +146,13 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             masterData.clear();
-            UserTypes[] types = new UserTypes[] {UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN};
+            UserTypes[] types = new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN};
             List<User> results = new ArrayList<User>();
             if (newValue == null || newValue.isEmpty()) {
-            	results = searcher.getDefaultResults(types);
+                results = searcher.getDefaultResults(types);
             } else {
-            	results = searcher.search(newValue,types , NUMRESULTS);
-            }      
+                results = searcher.search(newValue, types, NUMRESULTS);
+            }
             masterData.addAll(results);
             filteredData.setPredicate(patient -> true);
         });
@@ -187,7 +182,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
-                    List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, NUMRESULTS);
+                    List<User> results = searcher.search(newValue, new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, NUMRESULTS);
                     return results.contains(user);
                 }));
     }
@@ -202,15 +197,13 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
             @Override
             public void updateItem(User user, boolean empty) {
                 super.updateItem(user, empty);
-                if (user == null || !(user instanceof Patient)) {
+                if (!(user instanceof Patient)) {
                     setTooltip(null);
-                }
-                else if (((Patient)user).getDonations().isEmpty()) {
+                } else if (((Patient) user).getDonations().isEmpty()) {
                     Patient patient = (Patient) user;
                     tooltip.setText(patient.getNameConcatenated() + ". No donations.");
                     setTooltip(tooltip);
-                }
-                else {
+                } else {
                     Patient patient = (Patient) user;
                     StringBuilder tooltipText = new StringBuilder(patient.getNameConcatenated() + ". Donations: ");
                     for (GlobalEnums.Organ organ : patient.getDonations()) {
@@ -229,16 +222,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
      * Adds all db data via constructor
      */
     public GUIAdministratorSearchUsers() {
-        masterData.addAll(searcher.getDefaultResults(new UserTypes[] {UserTypes.ADMIN, UserTypes.CLINICIAN, UserTypes.PATIENT}));
-    }
-
-    public void goToAdministratorHome() {
-        try {
-            screenControl.show(userDataTable, "/scene/administratorHome.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load administrator home").show();
-            userActions.log(SEVERE, "Failed to load administrator home", "Attempted to load administrator home");
-        }
+        masterData.addAll(searcher.getDefaultResults(new UserTypes[]{UserTypes.ADMIN, UserTypes.CLINICIAN, UserTypes.PATIENT}));
     }
 
     /**

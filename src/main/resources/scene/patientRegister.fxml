@@ -7,11 +7,12 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane fx:id="patientRegisterAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientRegister">
    <children>
-      <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goBackToLogin" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
+      <Label fx:id="backButton" layoutX="14.0" layoutY="14.0" onMouseClicked="#goBackToLogin" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
       <Label layoutX="242.0" layoutY="19.0" prefHeight="55.0" prefWidth="116.0" styleClass="title" stylesheets="@../css/guiStyle.css" text="Register" />
       <TextField fx:id="userIdRegister" focusTraversable="false" layoutX="226.0" layoutY="123.0" promptText="NHI Number" />
       <TextField fx:id="firstnameRegister" focusTraversable="false" layoutX="226.0" layoutY="162.0" promptText="First name" />
@@ -19,11 +20,14 @@
       <TextField fx:id="middlenameRegister" focusTraversable="false" layoutX="226.0" layoutY="240.0" promptText="Middle name(s)" />
       <Button fx:id="doneButton" layoutX="463.0" layoutY="341.0" mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Done" />
       <DatePicker fx:id="birthRegister" editable="false" focusTraversable="false" layoutX="226.0" layoutY="282.0" prefHeight="25.0" prefWidth="149.0" promptText="Date of birth" />
-      <RadioButton fx:id="clinicianButton" layoutX="257.0" layoutY="83.0" mnemonicParsing="false" text="Clinician" />
-      <RadioButton fx:id="administratorButton" layoutX="375.0" layoutY="83.0" mnemonicParsing="false" text="Administrator" />
-      <RadioButton fx:id="patientButton" layoutX="139.0" layoutY="83.0" mnemonicParsing="false" text="Patient" />
-      <ChoiceBox fx:id="regionRegister" layoutX="226.0" layoutY="282.0" prefWidth="150.0" />
-      <PasswordField fx:id="passwordTxt" layoutX="226.0" layoutY="282.0" promptText="Password" />
-      <PasswordField fx:id="verifyPasswordTxt" layoutX="226.0" layoutY="321.0" promptText="Verify password" />
+      <RadioButton fx:id="clinicianButton" layoutX="257.0" layoutY="83.0" mnemonicParsing="false" onAction="#onSelectClinician" text="Clinician">
+         <toggleGroup>
+            <ToggleGroup fx:id="usertype" />
+         </toggleGroup></RadioButton>
+      <RadioButton fx:id="administratorButton" layoutX="375.0" layoutY="83.0" mnemonicParsing="false" onAction="#onSelectAdministrator" text="Administrator" toggleGroup="$usertype" />
+      <RadioButton fx:id="patientButton" layoutX="139.0" layoutY="83.0" mnemonicParsing="false" onAction="#onSelectPatient" selected="true" text="Patient" toggleGroup="$usertype" />
+      <ChoiceBox fx:id="regionRegister" disable="true" layoutX="226.0" layoutY="282.0" prefWidth="150.0" visible="false" />
+      <PasswordField fx:id="passwordTxt" disable="true" layoutX="226.0" layoutY="282.0" promptText="Password" visible="false" />
+      <PasswordField fx:id="verifyPasswordTxt" disable="true" layoutX="226.0" layoutY="321.0" promptText="Verify password" visible="false" />
    </children>
 </AnchorPane>

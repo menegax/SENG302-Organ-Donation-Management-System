@@ -66,6 +66,7 @@ public class GUIAdministratorProfile {
 
     /**
      * Loads administrator attributes to display in the administrator profile screen
+     *
      * @param administrator clinician logged in
      */
     private void loadProfile(Administrator administrator) {
@@ -93,22 +94,9 @@ public class GUIAdministratorProfile {
         if (!target.getUsername().toLowerCase().equals("admin")) {
             userActions.log(Level.INFO, "Successfully deleted admin profile", "Attempted to delete admin profile");
             Database.deleteAdministrator(target);
-            if (!target.getUsername().equals(((Administrator)userControl.getLoggedInUser()).getUsername())) {
+            if (!target.getUsername().equals(((Administrator) userControl.getLoggedInUser()).getUsername())) {
                 ((Stage) adminProfilePane.getScene().getWindow()).close();
             }
-        }
-    }
-
-    /**
-     * Opens the administrator home screen
-     */
-    @FXML
-    public void goToAdministratorHome() {
-        try {
-            screenControl.show(usernameTxt, "/scene/administratorHome.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load administrator home").show();
-            userActions.log(SEVERE, "Failed to load administrator home", "Attempted to load administrator home");
         }
     }
 }

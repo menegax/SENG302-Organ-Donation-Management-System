@@ -1,6 +1,5 @@
 package controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
@@ -10,7 +9,6 @@ import service.Database;
 import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,13 +16,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
  * Controller class to control GUI Clinician updating screen.
  */
-public class GUIAdministratorUpdateProfile extends UndoableController{
+public class GUIAdministratorUpdateProfile extends UndoableController {
 
     @FXML
     public AnchorPane administratorUpdateAnchorPane;
@@ -65,6 +62,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController{
     /**
      * Loads the currently logged in administrator from the Database and populates the tables using the logged
      * in administrator's attributes.
+     *
      * @param username The administrators username
      */
     private void loadProfile(String username) {
@@ -91,11 +89,13 @@ public class GUIAdministratorUpdateProfile extends UndoableController{
 
     /**
      * Populates the update screen using the current administrator attributes
+     *
      * @param administrator logged in administrator
      */
     private void populateForm(Administrator administrator) {
         //adds last modified date only if clinician has been edited before
-        if(target.getModified() != null) lastModifiedLbl.setText("Last Updated: " + administrator.getModified().toString());
+        if (target.getModified() != null)
+            lastModifiedLbl.setText("Last Updated: " + administrator.getModified().toString());
         else lastModifiedLbl.setText("Last Updated: n/a");
         firstnameTxt.setText(administrator.getFirstName());
         lastnameTxt.setText(administrator.getLastName());
@@ -140,11 +140,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController{
 
             target.adminModified();
             userActions.log(Level.INFO, "Successfully updated admin profile", "Attempted to update admin profile");
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Admin successfully updated", ButtonType.OK);
-            final Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
-            dialogOK.addEventFilter(ActionEvent.ACTION, event -> goBackToProfile());
-            alert.show();
-//            goBackToProfile();
+            new Alert(Alert.AlertType.INFORMATION, "Admin successfully updated", ButtonType.OK).showAndWait();
         } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }
@@ -178,18 +174,6 @@ public class GUIAdministratorUpdateProfile extends UndoableController{
         if (e.getTarget().getClass() == TextField.class) {
             TextField target = (TextField) e.getTarget();
             setValid(target);
-        }
-    }
-
-    /**
-     * Navigates back to the profile window
-     */
-    public void goBackToProfile() {
-        try {
-            screenControl.show(administratorUpdateAnchorPane, "/scene/administratorProfile.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load administrator profile").show();
-            userActions.log(SEVERE, "Failed to load administrator profile", "Attempted to load administrator profile");
         }
     }
 }

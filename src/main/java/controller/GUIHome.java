@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
@@ -57,6 +58,17 @@ public class GUIHome {
                 } else {
                     addTabsClinician();
                     setUpColouredBar(userControl.getLoggedInUser(), "Clinician");
+                }
+            } else if (userControl.getLoggedInUser() instanceof Administrator) {
+                if (userControl.getTargetUser() instanceof Patient) {
+                    addTabsForPatientClinician();
+                    setUpColouredBar(userControl.getTargetUser(), "Patient");
+                } else if (userControl.getTargetUser() instanceof Clinician) {
+                    addTabsForPatientClinician();
+                    setUpColouredBar(userControl.getLoggedInUser(), "Clinician");
+                } else {
+                    addTabsAdministrator();
+                    setUpColouredBar(userControl.getLoggedInUser(), "Administrator");
                 }
             }
             horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty().addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
@@ -139,6 +151,19 @@ public class GUIHome {
         createTab("Search Patients", "/scene/clinicianSearchPatients.fxml");
         createTab("Transplant Waiting List", "/scene/clinicianWaitingList.fxml");
         createTab("History", "/scene/clinicianHistory.fxml");
+    }
+
+    /**
+     * Adds tabs for a logged in administrator
+     * @throws IOException- if fxml cannot be located
+     */
+    private void addTabsAdministrator() throws IOException {
+        createTab("Profile", "/scene/administratorProfile.fxml");
+        createTab("Update", "/scene/administratorProfileUpdate.fxml");
+        createTab("Register User", "/scene/patientRegister.fxml");
+        createTab("Search Users", "/scene/administratorSearchUsers.fxml");
+        createTab("Transplant Waiting List", "/scene/clinicianWaitingList.fxml");
+        createTab("History", "/scene/adminHistory.fxml");
     }
 
 
