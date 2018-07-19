@@ -29,3 +29,16 @@
 4. logout and log back in as a patient without any donating organs
 5. select the profile button
 6. the donating list view should not be visible in the patient home page but the required list view should be visible
+
+##Test History
+
+###18/07/2018 - Maree
+Navigate to clinician view of patient: Pass
+
+Ensure that organs are listed on the receiving listview: Pass
+
+Ensure that organs are listed on the donating listview: Pass
+
+Ensure that organs highlighted if patient is donating and receiving the same organ: Pass
+
+Ensure that donating list and receiving lists are segregated: Fail - the listviews are still visible, but empty
