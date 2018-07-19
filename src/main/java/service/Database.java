@@ -34,6 +34,7 @@ public class Database {
     public static void addAdmin(Administrator admin) {
     	if (!usernameInDatabase(admin.getUsername())) {
     		administrators.add(admin);
+    		searcher.addIndex(admin);
     	}	
     }
     
@@ -199,6 +200,7 @@ public class Database {
 
         if (newClinician.getStaffID() == Database.getNextStaffID()) {
             clinicians.add(newClinician);
+            searcher.addIndex(newClinician);
             userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
         }
 
