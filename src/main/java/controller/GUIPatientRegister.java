@@ -402,11 +402,7 @@ public class GUIPatientRegister {
 
     private void returnToPreviousPage() {
         try {
-            if (userControl.getLoggedInUser() != null && userControl.getLoggedInUser() instanceof Administrator) {
-                screenControl.show(patientRegisterAnchorPane, "/scene/administratorHome.fxml");
-            } else {
-                screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-            }
+            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
             userActions.log(SEVERE, "Failed to load login", "Attempted to load login");

@@ -1,27 +1,21 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Administrator;
 import model.User;
 import service.Database;
 
-import java.io.IOException;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIAdministratorProfile {
     @FXML
-    private AnchorPane adminProfilePane;
-
-    @FXML
-    private Button back;
+    private GridPane adminProfilePane;
 
     @FXML
     private Label usernameTxt;
@@ -37,7 +31,6 @@ public class GUIAdministratorProfile {
 
     private Administrator target;
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
     private UserControl userControl = new UserControl();
 
     /**
@@ -57,9 +50,6 @@ public class GUIAdministratorProfile {
         if (target.getUsername().equals(((Administrator) loggedIn).getUsername())) {
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
-        } else {
-            back.setVisible(false);
-            back.setDisable(true);
         }
         loadProfile(target);
     }
@@ -73,18 +63,6 @@ public class GUIAdministratorProfile {
         usernameTxt.setText(administrator.getUsername());
         nameTxt.setText(administrator.getNameConcatenated());
         modifiedLbl.setText(administrator.getModified() == null ? "--" : administrator.getModified().toString());
-    }
-
-    /**
-     * Opens the administrator edit screen
-     */
-    public void goToEdit() {
-        try {
-            screenControl.show(usernameTxt, "/scene/administratorProfileUpdate.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load update administrator profile").show();
-            userActions.log(SEVERE, "Failed to load update administrator profile", "Attempted to load update administrator profile");
-        }
     }
 
     /**

@@ -1,41 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="adminProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAdministratorProfile">
+<GridPane fx:id="adminProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAdministratorProfile">
+   <columnConstraints>
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="171.0" minWidth="10.0" prefWidth="163.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="168.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <Label layoutX="169.0" layoutY="38.0" text="Administrator Profile">
+      <Label fx:id="nameTxt" styleClass="title" stylesheets="@../css/guiStyle.css" text="Default" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER">
          <font>
-            <Font size="27.0" />
+            <Font size="14.0" />
          </font>
       </Label>
-      <VBox layoutX="181.0" layoutY="95.0" prefHeight="230.0" prefWidth="239.0">
+      <VBox prefHeight="230.0" prefWidth="273.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
          <children>
             <HBox prefHeight="25.0" prefWidth="239.0">
                <children>
-                  <Label text="Username: " />
-                  <Label fx:id="usernameTxt" />
+                  <Label text="Username: ">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="usernameTxt">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
             </HBox>
             <HBox prefHeight="25.0" prefWidth="239.0">
                <children>
-                  <Label text="Name: " />
-                  <Label fx:id="nameTxt" />
-               </children>
-            </HBox>
-            <HBox prefHeight="25.0" prefWidth="239.0">
-               <children>
-                  <Label text="Last Modified: " />
-                  <Label fx:id="modifiedLbl" />
+                  <Label text="Last Modified: ">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="modifiedLbl">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                </children>
             </HBox>
          </children>
+         <padding>
+            <Insets left="30.0" />
+         </padding>
       </VBox>
-      <Button fx:id="deleteButton" layoutX="14.0" layoutY="344.0" mnemonicParsing="false" onAction="#deleteProfile" text="Delete Profile" />
+      <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteProfile" styleClass="delete-button" stylesheets="@../css/guiStyle.css" text="Delete Profile" GridPane.rowIndex="2" />
    </children>
-</AnchorPane>
+</GridPane>
