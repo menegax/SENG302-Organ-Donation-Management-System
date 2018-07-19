@@ -51,6 +51,10 @@ public class GUIAdministratorProfile {
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
         }
+        if (target.getUsername().equals(((Administrator) loggedIn).getUsername())) {
+            deleteButton.setVisible(false);
+            deleteButton.setDisable(true);
+        }
         loadProfile(target);
     }
 
