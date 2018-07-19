@@ -211,22 +211,6 @@ public class GUIClinicianWaitingList {
     }
 
     /**
-     * Returns the user to the clinician home page
-     */
-    public void goToHome() {
-        try {
-            if (userControl.getLoggedInUser() instanceof Clinician) {
-                screenControl.show(clinicianWaitingListAnchorPane, "/scene/clinicianHome.fxml");
-            } else if (userControl.getLoggedInUser() instanceof Administrator) {
-                screenControl.show(clinicianWaitingListAnchorPane, "/scene/administratorHome.fxml");
-            }
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load home screen").show();
-            userActions.log(SEVERE, "Failed to load home", "Attempted to load home");
-        }
-    }
-
-    /**
      * Refreshes the table data
      */
     private void tableRefresh() {

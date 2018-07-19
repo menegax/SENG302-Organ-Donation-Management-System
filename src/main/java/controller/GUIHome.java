@@ -51,9 +51,9 @@ public class GUIHome {
                 addTabsPatient();
                 setUpColouredBar(userControl.getLoggedInUser(), "Patient");
             } else if (userControl.getLoggedInUser() instanceof Clinician) {
-                if (userControl.getTargetPatient() != null) {
+                if (userControl.getTargetUser() != null) {
                     addTabsForPatientClinician(); // if we are a clinician looking at a patient
-                    setUpColouredBar(userControl.getTargetPatient(), "Patient");
+                    setUpColouredBar(userControl.getTargetUser(), "Patient");
                 } else {
                     addTabsClinician();
                     setUpColouredBar(userControl.getLoggedInUser(), "Clinician");

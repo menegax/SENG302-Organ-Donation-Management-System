@@ -90,7 +90,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * patient's profile view screen in a new window.
      */
     private void setupDoubleClickToPatientEdit() {
-        UserControl userControl = new UserControl();
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()

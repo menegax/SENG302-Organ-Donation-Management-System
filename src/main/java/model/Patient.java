@@ -396,7 +396,7 @@ public class Patient extends User {
         if (this.status != status) {
             this.status = status;
         }
-        patientModified();
+        userModified();
     }
 
     /**

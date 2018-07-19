@@ -1,13 +1,12 @@
 package model;
 
-import java.sql.Timestamp;
-import java.util.List;
+import utility.Searcher;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-
-import static utility.SystemLogger.systemLogger;
 
 public abstract class User {
 
@@ -100,8 +99,6 @@ public abstract class User {
     public UUID getUuid() {
         return uuid;
     }
-
-    public abstract String getNameConcatenated();
 
     // transient means that this property is not serialized on saving to disk
     transient PropertyChangeSupport propertyChangeSupport;

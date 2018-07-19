@@ -1,29 +1,15 @@
 package controller;
 
-import static utility.UserActionHistory.userActions;
-
-import javafx.application.Application;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.layout.AnchorPane;
-
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import main.Main;
 import model.Administrator;
-import javafx.scene.control.TextField;
-
-import javafx.stage.Stage;
-import model.Clinician;
-import model.Patient;
+import model.User;
 import service.Database;
 import utility.undoRedo.UndoableStage;
 
@@ -31,8 +17,8 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
-import static utility.SystemLogger.systemLogger;
 import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class GUILogin {
@@ -94,8 +80,8 @@ public class GUILogin {
     public void logIn() {
         UserControl login = new UserControl();
         ScreenControl screenControl = ScreenControl.getScreenControl();
-        Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
         try {
+            Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
             if (patient.isSelected()) {
                 login.addLoggedInUserToCache(Database.getPatientByNhi(nhiLogin.getText()));
             } else if (clinician.isSelected()) {

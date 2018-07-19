@@ -2,15 +2,14 @@ package controller;
 
 import model.Administrator;
 import model.Clinician;
-import static java.util.logging.Level.INFO;
-import static utility.SystemLogger.systemLogger;
-
-import model.Clinician;
 import model.Patient;
 import model.User;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.logging.Level.INFO;
+import static utility.SystemLogger.systemLogger;
 
 public class UserControl {
 
@@ -52,7 +51,7 @@ public class UserControl {
      * Adds a user to the cache
      * @param user - user to be added
      */
-    public void addLoggedInUserToCache(User user) {
+    void addLoggedInUserToCache(User user) {
         add("user_logged_in", user);
     }
 
@@ -89,7 +88,7 @@ public class UserControl {
      * Sets the user to be viewed
      * @param user - Patient object to view
      */
-    public void setTargetUser(User user) {
+    void setTargetUser(User user) {
         add("target_user", user);
     }
 
