@@ -29,3 +29,11 @@
 4. Click "set". If there is a validation error for valid values, the test fails.
 5. Go to the profile tab
 6. Compare what was entered in the update tab to what is displayed. If there is a mismatch, the test fails. Otherwise it succeeds.
+
+##Test History
+
+###19/07/2018 - Maree
+
+Test 1: Pass
+
+Test 2: Pass
