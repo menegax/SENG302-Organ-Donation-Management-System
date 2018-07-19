@@ -8,6 +8,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
@@ -31,7 +32,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIPatientUpdateContacts extends UndoableController {
 
     @FXML
-    public AnchorPane patientContactsPane;
+    public GridPane patientContactsPane;
 
     @FXML
     private TextField homePhoneField;
@@ -79,8 +80,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
     public void saveContactDetails() {
         boolean valid = setPatientContactDetails();
         if (valid) {
-            Database.saveToDisk();
-            goToProfile();
+            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
         } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }
@@ -178,7 +178,22 @@ public class GUIPatientUpdateContacts extends UndoableController {
     private void loadProfile(String nhi) {
         try {
             target = Database.getPatientByNhi(nhi);
-        } catch (InvalidObjectException e) {
+
+            ArrayList<Control> controls = new ArrayList<Control>() {{
+                add(homePhoneField);
+                add(mobilePhoneField);
+                add(workPhoneField);
+                add(emailAddressField);
+                add(contactNameField);
+                add(contactRelationshipField);
+                add(contactHomePhoneField);
+                add(contactMobilePhoneField);
+                add(contactWorkPhoneField);
+                add(contactEmailAddressField);
+            }};
+            statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATECONTACTS);
+        }
+        catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
         }
     }
@@ -300,29 +315,6 @@ public class GUIPatientUpdateContacts extends UndoableController {
     private void setValid(Control target) {
         if (target.getStyleClass().contains("invalid")) {
             target.getStyleClass().remove("invalid");
-        }
-    }
-
-
-    /**
-     * Closes the contact details screen and returns the user to the profile window without saving changes.
-     */
-    public void goToProfile() {
-        if (userControl.getLoggedInUser() instanceof Patient) {
-            try {
-                screenControl.show(patientContactsPane, "/scene/patientProfile.fxml");
-            } catch (IOException e) {
-                new Alert((Alert.AlertType.ERROR), "Unable to patient profile").show();
-                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
-            }
-        } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-            try {
-                ScreenControl.loadPopUpPane(patientContactsPane.getScene(), fxmlLoader);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error returning to profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
-            }
         }
     }
 

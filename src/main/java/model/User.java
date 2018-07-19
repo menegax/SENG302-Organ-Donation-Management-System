@@ -2,20 +2,23 @@ package model;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.UUID;
+import java.util.logging.Level;
 
-import utility.Searcher;
+import static utility.SystemLogger.systemLogger;
 
 public abstract class User {
 
     private final UUID uuid = UUID.randomUUID();
-    
+
     protected String firstName;
 
     protected List<String> middleNames;
 
     protected String lastName;
-    
+
     protected Timestamp modified;
 
     public User(String firstName, List<String> middleNames, String lastName) {
@@ -62,7 +65,7 @@ public abstract class User {
             userModified();
         }
     }
-    
+
     /**
      * Returns the name of the user as a formatted concatenated string
      *
@@ -93,9 +96,24 @@ public abstract class User {
    protected void userModified() {
        this.modified = new Timestamp(System.currentTimeMillis());
    }
-    
+
     public UUID getUuid() {
         return uuid;
     }
 
+    public abstract String getNameConcatenated();
+
+    // transient means that this property is not serialized on saving to disk
+    transient PropertyChangeSupport propertyChangeSupport;
+
+    /**
+     * Adds a listener to the propertyChangeSupport to be notified on user modification
+     * @param propertyChangeListener the propertyChangeListener to be notified
+     */
+    public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+        if (propertyChangeSupport == null) {
+            propertyChangeSupport = new PropertyChangeSupport(this);
+        }
+        propertyChangeSupport.addPropertyChangeListener(propertyChangeListener);
+    }
 }

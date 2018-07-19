@@ -9,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import model.Patient;
 import model.Procedure;
 import utility.GlobalEnums.Organ;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -42,12 +44,10 @@ public class GUIPatientProcedureForm  {
     @FXML
     public MenuButton affectedInput;
 
-    @FXML
-    public AnchorPane procedureAnchorPane;
-
     private Patient patient;
     private boolean isEditInstance = false;
     private Procedure procedure; //The Procedure that is being edited (null in the case of adding a procedure)
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initial setup. Sets up undo/redo, Populates the affected organs dropdown
@@ -131,7 +131,7 @@ public class GUIPatientProcedureForm  {
             this.procedure.setDescription(descriptionInput.getText());
             this.procedure.setAffectedDonations(affectedDonations);
             this.procedure.setDate(dateInput.getValue());
-            userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attemped to update procedure", patient.getNhiNumber()});
+            userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", patient.getNhiNumber()});
             goBackToProcedures();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +
@@ -214,18 +214,9 @@ public class GUIPatientProcedureForm  {
     }
 
     /**
-     * Goes back to the patient procedure screen
+     * Closes the pop-up stage for the procedure form
      */
     public void goBackToProcedures() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedures.fxml"));
-            ScreenControl.loadPopUpPane(procedureAnchorPane.getScene(), fxmlLoader);
-
-        } catch (IOException e) {
-            userActions.log(Level.SEVERE,
-                    "Failed to open procedures page from procedure form",
-                    "Attempted to open procedures page from procedure form");
-            new Alert(Alert.AlertType.ERROR, "Unable to open procedures page", ButtonType.OK).show();
-        }
+        screenControl.closeStage(((UndoableStage)summaryInput.getScene().getWindow()).getUUID());
     }
 }

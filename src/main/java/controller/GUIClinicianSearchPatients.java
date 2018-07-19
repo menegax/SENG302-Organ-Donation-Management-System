@@ -24,6 +24,8 @@ import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -48,7 +50,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     private TableColumn<Patient, String> columnRegion;
 
     private final int NUMRESULTS = 30;
-    
+
     @FXML
     private TextField searchEntry;
 
@@ -57,7 +59,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private Searcher searcher = Searcher.getSearcher();
-    
+
     /**
      * Initialises the data within the table to all patients
      *
@@ -88,6 +90,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * patient's profile view screen in a new window.
      */
     private void setupDoubleClickToPatientEdit() {
+        UserControl userControl = new UserControl();
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
@@ -96,8 +99,11 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     UserControl userControl = new UserControl();
                     userControl.setTargetUser(patientDataTable.getSelectionModel()
                             .getSelectedItem());
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     UndoableStage popUpStage = new UndoableStage();
+                    //Set initial popup dimensions
+                    popUpStage.setWidth(1000);
+                    popUpStage.setHeight(700);
                     screenControl.addStage(popUpStage.getUUID(), popUpStage);
                     screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
 
@@ -232,15 +238,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     		defaultPatients.add((Patient)user);
     	}
         masterData.addAll(defaultPatients);
-    }
-
-    public void goToClinicianHome() {
-        try {
-            screenControl.show(patientDataTable, "/scene/clinicianHome.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
-            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
-        }
     }
 
     /**

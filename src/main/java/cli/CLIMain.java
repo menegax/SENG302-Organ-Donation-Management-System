@@ -9,6 +9,8 @@ import utility.SystemLogger;
 import utility.UserActionHistory;
 import java.io.IOException;
 import java.util.logging.Level;
+
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("ConstantConditions")
@@ -20,7 +22,7 @@ public class CLIMain {
             Terminal terminal = builder.build();
             return LineReaderBuilder.builder().terminal(terminal).build();
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Unable to start LineReader", "Attempted to begin CLI application");
+            systemLogger.log(Level.SEVERE, "Unable to start LineReader", "Attempted to begin CLI application");
             System.exit(1);
         }
         return null;

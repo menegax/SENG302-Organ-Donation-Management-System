@@ -1,15 +1,29 @@
 package controller;
 
+import static utility.UserActionHistory.userActions;
+
+import javafx.application.Application;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.layout.AnchorPane;
+
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import main.Main;
 import model.Administrator;
+import javafx.scene.control.TextField;
+
+import javafx.stage.Stage;
+import model.Clinician;
+import model.Patient;
 import service.Database;
 import utility.undoRedo.UndoableStage;
 
@@ -17,8 +31,8 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUILogin {
@@ -80,22 +94,20 @@ public class GUILogin {
     public void logIn() {
         UserControl login = new UserControl();
         ScreenControl screenControl = ScreenControl.getScreenControl();
-        Parent home;
+        Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
         try {
             if (patient.isSelected()) {
                 login.addLoggedInUserToCache(Database.getPatientByNhi(nhiLogin.getText()));
-                home = FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml"));
             } else if (clinician.isSelected()) {
                 login.addLoggedInUserToCache(Database.getClinicianByID(Integer.parseInt(nhiLogin.getText())));
-                home = FXMLLoader.load((getClass().getResource("/scene/clinicianHome.fxml")));
             } else {
                 checkAdminCredentials();
                 login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
-                home = FXMLLoader.load((getClass().getResource("/scene/administratorHome.fxml")));
             }
             UndoableStage stage = new UndoableStage();
             screenControl.addStage(stage.getUUID(), stage);
             screenControl.show(stage.getUUID(), home);
+            screenControl.closeStage(Main.getUuid()); // close login scene after login
         } catch (InvalidObjectException e) {
             password.setText(""); //Reset password field on invalid login
             userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
@@ -106,8 +118,7 @@ public class GUILogin {
             systemLogger.log(Level.INFO, "Failed to find the .fxml file for login" + e.getStackTrace());
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
             alert.show();
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             userActions.log(Level.WARNING, "Non-numeric staff IDs are not permitted", "Attempted to log in");
             Alert alert = new Alert(Alert.AlertType.WARNING, "Non-numeric staff ID are not permitted");
             alert.show();

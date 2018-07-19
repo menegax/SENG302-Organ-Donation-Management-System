@@ -3,6 +3,8 @@ package model;
 import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,19 +69,6 @@ public class Clinician extends User {
         userModified();
     }
 
-    /**
-     * Updates the clinicians first name if the provided new value is valid.
-     * The first name must be non-null and have non-zero length. The first name can only
-     * contain alphabetic characters and hyphens
-     *
-     * @param firstName The new first name
-     */
-    public void setFirstName(String firstName) {
-        if (firstName != null && firstName.length() > 0 && Pattern.matches("^[-a-zA-Z]+$", firstName)) {
-            this.firstName = firstName;
-            userModified();
-        }
-    }
 
     public String getStreet1() {
         return street1;
@@ -93,7 +82,7 @@ public class Clinician extends User {
      * @param street1 The new street1 value
      */
     public void setStreet1(String street1) {
-        if (street1 != null && Pattern.matches("^[- a-zA-Z0-9]*$", street1)) {
+        if (street1 != null && Pattern.matches("^[- 0-9a-zA-Z]*$", street1)) {
             this.street1 = street1;
             userModified();
         }
@@ -104,7 +93,7 @@ public class Clinician extends User {
     }
 
     public void setStreet2(String street2) {
-        if (street2 != null && Pattern.matches("^[- a-zA-Z0-9]*$", street2)) {
+        if (street2 != null && Pattern.matches("^[- 0-9a-zA-Z]*$", street2)) {
             this.street2 = street2;
             userModified();
         }
@@ -115,7 +104,7 @@ public class Clinician extends User {
     }
 
     public void setSuburb(String suburb) {
-        if (suburb != null && Pattern.matches("^[- a-zA-Z0-9]*$", suburb)) {
+        if (suburb != null && Pattern.matches("^[- a-zA-Z]*$", suburb)) {
             this.suburb = suburb;
             userModified();
         }

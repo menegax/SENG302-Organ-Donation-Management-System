@@ -2,6 +2,10 @@ package controller;
 
 import model.Administrator;
 import model.Clinician;
+import static java.util.logging.Level.INFO;
+import static utility.SystemLogger.systemLogger;
+
+import model.Clinician;
 import model.Patient;
 import model.User;
 
@@ -10,7 +14,8 @@ import java.util.Map;
 
 public class UserControl {
 
-    private static final Map<String, Object> cache = new HashMap<>();
+
+    private static final Map<String, User> users = new HashMap<>();
 
 
     /**
@@ -18,9 +23,19 @@ public class UserControl {
      * @param key - key to identify the value by
      * @param value - value to store
      */
-    private void add(String key, Object value) {
+    private void add(String key, User value) {
         if (key != null && value != null){
-            cache.put(key, value);
+            users.put(key, value);
+        }
+    }
+
+    /**
+     * Remove an entry from the map
+     * @param key - key value to be removed
+     */
+    private void remove(String key) {
+        if (users.get(key) != null) {
+            users.remove(key);
         }
     }
 
@@ -29,17 +44,9 @@ public class UserControl {
      * @param key - key to identify the object value by
      * @return - object at the given key
      */
-    private Object get(String key) {
-        return cache.get(key);
+    private User get(String key) {
+        return users.get(key);
     }
-
-    /**
-     * Clears the map of all entries
-     */
-    private void clear() {
-        cache.clear();
-    }
-
 
     /**
      * Adds a user to the cache
@@ -49,12 +56,17 @@ public class UserControl {
         add("user_logged_in", user);
     }
 
+
     /**
      *  Gets the logged in user
      * @return - user object
      */
     public User getLoggedInUser() {
-        return (User) get("user_logged_in");
+        return get("user_logged_in");
+    }
+
+    public boolean isUserLoggedIn() {
+        return !users.isEmpty();
     }
 
     /**
@@ -84,7 +96,24 @@ public class UserControl {
     /**
      * Clears cache, removes all key value pairs
      */
-    public void clearCahce(){
+    void clearCache(){
         clear();
     }
+
+    /**
+     * Clears the map of all entries
+     */
+    private void clear() {
+        users.clear();
+    }
+
+    /**
+     * Removes the logged in user from the cache
+     */
+    public void rmLoggedInUserCache() {
+//        remove("user_logged_in");
+        users.clear();
+        systemLogger.log(INFO, "All users have been logged out");
+    }
+
 }

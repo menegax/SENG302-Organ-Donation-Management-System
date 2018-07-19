@@ -27,6 +27,5 @@ If a story is ready for review, it should be set to "Pending" on Agilefant.
 
 
 ## Persistent Features
-
 * Undo/redo
 * User action history

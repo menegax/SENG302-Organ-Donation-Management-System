@@ -30,7 +30,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Label alignment="CENTER" prefHeight="33.0" styleClass="title" text="Big Pharma" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+      <Label layoutX="227.0" layoutY="60.0" styleClass="title" text="Big Pharma">
          <font>
             <Font size="33.0" />
          </font>

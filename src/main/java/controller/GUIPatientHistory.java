@@ -52,20 +52,6 @@ public class GUIPatientHistory {
         populateTable();
     }
 
-
-    /**
-     * Go to home page action listener for back button
-     */
-    public void goToPatientHome() {
-        try {
-            screenControl.show(logHistoryTable,"/scene/patientHome.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load patient home").show();
-            userActions.log(SEVERE, "Failed to load patient home", "Attempted to load patient home");
-        }
-    }
-
-
     /**
      * Populate the table with records
      */

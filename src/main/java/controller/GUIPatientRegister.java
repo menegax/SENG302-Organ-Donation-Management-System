@@ -406,7 +406,6 @@ public class GUIPatientRegister {
                 userActions.log( Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile" );
                 alertMsg = "Successfully registered administrator with username " + id;
             }
-            Database.saveToDisk();
             clearFields();
             new Alert(Alert.AlertType.INFORMATION, alertMsg).showAndWait();
             returnToPreviousPage();

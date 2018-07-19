@@ -4,6 +4,7 @@ import com.sun.javafx.application.PlatformImpl;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListView;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryListView;
 
@@ -16,6 +17,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Junit test class for the StateHistoryListView
  */
+@Ignore
 public class StateHistoryListViewTest {
 
     private static ListView listView;
