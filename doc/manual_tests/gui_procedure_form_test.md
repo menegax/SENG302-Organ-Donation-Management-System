@@ -205,7 +205,7 @@
 
 ###19/07/2018 - Maree
 
-Procedure buttons invisible for patients:
+Procedure buttons invisible for patients: Pass
 
 Procedure buttons visible for clinicians: Pass
 
