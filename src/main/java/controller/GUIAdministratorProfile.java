@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.Administrator;
 import model.User;
 import service.Database;
@@ -15,6 +17,9 @@ import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIAdministratorProfile {
+    @FXML
+    private AnchorPane adminProfilePane;
+
     @FXML
     private Label usernameTxt;
 
@@ -78,7 +83,9 @@ public class GUIAdministratorProfile {
         if (!target.getUsername().toLowerCase().equals("admin")) {
             userActions.log(Level.INFO, "Successfully deleted admin profile", "Attempted to delete admin profile");
             Database.deleteAdministrator(target);
-            goToAdministratorHome();
+            if (!target.getUsername().equals(((Administrator)userControl.getLoggedInUser()).getUsername())) {
+                ((Stage) adminProfilePane.getScene().getWindow()).close();
+            }
         }
     }
 

@@ -7,25 +7,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import model.Administrator;
+import javafx.stage.Stage;
+import model.Clinician;
+import model.Medication;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
-import model.Clinician;
-import model.Medication;
 import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -467,19 +462,7 @@ public class GUIPatientProfile {
         Patient patient = (Patient) userControl.getTargetUser();
         userActions.log(Level.INFO, "Successfully deleted patient profile", "Attempted to delete patient profile");
         Database.deletePatient( patient );
-        goToAdministratorHome();
-    }
-
-    /**
-     * Opens the administrator home screen
-     */
-    private void goToAdministratorHome() {
-        try {
-            screenControl.show(patientProfilePane, "/scene/administratorHome.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load administrator home").show();
-            userActions.log(SEVERE, "Failed to load administrator home", "Attempted to load administrator home");
-        }
+        ((Stage) patientProfilePane.getScene().getWindow()).close();
     }
 
     /**

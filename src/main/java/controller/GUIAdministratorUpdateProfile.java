@@ -1,17 +1,13 @@
 package controller;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Administrator;
-import model.Clinician;
 import service.Database;
 import utility.GlobalEnums;
-import utility.GlobalEnums.Region;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -57,8 +53,12 @@ public class GUIAdministratorUpdateProfile extends UndoableController{
     public void initialize() {
         // Registering a change event to clear the invalid class
         UserControl userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
-        loadProfile(((Administrator) user).getUsername());
+        if (userControl.getTargetUser() instanceof Administrator) {
+            target = (Administrator) userControl.getTargetUser();
+        } else {
+            target = (Administrator) userControl.getLoggedInUser();
+        }
+        loadProfile(target.getUsername());
         setUpStateHistory();
     }
 
@@ -70,7 +70,6 @@ public class GUIAdministratorUpdateProfile extends UndoableController{
     private void loadProfile(String username) {
         try {
             Administrator administrator = Database.getAdministratorByUsername(username);
-            target = administrator;
             populateForm(administrator);
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");

@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.User;
@@ -16,6 +18,9 @@ import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianProfile {
+    @FXML
+    private AnchorPane clinicianProfilePane;
+
     @FXML
     private Label idTxt;
 
@@ -107,7 +112,7 @@ public class GUIClinicianProfile {
         if (clinician.getStaffID() != 0) {
             userActions.log(Level.INFO, "Successfully deleted clinician profile", "Attempted to delete clinician profile");
             Database.deleteClinician( clinician );
-            goToAdministratorHome();
+            ((Stage) clinicianProfilePane.getScene().getWindow()).close();
         }
     }
 
