@@ -50,6 +50,7 @@ public class Searcher {
     public Searcher() {
     	try {
 			indexWriter = initializeWriter();
+			createFullIndex();
             UserActionHistory.userActions.log(Level.INFO, "Successfully initialized index writer.", "Attempted to initialize index writer.");
 		} catch (IOException e) {
             UserActionHistory.userActions.log(Level.SEVERE, "Failure to initialize index writer.", "Attempted to initialize index writer.");
@@ -79,15 +80,15 @@ public class Searcher {
     private Document createPatientDocument(Patient patient) {
         Document patientDoc = new Document();
         patientDoc.add(new StringField("nhi", patient.getNhiNumber().toUpperCase(), Field.Store.YES));
-        patientDoc.add(new StringField("fName", patient.getFirstName().toUpperCase(), Field.Store.YES));
+        patientDoc.add(new StringField("fName", patient.getFirstName().toUpperCase(), Field.Store.NO));
         if (patient.getMiddleNames() != null) {
             for (String mName : patient.getMiddleNames()) {
-                patientDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.YES));
+                patientDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.NO));
             }
         }
-        patientDoc.add(new StringField("lName", patient.getLastName().toUpperCase(), Field.Store.YES));
+        patientDoc.add(new StringField("lName", patient.getLastName().toUpperCase(), Field.Store.NO));
         if (patient.getBirthGender() != null) {
-            patientDoc.add(new StringField("birthGender", patient.getBirthGender().toString().toUpperCase(), Field.Store.YES));
+            patientDoc.add(new StringField("birthGender", patient.getBirthGender().toString().toUpperCase(), Field.Store.NO));
         }
         patientDoc.add(new StringField("type", UserTypes.PATIENT.getValue(), Field.Store.YES));
         return patientDoc;
@@ -96,27 +97,27 @@ public class Searcher {
     private Document createClinicianDocument(Clinician clinician) {
     	Document clinicianDoc = new Document();
     	clinicianDoc.add(new StringField("staffid", String.valueOf(clinician.getStaffID()), Field.Store.YES));
-    	clinicianDoc.add(new StringField("fname", clinician.getFirstName().toUpperCase(), Field.Store.YES));
+    	clinicianDoc.add(new StringField("fName", clinician.getFirstName().toUpperCase(), Field.Store.NO));
         if (clinician.getMiddleNames() != null) {
             for (String mName : clinician.getMiddleNames()) {
-                clinicianDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.YES));
+                clinicianDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.NO));
             }
         }
-        clinicianDoc.add(new StringField("lname", clinician.getLastName().toUpperCase(), Field.Store.YES));
+        clinicianDoc.add(new StringField("lName", clinician.getLastName().toUpperCase(), Field.Store.NO));
         clinicianDoc.add(new StringField("type", UserTypes.CLINICIAN.getValue(), Field.Store.YES));
         return clinicianDoc;
     }
 
     private Document createAdminDocument(Administrator admin) {
     	Document adminDoc = new Document();
-    	adminDoc.add(new StringField("username", admin.getUsername(), Field.Store.YES));
-    	adminDoc.add(new StringField("fname", admin.getFirstName().toUpperCase(), Field.Store.YES));
+    	adminDoc.add(new StringField("username", admin.getUsername().toUpperCase(), Field.Store.YES));
+    	adminDoc.add(new StringField("fName", admin.getFirstName().toUpperCase(), Field.Store.NO));
         if (admin.getMiddleNames() != null) {
             for (String mName : admin.getMiddleNames()) {
-                adminDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.YES));
+                adminDoc.add(new StringField("mName", mName.toUpperCase(), Field.Store.NO));
             }
         }
-        adminDoc.add(new StringField("lname", admin.getLastName().toUpperCase(), Field.Store.YES));
+        adminDoc.add(new StringField("lName", admin.getLastName().toUpperCase(), Field.Store.NO));
         adminDoc.add(new StringField("type", UserTypes.ADMIN.getValue(), Field.Store.YES));
     	return adminDoc;
     }
@@ -237,18 +238,28 @@ public class Searcher {
      * Returns the default set of patient search results.
      * @return The default set of patient search results.
      */
-    public ArrayList<Patient> getDefaultResults() {
-        ArrayList<Patient> default_patients = new ArrayList<>(Database.getPatients());
-        default_patients.sort((o1, o2) -> { // sort by concatenated name
+    public List<User> getDefaultResults(UserTypes[] types) {
+    	List<UserTypes> typesList = Arrays.asList(types);
+    	List<User> defaultResults = new ArrayList<User>();
+    	if (typesList.contains(UserTypes.PATIENT)) {
+    		defaultResults.addAll(Database.getPatients());
+    	}
+    	if (typesList.contains(UserTypes.CLINICIAN)) {
+    		defaultResults.addAll(Database.getClinicians());
+    	}    	
+    	if (typesList.contains(UserTypes.ADMIN)) {
+    		defaultResults.addAll(Database.getAdministrators());
+    	}
+        defaultResults.sort((o1, o2) -> { // sort by concatenated name
             int comparison;
             comparison = o1.getNameConcatenated()
                     .compareTo(o2.getNameConcatenated());
             return comparison;
         });
-        if (default_patients.size() > 30) {
-            default_patients = new ArrayList<>(default_patients.subList(0, NUM_RESULTS)); // truncate into size num_results
+        if (defaultResults.size() > 30) {
+        	defaultResults = new ArrayList<>(defaultResults.subList(0, NUM_RESULTS)); // truncate into size num_results
         }
-        return default_patients;
+        return defaultResults;
     }
 
     /**
@@ -320,7 +331,7 @@ public class Searcher {
     private List<FuzzyQuery> createQueries(String field, String[] criteria, int distance) {
     	List<FuzzyQuery> queries = new ArrayList<FuzzyQuery>();
     	for (String param : criteria) {
-    		queries.add(new FuzzyQuery(new Term(field, param), distance));
+    		queries.add(new FuzzyQuery(new Term(field, param.toUpperCase()), distance));
     	}
     	return queries;
     }

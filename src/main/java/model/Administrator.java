@@ -27,7 +27,7 @@ public class Administrator extends User {
      */
     public Administrator(String username, String firstName, List<String> middleNames, String lastName, String password) throws IllegalArgumentException {
         super(firstName, middleNames, lastName);
-        this.username = username;
+        this.username = username.toUpperCase();
 
         if (password.length() < 6) {
             throw new IllegalArgumentException("Password must be at least 6 characters long");

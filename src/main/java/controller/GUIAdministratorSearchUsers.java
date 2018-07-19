@@ -151,7 +151,13 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             masterData.clear();
-            List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, NUMRESULTS);
+            UserTypes[] types = new UserTypes[] {UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN};
+            List<User> results = new ArrayList<User>();
+            if (newValue == null || newValue.isEmpty()) {
+            	results = searcher.getDefaultResults(types);
+            } else {
+            	results = searcher.search(newValue,types , NUMRESULTS);
+            }      
             masterData.addAll(results);
             filteredData.setPredicate(patient -> true);
         });
@@ -182,8 +188,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
                         return true;
                     }
                     List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, NUMRESULTS);
-                    List<User> users = new ArrayList<>(results);
-                    return users.contains(user);
+                    return results.contains(user);
                 }));
     }
 
@@ -224,7 +229,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
      * Adds all db data via constructor
      */
     public GUIAdministratorSearchUsers() {
-        masterData.addAll(searcher.getDefaultResults());
+        masterData.addAll(searcher.getDefaultResults(new UserTypes[] {UserTypes.ADMIN, UserTypes.CLINICIAN, UserTypes.PATIENT}));
     }
 
     public void goToAdministratorHome() {

@@ -226,7 +226,12 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * Adds all db data via constructor
      */
     public GUIClinicianSearchPatients() {
-        masterData.addAll(searcher.getDefaultResults());
+    	List<User> defaultUsers = searcher.getDefaultResults(new UserTypes[] {UserTypes.PATIENT});
+    	List<Patient> defaultPatients = new ArrayList<Patient>();
+    	for (User user: defaultUsers) {
+    		defaultPatients.add((Patient)user);
+    	}
+        masterData.addAll(defaultPatients);
     }
 
     public void goToClinicianHome() {

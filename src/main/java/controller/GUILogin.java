@@ -90,7 +90,7 @@ public class GUILogin {
                 home = FXMLLoader.load((getClass().getResource("/scene/clinicianHome.fxml")));
             } else {
                 checkAdminCredentials();
-                login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText()));
+                login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
                 home = FXMLLoader.load((getClass().getResource("/scene/administratorHome.fxml")));
             }
             UndoableStage stage = new UndoableStage();
@@ -115,7 +115,7 @@ public class GUILogin {
     }
 
     private void checkAdminCredentials() throws InvalidObjectException {
-        Administrator admin = Database.getAdministratorByUsername(nhiLogin.getText());
+        Administrator admin = Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
         String hashedInput = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password.getText() + admin.getSalt());
         if (!hashedInput.equals(admin.getHashedPassword())) {
             throw new InvalidObjectException("Invalid username/password combination");
