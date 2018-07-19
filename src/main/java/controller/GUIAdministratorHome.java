@@ -91,5 +91,20 @@ public class GUIAdministratorHome {
         }
     }
 
+    /**
+     * Opens the admins history screen
+     */
+    @FXML
+    public void goToHistory() {
+        try {
+            screenControl.show(administratorHomePane, "/scene/adminHistory.fxml");
+        }
+        catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, "Unable load admin history").show();
+            userActions.log(SEVERE, "Failed to load admin history", "Attempted to load admin history");
+
+        }
+    }
+
 }
 

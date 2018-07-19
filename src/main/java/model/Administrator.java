@@ -1,7 +1,10 @@
 package model;
 
+import utility.AdministratorActionRecord;
+
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -14,6 +17,9 @@ public class Administrator extends User {
     private String username;
     private final String salt;
     private String password;
+
+    private List<AdministratorActionRecord> adminActionsList = new ArrayList<>();
+
 
     /**
      * Creates a new Administrator
@@ -76,5 +82,13 @@ public class Administrator extends User {
         }
         this.password = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password + salt);
         adminModified();
+    }
+
+    /**
+     * Returns the list of this admins actions. This should only be modified within UserActionHistory
+     * @return the list of Admin Action Records
+     */
+    public List<AdministratorActionRecord> getAdminActionsList() {
+        return adminActionsList;
     }
 }
