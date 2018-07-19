@@ -145,6 +145,8 @@ public class Searcher {
     		addPatientIndex((Patient)object);
     	} else if (object instanceof Clinician) {
     		addClinicianIndex((Clinician)object);
+    	} else if (object instanceof Administrator) {
+    		addAdminIndex((Administrator)object);
     	}
     }
     
