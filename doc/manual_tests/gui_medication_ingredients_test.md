@@ -37,9 +37,9 @@ Navigate to the medications page: Pass
 
 GUI ingredients show on select test: Pass
 
-GUI ingredients history test: Fail - interactions throws NullPointerException
+GUI ingredients history test: Pass
 
-GUI clear ingredients test: Fail - Listview is not cleared of ingredients when the clear button is pressed
+GUI clear ingredients test: Pass
 
 
 
