@@ -3,8 +3,6 @@ package utility.undoRedo.stateHistoryWidgets;
 import javafx.scene.control.ChoiceBox;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class StateHistoryChoiceBox extends StateHistoryControl {
 

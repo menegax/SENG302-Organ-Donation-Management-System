@@ -1,7 +1,6 @@
 package utility.undoRedo.stateHistoryWidgets;
 
 import javafx.scene.control.Control;
-import utility.GlobalEnums;
 import utility.undoRedo.UndoableStage;
 
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public abstract class StateHistoryControl {
      */
     public int getIndex() {
         return index;
-    };
+    }
 
     /**
      * Gets the current state of the control
@@ -101,7 +100,7 @@ public abstract class StateHistoryControl {
      * Gets the undoable stage that this stateHistoryControl is on
      * @return the undoableStage of this stateHistoryControl
      */
-    public UndoableStage getUndoableStage() {
+    private UndoableStage getUndoableStage() {
         return undoableStage;
     }
 

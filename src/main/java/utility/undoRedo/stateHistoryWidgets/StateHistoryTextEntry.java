@@ -5,8 +5,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.ContextMenuEvent;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Represents the state history of a text entry field in the GUI

@@ -4,16 +4,20 @@ import com.sun.javafx.application.PlatformImpl;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListView;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryListView;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import static org.junit.Assert.assertEquals;
+import static utility.UserActionHistory.userActions;
 
 /**
  * Junit test class for the StateHistoryListView
  */
+@Ignore
 public class StateHistoryListViewTest {
 
     private static ListView listView;
@@ -24,6 +28,7 @@ public class StateHistoryListViewTest {
      */
     @BeforeClass
     public static void setup() throws InterruptedException{
+        userActions.setLevel(Level.OFF);
         PlatformImpl.startup(() -> {});
         listView = new ListView();
         listView.getItems().clear();

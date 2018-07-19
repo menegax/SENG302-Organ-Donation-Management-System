@@ -2,17 +2,21 @@ package utility_test.stateHistoryWidgetTests;
 
 import com.sun.javafx.application.PlatformImpl;
 import javafx.scene.control.RadioButton;
+import org.junit.Ignore;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryRadioButton;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import static org.junit.Assert.*;
+import static utility.UserActionHistory.userActions;
 
 /**
  * Junit test class for the StateHistoryRadioButton
  */
+@Ignore
 public class StateHistoryRadioButtonTest {
 
     private static RadioButton radioButton;
@@ -23,6 +27,7 @@ public class StateHistoryRadioButtonTest {
      */
     @BeforeClass
     public static void setup() throws InterruptedException{
+        userActions.setLevel(Level.OFF);
         PlatformImpl.startup(() -> {});
         radioButton = new RadioButton();
         radioButton.setSelected(false);

@@ -4,8 +4,6 @@ import javafx.scene.control.DatePicker;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class StateHistoryDatePicker extends StateHistoryControl {
 

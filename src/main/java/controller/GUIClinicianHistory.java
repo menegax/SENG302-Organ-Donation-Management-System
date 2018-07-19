@@ -10,9 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import model.Clinician;
-import model.Patient;
 import utility.ClinicianActionRecord;
-import utility.PatientActionRecord;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -46,24 +44,14 @@ public class GUIClinicianHistory {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    /**
+     * Initializes the screen and sets up the target for records as the currently logged in user
+     */
     public void initialize() {
         UserControl userControl = new UserControl();
         target = userControl.getLoggedInUser() instanceof Clinician ? (Clinician) userControl.getLoggedInUser() : null;
         masterData.addAll(target.getClinicianActionsList());
         populateTable();
-    }
-
-
-    /**
-     * Go to home page action listener for back button
-     */
-    public void goToClinicianHome() {
-        try {
-            screenControl.show(logHistoryTable, "/scene/clinicianHome.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
-            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
-        }
     }
 
 
@@ -95,7 +83,6 @@ public class GUIClinicianHistory {
 
         // add sorted (and filtered) data to the table.
         logHistoryTable.setItems(sortedData);
-
 
     }
 

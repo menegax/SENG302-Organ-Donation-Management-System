@@ -4,13 +4,11 @@ import controller.ScreenControl;
 import controller.UndoRedoControl;
 import controller.UndoableController;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import utility.GlobalEnums;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,13 +39,13 @@ public class UndoableStage extends Stage {
      */
     public UndoableStage() {
         super();
-        this.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (KeyCodeCombination.keyCombination(undoRedoControl.undoShortcut).match(event)) {
-                undo();
-            } else if (KeyCodeCombination.keyCombination(undoRedoControl.redoShortcut).match(event)) {
-                redo();
-            }
-        });
+//        this.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+//            if (KeyCodeCombination.keyCombination(undoRedoControl.undoShortcut).match(event)) {
+//                undo();
+//            } else if (KeyCodeCombination.keyCombination(undoRedoControl.redoShortcut).match(event)) {
+//                redo();
+//            }
+//        });
     }
 
     /**

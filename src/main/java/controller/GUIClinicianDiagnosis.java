@@ -1,24 +1,26 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import model.Disease;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
+import utility.undoRedo.UndoableStage;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;
 
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -27,7 +29,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIClinicianDiagnosis extends UndoableController{
 
     @FXML
-    public AnchorPane clinicianDiagnosesPane;
+    public GridPane clinicianDiagnosesPane;
 
     @FXML
     public TableView<Disease> pastDiagnosesView;
@@ -97,6 +99,9 @@ public class GUIClinicianDiagnosis extends UndoableController{
     private UserControl userControl;
 
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+
     /**
      * Sets if the patient's diagnoses have been altered at all.
      * @param bool altered
@@ -160,24 +165,21 @@ public class GUIClinicianDiagnosis extends UndoableController{
     }
 
     /**
-     * Sets up double click action of opening full disease edit window
+     * Sets up double click action of opening full disease edit window.
+     * Opens an update window to edit the selected disease in the table, and marks the window as being for
+     * an update.
      */
     private void setUpDoubleClickEdit(TableView<Disease> tableView) {
+        UndoableStage stage = new UndoableStage();
         tableView.setOnMouseClicked(click -> {
-            if (click.getClickCount() == 2 && tableView.getSelectionModel()
-                    .getSelectedItem() != null) {
+            if (click.getClickCount() == 2 && tableView.getSelectionModel().getSelectedItem() != null) {
+                GUIPatientUpdateDiagnosis.setDisease(tableView.getSelectionModel().getSelectedItem());
+                GUIPatientUpdateDiagnosis.setIsAdd(false);
+                screenControl.addStage(stage.getUUID(), stage);
+                stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
                 try {
-                    GUIPatientUpdateDiagnosis.setDisease(tableView.getSelectionModel().getSelectedItem());
-                    GUIPatientUpdateDiagnosis.setIsAdd(false);
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateDiagnosis.fxml"));
-                    try {
-                        ScreenControl.loadPopUpPane(clinicianDiagnosesPane.getScene(), fxmlLoader);
-                    } catch (IOException e) {
-                        userActions.log(Level.SEVERE, "Error loading update diagnoses screen in popup", "attempted to navigate from the diagnoses page to the update diagnosis page in popup");
-                        new Alert(Alert.AlertType.WARNING, "Error loading update diagnoses page", ButtonType.OK).show();
-                    }
-                }
-                catch (Exception e) {
+                    screenControl.show(stage.getUUID(), FXMLLoader.load(getClass().getResource("/scene/patientUpdateDiagnosis.fxml")));
+                } catch (IOException e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open diagnosis update window from the diagnoses page",
                             "attempted to open diagnosis update window from the diagnoses page");
@@ -190,21 +192,18 @@ public class GUIClinicianDiagnosis extends UndoableController{
 
 
     /**
-     * Registers a new diagnosis entry for a patient when 'Add diagnosis' is activated
+     * Opens the Patient update screen for the purpose of adding a diagnosis. Sets the update window to handle
+     * an addition of a disease rather than an update
      */
     private void addDiagnosis() {
         try {
             GUIPatientUpdateDiagnosis.setIsAdd(true);
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientUpdateDiagnosis.fxml"));
-            try {
-                ScreenControl.loadPopUpPane(clinicianDiagnosesPane.getScene(), fxmlLoader);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading update diagnoses screen in popup", "attempted to navigate from the diagnoses page to the update diagnosis page in popup");
-                new Alert(Alert.AlertType.WARNING, "Error loading update diagnoses page", ButtonType.OK).show();
-            }
+            UndoableStage stage = new UndoableStage();
+            screenControl.addStage(stage.getUUID(), stage);
+            screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/patientUpdateDiagnosis.fxml")));
+            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
         }
-        catch (Exception e) {
+        catch (IOException e) {
             userActions.log(Level.SEVERE,
                     "Failed to open diagnosis update window from the diagnoses page",
                     "attempted to open diagnosis update window from the diagnoses page");
@@ -213,10 +212,19 @@ public class GUIClinicianDiagnosis extends UndoableController{
     }
 
     /**
-     * Loads the current diseases table
+     * Refreshes the tables of past and current diseases
+     */
+    private void tableRefresh() {
+        loadCurrentDiseases();
+        loadPastDiseases();
+    }
+
+    /**
+     * Loads the current diseases table, fills the table with disease values and sets up the sorting behaviour
+     * or the table to be in descending date order
      */
     private void loadCurrentDiseases() {
-        ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(currentDiseases);
+        ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(target.getCurrentDiseases());
         setCellValues(currentDateCol, currentDiagnosisCol, currentTagsCol);
         currentDiagnosesView.setItems(observableCurrentDiseases);
         currentDiagnosesView.refresh();
@@ -230,10 +238,11 @@ public class GUIClinicianDiagnosis extends UndoableController{
     }
 
     /**
-     * Loads the past diseases table
+     * Loads the past diseases table, fills the table with disease values and sets up the sorting behaviour
+     * or the table to be in descending date order
      */
     private void loadPastDiseases() {
-        ObservableList <Disease> observablePastDiseases = FXCollections.observableArrayList( pastDiseases );
+        ObservableList <Disease> observablePastDiseases = FXCollections.observableArrayList( target.getPastDiseases() );
         setCellValues(pastDateCol, pastDiagnosisCol, pastTagsCol);
         pastDiagnosesView.setItems(observablePastDiseases);
         pastDiagnosesView.refresh();
@@ -283,46 +292,18 @@ public class GUIClinicianDiagnosis extends UndoableController{
         });
     }
 
-    /**
-     * Returns to the patient profile page
-     */
-    @FXML
-    public void goToProfile() {
-        boolean back = false;
-        if (changed) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "You have made some changes, are you sure you want to continue?", ButtonType.YES, ButtonType.CANCEL);
-            Optional<ButtonType> confirmation = alert.showAndWait();
-            if (confirmation.get() == ButtonType.YES) {
-                back = true;
-                currentDiseases.addAll(deletedCurrent);
-                pastDiseases.addAll(deletedPast);
-            }
-        } else {
-            back = true;
-        }
-        if (back) {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-                try {
-                    ScreenControl.loadPopUpPane(clinicianDiagnosesPane.getScene(), fxmlLoader);
-                } catch (IOException e) {
-                    userActions.log(Level.SEVERE, "Error returning to profile screen in popup", "attempted to navigate from the diagnoses page to the profile page in popup");
-                    new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
-                }
-        }
-    }
 
     /**
-     * Saves the current diagnoses to the database
+     * Saves the current diagnoses to the database after setting the patient's past and current diagnoses to
+     * the edited lists in the screen
      */
     @FXML
     public void saveDiagnoses() {
         target.setCurrentDiseases(currentDiseases);
         target.setPastDiseases(pastDiseases);
-        Database.saveToDisk();
         userActions.log( Level.FINE, "Successfully saved patient diseases", "Successfully saved patient " + target.getNhiNumber() + "diseases");
-        new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis saved successfully", ButtonType.OK).show();
+        new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
         changed = false;
-        goToProfile();
     }
 
 
@@ -372,7 +353,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
     }
 
     /**
-     * Deletes the selected diagnosis
+     * Deletes the selected diagnosis from the selected diagnoses list and updates the table.
      */
     @FXML
     public void deleteDiagnoses() {

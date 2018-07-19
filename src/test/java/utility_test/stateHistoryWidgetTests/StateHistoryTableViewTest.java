@@ -5,16 +5,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryTableView;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import static org.junit.Assert.assertEquals;
+import static utility.UserActionHistory.userActions;
 
 /**
  * Junit test class for the StateHistoryTableView
  */
+
+@Ignore
 public class StateHistoryTableViewTest {
 
     private static TableView tableView;
@@ -25,6 +30,7 @@ public class StateHistoryTableViewTest {
      */
     @BeforeClass
     public static void setup() throws InterruptedException{
+        userActions.setLevel(Level.OFF);
         PlatformImpl.startup(() -> {});
         tableView = new TableView();
         tableView.getItems().clear();

@@ -1,19 +1,18 @@
 package controller;
 
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -29,7 +28,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIPatientUpdateDiagnosis extends UndoableController{
 
     @FXML
-    public AnchorPane diagnosisUpdatePane;
+    private GridPane diagnosisUpdatePane;
 
     @FXML
     public Button doneButton;
@@ -61,6 +60,9 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
 
     private static boolean isAdd;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+
     /**
      * Sets the diagnosis that is being updated
      * @param disease diagnosis to update
@@ -86,10 +88,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
         userControl = new UserControl();
         currentPatient = userControl.getTargetPatient();
         if(isAdd) {
-            titleLabel.setText("Add Diagnosis");
             target = new Disease(null, null);
-        } else {
-            titleLabel.setText("Update Diagnosis");
         }
         populateDropdown();
         populateForm();
@@ -138,13 +137,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
      * before calling the stage close method.
      */
     public void cancelUpdate() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
-        try {
-            ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader);
-        } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error returning to diagnoses screen in popup", "attempted to navigate from the update diagnosis page to the diagnoses page in popup");
-            new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
-        }
+        screenControl.closeStage(((UndoableStage)cancelButton.getScene().getWindow()).getUUID());
     }
 
     /***
@@ -178,10 +171,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
      * @return boolean is duplicate
      */
     private boolean isDuplicate(Disease disease, Disease d) {
-        if(disease.equals(d)) {
-            return true;
-        }
-        return false;
+        return disease.equals(d);
     }
 
     /**
@@ -299,26 +289,11 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             } catch (NullPointerException e) {
                 target.setDiseaseState(null);
             }
-
+            currentPatient.sortDiseases();
             if(isAdd) {
                 currentPatient.getCurrentDiseases().add(target);
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
-                try {
-                    ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader);
-                } catch (IOException e) {
-                    userActions.log(Level.SEVERE, "Error returning to diagnoses screen in popup", "attempted to navigate from the update diagnosis page to the diagnoses page in popup");
-                    new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
-                }
-            } else {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/clinicianDiagnosis.fxml"));
-                try {
-                    ScreenControl.loadPopUpPane(diagnosisUpdatePane.getScene(), fxmlLoader);
-                } catch (IOException e) {
-                    userActions.log(Level.SEVERE, "Error returning to diagnoses screen in popup", "attempted to navigate from the update diagnosis page to the diagnoses page in popup");
-                    new Alert(Alert.AlertType.WARNING, "Error loading diagnoses page", ButtonType.OK).show();
-                }
             }
-
+            screenControl.closeStage(((UndoableStage)doneButton.getScene().getWindow()).getUUID());
         } else {
             String errorString = "Diseases must not have the same disease name and diagnosis date as another disease\n\n";
             if(diseaseNameTextField.getStyleClass().contains("invalid")) {

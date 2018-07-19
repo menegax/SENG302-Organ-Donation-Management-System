@@ -1,12 +1,10 @@
 package utility.undoRedo;
 
-import controller.ScreenControl;
 import utility.GlobalEnums.UndoableScreen;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryControl;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.Pane;
 import utility.undoRedo.stateHistoryWidgets.*;
 
 import java.util.ArrayList;
@@ -254,12 +252,12 @@ public class StatesHistoryScreen {
      * Stores the current state of the screen
      */
     public void store() {
-        if (!undone && !redone && !undoableStage.isChangingStates()) {
-            for (StateHistoryControl stateHistory : stateHistories) {
-                stateHistory.store();
-            }
-            undoableStage.store();
-        }
+//        if (!undone && !redone && !undoableStage.isChangingStates()) {
+//            for (StateHistoryControl stateHistory : stateHistories) {
+//                stateHistory.store();
+//            }
+//            undoableStage.store();
+//        }
     }
 
 

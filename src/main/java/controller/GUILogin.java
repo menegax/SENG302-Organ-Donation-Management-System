@@ -2,6 +2,7 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 
+import javafx.application.Application;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,22 +11,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.layout.AnchorPane;
+
+import javafx.scene.input.KeyCode;
 import javafx.scene.control.TextField;
-import javafx.scene.control.*;
 
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
-
-import javafx.scene.input.KeyCode;
-import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
-import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.Patient;
 import service.Database;
-import utility.GlobalEnums;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
@@ -33,8 +28,6 @@ import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
 import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
-
 import static java.util.logging.Level.SEVERE;
 
 public class GUILogin {
@@ -52,6 +45,9 @@ public class GUILogin {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    /**
+     * Initializes the login window by adding key binding for login on enter and an event filter on the login field
+     */
     public void initialize() {
         // Enter key triggers log in
         nhiLogin.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
@@ -87,11 +83,13 @@ public class GUILogin {
         if (!clinicianToggle.isSelected()) {
             try {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
-                login.addLoggedInUserToCache(newPatient);
-                Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml"));
+                login.clearCache(); //clear cache on user login
                 UndoableStage stage = new UndoableStage();
+                login.addLoggedInUserToCache(newPatient);
                 screenControl.addStage(stage.getUUID(), stage);
+                Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
                 screenControl.show(stage.getUUID(), homeScreen);
+                screenControl.closeStage(Main.getUuid()); // close login scene after login
             }
             catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
@@ -100,7 +98,7 @@ public class GUILogin {
             }
             catch (IOException e) {
                 userActions.log(Level.WARNING, "Unable to load patient home page", "Attempted to log in");
-                systemLogger.log(Level.INFO, "Failed to find the .fxml file for login" + e.getStackTrace());
+                systemLogger.log(Level.INFO, "Failed to find the .fxml file for login", e);
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
             }
@@ -108,13 +106,14 @@ public class GUILogin {
         else {
             try {
                 Clinician newClinician = Database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
-                login.addLoggedInUserToCache(newClinician);
                 UndoableStage stage = new UndoableStage();
-                Parent clincianHome = FXMLLoader.load((getClass().getResource("/scene/clinicianHome.fxml")));
+                login.addLoggedInUserToCache(newClinician);
                 screenControl.addStage(stage.getUUID(), stage);
-                screenControl.show(stage.getUUID(), clincianHome);
+                Parent clinicianHome = FXMLLoader.load((getClass().getResource("/scene/home.fxml")));
+                screenControl.show(stage.getUUID(), clinicianHome);
+                screenControl.closeStage(Main.getUuid()); // close login scene after login
             }
-            catch (InvalidObjectException e) {
+            catch (InvalidObjectException | NumberFormatException e) {
                 userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
                 alert.show();

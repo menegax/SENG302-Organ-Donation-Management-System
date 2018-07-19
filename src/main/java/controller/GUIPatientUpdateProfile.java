@@ -6,8 +6,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums.*;
@@ -23,18 +23,16 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateProfile extends UndoableController {
 
     @FXML
-    private AnchorPane patientUpdateAnchorPane;
+    private GridPane patientUpdateAnchorPane;
 
     @FXML
     private Label lastModifiedLbl;
-
-    @FXML
-    private Button saveButton;
 
     @FXML
     private TextField nhiTxt;
@@ -102,6 +100,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    /**
+     * Initializes the profile update screen. Gets the logged in or viewed user and loads the user's profile.
+     * Dropdown menus are populated. The enter key press event for saving changes is set up
+     */
     public void initialize() {
         populateDropdowns();
         userControl = new UserControl();
@@ -109,18 +111,16 @@ public class GUIPatientUpdateProfile extends UndoableController {
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         }
-        if (userControl.getTargetPatient() != null) {
+       else if (userControl.getTargetPatient() != null) {
             loadProfile((userControl.getTargetPatient()).getNhiNumber());
         }
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
-                saveProfile();
+                saveProfileUpdater();
             }
         });
     }
-
-
 
 
     /**
@@ -177,9 +177,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 add(heightTxt);
                 add(zipTxt);
             }};
-            statesHistoryScreen = new StatesHistoryScreen( controls, UndoableScreen.PATIENTUPDATEPROFILE);
-        }
-        catch (InvalidObjectException e) {
+            statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.PATIENTUPDATEPROFILE);
+        } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }
@@ -194,8 +193,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
         nhiTxt.setText(patient.getNhiNumber());
         firstnameTxt.setText(patient.getFirstName());
         lastnameTxt.setText(patient.getLastName());
-        for (String name : patient.getMiddleNames()) {
-            middlenameTxt.setText(middlenameTxt.getText() + name + " ");
+        if (patient.getMiddleNames() != null) {
+            for (String name : patient.getMiddleNames()) {
+                middlenameTxt.setText(middlenameTxt.getText() + name + " ");
+            }
         }
         preferrednameTxt.setText(patient.getPreferredName());
         if (patient.getBirthGender() != null) {
@@ -211,11 +212,14 @@ public class GUIPatientUpdateProfile extends UndoableController {
         if (patient.getPreferredGender() != null) {
             switch (patient.getPreferredGender().getValue()) {
                 case "Man":
-                    preferredGenderManRadio.setSelected(true); break;
+                    preferredGenderManRadio.setSelected(true);
+                    break;
                 case "Woman":
-                    preferredGenderWomanRadio.setSelected(true); break;
+                    preferredGenderWomanRadio.setSelected(true);
+                    break;
                 case "Non-binary":
-                    preferredGenderNonBinaryRadio.setSelected(true); break;
+                    preferredGenderNonBinaryRadio.setSelected(true);
+                    break;
             }
         }
         dobDate.setValue(patient.getBirth());
@@ -233,9 +237,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
             regionDD.setValue(patient.getRegion()
                     .getValue());
         }
-        if(patient.getZip() != 0) {
+        if (patient.getZip() != 0) {
             zipTxt.setText(String.valueOf(patient.getZip()));
-            while(zipTxt.getText().length() < 4) {
+            while (zipTxt.getText().length() < 4) {
                 zipTxt.setText("0" + zipTxt.getText());
             }
         }
@@ -258,8 +262,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         try {
             double value = Double.parseDouble(input);
             return (value < 0);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return true;
         }
     }
@@ -268,7 +271,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
      * Saves profile changes after checking each field for validity
      */
     @FXML
-    public void saveProfile() {
+    public void saveProfileUpdater() {
+        systemLogger.log(Level.FINEST, "Saving patient profile for update...");
         Boolean valid = true;
 
         Alert invalidInfo = new Alert(Alert.AlertType.WARNING);
@@ -287,50 +291,44 @@ public class GUIPatientUpdateProfile extends UndoableController {
             if (Database.getPatientByNhi(nhiTxt.getText()).getUuid() != target.getUuid()) {
                 valid = setInvalid(nhiTxt);
                 invalidContent.append("NHI is already in use\n");
-            }
-            else {
+            } else {
                 setValid(nhiTxt);
             }
-        }
-        catch (InvalidObjectException e) {
+        } catch (InvalidObjectException e) {
             setInvalid(nhiTxt);
         }
 
         // first name
         if (!firstnameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
+                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)+")) {
             valid = setInvalid(firstnameTxt);
             invalidContent.append("First name must be letters, ., or -.\n");
-        }
-        else {
+        } else {
             setValid(firstnameTxt);
         }
 
         // last name
         if (!lastnameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
+                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)+")) {
             valid = setInvalid(lastnameTxt);
             invalidContent.append("Last name must be letters, ., or -.\n");
-        }
-        else {
+        } else {
             setValid(lastnameTxt);
         }
 
         //middle names
         if (!middlenameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
+                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)*")) {
             valid = setInvalid(middlenameTxt);
             invalidContent.append("Middle name(s) must be letters, ., or -.\n");
-        }
-        else {
+        } else {
             setValid(middlenameTxt);
         }
 
         // preferred name
-        if (!preferrednameTxt.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
+        if (preferrednameTxt.getText() != null && !preferrednameTxt.getText().matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)*")) {
             valid = setInvalid(preferrednameTxt);
-        }
-        else {
+        } else {
             setValid(preferrednameTxt);
         }
 
@@ -342,12 +340,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
             if (region == null) {
                 valid = setInvalid(regionDD);
                 invalidContent.append("Region must be a valid selection from the dropdown\n");
-            }
-            else {
+            } else {
                 setValid(regionDD);
             }
-        }
-        else {
+        } else {
             setValid(regionDD);
         }
 
@@ -361,18 +357,15 @@ public class GUIPatientUpdateProfile extends UndoableController {
                         .equals(""))) {
                     valid = setInvalid(zipTxt);
                     invalidContent.append("Zip must be four digits\n");
-                }
-                else {
+                } else {
                     Integer.parseInt(zipTxt.getText());
                     setValid(zipTxt);
                 }
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 valid = setInvalid(zipTxt);
                 invalidContent.append("Zip must be four digits\n");
             }
-        }
-        else {
+        } else {
             setValid(zipTxt);
         }
 
@@ -381,12 +374,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
             if (isInvalidDouble(weightTxt.getText())) {
                 valid = setInvalid(weightTxt);
                 invalidContent.append("Weight must be a valid decimal number\n");
-            }
-            else {
+            } else {
                 setValid(weightTxt);
             }
-        }
-        else {
+        } else {
             setValid(weightTxt);
         }
 
@@ -395,12 +386,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
             if (isInvalidDouble(heightTxt.getText())) {
                 valid = setInvalid(heightTxt);
                 invalidContent.append("Height must be a valid decimal number\n");
-            }
-            else {
+            } else {
                 setValid(heightTxt);
             }
-        }
-        else {
+        } else {
             setValid(heightTxt);
         }
 
@@ -412,12 +401,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
             if (bloodgroup == null) {
                 valid = setInvalid(bloodGroupDD);
                 invalidContent.append("Blood group must be a valid selection\n");
-            }
-            else {
+            } else {
                 setValid(bloodGroupDD);
             }
-        }
-        else {
+        } else {
             setValid(bloodGroupDD);
         }
 
@@ -427,12 +414,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
                     .isAfter(LocalDate.now())) {
                 valid = setInvalid(dobDate);
                 invalidContent.append("Date of birth must be a valid date either today or earlier and must be before date of death\n");
-            }
-            else {
+            } else {
                 setValid(dobDate);
             }
-        }
-        else {
+        } else {
             valid = setInvalid(dobDate);
         }
 
@@ -443,12 +428,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
                     .isAfter(LocalDate.now())) {
                 valid = setInvalid(dateOfDeath);
                 invalidContent.append("Date of death must be a valid date either today or earlier and must be after date of birth\n");
-            }
-            else {
+            } else {
                 setValid(dateOfDeath);
             }
-        }
-        else {
+        } else {
             setValid(dateOfDeath);
         }
 
@@ -460,14 +443,15 @@ public class GUIPatientUpdateProfile extends UndoableController {
             if (middlenameTxt.getText()
                     .equals("")) {
                 target.setMiddleNames(new ArrayList<>());
-            }
-            else {
+            } else {
                 List<String> middlenames = Arrays.asList(middlenameTxt.getText()
                         .split(" "));
                 ArrayList<String> middles = new ArrayList<>(middlenames);
                 target.setMiddleNames(middles);
             }
-            target.setPreferredName( preferrednameTxt.getText() );
+            if (preferrednameTxt.getText() != null) {
+                target.setPreferredName(preferrednameTxt.getText());
+            }
             if (birthGenderMaleRadio.isSelected()) {
                 target.setBirthGender((BirthGender) BirthGender.getEnumFromString("male"));
             }
@@ -475,13 +459,13 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 target.setBirthGender((BirthGender) BirthGender.getEnumFromString("female"));
             }
             if (preferredGenderManRadio.isSelected()) {
-                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( "man" ) );
+                target.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("man"));
             }
             if (preferredGenderWomanRadio.isSelected()) {
-                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( "woman" ) );
+                target.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("woman"));
             }
             if (preferredGenderNonBinaryRadio.isSelected()) {
-                target.setPreferredGender( (PreferredGender) PreferredGender.getEnumFromString( "nonbinary" ) );
+                target.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("nonbinary"));
             }
             if (dobDate.getValue() != null) {
                 target.setBirth(dobDate.getValue());
@@ -489,18 +473,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
             if (dateOfDeath.getValue() != null) {
                 target.setDeath(dateOfDeath.getValue());
             }
-            if (street1Txt.getText()
-                    .length() > 0) {
-                target.setStreet1(street1Txt.getText());
-            }
-            if (street2Txt.getText()
-                    .length() > 0) {
-                target.setStreet2(street2Txt.getText());
-            }
-            if (suburbTxt.getText()
-                    .length() > 0) {
-                target.setSuburb(suburbTxt.getText());
-            }
+            target.setStreet1(street1Txt.getText());
+            target.setStreet2(street2Txt.getText());
+            target.setSuburb(suburbTxt.getText());
             if (regionDD.getValue() != null) {
                 target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
                         .getSelectedItem()));
@@ -519,11 +494,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 target.setBloodGroup((BloodGroup) BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
                         .getSelectedItem()));
             }
+            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
-            Database.saveToDisk();
-            goBackToProfile();
         }
         else {
+            systemLogger.log(Level.WARNING, "Failed to update patient profile due to invalid fields:\n" + invalidContent);
             userActions.log(Level.WARNING, "Failed to update patient profile due to invalid fields", "Attempted to update patient profile");
             invalidContent.append("\nYour changes have not been saved.");
             invalidInfo.setContentText(invalidContent.toString());
@@ -555,29 +530,4 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
     }
 
-    /**
-     * Returns to patient profile screen
-     */
-    public void goBackToProfile() {
-        if (userControl.getLoggedInUser() instanceof Patient) {
-            try {
-                screenControl.show(patientUpdateAnchorPane, "/scene/patientProfile.fxml");
-            } catch (IOException e) {
-                new Alert((Alert.AlertType.ERROR), "Unable to patient profile").show();
-                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
-            }
-        }
-        else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-            try {
-                ScreenControl.loadPopUpPane(patientUpdateAnchorPane.getScene(), fxmlLoader);
-            }
-            catch (IOException e) {
-                userActions.log(Level.SEVERE,
-                        "Error loading profile screen in popup",
-                        "attempted to navigate from the edit page to the profile page in popup");
-                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).show();
-            }
-        }
-    }
 }

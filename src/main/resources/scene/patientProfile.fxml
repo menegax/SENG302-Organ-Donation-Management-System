@@ -1,156 +1,243 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="patientProfilePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProfile">
+<GridPane fx:id="patientProfilePane" prefHeight="370.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProfile">
+  <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="33.399993896484375" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="258.19996337890626" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" prefWidth="6.200036621093773" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="93.19997558593752" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="97.99998779296874" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="82.199951171875" minWidth="10.0" prefWidth="28.000000000000057" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="87.9999877929688" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="81.60001220703123" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="89.199951171875" minWidth="10.0" prefWidth="28.000000000000057" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="89.199951171875" minWidth="10.0" prefWidth="28.000000000000057" />
+      <ColumnConstraints />
+      <ColumnConstraints />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
    <children>
-      <Label layoutX="264.0" layoutY="16.0" styleClass="title" text="Profile">
+       <ListView fx:id="medList" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="3" />
+       <ListView fx:id="donationList" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="3" />
+       <ListView fx:id="receivingList" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="9" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="3" />
+       <Label text="Medications" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
          <font>
-            <Font size="40.0" />
+            <Font size="24.0" />
          </font>
       </Label>
-      <VBox layoutX="37.0" layoutY="65.0" prefHeight="255.0" prefWidth="239.0">
+      <Label text="Donations" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+       <Label fx:id="receivingTitle" text="Receiving" GridPane.columnIndex="9" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+           <font>
+               <Font size="24.0" />
+           </font>
+       </Label>
+      <GridPane GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="3">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="127.3999755859375" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="8.800036621093739" prefWidth="10.400012207031239" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="9.399967193603516" prefWidth="120.79998779296875" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="150.0" text="NHI: " />
-                  <Label fx:id="nhiLbl" prefHeight="16.0" prefWidth="168.0" text="Label" textAlignment="CENTER" />
-               </children>
-            </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Name: " />
-                  <Label fx:id="nameLbl" text="Label" textOverrun="CENTER_ELLIPSIS" />
-               </children>
-            </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0">
-               <children>
-                  <Label fx:id="genderDeclaration" prefHeight="16.0" prefWidth="112.0" />
-                  <Label fx:id="genderStatus" />
-               </children>
-            </HBox>
-            <HBox layoutX="10.0" layoutY="61.0" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Vital status:" />
-                  <Label fx:id="vitalLbl1" text="Label" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Date of Birth: " />
-                  <Label fx:id="dobLbl" text="Label" />
-               </children>
-            </HBox>
-            <HBox layoutX="10.0" layoutY="61.0" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Date of Death: " />
-                  <Label fx:id="dateOfDeathLabel" text="Label" />
-               </children>
-            </HBox>
-            <HBox layoutX="10.0" layoutY="62.0" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Age:" />
-                  <Label fx:id="age" text="Label" />
-               </children>
-            </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Height: " />
-                  <Label fx:id="heightLbl" text="Label" />
-               </children>
-            </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Weight: " />
-                  <Label fx:id="weightLbl" text="Label" />
-               </children>
-            </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="BMI: " />
-                  <Label fx:id="bmi" text="Label" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Blood Group: " />
-                  <Label fx:id="bloodGroupLbl" text="Label" />
-               </children>
-            </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Street 1: " />
-                  <Label fx:id="addLbl1" text="Label" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Street 2: " />
-                  <Label fx:id="addLbl2" text="Label" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Suburb: " />
-                  <Label fx:id="addLbl3" text="Label" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Region: " />
-                  <Label fx:id="addLbl4" text="Label" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label prefHeight="16.0" prefWidth="112.0" text="Zip: " />
-                  <Label fx:id="addLbl5" text="Label" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <VBox layoutX="467.0" prefHeight="200.0" prefWidth="129.0">
-         <children>
-            <Label fx:id="donatingTitle" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Donations">
+            <Label text="NHI:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <ListView fx:id="donationList" prefHeight="200.0" prefWidth="200.0" />
-         </children>
-      </VBox>
-      <VBox alignment="TOP_RIGHT" layoutX="467.0" layoutY="200.0" prefHeight="200.0" prefWidth="129.0">
-         <children>
-            <Label fx:id="receivingTitle" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Receiving">
+            <Label fx:id="genderDeclaration" text="Gender:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <ListView fx:id="receivingList" prefHeight="200.0" prefWidth="200.0" />
-         </children>
-      </VBox>
-        <VBox layoutX="300.0" layoutY="81.0" prefHeight="200.0" prefWidth="129.0">
-           <children>
-            <Label fx:id="medicationTitle" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="167.0" text="Medications">
+            <Label text="Date of Birth:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-               <ListView fx:id="medList" prefHeight="200.0" prefWidth="200.0" />
-           </children>
-        </VBox>
-      <Label fx:id="back" layoutX="14.0" layoutY="14.0" onMouseClicked="#goToPatientHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-      <Button fx:id="editPatientButton" layoutX="57.0" layoutY="40.0" mnemonicParsing="false" onAction="#goToEdit" prefHeight="25.0" prefWidth="101.0" text="Manage Profile" />
-      <Button fx:id="donationsButton" layoutX="343.0" layoutY="315.0" mnemonicParsing="false" onAction="#goToDonations" text="Manage Donations" />
-      <Button fx:id="medicationBtn" layoutX="30.0" layoutY="362.0" mnemonicParsing="false" onAction="#openMedication" text="Manage Medications" />
-      <Button fx:id="requirementsButton" layoutX="181.0" layoutY="362.0" mnemonicParsing="false" onAction="#goToRequirements" text="Manage Requested" />
-      <Button fx:id="diseaseHistoryButton" layoutX="323.0" layoutY="362.0" mnemonicParsing="false" onAction="#openPatientDiagnoses" text="View Disease History" />
-      <Button fx:id="contactButton" layoutX="222.0" layoutY="315.0" mnemonicParsing="false" onAction="#goToContactDetails" text="Manage Contacts" />
+            <Label text="Date of Death:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label text="Age:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label text="Height:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label text="Weight:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label text="BMI:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="8">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label text="Blood Group:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="9">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label text="Street 1:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="10">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label text="Street 2:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="11">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label text="Suburb:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="12">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label text="Region:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="13">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label text="Zip:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="14">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="nhiLbl" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="genderStatus" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="dobLbl" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="dateOfDeathLabel" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="4">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="age" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="5">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="heightLbl" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="weightLbl" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="7">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="bmi" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="8">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="bloodGroupLbl" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="9">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="addLbl1" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="10">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="addLbl2" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="11">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="addLbl3" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="12">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="addLbl4" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="13">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="addLbl5" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="14">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label text="Vital status:" wrapText="true" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </Label>
+            <Label fx:id="vitalLbl1" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+         <GridPane.margin>
+            <Insets left="40.0" />
+         </GridPane.margin>
+      </GridPane>
+      <Label fx:id="nameLbl" wrapText="true" GridPane.columnSpan="11" GridPane.halignment="CENTER">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
    </children>
-</AnchorPane>
+</GridPane>

@@ -60,6 +60,10 @@ public class GUIRequiredOrganDeregistrationReason {
     @FXML
     private AnchorPane requiredOrganDeregistrationReasonPane;
 
+    /**
+     * Initializes the organ deregistration screen. Gets the target patient and sets optional elements as
+     * disabled and not visible.
+     */
     public void initialize() {
         userControl = new UserControl();
         target = userControl.getTargetPatient();
@@ -190,7 +194,7 @@ public class GUIRequiredOrganDeregistrationReason {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         }
         if (confirmed){
-            Stage reasonStage = (Stage)requiredOrganDeregistrationReasonPane.getScene().getWindow();
+            Stage reasonStage = (Stage)reasons.getScene().getWindow();
             reasonStage.close();
         }
         //GUIPatientUpdateRequirements.setClosed(true);

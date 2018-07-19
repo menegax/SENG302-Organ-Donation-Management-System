@@ -8,6 +8,8 @@
 *.idea
 
 *.iml
+clinician.json
+patient.json
 
 
 # Mobile Tools for Java (J2ME)
