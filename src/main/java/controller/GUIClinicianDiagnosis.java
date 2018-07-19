@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;
 
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -223,7 +224,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
      * or the table to be in descending date order
      */
     private void loadCurrentDiseases() {
-        ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(currentDiseases);
+        ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(target.getCurrentDiseases());
         setCellValues(currentDateCol, currentDiagnosisCol, currentTagsCol);
         currentDiagnosesView.setItems(observableCurrentDiseases);
         currentDiagnosesView.refresh();
@@ -241,7 +242,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
      * or the table to be in descending date order
      */
     private void loadPastDiseases() {
-        ObservableList <Disease> observablePastDiseases = FXCollections.observableArrayList( pastDiseases );
+        ObservableList <Disease> observablePastDiseases = FXCollections.observableArrayList( target.getPastDiseases() );
         setCellValues(pastDateCol, pastDiagnosisCol, pastTagsCol);
         pastDiagnosesView.setItems(observablePastDiseases);
         pastDiagnosesView.refresh();
