@@ -294,16 +294,16 @@ public class GUIClinicianDiagnosis extends UndoableController{
 
 
     /**
-     * Saves the current diagnoses to the database after setting the patient's past and current diagnoses to
-     * the edited lists in the screen
+     * Sets the patient's past and current diagnoses to the edited lists in the screen
      */
     @FXML
     public void saveDiagnoses() {
         target.setCurrentDiseases(currentDiseases);
         target.setPastDiseases(pastDiseases);
         userActions.log( Level.FINE, "Successfully saved patient diseases", "Successfully saved patient " + target.getNhiNumber() + "diseases");
-        new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+        new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
         changed = false;
+        screenControl.setIsSaved(false);
     }
 
 

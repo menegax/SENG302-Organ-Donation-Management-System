@@ -257,7 +257,8 @@ public class GUIPatientUpdateDonations extends UndoableController {
             target.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
 
         }
+        screenControl.setIsSaved(false);
         userActions.log(INFO, "Updated user donations to: " + newDonations, "Attempted to update donations");
-        new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+        new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
     }
 }

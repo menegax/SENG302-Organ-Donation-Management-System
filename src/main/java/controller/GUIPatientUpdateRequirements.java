@@ -269,7 +269,8 @@ public class GUIPatientUpdateRequirements extends UndoableController{
         }
         deregistrationReason();
         createOrganRequests();
-        new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+        screenControl.setIsSaved(false);
+        new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
     }
 
     /**

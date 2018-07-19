@@ -62,6 +62,7 @@ public class ScreenControl {
 
     private String appName = "Big Pharma";
 
+    private Boolean isSaved = true;
 
     private ScreenControl() {
         applicationStages = new HashMap<>();
@@ -362,5 +363,41 @@ public class ScreenControl {
         }
     }
 
+    /**
+     * Sets the isSaved boolean and adjusts screens accordingly
+     * @param isSaved whether local changes have been saved or not
+     */
+    public void setIsSaved(Boolean isSaved) {
+        this.isSaved = isSaved;
+        if (isSaved) {
+            removeUnsavedAsterixs();
+        } else {
+            addUnsavedAsterixs();
+        }
+    }
+
+    /**
+     * Removes asterixs from all stages when local changes are saved to disk
+     */
+    private void removeUnsavedAsterixs() {
+        for (Set<Stage> stages : userStages.values()) {
+            for (Stage stage : stages) {
+                stage.setTitle(stage.getTitle().replace("*", ""));
+            }
+        }
+    }
+
+    /**
+     * Adds asterixs to all stages when local changes have been made
+     */
+    private void addUnsavedAsterixs() {
+        for (Set<Stage> stages : userStages.values()) {
+            for (Stage stage : stages) {
+                if (!stage.getTitle().contains("*")) {
+                    stage.setTitle(stage.getTitle() + "*");
+                }
+            }
+        }
+    }
 }
 

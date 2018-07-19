@@ -268,10 +268,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
     }
 
     /**
-     * Saves profile changes after checking each field for validity
+     * Sets profile changes after checking each field for validity
      */
     public void saveProfileUpdater() {
-        systemLogger.log(Level.FINEST, "Saving patient profile for update...");
+        systemLogger.log(Level.FINEST, "Setting patient profile for update...");
         Boolean valid = true;
 
         Alert invalidInfo = new Alert(Alert.AlertType.WARNING);
@@ -493,7 +493,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 target.setBloodGroup((BloodGroup) BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
                         .getSelectedItem()));
             }
-            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+            screenControl.setIsSaved(false);
+            new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
         }
         else {

@@ -224,7 +224,8 @@ public class GUIClinicianUpdateProfile extends UndoableController {
                     .getSelectedItem()
                     .toString()));
             target.clinicianModified();
-            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+            screenControl.setIsSaved(false);
+            new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
         }
         else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();

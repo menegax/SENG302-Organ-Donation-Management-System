@@ -1,6 +1,7 @@
 package service;
 
 import com.google.gson.Gson;
+import controller.ScreenControl;
 import model.Clinician;
 import model.Patient;
 import utility.SearchPatients;
@@ -27,6 +28,7 @@ public class Database {
 
     private static Set<Clinician> clinicians = new HashSet<>();
 
+    private static ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Adds a patient to the database
@@ -185,6 +187,7 @@ public class Database {
             saveToDiskPatients();
             saveToDiskWaitlist();
             saveToDiskClinicians();
+            screenControl.setIsSaved(true);
         } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
