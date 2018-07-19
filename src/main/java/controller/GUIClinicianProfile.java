@@ -4,9 +4,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import model.Clinician;
 import model.Administrator;
+import model.Clinician;
+import model.User;
 import service.Database;
 
 import java.io.IOException;
@@ -36,22 +36,31 @@ public class GUIClinicianProfile {
     @FXML
     private Button deleteButton;
 
+    @FXML
+    private Button back;
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
-    private Object user = new UserControl().getLoggedInUser();
+    private UserControl userControl = new UserControl();
+
+    private User loggedIn = userControl.getLoggedInUser();
+    private User target = userControl.getTargetUser();
 
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
     public void initialize() {
-        if (user instanceof Clinician) {
+        if (loggedIn instanceof Clinician) {
             deleteButton.setVisible( false );
             deleteButton.setDisable( true );
-            loadProfile( ((Clinician) user) );
-        } else if (user instanceof Administrator) {
-            loadProfile( ((Clinician) user));
-        } else {
-            deleteButton.setVisible( false );
-            deleteButton.setDisable( true );
+            loadProfile( ((Clinician) loggedIn) );
+        } else if (loggedIn instanceof Administrator) {
+            back.setVisible(false);
+            back.setDisable(true);
+            loadProfile( ((Clinician) target));
+            if (((Clinician) target).getStaffID() == 0) {
+                deleteButton.setVisible( false );
+                deleteButton.setDisable( true );
+            }
         }
     }
 
@@ -96,7 +105,7 @@ public class GUIClinicianProfile {
      * Deletes the current profile from the HashSet in Database, not from disk, not until saved
      */
     public void deleteProfile() {
-        Clinician clinician = (Clinician) user;
+        Clinician clinician = (Clinician) target;
         if (clinician.getStaffID() != 0) {
             Database.deleteClinician( clinician );
             goToAdministratorHome();

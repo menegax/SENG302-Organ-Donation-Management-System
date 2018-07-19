@@ -45,7 +45,7 @@ public class UserControl {
      * Adds a user to the cache
      * @param user - user to be added
      */
-    public void addLoggedInUserToCache(Object user) {
+    public void addLoggedInUserToCache(User user) {
         add("user_logged_in", user);
     }
 
@@ -53,8 +53,8 @@ public class UserControl {
      *  Gets the logged in user
      * @return - user object
      */
-    public Object getLoggedInUser() {
-        return get("user_logged_in");
+    public User getLoggedInUser() {
+        return (User) get("user_logged_in");
     }
 
     /**

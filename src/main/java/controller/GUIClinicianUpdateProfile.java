@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
+import model.User;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
@@ -75,10 +76,13 @@ public class GUIClinicianUpdateProfile extends UndoableController{
         // Registering a change event to clear the invalid class
         regionDD.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> setValid(regionDD));
         UserControl userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
-        if (user instanceof Clinician){
-            loadProfile(((Clinician) user).getStaffID());
+        User loggedIn = userControl.getLoggedInUser();
+        if (loggedIn instanceof Clinician){
+            target = (Clinician) loggedIn;
+        } else {
+            target = (Clinician) userControl.getTargetUser();
         }
+        loadProfile(target.getStaffID());
         setUpStateHistory();
     }
 

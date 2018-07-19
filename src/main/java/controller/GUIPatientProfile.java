@@ -174,13 +174,12 @@ public class GUIPatientProfile {
             proceduresButton.setText("View Procedures"); //Changing the button text for patients
             deleteButton.setVisible( false );
             deleteButton.setDisable( true );
-        }
-        if (userControl.getLoggedInUser() instanceof Clinician) {
+        } else if (userControl.getLoggedInUser() instanceof Clinician) {
             removeBack();
             deleteButton.setVisible( false );
             deleteButton.setDisable( true );
             user = userControl.getTargetUser();
-        } else if (user instanceof Administrator) {
+        } else {
             removeBack();
             user = userControl.getTargetUser();
         }
