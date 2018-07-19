@@ -20,7 +20,7 @@
 2. The clinician selects the add button
 3. An alert is shown stating the disease is already registered and no disease is added
 
-###Add a diagnosis already in current
+###Add a diagnosis already in past
 
 1. The clinician types a diagnosis name into the text field that is already in the past disease list
 2. The clinician selects the add button
@@ -40,3 +40,16 @@
 3. The selected disease is deleted and is no longer present in the list
 
 
+##Test History
+
+###18/07/2018 - Maree
+
+Preconditions: Pass
+
+Add a diagnosis: Pass
+
+Add a diagnosis already in current: Pass
+
+Add an invalid disease name: Pass
+
+Delete the diagnosis: Pass

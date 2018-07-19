@@ -1,4 +1,4 @@
-# CLI Donor Update Manual Test
+# GUI Clinician Search Donors Test
 
 1. Open GUI application
 2. Register many, many patients using different names, capitalization, length, and null or not middle names

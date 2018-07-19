@@ -30,8 +30,8 @@ public class SearchPatientsTest {
      */
     @BeforeClass
     public static void setUp() {
-        userActions.setLevel(Level.OFF);
         Database.resetDatabase();
+        userActions.setLevel(Level.OFF);
         
         // Given patients in a db
         d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());

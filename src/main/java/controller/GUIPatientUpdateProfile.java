@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums.*;
@@ -22,12 +23,13 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateProfile extends UndoableController {
 
     @FXML
-    private AnchorPane patientUpdateAnchorPane;
+    private GridPane patientUpdateAnchorPane;
 
     @FXML
     private Label lastModifiedLbl;
@@ -108,13 +110,14 @@ public class GUIPatientUpdateProfile extends UndoableController {
         Object user = userControl.getLoggedInUser();
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
-        } else if (userControl.getTargetPatient() != null) {
+        }
+       else if (userControl.getTargetPatient() != null) {
             loadProfile((userControl.getTargetPatient()).getNhiNumber());
         }
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
-                saveProfile();
+                saveProfileUpdater();
             }
         });
     }
@@ -190,8 +193,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
         nhiTxt.setText(patient.getNhiNumber());
         firstnameTxt.setText(patient.getFirstName());
         lastnameTxt.setText(patient.getLastName());
-        for (String name : patient.getMiddleNames()) {
-            middlenameTxt.setText(middlenameTxt.getText() + name + " ");
+        if (patient.getMiddleNames() != null) {
+            for (String name : patient.getMiddleNames()) {
+                middlenameTxt.setText(middlenameTxt.getText() + name + " ");
+            }
         }
         preferrednameTxt.setText(patient.getPreferredName());
         if (patient.getBirthGender() != null) {
@@ -265,7 +270,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
     /**
      * Saves profile changes after checking each field for validity
      */
-    public void saveProfile() {
+    public void saveProfileUpdater() {
+        systemLogger.log(Level.FINEST, "Saving patient profile for update...");
         Boolean valid = true;
 
         Alert invalidInfo = new Alert(Alert.AlertType.WARNING);
@@ -487,10 +493,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 target.setBloodGroup((BloodGroup) BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
                         .getSelectedItem()));
             }
+            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
-            Database.saveToDisk();
-            goBackToProfile();
-        } else {
+        }
+        else {
+            systemLogger.log(Level.WARNING, "Failed to update patient profile due to invalid fields:\n" + invalidContent);
             userActions.log(Level.WARNING, "Failed to update patient profile due to invalid fields", "Attempted to update patient profile");
             invalidContent.append("\nYour changes have not been saved.");
             invalidInfo.setContentText(invalidContent.toString());
@@ -522,27 +529,4 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
     }
 
-    /**
-     * Returns to patient profile screen
-     */
-    public void goBackToProfile() {
-        if (userControl.getLoggedInUser() instanceof Patient) {
-            try {
-                screenControl.show(patientUpdateAnchorPane, "/scene/patientProfile.fxml");
-            } catch (IOException e) {
-                new Alert((Alert.AlertType.ERROR), "Unable to patient profile").show();
-                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
-            }
-        } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-            try {
-                ScreenControl.loadPopUpPane(patientUpdateAnchorPane.getScene(), fxmlLoader);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE,
-                        "Error loading profile screen in popup",
-                        "attempted to navigate from the edit page to the profile page in popup");
-                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).show();
-            }
-        }
-    }
 }
