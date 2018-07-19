@@ -74,7 +74,7 @@ public class GUIHome {
             horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty().addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
-            systemLogger.log(SEVERE, "Failed to load home scene and its fxmls", Arrays.toString(e.getStackTrace()));
+            systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());
         }
     }
 

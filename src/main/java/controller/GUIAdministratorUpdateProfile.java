@@ -3,7 +3,7 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import model.Administrator;
 import service.Database;
 import utility.GlobalEnums;
@@ -24,7 +24,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIAdministratorUpdateProfile extends UndoableController {
 
     @FXML
-    public AnchorPane administratorUpdateAnchorPane;
+    public GridPane administratorUpdateAnchorPane;
 
     @FXML
     private Label lastModifiedLbl;
