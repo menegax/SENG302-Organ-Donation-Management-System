@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
+<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="631.7999755859375" minWidth="10.0" prefWidth="350.00001220703126" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="359.7999755859375" />
@@ -27,7 +27,7 @@
          <columns>
              <TableColumn fx:id="columnName" editable="false" minWidth="140.79998779296875" prefWidth="176.0" text="Name" />
              <TableColumn fx:id="columnAge" editable="false" minWidth="0.0" prefWidth="124.79998779296875" text="Age" />
-             <TableColumn fx:id="columnBirthGender" editable="false" minWidth="100.0" prefWidth="100.0" text="Gender" />
+             <TableColumn fx:id="columnBirthGender" editable="false" minWidth="100.0" prefWidth="100.0" text="Birth Gender" />
             <TableColumn fx:id="columnRegion" editable="false" prefWidth="180.0" text="Region" />
          </columns>
          <columnResizePolicy>
