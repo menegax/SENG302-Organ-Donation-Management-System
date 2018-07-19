@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAdministratorUpdateProfile">
+<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAdministratorUpdateProfile">
    <children>
       <Label GridPane.columnIndex="1" GridPane.valignment="BOTTOM" />
       <Label fx:id="lastModifiedLbl" alignment="CENTER" prefHeight="17.0" prefWidth="257.0" text="Last Modified: " GridPane.columnIndex="1" GridPane.halignment="CENTER" />
       <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
          <children>
-            <PasswordField fx:id="passwordTxt" prefHeight="40.0" prefWidth="256.0" stylesheets="@../css/guiStyle.css" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="TOP" />
             <Label text="First Name" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
-            <TextField fx:id="firstnameTxt" focusTraversable="false" promptText="First name" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <TextField fx:id="firstnameTxt" promptText="First name" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
             <Label text="Middle Name(s)" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <TextField fx:id="middlenameTxt" promptText="Middle name(s)" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
             <Label text="Last Name" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
-            <TextField fx:id="lastnameTxt" focusTraversable="false" promptText="Last name" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP" />
+            <TextField fx:id="lastnameTxt" promptText="Last name" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP" />
             <Label text="Password" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="BOTTOM" />
-            <TextField fx:id="middlenameTxt" focusTraversable="false" promptText="Middle name(s)" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+            <PasswordField fx:id="passwordTxt" prefHeight="40.0" prefWidth="256.0" stylesheets="@../css/guiStyle.css" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="TOP" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
