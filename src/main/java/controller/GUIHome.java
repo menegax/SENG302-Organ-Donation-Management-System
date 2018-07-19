@@ -64,7 +64,7 @@ public class GUIHome {
                     addTabsForPatientClinician();
                     setUpColouredBar(userControl.getTargetUser(), "Patient");
                 } else if (userControl.getTargetUser() instanceof Clinician) {
-                    addTabsForPatientClinician();
+                    addTabsClinicianAdministrator();
                     setUpColouredBar(userControl.getLoggedInUser(), "Clinician");
                 } else {
                     addTabsAdministrator();
@@ -164,6 +164,15 @@ public class GUIHome {
         createTab("Search Users", "/scene/administratorSearchUsers.fxml");
         createTab("Transplant Waiting List", "/scene/clinicianWaitingList.fxml");
         createTab("History", "/scene/adminHistory.fxml");
+    }
+
+    /**
+     * Adds tabs for an administrator viewing a clinician
+     * @throws IOException- if fxml cannot be located
+     */
+    private void addTabsClinicianAdministrator() throws IOException {
+        createTab("Profile", "/scene/clinicianProfile.fxml");
+        createTab("Update", "/scene/clinicianProfileUpdate.fxml");
     }
 
 

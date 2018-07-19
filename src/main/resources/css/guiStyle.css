@@ -112,6 +112,20 @@ Button {
     -fx-background-color: linear-gradient(#3D8DC2, #1478BB);
 }
 
+.delete-button {
+    -fx-background-color: linear-gradient(#C0392B, #B0291B);
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 16;
+    -fx-min-height: 20;
+    -fx-max-height: 30;
+    -fx-min-width: 50;
+    -fx-max-width: 130;
+}
+
+.delete-button:hover {
+    -fx-background-color: linear-gradient(#B0291B, #A0191B);
+}
+
 .form TextField, .form ChoiceBox, .form DatePicker {
     -fx-min-height: 40;
 }
