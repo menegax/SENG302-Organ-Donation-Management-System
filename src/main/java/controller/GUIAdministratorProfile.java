@@ -27,17 +27,17 @@ public class GUIAdministratorProfile {
     private Button deleteButton;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
-    private Object user = new UserControl().getLoggedInUser();
+    private UserControl userControl = new UserControl();
 
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
     public void initialize() {
-        Administrator current = (Administrator) user;
+        Administrator current = (Administrator) userControl.getLoggedInUser();
         if (current.getUsername().equals("admin")) {
             deleteButton.setVisible(false);
         }
-        loadProfile((Administrator) user);
+        loadProfile((Administrator) userControl.getLoggedInUser());
     }
 
     /**
@@ -66,7 +66,7 @@ public class GUIAdministratorProfile {
      * Deletes the current profile from the HashSet in Database, not from disk, not until saved
      */
     public void deleteProfile() {
-        Administrator administrator = (Administrator) user;
+        Administrator administrator = (Administrator) userControl.getTargetUser();
         if (!administrator.getUsername().equals("admin")) {
             Database.deleteAdministrator(administrator);
             goToAdministratorHome();

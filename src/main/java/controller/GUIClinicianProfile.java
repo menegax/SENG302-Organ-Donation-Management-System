@@ -42,22 +42,19 @@ public class GUIClinicianProfile {
     private ScreenControl screenControl = ScreenControl.getScreenControl();
     private UserControl userControl = new UserControl();
 
-    private User loggedIn = userControl.getLoggedInUser();
-    private User target = userControl.getTargetUser();
-
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
     public void initialize() {
-        if (loggedIn instanceof Clinician) {
+        if (userControl.getLoggedInUser() instanceof Clinician) {
             deleteButton.setVisible( false );
             deleteButton.setDisable( true );
-            loadProfile( ((Clinician) loggedIn) );
-        } else if (loggedIn instanceof Administrator) {
+            loadProfile( ((Clinician) userControl.getLoggedInUser()) );
+        } else if (userControl.getLoggedInUser() instanceof Administrator) {
             back.setVisible(false);
             back.setDisable(true);
-            loadProfile( ((Clinician) target));
-            if (((Clinician) target).getStaffID() == 0) {
+            loadProfile( ((Clinician) userControl.getTargetUser()));
+            if (((Clinician) userControl.getTargetUser()).getStaffID() == 0) {
                 deleteButton.setVisible( false );
                 deleteButton.setDisable( true );
             }
@@ -105,7 +102,7 @@ public class GUIClinicianProfile {
      * Deletes the current profile from the HashSet in Database, not from disk, not until saved
      */
     public void deleteProfile() {
-        Clinician clinician = (Clinician) target;
+        Clinician clinician = (Clinician) userControl.getTargetUser();
         if (clinician.getStaffID() != 0) {
             Database.deleteClinician( clinician );
             goToAdministratorHome();

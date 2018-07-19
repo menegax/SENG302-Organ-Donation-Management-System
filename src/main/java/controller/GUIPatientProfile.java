@@ -145,7 +145,7 @@ public class GUIPatientProfile {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private Object user = new UserControl();
+
 
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
@@ -464,7 +464,7 @@ public class GUIPatientProfile {
      * Deletes the current profile from the HashSet in Database, not from disk, not until saved
      */
     public void deleteProfile() {
-        Patient patient = (Patient) user;
+        Patient patient = (Patient) userControl.getTargetUser();
         Database.deletePatient( patient );
         goToAdministratorHome();
     }
