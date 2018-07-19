@@ -17,6 +17,7 @@ public abstract class User {
 
     public abstract String getNameConcatenated();
 
+    // transient means that this property is not serialized on saving to disk
     transient PropertyChangeSupport propertyChangeSupport;
 
     /**
