@@ -864,6 +864,26 @@ public class Patient extends User {
     public void setPastDiseases(ArrayList<Disease> pastDiseases) { this.pastDiseases = pastDiseases; }
 
     /**
+     * Checks all diseases for tags and orders them into the correct list
+     * Cured - Past Diseases
+     * Chronic, Null - Current Diseases
+     */
+    public void sortDiseases() {
+        for (Disease disease : new ArrayList<>(pastDiseases)) {
+            if (disease.getDiseaseState() == DiseaseState.CHRONIC || disease.getDiseaseState() == null) {
+                currentDiseases.add(disease);
+                pastDiseases.remove(disease);
+            }
+        }
+        for (Disease disease : new ArrayList<>(currentDiseases)) {
+            if (disease.getDiseaseState() == DiseaseState.CURED) {
+                pastDiseases.add(disease);
+                currentDiseases.remove(disease);
+            }
+        }
+    }
+
+    /**
      * Updates the modified timestamp of the patient and notifies propertyChangeListeners
      */
     private void patientModified() {

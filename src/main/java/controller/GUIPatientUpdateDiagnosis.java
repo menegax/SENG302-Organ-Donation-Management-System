@@ -289,6 +289,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             } catch (NullPointerException e) {
                 target.setDiseaseState(null);
             }
+            currentPatient.sortDiseases();
             if(isAdd) {
                 currentPatient.getCurrentDiseases().add(target);
             }
