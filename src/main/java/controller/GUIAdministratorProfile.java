@@ -21,6 +21,9 @@ public class GUIAdministratorProfile {
     private AnchorPane adminProfilePane;
 
     @FXML
+    private Button back;
+
+    @FXML
     private Label usernameTxt;
 
     @FXML
@@ -54,6 +57,9 @@ public class GUIAdministratorProfile {
         if (target.getUsername().equals(((Administrator) loggedIn).getUsername())) {
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
+        } else {
+            back.setVisible(false);
+            back.setDisable(true);
         }
         loadProfile(target);
     }
