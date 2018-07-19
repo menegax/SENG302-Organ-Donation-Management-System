@@ -1,32 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="clinicianWaitingListAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianWaitingList">
-    <children>
-        <Label alignment="CENTER" layoutX="180.0" layoutY="50.0" styleClass="title" text="Organ Waiting List">
-            <font>
-                <Font size="27.0" />
-            </font>
-        </Label>
-      <TableView fx:id="waitingListTableView" layoutX="82.0" layoutY="102.0" prefHeight="246.0" prefWidth="444.0">
+<GridPane fx:id="clinicianWaitingList" prefHeight="400.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianWaitingList">
+  <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="210.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="208.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <TableView fx:id="waitingListTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
         <columns>
-          <TableColumn fx:id="dateCol" prefWidth="111.0" text="Date" />
-          <TableColumn fx:id="nameCol" prefWidth="111.0" text="Name" />
-            <TableColumn fx:id="organCol" prefWidth="111.0" text="Organ" />
-            <TableColumn fx:id="regionCol" prefWidth="111.0" text="Region" />
+          <TableColumn fx:id="dateCol" prefWidth="75.0" text="Date" />
+          <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="organCol" prefWidth="75.0" text="Organ" />
+            <TableColumn fx:id="regionCol" prefWidth="75.0" text="Region" />
         </columns>
+         <GridPane.margin>
+            <Insets bottom="60.0" left="60.0" right="60.0" />
+         </GridPane.margin>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
-        <ChoiceBox fx:id="organSelection" layoutX="130.0" layoutY="350.0" prefHeight="26.0" prefWidth="121.0" />
-        <ChoiceBox fx:id="regionSelection" layoutX="400.0" layoutY="350.0" prefHeight="26.0" prefWidth="122.0" />
-      <Label layoutX="82.0" layoutY="350.0" text="Organ" />
-      <Label layoutX="350.0" layoutY="350.0" text="Region" />
-      <Hyperlink fx:id="backButton" layoutX="14.0" layoutY="27.0" onAction="#goToClinicianHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-    </children>
-</AnchorPane>
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints hgrow="NEVER" minWidth="60.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="136.20001220703125" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <ChoiceBox fx:id="regionSelection" maxWidth="300.0" prefWidth="150.0" GridPane.columnIndex="1" />
+            <Label text="Region" GridPane.halignment="RIGHT">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </Label>
+         </children>
+         <GridPane.margin>
+            <Insets left="60.0" />
+         </GridPane.margin>
+      </GridPane>
+      <GridPane alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES">
+         <columnConstraints>
+            <ColumnConstraints fillWidth="false" hgrow="NEVER" minWidth="60.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="133.5999755859375" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <ChoiceBox fx:id="organSelection" maxWidth="300.0" prefHeight="26.0" prefWidth="150.0" GridPane.columnIndex="1" />
+            <Label text="Organ" GridPane.halignment="RIGHT">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </Label>
+         </children>
+         <GridPane.margin>
+            <Insets right="60.0" />
+         </GridPane.margin>
+      </GridPane>
+   </children>
+</GridPane>

@@ -80,3 +80,25 @@
 6. Select the 'Non-binary' Radio button, adjacent to 'Gender identity'
 8. Select the 'Save' button
 9. 'Gender Identity:' field shows 'Non-binary', and not 'Male', 'Female', 'Man', 'Woman', or 'Not set'
+
+##Test History
+
+###19/07/2018 - Maree
+
+Precondition: Pass
+
+The patient list is sorted based on birth gender: Fail - header is "Gender" and not "Birth Gender"
+
+The patient list shows only searched female birth gender: Pass
+
+The patient list shows only searched male birth gender: Pass
+
+Review the birth gender, preferred gender and preferred name on a patients profile: Fail - no fields for preferred name, gender
+
+Edit the preferred name for a patient: Pass
+
+Edit the preferred gender to Man for a patient: Fail - no field for preferred gender to check (though the update screen on refreshing is consistent with the edit)
+
+Edit the preferred gender to Woman for a patient: Fail - no field for preferred gender to check (though the update screen on refreshing is consistent with the edit)
+
+Edit the preferred gender to Non-binary for a patient: Fail - no field for preferred gender to check (though the update screen on refreshing is consistent with the edit)

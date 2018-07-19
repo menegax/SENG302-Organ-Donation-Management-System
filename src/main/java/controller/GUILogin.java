@@ -4,12 +4,14 @@ import static utility.UserActionHistory.userActions;
 
 import com.sun.javafx.scene.control.skin.FXVK;
 import javafx.event.ActionEvent;
+import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -19,7 +21,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.TextField;
 
 import javafx.stage.Window;
-import main.Main;
 import model.Clinician;
 import model.Patient;
 import service.Database;
@@ -32,7 +33,6 @@ import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
 import static utility.SystemLogger.systemLogger;
-
 import static java.util.logging.Level.SEVERE;
 
 public class GUILogin implements TouchscreenCapable {
@@ -91,11 +91,13 @@ public class GUILogin implements TouchscreenCapable {
         if (!clinicianToggle.isSelected()) {
             try {
                 Patient newPatient = Database.getPatientByNhi(nhiLogin.getText());
-                login.addLoggedInUserToCache(newPatient);
-                Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/patientHome.fxml"));
+                login.clearCache(); //clear cache on user login
                 UndoableStage stage = new UndoableStage();
+                login.addLoggedInUserToCache(newPatient);
                 screenControl.addStage(stage.getUUID(), stage);
+                Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
                 screenControl.show(stage.getUUID(), homeScreen);
+                screenControl.closeStage(Main.getUuid()); // close login scene after login
             }
             catch (InvalidObjectException e) {
                 userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
@@ -104,7 +106,7 @@ public class GUILogin implements TouchscreenCapable {
             }
             catch (IOException e) {
                 userActions.log(Level.WARNING, "Unable to load patient home page", "Attempted to log in");
-                systemLogger.log(Level.INFO, "Failed to find the .fxml file for login" + e.getStackTrace());
+                systemLogger.log(Level.INFO, "Failed to find the .fxml file for login", e);
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
                 alert.show();
             }
@@ -112,13 +114,14 @@ public class GUILogin implements TouchscreenCapable {
         else {
             try {
                 Clinician newClinician = Database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
-                login.addLoggedInUserToCache(newClinician);
                 UndoableStage stage = new UndoableStage();
-                Parent clincianHome = FXMLLoader.load((getClass().getResource("/scene/clinicianHome.fxml")));
+                login.addLoggedInUserToCache(newClinician);
                 screenControl.addStage(stage.getUUID(), stage);
-                screenControl.show(stage.getUUID(), clincianHome);
+                Parent clinicianHome = FXMLLoader.load((getClass().getResource("/scene/home.fxml")));
+                screenControl.show(stage.getUUID(), clinicianHome);
+                screenControl.closeStage(Main.getUuid()); // close login scene after login
             }
-            catch (InvalidObjectException e) {
+            catch (InvalidObjectException | NumberFormatException e) {
                 userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
                 alert.show();
@@ -126,11 +129,6 @@ public class GUILogin implements TouchscreenCapable {
             catch (IOException e) {
                 userActions.log(Level.WARNING, "Unable to load clinician home page", "Attempted to log in");
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
-                alert.show();
-            }
-            catch (NumberFormatException e) {
-                userActions.log(Level.WARNING, "Non-numeric staff IDs are not permitted", "Attempted to log in");
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Non-numeric staff ID are not permitted");
                 alert.show();
             }
         }

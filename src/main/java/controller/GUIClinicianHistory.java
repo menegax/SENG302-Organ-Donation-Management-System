@@ -56,19 +56,6 @@ public class GUIClinicianHistory {
 
 
     /**
-     * Go to home page action listener for back button
-     */
-    public void goToClinicianHome() {
-        try {
-            screenControl.show(logHistoryTable,"/scene/clinicianHome.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
-            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
-        }
-    }
-
-
-    /**
      * Populate the table with records
      */
     private void populateTable() {
@@ -96,7 +83,6 @@ public class GUIClinicianHistory {
 
         // add sorted (and filtered) data to the table.
         logHistoryTable.setItems(sortedData);
-
 
     }
 

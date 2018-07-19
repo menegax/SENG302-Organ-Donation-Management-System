@@ -13,7 +13,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
-import main.Main;
 import model.Patient;
 import service.Database;
 import utility.TouchscreenCapable;
@@ -218,7 +217,6 @@ public class GUIPatientRegister implements TouchscreenCapable {
 
             Database.addPatient(new Patient(nhi, firstName, middles, lastName, birth));
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
-            Database.saveToDisk();
             clearFields();
             new Alert(Alert.AlertType.INFORMATION, "Successfully registered!").show();
             try {
