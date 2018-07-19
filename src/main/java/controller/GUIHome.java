@@ -121,11 +121,11 @@ public class GUIHome {
     }
 
     private void setStageTitle() {
-        homeStage.setTitle("Home of " + homeTarget.getNameConcatenated()); //todo switch to just "home"
+        homeStage.setTitle("Home");
 
         // If clinician viewing patient
         if (userControl.getLoggedInUser() instanceof Clinician && userControl.getTargetPatient() != null) {
-            homeStage.setTitle("Viewing patient " + homeTarget.getNameConcatenated());
+            homeStage.setTitle("Viewing patient " + ((Patient) homeTarget).getNhiNumber());
         }
 
     }
