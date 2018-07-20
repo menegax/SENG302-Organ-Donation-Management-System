@@ -19,6 +19,7 @@ import model.Clinician;
 import model.Patient;
 import model.User;
 import service.Database;
+import utility.undoRedo.UndoableStage;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +46,20 @@ public class GUIHome {
 
     @FXML
     public void initialize() {
+        horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty()
+                .addListener((observable1, oldStage, newStage) -> {
+            setUpMenuBar((UndoableStage) newStage);
+            addTabs((UndoableStage) newStage);
+        }));
+    }
+
+    /**
+     * Detects the appropriate user and adds the tabs to the tab bar accordingly
+     * @param stage the stage the horizontal tab is on
+     */
+    private void addTabs(UndoableStage stage) {
         UserControl userControl = new UserControl();
+        stage.setChangingStates(true);
         try {
             if (userControl.getLoggedInUser() instanceof Patient){
                 addTabsPatient();
@@ -59,11 +73,11 @@ public class GUIHome {
                     setUpColouredBar(userControl.getLoggedInUser(), "Clinician");
                 }
             }
-            horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty().addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls", Arrays.toString(e.getStackTrace()));
         }
+        stage.setChangingStates(false);
     }
 
     /**
@@ -94,7 +108,6 @@ public class GUIHome {
                 systemLogger.log(SEVERE, "Failed to create tab", e);
             }
         });
-        newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
         horizontalTabPane.getTabs().add(newTab);
     }
 
@@ -110,6 +123,7 @@ public class GUIHome {
         createTab("View Disease History", "/scene/clinicianDiagnosis.fxml");
         createTab("History", "/scene/patientHistory.fxml");
         createTab("Procedures", "/scene/patientProcedures.fxml");
+
     }
 
 
@@ -154,6 +168,7 @@ public class GUIHome {
      * Creates a native-looking MacOS menu bar for the application
      */
     private void setUpMenuBar(Stage stage) {
+        screenControl.addStageTab(stage, horizontalTabPane);
 
         // Create a new menu bar
         MenuBar bar = new MenuBar();
@@ -201,19 +216,16 @@ public class GUIHome {
         subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
         menu2.getItems().addAll(menu2Item1, subMenuImport);
 
-        // EDIT
-//        Menu menu3 = new Menu("Edit");
-//        MenuItem menu3Item1 = new MenuItem("Undo");
-//        menu3Item1.setAccelerator(screenControl.getUndo());
-//        menu3Item1.setOnAction(event -> ((UndoableStage) stage).undo());
-//        MenuItem menu3Item2 = new MenuItem("Redo");
-//        menu3Item2.setAccelerator(screenControl.getRedo());
-//        menu3Item2.setOnAction(event -> System.out.println("Redo clicked"));
-//        menu3.getItems()
-//                .addAll(menu3Item1, menu3Item2);
+        Menu menu3 = new Menu("Edit");
+        MenuItem menu3Item1 = new MenuItem("Undo");
+        menu3Item1.setAccelerator(screenControl.getUndo());
+        menu3Item1.setOnAction(event -> ((UndoableStage) stage).undo());
+        MenuItem menu3Item2 = new MenuItem("Redo");
+        menu3Item2.setAccelerator(screenControl.getRedo());
+        menu3Item2.setOnAction(event -> ((UndoableStage) stage).redo());
+        menu3.getItems().addAll(menu3Item1, menu3Item2);
 
-        bar.getMenus()
-                .addAll(menu1, menu2);
+        bar.getMenus().addAll(menu1, menu2, menu3);
 
         boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless")
                 .equals("true");
@@ -236,7 +248,7 @@ public class GUIHome {
                 menuBar.getMenus()
                         .clear();
                 menuBar.getMenus()
-                        .addAll(menu1, menu2);
+                        .addAll(menu1, menu2, menu3);
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
             }
         }

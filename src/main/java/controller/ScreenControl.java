@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -40,10 +41,12 @@ public class ScreenControl {
     @Deprecated
     public static Map<String, Parent> scenes = new HashMap<>();
 
-    private static Map<User, Set<Stage>> userStages = new HashMap<>();
-
     @Deprecated
     private static Scene main;
+
+    private static Map<User, Set<Stage>> userStages = new HashMap<>();
+
+    private Map<Stage, TabPane> stageTabs = new HashMap<>();
 
     private static Map<UUID, Stage> applicationStages;
 
@@ -360,6 +363,24 @@ public class ScreenControl {
         catch (IOException e) {
             systemLogger.log(SEVERE, "Failed to recreate login scene");
         }
+    }
+
+    /**
+     * Adds a tabpane to a map of stages to tabpanes
+     * @param stage the stage of the tadpane
+     * @param tabPane the tabpane associated with that stage
+     */
+    public void addStageTab(Stage stage, TabPane tabPane) {
+        stageTabs.put(stage, tabPane);
+    }
+
+    /**
+     * Gets the tab pane of the given stage
+     * @param stage the required stage
+     * @return the TabPane of that stage
+     */
+    public TabPane getTabPane(Stage stage) {
+        return stageTabs.get(stage);
     }
 
 }

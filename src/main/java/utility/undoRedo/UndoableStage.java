@@ -6,16 +6,16 @@ import controller.UndoableController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -25,6 +25,8 @@ public class UndoableStage extends Stage {
 
     private List<StatesHistoryScreen> statesHistoryScreens = new ArrayList<>();
 
+    private Map<StatesHistoryScreen, Tab> tabMap = new HashMap<>();
+
     private int index = -1;
 
     private boolean changingStates = false;
@@ -32,6 +34,8 @@ public class UndoableStage extends Stage {
     private final UUID uuid = UUID.randomUUID();
 
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Undoes the previous action and navigates to the appropriate screen where applicable
@@ -78,6 +82,9 @@ public class UndoableStage extends Stage {
     public void store() {
         if (!changingStates) {
             statesHistoryScreens = new ArrayList<>(statesHistoryScreens.subList(0, index + 1));
+            for (StatesHistoryScreen statesHistoryScreen : statesHistoryScreens) {
+                statesHistoryScreen.notifyStoreComplete();
+            }
         }
     }
 
@@ -86,10 +93,10 @@ public class UndoableStage extends Stage {
      * @param method whether this was called from an undo or redo
      */
     private void navigateToScreen(String method) {
+        Tab newTab = tabMap.get(statesHistoryScreens.get(index));
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/" + (statesHistoryScreens.get(index)).getUndoableScreen().toString() + ".fxml"));
         try {
-            ScreenControl screenControl = ScreenControl.getScreenControl();
-            screenControl.show(uuid, fxmlLoader.load());
+            newTab.setContent(fxmlLoader.load());
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading screen", "Attempted to navigate screens during " + method);
             new Alert(Alert.AlertType.WARNING, "ERROR loading screen", ButtonType.OK).showAndWait();
@@ -98,6 +105,8 @@ public class UndoableStage extends Stage {
         undoRedoControl.setStates(statesHistoryScreens.get(index), controller.getControls());
         undoRedoControl.setStatesHistoryScreen(controller, statesHistoryScreens.get(index));
         statesHistoryScreens.set(index, controller.getStatesHistory());
+        screenControl.getTabPane(this).getSelectionModel().select(newTab);
+        tabMap.put(controller.getStatesHistory(), newTab);
     }
 
     /**
@@ -110,6 +119,7 @@ public class UndoableStage extends Stage {
             index += 1;
             statesHistoryScreens = new ArrayList<>(statesHistoryScreens.subList(0, index));
             statesHistoryScreens.add(statesHistoryScreen);
+            tabMap.put(statesHistoryScreen, screenControl.getTabPane(this).getSelectionModel().getSelectedItem());
         }
     }
 
@@ -128,5 +138,9 @@ public class UndoableStage extends Stage {
      */
     public boolean isChangingStates() {
         return changingStates;
+    }
+
+    public void setChangingStates(Boolean changingStates) {
+        this.changingStates = changingStates;
     }
 }

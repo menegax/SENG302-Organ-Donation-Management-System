@@ -114,12 +114,11 @@ public class StatesHistoryScreen {
      */
     private void createStateHistoriesTextField(Object entry) {
         stateHistories.add(new StateHistoryTextEntry((TextField) entry));
-        ((TextField) entry).textProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    if (!newValue.equals(oldValue)) {
-                        store();
-                    }
-                });
+        ((TextField) entry).textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.equals(oldValue)) {
+                store();
+            }
+        });
         ((TextField) entry).setOnKeyPressed(event -> {
             if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
                 ((TextField) entry).getParent().requestFocus();
@@ -252,12 +251,12 @@ public class StatesHistoryScreen {
      * Stores the current state of the screen
      */
     public void store() {
-//        if (!undone && !redone && !undoableStage.isChangingStates()) {
-//            for (StateHistoryControl stateHistory : stateHistories) {
-//                stateHistory.store();
-//            }
-//            undoableStage.store();
-//        }
+        if (!undone && !redone && !undoableStage.isChangingStates()) {
+            for (StateHistoryControl stateHistory : stateHistories) {
+                stateHistory.store();
+            }
+            undoableStage.store();
+        }
     }
 
 
@@ -292,6 +291,16 @@ public class StatesHistoryScreen {
         }
         redone = false;
         return true;
+    }
+
+    /**
+     * Called when this StatesHistoryScreen's undoable stage completes a store action
+     * Truncates state lists to current index
+     */
+    public void notifyStoreComplete() {
+        for (StateHistoryControl stateHistoryControl : stateHistories) {
+            stateHistoryControl.notifyStoreComplete();
+        }
     }
 
 
