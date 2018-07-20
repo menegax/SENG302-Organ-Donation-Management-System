@@ -50,5 +50,10 @@
          </GridPane.margin>
       </ComboBox>
       <ComboBox fx:id="regionFilter" prefHeight="25.0" prefWidth="210.0" promptText="Region" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+      <ComboBox fx:id="organFilter" prefHeight="25.0" prefWidth="210.0" promptText="Organ" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets right="60.0" />
+         </GridPane.margin>
+      </ComboBox>
    </children>
 </GridPane>
