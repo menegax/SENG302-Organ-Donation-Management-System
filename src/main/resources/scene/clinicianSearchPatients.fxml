@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -8,7 +9,9 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.control.Button?>
 

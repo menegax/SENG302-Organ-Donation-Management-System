@@ -24,6 +24,8 @@ import utility.undoRedo.UndoableStage;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -104,16 +106,18 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * patient's profile view screen in a new window.
      */
     private void setupDoubleClickToPatientEdit() {
+        UserControl userControl = new UserControl();
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
                     .getSelectedItem() != null) {
                 try {
-                    UserControl userControl = new UserControl();
-                    userControl.setTargetPatient(patientDataTable.getSelectionModel()
-                            .getSelectedItem());
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
+                    userControl.setTargetPatient(patientDataTable.getSelectionModel().getSelectedItem());
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     UndoableStage popUpStage = new UndoableStage();
+                    //Set initial popup dimensions
+                    popUpStage.setWidth(1000);
+                    popUpStage.setHeight(700);
                     screenControl.addStage(popUpStage.getUUID(), popUpStage);
                     screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
 
@@ -321,15 +325,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      */
     public GUIClinicianSearchPatients() {
         masterData.addAll(SearchPatients.searchByName(null, 30));
-    }
-
-    public void goToClinicianHome() {
-        try {
-            screenControl.show(patientDataTable, "/scene/clinicianHome.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
-            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
-        }
     }
 
     /**

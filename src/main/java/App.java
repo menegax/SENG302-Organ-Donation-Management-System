@@ -1,5 +1,5 @@
 import cli.CLIMain;
-import main.Main;
+import controller.Main;
 
 import java.util.Arrays;
 import java.util.List;

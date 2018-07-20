@@ -1,6 +1,6 @@
 package controller;
 
-import api.APIHelper;
+import service.APIHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import model.Clinician;
 import model.DrugInteraction;
 import model.Medication;
@@ -20,6 +21,7 @@ import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 import service.TextWatcher;
+import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -27,33 +29,49 @@ import java.io.InvalidObjectException;
 import java.util.*;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientMedications extends UndoableController {
 
     private ListProperty<String> currentListProperty = new SimpleListProperty<>();
+
     private ListProperty<String> historyListProperty = new SimpleListProperty<>();
+
     private ListProperty<String> informationListProperty = new SimpleListProperty<>();
+
     private ArrayList<String> ingredients;
+
     private ArrayList<String> current;
+
     private ArrayList<String> history;
+
     private Patient target;
 
     @FXML
-    public AnchorPane medicationPane;
+    public GridPane medicationPane;
+
     public Button registerMed;
+
     public Button removeMed;
+
     public Button addMed;
+
     public Button deleteMed;
+
     public Button compareMeds;
+
     public Button goBack;
+
     public Button wipeReview;
+
     public Button clearMed;
+
     public ContextMenu contextMenu;
 
     private JsonObject suggestions;
-    private boolean itemSelected = false;
 
+    private boolean itemSelected = false;
 
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
@@ -81,13 +99,16 @@ public class GUIPatientMedications extends UndoableController {
 
     private Patient viewedPatient;
 
+
     /**
      * Removes a medication from the history or current ArrayList and listView
      */
     @FXML
     public void deleteMedication() {
-        ArrayList<String> selections = new ArrayList<>(pastMedications.getSelectionModel().getSelectedItems());
-        selections.addAll(currentMedications.getSelectionModel().getSelectedItems());
+        ArrayList<String> selections = new ArrayList<>(pastMedications.getSelectionModel()
+                .getSelectedItems());
+        selections.addAll(currentMedications.getSelectionModel()
+                .getSelectedItems());
         removeMedication(selections);
     }
 
@@ -97,24 +118,34 @@ public class GUIPatientMedications extends UndoableController {
      */
     @FXML
     public void makeCurrent() {
-        if (pastMedications.getFocusModel().getFocusedItem() == null) {
-            currentMedications.getSelectionModel().clearSelection();
-        } else {
-            moveToCurrent(new ArrayList<>(pastMedications.getSelectionModel().getSelectedItems()));
+        if (pastMedications.getFocusModel()
+                .getFocusedItem() == null) {
+            currentMedications.getSelectionModel()
+                    .clearSelection();
+        }
+        else {
+            moveToCurrent(new ArrayList<>(pastMedications.getSelectionModel()
+                    .getSelectedItems()));
         }
     }
+
 
     /**
      * Swaps a medication in current to history ArrayList and listView
      */
     @FXML
     public void makeHistory() {
-        if (currentMedications.getFocusModel().getFocusedItem() == null) {
-            pastMedications.getSelectionModel().clearSelection();
-        } else {
-            moveToHistory(new ArrayList<>(currentMedications.getSelectionModel().getSelectedItems()));
+        if (currentMedications.getFocusModel()
+                .getFocusedItem() == null) {
+            pastMedications.getSelectionModel()
+                    .clearSelection();
+        }
+        else {
+            moveToHistory(new ArrayList<>(currentMedications.getSelectionModel()
+                    .getSelectedItems()));
         }
     }
+
 
     /**
      * Adds a newly entered medication to the current medications array and the listView for the current medications
@@ -124,7 +155,9 @@ public class GUIPatientMedications extends UndoableController {
         addMedication(newMedication.getText());
     }
 
+
     private UserControl userControl;
+
 
     /**
      * Initializes the Medication GUI pane, adds any medications stored for donor to current and past listViews
@@ -136,11 +169,14 @@ public class GUIPatientMedications extends UndoableController {
         //Register events for when an item is selected from a listView and set selection mode to multiple
         currentMedications.setOnMouseClicked(event -> onSelect(currentMedications));
         pastMedications.setOnMouseClicked(event -> onSelect(pastMedications));
-        pastMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        currentMedications.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        pastMedications.getSelectionModel()
+                .setSelectionMode(SelectionMode.MULTIPLE);
+        currentMedications.getSelectionModel()
+                .setSelectionMode(SelectionMode.MULTIPLE);
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
-        } else if (user instanceof Clinician) {
+        }
+        else if (user instanceof Clinician) {
             viewedPatient = userControl.getTargetPatient();
             loadProfile(viewedPatient.getNhiNumber());
         }
@@ -150,6 +186,7 @@ public class GUIPatientMedications extends UndoableController {
         }};
         statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS);
     }
+
 
     /**
      * Loads the donor medication GUI pane with all logged-in patient medication data listed in listViews
@@ -172,10 +209,14 @@ public class GUIPatientMedications extends UndoableController {
             refreshReview();
             addActionListeners();
             refreshReview();
-        } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", new String[]{"Attempted to load patient profile", target.getNhiNumber()});
+        }
+        catch (InvalidObjectException e) {
+            userActions.log(SEVERE,
+                    "Error loading logged in user",
+                    new String[] { "Attempted to load patient profile", target.getNhiNumber() });
         }
     }
+
 
     /**
      * Sets a list of suggestions given a partially matching string
@@ -184,23 +225,27 @@ public class GUIPatientMedications extends UndoableController {
      */
     private void addActionListeners() {
         TextWatcher textWatcher = new TextWatcher();
-        newMedication.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.equals(oldValue)) {
-                textWatcher.onTextChange(); //reset timer, user hasn't finished typing yet
-            }
-            if (itemSelected) {
-                itemSelected = false; //reset
-            }
-            if (!newMedication.getText().equals("") && !itemSelected) { //don't make an empty api call. will crash FX thread()) {
-                try {
-                    textWatcher.afterTextChange(GUIPatientMedications.class.getMethod("autoComplete"), this); //start timer
+        newMedication.textProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (!newValue.equals(oldValue)) {
+                        textWatcher.onTextChange(); //reset timer, user hasn't finished typing yet
+                    }
+                    if (itemSelected) {
+                        itemSelected = false; //reset
+                    }
+                    if (!newMedication.getText()
+                            .equals("") && !itemSelected) { //don't make an empty api call. will crash FX thread()) {
+                        try {
+                            textWatcher.afterTextChange(GUIPatientMedications.class.getMethod("autoComplete"), this); //start timer
 
-                } catch (NoSuchMethodException e) {
-                    userActions.log(Level.SEVERE, "No method exists for autocomplete", "Attempted to make API call"); // MAJOR ISSUE HERE!
-                }
-            }
-        });
+                        }
+                        catch (NoSuchMethodException e) {
+                            userActions.log(SEVERE, "No method exists for autocomplete", "Attempted to make API call"); // MAJOR ISSUE HERE!
+                        }
+                    }
+                });
     }
+
 
     /**
      * Runs the updating of UI elements and API call
@@ -208,10 +253,12 @@ public class GUIPatientMedications extends UndoableController {
     @SuppressWarnings("WeakerAccess")
     public void autoComplete() {
         Platform.runLater(() -> { // run this on the FX thread (next available)
-            getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread
+            getDrugSuggestions(newMedication.getText()
+                    .trim()); //possibly able to run this on the timer thread
             displayDrugSuggestions();//UPDATE UI
         });
     }
+
 
     /**
      * Sets a list of suggestions given a partially matching string
@@ -222,26 +269,33 @@ public class GUIPatientMedications extends UndoableController {
         APIHelper apiHelper = new APIHelper();
         try {
             suggestions = apiHelper.getMapiDrugSuggestions(query);
-        } catch (IOException exception) {
+        }
+        catch (IOException exception) {
             suggestions = null;
             userActions.log(Level.WARNING, "Illegal characters in query");
         }
     }
 
+
     /**
      * Display the drug suggestions in the context menu
      */
     private void displayDrugSuggestions() {
-        contextMenu.getItems().clear();
+        contextMenu.getItems()
+                .clear();
         List<String> suggestionArray = new ArrayList<>();
-        suggestions.get("suggestions").getAsJsonArray().forEach((suggestion) -> suggestionArray.add(suggestion.getAsString()));
+        suggestions.get("suggestions")
+                .getAsJsonArray()
+                .forEach((suggestion) -> suggestionArray.add(suggestion.getAsString()));
         Collections.shuffle(suggestionArray); //shuffle array so each time results are slightly different (to combat not being able to view all)
         for (int i = 0; i < 10 && i < suggestionArray.size(); i++) {
             MenuItem item = createMenuItem(suggestionArray.get(i));
-            contextMenu.getItems().add(item);
+            contextMenu.getItems()
+                    .add(item);
         }
         contextMenu.show(newMedication, Side.BOTTOM, 0, 0);
     }
+
 
     /**
      * Create menu items to display inside the context menu
@@ -251,13 +305,14 @@ public class GUIPatientMedications extends UndoableController {
      */
     private MenuItem createMenuItem(String suggestion) {
         Label menuLabel = new Label(suggestion);//create label with suggestion
-        menuLabel.setPrefWidth(newMedication.getPrefWidth() - 30);
+        menuLabel.setPrefWidth(newMedication.getWidth() - 30);
         menuLabel.setWrapText(true);
         MenuItem item = new MenuItem();
         item.setGraphic(menuLabel);
         item.setOnAction((ae) -> selectFromAutoComplete(menuLabel.getText()));
         return item;
     }
+
 
     /**
      * Sets the text field to the medication selected
@@ -271,6 +326,7 @@ public class GUIPatientMedications extends UndoableController {
         itemSelected = true; //indicate that an API does not need to be made
     }
 
+
     /**
      * Retrieves the medications stored in the currentMedications ArrayList.
      * Displays the retrieved medications to the currentMedications listView.
@@ -278,10 +334,13 @@ public class GUIPatientMedications extends UndoableController {
     private void viewCurrentMedications() {
         clearSelections();
         current = new ArrayList<>();
-        target.getCurrentMedications().forEach((med) -> current.add(String.valueOf(med)));
+        target.getCurrentMedications()
+                .forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set(FXCollections.observableArrayList(current));
-        currentMedications.itemsProperty().bind(currentListProperty);
+        currentMedications.itemsProperty()
+                .bind(currentListProperty);
     }
+
 
     /**
      * Retrieves the medications stored in the medicationHistory ArrayList
@@ -290,10 +349,13 @@ public class GUIPatientMedications extends UndoableController {
     private void viewPastMedications() {
         clearSelections();
         history = new ArrayList<>();
-        target.getMedicationHistory().forEach((med) -> history.add(String.valueOf(med)));
+        target.getMedicationHistory()
+                .forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set(FXCollections.observableArrayList(history));
-        pastMedications.itemsProperty().bind(historyListProperty);
+        pastMedications.itemsProperty()
+                .bind(historyListProperty);
     }
+
 
     /**
      * Adds a new medication to the currentMedications ArrayList
@@ -302,28 +364,42 @@ public class GUIPatientMedications extends UndoableController {
      * @param medication The selected medication being added to the current ArrayList and listView
      */
     private void addMedication(String medication) {
-        if (!medication.equals("Enter medicine") && !medication.equals("") && !medication.substring(0, 1).equals(" ")) {
-            medication = medication.substring(0, 1).toUpperCase() + medication.substring(1).toLowerCase();
+        if (!medication.equals("Enter medicine") && !medication.equals("") && !medication.substring(0, 1)
+                .equals(" ")) {
+            medication = medication.substring(0, 1)
+                    .toUpperCase() + medication.substring(1)
+                    .toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
-                target.getCurrentMedications().add(new Medication(medication));
-                userActions.log(Level.INFO, "Added medication: " + medication, new String[]{"Attempted to add medication: " + medication, target.getNhiNumber()});
+                target.getCurrentMedications()
+                        .add(new Medication(medication));
+                userActions.log(Level.INFO,
+                        "Added medication: " + medication,
+                        new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
                 viewCurrentMedications();
                 newMedication.clear();
-            } else if (history.contains(medication) && !current.contains(medication)) {
+            }
+            else if (history.contains(medication) && !current.contains(medication)) {
                 moveToCurrent(new ArrayList<>(Collections.singleton(medication)));
                 newMedication.clear();
-            } else {
-                userActions.log(Level.WARNING, "Medication already exists", new String[]{"Attempted to add medication: " + medication, target.getNhiNumber()});
+            }
+            else {
+                userActions.log(Level.WARNING,
+                        "Medication already exists",
+                        new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
                 Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is already registered");
                 err.show();
             }
-        } else {
-            userActions.log(Level.WARNING, "Invalid medication registration", new String[]{"Attempted to add medication: " + medication, target.getNhiNumber()});
+        }
+        else {
+            userActions.log(Level.WARNING,
+                    "Invalid medication registration",
+                    new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
             Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is invalid for registration");
             err.show();
         }
     }
+
 
     /**
      * Removes a selected medication from the medicationHistory ArrayList
@@ -334,23 +410,32 @@ public class GUIPatientMedications extends UndoableController {
     private void removeMedication(ArrayList<String> medications) {
         for (String medication : medications) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confirm deletion of " + medication + "?");
-            final Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+            final Button dialogOK = (Button) alert.getDialogPane()
+                    .lookupButton(ButtonType.OK);
             dialogOK.addEventFilter(ActionEvent.ACTION, event -> performDelete(medication));
             alert.show();
         }
     }
+
 
     /**
      * Called when the user confirms the deletion of the selected medication(s) in the alert window.
      */
     private void performDelete(String medication) {
         if (history.contains(medication)) {
-            target.getMedicationHistory().remove(history.indexOf(medication));
-            userActions.log(Level.INFO, "Deleted medication: " + medication, new String[]{"Attempted to delete medication: " + medication, target.getNhiNumber()});
+            target.getMedicationHistory()
+                    .remove(history.indexOf(medication));
+            userActions.log(Level.INFO,
+                    "Deleted medication: " + medication,
+                    new String[] { "Attempted to delete medication: " + medication, target.getNhiNumber() });
             viewPastMedications();
-        } else if (current.contains(medication)) {
-            target.getCurrentMedications().remove(current.indexOf(medication));
-            userActions.log(Level.INFO, "Deleted medication: " + medication, new String[]{"Attempted to delete medication: " + medication, target.getNhiNumber()});
+        }
+        else if (current.contains(medication)) {
+            target.getCurrentMedications()
+                    .remove(current.indexOf(medication));
+            userActions.log(Level.INFO,
+                    "Deleted medication: " + medication,
+                    new String[] { "Attempted to delete medication: " + medication, target.getNhiNumber() });
 
             viewCurrentMedications();
         }
@@ -366,17 +451,22 @@ public class GUIPatientMedications extends UndoableController {
     private void moveToCurrent(ArrayList<String> medications) {
         for (String medication : medications) {
             if (history.contains(medication)) {
-                target.getMedicationHistory().remove(history.indexOf(medication));
+                target.getMedicationHistory()
+                        .remove(history.indexOf(medication));
 
                 if (!current.contains(medication)) {
-                    target.getCurrentMedications().add(new Medication(medication));
+                    target.getCurrentMedications()
+                            .add(new Medication(medication));
                     viewCurrentMedications();
                 }
-                userActions.log(Level.INFO, "Moved medication to current: " + medication, new String[]{"Attempted to move medication " + medication + " to current medications", target.getNhiNumber()});
+                userActions.log(Level.INFO,
+                        "Moved medication to current: " + medication,
+                        new String[] { "Attempted to move medication " + medication + " to current medications", target.getNhiNumber() });
                 viewPastMedications();
             }
         }
     }
+
 
     /**
      * Removes a selected medication from medicationHistory ArrayList and adds the medication to currentMedications ArrayList
@@ -387,17 +477,22 @@ public class GUIPatientMedications extends UndoableController {
     private void moveToHistory(ArrayList<String> medications) {
         for (String medication : medications) {
             if (current.contains(medication)) {
-                target.getCurrentMedications().remove(current.indexOf(medication));
+                target.getCurrentMedications()
+                        .remove(current.indexOf(medication));
 
                 if (!history.contains(medication)) {
-                    target.getMedicationHistory().add(new Medication(medication));
+                    target.getMedicationHistory()
+                            .add(new Medication(medication));
                     viewPastMedications();
                 }
-                userActions.log(Level.INFO, "Moved medication to past: " + medication, new String[]{"Attempted to move medication " + medication + " to past medications", target.getNhiNumber()});
+                userActions.log(Level.INFO,
+                        "Moved medication to past: " + medication,
+                        new String[] { "Attempted to move medication " + medication + " to past medications", target.getNhiNumber() });
                 viewCurrentMedications();
             }
         }
     }
+
 
     /**
      * Runs when an item is selected within a listView
@@ -406,14 +501,18 @@ public class GUIPatientMedications extends UndoableController {
      * @param listView The listView of the selected item
      */
     private void onSelect(ListView listView) {
-        if (listView.getSelectionModel().getSelectedItems().size() >= 1) {
-            for (Object item : listView.getSelectionModel().getSelectedItems()) {
+        if (listView.getSelectionModel()
+                .getSelectedItems()
+                .size() >= 1) {
+            for (Object item : listView.getSelectionModel()
+                    .getSelectedItems()) {
                 if (item != null) {
                     loadMedicationIngredients(item.toString());
                 }
             }
         }
     }
+
 
     /**
      * Shifts an already existing ingredient/interaction listing entry to the top of the list
@@ -434,6 +533,7 @@ public class GUIPatientMedications extends UndoableController {
         }
     }
 
+
     /**
      * Fetches the ingredients from the APIHelper, then converts the results into a temporary list.
      * The list, after having a header included, is then added to existing listing of other medicine
@@ -451,16 +551,20 @@ public class GUIPatientMedications extends UndoableController {
             try {
                 if (medication.length() == 1) {
                     getDrugSuggestions(medication);
-                } else {
+                }
+                else {
                     getDrugSuggestions(Collections.max(new ArrayList<>(Arrays.asList(medication.split(" ")))));
                 }
 
-                if (suggestions.get("suggestions").toString().contains(medication)) {
+                if (suggestions.get("suggestions")
+                        .toString()
+                        .contains(medication)) {
                     JsonArray response = helper.getMapiDrugIngredients(medication);
                     response.forEach((element) -> newIngredients.add(element.getAsString()));
                     hasIngredients = true;
                 }
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 hasIngredients = false;
             }
 
@@ -469,27 +573,34 @@ public class GUIPatientMedications extends UndoableController {
             }
             newIngredients.add("");
             ingredients.addAll(0, newIngredients);
-        } else {
+        }
+        else {
             int index = ingredients.indexOf("Ingredients for '" + medication + "': ");
             moveToTopInformationList(index);
         }
         displayIngredients(ingredients);
     }
 
+
     /**
      * When activated displays the interactions between the two most recently selected medications
      */
     private void displayInteractions(HashMap<String, Set<String>> interactions, String drugOne, String drugTwo) {
-        Set<String> keys = interactions.keySet();
-        ingredients.clear();
-        ingredients.add("Interactions for " + drugOne + " & " + drugTwo);
-        ingredients.add("");
-        for (String key : keys) {
-            interactions.get(key).forEach((interaction) ->
-                    ingredients.add(interaction.replace("\"", "") + "  (" + key + ")"));
+        if (interactions != null) {
+            Set<String> keys = interactions.keySet();
+            ingredients.clear();
+            ingredients.add("Interactions for " + drugOne + " & " + drugTwo);
+            ingredients.add("");
+            for (String key : keys) {
+                interactions.get(key)
+                        .forEach((interaction) -> ingredients.add(interaction.replace("\"", "") + "  (" + key + ")"));
+            }
+            displayIngredients(ingredients);
+        } else {
+            new Alert(Alert.AlertType.ERROR, "Unable to retrieve interactions between selected medications", ButtonType.OK).show();
         }
-        displayIngredients(ingredients);
     }
+
 
     /**
      * When activated displays the interactions between the two most recently selected medications
@@ -498,22 +609,26 @@ public class GUIPatientMedications extends UndoableController {
     public void reviewInteractions() {
         Alert alert = new Alert(Alert.AlertType.WARNING, "Drug interactions not available. Please select 2 medications.");
         ArrayList<String> selectedMedications = new ArrayList<String>() {{
-            addAll(currentMedications.getSelectionModel().getSelectedItems());
-            addAll(pastMedications.getSelectionModel().getSelectedItems());
+            addAll(currentMedications.getSelectionModel()
+                    .getSelectedItems());
+            addAll(pastMedications.getSelectionModel()
+                    .getSelectedItems());
         }};
         if (selectedMedications.size() == 2) { //if two are selected
             try {
                 DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1), viewedPatient);
                 displayInteractions(interaction.getInteractionsWithDurations(), selectedMedications.get(0), selectedMedications.get(1));
-            } catch (IOException e) {
-                alert.setContentText("Drug interactions not available, either this study has not been completed or" +
-                        " drugs provided don't exist.");
+            }
+            catch (IOException e) {
+                alert.setContentText("Drug interactions not available, either this study has not been completed or" + " drugs provided don't exist.");
                 alert.show();
             }
-        } else {
+        }
+        else {
             alert.show();
         }
     }
+
 
     /**
      * Takes a string list of ingredients, and binds it to the medicineInformation listView to be displayed
@@ -522,22 +637,8 @@ public class GUIPatientMedications extends UndoableController {
      */
     private void displayIngredients(List<String> ingredients) {
         informationListProperty.set(FXCollections.observableList(ingredients));
-        medicineInformation.itemsProperty().bind(informationListProperty);
-    }
-
-    /**
-     * Button for clearing each currently selected medication from being selected on activation
-     * Navigates from the Medication panel to the home panel after 'back' is selected, saves medication log
-     */
-    @FXML
-    public void goToProfile() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-        try {
-            ScreenControl.loadPopUpPane(medicationPane.getScene(), fxmlLoader);
-        } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Error loading profile screen in popup", new String[]{"Attempted to navigate from the edit page to the profile page in popup", target.getNhiNumber()});
-            new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
-        }
+        medicineInformation.itemsProperty()
+                .bind(informationListProperty);
     }
 
     /**
@@ -545,15 +646,19 @@ public class GUIPatientMedications extends UndoableController {
      */
     @FXML
     public void clearSelections() {
-        pastMedications.getSelectionModel().clearSelection();
-        currentMedications.getSelectionModel().clearSelection();
-        medicineInformation.getSelectionModel().clearSelection();
+        pastMedications.getSelectionModel()
+                .clearSelection();
+        currentMedications.getSelectionModel()
+                .clearSelection();
+        medicineInformation.getSelectionModel()
+                .clearSelection();
+        refreshReview();
     }
 
+
     /**
-     * Button for clearing the information being currently displayed on the medicine information ListView on activation
+     * Clears the information being currently displayed on the medicine information ListView on activation
      */
-    @FXML
     private void refreshReview() {
         ingredients = new ArrayList<>();
         displayIngredients(ingredients);

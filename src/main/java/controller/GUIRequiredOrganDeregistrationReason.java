@@ -194,7 +194,7 @@ public class GUIRequiredOrganDeregistrationReason {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         }
         if (confirmed){
-            Stage reasonStage = (Stage)requiredOrganDeregistrationReasonPane.getScene().getWindow();
+            Stage reasonStage = (Stage)reasons.getScene().getWindow();
             reasonStage.close();
         }
         //GUIPatientUpdateRequirements.setClosed(true);

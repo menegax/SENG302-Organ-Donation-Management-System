@@ -2,8 +2,11 @@ package model_test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.logging.Level;
 
+import model.Disease;
 import model.Patient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -12,6 +15,7 @@ import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 
@@ -211,6 +215,60 @@ public class PatientTest {
     }
 
     /**
+     * Checks that the patient can successfully sort its current and past disease lists
+     */
+    @Test
+    public void testDiseaseSorting() {
+        // Define diseases
+        Disease noneToCured = new Disease("test1", null);
+        Disease chronicToCured = new Disease("test2", GlobalEnums.DiseaseState.CHRONIC);
+        Disease curedToNone = new Disease("test3", GlobalEnums.DiseaseState.CURED);
+        Disease curedToChronic = new Disease("test4", GlobalEnums.DiseaseState.CHRONIC);
+        Disease noneToChronic = new Disease("test5", null);
+        Disease none = new Disease("test6", null);
+        Disease chronic = new Disease("test7", GlobalEnums.DiseaseState.CHRONIC);
+        Disease cured = new Disease("test8", GlobalEnums.DiseaseState.CURED);
+
+        // Add diseases to patient
+        testPatient.setCurrentDiseases(new ArrayList<Disease>(){{
+            add(noneToCured);
+            add(chronicToCured);
+            add(noneToChronic);
+            add(none);
+            add(chronic);
+        }});
+        testPatient.setPastDiseases(new ArrayList<Disease>(){{
+            add(curedToNone);
+            add(curedToChronic);
+            add(cured);
+        }});
+
+        // Edit disease tags
+        noneToCured.setDiseaseState(GlobalEnums.DiseaseState.CURED);
+        chronicToCured.setDiseaseState(GlobalEnums.DiseaseState.CURED);
+        curedToNone.setDiseaseState(null);
+        curedToChronic.setDiseaseState(GlobalEnums.DiseaseState.CHRONIC);
+        noneToChronic.setDiseaseState(GlobalEnums.DiseaseState.CHRONIC);
+
+        // Check sort outcome
+        testPatient.sortDiseases();
+        List<Disease> currentDiseasesExpected = new ArrayList<Disease>() {{
+            add(curedToNone);
+            add(curedToChronic);
+            add(noneToChronic);
+            add(none);
+            add(chronic);
+        }};
+        List<Disease> pastDiseasesExpected = new ArrayList<Disease>() {{
+            add(noneToCured);
+            add(chronicToCured);
+            add(cured);
+        }};
+        checkSameDiseases(currentDiseasesExpected, testPatient.getCurrentDiseases());
+        checkSameDiseases(pastDiseasesExpected, testPatient.getPastDiseases());
+    }
+
+    /**
      * Reset the logging level
      */
     @AfterClass
@@ -274,4 +332,17 @@ public class PatientTest {
         testPatient.setLastName("Bloggs");
     }
 
+    /**
+     * Runs asserts that the same diseases occur in two lists irrespective of order
+     * @param expectedDiseases the list of expected diseases
+     * @param actualDiseases the list of actual diseases
+     */
+    private void checkSameDiseases(List<Disease> expectedDiseases, List<Disease> actualDiseases) {
+        assertEquals(expectedDiseases.size(), actualDiseases.size());
+        expectedDiseases.sort(Comparator.comparing(Disease::getDiseaseName));
+        actualDiseases.sort(Comparator.comparing(Disease::getDiseaseName));
+        for (int i = 0; i < expectedDiseases.size(); i++) {
+            assertEquals(expectedDiseases.get(i), actualDiseases.get(i));
+        }
+    }
 }

@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="loginPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUILogin">
+<AnchorPane fx:id="loginPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUILogin">
    <children>
-      <Label layoutX="224.0" layoutY="49.0" styleClass="title" text="Big Pharma">
+      <Label layoutX="227.0" layoutY="60.0" styleClass="title" text="Big Pharma">
          <font>
             <Font size="27.0" />
          </font>

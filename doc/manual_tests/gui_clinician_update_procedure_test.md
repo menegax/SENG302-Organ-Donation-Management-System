@@ -47,3 +47,17 @@
 3. In the description textbox, enter `Conducted brain surgery`
 4. Set the date picker to two days in the past
 5. Click `Done` to add the procedure
+
+##Test History
+
+###18/07/2018 - Maree
+
+Update Procedure Summary Test: Pass
+
+Update Procedure Organs Test: Pass
+
+Cancel Update Test: Pass
+
+Add Procedure: Pass (no error)
+
+
