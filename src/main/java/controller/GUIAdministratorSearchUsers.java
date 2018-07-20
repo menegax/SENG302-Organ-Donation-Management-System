@@ -86,11 +86,10 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     private void setupDoubleClickToUserEdit() {
         // Add double-click event to rows
         userDataTable.setOnMouseClicked(click -> {
-            if (click.getClickCount() == 2 && userDataTable.getSelectionModel()
-                    .getSelectedItem() != null) {
+        	UserControl userControl = new UserControl();
+        	User selected = userDataTable.getSelectionModel().getSelectedItem();
+            if (click.getClickCount() == 2 && selected != null && selected != userControl.getLoggedInUser()) {
                 try {
-                    UserControl userControl = new UserControl();
-                    User selected = userDataTable.getSelectionModel().getSelectedItem();
                     userControl.setTargetUser(selected);
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     UndoableStage popUpStage = new UndoableStage();
