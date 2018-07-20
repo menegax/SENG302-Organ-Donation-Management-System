@@ -14,7 +14,7 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<GridPane fx:id="userRegisterPane" prefHeight="400.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientRegister">
+<GridPane fx:id="userRegisterPane" prefHeight="400.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIUserRegister">
    <children>
       <Label fx:id="backButton" onMouseClicked="#goBackToLogin" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
       <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="2">

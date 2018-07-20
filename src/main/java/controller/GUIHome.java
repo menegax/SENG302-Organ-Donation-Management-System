@@ -161,7 +161,7 @@ public class GUIHome {
     private void addTabsAdministrator() throws IOException {
         createTab("Profile", "/scene/administratorProfile.fxml");
         createTab("Update", "/scene/administratorProfileUpdate.fxml");
-        createTab("Register User", "/scene/patientRegister.fxml");
+        createTab("Register User", "/scene/userRegister.fxml");
         createTab("Search Users", "/scene/administratorSearchUsers.fxml");
         createTab("Transplant Waiting List", "/scene/clinicianWaitingList.fxml");
         createTab("History", "/scene/adminHistory.fxml");

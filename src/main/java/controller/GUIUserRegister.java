@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientRegister {
+public class GUIUserRegister {
 
     public Button doneButton;
 
