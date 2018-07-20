@@ -36,7 +36,7 @@ public class Database {
      */
     public static void addPatient(Patient newPatient) throws IllegalArgumentException {
         try {
-            newPatient.ensureValidNhi();
+            newPatient.ensureValidNhi(newPatient.getNhiNumber());
             newPatient.ensureUniqueNhi();
             patients.add(newPatient);
             SearchPatients.addIndex(newPatient);

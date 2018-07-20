@@ -1,7 +1,9 @@
 package model;
 
+import com.univocity.parsers.annotations.Convert;
 import com.univocity.parsers.annotations.Parsed;
 import service.Database;
+import utility.CSVParsing.DateConverterCSV;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
@@ -33,29 +35,42 @@ public class Patient extends User {
     private String preferredName;
 
     @Parsed(field = "date_of_birth")
+    @Convert(conversionClass = DateConverterCSV.class)
     private LocalDate birth;
 
+    @Parsed(field = "date_of_death")
+    @Convert(conversionClass = DateConverterCSV.class)
     private LocalDate death;
 
-
+  //  @Parsed(field = "birth_gender")
     private BirthGender birthGender;
 
+  //  @Parsed(field = "gender")
     private PreferredGender preferredGender;
 
+    @Parsed(field = "height")
     private double height; // Height in meters
 
+    @Parsed(field = "weight")
     private double weight; // Weight in kilograms
 
+    //@Parsed(field = "blood_type")
+   // @EnumOptions(customElement = BloodGroup.class)
     private BloodGroup bloodGroup;
 
+    @Parsed(field = "street_number")
     private String street1;
 
     private String street2;
 
+    @Parsed(field = "neighbourhood")
     private String suburb;
 
+  //  @Parsed(field = "region")
+   // @Convert(conversionClass = )
     private Region region;
 
+    @Parsed(field = "zip_code")
     private int zip;
 
     private ArrayList<Organ> donations;
@@ -267,7 +282,7 @@ public class Patient extends User {
      *
      * @exception IllegalArgumentException when the nhi number given is not in the valid format
      */
-    public void ensureValidNhi() throws IllegalArgumentException {
+    public void ensureValidNhi(String nhiNumber) throws IllegalArgumentException {
         if (!Pattern.matches("[A-Z]{3}[0-9]{4}", nhiNumber.toUpperCase())) {
             throw new IllegalArgumentException(
                     "NHI number " + nhiNumber.toUpperCase() + " is not in the correct format (3 letters followed by 4 numbers)");
@@ -688,8 +703,8 @@ public class Patient extends User {
     }
 
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
-        ensureValidNhi();
-        if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
+        ensureValidNhi(nhiNumber);
+        if (this.nhiNumber != null && !this.nhiNumber.equals(nhiNumber.toUpperCase())) {
             SearchPatients.removeIndex(this);
         	this.nhiNumber = nhiNumber.toUpperCase();
             SearchPatients.addIndex(this);
