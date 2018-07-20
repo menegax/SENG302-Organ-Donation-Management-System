@@ -44,10 +44,11 @@
             <Insets bottom="60.0" left="60.0" right="60.0" />
          </GridPane.margin>
        </TableView>
-      <ComboBox fx:id="birthGender" prefHeight="25.0" prefWidth="210.0" promptText="Birth Gender" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+      <ComboBox fx:id="birthGenderFilter" prefHeight="25.0" prefWidth="210.0" promptText="Birth Gender" GridPane.halignment="CENTER" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="60.0" />
          </GridPane.margin>
       </ComboBox>
+      <ComboBox fx:id="regionFilter" prefHeight="25.0" prefWidth="210.0" promptText="Region" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
    </children>
 </GridPane>
