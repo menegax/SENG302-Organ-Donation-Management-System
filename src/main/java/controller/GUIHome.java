@@ -66,10 +66,13 @@ public class GUIHome {
                     setUpColouredBar(userControl.getTargetUser(), "Patient");
                 } else if (userControl.getTargetUser() instanceof Clinician) {
                     addTabsClinicianAdministrator();
-                    setUpColouredBar(userControl.getLoggedInUser(), "Clinician");
-                } else {
+                    setUpColouredBar(userControl.getTargetUser(), "Clinician");
+                } else if (userControl.getTargetUser() instanceof Administrator) {
                     addTabsAdministrator();
-                    setUpColouredBar(userControl.getLoggedInUser(), "Administrator");
+                    setUpColouredBar(userControl.getTargetUser(), "Administrator");
+                } else {
+                	addTabsAdministrator();
+                	setUpColouredBar(userControl.getLoggedInUser(), "Administrator");
                 }
             }
             horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty().addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));

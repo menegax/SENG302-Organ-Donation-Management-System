@@ -145,7 +145,7 @@ public class Database {
      */
     public static boolean isAdministratorInDb(String username) {
         for (Administrator a : getAdministrators()) {
-            if (a.getUsername().equals(username)) {
+            if (a.getUsername().equals(username.toUpperCase())) {
                 return true;
             }
         }
@@ -225,7 +225,7 @@ public class Database {
         for (Administrator admin : administrators) {
             if (admin.getUsername().toLowerCase().equals(administrator.getUsername().toLowerCase())) {
                 userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field username", "Attempted to add an administrator");
-                throw new IllegalArgumentException("staffID");
+                throw new IllegalArgumentException("admin username");
             }
         }
         administrators.add(administrator);
