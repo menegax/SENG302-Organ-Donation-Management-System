@@ -160,7 +160,7 @@ public class SearchPatientsTest {
     		}
     	}
     	
-    	numResults = 60;
+    	numResults = 30;
     	
     	// For a number of patients more than 30
     	assertTrue(Database.getPatients().size() > 30);
