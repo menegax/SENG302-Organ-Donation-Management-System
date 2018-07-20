@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAdministratorSearchUsers">
    <children>
       <TextField fx:id="searchEntry" prefHeight="27.0" prefWidth="46.0" promptText="Search by name" GridPane.columnSpan="2">
          <GridPane.margin>

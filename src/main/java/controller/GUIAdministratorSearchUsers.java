@@ -119,6 +119,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
      */
     private FilteredList<User> setupTableColumnsAndData() {
     	UserTypes[] types = new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN};
+    	masterData.clear();
     	masterData.addAll(searcher.getDefaultResults(types));
         // initialize columns
         columnName.setCellValueFactory(d -> d.getValue()
@@ -138,19 +139,16 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         });
 
         // wrap ObservableList in a FilteredList
-        FilteredList<User> filteredData = new FilteredList<>(masterData, new Predicate<User>() {
-            @Override
-            public boolean test(User d) {
-                return true;
-            }
-        });
+        FilteredList<User> filteredData = new FilteredList<>(masterData, d -> true);
 
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             masterData.clear();
-            List<User> results = new ArrayList<User>();
-            for (User user : results) {
-            	masterData.add(user);
+            List<User> results;
+            if (newValue == null || newValue.isEmpty()) {
+                results = searcher.getDefaultResults(new UserTypes[] { UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN });
+            } else {
+                results = searcher.search(newValue, new UserTypes[] { UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN }, NUMRESULTS);
             }
             masterData.addAll(results);
             filteredData.setPredicate(patient -> true);
