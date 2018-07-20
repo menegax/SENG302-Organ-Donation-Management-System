@@ -75,6 +75,7 @@ public class GUIHome {
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

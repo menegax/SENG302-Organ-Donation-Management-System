@@ -8,7 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import model.Administrator;
 import model.Clinician;
@@ -69,7 +69,7 @@ public class GUIPatientRegister {
     private RadioButton administratorButton;
 
     @FXML
-    private AnchorPane patientRegisterAnchorPane;
+    private GridPane userRegisterPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -94,6 +94,7 @@ public class GUIPatientRegister {
             regionRegister.setItems(regions);
             backButton.setVisible(false);
             backButton.setDisable(true);
+            userRegisterPane.getRowConstraints().get(0).setMaxHeight(0);
         } else {
             patientButton.setDisable(true);
             patientButton.setVisible(false);
@@ -104,7 +105,7 @@ public class GUIPatientRegister {
         }
 
         // Enter key
-        patientRegisterAnchorPane.setOnKeyPressed(e -> {
+        userRegisterPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 register();
             }
