@@ -1,16 +1,15 @@
 package model;
 
-import com.j256.simplecsv.common.CsvColumn;
+import com.univocity.parsers.annotations.Parsed;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
-import utility.LocalDateConverter;
 import utility.PatientActionRecord;
 import utility.SearchPatients;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,20 +22,19 @@ public class Patient extends User {
 
     private final Timestamp CREATED;
 
-    @CsvColumn(columnName = "first_name")
+    @Parsed(field = "first_names")
     private String firstName;
 
     private ArrayList<String> middleNames;
 
-    @CsvColumn(columnName = "last_name")
+    @Parsed(field = "last_names")
     private String lastName;
 
     private String preferredName;
 
-    @CsvColumn(columnName = "date_of_birth", converterClass = LocalDateConverter.class)
+    @Parsed(field = "date_of_birth")
     private LocalDate birth;
 
-    @CsvColumn(columnName = "date_of_death")
     private LocalDate death;
 
 
@@ -66,7 +64,7 @@ public class Patient extends User {
 
     private Timestamp modified;
 
-    @CsvColumn(columnName = "first_name")
+    @Parsed(field = "nhi")
     private String nhiNumber;
 
     private ArrayList<Medication> currentMedications = new ArrayList<>();
@@ -102,6 +100,11 @@ public class Patient extends User {
     private ArrayList<Disease> pastDiseases = new ArrayList<>();
 
     private GlobalEnums.Organ removedOrgan;
+
+    public Patient() {
+        this.CREATED = new Timestamp(System.currentTimeMillis());
+        this.modified = CREATED;
+    }
 
     /**
      * Constructor for the patient class. Initializes basic attributes
@@ -332,12 +335,12 @@ public class Patient extends User {
 
     public void setFirstName(String firstName) {
         if (this.firstName == null || (!firstName.equals(this.firstName))) {
-        	SearchPatients.removeIndex(this);
+        	//SearchPatients.removeIndex(this);
             this.firstName = firstName;
             if (getPreferredName() == null) {
                 setPreferredName( firstName );
             }
-            SearchPatients.addIndex(this);
+            //SearchPatients.addIndex(this);
             patientModified();
         }
     }
@@ -361,9 +364,9 @@ public class Patient extends User {
 
     public void setLastName(String lastName) {
         if (this.lastName == null || (!lastName.equals(this.lastName))) {
-        	SearchPatients.removeIndex(this);
+        	//SearchPatients.removeIndex(this);
             this.lastName = lastName;
-            SearchPatients.addIndex(this);
+            //SearchPatients.addIndex(this);
             patientModified();
         }
     }
