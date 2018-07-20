@@ -166,7 +166,7 @@ public class SearchPatients {
      *
      * @return First num_results patients from a alphabetical ordering.
      */
-    public static ArrayList<Patient> getDefaultResults() {
+    private static ArrayList<Patient> getDefaultResults(int numResults) {
         totalResults = new ArrayList<>(Database.getPatients());
         totalResults.sort((o1, o2) -> { // sort by concatenated name
             int comparison;
@@ -174,10 +174,8 @@ public class SearchPatients {
                     .compareTo(o2.getNameConcatenated());
             return comparison;
         });
-		if (totalResults.size() > 30) {
-            totalResults = new ArrayList<>(totalResults.subList(0, 30)); // truncate into size num_results
-        }
-    	return totalResults;
+        return new ArrayList<>(totalResults.subList(0, Math.min(totalResults.size(), numResults))); // truncate into size num_results
+       
     }
 
     /**
@@ -205,8 +203,8 @@ public class SearchPatients {
      */
     public static ArrayList<Patient> searchByName(String input, int numberResults) {
     	numResults = numberResults;
-        if (input.isEmpty()) {
-            return getDefaultResults();
+        if (input == null || input.isEmpty()) {
+            return getDefaultResults(numberResults);
         }
         String[] names = input.split(" ");
 

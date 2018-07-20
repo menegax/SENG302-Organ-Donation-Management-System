@@ -194,14 +194,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         searchEntry.textProperty()
                 .addListener((observable, oldValue, newValue) -> filteredData.setPredicate(patient -> {
                     // If filter text is empty, display all persons.
-                    if (newValue == null || newValue.isEmpty()) {
-                        return true;
-                    } else if (newValue.toLowerCase().equals( "male" ) || newValue.toLowerCase().equals("female")) {
-                        //return SearchPatients.searchByGender(newValue).contains(patient);
-                        return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() ); // ------------------------------this is where it fails!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    }
                     int numResults = 30;
-                    String search = searchEntry.getText();
                     String numResultsString = valueX.getText();
                     if (!numResultsString.equals("")) {
             	        try {
@@ -209,6 +202,10 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             	        } catch (NumberFormatException e) {
             	        	new Alert((Alert.AlertType.ERROR), valueX.getText() + " is not a valid number. \nPlease enter a valid number for the number of search results.").show();
             	        }
+                    }
+                    if (newValue.toLowerCase().equals( "male" ) || newValue.toLowerCase().equals("female")) {
+                        //return SearchPatients.searchByGender(newValue).contains(patient);
+                        return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() ); // ------------------------------this is where it fails!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
                     filteredData.setPredicate(patientCheck -> true);
                     if (numResults > 0) {
@@ -323,7 +320,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * Adds all db data via constructor
      */
     public GUIClinicianSearchPatients() {
-        masterData.addAll(SearchPatients.getDefaultResults());
+        masterData.addAll(SearchPatients.searchByName(null, 30));
     }
 
     public void goToClinicianHome() {
