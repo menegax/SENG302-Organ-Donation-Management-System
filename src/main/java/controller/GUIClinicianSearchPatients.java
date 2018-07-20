@@ -176,9 +176,18 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * @param filteredData the patients to be filtered/searched through
      */
     private void setupSearchingListener(FilteredList<Patient> filteredData) {
+    	UserTypes[] types = new UserTypes[]{UserTypes.PATIENT};
+    	masterData.clear();
+    	List<Patient> tempPatients = new ArrayList<Patient>();
+    	List<User> users = searcher.getDefaultResults(types);
+    	for (User user: users) {
+    		tempPatients.add((Patient)user);
+    	}
+    	masterData.addAll(tempPatients);
         // set the filter Predicate whenever the filter changes.
         searchEntry.textProperty()
                 .addListener((observable, oldValue, newValue) -> filteredData.setPredicate(patient -> {
+                	
                     // If filter text is empty, display all persons.
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
