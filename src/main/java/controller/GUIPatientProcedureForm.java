@@ -131,6 +131,7 @@ public class GUIPatientProcedureForm  {
             this.procedure.setDescription(descriptionInput.getText());
             this.procedure.setAffectedDonations(affectedDonations);
             this.procedure.setDate(dateInput.getValue());
+            screenControl.setIsSaved(false);
             userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", patient.getNhiNumber()});
             goBackToProcedures();
         } else {
@@ -157,6 +158,7 @@ public class GUIPatientProcedureForm  {
             Procedure procedure = new Procedure( summaryInput.getText(), descriptionInput.getText(),
                     dateInput.getValue(), affectedDonations );
             patient.addProcedure( procedure );
+            screenControl.setIsSaved(false);
             userActions.log(Level.INFO, "Added procedure " + procedure.getSummary(), new String[]{"Attempted to add a procedure", patient.getNhiNumber()});
             goBackToProcedures();
         } else {

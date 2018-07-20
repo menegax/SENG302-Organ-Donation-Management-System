@@ -293,6 +293,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             if(isAdd) {
                 currentPatient.getCurrentDiseases().add(target);
             }
+            screenControl.setIsSaved(false);
             screenControl.closeStage(((UndoableStage)doneButton.getScene().getWindow()).getUUID());
         } else {
             String errorString = "Diseases must not have the same disease name and diagnosis date as another disease\n\n";
@@ -316,20 +317,4 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             alert.showAndWait();
         }
     }
-
-
-    /**
-     * Redoes an action
-     */
-    public void redo() {
-        statesHistoryScreen.redo();
-    }
-
-    /**
-     * Undoes the last action
-     */
-    public void undo() {
-        statesHistoryScreen.undo();
-    }
-
 }

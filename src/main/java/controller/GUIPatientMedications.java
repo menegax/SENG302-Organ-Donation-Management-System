@@ -99,6 +99,8 @@ public class GUIPatientMedications extends UndoableController {
 
     private Patient viewedPatient;
 
+    ScreenControl screenControl = ScreenControl.getScreenControl();
+
 
     /**
      * Removes a medication from the history or current ArrayList and listView
@@ -378,6 +380,7 @@ public class GUIPatientMedications extends UndoableController {
                         new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
                 viewCurrentMedications();
                 newMedication.clear();
+                screenControl.setIsSaved(false);
             }
             else if (history.contains(medication) && !current.contains(medication)) {
                 moveToCurrent(new ArrayList<>(Collections.singleton(medication)));
@@ -439,6 +442,7 @@ public class GUIPatientMedications extends UndoableController {
 
             viewCurrentMedications();
         }
+        screenControl.setIsSaved(false);
     }
 
 
@@ -462,6 +466,7 @@ public class GUIPatientMedications extends UndoableController {
                 userActions.log(Level.INFO,
                         "Moved medication to current: " + medication,
                         new String[] { "Attempted to move medication " + medication + " to current medications", target.getNhiNumber() });
+                screenControl.setIsSaved(false);
                 viewPastMedications();
             }
         }
@@ -488,6 +493,7 @@ public class GUIPatientMedications extends UndoableController {
                 userActions.log(Level.INFO,
                         "Moved medication to past: " + medication,
                         new String[] { "Attempted to move medication " + medication + " to past medications", target.getNhiNumber() });
+                screenControl.setIsSaved(false);
                 viewCurrentMedications();
             }
         }
