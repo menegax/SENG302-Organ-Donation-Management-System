@@ -20,7 +20,7 @@ public class ParseCsv {
         final List<CSVUser> beans = csvClient.readBeans();
 
         for (CSVUser bean : beans) {
-            System.out.println(bean.getFirstname());
+            System.out.println(bean);
         }
     }
 }
