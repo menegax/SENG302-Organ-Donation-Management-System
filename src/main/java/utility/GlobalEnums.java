@@ -254,31 +254,6 @@ public class GlobalEnums {
      * Enum for a patient status; whether donating, receiving, or both
      */
     public enum Status {
-        RECEIVING ("receiving"),
-        DONATING ("donating"),
-        BOTH ("both");
-
-        private String value;
-
-        Status(final String value) { this.value = value; }
-
-
-        @Override
-        public String toString() {
-            return this.getValue();
-        }
-
-
-        public String getValue() {
-            return value;
-        }
-
-    }
-
-    /**
-     * Enum for a patient status; whether donating, receiving, or both
-     */
-    public enum Status {
         RECEIVING("receiving"), DONATING("donating"), BOTH("both");
 
         private String value;
