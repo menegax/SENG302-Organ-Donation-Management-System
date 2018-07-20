@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -8,22 +12,25 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
+<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="631.7999755859375" minWidth="10.0" prefWidth="350.00001220703126" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="359.7999755859375" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="631.7999755859375" minWidth="10.0" prefWidth="274.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="253.0" minWidth="10.0" prefWidth="235.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="321.0" minWidth="10.0" prefWidth="261.0" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints minHeight="10.0" prefHeight="40.79999847412109" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="518.8000015258789" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="101.0" minHeight="0.0" prefHeight="54.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="295.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="295.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="477.0" minHeight="10.0" prefHeight="477.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-       <TextField fx:id="searchEntry" prefHeight="27.0" prefWidth="46.0" promptText="Search by name" GridPane.columnSpan="2">
+       <TextField fx:id="searchEntry" prefHeight="27.0" prefWidth="46.0" promptText="Search by name" GridPane.columnSpan="3">
          <GridPane.margin>
             <Insets left="60.0" right="60.0" />
          </GridPane.margin>
       </TextField>
-       <TableView fx:id="patientDataTable" GridPane.columnSpan="2" GridPane.rowIndex="1">
+       <TableView fx:id="patientDataTable" GridPane.columnSpan="3" GridPane.rowIndex="3">
          <columns>
              <TableColumn fx:id="columnName" editable="false" minWidth="140.79998779296875" prefWidth="176.0" text="Name" />
              <TableColumn fx:id="columnAge" editable="false" minWidth="0.0" prefWidth="124.79998779296875" text="Age" />
@@ -37,5 +44,10 @@
             <Insets bottom="60.0" left="60.0" right="60.0" />
          </GridPane.margin>
        </TableView>
+      <ComboBox fx:id="birthGender" prefHeight="25.0" prefWidth="210.0" promptText="Birth Gender" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="60.0" />
+         </GridPane.margin>
+      </ComboBox>
    </children>
 </GridPane>
