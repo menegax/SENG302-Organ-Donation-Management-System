@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
@@ -15,26 +16,65 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.control.Button?>
 
-<AnchorPane fx:id="clinicianSearchPatientsPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
+<GridPane prefHeight="763.0" prefWidth="1029.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
    <children>
-       <Label alignment="CENTER" layoutX="81.0" layoutY="14.0" prefHeight="57.0" prefWidth="439.0" styleClass="title" text="Search Patients" textAlignment="CENTER">
-           <font>
-             <Font name="Calibri" size="56.0" />
-           </font>
-       </Label>
-       <TableView fx:id="patientDataTable" layoutX="10.0" layoutY="111.0" prefHeight="275.0" prefWidth="580.0">
+      <TableView fx:id="patientDataTable" prefHeight="68.0" prefWidth="204.0" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
          <columns>
-             <TableColumn fx:id="columnName" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="240.0" resizable="false" text="Name" />
-             <TableColumn fx:id="columnStatus" editable="false" maxWidth="200" minWidth="80" prefWidth="80" resizable="false" text="Status" />
-             <TableColumn fx:id="columnAge" editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="Age" />
-             <TableColumn fx:id="columnBirthGender" editable="false" maxWidth="100.0" minWidth="80.0" prefWidth="80.0" resizable="false" text="Birth Gender" />
-            <TableColumn fx:id="columnRegion" editable="false" maxWidth="200.0" prefWidth="130.0" resizable="false" text="Region" />
+            <TableColumn fx:id="columnName" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="239.0" text="Name" />
+            <TableColumn fx:id="columnStatus" editable="false" maxWidth="200" minWidth="80" prefWidth="107.0" text="Status" />
+            <TableColumn fx:id="columnAge" editable="false" maxWidth="107.0" minWidth="50.0" prefWidth="81.0" text="Age" />
+            <TableColumn fx:id="columnBirthGender" editable="false" maxWidth="176.0" minWidth="80.0" prefWidth="122.0" text="Birth Gender" />
+            <TableColumn fx:id="columnRegion" editable="false" maxWidth="287.0" prefWidth="188.0" resizable="false" text="Region" />
          </columns>
-       </TableView>
-       <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToClinicianHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-       <TextField fx:id="searchEntry" layoutX="10.0" layoutY="71.0" onKeyReleased="#updateSearch" prefHeight="27.0" prefWidth="251.0" />
-       <Label fx:id="displayX" layoutX="290.0" layoutY="71.0" text="Display top:" />
-       <Label fx:id="displayY" layoutX="450.0" layoutY="71.0" onMouseClicked="#displayAllResults" styleClass="back" stylesheets="@../css/guiStyle.css" />
-      <TextField fx:id="valueX" layoutX="377.0" layoutY="68.0" onKeyReleased="#updateSearch" onMouseClicked="#updateSearch" prefHeight="28.0" prefWidth="53.0" styleClass="back" stylesheets="@../css/guiStyle.css" text="30" />
+         <GridPane.margin>
+            <Insets bottom="60.0" left="60.0" right="60.0" />
+         </GridPane.margin>
+      </TableView>
+      <TextField fx:id="searchEntry" maxWidth="1000.0" onKeyReleased="#updateSearch" prefHeight="27.0" prefWidth="500.0">
+         <GridPane.margin>
+            <Insets bottom="10.0" left="60.0" right="10.0" top="10.0" />
+         </GridPane.margin>
+      </TextField>
+      <GridPane maxWidth="1000.0" prefHeight="164.0" prefWidth="311.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+         <children>
+            <GridPane maxWidth="1000.0" prefHeight="164.0" prefWidth="222.0" GridPane.halignment="RIGHT">
+               <children>
+                  <Label fx:id="displayX" prefHeight="15.0" prefWidth="78.0" text="Display top:" GridPane.halignment="RIGHT">
+                     <GridPane.margin>
+                        <Insets right="5.0" />
+                     </GridPane.margin></Label>
+                  <TextField fx:id="valueX" onKeyReleased="#updateSearch" onMouseClicked="#updateSearch" prefHeight="28.0" prefWidth="53.0" styleClass="back" stylesheets="@../css/guiStyle.css" text="30" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="90.0" minWidth="10.0" prefWidth="90.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="10.0" prefWidth="44.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+            <Label fx:id="displayY" maxWidth="1000.0" onMouseClicked="#displayAllResults" prefHeight="18.0" prefWidth="245.0" styleClass="back" stylesheets="@../css/guiStyle.css" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="RIGHT" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="10.0" prefWidth="162.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.0" minWidth="10.0" prefWidth="106.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.0" minWidth="10.0" prefWidth="106.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <GridPane.margin>
+            <Insets bottom="10.0" left="10.0" right="60.0" top="10.0" />
+         </GridPane.margin>
+      </GridPane>
    </children>
-</AnchorPane>
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="215.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="404.0" minHeight="10.0" prefHeight="404.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+</GridPane>
