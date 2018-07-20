@@ -382,7 +382,9 @@ public class ScreenControl {
     private void removeUnsavedAsterixs() {
         for (Set<Stage> stages : userStages.values()) {
             for (Stage stage : stages) {
-                stage.setTitle(stage.getTitle().replace("*", ""));
+                if (stage.getTitle() != null) {
+                    stage.setTitle(stage.getTitle().replace("*", ""));
+                }
             }
         }
     }
@@ -393,8 +395,10 @@ public class ScreenControl {
     private void addUnsavedAsterixs() {
         for (Set<Stage> stages : userStages.values()) {
             for (Stage stage : stages) {
-                if (!stage.getTitle().contains("*")) {
-                    stage.setTitle(stage.getTitle() + "*");
+                if (stage.getTitle() != null) {
+                    if (!stage.getTitle().contains("*")) {
+                        stage.setTitle(stage.getTitle() + "*");
+                    }
                 }
             }
         }

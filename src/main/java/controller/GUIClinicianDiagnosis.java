@@ -123,16 +123,12 @@ public class GUIClinicianDiagnosis extends UndoableController{
             target = (Patient) userControl.getLoggedInUser();
             addDiagnosisButton.setVisible(false);
             addDiagnosisButton.setDisable(true);
-            saveButton.setVisible(false);
-            saveButton.setDisable(true);
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
         } else {
             target = userControl.getTargetPatient();
             addDiagnosisButton.setVisible(true);
             addDiagnosisButton.setDisable(false);
-            saveButton.setVisible(true);
-            saveButton.setDisable(false);
             deleteButton.setVisible(true);
             deleteButton.setDisable(false);
         }
@@ -291,21 +287,6 @@ public class GUIClinicianDiagnosis extends UndoableController{
             return true;
         });
     }
-
-
-    /**
-     * Sets the patient's past and current diagnoses to the edited lists in the screen
-     */
-    @FXML
-    public void saveDiagnoses() {
-        target.setCurrentDiseases(currentDiseases);
-        target.setPastDiseases(pastDiseases);
-        userActions.log( Level.FINE, "Successfully saved patient diseases", "Successfully saved patient " + target.getNhiNumber() + "diseases");
-        new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
-        changed = false;
-        screenControl.setIsSaved(false);
-    }
-
 
     /**
      * Iterates through current and past diagnoses and moves cured and chronic diseases to their required lists.
