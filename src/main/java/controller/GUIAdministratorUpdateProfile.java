@@ -138,7 +138,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
                 target.setPassword(passwordTxt.getText());
             }
 
-            target.adminModified();
+            target.userModified();
             userActions.log(Level.INFO, "Successfully updated admin profile", "Attempted to update admin profile");
             new Alert(Alert.AlertType.INFORMATION, "Admin successfully updated", ButtonType.OK).showAndWait();
         } else {
