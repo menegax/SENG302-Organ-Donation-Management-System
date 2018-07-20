@@ -64,7 +64,7 @@ public class GUILogin {
     @FXML
     public void goToRegister() {
         try {
-            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/patientRegister.fxml")));
+            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml")));
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load patient register").show();
             userActions.log(SEVERE, "Failed to load patient register", "Attempted to load patient register");

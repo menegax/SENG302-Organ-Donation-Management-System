@@ -43,10 +43,11 @@ public class GUIHome {
     private Label userTypeDisplay;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+    
+    private UserControl userControl = new UserControl();
 
     @FXML
     public void initialize() {
-        UserControl userControl = new UserControl();
         try {
             if (userControl.getLoggedInUser() instanceof Patient){
                 addTabsPatient();
@@ -213,28 +214,31 @@ public class GUIHome {
             Database.saveToDisk();
             userActions.log(INFO, "Successfully saved to disk", "Attempted to save to disk");
         });
-        Menu subMenuImport = new Menu("Import"); // import submenu
-        MenuItem menu2Item2 = new MenuItem("Import patients...");
-        menu2Item2.setAccelerator(screenControl.getImportt());
-        menu2Item2.setOnAction(event -> {
-            File file = new FileChooser().showOpenDialog(stage);
-            if (file != null) {
-                Database.importFromDiskPatients(file.getAbsolutePath());
-                userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
-                userActions.log(INFO, "Imported patient file from disk", "Attempted to import file from disk");
-            }
-        });
-        MenuItem menu2Item3 = new MenuItem("Import clinicians...");
-        menu2Item3.setOnAction(event -> {
-            File file = new FileChooser().showOpenDialog(stage);
-            if (file != null) {
-                Database.importFromDiskPatients(file.getAbsolutePath());
-                userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
-                userActions.log(INFO, "Imported clinician file from disk", "Attempted to import file from disk");
-            }
-        });
-        subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
-        menu2.getItems().addAll(menu2Item1, subMenuImport);
+        if (userControl.getLoggedInUser() instanceof Administrator) {
+            Menu subMenuImport = new Menu("Import"); // import submenu
+            MenuItem menu2Item2 = new MenuItem("Import patients...");
+            menu2Item2.setAccelerator(screenControl.getImportt());
+            menu2Item2.setOnAction(event -> {
+                File file = new FileChooser().showOpenDialog(stage);
+                if (file != null) {
+                    Database.importFromDiskPatients(file.getAbsolutePath());
+                    userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
+                    userActions.log(INFO, "Imported patient file from disk", "Attempted to import file from disk");
+                }
+            });
+            MenuItem menu2Item3 = new MenuItem("Import clinicians...");
+            menu2Item3.setOnAction(event -> {
+                File file = new FileChooser().showOpenDialog(stage);
+                if (file != null) {
+                    Database.importFromDiskPatients(file.getAbsolutePath());
+                    userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
+                    userActions.log(INFO, "Imported clinician file from disk", "Attempted to import file from disk");
+                }
+            });
+            subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
+            menu2.getItems().addAll(subMenuImport);
+        }
+        menu2.getItems().addAll(menu2Item1);
 
         // EDIT
 //        Menu menu3 = new Menu("Edit");
