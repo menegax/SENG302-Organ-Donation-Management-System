@@ -317,7 +317,7 @@ public class Database {
         String json = gson.toJson(administrators);
 
         String adminPath = "./";
-        Writer writer = new FileWriter(new File(adminPath, "admin.json"));
+        Writer writer = new FileWriter(new File(adminPath, "administrator.json"));
         writer.write(json);
         writer.close();
     }

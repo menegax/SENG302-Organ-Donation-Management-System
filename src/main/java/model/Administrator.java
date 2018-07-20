@@ -14,8 +14,11 @@ import java.util.regex.Pattern;
  * Administrators also have a password that is hashed and they are given a generated user salt
  */
 public class Administrator extends User {
+
     private String username;
+
     private final String salt;
+
     private String password;
 
     private List<AdministratorActionRecord> adminActionsList = new ArrayList<>();
@@ -29,26 +32,31 @@ public class Administrator extends User {
      * @param middleNames The administrators middle names. This should should be a list of Strings where each string is a single middle name
      * @param lastName    The administrators last name
      * @param password    The administrators password
-     * @throws IllegalArgumentException If the administrators password is too short (less than 6 characters)
+     * @exception IllegalArgumentException If the administrators password is too short (less than 6 characters)
      */
-    public Administrator(String username, String firstName, List<String> middleNames, String lastName, String password) throws IllegalArgumentException {
+    public Administrator(String username, String firstName, List<String> middleNames, String lastName, String password)
+            throws IllegalArgumentException {
         super(firstName, middleNames, lastName);
         this.username = username.toUpperCase();
 
         if (password.length() < 6) {
             throw new IllegalArgumentException("Password must be at least 6 characters long");
         }
-        this.salt = org.apache.commons.codec.digest.DigestUtils.sha256Hex(LocalDate.now().toString());
+        this.salt = org.apache.commons.codec.digest.DigestUtils.sha256Hex(LocalDate.now()
+                .toString());
         this.password = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password + salt);
     }
+
 
     public void adminModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
     }
 
+
     public String getUsername() {
         return username;
     }
+
 
     /**
      * Updates the administrators last name if the provided new value is valid.
@@ -64,16 +72,20 @@ public class Administrator extends User {
         }
     }
 
+
     public String getSalt() {
         return salt;
     }
+
 
     public String getHashedPassword() {
         return password;
     }
 
+
     /**
      * Updates the administrators password
+     *
      * @param password the administrators new password
      */
     public void setPassword(String password) {
@@ -84,8 +96,10 @@ public class Administrator extends User {
         adminModified();
     }
 
+
     /**
      * Returns the list of this admins actions. This should only be modified within UserActionHistory
+     *
      * @return the list of Admin Action Records
      */
     public List<AdministratorActionRecord> getAdminActionsList() {

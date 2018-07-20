@@ -4,8 +4,8 @@ If you are a developer seeking a code review, please follow the `story_definitio
 
 ## Code Reviewer Questionnaire
 
-* Have the developers on the story gone through DoD? Ask them. If not, stop the review. Else continue questionnaire.
-* Has the story passed the story DoD?
+* Have the developers on the story gone through DoP? Ask them. If not, stop the review. Else continue questionnaire.
+* Has the story passed the story DoP?
 * It's in the DoP, but it's important: has the story passed the acceptance criteria?
 * Are classes named accordingly? (i.e. GUIPatientUpdateProfile not PatientProfileUpdate)
 * Are classes placed in the correct package? (i.e. undo/redo in utility)
