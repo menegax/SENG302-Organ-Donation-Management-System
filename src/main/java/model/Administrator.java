@@ -45,6 +45,7 @@ public class Administrator extends User {
         this.salt = org.apache.commons.codec.digest.DigestUtils.sha256Hex(LocalDate.now()
                 .toString());
         this.password = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password + salt);
+        userModified();
     }
 
 

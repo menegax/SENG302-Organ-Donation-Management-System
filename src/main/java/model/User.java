@@ -2,6 +2,7 @@ package model;
 
 import utility.Searcher;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
@@ -25,6 +26,9 @@ public abstract class User {
         this.firstName = firstName;
         this.middleNames = middleNames;
         this.lastName = lastName;
+        if (propertyChangeSupport == null) {
+            propertyChangeSupport = new PropertyChangeSupport(this);
+        }
     }
 
     public String getFirstName() {
@@ -93,8 +97,9 @@ public abstract class User {
     *
     * Updates the modified timestamp of the patient
     */
-   protected void userModified() {
+   public void userModified() {
        this.modified = new Timestamp(System.currentTimeMillis());
+       propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "User Modified", null, null));
    }
 
     public UUID getUuid() {
