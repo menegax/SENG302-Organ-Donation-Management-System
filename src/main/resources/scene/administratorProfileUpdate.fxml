@@ -14,17 +14,18 @@
       <Label fx:id="lastModifiedLbl" alignment="CENTER" prefHeight="17.0" prefWidth="257.0" text="Last Modified: " GridPane.columnIndex="1" GridPane.halignment="CENTER" />
       <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
          <children>
-            <Label text="First Name" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
-            <TextField fx:id="firstnameTxt" promptText="First name" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-            <Label text="Middle Name(s)" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-            <TextField fx:id="middlenameTxt" promptText="Middle name(s)" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-            <Label text="Last Name" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
-            <TextField fx:id="lastnameTxt" promptText="Last name" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP" />
-            <Label text="Password" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="BOTTOM" />
-            <PasswordField fx:id="passwordTxt" prefHeight="40.0" prefWidth="256.0" stylesheets="@../css/guiStyle.css" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="TOP" />
+            <Label text="First Name" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+            <TextField fx:id="firstnameTxt" promptText="First name" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Label text="Middle Name(s)" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <TextField fx:id="middlenameTxt" promptText="Middle name(s)" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Label text="Last Name" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+            <TextField fx:id="lastnameTxt" promptText="Last name" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+            <Label text="Password" GridPane.halignment="LEFT" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+            <PasswordField fx:id="passwordTxt" prefHeight="40.0" prefWidth="256.0" stylesheets="@../css/guiStyle.css" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
          </children>
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -41,7 +42,7 @@
    </children>
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
    </columnConstraints>
    <rowConstraints>
