@@ -14,6 +14,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+        <dependency>
+            <groupId>org.csveed</groupId>
+            <artifactId>csveed</artifactId>
+            <version>0.5.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.j256.simplecsv</groupId>
             <artifactId>simplecsv</artifactId>
             <version>2.3</version>
@@ -23,6 +33,7 @@
             <artifactId>centerdevice-nsmenufx</artifactId>
             <version>2.1.6</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>

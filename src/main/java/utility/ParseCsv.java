@@ -1,29 +1,26 @@
+
 package utility;
+import model.CSVUser;
+import org.csveed.api.CsvClient;
+import org.csveed.api.CsvClientImpl;
 
-import com.j256.simplecsv.processor.CsvProcessor;
-import model.Patient;
-
-import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
+import java.io.Reader;
 import java.util.List;
 
-public class ParseCsv {
 
-    @SuppressWarnings("unchecked") // casting of type to class
-    public List<Patient> parse(String filePath) {
-        CsvProcessor<Patient> csvProcessor = new CsvProcessor<Patient>(Patient.class);
-        File csvFile = new File(filePath);
-        try {
-            return csvProcessor.readAll(csvFile,null );
-        } catch (IOException | ParseException e) {
-            return null;
+public class ParseCsv {
+    private static final String SAMPLE_CSV_FILE_PATH = "";
+
+    public static void main(String[] args) throws IOException {
+        Reader reader = new FileReader(SAMPLE_CSV_FILE_PATH);
+        CsvClient<CSVUser> csvClient = new CsvClientImpl<CSVUser>(reader, CSVUser.class);
+        //System.out.println(csvClient.readRows());
+        final List<CSVUser> beans = csvClient.readBeans();
+
+        for (CSVUser bean : beans) {
+            System.out.println(bean.getFirstname());
         }
     }
-
-    public static void main(String[] argv) {
-        ParseCsv parseCsv = new ParseCsv();
-        System.out.println(parseCsv.parse("C:\\Users\\Hayden Taylor\\Downloads\\testCSV.csv"));
-    }
-
 }

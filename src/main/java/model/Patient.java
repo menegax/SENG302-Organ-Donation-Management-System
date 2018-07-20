@@ -1,6 +1,7 @@
 package model;
 
 import com.j256.simplecsv.common.CsvColumn;
+
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
@@ -21,22 +22,20 @@ import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
 
-    private final Timestamp CREATED;
+    private  Timestamp CREATED;
 
-    @CsvColumn(columnName = "first_name")
+
     private String firstName;
 
     private ArrayList<String> middleNames;
 
-    @CsvColumn(columnName = "last_name")
+   // @CsvBindByName(column = "last_names")
     private String lastName;
 
     private String preferredName;
 
-    @CsvColumn(columnName = "date_of_birth", converterClass = LocalDateConverter.class)
     private LocalDate birth;
 
-    @CsvColumn(columnName = "date_of_death")
     private LocalDate death;
 
 
@@ -66,7 +65,6 @@ public class Patient extends User {
 
     private Timestamp modified;
 
-    @CsvColumn(columnName = "first_name")
     private String nhiNumber;
 
     private ArrayList<Medication> currentMedications = new ArrayList<>();
@@ -123,6 +121,10 @@ public class Patient extends User {
         this.donations = new ArrayList<>();
         this.userActionsList = new ArrayList<>();
         this.requiredOrgans = new ArrayList<>();
+    }
+
+    public Patient() {
+
     }
 
 
