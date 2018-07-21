@@ -226,7 +226,6 @@ public class GUIHome {
                 if (file != null) {
                     Database.importFromDiskPatients(file.getAbsolutePath());
                     userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
-                    userActions.log(INFO, "Imported patient file from disk", "Attempted to import file from disk");
                 }
             });
             MenuItem menu2Item3 = new MenuItem("Import clinicians...");
@@ -235,7 +234,6 @@ public class GUIHome {
                 if (file != null) {
                     Database.importFromDiskPatients(file.getAbsolutePath());
                     userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
-                    userActions.log(INFO, "Imported clinician file from disk", "Attempted to import file from disk");
                 }
             });
             subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
