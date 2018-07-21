@@ -12,6 +12,9 @@ import de.codecentric.centerdevice.MenuToolkit;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.RotateEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -19,12 +22,14 @@ import model.Clinician;
 import model.Patient;
 import model.User;
 import service.Database;
+import utility.TouchCapablePane;
+import utility.TouchscreenCapable;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class GUIHome {
+public class GUIHome implements TouchscreenCapable {
 
     @FXML
     public BorderPane homePane;
@@ -40,6 +45,8 @@ public class GUIHome {
 
     @FXML
     private Label userTypeDisplay;
+
+    private TouchCapablePane homeTouchPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -59,7 +66,11 @@ public class GUIHome {
                     setUpColouredBar(userControl.getLoggedInUser(), "Clinician");
                 }
             }
+            homeTouchPane = new TouchCapablePane(homePane);
             horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty().addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
+            homePane.setOnZoom(this::zoomWindow);
+            homePane.setOnRotate(this::rotateWindow);
+            homePane.setOnScroll(this::scrollWindow);
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls", Arrays.toString(e.getStackTrace()));
@@ -244,4 +255,18 @@ public class GUIHome {
 
     }
 
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        homeTouchPane.zoomPane(zoomEvent);
+    }
+
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        homeTouchPane.rotatePane(rotateEvent);
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        homeTouchPane.scrollPane(scrollEvent);
+    }
 }

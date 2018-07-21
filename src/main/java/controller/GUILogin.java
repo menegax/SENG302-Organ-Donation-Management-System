@@ -2,16 +2,10 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 
-import com.sun.javafx.scene.control.skin.FXVK;
-import javafx.event.ActionEvent;
-import javafx.application.Application;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -20,11 +14,12 @@ import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.control.TextField;
 
-import javafx.stage.Window;
 import model.Clinician;
 import model.Patient;
+import org.tuiofx.Configuration;
+import org.tuiofx.TuioFX;
 import service.Database;
-import utility.SystemLogger;
+import utility.TouchCapablePane;
 import utility.TouchscreenCapable;
 import utility.undoRedo.UndoableStage;
 
@@ -48,6 +43,8 @@ public class GUILogin implements TouchscreenCapable {
     @FXML
     private CheckBox clinicianToggle;
 
+    private TouchCapablePane loginTouchPane;
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
@@ -55,6 +52,7 @@ public class GUILogin implements TouchscreenCapable {
      */
     public void initialize() {
         // Enter key triggers log in
+        loginTouchPane = new TouchCapablePane(loginPane);
         nhiLogin.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         loginPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -118,6 +116,8 @@ public class GUILogin implements TouchscreenCapable {
                 login.addLoggedInUserToCache(newClinician);
                 screenControl.addStage(stage.getUUID(), stage);
                 Parent clinicianHome = FXMLLoader.load((getClass().getResource("/scene/home.fxml")));
+                TuioFX tuioFXLoggedIn = new TuioFX(stage, Configuration.debug());
+                tuioFXLoggedIn.start();
                 screenControl.show(stage.getUUID(), clinicianHome);
                 screenControl.closeStage(Main.getUuid()); // close login scene after login
             }
@@ -153,28 +153,17 @@ public class GUILogin implements TouchscreenCapable {
 
     @Override
     public void zoomWindow(ZoomEvent zoomEvent) {
-        Window currentWindow = ((Node)zoomEvent.getTarget()).getScene().getWindow();
-        loginPane.setScaleX(loginPane.getScaleX() * zoomEvent.getZoomFactor());
-        currentWindow.setWidth(currentWindow.getWidth() * zoomEvent.getZoomFactor() - 0.1);
-        loginPane.setScaleY(loginPane.getScaleY() * zoomEvent.getZoomFactor());
-        currentWindow.setHeight(currentWindow.getHeight() * zoomEvent.getZoomFactor() - 0.1);
-
-        loginPane.setTranslateX(0);
-        loginPane.setTranslateY(0);
+        loginTouchPane.zoomPane(zoomEvent);
     }
 
     @Override
     public void rotateWindow(RotateEvent rotateEvent) {
-        loginPane.setRotate(loginPane.getRotate() + rotateEvent.getAngle());
-//        ((Node)rotateEvent.getTarget()).getScene().getWindow();
+        loginTouchPane.rotatePane(rotateEvent);
     }
 
     @Override
     public void scrollWindow(ScrollEvent scrollEvent) {
-        if(!scrollEvent.isInertia()) {
-            loginPane.setTranslateX(loginPane.getTranslateX() + scrollEvent.getDeltaX());
-            loginPane.setTranslateY(loginPane.getTranslateY() + scrollEvent.getDeltaY());
-        }
+        loginTouchPane.scrollPane(scrollEvent);
     }
 
 }
