@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<GridPane prefHeight="400.0" prefWidth="594.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAdminHistory">
+<GridPane prefHeight="400.0" prefWidth="594.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAdminHistory">
    <children>
       <TableView fx:id="logHistoryTable" prefHeight="255.0" prefWidth="530.0" GridPane.columnSpan="2" GridPane.rowSpan="2">
          <columnResizePolicy>
@@ -22,7 +18,7 @@
             <TableColumn fx:id="levelColumn" maxWidth="70.0" minWidth="45.0" prefWidth="69.0" text="Level" />
             <TableColumn fx:id="actionColumn" prefWidth="187.0" text="Action" />
             <TableColumn fx:id="messageColumn" editable="false" minWidth="-1.0" prefWidth="258.0" text="Message" />
-            <TableColumn fx:id="targetColumn" prefWidth="187.0" text="Patient" />
+            <TableColumn fx:id="targetColumn" prefWidth="187.0" text="User" />
          </columns>
          <opaqueInsets>
             <Insets bottom="60.0" left="60.0" right="60.0" top="60.0" />

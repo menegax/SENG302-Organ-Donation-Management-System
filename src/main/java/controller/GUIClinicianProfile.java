@@ -89,7 +89,7 @@ public class GUIClinicianProfile {
     public void deleteProfile() {
         Clinician clinician = (Clinician) userControl.getTargetUser();
         if (clinician.getStaffID() != 0) {
-            userActions.log(Level.INFO, "Successfully deleted clinician profile", "Attempted to delete clinician profile");
+            userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(clinician.getStaffID())});
             Database.deleteClinician(clinician);
             ((Stage) clinicianProfilePane.getScene().getWindow()).close();
         }

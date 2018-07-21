@@ -139,7 +139,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
             }
 
             target.userModified();
-            userActions.log(Level.INFO, "Successfully updated admin profile", "Attempted to update admin profile");
+            userActions.log(Level.INFO, "Successfully updated admin profile", new String[]{"Attempted to update admin profile", target.getUsername()});
             new Alert(Alert.AlertType.INFORMATION, "Admin successfully updated", ButtonType.OK).showAndWait();
         } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();

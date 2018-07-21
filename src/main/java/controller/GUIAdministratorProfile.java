@@ -70,7 +70,7 @@ public class GUIAdministratorProfile {
      */
     public void deleteProfile() {
         if (!target.getUsername().toLowerCase().equals("admin")) {
-            userActions.log(Level.INFO, "Successfully deleted admin profile", "Attempted to delete admin profile");
+            userActions.log(Level.INFO, "Successfully deleted admin profile", new String[]{"Attempted to delete admin profile", target.getUsername()});
             Database.deleteAdministrator(target);
             if (!target.getUsername().equals(((Administrator) userControl.getLoggedInUser()).getUsername())) {
                 ((Stage) adminProfilePane.getScene().getWindow()).close();

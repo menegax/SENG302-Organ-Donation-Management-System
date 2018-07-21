@@ -228,6 +228,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
                     .getSelectedItem()
                     .toString()));
             new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+            userActions.log(Level.INFO, "Successfully updated clinician profile", new String[]{"Attempted to update clinician profile", String.valueOf(target.getStaffID())});
         }
         else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
