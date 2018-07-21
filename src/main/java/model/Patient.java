@@ -12,6 +12,8 @@ import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.SearchPatients;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
@@ -104,6 +107,8 @@ public class Patient extends User {
 
     private String contactEmailAddress;
 
+    private Status status; // Whether patient is receiving/donating/both/neither
+
     private ArrayList<Organ> donations;
 
     private ArrayList<Organ> requiredOrgans;
@@ -130,7 +135,7 @@ public class Patient extends User {
     }
 
     /**
-     * Constructor for the patient class. Initializes basic attributes
+     * Constructor for the patient class. Initializes basic attributes and adds listeners for status changes
      * @param nhiNumber unique number to identify the patient by
      * @param firstName first name of the patient
      * @param middleNames middle names of the patient
@@ -149,6 +154,12 @@ public class Patient extends User {
         this.donations = new ArrayList<>();
         this.userActionsList = new ArrayList<>();
         this.requiredOrgans = new ArrayList<>();
+        if (propertyChangeSupport == null) {
+            propertyChangeSupport = new PropertyChangeSupport(this);
+        }
+        propertyChangeSupport.addPropertyChangeListener(evt -> {
+            refreshStatus();
+        });
     }
 
 
@@ -437,6 +448,45 @@ public class Patient extends User {
         }
         else {
             return (int) ChronoUnit.YEARS.between(this.birth, LocalDate.now());
+        }
+    }
+
+    /**
+     * Gets the status of the patient; donating, receiving, both, neither (null)
+     * @return The patient's status
+     */
+    public Status getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets the status of the patient; donating, receiving, both, neither (null)
+     * @param status The status of the patient
+     */
+    public void setStatus(Status status) {
+        if (this.status != status) {
+            this.status = status;
+        }
+        patientModified();
+    }
+
+    /**
+     * Refreshes the status of the patient to the correct status
+     * Always called after patient is modified
+     */
+    private void refreshStatus() {
+        Status newStatus = null;
+        if (this.donations.size() > 0 && this.requiredOrgans.size() > 0) {
+            newStatus = (Status) Status.getEnumFromString( "both" );
+        }
+        else if (this.donations.size() > 0) {
+            newStatus = (Status) Status.getEnumFromString( "donating" );
+        }
+        else if (this.requiredOrgans.size() > 0) {
+            newStatus = (Status) Status.getEnumFromString( "receiving" );
+        }
+        if (getStatus() != newStatus) {
+            setStatus(newStatus);
         }
     }
 
@@ -847,13 +897,33 @@ public class Patient extends User {
      */
     public void setPastDiseases(ArrayList<Disease> pastDiseases) { this.pastDiseases = pastDiseases; }
 
+    /**
+     * Checks all diseases for tags and orders them into the correct list
+     * Cured - Past Diseases
+     * Chronic, Null - Current Diseases
+     */
+    public void sortDiseases() {
+        for (Disease disease : new ArrayList<>(pastDiseases)) {
+            if (disease.getDiseaseState() == DiseaseState.CHRONIC || disease.getDiseaseState() == null) {
+                currentDiseases.add(disease);
+                pastDiseases.remove(disease);
+            }
+        }
+        for (Disease disease : new ArrayList<>(currentDiseases)) {
+            if (disease.getDiseaseState() == DiseaseState.CURED) {
+                pastDiseases.add(disease);
+                currentDiseases.remove(disease);
+            }
+        }
+    }
 
     /**
-     *
-     * Updates the modified timestamp of the patient
+     * Updates the modified timestamp of the patient and notifies propertyChangeListeners
      */
     private void patientModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "Patient Modified", null, null));
+        systemLogger.log(Level.FINER, "Patient with NHI " + this.nhiNumber + " has been modified to " + this);
     }
 
     public void addProcedure(Procedure procedure) {

@@ -16,6 +16,7 @@ import model.Procedure;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -24,7 +25,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -157,6 +158,8 @@ public class GUIPatientProcedures extends UndoableController {
         //Registers event for when an item is selected in either table
         previousProceduresView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> onItemSelect());
         pendingProceduresView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> onItemSelect());
+        previousProceduresView.refresh();
+        pendingProceduresView.refresh();
     }
 
     /**
@@ -181,9 +184,12 @@ public class GUIPatientProcedures extends UndoableController {
     @FXML
     public void addProcedure() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
-            ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader);
-        } catch (IOException e) {
+            UndoableStage stage = new UndoableStage();
+            screenControl.addStage(stage.getUUID(), stage);
+            screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/patientProcedureForm.fxml")));
+            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
+        }
+        catch (IOException e) {
             userActions.log(Level.SEVERE,
                     "Failed to open add procedure popup from patient procedures",
                     "Attempted to open add procedure popup from patient procedures");
@@ -208,16 +214,28 @@ public class GUIPatientProcedures extends UndoableController {
             return;
         }
         try {
+            UndoableStage stage = new UndoableStage();
+            screenControl.addStage(stage.getUUID(), stage);
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
-            ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader);
+            screenControl.show(stage.getUUID(),fxmlLoader.load());
             GUIPatientProcedureForm controller = fxmlLoader.getController();
             controller.setupEditing(selectedProcedure);
-        } catch (IOException e) {
+            systemLogger.log(Level.FINE, "set up event");
+            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
+        }
+        catch (IOException e) {
             userActions.log(Level.SEVERE,
                     "Failed to load edit procedure scene from patient procedures popup",
                     "Attempted to load edit procedure scene from patient procedures popup");
             new Alert(Alert.AlertType.ERROR, "Unable to load procedures page", ButtonType.OK).show();
         }
+    }
+
+    /**
+     * Refreshes the tables shown
+     */
+    private void tableRefresh() {
+        setupTables();
     }
 
     /**
@@ -245,27 +263,4 @@ public class GUIPatientProcedures extends UndoableController {
         }
     }
 
-    /**
-     * Navigates back to the patients profile in the main patient window if the patient is logged in, or back to the
-     * patient screen in the patient popup pane if a clinician is logged in
-     */
-    @FXML
-    public void goToProfile() {
-        if (userControl.getLoggedInUser() instanceof Patient ) {
-            try {
-                screenControl.show(patientProceduresPane,"/scene/patientProfile.fxml");
-            } catch (IOException e) {
-                new Alert((Alert.AlertType.ERROR), "Unable to load patient profile").show();
-                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
-            }
-        } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-            try {
-                ScreenControl.loadPopUpPane(patientProceduresPane.getScene(), fxmlLoader);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the procedures page to the profile page in popup");
-                new Alert(Alert.AlertType.ERROR, "Error loading profile page", ButtonType.OK).showAndWait();
-            }
-        }
-    }
 }

@@ -80,3 +80,23 @@
 6. Click the `Delete` button to remove them both
 7. Click `OK` when queried by the confirmation alert for each medication
 8. Verify that neither `Codeine` nor `Morphine` appear in the current or past medications list
+
+##Test History
+
+###19/07/2018 - Maree
+
+Navigate to the medications page: Pass
+
+GUI medication adding with valid input: Pass
+
+GUI medication adding with invalid input test: Pass
+
+GUI medication delete test: Pass
+
+GUI medication moving task: Pass
+
+GUI medication adding duplicates test: Pass
+
+GUI medication adding medication that is in history test: Pass
+
+GUI medication deleting multiple medications: Pass
