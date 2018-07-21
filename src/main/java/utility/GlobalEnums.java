@@ -8,7 +8,7 @@ public class GlobalEnums {
     public enum PreferredGender {
         MAN("Man"), WOMAN("Woman"), NONBINARY("Non-binary");
 
-        private String value;
+        public String value;
 
         PreferredGender(final String value) { this.value = value; }
 
@@ -37,7 +37,7 @@ public class GlobalEnums {
     public enum BirthGender {
         MALE("Male"), FEMALE("Female");
 
-        private String value;
+        public String value;
 
         BirthGender(final String value) {
             this.value = value;
@@ -66,11 +66,11 @@ public class GlobalEnums {
      *
      */
     public enum Region {
-        NORTHLAND("Northland"), AUCKLAND("Auckland"), WAIKATO("Waikato"), BAYOFPLENTY("Bay of Plenty"), GISBORNE("Gisborne"), HAWKESBAY("Hawkes Bay"), TARANAKI(
-                "Taranaki"), MANAWATU("Manawatu"), WELLINGTON("Wellington"), TASMAN("Tasman"), NELSON("Nelson"), MARLBOROUGH("Marlborough"), WESTCOAST(
+        NORTHLAND("Northland"), AUCKLAND("Auckland"), WAIKATO("Waikato"), BAYOFPLENTY("Bay of Plenty"), GISBORNE("Gisborne"), HAWKESBAY("Hawke's Bay"), TARANAKI(
+                "Taranaki"), MANAWATU("Manawatu-Wanganui"), WELLINGTON("Wellington"), TASMAN("Tasman"), NELSON("Nelson"), MARLBOROUGH("Marlborough"), WESTCOAST(
                 "West Coast"), CANTERBURY("Canterbury"), OTAGO("Otago"), SOUTHLAND("Southland");
 
-        private String value;
+        public String value;
 
         Region(final String value) {
             this.value = value;
@@ -101,7 +101,7 @@ public class GlobalEnums {
         LIVER("liver"), KIDNEY("kidney"), PANCREAS("pancreas"), HEART("heart"), LUNG("lung"), INTESTINE("intestine"), CORNEA("cornea"), MIDDLEEAR(
                 "middle ear"), SKIN("skin"), BONE("bone"), BONE_MARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
 
-        private String value;
+        public String value;
 
         Organ(final String value) {
             this.value = value;
@@ -130,10 +130,10 @@ public class GlobalEnums {
      *
      */
     public enum BloodGroup {
-        A_POSITIVE("A positive"), A_NEGATIVE("A negative"), B_POSITIVE("B positive"), B_NEGATIVE("B negative"), AB_POSITIVE("AB positive"), AB_NEGATIVE(
-                "AB negative"), O_POSITIVE("O positive"), O_NEGATIVE("O negative");
+        A_POSITIVE("A+"), A_NEGATIVE("A-"), B_POSITIVE("B+"), B_NEGATIVE("B-"), AB_POSITIVE("AB+"), AB_NEGATIVE(
+                "AB-"), O_POSITIVE("O+"), O_NEGATIVE("O-");
 
-        private String value;
+        public String value;
 
         BloodGroup(final String value) {
             this.value = value;

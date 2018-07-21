@@ -1,9 +1,11 @@
 package model;
 
 import com.univocity.parsers.annotations.Convert;
+import com.univocity.parsers.annotations.EnumOptions;
 import com.univocity.parsers.annotations.Parsed;
 import service.Database;
 import utility.CSVParsing.DateConverterCSV;
+import utility.CSVParsing.EnumConverterCSV;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
@@ -42,10 +44,12 @@ public class Patient extends User {
     @Convert(conversionClass = DateConverterCSV.class)
     private LocalDate death;
 
-  //  @Parsed(field = "birth_gender")
+    @Parsed(field = "birth_gender")
+    @EnumOptions(customElement = "value")
     private BirthGender birthGender;
 
-  //  @Parsed(field = "gender")
+    @Parsed(field = "gender")
+    @Convert(conversionClass = EnumConverterCSV.class)
     private PreferredGender preferredGender;
 
     @Parsed(field = "height")
@@ -54,8 +58,8 @@ public class Patient extends User {
     @Parsed(field = "weight")
     private double weight; // Weight in kilograms
 
-    //@Parsed(field = "blood_type")
-   // @EnumOptions(customElement = BloodGroup.class)
+    @Parsed(field = "blood_type")
+    @EnumOptions(customElement = "value")
     private BloodGroup bloodGroup;
 
     @Parsed(field = "street_number")
@@ -66,27 +70,15 @@ public class Patient extends User {
     @Parsed(field = "neighbourhood")
     private String suburb;
 
-  //  @Parsed(field = "region")
-   // @Convert(conversionClass = )
+    @Parsed(field = "region")
+    @EnumOptions(customElement = "value")
     private Region region;
 
     @Parsed(field = "zip_code")
     private int zip;
 
-    private ArrayList<Organ> donations;
-
-    private ArrayList<Organ> requiredOrgans;
-
-    private Timestamp modified;
-
     @Parsed(field = "nhi")
     private String nhiNumber;
-
-    private ArrayList<Medication> currentMedications = new ArrayList<>();
-
-    private ArrayList<Medication> medicationHistory = new ArrayList<>();
-
-    private List<Procedure> procedures = new ArrayList<>();
 
     private String homePhone;
 
@@ -107,6 +99,18 @@ public class Patient extends User {
     private String contactWorkPhone;
 
     private String contactEmailAddress;
+
+    private ArrayList<Organ> donations;
+
+    private ArrayList<Organ> requiredOrgans;
+
+    private Timestamp modified;
+
+    private ArrayList<Medication> currentMedications = new ArrayList<>();
+
+    private ArrayList<Medication> medicationHistory = new ArrayList<>();
+
+    private List<Procedure> procedures = new ArrayList<>();
 
     private ArrayList<PatientActionRecord> userActionsList;
 
