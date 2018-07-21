@@ -408,7 +408,9 @@ public class Database {
      * @param clinician The clinician being removed from set
      */
     public static void deleteClinician(Clinician clinician) {
-        clinicians.remove( clinician );
+        if (clinician.getStaffID() != 0) {
+            clinicians.remove(clinician);
+        }
     }
 
     /**
@@ -424,7 +426,9 @@ public class Database {
      * @param administrator The administrator being removed from set
      */
     public static void deleteAdministrator(Administrator administrator) {
-        administrators.remove( administrator );
+        if (!administrator.getUsername().toLowerCase().equals("admin")) {
+            administrators.remove(administrator);
+        }
     }
 
     /**
