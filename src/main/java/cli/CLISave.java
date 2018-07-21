@@ -16,7 +16,6 @@ public class CLISave implements Runnable {
     private boolean helpRequested = false;
 
     public void run() {
-        Database.saveToDisk();
         userActions.log(Level.INFO, "successfully saved", "attempted to save data");
     }
 

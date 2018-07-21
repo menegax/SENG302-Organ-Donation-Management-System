@@ -1,26 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="clinicianSearchPatientsPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
-    <TextField fx:id="searchEntry" layoutX="10.0" layoutY="71.0" prefHeight="27.0" prefWidth="251.0" promptText="Search by name" />
-    <Label alignment="CENTER" layoutX="81.0" layoutY="14.0" prefHeight="57.0" prefWidth="439.0" styleClass="title" text="Search Patients" textAlignment="CENTER">
-        <font>
-          <Font name="Calibri" size="56.0" />
-        </font>
-    </Label>
-    <TableView fx:id="patientDataTable" layoutX="10.0" layoutY="111.0" prefHeight="275.0" prefWidth="580.0">
-      <columns>
-          <TableColumn fx:id="columnName" editable="false" maxWidth="300.0" minWidth="250.0" prefWidth="250.0" resizable="false" text="Name" />
-          <TableColumn fx:id="columnAge" editable="false" maxWidth="100.0" minWidth="0.0" prefWidth="50.0" resizable="false" text="Age" />
-          <TableColumn fx:id="columnBirthGender" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Birth Gender" />
-         <TableColumn fx:id="columnRegion" editable="false" maxWidth="200.0" prefWidth="180.0" resizable="false" text="Region" />
-      </columns>
-    </TableView>
-    <Label layoutX="14.0" layoutY="14.0" onMouseClicked="#goToClinicianHome" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back" />
-</AnchorPane>
+<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="631.7999755859375" minWidth="10.0" prefWidth="350.00001220703126" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="359.7999755859375" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="40.79999847412109" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="518.8000015258789" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+       <TextField fx:id="searchEntry" prefHeight="27.0" prefWidth="46.0" promptText="Search by name" GridPane.columnSpan="2">
+         <GridPane.margin>
+            <Insets left="60.0" right="60.0" />
+         </GridPane.margin>
+      </TextField>
+       <TableView fx:id="patientDataTable" GridPane.columnSpan="2" GridPane.rowIndex="1">
+         <columns>
+             <TableColumn fx:id="columnName" editable="false" minWidth="140.79998779296875" prefWidth="176.0" text="Name" />
+             <TableColumn fx:id="columnAge" editable="false" minWidth="0.0" prefWidth="124.79998779296875" text="Age" />
+             <TableColumn fx:id="columnBirthGender" editable="false" minWidth="100.0" prefWidth="100.0" text="Birth Gender" />
+            <TableColumn fx:id="columnRegion" editable="false" prefWidth="180.0" text="Region" />
+         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+         <GridPane.margin>
+            <Insets bottom="60.0" left="60.0" right="60.0" />
+         </GridPane.margin>
+       </TableView>
+   </children>
+</GridPane>

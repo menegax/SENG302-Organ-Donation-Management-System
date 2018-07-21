@@ -2,6 +2,7 @@ package utility_test.stateHistoryWidgetTests;
 
 import com.sun.javafx.application.PlatformImpl;
 import javafx.scene.control.CheckBox;
+import org.junit.Ignore;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryCheckBox;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,16 +16,16 @@ import static utility.UserActionHistory.userActions;
 /**
  * Junit test class for the StateHistoryCheckBox
  */
+@Ignore
 public class StateHistoryCheckBoxTest {
 
     private static CheckBox checkBox;
 
     /**
      * Creates the checkbox to be used and sets up the JavaFX environment so JavaFX objects can be created
-     * @throws InterruptedException if the JavaFX environment is interrupted
      */
     @BeforeClass
-    public static void setup() throws InterruptedException{
+    public static void setup() {
         userActions.setLevel(Level.OFF);
         PlatformImpl.startup(() -> {});
         checkBox = new CheckBox();

@@ -3,6 +3,8 @@ package model;
 import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +21,6 @@ public class Clinician extends User {
     private String firstName;
     private ArrayList<String> middleNames;
     private String lastName;
-
     private String street1;
     private String street2;
     private String suburb;
@@ -129,7 +130,7 @@ public class Clinician extends User {
      * Concatenates a clinician's first, middle and last names, and returns the full name as a String
      * @return String concatenated name
      */
-    public String getConcatenatedName() {
+    public String getNameConcatenated() {
         String name = this.firstName;
         if(this.middleNames != null) {
             for(String middleName : this.middleNames) {
@@ -152,7 +153,7 @@ public class Clinician extends User {
      * @param street1 The new street1 value
      */
     public void setStreet1(String street1) {
-        if (street1 != null && Pattern.matches("^[- a-zA-Z0-9]*$", street1)) {
+        if (street1 != null && Pattern.matches("^[- 0-9a-zA-Z]*$", street1)) {
             this.street1 = street1;
             clinicianModified();
         }
@@ -163,7 +164,7 @@ public class Clinician extends User {
     }
 
     public void setStreet2(String street2) {
-        if (street2 != null && Pattern.matches("^[- a-zA-Z0-9]*$", street2)) {
+        if (street2 != null && Pattern.matches("^[- 0-9a-zA-Z]*$", street2)) {
             this.street2 = street2;
             clinicianModified();
         }
@@ -174,7 +175,7 @@ public class Clinician extends User {
     }
 
     public void setSuburb(String suburb) {
-        if (suburb != null && Pattern.matches("^[- a-zA-Z0-9]*$", suburb)) {
+        if (suburb != null && Pattern.matches("^[- a-zA-Z]*$", suburb)) {
             this.suburb = suburb;
             clinicianModified();
         }
@@ -193,6 +194,10 @@ public class Clinician extends User {
 
     public void clinicianModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
+        if (propertyChangeSupport == null) {
+            propertyChangeSupport = new PropertyChangeSupport(this);
+        }
+        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "Clinician Modified", null, null));
     }
 
     /**
