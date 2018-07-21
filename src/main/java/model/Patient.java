@@ -5,8 +5,8 @@ import com.univocity.parsers.annotations.EnumOptions;
 import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.annotations.Validate;
 import service.Database;
-import utility.CSVParsing.DateConverterCSV;
-import utility.CSVParsing.EnumConverterCSV;
+import utility.parsing.DateConverterCSV;
+import utility.parsing.EnumConverterCSV;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
@@ -368,13 +368,17 @@ public class Patient extends User {
     }
 
     public void setFirstName(String firstName) {
-        if (this.firstName == null || (!firstName.equals(this.firstName))) {
-        	//SearchPatients.removeIndex(this);
+        //added for when csv parsing creates obj from default constructor
+        if (this.firstName == null) {
+            this.firstName = firstName;
+        }
+        if ((!firstName.equals(this.firstName))) {
+        	SearchPatients.removeIndex(this);
             this.firstName = firstName;
             if (getPreferredName() == null) {
                 setPreferredName( firstName );
             }
-            //SearchPatients.addIndex(this);
+            SearchPatients.addIndex(this);
             patientModified();
         }
     }
@@ -397,10 +401,14 @@ public class Patient extends User {
     }
 
     public void setLastName(String lastName) {
-        if (this.lastName == null || (!lastName.equals(this.lastName))) {
-        	//SearchPatients.removeIndex(this);
+        //added for when csv parsing creates obj from default constructor
+        if (this.lastName == null) {
             this.lastName = lastName;
-            //SearchPatients.addIndex(this);
+        }
+        if ((!lastName.equals(this.lastName))) {
+        	SearchPatients.removeIndex(this);
+            this.lastName = lastName;
+            SearchPatients.addIndex(this);
             patientModified();
         }
     }
@@ -762,11 +770,15 @@ public class Patient extends User {
 
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
         ensureValidNhi(nhiNumber);
-        if (this.nhiNumber != null && !this.nhiNumber.equals(nhiNumber.toUpperCase())) {
+        //added for when csv parsing creates obj from default constructor
+        if (this.nhiNumber == null) {
+            this.nhiNumber = nhiNumber;
+        }
+        if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
+            this.nhiNumber = nhiNumber.toUpperCase();
             SearchPatients.removeIndex(this);
-        	this.nhiNumber = nhiNumber.toUpperCase();
             SearchPatients.addIndex(this);
-        	patientModified();
+            patientModified();
         }
     }
 
@@ -922,8 +934,10 @@ public class Patient extends User {
      */
     private void patientModified() {
         this.modified = new Timestamp(System.currentTimeMillis());
-        propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "Patient Modified", null, null));
-        systemLogger.log(Level.FINER, "Patient with NHI " + this.nhiNumber + " has been modified to " + this);
+        if (propertyChangeSupport != null) {
+            propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "Patient Modified", null, null));
+            systemLogger.log(Level.FINER, "Patient with NHI " + this.nhiNumber + " has been modified to " + this);
+        }
     }
 
     public void addProcedure(Procedure procedure) {
@@ -932,6 +946,7 @@ public class Patient extends User {
 
     public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
 
+    //!!??
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
                 + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Preferred name: " + preferredName +
@@ -939,10 +954,5 @@ public class Patient extends User {
                 "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + street1 + "\n" + "Street2: " + street2 + "\n" + "Suburb:" + suburb +
                 "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: " + height + "\n" + "Weight: "
                 + weight + "\n" + "Blood group: " + bloodGroup + "\n";
-    }
-
-    public boolean equals(Object obj) {
-        Patient patient = (Patient) obj;
-        return this.nhiNumber.equals(patient.nhiNumber) && obj.getClass() == this.getClass();
     }
 }

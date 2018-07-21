@@ -1,22 +1,21 @@
-package utility.CSVParsing;
+package utility.parsing;
 
 import com.univocity.parsers.common.processor.BeanListProcessor;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import model.Patient;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.Reader;
 import java.util.*;
 
-public class ParseCsv {
+public class ParseCSV {
 
     public enum Result {
         SUCCESS,
         FAIL
     }
 
-    public static Map parse(FileReader reader) {
+    public Map<Result, List> parse(Reader reader) {
         BeanListProcessor<Patient> rowProcessor = new BeanListProcessor<>(Patient.class);
         CsvParserSettings settings = new CsvParserSettings();
         settings.getFormat().setLineSeparator("\n");
@@ -44,13 +43,4 @@ public class ParseCsv {
         return results;
     }
 
-    public static void main(String[] argv) {
-        try {
-            FileReader reader = new FileReader("C:\\Users\\Hayden Taylor\\Downloads\\testCSV.csv");
-            parse(reader);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

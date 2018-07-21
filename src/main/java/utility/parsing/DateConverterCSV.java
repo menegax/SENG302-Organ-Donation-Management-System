@@ -1,4 +1,4 @@
-package utility.CSVParsing;
+package utility.parsing;
 
 import com.univocity.parsers.conversions.Conversion;
 
@@ -13,7 +13,7 @@ public class DateConverterCSV implements Conversion {
             final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("M/d/yyyy");
             return LocalDate.parse(o.toString(), dtf);
         }
-        return o;
+        return null;
     }
 
     @Override

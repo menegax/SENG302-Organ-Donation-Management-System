@@ -1,4 +1,4 @@
-package utility.CSVParsing;
+package utility.parsing;
 
 import com.univocity.parsers.conversions.Conversion;
 import utility.GlobalEnums.*;
@@ -34,10 +34,10 @@ public class EnumConverterCSV implements Conversion {
     }
 
     private String like(String str) {
-        char[] chars1 = str.replaceAll(" ","").toCharArray();
+        char[] chars1 = str.toLowerCase().replaceAll(" ","").toCharArray();
         for (Region region : regions) {
-            char[] chars2 = region.toString().replaceAll(" ","").toCharArray();
-            if (Arrays.asList(chars1).containsAll(Arrays.asList(chars2))) {
+            char[] chars2 = region.toString().toLowerCase().replaceAll(" ","").toCharArray();
+            if (Arrays.equals(chars1, chars2)){
                 return region.toString();
             }
         }
