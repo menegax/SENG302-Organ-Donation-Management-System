@@ -9,9 +9,9 @@ public class Action {
     private User after;
 
     public Action(User current, User after) {
-        before = current.deepClone();
-        current = current;
-        after = after.deepClone();
+        this.before = current.deepClone();
+        this.current = current;
+        this.after = after.deepClone();
         execute();
     }
 

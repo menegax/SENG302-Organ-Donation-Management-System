@@ -116,6 +116,9 @@ public class SearchPatients {
             userActions.log(Level.INFO, "Successfully removed patient: " + patient.getNhiNumber() + " from the search index", "Attempted to remove patient " + patient.getNhiNumber() + " from the search index");
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Unable to remove patient index", "Attempted to remove patient index");
+        } catch (NullPointerException e) {
+            // Will go here for some unit tests (ActionTest)
+            userActions.log(Level.WARNING, "Index of patient does not exist", "Attempted to remove patient index");
         }
     }
 
