@@ -3,6 +3,7 @@ package model;
 import com.univocity.parsers.annotations.Convert;
 import com.univocity.parsers.annotations.EnumOptions;
 import com.univocity.parsers.annotations.Parsed;
+import com.univocity.parsers.annotations.Validate;
 import service.Database;
 import utility.CSVParsing.DateConverterCSV;
 import utility.CSVParsing.EnumConverterCSV;
@@ -45,10 +46,12 @@ public class Patient extends User {
     private LocalDate death;
 
     @Parsed(field = "birth_gender")
+    @Validate(oneOf = {"Male", "male", "m", "Female", "female", "f"})
     @EnumOptions(customElement = "value")
     private BirthGender birthGender;
 
     @Parsed(field = "gender")
+    @Validate(oneOf = {"Male", "male", "m", "Female", "female", "f"})
     @Convert(conversionClass = EnumConverterCSV.class)
     private PreferredGender preferredGender;
 
@@ -59,6 +62,7 @@ public class Patient extends User {
     private double weight; // Weight in kilograms
 
     @Parsed(field = "blood_type")
+    @Validate(oneOf = {"A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"})
     @EnumOptions(customElement = "value")
     private BloodGroup bloodGroup;
 
@@ -71,7 +75,7 @@ public class Patient extends User {
     private String suburb;
 
     @Parsed(field = "region")
-    @EnumOptions(customElement = "value")
+    @Convert(conversionClass = EnumConverterCSV.class)
     private Region region;
 
     @Parsed(field = "zip_code")

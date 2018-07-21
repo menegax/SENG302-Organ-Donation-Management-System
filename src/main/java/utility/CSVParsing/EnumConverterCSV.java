@@ -3,8 +3,13 @@ package utility.CSVParsing;
 import com.univocity.parsers.conversions.Conversion;
 import utility.GlobalEnums.*;
 
+import java.util.Arrays;
+
 public class EnumConverterCSV implements Conversion {
 
+    private final Region[] regions = {Region.AUCKLAND, Region.CANTERBURY, Region.GISBORNE, Region.BAYOFPLENTY, Region.HAWKESBAY,
+                                Region.MANAWATU, Region.MARLBOROUGH, Region.NELSON, Region.NORTHLAND, Region.OTAGO, Region.SOUTHLAND,
+                                Region.TARANAKI, Region.TASMAN, Region.WAIKATO, Region.WELLINGTON, Region.WESTCOAST};
     @Override
     public Object execute(Object o) {
         if (o != null) {
@@ -18,12 +23,24 @@ public class EnumConverterCSV implements Conversion {
                     return "Man";
                 }
             }
+            return like(o.toString());
         }
         return null;
     }
 
     @Override
     public Object revert(Object o) {
+        return null;
+    }
+
+    private String like(String str) {
+        char[] chars1 = str.replaceAll(" ","").toCharArray();
+        for (Region region : regions) {
+            char[] chars2 = region.toString().replaceAll(" ","").toCharArray();
+            if (Arrays.asList(chars1).containsAll(Arrays.asList(chars2))) {
+                return region.toString();
+            }
+        }
         return null;
     }
 }
