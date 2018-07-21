@@ -189,12 +189,16 @@ public class GUIUserRegister {
         middlenameRegister.clear();
         birthRegister.getEditor().clear();
         regionRegister.valueProperty().set(null);
+        passwordTxt.clear();
+        verifyPasswordTxt.clear();
 
         setValid(userIdRegister);
         setValid(firstnameRegister);
         setValid(lastnameRegister);
         setValid(middlenameRegister);
         setValid(birthRegister);
+        setValid(passwordTxt);
+        setValid(verifyPasswordTxt);
     }
 
     /**
