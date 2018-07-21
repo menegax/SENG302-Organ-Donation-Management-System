@@ -1,23 +1,20 @@
 package model_test;
 
 
-import model.Administrator;
 import model.Clinician;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import service.Database;
 import utility.GlobalEnums;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.OFF;
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -93,7 +90,7 @@ public class ClinicianTest {
     }
 
 
-    public void givenDefaultClinician() {
+    private void givenDefaultClinician() {
         try {
             Database.getClinicianByID(clinician.getStaffID());
         } catch(IOException e) {
@@ -102,11 +99,11 @@ public class ClinicianTest {
         }
     }
 
-    public void whenDeletingClinician(Clinician clinician) {
+    private void whenDeletingClinician(Clinician clinician) {
         Database.deleteClinician(clinician);
     }
 
-    public void thenClinicianShouldntBeRemovedFromDatabase(Clinician clinician) {
+    private void thenClinicianShouldntBeRemovedFromDatabase(Clinician clinician) {
         try {
             Database.getClinicianByID(clinician.getStaffID());
         } catch(IOException e) {
