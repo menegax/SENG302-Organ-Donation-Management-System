@@ -240,24 +240,17 @@ public class GUIUserRegister {
         boolean valid = true;
         // first name
         if (!firstnameRegister.getText()
-                .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
+                .matches("^[-a-zA-Z]+$")) {
             valid = setInvalid(firstnameRegister);
         } else {
             setValid(firstnameRegister);
         }
         // last name
         if (!lastnameRegister.getText()
-                .matches("([A-Za-z]+[.]*[-]*[\\s]*)+")) {
+                .matches("^[-a-zA-Z]+$")) {
             valid = setInvalid(lastnameRegister);
         } else {
             setValid(lastnameRegister);
-        }
-        //middle names
-        if (!middlenameRegister.getText()
-                .matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
-            valid = setInvalid(middlenameRegister);
-        } else {
-            setValid(middlenameRegister);
         }
         return valid;
     }
@@ -268,7 +261,7 @@ public class GUIUserRegister {
      * @return Whether the fields are valid
      */
     private boolean validatePatient() {
-        boolean valid = true;
+        boolean valid = validateNames();
         // nhi
         if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", userIdRegister.getText().toUpperCase())) {
             valid = setInvalid(userIdRegister);
@@ -300,7 +293,7 @@ public class GUIUserRegister {
      * @return Whether the fields are valid
      */
     private boolean validateClinician() {
-        boolean valid = true;
+        boolean valid = validateNames();
         if (regionRegister.getValue() != null) {
             setValid(birthRegister);
         } else {

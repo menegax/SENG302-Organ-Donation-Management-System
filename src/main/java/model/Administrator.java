@@ -48,29 +48,8 @@ public class Administrator extends User {
         userModified();
     }
 
-
-    public void adminModified() {
-        this.modified = new Timestamp(System.currentTimeMillis());
-    }
-
-
     public String getUsername() {
         return username;
-    }
-
-
-    /**
-     * Updates the administrators last name if the provided new value is valid.
-     * The last name must be non-null and have non-zero length. The last name can only
-     * contain alphabetic characters and hyphens
-     *
-     * @param firstName The new last name
-     */
-    public void setFirstName(String firstName) {
-        if (firstName != null && firstName.length() > 0 && Pattern.matches("^[-a-zA-Z]+$", firstName)) {
-            this.firstName = firstName;
-            adminModified();
-        }
     }
 
 
@@ -94,7 +73,7 @@ public class Administrator extends User {
             throw new IllegalArgumentException("Password must be at least 6 characters long");
         }
         this.password = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password + salt);
-        adminModified();
+        userModified();
     }
 
 
