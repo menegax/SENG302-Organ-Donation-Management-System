@@ -32,29 +32,6 @@ public class Database {
 
     private static Searcher searcher = Searcher.getSearcher();
 
-    public static void addAdmin(Administrator admin) {
-    	if (!usernameInDatabase(admin.getUsername())) {
-    		administrators.add(admin);
-    		searcher.addIndex(admin);
-    	}
-    }
-
-    public static void removeAdmin(Administrator admin) {
-    	if (usernameInDatabase(admin.getUsername())) {
-    		administrators.remove(admin);
-    	}
-    }
-
-    private static boolean usernameInDatabase(String username) {
-    	boolean inDatabase = false;
-    	for (Administrator admin : getAdministrators()) {
-    		if (username.equals(admin.getUsername())) {
-    			inDatabase = true;
-    		}
-    	}
-    	return inDatabase;
-    }
-
     /**
      * Adds a patient to the database
      *

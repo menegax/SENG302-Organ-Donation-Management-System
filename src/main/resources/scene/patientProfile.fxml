@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="patientProfilePane" prefHeight="370.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProfile">
+<GridPane fx:id="patientProfilePane" prefHeight="370.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProfile">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="33.399993896484375" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="258.19996337890626" />
@@ -240,6 +240,9 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-       <Button fx:id="deleteButton" layoutX="14.0" layoutY="344.0" mnemonicParsing="false" onAction="#deleteProfile" styleClass="delete-button" stylesheets="@../css/guiStyle.css" text="Delete Profile" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+       <Button fx:id="deleteButton" layoutX="14.0" layoutY="344.0" mnemonicParsing="false" onAction="#deleteProfile" styleClass="delete-button" stylesheets="@../css/guiStyle.css" text="Delete Profile" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+         <GridPane.margin>
+            <Insets bottom="5.0" left="5.0" />
+         </GridPane.margin></Button>
    </children>
 </GridPane>
