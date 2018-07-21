@@ -1,5 +1,7 @@
 package utility;
 
+import static utility.SystemLogger.systemLogger;
+
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -51,9 +53,9 @@ public class Searcher {
     	try {
 			indexWriter = initializeWriter();
 			createFullIndex();
-            UserActionHistory.userActions.log(Level.INFO, "Successfully initialized index writer.", "Attempted to initialize index writer.");
+            systemLogger.log(Level.INFO, "Successfully initialized index writer.");
 		} catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Failure to initialize index writer.", "Attempted to initialize index writer.");
+            systemLogger.log(Level.SEVERE, "Failed to initialize index writer.");
 		}
     }
     

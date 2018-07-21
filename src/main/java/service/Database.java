@@ -323,9 +323,63 @@ public class Database {
             userActions.log(Level.WARNING, "Patient import file not found", "Attempted to read patient file");
         }
         catch (Exception e) {
-            userActions.log(Level.WARNING, "Failed to import from patient file", "Attempted to read patient file");
+            userActions.log(Level.WARNING, "Failed to import patients from file", "Attempted to read patient file");
         }
 
+    }
+
+    /**
+     * Reads clinician data from disk
+     * @param fileName file to import from
+     */
+    public static void importFromDiskClinicians(String fileName) {
+        Gson gson = new Gson();
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(fileName));
+            Clinician[] clinician = gson.fromJson(br, Clinician[].class);
+            for (Clinician c : clinician) {
+                try {
+                    Database.addClinician(c);
+                } catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
+                }
+            }
+            systemLogger.log(Level.INFO, "Successfully imported clinician from file");
+        }
+        catch (FileNotFoundException e) {
+            userActions.log(Level.WARNING, "Clinician import file not found", "Attempted to read clinician file");
+        }
+        catch (Exception e) {
+            userActions.log(Level.WARNING, "Failed to import clinicians from file", "Attempted to read clinician file");
+        }
+
+    }
+
+    /**
+     * Reads administrator data from disk
+     * @param fileName file to import from
+     */
+    public static void importFromDiskAdministrators(String fileName) {
+        Gson gson = new Gson();
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(fileName));
+            Administrator[] administrators = gson.fromJson(br, Administrator[].class);
+            for (Administrator a : administrators) {
+                try {
+                    Database.addAdministrator(a);
+                } catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Error importing administrator from file", "Attempted to import administrator from file");
+                }
+            }
+        }
+        catch (FileNotFoundException e) {
+            userActions.log(Level.WARNING, "Administrator import file not found", "Attempted to read administrator file");
+        }
+        catch (Exception e) {
+            userActions.log(Level.WARNING, "Failed to import administrators from file", "Attempted to read administrator file");
+        }
     }
 
     /**
@@ -371,57 +425,6 @@ public class Database {
      */
     public static void deleteAdministrator(Administrator administrator) {
         administrators.remove( administrator );
-    }
-
-    /**
-     * Reads clinician data from disk
-     * @param fileName file to import from
-     */
-    public static void importFromDiskClinicians(String fileName) {
-        Gson gson = new Gson();
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new FileReader(fileName));
-            Clinician[] clinician = gson.fromJson(br, Clinician[].class);
-            for (Clinician c : clinician) {
-                try {
-                    Database.addClinician(c);
-                } catch (IllegalArgumentException e) {
-                    userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
-                }
-            }
-            systemLogger.log(Level.INFO, "Successfully imported clinician from file");
-        }
-        catch (FileNotFoundException e) {
-            userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
-        }
-        catch (Exception e) {
-            userActions.log(Level.WARNING, "Failed to import from file", "Attempted to read clinician file");
-        }
-
-    }
-
-    /**
-     * Reads administrator data from disk
-     * @param fileName file to import from
-     */
-    public static void importFromDiskAdministrators(String fileName) {
-        Gson gson = new Gson();
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new FileReader(fileName));
-            Administrator[] administrators = gson.fromJson(br, Administrator[].class);
-            for (Administrator a : administrators) {
-                try {
-                    Database.addAdministrator(a);
-                } catch (IllegalArgumentException e) {
-                    userActions.log(Level.WARNING, "Error importing administrator from file", "Attempted to import administrator from file");
-                }
-            }
-        }
-        catch (FileNotFoundException e) {
-            userActions.log(Level.WARNING, "Failed to import administrators", "Attempted to import administrators");
-        }
     }
 
     /**
