@@ -225,6 +225,9 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
      * Refreshes the table data
      */
     private void tableRefresh() {
+        UserTypes[] types = new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN};
+        masterData.clear();
+        masterData.addAll(searcher.getDefaultResults(types));
         userDataTable.refresh();
     }
 }
