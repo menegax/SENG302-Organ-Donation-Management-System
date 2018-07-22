@@ -7,9 +7,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCodeCombination;
 import utility.undoRedo.stateHistoryWidgets.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 /**
  * Represents the state history of a screen of FXML widgets
@@ -34,6 +35,10 @@ public class StatesHistoryScreen {
     private UndoableScreen undoableScreen;
 
     private UndoableStage undoableStage;
+
+    private Map<Integer, Action> actions = new HashMap<>();
+
+    private int index = 0;
 
     /**
      * Constructor for the StatesHistoryScreen, creates state objects of passed in control items to keep track of
@@ -215,6 +220,11 @@ public class StatesHistoryScreen {
     }
 
 
+    /**
+     * Creates state objects for every choiceBox item in the passed in array
+     *
+     * @param choiceBox - object which can be cast to an arraylist<choiceBox>
+     */
     private void createStateHistoriesChoiceBox(Object choiceBox) {
         stateHistories.add( new StateHistoryChoiceBox( (ChoiceBox <String>) choiceBox ) );
         ((ChoiceBox <String>) choiceBox).getSelectionModel()
@@ -252,6 +262,7 @@ public class StatesHistoryScreen {
      */
     public void store() {
         if (!undone && !redone && !undoableStage.isChangingStates()) {
+            index += 1;
             for (StateHistoryControl stateHistory : stateHistories) {
                 stateHistory.store();
             }
@@ -272,6 +283,11 @@ public class StatesHistoryScreen {
                 return false;
             }
         }
+        index -= 1;
+        if (actions.get(index) != null) {
+            actions.get(index).unexecute();
+            userActions.log(Level.INFO, "Local change undone", "User undoed through local change");
+        }
         undone = false;
         return true;
     }
@@ -289,6 +305,11 @@ public class StatesHistoryScreen {
                 return false;
             }
         }
+        if (actions.get(index) != null) {
+            actions.get(index).execute();
+            userActions.log(Level.INFO, "Local change redone", "User redoed through local change");
+        }
+        index += 1;
         redone = false;
         return true;
     }
@@ -327,6 +348,15 @@ public class StatesHistoryScreen {
      */
     public UndoableScreen getUndoableScreen() {
         return undoableScreen;
+    }
+
+    /**
+     * Adds an action to the actions map for this StatesHistoryScreen
+     * Action is assciated with the current index in the undo/redo stack
+     * @param action the new action to add
+     */
+    public void addAction(Action action) {
+        actions.put(index, action);
     }
 
 }
