@@ -72,9 +72,10 @@ public class Patient extends User {
     @Parsed(field = "street_number")
     private String street1;
 
+    @Parsed(field = "street_name")
     private String street2;
 
-    @Parsed(field = "neighbourhood")
+    @Parsed(field = "neighborhood")
     private String suburb;
 
     @Parsed(field = "region")
@@ -87,13 +88,16 @@ public class Patient extends User {
     @Parsed(field = "nhi")
     private String nhiNumber;
 
+    @Parsed(field = "home_number")
     private String homePhone;
 
+    @Parsed(field = "mobile_number")
     private String mobilePhone;
 
-    private String workPhone;
-
+    @Parsed(field = "email")
     private String emailAddress;
+
+    private String workPhone;
 
     private String contactName;
 
