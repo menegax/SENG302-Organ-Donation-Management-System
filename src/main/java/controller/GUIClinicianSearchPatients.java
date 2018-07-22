@@ -67,6 +67,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private RangeSlider rangeSlider;
+
     /**
      * Initialises the data within the table to all patients
      *
@@ -233,7 +235,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * Adds listener to the age label to update when slider is moved
      */
     private void setupAgeSliderListeners() {
-        RangeSlider rangeSlider = new RangeSlider();
+        rangeSlider = new RangeSlider();
         rangeSlider.setShowTickLabels(true);
         rangeSlider.setPadding(new Insets(10, 150, 0, 50));
         rangeSlider.setMaxWidth(10000);
@@ -252,6 +254,16 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             ageLabel.setText(String.format("%s - %s", String.valueOf(newValue.intValue()), (int) rangeSlider.getHighValue()));
         }));
     }
+
+    @FXML
+    public void clearFilterOptions() {
+        rangeSlider.setLowValue(0);
+        rangeSlider.setHighValue(100);
+        searchEntry.clear();
+        isRecieverCheckbox.setSelected(false);
+        isDonorCheckbox.setSelected(false);
+    }
+
 
     /**
      * Adds all db data via constructor
