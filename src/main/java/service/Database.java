@@ -226,6 +226,17 @@ public class Database {
         }
     }
 
+    public static boolean usernameUsed(String username) {
+    	username = username.toUpperCase();
+    	boolean exisits = false;
+    	for (Administrator admin: getAdministrators()) {
+    		if (admin.getUsername().equals(username)) {
+    			exisits = true;
+    		}
+    	}
+    	return exisits;
+    }
+    
     /**
      * Calls all sub-methods to save data to disk
      */

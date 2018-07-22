@@ -312,6 +312,10 @@ public class GUIUserRegister {
         if (!userIdRegister.getText()
                 .matches("([A-Za-z0-9]+[-]*[_]*)+")) {
             valid = setInvalid(userIdRegister);
+            new Alert(Alert.AlertType.ERROR, "Invalid username.").showAndWait();
+        } else if (Database.usernameUsed(userIdRegister.getText())) {
+            valid = setInvalid(userIdRegister);
+            new Alert(Alert.AlertType.ERROR, "Username already in use.").showAndWait();
         } else {
             setValid(userIdRegister);
         }
