@@ -40,12 +40,12 @@ public class ScreenControl {
     @Deprecated
     public static Map<String, Parent> scenes = new HashMap<>();
 
-    private static Map<User, Set<Stage>> userStages = new HashMap<>();
+    private Map<User, Set<Stage>> userStages = new HashMap<>();
 
     @Deprecated
     private static Scene main;
 
-    private static Map<UUID, Stage> applicationStages;
+    private Map<UUID, Stage> applicationStages;
 
     private boolean macOs = System.getProperty("os.name")
             .startsWith("Mac");
@@ -309,7 +309,7 @@ public class ScreenControl {
      * @param user the user responsible for the stage
      * @param newStage the new stage to be tied to the user
      */
-    private static void addUserStage(User user, Stage newStage) {
+    private void addUserStage(User user, Stage newStage) {
 
         systemLogger.log(FINE, "Added user and stage");
 
@@ -329,7 +329,7 @@ public class ScreenControl {
      * Closes all the stages related to a given user
      * @param user the user whose stages will be closed
      */
-    static void closeAllUserStages(User user) {
+    void closeAllUserStages(User user) {
         systemLogger.log(FINER, "Attempting to close all user stages...");
         Set<Stage> stages = userStages.get(user);
         try {
@@ -380,11 +380,9 @@ public class ScreenControl {
      * Removes asterisks from all stages when local changes are saved to disk
      */
     private void removeUnsavedAsterisks() {
-        for (Set<Stage> stages : userStages.values()) {
-            for (Stage stage : stages) {
-                if (stage.getTitle() != null) {
-                    stage.setTitle(stage.getTitle().replace("*", ""));
-                }
+        for (Stage stage : applicationStages.values()) {
+            if (stage.getTitle() != null) {
+                stage.setTitle(stage.getTitle().replace("*", ""));
             }
         }
     }
@@ -393,15 +391,22 @@ public class ScreenControl {
      * Adds asterisks to all stages when local changes have been made
      */
     private void addUnsavedAsterisks() {
-        for (Set<Stage> stages : userStages.values()) {
-            for (Stage stage : stages) {
-                if (stage.getTitle() != null) {
-                    if (!stage.getTitle().contains("*")) {
-                        stage.setTitle(stage.getTitle() + "*");
-                    }
+        for (Stage stage : applicationStages.values()) {
+            if (stage.getTitle() != null) {
+                if (!stage.getTitle().contains("*")) {
+                    stage.setTitle(stage.getTitle() + "*");
                 }
             }
         }
+    }
+
+    /**
+     * Resets the data in ScreenControl
+     */
+    public void reset() {
+        isSaved = true;
+        userStages = new HashMap<>();
+        applicationStages = new HashMap<>();
     }
 }
 

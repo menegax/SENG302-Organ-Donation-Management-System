@@ -38,6 +38,7 @@ public class ScreenControlTest {
     @Test
     public void testSetIsSaved() {
         Platform.runLater(() -> { // Means that stages are created on JavaFX thread not main thread
+            screenControl.reset();
             givenTestTitleStagesAdded();
             givenNullTitleStageAdded();
             whenSetNotSaved();
