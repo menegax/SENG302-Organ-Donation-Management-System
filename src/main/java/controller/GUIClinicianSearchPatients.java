@@ -1,6 +1,5 @@
 package controller;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 import javafx.application.Platform;
@@ -13,9 +12,12 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
+import org.controlsfx.control.RangeSlider;
 import utility.GlobalEnums;
 import utility.SearchPatients;
 import utility.undoRedo.StatesHistoryScreen;
@@ -23,8 +25,6 @@ import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -50,8 +50,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     @FXML
     private TextField searchEntry;
 
-    @FXML
-    private Slider ageSlider;
 
     @FXML
     private Text ageLabel;
@@ -61,6 +59,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
     @FXML
     private CheckBox isRecieverCheckbox;
+
+    @FXML
+    private GridPane sliderGrid;
 
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
 
@@ -232,8 +233,23 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * Adds listener to the age label to update when slider is moved
      */
     private void setupAgeSliderListeners() {
-        ageSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
-            ageLabel.setText(String.valueOf(newValue.intValue()));
+        RangeSlider rangeSlider = new RangeSlider();
+        rangeSlider.setShowTickLabels(true);
+        rangeSlider.setPadding(new Insets(10, 150, 0, 50));
+        rangeSlider.setMaxWidth(10000);
+        rangeSlider.setMax(100);
+        rangeSlider.setLowValue(0);
+        rangeSlider.setHighValue(100);
+        rangeSlider.setShowTickMarks(true);
+
+        sliderGrid.add(rangeSlider, 0, 4, 3, 1);
+
+        rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> {
+            ageLabel.setText(String.format("%s - %s", ((int) rangeSlider.getLowValue()), String.valueOf(newValue.intValue())));
+        }));
+
+        rangeSlider.lowValueProperty().addListener(((observable, oldValue, newValue) -> {
+            ageLabel.setText(String.format("%s - %s", String.valueOf(newValue.intValue()), (int) rangeSlider.getHighValue()));
         }));
     }
 
