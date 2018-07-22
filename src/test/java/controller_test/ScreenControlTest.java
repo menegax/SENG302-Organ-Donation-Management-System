@@ -33,7 +33,7 @@ public class ScreenControlTest {
 
     /**
      * Tests the setIsSaved method of screen control
-     * Does this by checking asterixs on stage titles
+     * Does this by checking asterisks on stage titles
      */
     @Test
     public void testSetIsSaved() {
@@ -41,15 +41,15 @@ public class ScreenControlTest {
             givenTestTitleStagesAdded();
             givenNullTitleStageAdded();
             whenSetNotSaved();
-            thenStagesHaveAsterixs();
+            thenStagesHaveAsterisks();
             whenSetSaved();
-            thenStagesDontHaveAsterixs();
+            thenStagesDontHaveAsterisks();
             whenSetSaved();
-            thenStagesDontHaveAsterixs();
+            thenStagesDontHaveAsterisks();
             whenSetNotSaved();
-            thenStagesHaveAsterixs();
+            thenStagesHaveAsterisks();
             whenSetNotSaved();
-            thenStagesHaveAsterixs();
+            thenStagesHaveAsterisks();
         });
     }
 
@@ -88,18 +88,18 @@ public class ScreenControlTest {
     }
 
     /**
-     * Checks that the stages have an asterix when they have a title
+     * Checks that the stages have an asterisk when they have a title
      */
-    private void thenStagesHaveAsterixs() {
+    private void thenStagesHaveAsterisks() {
         assertEquals("Test1*", testStage1.getTitle());
         assertEquals("Test2*", testStage2.getTitle());
         assertEquals(null, nullStage.getTitle());
     }
 
     /**
-     * Checks that the stages don't have an asterix when they have a title
+     * Checks that the stages don't have an asterisk when they have a title
      */
-    private void thenStagesDontHaveAsterixs() {
+    private void thenStagesDontHaveAsterisks() {
         assertEquals("Test1", testStage1.getTitle());
         assertEquals("Test2", testStage2.getTitle());
         assertEquals(null, nullStage.getTitle());
