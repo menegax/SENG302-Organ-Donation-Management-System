@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import model.Patient;
 import utility.GlobalEnums;
 import utility.SearchPatients;
@@ -49,6 +50,12 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     @FXML
     private TextField searchEntry;
 
+    @FXML
+    private Slider ageSlider;
+
+    @FXML
+    private Text ageLabel;
+
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
@@ -62,6 +69,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
         FilteredList<Patient> filteredData = setupTableColumnsAndData();
+        setupAgeSliderListeners();
         setupSearchingListener(filteredData);
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
@@ -211,6 +219,13 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 }
             }
         });
+    }
+
+
+    private void setupAgeSliderListeners() {
+        ageSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            ageLabel.setText(String.valueOf(newValue.intValue()));
+        }));
     }
 
     /**
