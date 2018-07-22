@@ -8,7 +8,7 @@ import java.util.logging.Level;
 
 import static utility.SystemLogger.systemLogger;
 
-public abstract class User implements Serializable{
+public abstract class User implements Serializable {
 
     private final UUID uuid = UUID.randomUUID();
 
@@ -45,6 +45,7 @@ public abstract class User implements Serializable{
             ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
             return (User) in.readObject();
         } catch (Exception e) {
+            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Error setting attributes of patient");
         }
         return null;

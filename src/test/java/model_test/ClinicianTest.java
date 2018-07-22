@@ -2,6 +2,7 @@ package model_test;
 
 
 import model.Clinician;
+import model.Patient;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -11,17 +12,19 @@ import utility.GlobalEnums;
 
 import javax.xml.crypto.Data;
 import java.io.InvalidObjectException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.OFF;
 import static junit.framework.TestCase.*;
+import static org.junit.Assert.assertEquals;
 import static utility.UserActionHistory.userActions;
 
 /**
  * Tests valid and invalid controller creation, fetching clinicians from the database, as well as updating clinicians
  */
-public class ClinicianTest {
+public class ClinicianTest implements Serializable{
 
     private Clinician clinician;
 
@@ -90,4 +93,19 @@ public class ClinicianTest {
         assertEquals("Joe", clinician.getFirstName());
     }
 
+    /**
+     * Tests the setAttributes method
+     */
+    @Test
+    public void testSetAttributes() {
+        Clinician beforeClinician = new Clinician(1, "First", new ArrayList<>(), "Last", GlobalEnums.Region.CANTERBURY);
+        Clinician afterClinician = new Clinician(1, "Second", new ArrayList<String>(){{add("Middle"); add("Name");}}, "Last", GlobalEnums.Region.CANTERBURY);
+        beforeClinician.setAttributes(afterClinician);
+        assertEquals("Second", beforeClinician.getFirstName());
+        assertEquals("Name", beforeClinician.getMiddleNames().get(1));
+
+        // checks deep copy has occurred
+        beforeClinician.getMiddleNames().remove(0);
+        assertEquals("Middle", afterClinician.getMiddleNames().get(0));
+    }
 }
