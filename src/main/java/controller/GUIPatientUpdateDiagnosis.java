@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import utility.GlobalEnums;
+import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
 
@@ -294,6 +295,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
                 currentPatient.getCurrentDiseases().add(target);
             }
             screenControl.setIsSaved(false);
+            StatusObservable.getInstance().setStatus("Disease " + target.getDiseaseName() + " updated");
             screenControl.closeStage(((UndoableStage)doneButton.getScene().getWindow()).getUUID());
         } else {
             String errorString = "Diseases must not have the same disease name and diagnosis date as another disease\n\n";

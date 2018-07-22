@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
+import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -81,6 +82,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
         boolean valid = setPatientContactDetails();
         if (valid) {
             screenControl.setIsSaved(false);
+            StatusObservable.getInstance().setStatus("Patient contacts updated");
             new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
         } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();

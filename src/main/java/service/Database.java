@@ -5,6 +5,7 @@ import controller.ScreenControl;
 import model.Clinician;
 import model.Patient;
 import utility.SearchPatients;
+import utility.StatusObservable;
 
 import java.io.*;
 import java.util.Comparator;
@@ -188,6 +189,7 @@ public class Database {
             saveToDiskWaitlist();
             saveToDiskClinicians();
             screenControl.setIsSaved(true);
+            StatusObservable.getInstance().setStatus("Local changes saved");
         } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }

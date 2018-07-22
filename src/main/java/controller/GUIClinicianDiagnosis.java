@@ -12,6 +12,7 @@ import model.Disease;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
+import utility.StatusObservable;
 import utility.undoRedo.UndoableStage;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -344,6 +345,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
             deletedPast.add(pastDiagnosesView.getSelectionModel().getSelectedItem());
             loadPastDiseases();
             screenControl.setIsSaved(false);
+            StatusObservable.getInstance().setStatus("Disease deleted");
             userActions.log(Level.FINE, "Successfully deleted a disease",  pastDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
             new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis deleted successfully", ButtonType.OK).show();
         } else if (currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
@@ -352,6 +354,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
             deletedCurrent.add(currentDiagnosesView.getSelectionModel().getSelectedItem());
             loadCurrentDiseases();
             screenControl.setIsSaved(false);
+            StatusObservable.getInstance().setStatus("Disease deleted");
             userActions.log(Level.WARNING, "Successfully deleted a disease", currentDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
             new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis deleted successfully", ButtonType.OK).show();
         } else {

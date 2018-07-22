@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums.*;
+import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -494,6 +495,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                         .getSelectedItem()));
             }
             screenControl.setIsSaved(false);
+            StatusObservable.getInstance().setStatus("Patient profile updated");
             new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
             userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
         }

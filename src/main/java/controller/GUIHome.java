@@ -1,13 +1,5 @@
 package controller;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
-
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,12 +11,20 @@ import model.Clinician;
 import model.Patient;
 import model.User;
 import service.Database;
+import utility.StatusObservable;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Observable;
+import java.util.Observer;
 
-public class GUIHome {
+import static java.util.logging.Level.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
+public class GUIHome implements Observer {
 
     @FXML
     public BorderPane homePane;
@@ -41,6 +41,9 @@ public class GUIHome {
     @FXML
     private Label userTypeDisplay;
 
+    @FXML
+    private Label statusLbl;
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private UserControl userControl = new UserControl();
@@ -52,6 +55,8 @@ public class GUIHome {
 
     @FXML
     public void initialize() {
+        StatusObservable statusObservable = StatusObservable.getInstance();
+        statusObservable.addObserver(this);
         try {
             // Patient viewing themself
             if (userControl.getLoggedInUser() instanceof Patient){
@@ -308,4 +313,21 @@ public class GUIHome {
 
     }
 
+    /**
+     * Sets the text of the status label
+     * @param text - The new text
+     */
+    private void setStatusLbl(String text) {
+        statusLbl.setText(text);
+    }
+
+    /**
+     * Called when the status text of the StatusObservable is set
+     * @param o The StatusObservable instance
+     * @param arg The new status text
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        setStatusLbl(arg.toString());
+    }
 }
