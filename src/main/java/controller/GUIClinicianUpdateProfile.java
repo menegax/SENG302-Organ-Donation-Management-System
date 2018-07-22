@@ -11,6 +11,7 @@ import model.Clinician;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
+import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -225,6 +226,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
                     .toString()));
             target.clinicianModified();
             screenControl.setIsSaved(false);
+            StatusObservable.getInstance().setStatus("Clinician profile updated");
             new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
         }
         else {
