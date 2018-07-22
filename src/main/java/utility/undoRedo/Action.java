@@ -1,6 +1,7 @@
 package utility.undoRedo;
 
 import model.User;
+import service.Database;
 
 /**
  * Represents an action (edit, add, delete) performed on a user in the application
@@ -17,9 +18,19 @@ public class Action {
      * @param after a user with the attributes of the user after the action has occurred
      */
     public Action(User current, User after) {
-        this.before = current.deepClone();
-        this.current = current;
-        this.after = after.deepClone();
+        if (current == null) { // New User added
+            this.before = null;
+            this.current = null;
+            this.after = after.deepClone();
+        } else if (after == null) { // User deleted
+            this.before = current.deepClone();
+            this.current = current;
+            this.after = null;
+        } else { // User updated
+            this.before = current.deepClone();
+            this.current = current;
+            this.after = after.deepClone();
+        }
         execute();
     }
 
@@ -27,13 +38,29 @@ public class Action {
      * Executes the action (does nothing if action has occurred)
      */
     public void execute() {
-        current.setAttributes(after);
+        if (after == null) {
+            Database.removeUser(current);
+            current = null;
+        } else if (before == null) {
+            current = after.deepClone();
+            Database.addUser(current);
+        } else {
+            current.setAttributes(after);
+        }
     }
 
     /**
      * Unexecutes (undoes) the action (does nothing if the action has already been undone)
      */
     public void unexecute() {
-        current.setAttributes(before);
+        if (after == null) {
+            current = before.deepClone();
+            Database.addUser(current);
+        } else if (before == null) {
+            Database.removeUser(current);
+            current = null;
+        } else {
+            current.setAttributes(before);
+        }
     }
 }
