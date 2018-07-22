@@ -49,8 +49,6 @@ public class GUIHome implements Observer {
 
     private UserControl userControl = new UserControl();
 
-    private UserControl userControl = new UserControl();
-
     private Stage homeStage;
 
     /** The user that the home controller is viewing. If it is a clinician viewing a patient it is the patient */
@@ -70,7 +68,7 @@ public class GUIHome implements Observer {
             else if (userControl.getLoggedInUser() instanceof Clinician) {
                 // Clinician viewing a patient
                 if (userControl.getTargetUser() != null) {
-                    homeTarget = userControl.getTargetPatient();
+                    homeTarget = userControl.getTargetUser();
                     addTabsForPatientClinician(); // if we are a clinician looking at a patient
                     setUpColouredBar(userControl.getTargetUser(), "Patient");
                 }
@@ -146,7 +144,7 @@ public class GUIHome implements Observer {
         homeStage.setTitle("Home");
 
         // If clinician viewing patient
-        if (userControl.getLoggedInUser() instanceof Clinician && userControl.getTargetPatient() != null) {
+        if (userControl.getLoggedInUser() instanceof Clinician && userControl.getTargetUser() != null) {
             homeStage.setTitle("Viewing patient " + ((Patient) homeTarget).getNhiNumber()); //todo change to accomodate admin viewing clinician, admin viewing patient, admin viewing admin
         }
 

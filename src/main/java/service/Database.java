@@ -6,7 +6,6 @@ import controller.ScreenControl;
 import model.Clinician;
 import model.Patient;
 import utility.Searcher;
-import utility.SearchPatients;
 import utility.StatusObservable;
 
 import java.io.*;
