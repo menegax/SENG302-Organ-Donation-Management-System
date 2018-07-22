@@ -9,13 +9,13 @@ import org.junit.Test;
 import service.Database;
 import utility.GlobalEnums;
 
-import javax.xml.crypto.Data;
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.OFF;
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -79,4 +79,32 @@ public class ClinicianTest {
         assertEquals("Joe", clinician.getFirstName());
     }
 
+
+    private void givenDefaultClinician() {
+        try {
+            database.getClinicianByID(clinician.getStaffID());
+        } catch(IOException e) {
+            database.addClinician(clinician);
+            assert database.getClinicians().contains(clinician);
+        }
+    }
+
+    private void whenDeletingClinician(Clinician clinician) {
+        database.deleteClinician(clinician);
+    }
+
+    private void thenClinicianShouldntBeRemovedFromDatabase(Clinician clinician) {
+        try {
+            database.getClinicianByID(clinician.getStaffID());
+        } catch(IOException e) {
+            assert false;
+        }
+    }
+
+    @Test
+    public void testDeletingDefaultClinician() {
+        givenDefaultClinician();
+        whenDeletingClinician(clinician);
+        thenClinicianShouldntBeRemovedFromDatabase(clinician);
+    }
 }

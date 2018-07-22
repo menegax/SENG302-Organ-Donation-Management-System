@@ -1,16 +1,22 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+import model.Administrator;
 import model.Clinician;
+import service.Database;
 
-import java.io.IOException;
+import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianProfile {
+    @FXML
+    private GridPane clinicianProfilePane;
+
     @FXML
     private Label idTxt;
 
@@ -29,26 +35,38 @@ public class GUIClinicianProfile {
     @FXML
     private Label regionTxt;
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    @FXML
+    private Button deleteButton;
+
+    private UserControl userControl = new UserControl();
+    
+    private Database database = Database.getDatabase();
 
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
     public void initialize() {
-        UserControl userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
-        if (user instanceof Clinician){
-            loadProfile(((Clinician) user));
+        if (userControl.getLoggedInUser() instanceof Clinician) {
+            deleteButton.setVisible(false);
+            deleteButton.setDisable(true);
+            loadProfile(((Clinician) userControl.getLoggedInUser()));
+        } else if (userControl.getLoggedInUser() instanceof Administrator) {
+            loadProfile(((Clinician) userControl.getTargetUser()));
+            if (((Clinician) userControl.getTargetUser()).getStaffID() == 0) {
+                deleteButton.setVisible(false);
+                deleteButton.setDisable(true);
+            }
         }
     }
 
     /**
      * Loads clinician attributes to display in the clinician profile screen
+     *
      * @param clinician clinician logged in
      */
     private void loadProfile(Clinician clinician) {
         idTxt.setText(String.valueOf(clinician.getStaffID()));
-        nameTxt.setText(clinician.getConcatenatedName());
+        nameTxt.setText(clinician.getNameConcatenated());
         if (clinician.getStreet1() != null && clinician.getStreet1().length() > 0) {
             street1Txt.setText(clinician.getStreet1());
         } else {
@@ -68,26 +86,14 @@ public class GUIClinicianProfile {
     }
 
     /**
-     * Opens the clinician edit screen
+     * Deletes the current profile from the HashSet in Database, not from disk, not until saved
      */
-    public void goToEdit() {
-        try {
-            screenControl.show(idTxt, "/scene/clinicianProfileUpdate.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load update clinician profile").show();
-            userActions.log(SEVERE, "Failed to load update clinician profile", "Attempted to load update clinician profile");
-        }
-    }
-
-    /**
-     * Opens the clinician home screen
-     */
-    public void goToClinicianHome() {
-        try {
-            screenControl.show(idTxt, "/scene/clinicianHome.fxml");
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load clinician home").show();
-            userActions.log(SEVERE, "Failed to load clinician home", "Attempted to load clinician home");
+    public void deleteProfile() {
+        Clinician clinician = (Clinician) userControl.getTargetUser();
+        if (clinician.getStaffID() != 0) {
+            userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(clinician.getStaffID())});
+            database.delete(clinician);
+            ((Stage) clinicianProfilePane.getScene().getWindow()).close();
         }
     }
 }

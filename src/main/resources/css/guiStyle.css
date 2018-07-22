@@ -1,23 +1,37 @@
 /*Global attributes in root*/
 .root {
+    /* Global Colors */
+    color1: #163a67; /* for text */
+    color2: #F0EFEC;
+    color3: #A3C0DD;
+    color4: rgba(223, 245, 255, 0.35);
+    color5: #A2B5C2;
+    black: #020812;
+    white: #f5f5f5; /* smoke white */
+    invalid: #e6b3b3;
+
+    /*hyperlink-clicked: ;*/
+
+    /*button-highlight: #0;*/
+    -fx-base: color2;
+
+    -fx-border-color: black;
     -fx-font-family: "  Neue";
-
-    /*colors from color scheme generator*/
-    color1: #F15025;
-    /*color2: ;*/
-    color3: #E6E8E6;
-    color4: #CED0CE;
-    color5: #FFFFFF;
-    black: #191919;
-    white: #FFFFFF;
-
-    -fx-base: color3;
-    -fx-background: white;
+    /*-fx-font: ;*/
+    /*-fx-font-size: ;*/
+    /*-fx-font-style: ;*/
+    /*-fx-font-weight: ;*/
 }
 
 .title {
+    -fx-text-fill: #163a67; /* color1 */
     -fx-font-weight: bold;
     -fx-font-size: 28px;
+}
+
+.back {
+    /*-fx-text-fill: color4;*/
+    -fx-font-size: 14px;
 }
 
 .back:hover {
@@ -29,29 +43,14 @@
     -fx-text-fill: #235587;
 }
 
-.back {
-    -fx-text-fill: black;
-    -fx-font-size: 14px;
-    -fx-underline: false;
-    -fx-border-width: 0;
-}
-
-.tile {
-    /*for custom title styles in the home scene*/
-}
-
 .listViewTitles {
     -fx-font-style: italic;
     -fx-font-size: 16px;
 }
 
-.customButton {
-
-}
-
 /* For invalid text-fields within forms */
 .invalid {
-    -fx-background-color: #e6b3b3;
+    -fx-background-color: #e6b3b3; /* color1 */
     -fx-border-color: red;
     -fx-border-width: 2px;
     -fx-border-radius: 3px;
@@ -67,11 +66,11 @@
 }
 
 .redo {
-    -fx-background-image: url("../Icons/redo.png");
+    -fx-background-image: url("../image/redo.png");
 }
 
 .undo {
-    -fx-background-image: url("../Icons/undo.png");
+    -fx-background-image: url("../image/undo.png");
 }
 
 .redo:hover, .undo:hover {
@@ -84,13 +83,66 @@
     -fx-scale-y: 0.65;
 }
 
-.list-view .list-cell:even {
-    -fx-control-inner-background: WHITE;
-}
-.list-view .list-cell:odd {
-    -fx-control-inner-background: WHITE;
+.colouredBar {
+    -fx-background-color: linear-gradient(#5DADE2, #3498DB);
 }
 
-.list-cell:filled:selected {
-    -fx-text-fill: GREY;
+.colouredBarText {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 25;
+    -fx-font-weight: bold;
 }
+
+Button {
+    -fx-background-radius: 6;
+}
+
+
+.save-button {
+    -fx-background-color: linear-gradient(#5DADE2, #3498DB);
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 16;
+    -fx-min-height: 30;
+    -fx-max-height: 35;
+    -fx-min-width: 80;
+    -fx-max-width: 110;
+}
+
+.save-button:hover {
+    -fx-background-color: linear-gradient(#3D8DC2, #1478BB);
+}
+
+.delete-button {
+    -fx-background-color: linear-gradient(#C0392B, #B0291B);    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 16;
+    -fx-min-height: 20;
+    -fx-max-height: 30;
+    -fx-min-width: 50;
+    -fx-max-width: 130;
+}
+
+.delete-button:hover {
+    -fx-background-color: linear-gradient(#B0291B, #A0191B);
+}
+
+.form TextField, .form ChoiceBox, .form DatePicker {
+    -fx-min-height: 40;
+}
+
+.form Label, .form CheckBox {
+    -fx-font-size: 14;
+}
+
+#loginButton {
+    -fx-background-color: linear-gradient(#5DADE2, #3498DB);
+    -fx-text-fill: #FFFFFF;
+    -fx-min-height: 20;
+    -fx-max-height: 30;
+    -fx-min-width: 185;
+    -fx-max-width: 185;
+}
+
+#loginButton:hover {
+    -fx-background-color: linear-gradient(#3D8DC2, #1478BB);
+}
+

@@ -22,16 +22,16 @@ The decision was made to maintain one large global enumerations class in a separ
 #### Date Library
 JodaTime will be used for dates and times (i.e. DateTime and LocalDate), not the native Java Date class from utils.
 
-#### Donor Unique ID
-In order to satisfy story number 43, the user must be able to search for a particular donor and receive one search result. 
+#### Patient Unique ID
+In order to satisfy story number 43, the user must be able to search for a particular patient and receive one search result. 
 This requires a unique search term to be entered such that duplicates are not returned. 
 
-* we have decided to use a donor's IRD number to distinguish one donor from another, whom have colliding names.
-* we will check for uniqueness within our application by checking if a donor with the IRD already exists. If it already exists an exception is thrown to tell the user this.
-* if there an IRD is entered but there is a collision (i.e another donor has the incorrect IRD) then the incorrect IRD will need to updated before adding the new donor
+* we have decided to use a patient's IRD number to distinguish one patient from another, whom have colliding names.
+* we will check for uniqueness within our application by checking if a patient with the IRD already exists. If it already exists an exception is thrown to tell the user this.
+* if there an IRD is entered but there is a collision (i.e another patient has the incorrect IRD) then the incorrect IRD will need to updated before adding the new patient
 
 #### CLI Subcommand Limit
-We have decided that the maximum level of subcommands is three i.e. `donor update donations --option`
+We have decided that the maximum level of subcommands is three i.e. `patient update donations --option`
 
 #### Gson Library
 We've decided to use Gson library for parsing json files. This will be used for saving data to .json and importing data from .json.
@@ -84,9 +84,20 @@ See the GUIDonorRegister class for examples of goToLogin() and register()
 All user actions require an NHI to be logged against the action and the corresponding result. Therefore attempting but failing to log in would not be logged as there is no NHI to use. Registering a new donor would not be logged either.
 
 ## Sprint 3
-26th of March to the 3rd of May
+26th March to the 3rd of May
 
-#### Donor Contact Details
+#### GUI Donor Medications
+
+To reduce error, for in the case that a medication has been selected in each of the history and the current listViews, it has been decided to reserve deletion of a medication from the history listView, only. Otherwise, if not reserve deletion to only one listView, and include both listViews, being that there is currently no found appropriate method to determine which medication is the most recently selected between listViews, and that deciding deletion between listViews can only currently be done by determining if one listView does not have a medication selected before deleting a selected medication from another listView, then a selected medication other than the most previously selected medication could be deleted instead if the most recently selected medication is in the listView that has a selected medication deleted from it only after the other listView is determined to not have any selected medication for deleting, when in the case that each listView has a medication selected.
+
+If a medication is selected in each of the current and history listViews, and a user selects either a remove or add button unintentionally, then a medication will be swapped from one listView to the other, depending on which button is selected, even if this medication is not the most recently selected between the two listViews. If this is not the intention of the user, then this has been assumed to be determined as user error, and not the fault of the program.
+
+Medication selection is assumed to be possible in each listView simultaneously for the benefit of future stories.
+
+The current option of multiple selection in each listView may not be appropriate for future stories. 
+
+
+####Donor Contact Details
 Contact Details for a Donor are updated in a separate update method. This is because as contact details are implemented solely in the GUI application, and so will only need handling there.
 
 For viewing a Donor's contact details, a new window is shown for both editing and viewing contact details. This is to reduce clutter in the profile view screen.
@@ -117,15 +128,15 @@ We thought this would be very useful when searching for patients, as the clinici
 However we do not want every patient to be matched to any search, so we set the max number of the character difference between the search and the patient's name to two.
 
 
-##Sprint 4
+## Sprint 4
 
-####Diagnosis Validation
+#### Diagnosis Validation
 A diagnosis must have a name between 3 and 50 characters long, as this covers the length of the full names of most diseases and conditions. A diagnosis can not be made in the future or before the patient was born.
 
-####Diagnosis Adding
+#### Diagnosis Adding
 A diagnosis can not be added to the current diagnoses list if the patient has a diagnosis of the same name and the same diagnosis date.
 
-####Setting past and current diagnoses lists
+#### Setting past and current diagnoses lists
 Diagnoses lists for a patient are set entirely after all changes have been made before saving. This is to keep tracking changes made to a minimum to reduce operation complexity, and thus making the saving procedure quicker to execute.
 
 #### User Actions Logging
@@ -157,3 +168,31 @@ We created abstract classes UndoableStage and UndoableController to enable futur
 When you deregister an organ due to a disease or collection of diseases being cured and mark a collection of selected diseases to cured in the dropdown, we considered how
 the program should handle chronic diseases. We decided that it makes most sense to be able to set chronic diseases to cured in this scenario as it is not
 very user friendly to have to go back to the disease screen to 'complete' the cure of the disease
+
+#### Storing (hashed) passwords and salt in the Administrator object
+Due to the database story being currently worked on, we have decided to store the hashed password and salt for the administrator accounts
+stored within the administrator object rather than only storing it in the database. This is so we can test and progress the administrator story without
+waiting for the database story to get fully implemented. When the database story is complete, we easily switch it so the password and salt are no longer
+stored within the objects if required/decided.
+
+#### Keyboard Shortcuts
+MenuBar has the ability to set and bind keyboard shortcuts to a stage. Therefore we will use MenuBars to set the keyboard shortcuts. 
+This means there should not be other action listeners for global or stage-level shortcuts. If it has a keyboard shortcut, it belongs as an item in the menubar.
+ 
+ 
+ ## Sprint 5
+ 
+ #### GUI
+ We have decided that tabs will not call methods to navigate between themselves on the home screen.  
+ This will remove the necessity to find the tabs of the home screen that a tab is on.
+ 
+ ### GUI Testing
+ TestFX has been essentially component testing the application instead of performing small-scale unit tests. We debated making each GUI controller 
+ runnable for the purpose of unit testing single controllers, but realized the unit tests would have minimal meaning without the backend supporting 
+ it. Therefore we will be using TestFX controller tests more sparingly and for larger-scale component testing for the entire application.
+ 
+ ### GUI Testing (again)
+ TestFX has been a huge drain on effort and time from the developers. We've decided to entirely remove all TestFX tests in favor of the more 
+ human-intensive manual testing method. In truth, we seem to believe manual testing will take less time and effort than TestFX at this point. This 
+ will and has led to 0% test coverage on the `controller` package. We expect that. With comprehensive manual testing in addition to smoke testing we 
+ will effectively have 100% test coverage through manual testing.
