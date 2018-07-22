@@ -95,14 +95,17 @@
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>guava-14.0.1</artifactId>
+            <version>14.0.1</version>
         </dependency>
         <dependency>
             <groupId>libTUIO</groupId>
             <artifactId>libTUIO</artifactId>
+            <version>1.1</version>
         </dependency>
         <dependency>
             <groupId>ScenicView</groupId>
             <artifactId>ScenicView</artifactId>
+            <version>8.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -117,10 +120,12 @@
         <dependency>
             <groupId>tuiofx</groupId>
             <artifactId>tuiofx-all</artifactId>
+            <version>0.10.4</version>
         </dependency>
         <dependency>
             <groupId>tuiofx</groupId>
             <artifactId>tuiofx-core</artifactId>
+            <version>0.10.4</version>
         </dependency>
     </dependencies>
 
