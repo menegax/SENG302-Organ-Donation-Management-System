@@ -370,16 +370,16 @@ public class ScreenControl {
     public void setIsSaved(Boolean isSaved) {
         this.isSaved = isSaved;
         if (isSaved) {
-            removeUnsavedAsterixs();
+            removeUnsavedAsterisks();
         } else {
-            addUnsavedAsterixs();
+            addUnsavedAsterisks();
         }
     }
 
     /**
-     * Removes asterixs from all stages when local changes are saved to disk
+     * Removes asterisks from all stages when local changes are saved to disk
      */
-    private void removeUnsavedAsterixs() {
+    private void removeUnsavedAsterisks() {
         for (Set<Stage> stages : userStages.values()) {
             for (Stage stage : stages) {
                 if (stage.getTitle() != null) {
@@ -390,9 +390,9 @@ public class ScreenControl {
     }
 
     /**
-     * Adds asterixs to all stages when local changes have been made
+     * Adds asterisks to all stages when local changes have been made
      */
-    private void addUnsavedAsterixs() {
+    private void addUnsavedAsterisks() {
         for (Set<Stage> stages : userStages.values()) {
             for (Stage stage : stages) {
                 if (stage.getTitle() != null) {
