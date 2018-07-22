@@ -93,6 +93,13 @@ public class UserControl {
     }
 
     /**
+     * Clears the target user record
+     */
+    void clearTargetUser() {
+        remove("target_user");
+    }
+
+    /**
      * Clears cache, removes all key value pairs
      */
     void clearCache(){

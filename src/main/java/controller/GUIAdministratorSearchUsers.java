@@ -100,7 +100,10 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
                     screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
 
                     // When pop up is closed, refresh the table
-                    popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
+                    popUpStage.setOnHiding(event -> {
+                        Platform.runLater(this::tableRefresh);
+                        userControl.clearTargetUser();
+                    });
                 } catch (IOException e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open user profile scene from search users table",
