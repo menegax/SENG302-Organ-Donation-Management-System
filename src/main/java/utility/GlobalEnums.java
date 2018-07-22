@@ -5,6 +5,12 @@ package utility;
  */
 public class GlobalEnums {
 
+
+    public enum FilterOption {
+        ORGAN, REQUESTEDDONATIONS, DONATIONS, REGION, AGE
+    }
+
+
     /**
      * Enumerates all options for preferred gender
      */

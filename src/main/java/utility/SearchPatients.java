@@ -18,11 +18,8 @@ import org.apache.lucene.store.RAMDirectory;
 import service.Database;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
-import java.util.Set;
 import java.util.logging.Level;
 
 public class SearchPatients {
@@ -38,6 +35,11 @@ public class SearchPatients {
     private static IndexSearcher indexSearcher = null;
 
     private static int NUM_RESULTS = 30;
+
+    private enum filterOption {
+
+    }
+
 
 
     /**
@@ -189,18 +191,24 @@ public class SearchPatients {
     /**
      * Searches through the index for patients by full name.
      *
-     * @param input The name you want to search for.
+     * @param inputName The name you want to search for.
      * @return ArrayList of the patients it found as a result of the search.
      */
-    public static ArrayList<Patient> searchByName(String input) {
-
-        if (input.isEmpty()) {
-            return getDefaultResults();
+    public static ArrayList<Patient> searchByName(String inputName, Map filter) {
+        ArrayList<Patient> results = new ArrayList<>();
+        if (inputName.isEmpty()) {
+            for (Patient patient : getDefaultResults()) {
+                if (matchesFilter(patient, filter)) {
+                    results.add(patient);
+                } else if (noFilterSelected(filter)) {
+                    results.add(patient);
+                }
+            }
+            return results;
         }
 
-        String[] names = input.split(" ");
+        String[] names = inputName.split(" ");
 
-        ArrayList<Patient> results = new ArrayList<>();
         ArrayList<FuzzyQuery> queries = new ArrayList<>();
         for (String name : names) {
             queries.add(new FuzzyQuery(new Term("fName", name.toUpperCase()), 2));
@@ -210,7 +218,7 @@ public class SearchPatients {
         }
 
         TopDocs docs;
-        ArrayList<ScoreDoc> allDocs = new ArrayList<ScoreDoc>();
+        ArrayList<ScoreDoc> allDocs = new ArrayList<>();
         try {
             Patient patient;
             for (FuzzyQuery query : queries) {
@@ -220,14 +228,13 @@ public class SearchPatients {
                 }
             }
 
-            Collections.sort(allDocs, new Comparator<ScoreDoc>() {
+            allDocs.sort(new Comparator<ScoreDoc>() {
                 @Override
                 public int compare(ScoreDoc o1, ScoreDoc o2) {
                     int comparison = new Float(o2.score).compareTo(o1.score);
                     if (comparison == 0) {
                         try {
-                            comparison = fetchPatient(o1).getNameConcatenated()
-                                    .compareTo(fetchPatient(o2).getNameConcatenated());
+                            comparison = fetchPatient(o1).getNameConcatenated().compareTo(fetchPatient(o2).getNameConcatenated());
                         } catch (IOException e) {
                             userActions.log(Level.SEVERE, "Unable to get patient from database", "Attempted to get patient from database");
                         }
@@ -241,8 +248,13 @@ public class SearchPatients {
             while (docCount < allDocs.size() && patientCount < NUM_RESULTS) {
                 patient = fetchPatient(allDocs.get(docCount));
                 if (!results.contains(patient)) {
-                    results.add(patient);
-                    patientCount += 1;
+                    if (matchesFilter(patient, filter)) {
+                        results.add(patient);
+                        patientCount += 1;
+                    } else if (noFilterSelected(filter)) {
+                        results.add(patient);
+                        patientCount += 1;
+                    }
                 }
                 docCount += 1;
             }
@@ -250,5 +262,29 @@ public class SearchPatients {
             userActions.log(Level.SEVERE, "Unable to search patients by name", "Attempted to search patients by name");
         }
         return results;
+    }
+
+
+    private static boolean matchesFilter(Patient patient, Map filter) {
+        if (filter == null) {
+            return false;
+        }
+        if (filter.get(GlobalEnums.FilterOption.REGION) != null && patient.getRegion() != null &&
+                patient.getRegion().toString().equals(filter.get(GlobalEnums.FilterOption.REGION))) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean noFilterSelected(Map filter){
+        if (filter == null) {
+            return false;
+        }
+        for (Object value : filter.values()) {
+            if (value != null && !value.toString().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

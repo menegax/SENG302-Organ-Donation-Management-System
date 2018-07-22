@@ -85,7 +85,6 @@ public class GUIClinicianWaitingList {
         for (Organ organ : Organ.values()) {
             organSelection.getItems().add(StringUtils.capitalize(organ.getValue()));
         }
-
     }
 
     /**

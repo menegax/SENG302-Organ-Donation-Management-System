@@ -17,8 +17,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
+import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.RangeSlider;
-import utility.GlobalEnums;
+import utility.GlobalEnums.*;
 import utility.SearchPatients;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
@@ -26,6 +27,8 @@ import utility.undoRedo.UndoableStage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -63,11 +66,18 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     @FXML
     private GridPane sliderGrid;
 
+    @FXML
+    private ComboBox<String> organFilter;
+
+    @FXML
+    private ComboBox<String> regionFilter;
+
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private RangeSlider rangeSlider;
+    Map<FilterOption, String> filter = new HashMap<>();
 
     /**
      * Initialises the data within the table to all patients
@@ -77,6 +87,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
+        populateDropdowns();
         FilteredList<Patient> filteredData = setupTableColumnsAndData();
         setupAgeSliderListeners();
         setupSearchingListener(filteredData);
@@ -92,7 +103,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         controls = new ArrayList<Control>() {{
             add(searchEntry);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANSEARCHPATIENTS);
+        statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.CLINICIANSEARCHPATIENTS);
     }
 
     /**
@@ -157,13 +168,25 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             }
         });
 
+
+        filter.put(FilterOption.REGION, regionFilter.getValue());
+
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             masterData.clear();
-            masterData.addAll(SearchPatients.searchByName(newValue));
-
+            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
             filteredData.setPredicate(patient -> true);
         });
+
+        //3.
+        regionFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            masterData.clear();
+            filter.replace(FilterOption.REGION, filter.get(FilterOption.REGION), newValue);
+            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+        }));
+
+
+
 
         // wrap the FilteredList in a SortedList.
         SortedList<Patient> sortedData = new SortedList<>(filteredData);
@@ -193,7 +216,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                         //return SearchPatients.searchByGender(newValue).contains(patient);
                         return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() ); // ------------------------------this is where it fails!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
-                    return SearchPatients.searchByName(newValue)
+                    return SearchPatients.searchByName(newValue, filter)
                             .contains(patient);
                 }));
     }
@@ -218,7 +241,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 }
                 else {
                     StringBuilder tooltipText = new StringBuilder(patient.getNameConcatenated() + ". Donations: ");
-                    for (GlobalEnums.Organ organ : patient.getDonations()) {
+                    for (Organ organ : patient.getDonations()) {
                         tooltipText.append(organ)
                                 .append(", ");
                     }
@@ -264,6 +287,27 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         isDonorCheckbox.setSelected(false);
     }
 
+    private void populateDropdowns() {
+        regionFilter.getItems().add(""); //for empty selection
+        for (Region region : Region.values()) { //add values to region choice box
+            regionFilter.getItems().add(StringUtils.capitalize(region.getValue()));
+        }
+//        organSelection.getItems().add("");
+//        for (Organ organ : Organ.values()) {
+//            organSelection.getItems().add(StringUtils.capitalize(organ.getValue()));
+//        }
+    }
+
+    private String buildSearchQuery() {
+        StringBuilder query = new StringBuilder();
+        if (!searchEntry.getText().equals("")) {
+            query.append(searchEntry.getText()).append(" ");
+        }
+        if (regionFilter.getValue() != null && !regionFilter.getValue().equals("")) {
+            query.append(regionFilter.getValue()).append(" ");
+        }
+        return query.toString();
+    }
 
     /**
      * Adds all db data via constructor
