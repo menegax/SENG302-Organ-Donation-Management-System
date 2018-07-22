@@ -309,29 +309,33 @@ public class GUIUserRegister {
      */
     private boolean validateAdministrator() {
         boolean valid = validateNames();
+        String error = "";
         if (!userIdRegister.getText()
                 .matches("([A-Za-z0-9]+[-]*[_]*)+")) {
             valid = setInvalid(userIdRegister);
-            new Alert(Alert.AlertType.ERROR, "Invalid username.").showAndWait();
+            error += "Invalid username.\n";
         } else if (Database.usernameUsed(userIdRegister.getText())) {
             valid = setInvalid(userIdRegister);
-            new Alert(Alert.AlertType.ERROR, "Username already in use.").showAndWait();
+            error += "Username already in use.\n";
         } else {
             setValid(userIdRegister);
         }
         if (passwordTxt.getText().length() < 6) {
             valid = setInvalid(passwordTxt);
-            new Alert(Alert.AlertType.ERROR, "Password must be 6 or more characters").showAndWait();
+            error += "Password must be 6 or more characters.\n";
         } else {
             setValid(passwordTxt);
         }
         if (!verifyPasswordTxt.getText().equals(passwordTxt.getText())) {
             valid = setInvalid(verifyPasswordTxt);
             if (passwordTxt.getText().length() >= 6) {
-                new Alert(Alert.AlertType.ERROR, "Passwords do not match").showAndWait();
+                error += "Passwords do not match.\n";
             }
         } else {
             setValid(verifyPasswordTxt);
+        }
+        if (!valid) {
+        	new Alert(Alert.AlertType.ERROR, error).showAndWait();
         }
         return valid;
     }
