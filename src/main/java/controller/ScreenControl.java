@@ -86,7 +86,7 @@ public class ScreenControl {
      * @param key the uuid of the stage to add
      * @param stage the stage object to add to the hashmap
      */
-    void addStage(UUID key, Stage stage){
+    public void addStage(UUID key, Stage stage){
         applicationStages.put(key, stage);
         if (new UserControl().isUserLoggedIn()) { // if scene belongs to a user
             systemLogger.log(FINE, "User is logged in and a stage is being added");
