@@ -377,9 +377,14 @@ public class GUIUserRegister {
             userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
             alertMsg = "Successfully registered clinician with staff ID " + staffID;
         } else {
-            Database.addAdministrator(new Administrator(id, firstName, middles, lastName, password));
-            userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
-            alertMsg = "Successfully registered administrator with username " + id;
+            try {
+                Database.addAdministrator(new Administrator(id, firstName, middles, lastName, password));
+                userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
+                alertMsg = "Successfully registered administrator with username " + id;
+            } catch (IllegalArgumentException e) {
+                userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");
+                alertMsg = "Couldn't register administrator, this username is already in use";
+            }
         }
         clearFields();
         new Alert(Alert.AlertType.INFORMATION, alertMsg).showAndWait();
