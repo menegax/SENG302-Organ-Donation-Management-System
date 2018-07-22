@@ -125,7 +125,7 @@ public class GUIHome {
 
         // If clinician viewing patient
         if (userControl.getLoggedInUser() instanceof Clinician && userControl.getTargetPatient() != null) {
-            homeStage.setTitle("Viewing patient " + ((Patient) homeTarget).getNhiNumber());
+            homeStage.setTitle("Viewing patient " + ((Patient) homeTarget).getNhiNumber()); //todo change to accomodate admin viewing clinician, admin viewing patient, admin viewing admin
         }
 
     }
