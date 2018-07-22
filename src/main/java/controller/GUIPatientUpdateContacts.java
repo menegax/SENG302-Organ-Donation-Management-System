@@ -101,8 +101,8 @@ public class GUIPatientUpdateContacts extends UndoableController {
             loadProfile(((Patient) user).getNhiNumber());
             setContactFields();
         }
-        if (userControl.getTargetPatient() != null) {
-            loadProfile((userControl.getTargetPatient()).getNhiNumber());
+        if (userControl.getTargetUser() != null) {
+            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
             setContactFields();
         }
         setupUndoRedo();

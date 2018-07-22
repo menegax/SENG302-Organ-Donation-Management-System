@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
+import model.User;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
@@ -84,10 +85,13 @@ public class GUIClinicianUpdateProfile extends UndoableController {
                 .selectedIndexProperty()
                 .addListener((observable, oldValue, newValue) -> setValid(regionDD));
         UserControl userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
-        if (user instanceof Clinician) {
-            loadProfile(((Clinician) user).getStaffID());
+        User loggedIn = userControl.getLoggedInUser();
+        if (loggedIn instanceof Clinician){
+            target = (Clinician) loggedIn;
+        } else {
+            target = (Clinician) userControl.getTargetUser();
         }
+        loadProfile(target.getStaffID());
         setUpStateHistory();
     }
 
@@ -224,6 +228,8 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
                     .getSelectedItem()
                     .toString()));
+            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+            userActions.log(Level.INFO, "Successfully updated clinician profile", new String[]{"Attempted to update clinician profile", String.valueOf(target.getStaffID())});
             target.clinicianModified();
             screenControl.setIsSaved(false);
             StatusObservable.getInstance().setStatus("Clinician profile updated");
