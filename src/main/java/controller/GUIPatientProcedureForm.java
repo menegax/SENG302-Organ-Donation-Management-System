@@ -9,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import model.Patient;
 import model.Procedure;
 import utility.GlobalEnums.Organ;
+import utility.StatusObservable;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
@@ -131,6 +132,8 @@ public class GUIPatientProcedureForm  {
             this.procedure.setDescription(descriptionInput.getText());
             this.procedure.setAffectedDonations(affectedDonations);
             this.procedure.setDate(dateInput.getValue());
+            screenControl.setIsSaved(false);
+            StatusObservable.getInstance().setStatus("Procedure " + this.procedure.getSummary() + " updated");
             userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", patient.getNhiNumber()});
             goBackToProcedures();
         } else {
@@ -157,6 +160,8 @@ public class GUIPatientProcedureForm  {
             Procedure procedure = new Procedure( summaryInput.getText(), descriptionInput.getText(),
                     dateInput.getValue(), affectedDonations );
             patient.addProcedure( procedure );
+            screenControl.setIsSaved(false);
+            StatusObservable.getInstance().setStatus("Procedure " + procedure.getSummary() + " added");
             userActions.log(Level.INFO, "Added procedure " + procedure.getSummary(), new String[]{"Attempted to add a procedure", patient.getNhiNumber()});
             goBackToProcedures();
         } else {

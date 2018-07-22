@@ -86,7 +86,7 @@ public class ScreenControl {
      * @param key the uuid of the stage to add
      * @param stage the stage object to add to the hashmap
      */
-    void addStage(UUID key, Stage stage){
+    public void addStage(UUID key, Stage stage){
         applicationStages.put(key, stage);
         if (new UserControl().isUserLoggedIn()) { // if scene belongs to a user
             systemLogger.log(FINE, "User is logged in and a stage is being added");
@@ -382,7 +382,9 @@ public class ScreenControl {
     private void removeUnsavedAsterixs() {
         for (Set<Stage> stages : userStages.values()) {
             for (Stage stage : stages) {
-                stage.setTitle(stage.getTitle().replace("*", ""));
+                if (stage.getTitle() != null) {
+                    stage.setTitle(stage.getTitle().replace("*", ""));
+                }
             }
         }
     }
@@ -393,8 +395,10 @@ public class ScreenControl {
     private void addUnsavedAsterixs() {
         for (Set<Stage> stages : userStages.values()) {
             for (Stage stage : stages) {
-                if (!stage.getTitle().contains("*")) {
-                    stage.setTitle(stage.getTitle() + "*");
+                if (stage.getTitle() != null) {
+                    if (!stage.getTitle().contains("*")) {
+                        stage.setTitle(stage.getTitle() + "*");
+                    }
                 }
             }
         }

@@ -12,6 +12,7 @@ import model.Disease;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
+import utility.StatusObservable;
 import utility.undoRedo.UndoableStage;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -123,16 +124,12 @@ public class GUIClinicianDiagnosis extends UndoableController{
             target = (Patient) userControl.getLoggedInUser();
             addDiagnosisButton.setVisible(false);
             addDiagnosisButton.setDisable(true);
-            saveButton.setVisible(false);
-            saveButton.setDisable(true);
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
         } else {
             target = userControl.getTargetPatient();
             addDiagnosisButton.setVisible(true);
             addDiagnosisButton.setDisable(false);
-            saveButton.setVisible(true);
-            saveButton.setDisable(false);
             deleteButton.setVisible(true);
             deleteButton.setDisable(false);
         }
@@ -292,21 +289,6 @@ public class GUIClinicianDiagnosis extends UndoableController{
         });
     }
 
-
-    /**
-     * Sets the patient's past and current diagnoses to the edited lists in the screen
-     */
-    @FXML
-    public void saveDiagnoses() {
-        target.setCurrentDiseases(currentDiseases);
-        target.setPastDiseases(pastDiseases);
-        userActions.log( Level.FINE, "Successfully saved patient diseases", "Successfully saved patient " + target.getNhiNumber() + "diseases");
-        new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
-        changed = false;
-        screenControl.setIsSaved(false);
-    }
-
-
     /**
      * Iterates through current and past diagnoses and moves cured and chronic diseases to their required lists.
      * Reloads the lists to reflect updates
@@ -362,6 +344,8 @@ public class GUIClinicianDiagnosis extends UndoableController{
             pastDiseases.remove(pastDiagnosesView.getSelectionModel().getSelectedItem());
             deletedPast.add(pastDiagnosesView.getSelectionModel().getSelectedItem());
             loadPastDiseases();
+            screenControl.setIsSaved(false);
+            StatusObservable.getInstance().setStatus("Disease deleted");
             userActions.log(Level.FINE, "Successfully deleted a disease",  pastDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
             new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis deleted successfully", ButtonType.OK).show();
         } else if (currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
@@ -369,6 +353,8 @@ public class GUIClinicianDiagnosis extends UndoableController{
             currentDiseases.remove(currentDiagnosesView.getSelectionModel().getSelectedItem());
             deletedCurrent.add(currentDiagnosesView.getSelectionModel().getSelectedItem());
             loadCurrentDiseases();
+            screenControl.setIsSaved(false);
+            StatusObservable.getInstance().setStatus("Disease deleted");
             userActions.log(Level.WARNING, "Successfully deleted a disease", currentDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
             new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis deleted successfully", ButtonType.OK).show();
         } else {

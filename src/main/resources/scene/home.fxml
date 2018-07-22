@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="homePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIHome">
+<BorderPane fx:id="homePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIHome">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -54,7 +54,10 @@
       </VBox>
    </top>
    <bottom>
-      <AnchorPane maxHeight="25.0" minHeight="25.0" style="-fx-background-color: gray;" BorderPane.alignment="CENTER" />
+      <AnchorPane maxHeight="25.0" minHeight="25.0" style="-fx-background-color: gray;" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="statusLbl" textFill="WHITE" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="4.0" />
+         </children></AnchorPane>
    </bottom>
    <center>
       <TabPane fx:id="horizontalTabPane" prefHeight="200.0" prefWidth="1205.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
