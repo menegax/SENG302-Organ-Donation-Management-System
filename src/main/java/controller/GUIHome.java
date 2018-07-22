@@ -87,13 +87,15 @@ public class GUIHome {
     private void createTab(String title, String fxmlPath) throws IOException {
         Tab newTab = new Tab();
         newTab.setText(title);
-        newTab.setOnSelectionChanged(event -> {
-            try {
-                newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
-            } catch (IOException e) {
-                systemLogger.log(SEVERE, "Failed to create tab", e);
-            }
-        });
+        if (!title.equals("Search Patients")) {
+            newTab.setOnSelectionChanged(event -> {
+                try {
+                    newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
+                } catch (IOException e) {
+                    systemLogger.log(SEVERE, "Failed to create tab", e);
+                }
+            });
+        }
         newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
         horizontalTabPane.getTabs().add(newTab);
     }
