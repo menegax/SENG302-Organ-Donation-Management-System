@@ -43,10 +43,11 @@
        </TableView>
       <GridPane GridPane.columnSpan="3" GridPane.rowIndex="2">
         <columnConstraints>
-          <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="148.0" />
-            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="148.0" />
-            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="148.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="44.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="140.0" />
+          <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="140.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="140.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="140.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
             <ColumnConstraints />
             <ColumnConstraints />
         </columnConstraints>
@@ -92,12 +93,12 @@
                   <Insets />
                </GridPane.margin>
             </ComboBox>
-            <ComboBox fx:id="organFilter" prefHeight="40.0" prefWidth="210.0" promptText="Organ" GridPane.columnIndex="1" GridPane.halignment="LEFT">
+            <ComboBox fx:id="organFilter" prefHeight="40.0" prefWidth="210.0" promptText="Receiving Organ" GridPane.columnIndex="2" GridPane.halignment="LEFT">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </ComboBox>
-            <ComboBox fx:id="regionFilter" prefHeight="40.0" prefWidth="210.0" promptText="Region" GridPane.columnIndex="2" GridPane.halignment="LEFT" />
+            <ComboBox fx:id="regionFilter" prefHeight="40.0" prefWidth="210.0" promptText="Region" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
             <CheckBox fx:id="isDonorCheckbox" mnemonicParsing="false" text="Donor" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets top="15.0" />
@@ -109,11 +110,12 @@
                <GridPane.margin>
                   <Insets top="15.0" />
                </GridPane.margin></CheckBox>
-             <TextField fx:id="searchEntry" prefHeight="27.0" prefWidth="46.0" promptText="Search by name" GridPane.columnIndex="3" GridPane.columnSpan="3">
+             <TextField fx:id="searchEntry" prefHeight="40.0" prefWidth="143.0" promptText="Search by name" GridPane.columnIndex="4" GridPane.columnSpan="3">
                <GridPane.margin>
                   <Insets left="40.0" />
                </GridPane.margin>
             </TextField>
+            <ComboBox prefHeight="40.0" prefWidth="210.0" promptText="Donating Organ" GridPane.columnIndex="1" />
          </children>
          <GridPane.margin>
             <Insets left="60.0" right="60.0" />
