@@ -169,17 +169,19 @@ public class GUIHome implements Observer {
 
         // If clinician viewing patient
         if (userControl.getTargetUser() != null) {
+            // viewing patient
             if (userControl.getTargetUser() instanceof Patient) {
-                homeStage.setTitle("Patient " + ((Patient) homeTarget).getNhiNumber()); //todo fix
+                homeStage.setTitle("Patient " + ((Patient) homeTarget).getNhiNumber());
             }
+            // viewing clinician
             else if (userControl.getTargetUser() instanceof Clinician) {
                 homeStage.setTitle("Clinician " + ((Clinician) homeTarget).getStaffID());
             }
+            // viewing admin
             else if (userControl.getTargetUser() instanceof Administrator) {
                 homeStage.setTitle("Administrator " + ((Administrator) homeTarget).getUsername());
             }
         }
-
     }
 
 
