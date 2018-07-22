@@ -93,14 +93,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
+            <groupId>com.google.guava.guava</groupId>
             <artifactId>guava-14.0.1</artifactId>
             <version>14.0.1</version>
         </dependency>
         <dependency>
             <groupId>libTUIO</groupId>
             <artifactId>libTUIO</artifactId>
-            <version>1.1</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>ScenicView</groupId>
