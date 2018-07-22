@@ -93,7 +93,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.guava.guava</groupId>
+            <groupId>com.google.guava</groupId>
             <artifactId>guava-14.0.1</artifactId>
             <version>14.0.1</version>
         </dependency>
@@ -105,15 +105,15 @@
         <dependency>
             <groupId>ScenicView</groupId>
             <artifactId>ScenicView</artifactId>
-            <version>8.7.0</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
+            <groupId>slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.6</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
+            <groupId>slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.6</version>
         </dependency>
