@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import service.Database;
+import utility.StatusObservable;
 
 import java.util.logging.Level;
 
@@ -90,6 +91,7 @@ public class GUIClinicianProfile {
         Clinician clinician = (Clinician) userControl.getTargetUser();
         if (clinician.getStaffID() != 0) {
             userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(clinician.getStaffID())});
+            StatusObservable.getInstance().setStatus("Clinician deleted");
             Database.deleteClinician(clinician);
             ((Stage) clinicianProfilePane.getScene().getWindow()).close();
         }
