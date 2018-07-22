@@ -56,6 +56,12 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     @FXML
     private Text ageLabel;
 
+    @FXML
+    private CheckBox isDonorCheckbox;
+
+    @FXML
+    private CheckBox isRecieverCheckbox;
+
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
@@ -222,6 +228,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     }
 
 
+    /**
+     * Adds listener to the age label to update when slider is moved
+     */
     private void setupAgeSliderListeners() {
         ageSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
             ageLabel.setText(String.valueOf(newValue.intValue()));
