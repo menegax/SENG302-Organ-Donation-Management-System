@@ -1,5 +1,9 @@
 package utility;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
@@ -15,6 +19,8 @@ public class StatusObservable extends Observable {
 
     private String status;
     private Set<Observer> observers;
+    //The clearStatus event
+    private Timeline timeline;
 
     private StatusObservable() {
         status = "";
@@ -36,10 +42,26 @@ public class StatusObservable extends Observable {
 
     /**
      * Updates the status text and notifies observers of the new value
+     * After 10 seconds, the status text will be cleared
      * @param text The new status text
      */
     public void setStatus(String text) {
+        //If there is an existing clear event, clear it
+        if (timeline != null) {
+            timeline.stop();
+        }
         status = text;
+        notifyObservers();
+
+        timeline = new Timeline(new KeyFrame(Duration.seconds(10), e -> clearStatus()));
+        timeline.play();
+    }
+
+    /**
+     * Resets the status to an empty string and notifies observers of this new value
+     */
+    private void clearStatus() {
+        status = "";
         notifyObservers();
     }
 

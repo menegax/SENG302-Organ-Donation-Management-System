@@ -11,6 +11,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Clinician;
 import model.Medication;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import model.Clinician;
+import model.Medication;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
@@ -49,6 +53,9 @@ public class GUIPatientProfile {
 
     @FXML
     public Button requirementsButton;
+
+    @FXML
+    private Button deleteButton;
 
     @FXML
     private Label nhiLbl;
@@ -128,12 +135,13 @@ public class GUIPatientProfile {
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
 
+
+
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
      *
      * @exception InvalidObjectException -
      */
-
     public void initialize() throws InvalidObjectException {
         userControl = new UserControl();
         Object user = null;
@@ -154,11 +162,15 @@ public class GUIPatientProfile {
                 }
             }
             user = userControl.getLoggedInUser();
+            deleteButton.setVisible( false );
+            deleteButton.setDisable( true );
+        } else if (userControl.getLoggedInUser() instanceof Clinician) {
+            deleteButton.setVisible( false );
+            deleteButton.setDisable( true );
+            user = userControl.getTargetUser();
+        } else {
+            user = userControl.getTargetUser();
         }
-        if (userControl.getLoggedInUser() instanceof Clinician) {
-            user = userControl.getTargetPatient();
-        }
-
         try {
             assert user != null;
             loadProfile(((Patient) user).getNhiNumber());
@@ -289,6 +301,16 @@ public class GUIPatientProfile {
                 }
             }
         });
+    }
+
+    /**
+     * Deletes the current profile from the HashSet in Database, not from disk, not until saved
+     */
+    public void deleteProfile() {
+        Patient patient = (Patient) userControl.getTargetUser();
+        userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", patient.getNhiNumber()});
+        Database.deletePatient( patient );
+        ((Stage) patientProfilePane.getScene().getWindow()).close();
     }
 
 }

@@ -1,16 +1,22 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+import model.Administrator;
 import model.Clinician;
+import service.Database;
 
-import java.io.IOException;
+import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianProfile {
+    @FXML
+    private GridPane clinicianProfilePane;
+
     @FXML
     private Label idTxt;
 
@@ -29,19 +35,31 @@ public class GUIClinicianProfile {
     @FXML
     private Label regionTxt;
 
+    @FXML
+    private Button deleteButton;
+
+    private UserControl userControl = new UserControl();
+
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
     public void initialize() {
-        UserControl userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
-        if (user instanceof Clinician){
-            loadProfile(((Clinician) user));
+        if (userControl.getLoggedInUser() instanceof Clinician) {
+            deleteButton.setVisible(false);
+            deleteButton.setDisable(true);
+            loadProfile(((Clinician) userControl.getLoggedInUser()));
+        } else if (userControl.getLoggedInUser() instanceof Administrator) {
+            loadProfile(((Clinician) userControl.getTargetUser()));
+            if (((Clinician) userControl.getTargetUser()).getStaffID() == 0) {
+                deleteButton.setVisible(false);
+                deleteButton.setDisable(true);
+            }
         }
     }
 
     /**
      * Loads clinician attributes to display in the clinician profile screen
+     *
      * @param clinician clinician logged in
      */
     private void loadProfile(Clinician clinician) {
@@ -63,5 +81,17 @@ public class GUIClinicianProfile {
             suburbTxt.setText("Not Set");
         }
         if (clinician.getRegion() != null) regionTxt.setText(clinician.getRegion().getValue());
+    }
+
+    /**
+     * Deletes the current profile from the HashSet in Database, not from disk, not until saved
+     */
+    public void deleteProfile() {
+        Clinician clinician = (Clinician) userControl.getTargetUser();
+        if (clinician.getStaffID() != 0) {
+            userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(clinician.getStaffID())});
+            Database.deleteClinician(clinician);
+            ((Stage) clinicianProfilePane.getScene().getWindow()).close();
+        }
     }
 }

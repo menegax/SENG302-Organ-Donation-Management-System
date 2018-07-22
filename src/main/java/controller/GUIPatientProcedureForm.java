@@ -54,7 +54,7 @@ public class GUIPatientProcedureForm  {
      * Initial setup. Sets up undo/redo, Populates the affected organs dropdown
      */
     public void initialize() {
-        patient = new UserControl().getTargetPatient();
+        patient = (Patient) new UserControl().getTargetUser();
         setupDonations();
         for (MenuItem menuItem : affectedInput.getItems()) { //Adding organ checkboxes to the undo/redo controls
             if (((CustomMenuItem) menuItem).getContent() instanceof CheckBox) {

@@ -15,8 +15,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import model.Patient;
+import model.User;
 import utility.GlobalEnums;
-import utility.SearchPatients;
+import utility.GlobalEnums.UserTypes;
+import utility.Searcher;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
 
@@ -25,6 +27,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -46,12 +49,16 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     @FXML
     private TableColumn<Patient, String> columnRegion;
 
+    private final int NUMRESULTS = 30;
+
     @FXML
     private TextField searchEntry;
 
     private ObservableList<Patient> masterData = FXCollections.observableArrayList();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private Searcher searcher = Searcher.getSearcher();
 
     /**
      * Initialises the data within the table to all patients
@@ -83,13 +90,14 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * patient's profile view screen in a new window.
      */
     private void setupDoubleClickToPatientEdit() {
-        UserControl userControl = new UserControl();
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
                     .getSelectedItem() != null) {
                 try {
-                    userControl.setTargetPatient(patientDataTable.getSelectionModel().getSelectedItem());
+                    UserControl userControl = new UserControl();
+                    userControl.setTargetUser(patientDataTable.getSelectionModel()
+                            .getSelectedItem());
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     UndoableStage popUpStage = new UndoableStage();
                     //Set initial popup dimensions
@@ -143,8 +151,10 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             masterData.clear();
-            masterData.addAll(SearchPatients.searchByName(newValue));
-
+            List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT}, NUMRESULTS);
+            for (User user : results) {
+            	masterData.add((Patient)user);
+            }
             filteredData.setPredicate(patient -> true);
         });
 
@@ -166,18 +176,31 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * @param filteredData the patients to be filtered/searched through
      */
     private void setupSearchingListener(FilteredList<Patient> filteredData) {
+    	UserTypes[] types = new UserTypes[]{UserTypes.PATIENT};
+    	masterData.clear();
+    	List<Patient> tempPatients = new ArrayList<Patient>();
+    	List<User> users = searcher.getDefaultResults(types);
+    	for (User user: users) {
+    		tempPatients.add((Patient)user);
+    	}
+    	masterData.addAll(tempPatients);
         // set the filter Predicate whenever the filter changes.
         searchEntry.textProperty()
                 .addListener((observable, oldValue, newValue) -> filteredData.setPredicate(patient -> {
+                	
                     // If filter text is empty, display all persons.
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     } else if (newValue.toLowerCase().equals( "male" ) || newValue.toLowerCase().equals("female")) {
-                        //return SearchPatients.searchByGender(newValue).contains(patient);
+                        //return Searcher.searchByGender(newValue).contains(patient);
                         return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() ); // ------------------------------this is where it fails!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
-                    return SearchPatients.searchByName(newValue)
-                            .contains(patient);
+                    List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT}, NUMRESULTS);
+                    List<Patient> patients = new ArrayList<Patient>();
+                    for (User user : results) {
+                    	patients.add((Patient)user);
+                    }
+                    return patients.contains(patient);
                 }));
     }
 
@@ -217,7 +240,12 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * Adds all db data via constructor
      */
     public GUIClinicianSearchPatients() {
-        masterData.addAll(SearchPatients.getDefaultResults());
+    	List<User> defaultUsers = searcher.getDefaultResults(new UserTypes[] {UserTypes.PATIENT});
+    	List<Patient> defaultPatients = new ArrayList<Patient>();
+    	for (User user: defaultUsers) {
+    		defaultPatients.add((Patient)user);
+    	}
+        masterData.addAll(defaultPatients);
     }
 
     /**

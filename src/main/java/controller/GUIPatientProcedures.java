@@ -96,7 +96,7 @@ public class GUIPatientProcedures extends UndoableController {
             editProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
         } else if (userControl.getLoggedInUser() instanceof Clinician) {
-            this.patient = userControl.getTargetPatient();
+            this.patient = (Patient) userControl.getTargetUser();
             setupTables();
         }
         setupUndoRedo();
