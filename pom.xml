@@ -88,36 +88,50 @@
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>guava-14.0.1</artifactId>
+            <version>14.0.1</version>
+            <scope>system</scope>
             <systemPath>${basedir}/libs/guava-14.0.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>libTUIO</groupId>
             <artifactId>libTUIO</artifactId>
+            <version>1.1</version>
+            <scope>system</scope>
             <systemPath>${basedir}/libs/libTUIO.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>ScenicView</groupId>
             <artifactId>ScenicView</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
             <systemPath>${basedir}/libs/ScenicView.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <version>1.7.6</version>
+            <scope>system</scope>
             <systemPath>${basedir}/libs/slf4j-api-1.7.6.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simplei</artifactId>
+            <version>1.7.6</version>
+            <scope>system</scope>
             <systemPath>${basedir}/libs/slf4j-simple-1.7.6.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>tuiofx</groupId>
             <artifactId>tuiofx-all</artifactId>
+            <version>0.10.4</version>
+            <scope>system</scope>
             <systemPath>${basedir}/libs/tuiofx-all-0.10.4.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>tuiofx</groupId>
             <artifactId>tuiofx-core</artifactId>
+            <version>0.10.4</version>
+            <scope>system</scope>
             <systemPath>${basedir}/libs/tuiofx-core-0.10.4.jar</systemPath>
         </dependency>
     </dependencies>
