@@ -32,9 +32,9 @@
 1. The Search Patients screen is shown
 2. A patient in the list is selected by mouse double-click
 3. The Profile screen is shown
-4. 'Gender Identity:' field shows either 'Man', 'Woman', 'Non-binary', or 'Not set'
+4. 'Pref Gender:' field shows either 'Man', 'Woman', 'Non-binary', or 'Not set'
 3. 'Gender Assigned at Birth' field shows either 'Male', 'Female' or 'Not set'
-5. 'Name:' field shows preferred name (or first name if not set), middle name(s), and last name
+5. 'Name' field shows preferred name (or first name if not set), middle name(s), and last name
 
 ### Edit the preferred name for a patient
 
@@ -87,18 +87,18 @@
 
 Precondition: Pass
 
-The patient list is sorted based on birth gender: Fail - header is "Gender" and not "Birth Gender"
+The patient list is sorted based on birth gender: Pass
 
 The patient list shows only searched female birth gender: Pass
 
 The patient list shows only searched male birth gender: Pass
 
-Review the birth gender, preferred gender and preferred name on a patients profile: Fail - no fields for preferred name, gender
+Review the birth gender, preferred gender and preferred name on a patients profile: Pass
 
 Edit the preferred name for a patient: Pass
 
-Edit the preferred gender to Man for a patient: Fail - no field for preferred gender to check (though the update screen on refreshing is consistent with the edit)
+Edit the preferred gender to Man for a patient: Pass
 
-Edit the preferred gender to Woman for a patient: Fail - no field for preferred gender to check (though the update screen on refreshing is consistent with the edit)
+Edit the preferred gender to Woman for a patient: Pass
 
-Edit the preferred gender to Non-binary for a patient: Fail - no field for preferred gender to check (though the update screen on refreshing is consistent with the edit)
+Edit the preferred gender to Non-binary for a patient: Pass

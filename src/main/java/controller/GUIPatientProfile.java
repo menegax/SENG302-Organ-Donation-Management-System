@@ -108,6 +108,9 @@ public class GUIPatientProfile {
     private Label receivingTitle;
 
     @FXML
+    private Label prefGenderLbl;
+
+    @FXML
     private Label donatingTitle;
 
     private ListProperty<String> donatingListProperty = new SimpleListProperty<>();
@@ -179,16 +182,9 @@ public class GUIPatientProfile {
         Patient patient = Database.getPatientByNhi(nhi);
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
-        if (userControl.getLoggedInUser() instanceof Clinician) {
-            genderDeclaration.setText("Birth Gender: ");
-            genderStatus.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender()
-                    .getValue());
-        }
-        else {
-            genderDeclaration.setText("Gender identity: ");
-            genderStatus.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender()
-                    .getValue());
-        }
+        genderDeclaration.setText("Birth Gender: ");
+        genderStatus.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue());
+        prefGenderLbl.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender().getValue());
         vitalLbl1.setText(patient.getDeath() == null ? "Alive" : "Deceased");
         dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
