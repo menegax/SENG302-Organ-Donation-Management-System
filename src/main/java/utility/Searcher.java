@@ -194,9 +194,10 @@ public class Searcher {
     	} else if (user instanceof Administrator) {
     		toDel = new Term("username", ((Administrator)user).getUsername().toUpperCase());
     	}
-        
+
         try {
             indexWriter.deleteDocuments(toDel);
+            indexWriter.commit();
             UserActionHistory.userActions.log(Level.INFO, "Successfully removed user from the search index", "Attempted to remove user from the search index");
         } catch (IOException e) {
         	UserActionHistory.userActions.log(Level.SEVERE, "Unable to remove user index", "Attempted to remove user index");

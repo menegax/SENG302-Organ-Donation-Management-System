@@ -121,9 +121,7 @@ public class Main extends Application {
         // if default administrator 'admin' not in db, add it
         if (!Database.isAdministratorInDb("admin")) {
             systemLogger.log(INFO, "Default admin not in database. Adding default admin to database.");
-            Database.addAdministrator(new Administrator("admin", "Moffat", new ArrayList<String>(){{
-                add("Ashley");
-            }}, "Matthews", "password"));
+            Database.addAdministrator(new Administrator("admin", "John", new ArrayList<>(), "Smith", "password"));
         }
     }
 

@@ -409,6 +409,7 @@ public class Database {
      */
     public static void deleteClinician(Clinician clinician) {
         if (clinician.getStaffID() != 0) {
+            searcher.removeIndex(clinician);
             clinicians.remove(clinician);
         }
     }
@@ -418,6 +419,7 @@ public class Database {
      * @param patient The patient being removed from set
      */
     public static void deletePatient(Patient patient) {
+        searcher.removeIndex(patient);
         patients.remove( patient );
     }
 
@@ -427,6 +429,7 @@ public class Database {
      */
     public static void deleteAdministrator(Administrator administrator) {
         if (!administrator.getUsername().toLowerCase().equals("admin")) {
+            searcher.removeIndex(administrator);
             administrators.remove(administrator);
         }
     }
