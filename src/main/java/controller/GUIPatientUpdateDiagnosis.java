@@ -97,7 +97,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             add(diagnosisDate);
             add(tagsDD);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDIAGNOSIS);
+        //statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDIAGNOSIS); todo make work
     }
 
     /**
