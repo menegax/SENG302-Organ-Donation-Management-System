@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import model.Administrator;
 import model.User;
 import service.Database;
+import utility.StatusObservable;
 
 import java.util.logging.Level;
 
@@ -71,6 +72,7 @@ public class GUIAdministratorProfile {
     public void deleteProfile() {
         if (!target.getUsername().toLowerCase().equals("admin")) {
             userActions.log(Level.INFO, "Successfully deleted admin profile", new String[]{"Attempted to delete admin profile", target.getUsername()});
+            StatusObservable.getInstance().setStatus("Administrator deleted");
             Database.deleteAdministrator(target);
             if (!target.getUsername().equals(((Administrator) userControl.getLoggedInUser()).getUsername())) {
                 ((Stage) adminProfilePane.getScene().getWindow()).close();

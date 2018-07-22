@@ -15,6 +15,7 @@ import model.Clinician;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums.Region;
+import utility.StatusObservable;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -378,17 +379,20 @@ public class GUIUserRegister {
             Database.addPatient(new Patient(id, firstName, middles, lastName, birth));
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
             alertMsg = "Successfully registered patient with NHI " + id;
+            StatusObservable.getInstance().setStatus("Patient created");
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
             int staffID = Database.getNextStaffID();
             Database.addClinician(new Clinician(staffID, firstName, middles, lastName, (Region) Region.getEnumFromString(region)));
             userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
             alertMsg = "Successfully registered clinician with staff ID " + staffID;
+            StatusObservable.getInstance().setStatus("Clinician created");
         } else {
             try {
                 Database.addAdministrator(new Administrator(id, firstName, middles, lastName, password));
                 userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
                 alertMsg = "Successfully registered administrator with username " + id;
+                StatusObservable.getInstance().setStatus("Administrator created");
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");
                 alertMsg = "Couldn't register administrator, this username is already in use";

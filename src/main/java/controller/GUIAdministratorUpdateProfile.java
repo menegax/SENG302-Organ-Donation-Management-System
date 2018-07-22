@@ -7,6 +7,7 @@ import javafx.scene.layout.GridPane;
 import model.Administrator;
 import service.Database;
 import utility.GlobalEnums;
+import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.InvalidObjectException;
@@ -140,6 +141,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
 
             target.userModified();
             userActions.log(Level.INFO, "Successfully updated admin profile", new String[]{"Attempted to update admin profile", target.getUsername()});
+            StatusObservable.getInstance().setStatus("Administrator profile updated");
             new Alert(Alert.AlertType.INFORMATION, "Admin successfully updated", ButtonType.OK).showAndWait();
         } else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
