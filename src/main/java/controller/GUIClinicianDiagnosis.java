@@ -128,7 +128,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
         } else {
-            target = userControl.getTargetPatient();
+            target = (Patient) userControl.getTargetUser();
             addDiagnosisButton.setVisible(true);
             addDiagnosisButton.setDisable(false);
             saveButton.setVisible(true);

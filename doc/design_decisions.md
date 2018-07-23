@@ -169,6 +169,12 @@ When you deregister an organ due to a disease or collection of diseases being cu
 the program should handle chronic diseases. We decided that it makes most sense to be able to set chronic diseases to cured in this scenario as it is not
 very user friendly to have to go back to the disease screen to 'complete' the cure of the disease
 
+#### Storing (hashed) passwords and salt in the Administrator object
+Due to the database story being currently worked on, we have decided to store the hashed password and salt for the administrator accounts
+stored within the administrator object rather than only storing it in the database. This is so we can test and progress the administrator story without
+waiting for the database story to get fully implemented. When the database story is complete, we easily switch it so the password and salt are no longer
+stored within the objects if required/decided.
+
 #### Keyboard Shortcuts
 MenuBar has the ability to set and bind keyboard shortcuts to a stage. Therefore we will use MenuBars to set the keyboard shortcuts. 
 This means there should not be other action listeners for global or stage-level shortcuts. If it has a keyboard shortcut, it belongs as an item in the menubar.
