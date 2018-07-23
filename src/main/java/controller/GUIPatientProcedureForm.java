@@ -2,13 +2,21 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.RotateEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import model.Patient;
 import model.Procedure;
 import utility.GlobalEnums.Organ;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
@@ -24,7 +32,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Form to add and edit patient procedures only accessible by a clinician
  */
-public class GUIPatientProcedureForm  {
+public class GUIPatientProcedureForm implements TouchscreenCapable {
 
     @FXML
     public Button doneButton;
@@ -44,10 +52,15 @@ public class GUIPatientProcedureForm  {
     @FXML
     public MenuButton affectedInput;
 
+    @FXML
+    public GridPane procedureUpdatePane;
+
     private Patient patient;
     private boolean isEditInstance = false;
     private Procedure procedure; //The Procedure that is being edited (null in the case of adding a procedure)
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private TouchPaneController procedureTouchPane;
 
     /**
      * Initial setup. Sets up undo/redo, Populates the affected organs dropdown
@@ -57,9 +70,13 @@ public class GUIPatientProcedureForm  {
         setupDonations();
         for (MenuItem menuItem : affectedInput.getItems()) { //Adding organ checkboxes to the undo/redo controls
             if (((CustomMenuItem) menuItem).getContent() instanceof CheckBox) {
-            CheckBox checkbox = (CheckBox) ((CustomMenuItem) menuItem).getContent();
+                CheckBox checkbox = (CheckBox) ((CustomMenuItem) menuItem).getContent();
             }
         }
+        procedureTouchPane = new TouchPaneController(procedureUpdatePane);
+        procedureUpdatePane.setOnZoom(this::zoomWindow);
+        procedureUpdatePane.setOnRotate(this::rotateWindow);
+        procedureUpdatePane.setOnScroll(this::scrollWindow);
     }
 
     /**
@@ -105,6 +122,7 @@ public class GUIPatientProcedureForm  {
 
     /**
      * Converts the selected checkboxes in the affected organ selection menu into a set of organs
+     *
      * @return The resulting set of organs that are affected
      */
     private Set<Organ> getAffectedOrgansFromForm() {
@@ -137,7 +155,7 @@ public class GUIPatientProcedureForm  {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +
                     "patients DOB. There must be a summary. A summary, and description, if any, must contain " +
                     "alphabetic or numerical character(s), hyphens or spaces");
-            alert.setHeaderText( "Field input(s) are invalid!" );
+            alert.setHeaderText("Field input(s) are invalid!");
             alert.show();
         }
     }
@@ -146,24 +164,24 @@ public class GUIPatientProcedureForm  {
      * Adds the procedure to the patient's list of procedures and closes the pop-up
      */
     private void addProcedure() {
-        Set <Organ> affectedDonations = getAffectedOrgansFromForm();
-        dateInput.setStyle( null );
-        summaryInput.setStyle( null );
-        descriptionInput.setStyle( null );
-        if (validateInputs(summaryInput.getText(), descriptionInput.getText(), dateInput.getValue())){
-            if ( affectedDonations.size() == 0 ) {
+        Set<Organ> affectedDonations = getAffectedOrgansFromForm();
+        dateInput.setStyle(null);
+        summaryInput.setStyle(null);
+        descriptionInput.setStyle(null);
+        if (validateInputs(summaryInput.getText(), descriptionInput.getText(), dateInput.getValue())) {
+            if (affectedDonations.size() == 0) {
                 affectedDonations = null;
             }
-            Procedure procedure = new Procedure( summaryInput.getText(), descriptionInput.getText(),
-                    dateInput.getValue(), affectedDonations );
-            patient.addProcedure( procedure );
+            Procedure procedure = new Procedure(summaryInput.getText(), descriptionInput.getText(),
+                    dateInput.getValue(), affectedDonations);
+            patient.addProcedure(procedure);
             userActions.log(Level.INFO, "Added procedure " + procedure.getSummary(), new String[]{"Attempted to add a procedure", patient.getNhiNumber()});
             goBackToProcedures();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +
                     "patients DOB. There must be a summary. A summary, and description, if any, must contain " +
                     "alphabetic or numerical character(s), or ',.%() or spaces");
-            alert.setHeaderText( "Field input(s) are invalid!" );
+            alert.setHeaderText("Field input(s) are invalid!");
             alert.show();
         }
     }
@@ -171,26 +189,27 @@ public class GUIPatientProcedureForm  {
     /**
      * Validates the input fields summary, description, date and organs on creation of a procedure
      * If any field is invalid, the field will be highlighted red ro display that there is an error
-     * @param summary The procedure summary string
+     *
+     * @param summary     The procedure summary string
      * @param description The procedure description string
-     * @param date The date of the procedure
+     * @param date        The date of the procedure
      * @return True if date is not before patient DOB, one or more organs, or summary/description are more than 1 chars
      */
     private Boolean validateInputs(String summary, String description, LocalDate date) {
         Boolean isValid = true;
-        if ( date == null || date.isBefore( patient.getBirth() )) {
+        if (date == null || date.isBefore(patient.getBirth())) {
             isValid = false;
-            dateInput.setStyle( "-fx-base: red;" );
+            dateInput.setStyle("-fx-base: red;");
         }
-        if ( summary.length() < 1 || !Pattern.matches("[A-Za-z0-9-,.'%() ]+", summary) ||
-                summary.substring(0,1).equals(" ") ) {
+        if (summary.length() < 1 || !Pattern.matches("[A-Za-z0-9-,.'%() ]+", summary) ||
+                summary.substring(0, 1).equals(" ")) {
             isValid = false;
-            summaryInput.setStyle( "-fx-base: red;" );
+            summaryInput.setStyle("-fx-base: red;");
         }
-        if ( description.length() > 0 && (!Pattern.matches("[A-Za-z0-9-,.'%() ]+", description) ||
-                description.substring( 0,1 ).equals(" ") )) {
+        if (description.length() > 0 && (!Pattern.matches("[A-Za-z0-9-,.'%() ]+", description) ||
+                description.substring(0, 1).equals(" "))) {
             isValid = false;
-            descriptionInput.setStyle( "-fx-base: red;" );
+            descriptionInput.setStyle("-fx-base: red;");
         }
         return isValid;
     }
@@ -217,6 +236,24 @@ public class GUIPatientProcedureForm  {
      * Closes the pop-up stage for the procedure form
      */
     public void goBackToProcedures() {
-        screenControl.closeStage(((UndoableStage)summaryInput.getScene().getWindow()).getUUID());
+        screenControl.closeStage(((UndoableStage) summaryInput.getScene().getWindow()).getUUID());
     }
+
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        procedureTouchPane.zoomPane(zoomEvent);
+    }
+
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        procedureTouchPane.rotatePane(rotateEvent);
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        if(scrollEvent.isDirect()) {
+            procedureTouchPane.scrollPane(scrollEvent);
+        }
+    }
+
 }

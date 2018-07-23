@@ -87,14 +87,6 @@ public class GUIHome implements TouchscreenCapable {
             homePane.setOnZoom(this::zoomWindow);
             homePane.setOnRotate(this::rotateWindow);
             homePane.setOnScroll(this::scrollWindow);
-            homePane.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if(event.getClickCount() == 2) {
-                        resizePane();
-                    }
-                }
-            });
 
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
@@ -207,7 +199,6 @@ public class GUIHome implements TouchscreenCapable {
         new UserControl().rmLoggedInUserCache();
         screenControl.setUpNewLogin(); // ONLY FOR SINGLE USER SUPPORT. REMOVE WHEN MULTI USER SUPPORT
         screenControl.removeTUIOFX();
-        System.out.println("tuiofx removed");
     }
 
     /**
@@ -317,11 +308,9 @@ public class GUIHome implements TouchscreenCapable {
 
     @Override
     public void scrollWindow(ScrollEvent scrollEvent) {
-        homeTouchPane.scrollPane(scrollEvent);
+        if(scrollEvent.isDirect()) {
+            homeTouchPane.scrollPane(scrollEvent);
+        }
     }
 
-    @Override
-    public void resizePane() {
-        homeTouchPane.resizePane();
-    }
 }

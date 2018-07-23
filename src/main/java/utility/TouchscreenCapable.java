@@ -13,5 +13,4 @@ public interface TouchscreenCapable {
 
     void scrollWindow(ScrollEvent scrollEvent);
 
-    void resizePane();
 }

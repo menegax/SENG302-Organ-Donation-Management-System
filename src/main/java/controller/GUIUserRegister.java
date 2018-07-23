@@ -118,14 +118,7 @@ public class GUIUserRegister implements TouchscreenCapable {
         userRegisterPane.setOnZoom(this::zoomWindow);
         userRegisterPane.setOnRotate(this::rotateWindow);
         userRegisterPane.setOnScroll(this::scrollWindow);
-        userRegisterPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if(event.getClickCount() == 2) {
-                    resizePane();
-                }
-            }
-        });
+
     }
 
     /**
@@ -458,11 +451,10 @@ public class GUIUserRegister implements TouchscreenCapable {
 
     @Override
     public void scrollWindow(ScrollEvent scrollEvent) {
-        registerTouchPane.scrollPane(scrollEvent);
+        if(scrollEvent.isDirect()) {
+            registerTouchPane.scrollPane(scrollEvent);
+        }
     }
 
-    @Override
-    public void resizePane() {
-        registerTouchPane.resizePane();
-    }
+
 }

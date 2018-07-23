@@ -36,7 +36,7 @@ public class TouchPaneController {
         currentWindow.setWidth(currentWindow.getWidth() * zoomEvent.getZoomFactor());
         pane.setScaleY(pane.getScaleY() * zoomEvent.getZoomFactor());
         currentWindow.setHeight(currentWindow.getHeight() * zoomEvent.getZoomFactor());
-//        resizePane();
+        resizePane();
     }
 
     /**
@@ -58,23 +58,13 @@ public class TouchPaneController {
         }
     }
 
-    public void resizePane() {
+    private void resizePane() {
         Window currentWindow = pane.getScene().getWindow();
         double stageWidth = currentWindow.getWidth();
         double stageHeight = currentWindow.getHeight();
-        System.out.println("Stage: " + stageHeight + ", " + stageWidth);
         pane.resize(stageWidth, stageHeight);
         pane.setTranslateX(0);
         pane.setTranslateY(0);
-        System.out.println("Pane: " + pane.getHeight() + ", " + pane.getWidth());
-
-//        double rotation = pane.getRotate();
-//        if(Math.abs(rotation) > 90) {
-//            pane.setRotate(180);
-//        } else {
-//            pane.setRotate(0);
-//        }
-
     }
 
 }

@@ -70,14 +70,7 @@ public class GUILogin implements TouchscreenCapable {
         loginPane.setOnZoom(this::zoomWindow);
         loginPane.setOnRotate(this::rotateWindow);
         loginPane.setOnScroll(this::scrollWindow);
-        loginPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if(event.getClickCount() == 2) {
-                    resizePane();
-                }
-            }
-        });
+
     }
 
     /**
@@ -115,7 +108,6 @@ public class GUILogin implements TouchscreenCapable {
             UndoableStage stage = new UndoableStage();
             screenControl.addStage(stage.getUUID(), stage);
             screenControl.setTUIOFX(stage);
-            System.out.println("tuiofx");
             screenControl.show(stage.getUUID(), home);
             screenControl.closeStage(Main.getUuid()); // close login scene after login
         } catch (InvalidObjectException e) {
@@ -176,12 +168,10 @@ public class GUILogin implements TouchscreenCapable {
 
     @Override
     public void scrollWindow(ScrollEvent scrollEvent) {
-        loginTouchPane.scrollPane(scrollEvent);
+        if(scrollEvent.isDirect()) {
+            loginTouchPane.scrollPane(scrollEvent);
+        }
     }
 
-    @Override
-    public void resizePane() {
-        loginTouchPane.resizePane();
-    }
 
 }
