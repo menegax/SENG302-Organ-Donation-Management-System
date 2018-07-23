@@ -238,7 +238,7 @@ public class SearchPatients {
                     if (matchesFilter(patient, filter)) {
                         results.add(patient);
                         patientCount += 1;
-                    } else if (noFilterSelected(filter)) {
+                    } else if (noFilterSelected(filter) || filter == null) {
                         results.add(patient);
                         patientCount += 1;
                     }
