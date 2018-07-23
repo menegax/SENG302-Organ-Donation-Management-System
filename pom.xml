@@ -14,7 +14,7 @@
 
     <repositories>
         <repository>
-            <id>big-pharma-project-repo</id>
+            <id>libs</id>
             <url>file://${basedir}/libs</url>
         </repository>
     </repositories>
@@ -93,38 +93,38 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
+            <groupId>guava</groupId>
             <artifactId>guava-14.0.1</artifactId>
             <version>14.0.1</version>
         </dependency>
         <dependency>
             <groupId>libTUIO</groupId>
-            <artifactId>libTUIO</artifactId>
+            <artifactId>libTUIO-1.0</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>ScenicView</groupId>
-            <artifactId>ScenicView</artifactId>
+            <artifactId>ScenicView-1.0</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <artifactId>slf4j-api-1.7.6</artifactId>
             <version>1.7.6</version>
         </dependency>
         <dependency>
             <groupId>slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
+            <artifactId>slf4j-simple-1.7.6</artifactId>
             <version>1.7.6</version>
         </dependency>
         <dependency>
             <groupId>tuiofx</groupId>
-            <artifactId>tuiofx-all</artifactId>
+            <artifactId>tuiofx-all-0.10.4</artifactId>
             <version>0.10.4</version>
         </dependency>
         <dependency>
             <groupId>tuiofx</groupId>
-            <artifactId>tuiofx-core</artifactId>
+            <artifactId>tuiofx-core-0.10.4</artifactId>
             <version>0.10.4</version>
         </dependency>
     </dependencies>
