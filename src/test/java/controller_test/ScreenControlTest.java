@@ -29,6 +29,14 @@ public class ScreenControlTest {
     @BeforeClass
     public static void setup() {
         userActions.setLevel(Level.OFF);
+        System.setProperty("prism.verbose", "true");
+        System.setProperty("java.awt.headless", "true");
+        System.setProperty("testfx.robot", "glass");
+        System.setProperty("testfx.headless", "true");
+        System.setProperty("prism.order", "sw");
+        System.setProperty("prism.text", "t2k");
+        System.setProperty("testfx.setup.timeout", "2500");
+
     }
 
     /**
