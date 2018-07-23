@@ -19,7 +19,7 @@ import model.Patient;
 import org.tuiofx.Configuration;
 import org.tuiofx.TuioFX;
 import service.Database;
-import utility.TouchCapablePane;
+import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 import utility.undoRedo.UndoableStage;
 
@@ -43,7 +43,7 @@ public class GUILogin implements TouchscreenCapable {
     @FXML
     private CheckBox clinicianToggle;
 
-    private TouchCapablePane loginTouchPane;
+    private TouchPaneController loginTouchPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -52,16 +52,16 @@ public class GUILogin implements TouchscreenCapable {
      */
     public void initialize() {
         // Enter key triggers log in
-        loginTouchPane = new TouchCapablePane(loginPane);
+        loginTouchPane = new TouchPaneController(loginPane);
         nhiLogin.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         loginPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 logIn();
             }
         });
-        loginPane.setOnZoom(this::zoomWindow);
-        loginPane.setOnRotate(this::rotateWindow);
-        loginPane.setOnScroll(this::scrollWindow);
+//        loginPane.setOnZoom(this::zoomWindow);
+//        loginPane.setOnRotate(this::rotateWindow);
+//        loginPane.setOnScroll(this::scrollWindow);
     }
 
     /**
@@ -94,6 +94,8 @@ public class GUILogin implements TouchscreenCapable {
                 login.addLoggedInUserToCache(newPatient);
                 screenControl.addStage(stage.getUUID(), stage);
                 Parent homeScreen = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
+                TuioFX tuioFXLoggedIn = new TuioFX(stage, Configuration.debug());
+                tuioFXLoggedIn.start();
                 screenControl.show(stage.getUUID(), homeScreen);
                 screenControl.closeStage(Main.getUuid()); // close login scene after login
             }
@@ -116,8 +118,7 @@ public class GUILogin implements TouchscreenCapable {
                 login.addLoggedInUserToCache(newClinician);
                 screenControl.addStage(stage.getUUID(), stage);
                 Parent clinicianHome = FXMLLoader.load((getClass().getResource("/scene/home.fxml")));
-                TuioFX tuioFXLoggedIn = new TuioFX(stage, Configuration.debug());
-                tuioFXLoggedIn.start();
+                screenControl.setTUIOFX(stage);
                 screenControl.show(stage.getUUID(), clinicianHome);
                 screenControl.closeStage(Main.getUuid()); // close login scene after login
             }

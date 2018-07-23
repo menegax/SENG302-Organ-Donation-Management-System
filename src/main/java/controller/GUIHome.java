@@ -21,8 +21,9 @@ import javafx.stage.Stage;
 import model.Clinician;
 import model.Patient;
 import model.User;
+import org.tuiofx.TuioFX;
 import service.Database;
-import utility.TouchCapablePane;
+import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 
 import java.io.File;
@@ -46,7 +47,7 @@ public class GUIHome implements TouchscreenCapable {
     @FXML
     private Label userTypeDisplay;
 
-    private TouchCapablePane homeTouchPane;
+    private TouchPaneController homeTouchPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -66,7 +67,7 @@ public class GUIHome implements TouchscreenCapable {
                     setUpColouredBar(userControl.getLoggedInUser(), "Clinician");
                 }
             }
-            homeTouchPane = new TouchCapablePane(homePane);
+            homeTouchPane = new TouchPaneController(homePane);
             horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty().addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
             homePane.setOnZoom(this::zoomWindow);
             homePane.setOnRotate(this::rotateWindow);
@@ -157,8 +158,8 @@ public class GUIHome implements TouchscreenCapable {
         systemLogger.log(FINE, "User trying to log out");
         ScreenControl.closeAllUserStages(new UserControl().getLoggedInUser());
         new UserControl().rmLoggedInUserCache();
-
         screenControl.setUpNewLogin(); // ONLY FOR SINGLE USER SUPPORT. REMOVE WHEN MULTI USER SUPPORT
+        screenControl.removeTUIOFX();
     }
 
     /**

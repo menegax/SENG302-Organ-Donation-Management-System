@@ -4,14 +4,13 @@ import javafx.scene.Node;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Window;
 
 /**
  * Wrapper class for a Pane object to enable base touch functionality, including zooming, rotating and scrolling
  */
-public class TouchCapablePane extends Pane {
+public class TouchPaneController {
 
     /**
      * Pane to perform touch operations on
@@ -19,10 +18,10 @@ public class TouchCapablePane extends Pane {
     private Pane pane;
 
     /**
-     * Creates a new TouchCapablePane
+     * Creates a new TouchPaneController
      * @param pane base pane
      */
-    public TouchCapablePane(Pane pane) {
+    public TouchPaneController(Pane pane) {
         this.pane = pane;
     }
 
@@ -36,9 +35,6 @@ public class TouchCapablePane extends Pane {
         currentWindow.setWidth(currentWindow.getWidth() * zoomEvent.getZoomFactor() - 0.1);
         pane.setScaleY(pane.getScaleY() * zoomEvent.getZoomFactor());
         currentWindow.setHeight(currentWindow.getHeight() * zoomEvent.getZoomFactor() - 0.1);
-
-//        pane.setTranslateX(0);
-//        pane.setTranslateY(0);
     }
 
     /**

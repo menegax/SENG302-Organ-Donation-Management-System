@@ -15,6 +15,8 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.User;
+import org.tuiofx.Configuration;
+import org.tuiofx.TuioFX;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
@@ -61,6 +63,8 @@ public class ScreenControl {
     private KeyCodeCombination redo;
 
     private String appName = "Big Pharma";
+
+    private TuioFX tuiofxInstance;
 
 
     private ScreenControl() {
@@ -360,6 +364,16 @@ public class ScreenControl {
         catch (IOException e) {
             systemLogger.log(SEVERE, "Failed to recreate login scene");
         }
+    }
+
+    public void setTUIOFX(Stage stage) {
+        tuiofxInstance = new TuioFX(stage, Configuration.debug());
+        tuiofxInstance.start();
+    }
+
+    public void removeTUIOFX() {
+        tuiofxInstance.stop();
+        tuiofxInstance = null;
     }
 
 }

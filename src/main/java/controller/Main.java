@@ -53,8 +53,8 @@ public class Main extends Application {
         SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
         openKeyboard();
-        TuioFX tuioFX = new TuioFX(primaryStage, Configuration.debug());
-        tuioFX.start();
+//        TuioFX tuioFX = new TuioFX(primaryStage, Configuration.debug());
+//        tuioFX.start();
         primaryStage.show();
     }
 
