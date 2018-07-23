@@ -370,7 +370,7 @@ public class GUIUserRegister {
         String lastName = lastnameRegister.getText();
         String password = passwordTxt.getText();
         ArrayList<String> middles = new ArrayList<>();
-        String errorMsg;
+        String errorMsg = "";
         if (!middlenameRegister.getText().equals("")) {
             List<String> middleNames = Arrays.asList(middlenameRegister.getText().split(" "));
             middles = new ArrayList<>(middleNames);
@@ -400,7 +400,9 @@ public class GUIUserRegister {
             }
         }
         clearFields();
-        userActions.log(Level.INFO, errorMsg);
+        if (!errorMsg.equals("")) {
+            userActions.log(Level.INFO, errorMsg, "Attempted to register user with invalid fields");
+        }
         if (userControl.getLoggedInUser() == null) {
             returnToPreviousPage();
         }

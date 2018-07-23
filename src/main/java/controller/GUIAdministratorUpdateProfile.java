@@ -143,7 +143,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
             screenControl.setIsSaved(false);
             userActions.log(Level.INFO, "Successfully updated admin profile", new String[]{"Attempted to update admin profile", target.getUsername()});
         } else {
-            userActions.log(Level.WARNING, "Invalid fields");
+            userActions.log(Level.WARNING, "Invalid fields", "Attempted to register administrator with invalid fields");
         }
     }
 
