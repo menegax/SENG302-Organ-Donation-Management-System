@@ -5,17 +5,25 @@ import static org.junit.Assert.assertTrue;
 import static utility.UserActionHistory.userActions;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 import model.Patient;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import service.Database;
+import utility.GlobalEnums.*;
 import utility.SearchPatients;
+
+import javax.xml.crypto.Data;
 
 public class SearchPatientsTest {
 
@@ -23,6 +31,8 @@ public class SearchPatientsTest {
 	private static Patient d2;
 	private static Patient d3;
 	private static Patient d4;
+
+    private Map<FilterOption, String> filter = new HashMap<>();
 
     /**
      * Populate database with test patients and disables logging
@@ -281,6 +291,63 @@ public class SearchPatientsTest {
     	assertTrue(results.contains(d4));
     }
 
+
+    /**
+     * Test filtering of region
+     */
+    @Test
+    public void testFilterRegionWithNameSearch() throws InvalidObjectException {
+        Database.resetDatabase();
+        filter.clear();
+
+        //filter region
+        filter.put(FilterOption.REGION,  Region.CANTERBURY.toString());
+
+        //setup with region of null
+        d1 = new Patient("abc1230", "Bob", null, "Bobby", LocalDate.of(1997, 8, 19));
+        d2 = new Patient("abc1231", "aoc", null, "Bobby", LocalDate.of(2001, 9, 20));
+        d1.setRegion(Region.CANTERBURY);
+
+        Database.addPatient(d1);
+        Database.addPatient(d2);
+
+        //search with no name
+        ArrayList<Patient> results = SearchPatients.search("", filter);
+
+        //only 1 should result
+        Assert.assertEquals(1, results.size());
+
+        //check that all have correct region
+        for (Patient patient : results) {
+            Assert.assertEquals(Region.CANTERBURY, patient.getRegion());
+        }
+
+        //update region
+        Database.getPatientByNhi("abc1231").setRegion(Region.CANTERBURY);
+        results = SearchPatients.search("", filter);
+
+        //2 results with region CANTERBURY
+        Assert.assertEquals(2, results.size());
+
+        hasRegions(results);
+
+        results = SearchPatients.search("aoc", filter);
+
+        //1 results with region CANTERBURY and search
+        Assert.assertEquals(2, results.size());
+
+        hasRegions(results);
+    }
+
+    /**
+     * check that all have correct region
+     * @param res - results of search to check
+     */
+    private void hasRegions(ArrayList<Patient> res) {
+        for (Patient patient : res) {
+            Assert.assertEquals(Region.CANTERBURY, patient.getRegion());
+        }
+    }
     /**
      * Reset the logging level
      */

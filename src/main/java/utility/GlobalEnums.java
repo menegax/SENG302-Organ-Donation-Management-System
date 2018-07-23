@@ -145,8 +145,7 @@ public class GlobalEnums {
 
         public static Organ getEnumFromString(String value) {
             try {
-                String test = value.replaceAll(" ", "").toUpperCase();
-                return Organ.valueOf(test);
+                return Organ.valueOf(value.replaceAll(" ", "").toUpperCase());
             }
             catch (IllegalArgumentException e) {
                 return null;

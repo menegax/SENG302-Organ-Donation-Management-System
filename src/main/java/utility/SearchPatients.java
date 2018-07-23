@@ -1,5 +1,6 @@
 package utility;
 
+import static utility.GlobalEnums.NONE_ID;
 import static utility.UserActionHistory.userActions;
 
 import model.Patient;
@@ -256,38 +257,40 @@ public class SearchPatients {
         if (filter == null) {
             return false;
         }
-        if (!filter.get(GlobalEnums.FilterOption.REGION).equals(GlobalEnums.NONE_ID)) {
+        if (filter.get(FilterOption.REGION) != null && !filter.get(FilterOption.REGION).equals(NONE_ID)) {
             Region region = Region.getEnumFromString(filter.get(FilterOption.REGION));
             if (patient.getRegion() == null || !patient.getRegion().equals(region)) {
                 return false;
             }
         }
-        if (!filter.get(GlobalEnums.FilterOption.DONATIONS).equals(GlobalEnums.NONE_ID)) {
+        if (filter.get(FilterOption.DONATIONS) != null && !filter.get(FilterOption.DONATIONS).equals(NONE_ID)) {
             Organ donatingOrgan = Organ.getEnumFromString(filter.get(FilterOption.DONATIONS));
             if (patient.getDonations() == null || !patient.getDonations().contains(donatingOrgan)) return false;
         }
-        if (!filter.get(GlobalEnums.FilterOption.REQUESTEDDONATIONS).equals(GlobalEnums.NONE_ID)) {
+        if (filter.get(FilterOption.REQUESTEDDONATIONS) != null && !filter.get(FilterOption.REQUESTEDDONATIONS).equals(NONE_ID)) {
             Organ requestedOrgans = Organ.getEnumFromString(filter.get(FilterOption.REQUESTEDDONATIONS));
             if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().contains(requestedOrgans))
                 return false;
         }
-        if (!filter.get(FilterOption.BIRTHGENDER).equals(GlobalEnums.NONE_ID)) {
+        if (filter.get(FilterOption.BIRTHGENDER) != null && !filter.get(FilterOption.BIRTHGENDER).equals(NONE_ID)) {
             BirthGender birthGender = BirthGender.getEnumFromString(filter.get(FilterOption.BIRTHGENDER));
             if (patient.getBirthGender() == null || !patient.getBirthGender().equals(birthGender)) return false;
         }
-        if (Boolean.valueOf(filter.get(FilterOption.RECIEVER)).equals(true)
+        if (filter.get(FilterOption.RECIEVER) != null && Boolean.valueOf(filter.get(FilterOption.RECIEVER)).equals(true)
                 && patient.getRequiredOrgans().size() == 0) {
             return false;
         }
-        if (Boolean.valueOf(filter.get(FilterOption.DONOR)).equals(true)
+        if (filter.get(FilterOption.DONOR) != null && Boolean.valueOf(filter.get(FilterOption.DONOR)).equals(true)
                 && patient.getDonations().size() == 0) {
             return false;
         }
 
 
-        if (patient.getAge() > Integer.parseInt(filter.get(FilterOption.AGEUPPER))
-                || patient.getAge() < Integer.parseInt(filter.get(FilterOption.AGELOWER))) {
-            return false;
+        if (filter.get(FilterOption.AGEUPPER) != null &&  filter.get(FilterOption.AGELOWER) != null) {
+            if (patient.getAge() > Integer.parseInt(filter.get(FilterOption.AGEUPPER))
+                    || patient.getAge() < Integer.parseInt(filter.get(FilterOption.AGELOWER))) {
+                return false;
+            }
         }
 
         return true;
@@ -298,7 +301,7 @@ public class SearchPatients {
             return false;
         }
         for (Object value : filter.values()) {
-            if (value != null && !value.toString().equals(GlobalEnums.NONE_ID) && !value.equals("0") && !value.equals("100")) {
+            if (value != null && !value.toString().equals(NONE_ID) && !value.equals("0") && !value.equals("100")) {
                 return false;
             }
         }
