@@ -14,7 +14,9 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import service.Database;
+import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -28,7 +30,7 @@ import java.util.regex.Pattern;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
-public class GUIUserRegister {
+public class GUIUserRegister extends UndoableController{
 
     public Button doneButton;
 
@@ -104,12 +106,34 @@ public class GUIUserRegister {
             administratorButton.setVisible(false);
         }
 
+        setUpUndoRedo();
+
         // Enter key
         userRegisterPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 register();
             }
         });
+    }
+
+    /**
+     * Sets up undo redo for this tab
+     */
+    private void setUpUndoRedo() {
+        controls = new ArrayList<Control>(){{
+            add(firstnameRegister);
+            add(lastnameRegister);
+            add(middlenameRegister);
+            add(birthRegister);
+            add(userIdRegister);
+            add(regionRegister);
+            add(passwordTxt);
+            add(verifyPasswordTxt);
+            add(patientButton);
+            add(clinicianButton);
+            add(administratorButton);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.USERREGISTER);
     }
 
     /**

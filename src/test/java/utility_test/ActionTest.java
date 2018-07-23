@@ -3,9 +3,12 @@ package utility_test;
 import model.Clinician;
 import model.Patient;
 import model.User;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static utility.UserActionHistory.userActions;
 
 import service.Database;
 import utility.GlobalEnums;
@@ -14,6 +17,7 @@ import utility.undoRedo.Action;
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 public class ActionTest {
 
@@ -30,6 +34,14 @@ public class ActionTest {
     private String nhi = "TST0001";
 
     private int staffId = 1;
+
+    /**
+     * Turns of logging before the test starts
+     */
+    @BeforeClass
+    public static void setup() {
+        userActions.setLevel(Level.OFF);
+    }
 
     /**
      * Resets the users and action attributes before each test
@@ -276,6 +288,14 @@ public class ActionTest {
         whenActionUnexecuted();
         whenActionUnexecuted();
         thenBeforeClinicianInDatabase();
+    }
+
+    /**
+     * Reset the logging level
+     */
+    @AfterClass
+    public static void tearDown() {
+        userActions.setLevel(Level.INFO);
     }
 
     /**

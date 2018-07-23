@@ -133,7 +133,7 @@ public abstract class User implements Serializable {
             ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
             return (User) in.readObject();
         } catch (Exception e) {
-            systemLogger.log(Level.SEVERE, "Error setting attributes of patient");
+            systemLogger.log(Level.SEVERE, "Error setting attributes of user");
         }
         return null;
     }

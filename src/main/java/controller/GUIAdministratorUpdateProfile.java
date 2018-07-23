@@ -84,7 +84,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
             add(lastnameTxt);
             add(middlenameTxt);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPROFILEUPDATE);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORPROFILEUPDATE);
     }
 
     /**
