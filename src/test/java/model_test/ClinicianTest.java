@@ -5,19 +5,18 @@ import model.Clinician;
 import model.Patient;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import service.Database;
 import utility.GlobalEnums;
 
-import javax.xml.crypto.Data;
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.OFF;
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static utility.UserActionHistory.userActions;
 
@@ -93,6 +92,34 @@ public class ClinicianTest implements Serializable{
         assertEquals("Joe", clinician.getFirstName());
     }
 
+
+    private void givenDefaultClinician() {
+        try {
+            Database.getClinicianByID(clinician.getStaffID());
+        } catch(IOException e) {
+            Database.addClinician(clinician);
+            assert Database.getClinicians().contains(clinician);
+        }
+    }
+
+    private void whenDeletingClinician(Clinician clinician) {
+        Database.deleteClinician(clinician);
+    }
+
+    private void thenClinicianShouldntBeRemovedFromDatabase(Clinician clinician) {
+        try {
+            Database.getClinicianByID(clinician.getStaffID());
+        } catch(IOException e) {
+            assert false;
+        }
+    }
+
+    @Test
+    public void testDeletingDefaultClinician() {
+        givenDefaultClinician();
+        whenDeletingClinician(clinician);
+        thenClinicianShouldntBeRemovedFromDatabase(clinician);
+    }
     /**
      * Tests the setAttributes method
      */
