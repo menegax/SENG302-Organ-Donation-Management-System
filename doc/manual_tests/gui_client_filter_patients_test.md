@@ -42,8 +42,9 @@
 2. Drag the minimum age bar to 28.
 3. Drag the maximum age bar to also 28.
 4. Alter the birth gender combobox so that only male patients are presented.
-5. Alter the donating organ combobox so that only patients donating a liver are presented in the table.
-6. The resulting patient(s) left in the table should be a 28 year old male donating a liver.
+5. Alter the donating organ combobox so that only patients donating bone are presented in the table.
+6. Ensure that the `Donor` checkbox is checked.
+7. The resulting patient(s) left in the table should be a 28 year old male donating bone.
 
 ### Filter patients by age, birth gender, receiving organ and receiver checkbox
 
@@ -51,8 +52,6 @@
 2. Drag the minimum age bar to 28.
 3. Drag the maximum age bar to also 28.
 4. Alter the birth gender combobox so that only female patients are presented.
-5. Alter the receiving organ combobox so that only patients requiring bone marrow are presented in the table.
+5. Alter the receiving organ combobox so that only patients requiring lung are presented in the table.
 6. Ensure that the `Receiver` checkbox is checked.
-7. The resulting patient(s) left in the table should be a 28 year old female receiver, requiring a liver.
-
--- Tested by Joshua Meneghini and the receiving organ combobox is not currently working
+7. The resulting patient(s) left in the table should be a 28 year old female receiver, requiring a lung.
