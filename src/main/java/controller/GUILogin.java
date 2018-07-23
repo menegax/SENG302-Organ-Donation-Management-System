@@ -2,6 +2,7 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,8 +12,6 @@ import javafx.scene.input.*;
 
 import javafx.scene.control.TextField;
 
-import org.tuiofx.Configuration;
-import org.tuiofx.TuioFX;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
@@ -68,9 +67,17 @@ public class GUILogin implements TouchscreenCapable {
                 logIn();
             }
         });
-//        loginPane.setOnZoom(this::zoomWindow);
-//        loginPane.setOnRotate(this::rotateWindow);
-//        loginPane.setOnScroll(this::scrollWindow);
+        loginPane.setOnZoom(this::zoomWindow);
+        loginPane.setOnRotate(this::rotateWindow);
+        loginPane.setOnScroll(this::scrollWindow);
+        loginPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getClickCount() == 2) {
+                    resizePane();
+                }
+            }
+        });
     }
 
     /**
@@ -170,6 +177,11 @@ public class GUILogin implements TouchscreenCapable {
     @Override
     public void scrollWindow(ScrollEvent scrollEvent) {
         loginTouchPane.scrollPane(scrollEvent);
+    }
+
+    @Override
+    public void resizePane() {
+        loginTouchPane.resizePane();
     }
 
 }

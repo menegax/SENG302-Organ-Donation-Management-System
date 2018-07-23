@@ -3,6 +3,7 @@ package utility;
 import javafx.scene.Node;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Window;
@@ -32,9 +33,9 @@ public class TouchPaneController {
     public void zoomPane(ZoomEvent zoomEvent) {
         Window currentWindow = ((Node)zoomEvent.getTarget()).getScene().getWindow();
         pane.setScaleX(pane.getScaleX() * zoomEvent.getZoomFactor());
-        currentWindow.setWidth(currentWindow.getWidth() * zoomEvent.getZoomFactor() - 0.1);
+        currentWindow.setWidth(currentWindow.getWidth() * zoomEvent.getZoomFactor());
         pane.setScaleY(pane.getScaleY() * zoomEvent.getZoomFactor());
-        currentWindow.setHeight(currentWindow.getHeight() * zoomEvent.getZoomFactor() - 0.1);
+        currentWindow.setHeight(currentWindow.getHeight() * zoomEvent.getZoomFactor());
     }
 
     /**
@@ -54,6 +55,25 @@ public class TouchPaneController {
             pane.setTranslateX(pane.getTranslateX() + scrollEvent.getDeltaX());
             pane.setTranslateY(pane.getTranslateY() + scrollEvent.getDeltaY());
         }
+    }
+
+    public void resizePane() {
+        Window currentWindow = pane.getScene().getWindow();
+        double stageWidth = currentWindow.getWidth();
+        double stageHeight = currentWindow.getHeight();
+        System.out.println("Stage: " + stageHeight + ", " + stageWidth);
+        pane.resize(stageWidth, stageHeight);
+        pane.setTranslateX(0);
+        pane.setTranslateY(0);
+        System.out.println("Pane: " + pane.getHeight() + ", " + pane.getWidth());
+
+        double rotation = pane.getRotate();
+        if(Math.abs(rotation) > 90) {
+            pane.setRotate(180);
+        } else {
+            pane.setRotate(0);
+        }
+
     }
 
 }

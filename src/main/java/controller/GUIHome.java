@@ -9,12 +9,11 @@ import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 import de.codecentric.centerdevice.MenuToolkit;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.input.RotateEvent;
-import javafx.scene.input.ScrollEvent;
-import javafx.scene.input.ZoomEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -88,10 +87,19 @@ public class GUIHome implements TouchscreenCapable {
             homePane.setOnZoom(this::zoomWindow);
             homePane.setOnRotate(this::rotateWindow);
             homePane.setOnScroll(this::scrollWindow);
+            homePane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if(event.getClickCount() == 2) {
+                        resizePane();
+                    }
+                }
+            });
+
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());
-            e.printStackTrace();
+            e.printStackTrace(); //todo rm
         }
     }
 
@@ -310,5 +318,10 @@ public class GUIHome implements TouchscreenCapable {
     @Override
     public void scrollWindow(ScrollEvent scrollEvent) {
         homeTouchPane.scrollPane(scrollEvent);
+    }
+
+    @Override
+    public void resizePane() {
+        homeTouchPane.resizePane();
     }
 }

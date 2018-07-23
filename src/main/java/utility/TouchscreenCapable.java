@@ -12,4 +12,6 @@ public interface TouchscreenCapable {
     void rotateWindow(RotateEvent rotateEvent);
 
     void scrollWindow(ScrollEvent scrollEvent);
+
+    void resizePane();
 }
