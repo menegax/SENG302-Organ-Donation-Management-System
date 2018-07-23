@@ -379,17 +379,20 @@ public class GUIUserRegister {
             Database.addPatient(new Patient(id, firstName, middles, lastName, birth));
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
             alertMsg = "Successfully registered patient with NHI " + id;
+            screenControl.setIsSaved(false);
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
             int staffID = Database.getNextStaffID();
             Database.addClinician(new Clinician(staffID, firstName, middles, lastName, (Region) Region.getEnumFromString(region)));
             userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
             alertMsg = "Successfully registered clinician with staff ID " + staffID;
+            screenControl.setIsSaved(false);
         } else {
             try {
                 Database.addAdministrator(new Administrator(id, firstName, middles, lastName, password));
                 userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
                 alertMsg = "Successfully registered administrator with username " + id;
+                screenControl.setIsSaved(false);
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");
                 alertMsg = "Couldn't register administrator, this username is already in use";
