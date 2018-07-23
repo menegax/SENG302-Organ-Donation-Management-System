@@ -15,7 +15,7 @@
     <repositories>
         <repository>
             <id>libs</id>
-            <url>file://${basedir}/libs</url>
+            <url>file://${project.basedir}/libs</url>
         </repository>
     </repositories>
 
@@ -97,49 +97,49 @@
             <artifactId>guava-14.0.1</artifactId>
             <version>14.0.1</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/guava/guava-14.0.1/14.0.1/guava-14.0.1.jar</systemPath>
+            <systemPath>${project.basedir}/libs/guava/guava-14.0.1/14.0.1/guava-14.0.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>libTUIO</groupId>
             <artifactId>libTUIO-1.0</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/libTUIO/libTUIO-1.0/1.0/libTUIO.jar</systemPath>
+            <systemPath>${project.basedir}/libs/libTUIO/libTUIO-1.0/1.0/libTUIO.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>ScenicView</groupId>
             <artifactId>ScenicView-1.0</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/ScenicView/ScenicView-1.0/1.0/ScenicView.jar</systemPath>
+            <systemPath>${project.basedir}/libs/ScenicView/ScenicView-1.0/1.0/ScenicView.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>slf4j</groupId>
             <artifactId>slf4j-api-1.7.6</artifactId>
             <version>1.7.6</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/slf4j/slf4j-api-1.7.6/1.7.6/slf4j-api-1.7.6.jar</systemPath>
+            <systemPath>${project.basedir}/libs/slf4j/slf4j-api-1.7.6/1.7.6/slf4j-api-1.7.6.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>slf4j</groupId>
             <artifactId>slf4j-simple-1.7.6</artifactId>
             <version>1.7.6</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/slf4j/slf4j-simple-1.7.6/1.7.6/slf4j-simple-1.7.6.jar</systemPath>
+            <systemPath>${project.basedir}/libs/slf4j/slf4j-simple-1.7.6/1.7.6/slf4j-simple-1.7.6.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>tuiofx</groupId>
             <artifactId>tuiofx-all-0.10.4</artifactId>
             <version>0.10.4</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/tuiofx/tuiofx-all-0.10.4/0.10.4/tuiofx-all-0.10.4.jar</systemPath>
+            <systemPath>${project.basedir}/libs/tuiofx/tuiofx-all-0.10.4/0.10.4/tuiofx-all-0.10.4.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>tuiofx</groupId>
             <artifactId>tuiofx-core-0.10.4</artifactId>
             <version>0.10.4</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/tuiofx/tuiofx-core-0.10.4/0.10.4/tuiofx-core-0.10.4.jar</systemPath>
+            <systemPath>${project.basedir}/libs/tuiofx/tuiofx-core-0.10.4/0.10.4/tuiofx-core-0.10.4.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.sonarsource.scanner.maven</groupId>
