@@ -1,5 +1,6 @@
 package utility.undoRedo;
 
+import controller.GUIHome;
 import controller.ScreenControl;
 import controller.UndoRedoControl;
 import controller.UndoableController;
@@ -32,6 +33,8 @@ public class UndoableStage extends Stage {
     private final UUID uuid = UUID.randomUUID();
 
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
+
+    private GUIHome guiHome;
 
     /**
      * Constructor for the undoable stage
@@ -142,5 +145,13 @@ public class UndoableStage extends Stage {
      */
     public boolean isChangingStates() {
         return changingStates;
+    }
+
+    public GUIHome getGuiHome() {
+        return guiHome;
+    }
+
+    public void setGuiHome(GUIHome guiHome) {
+        this.guiHome = guiHome;
     }
 }

@@ -22,6 +22,7 @@ import model.Patient;
 import model.User;
 import service.Database;
 import utility.StatusObservable;
+import utility.undoRedo.UndoableStage;
 
 import java.io.File;
 import java.io.IOException;
@@ -163,10 +164,12 @@ public class GUIHome implements Observer {
         }
     }
 
-
+    /**
+     * Sets the stage title of the stage this guiHome is on
+     */
     private void setStageTitle() {
         homeStage.setTitle("Home");
-
+        ((UndoableStage) homeStage).setGuiHome(this);
         // If clinician viewing patient
         if (userControl.getTargetUser() != null) {
             // viewing patient
@@ -447,5 +450,21 @@ public class GUIHome implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         setStatusLbl(arg.toString());
+    }
+
+    /**
+     * Adds an asterisk from the username display
+     */
+    public void addAsterisk() {
+        if (!userNameDisplay.getText().contains("*")) {
+            userNameDisplay.setText(userNameDisplay.getText() + "*");
+        }
+    }
+
+    /**
+     * Removes the asterisk from the username display
+     */
+    public void removeAsterisk() {
+        userNameDisplay.setText(userNameDisplay.getText().replace("*", ""));
     }
 }
