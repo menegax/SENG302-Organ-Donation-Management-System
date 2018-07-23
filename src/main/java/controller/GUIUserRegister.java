@@ -324,7 +324,7 @@ public class GUIUserRegister {
         }
         if (passwordTxt.getText().length() < 6) {
             valid = setInvalid(passwordTxt);
-            error += "Password must be 6 or more characters. ";
+            error += "Password must be 6 or more characters.";
         } else {
             setValid(passwordTxt);
         }
@@ -337,7 +337,7 @@ public class GUIUserRegister {
             setValid(verifyPasswordTxt);
         }
         if (!valid) {
-            userActions.log(WARNING, "Invalid fields: " + error);
+            userActions.log(WARNING, "Invalid fields: " + error, "Attempted to register an admin");
         }
         return valid;
     }
