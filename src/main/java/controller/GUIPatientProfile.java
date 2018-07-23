@@ -310,7 +310,6 @@ public class GUIPatientProfile {
     public void deleteProfile() {
         Patient patient = (Patient) userControl.getTargetUser();
         userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", patient.getNhiNumber()});
-        StatusObservable.getInstance().setStatus("Patient deleted");
         Database.deletePatient( patient );
         ((Stage) patientProfilePane.getScene().getWindow()).close();
     }

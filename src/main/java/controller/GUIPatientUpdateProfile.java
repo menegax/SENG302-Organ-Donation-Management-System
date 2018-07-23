@@ -494,7 +494,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
                         .getSelectedItem()));
             }
             screenControl.setIsSaved(false);
-            StatusObservable.getInstance().setStatus("Patient profile updated");
             new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
             userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", target.getNhiNumber()});
         }

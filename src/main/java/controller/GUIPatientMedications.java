@@ -381,7 +381,6 @@ public class GUIPatientMedications extends UndoableController {
                 viewCurrentMedications();
                 newMedication.clear();
                 screenControl.setIsSaved(false);
-                StatusObservable.getInstance().setStatus("Medication " + medication + " added");
             }
             else if (history.contains(medication) && !current.contains(medication)) {
                 moveToCurrent(new ArrayList<>(Collections.singleton(medication)));
@@ -444,7 +443,6 @@ public class GUIPatientMedications extends UndoableController {
             viewCurrentMedications();
         }
         screenControl.setIsSaved(false);
-        StatusObservable.getInstance().setStatus("Medication " + medication + " deleted");
     }
 
 
@@ -469,7 +467,6 @@ public class GUIPatientMedications extends UndoableController {
                         "Moved medication to current: " + medication,
                         new String[] { "Attempted to move medication " + medication + " to current medications", target.getNhiNumber() });
                 screenControl.setIsSaved(false);
-                StatusObservable.getInstance().setStatus(medication + " moved to current medications");
                 viewPastMedications();
             }
         }
@@ -497,7 +494,6 @@ public class GUIPatientMedications extends UndoableController {
                         "Moved medication to past: " + medication,
                         new String[] { "Attempted to move medication " + medication + " to past medications", target.getNhiNumber() });
                 screenControl.setIsSaved(false);
-                StatusObservable.getInstance().setStatus(medication + " moved to past medications");
                 viewCurrentMedications();
             }
         }

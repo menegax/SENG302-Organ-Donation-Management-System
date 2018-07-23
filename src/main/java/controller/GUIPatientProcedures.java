@@ -258,7 +258,6 @@ public class GUIPatientProcedures extends UndoableController {
             dialogOK.addEventFilter(ActionEvent.ACTION, event -> {
                 patient.removeProcedure(finalProcedure);
                 screenControl.setIsSaved(false);
-                StatusObservable.getInstance().setStatus("Procedure " + finalProcedure.getSummary() + " deleted");
                 userActions.log(INFO, "Removed procedure " + finalProcedure.getSummary(), new String[]{"Attempted to remove a procedure", patient.getNhiNumber()});
                 setupTables();
             });
