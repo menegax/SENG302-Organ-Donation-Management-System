@@ -298,7 +298,7 @@ public class GUIHome implements Observer {
 
     private void logOut() {
         systemLogger.log(FINE, "User trying to log out");
-        ScreenControl.closeAllUserStages(new UserControl().getLoggedInUser());
+        screenControl.closeAllUserStages(new UserControl().getLoggedInUser());
         new UserControl().rmLoggedInUserCache();
 
         screenControl.setUpNewLogin(); // ONLY FOR SINGLE USER SUPPORT. REMOVE WHEN MULTI USER SUPPORT
