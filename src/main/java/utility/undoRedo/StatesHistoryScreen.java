@@ -359,4 +359,11 @@ public class StatesHistoryScreen {
         actions.put(index, action);
     }
 
+    /**
+     * Gets the undoable stage this statesHistoryScreen is on
+     * @return the undoableStage
+     */
+    public UndoableStage getUndoableStage() {
+        return undoableStage;
+    }
 }

@@ -143,4 +143,8 @@ public class UndoableStage extends Stage {
     public void setChangingStates(Boolean changingStates) {
         this.changingStates = changingStates;
     }
+
+    public boolean getChangingStates() {
+        return this.changingStates;
+    }
 }

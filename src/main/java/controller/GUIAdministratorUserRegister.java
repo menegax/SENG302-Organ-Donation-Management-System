@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
-public class GUIUserRegister {
+public class GUIAdministratorUserRegister extends UndoableController {
 
     public Button doneButton;
 
@@ -95,16 +95,15 @@ public class GUIUserRegister {
             }
             regionRegister.setItems(regions);
             backButton.setVisible(false);
-            backButton.setDisable(true);
             userRegisterPane.getRowConstraints().get(0).setMaxHeight(0);
         } else {
-            patientButton.setDisable(true);
             patientButton.setVisible(false);
-            clinicianButton.setDisable(true);
             clinicianButton.setVisible(false);
-            administratorButton.setDisable(true);
             administratorButton.setVisible(false);
         }
+        setUpUndoRedo();
+        setUpButtonListeners();
+
         // Enter key
         userRegisterPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -114,22 +113,72 @@ public class GUIUserRegister {
     }
 
     /**
+     * Sets up the listeners for the radio buttons to switch controls on selection
+     */
+    private void setUpButtonListeners() {
+        patientButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!oldValue && newValue) {
+                if (!statesHistoryScreen.getUndoableStage().getChangingStates()) {
+                    statesHistoryScreen.getUndoableStage().setChangingStates(true);
+                    clearFields();
+                    statesHistoryScreen.getUndoableStage().setChangingStates(false);
+                }
+                onSelectPatient();
+            }
+        }));
+        clinicianButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!oldValue && newValue) {
+                if (!statesHistoryScreen.getUndoableStage().getChangingStates()) {
+                    statesHistoryScreen.getUndoableStage().setChangingStates(true);
+                    clearFields();
+                    statesHistoryScreen.getUndoableStage().setChangingStates(false);
+                }
+                onSelectClinician();
+            }
+        }));
+        administratorButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!oldValue && newValue) {
+                if (!statesHistoryScreen.getUndoableStage().getChangingStates()) {
+                    statesHistoryScreen.getUndoableStage().setChangingStates(true);
+                    clearFields();
+                    statesHistoryScreen.getUndoableStage().setChangingStates(false);
+                }
+                onSelectAdministrator();
+            }
+        }));
+    }
+
+    /**
+     * Sets up undo redo for this tab
+     */
+    private void setUpUndoRedo() {
+        controls = new ArrayList<Control>(){{
+            add(firstnameRegister);
+            add(lastnameRegister);
+            add(middlenameRegister);
+            add(birthRegister);
+            add(userIdRegister);
+            add(regionRegister);
+            add(passwordTxt);
+            add(verifyPasswordTxt);
+            add(patientButton);
+            add(clinicianButton);
+            add(administratorButton);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORUSERREGISTER);
+    }
+
+    /**
      * Sets the registry fields for registering a patient
      */
     @FXML
     public void onSelectPatient() {
-        clearFields();
         userIdRegister.setPromptText("NHI Number");
         regionRegister.setVisible(false);
-        regionRegister.setDisable(true);
         birthRegister.setVisible(true);
-        birthRegister.setDisable(false);
         passwordTxt.setVisible(false);
-        passwordTxt.setDisable(true);
         verifyPasswordTxt.setVisible(false);
-        verifyPasswordTxt.setDisable(true);
         userIdRegister.setVisible(true);
-        userIdRegister.setDisable(false);
     }
 
     /**
@@ -137,18 +186,12 @@ public class GUIUserRegister {
      */
     @FXML
     public void onSelectClinician() {
-        clearFields();
         userIdRegister.setPromptText("Staff ID");
         regionRegister.setVisible(true);
-        regionRegister.setDisable(false);
         birthRegister.setVisible(false);
-        birthRegister.setDisable(true);
         passwordTxt.setVisible(false);
-        passwordTxt.setDisable(true);
         verifyPasswordTxt.setVisible(false);
-        verifyPasswordTxt.setDisable(true);
         userIdRegister.setVisible(false);
-        userIdRegister.setDisable(true);
     }
 
     /**
@@ -156,18 +199,12 @@ public class GUIUserRegister {
      */
     @FXML
     public void onSelectAdministrator() {
-        clearFields();
         userIdRegister.setPromptText("Username");
         regionRegister.setVisible(false);
-        regionRegister.setDisable(true);
         birthRegister.setVisible(false);
-        birthRegister.setDisable(true);
         passwordTxt.setVisible(true);
-        passwordTxt.setDisable(false);
         verifyPasswordTxt.setVisible(true);
-        verifyPasswordTxt.setDisable(false);
         userIdRegister.setVisible(true);
-        userIdRegister.setDisable(false);
     }
 
     /**
