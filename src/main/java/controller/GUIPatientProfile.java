@@ -6,12 +6,9 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import model.Clinician;
 import model.Medication;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Clinician;
 import model.Medication;
@@ -120,6 +117,21 @@ public class GUIPatientProfile {
     @FXML
     private Label donatingTitle;
 
+    @FXML
+    private Label firstNameLbl;
+
+    @FXML
+    private Label firstNameValue;
+
+    @FXML
+    private GridPane details;
+
+    @FXML
+    private RowConstraints genderRow;
+
+    @FXML
+    private RowConstraints firstNameRow;
+
     private ListProperty<String> donatingListProperty = new SimpleListProperty<>();
 
     private ListProperty<String> receivingListProperty = new SimpleListProperty<>();
@@ -149,9 +161,7 @@ public class GUIPatientProfile {
         userControl = new UserControl();
         Object user = null;
         if (userControl.getLoggedInUser() instanceof Patient) {
-            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber())
-                    .getRequiredOrgans()
-                    .size() == 0) {
+            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
                 receivingList.setDisable(true);
                 receivingList.setVisible(false);
                 receivingTitle.setDisable(true);
@@ -164,6 +174,14 @@ public class GUIPatientProfile {
                             .setMaxWidth(0);
                 }
             }
+
+            genderDeclaration.setVisible(false);
+            genderStatus.setVisible(false);
+            genderRow.setMaxHeight(0);
+            firstNameLbl.setVisible(false);
+            firstNameValue.setVisible(false);
+            firstNameRow.setMaxHeight(0);
+
             user = userControl.getLoggedInUser();
             deleteButton.setVisible( false );
             deleteButton.setDisable( true );
@@ -194,6 +212,7 @@ public class GUIPatientProfile {
         Patient patient = Database.getPatientByNhi(nhi);
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
+        firstNameValue.setText(patient.getFirstName());
         genderDeclaration.setText("Birth Gender: ");
         genderStatus.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue());
         prefGenderLbl.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender().getValue());
