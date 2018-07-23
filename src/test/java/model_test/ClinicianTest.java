@@ -39,7 +39,7 @@ public class ClinicianTest {
      */
     @BeforeClass
     public static void turnOff() {
-        userActions.setLevel(OFF);
+        userActions.setLevel(Level.OFF);
     }
 
     /**
@@ -81,24 +81,15 @@ public class ClinicianTest {
 
 
     private void givenDefaultClinician() {
-        try {
-            database.getClinicianByID(clinician.getStaffID());
-        } catch(IOException e) {
-            database.addClinician(clinician);
-            assert database.getClinicians().contains(clinician);
-        }
+        database.getClinicianByID(clinician.getStaffID());
     }
 
     private void whenDeletingClinician(Clinician clinician) {
-        database.deleteClinician(clinician);
+        database.delete(clinician);
     }
 
     private void thenClinicianShouldntBeRemovedFromDatabase(Clinician clinician) {
-        try {
-            database.getClinicianByID(clinician.getStaffID());
-        } catch(IOException e) {
-            assert false;
-        }
+        database.getClinicianByID(clinician.getStaffID());
     }
 
     @Test

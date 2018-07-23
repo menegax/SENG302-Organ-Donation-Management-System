@@ -119,6 +119,17 @@ public class Database {
             + "ON DUPLICATE KEY UPDATE "
             + "Description = VALUES (Description), "
             + "AffectedOrgans = VALUES (AffectedOrgans)";
+    
+    private final String UPDATEADMINQUERYSTRING = "INSERT INTO tblAdmins "
+    		+ "(Username, FName, MName, LName, Salt, Password, Modified) "
+    		+ "VALUES (?, ?, ?, ?, ?, ?, ?) "
+    		+ "ON DUPLICATE KEY UPDATE "
+    		+ "FName = VALUES (FName), "
+    		+ "MName = VALUES (MName), "
+    		+ "LName = VALUES (LName), "
+    		+ "Salt = VALUES (Salt), "
+    		+ "Password = VALUES (Password), "
+    		+ "Modified = VALUES (Modified)";
 
     /**
      * Private constructor for creating instance of Database for Singleton.
@@ -234,6 +245,8 @@ public class Database {
             return addPatient((Patient) object);
         } else if (object instanceof Clinician) {
             return addClinician((Clinician) object);
+        } else if (object instanceof Administrator) {
+        	return addAdministrator((Administrator) object);
         }
         return false;
     }
@@ -352,6 +365,23 @@ public class Database {
     }
 
     /**
+     * Gets a Administrators attributes and stores them in a String array
+     * @param admin The Administrator to get attributes from
+     * @return String[] of the Administrators attributes.
+     */
+    private String[] getAdministratorAttributes(Administrator admin) {
+    	String[] adminAttr = new String[7];
+    	adminAttr[0] = admin.getUsername();
+    	adminAttr[1] = admin.getFirstName();
+    	adminAttr[2] = String.join(" ", admin.getMiddleNames());
+    	adminAttr[3] = admin.getLastName();
+    	adminAttr[4] = admin.getSalt();
+    	adminAttr[5] = admin.getHashedPassword();
+    	adminAttr[6] = admin.getModified().toString();
+    	return adminAttr;
+    }
+    
+    /**
      * Gets all attributes for a medication object
      *
      * @param patient    Patient who is taking or used to take the medication
@@ -448,6 +478,8 @@ public class Database {
 			return updatePatient((Patient) object);
         } else if (object instanceof Clinician) {
         	return updateClinician((Clinician) object);
+        } else if (object instanceof Administrator) {
+        	return updateAdministrator((Administrator) object);
         }
         return false;
     }
@@ -526,7 +558,7 @@ public class Database {
     	String[] attr = getClinicianAttributes(clinician);
     	try {
 			runQuery(UPDATECLINICIANQUERYSTRING, attr);
-			userActions.log(Level.INFO, "Updated patient attributes in database.", "Attempted to update clinician attributes in database.");
+			userActions.log(Level.INFO, "Updated clinician attributes in database.", "Attempted to update clinician attributes in database.");
 			return true;
 		} catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to update clinician in database.");
@@ -534,6 +566,23 @@ public class Database {
     	return false;
     }
 
+    /**
+     * Updates a Administrator in the database.
+     * @param admin The Administrator to update.
+     * @return True if successfully updated, otherwise false.
+     */
+    private boolean updateAdministrator(Administrator admin) {
+    	String[] attr = getAdministratorAttributes(admin);
+    	try {
+			runQuery(UPDATEADMINQUERYSTRING, attr);
+			userActions.log(Level.INFO, "Updated administrator attributes in database.", "Attempted to update administrator attributes in database.");
+			return true;
+		} catch (SQLException e) {
+			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to update administrator in database.");
+		}
+    	return false;
+    }
+    
     /**
      * Checks if the given NHI exists in the database.
      * @param nhi The NHI to check.
@@ -587,17 +636,32 @@ public class Database {
      */
     private boolean addClinician(Clinician newClinician) throws IllegalArgumentException {
     	if (inDatabase(newClinician)) {
-            userActions.log(Level.SEVERE, "Failed to add clinician to database, staff ID already exisits.", "Attempted to add new clinician to database.");
-    		throw new IllegalArgumentException("StaffID " + String.valueOf(newClinician.getStaffID()) + "already in use.");
-    	} else {
-			if (updateClinician(newClinician)) {
-				clinicians.add(newClinician);
-				userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
-				return true;
-			}
-			userActions.log(Level.SEVERE, "Failed added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
-			return false;
+            userActions.log(Level.SEVERE, "Failed to add clinician to database, staff ID " + newClinician.getStaffID() + " already exisits.", "Attempted to add new clinician to database.");
+            return false;
     	}
+		if (updateClinician(newClinician)) {
+			clinicians.add(newClinician);
+			searcher.addIndex(newClinician);
+			userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
+			return true;
+		}
+		userActions.log(Level.SEVERE, "Failed added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
+		return false;
+    }
+    
+    private boolean addAdministrator(Administrator admin) {
+    	if (inDatabase(admin)) {
+            userActions.log(Level.SEVERE, "Failed to add administrator to database, username " + admin.getUsername() + " already exisits.", "Attempted to add new administrator to database.");
+            return false;
+    	}
+    	if (updateAdministrator(admin)) {
+            administrators.add(admin);
+            searcher.addIndex(admin);
+            userActions.log(Level.INFO, "Successfully added administrator " + admin.getUsername(), "Attempted to add an administrator");
+            return true;
+		}
+		userActions.log(Level.SEVERE, "Failed added clinician " + admin.getUsername(), "Attempted to add a Administrator.");
+		return false;
     }
 
     /**
@@ -1079,6 +1143,17 @@ public class Database {
     }
 
     /**
+     * Removes from the administrators HashSet the given administrator
+     * @param administrator The administrator being removed from set
+     */
+    private void deleteAdministrator(Administrator administrator) {
+        if (!administrator.getUsername().toLowerCase().equals("admin")) {
+            searcher.removeIndex(administrator);
+            administrators.remove(administrator);
+        }
+    }
+    
+    /**
      * Deletes a clinician from the database and application.
      * @param clinician The clinician to delete.
      * @return True if successfully deletes clinician, otherwise false.
@@ -1118,7 +1193,7 @@ public class Database {
     	params[counter] = nhi;
     	try {
 			runQuery(query, params);
-			SearchPatients.removeIndex(patient);
+			searcher.removeIndex(patient);
 			patients.remove(patient);
 			userActions.log(Level.INFO, "Deleted patient " + nhi, "Attempted to delete patient " + nhi);
 			return true;
@@ -1134,7 +1209,7 @@ public class Database {
      * @param username the username of the administrator to search for
      * @return true if exists else false
      */
-    public static boolean isAdministratorInDb(String username) {
+    public boolean administratorInDb(String username) {
         for (Administrator a : getAdministrators()) {
             if (a.getUsername().equals(username.toUpperCase())) {
                 return true;
@@ -1174,9 +1249,9 @@ public class Database {
         return null;
     }
 
-    public static Administrator getAdministratorByUsername(String username) throws InvalidObjectException {
+    public Administrator getAdministratorByUsername(String username) throws InvalidObjectException {
         for (Administrator a : getAdministrators()) {
-            if (a.getUsername().equals(username)) {
+            if (a.getUsername().equals(username.toUpperCase())) {
                 return a;
             }
         }
@@ -1230,29 +1305,7 @@ public class Database {
 		}
     	return false;
     }
-
-
-    public static void addAdministrator(Administrator administrator) throws IllegalArgumentException {
-        if (!Pattern.matches("^[-a-zA-Z]+$", administrator.getFirstName())) {
-            userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field: first name", "Attempted to add a administrator");
-            throw new IllegalArgumentException("firstname");
-        }
-
-        if (!Pattern.matches("^[-a-zA-Z]+$", administrator.getLastName())) {
-            userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field: last name", "Attempted to add an administrator");
-            throw new IllegalArgumentException("lastname");
-        }
-
-        for (Administrator admin : administrators) {
-            if (admin.getUsername().toLowerCase().equals(administrator.getUsername().toLowerCase())) {
-                userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field username", "Attempted to add an administrator");
-                throw new IllegalArgumentException("admin username");
-            }
-        }
-        administrators.add(administrator);
-        userActions.log(Level.INFO, "Successfully added administrator " + administrator.getUsername(), "Attempted to add an administrator");
-    }
-
+    
     /**
      * Pushes all local changes to the database.
      * @return True if everything was successfully updated, false otherwise.
@@ -1263,18 +1316,6 @@ public class Database {
     	return patientUpdate && clinicianUpdate;
     }
 
-    //TODO change this to save to remote database
-
-    public static boolean usernameUsed(String username) {
-    	username = username.toUpperCase();
-    	boolean exisits = false;
-    	for (Administrator admin: getAdministrators()) {
-    		if (admin.getUsername().equals(username)) {
-    			exisits = true;
-    		}
-    	}
-    	return exisits;
-    }
 
     /**
      * Calls all sub-methods to save data to disk
@@ -1297,7 +1338,7 @@ public class Database {
      */
     @SuppressWarnings("unused")
 	@Deprecated
-    private static void saveToDiskWaitlist() throws IOException {
+    private void saveToDiskWaitlist() throws IOException {
         Gson gson = new Gson();
         //String json = gson.toJson(organWaitingList);
 
@@ -1345,7 +1386,8 @@ public class Database {
      *
      * @throws IOException when the file cannot be found nor created
      */
-    private static void saveToDiskAdministrators() throws IOException {
+    @Deprecated
+    private void saveToDiskAdministrators() throws IOException {
         Gson gson = new Gson();
         String json = gson.toJson(administrators);
 
@@ -1384,15 +1426,15 @@ public class Database {
      */
     @SuppressWarnings("unused")
 	@Deprecated
-    public static void importFromDiskWaitlist(String filename) {
+    public void importFromDiskWaitlist(String filename) {
         Gson gson = new Gson();
 
             InputStream in = ClassLoader.class.getResourceAsStream(filename);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             //organWaitingList = gson.fromJson(br, OrganWaitlist.class);
-        catch (Exception e) {
-            userActions.log(Level.WARNING, "Failed to import patients from file", "Attempted to read patient file");
-        }
+//        catch (Exception e) {
+//            userActions.log(Level.WARNING, "Failed to import patients from file", "Attempted to read patient file");
+//        }
 
     }
 
@@ -1429,7 +1471,8 @@ public class Database {
      * Reads administrator data from disk
      * @param fileName file to import from
      */
-    public static void importFromDiskAdministrators(String fileName) {
+    @Deprecated
+    public void importFromDiskAdministrators(String fileName) {
         Gson gson = new Gson();
         BufferedReader br;
         try {
@@ -1437,7 +1480,7 @@ public class Database {
             Administrator[] administrators = gson.fromJson(br, Administrator[].class);
             for (Administrator a : administrators) {
                 try {
-                    Database.addAdministrator(a);
+                    database.addAdministrator(a);
                 } catch (IllegalArgumentException e) {
                     userActions.log(Level.WARNING, "Error importing administrator from file", "Attempted to import administrator from file");
                 }
@@ -1448,18 +1491,6 @@ public class Database {
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Failed to import administrators from file", "Attempted to read administrator file");
-        }
-    }
-
-
-    /**
-     * Removes from the administrators HashSet the given administrator
-     * @param administrator The administrator being removed from set
-     */
-    public static void deleteAdministrator(Administrator administrator) {
-        if (!administrator.getUsername().toLowerCase().equals("admin")) {
-            searcher.removeIndex(administrator);
-            administrators.remove(administrator);
         }
     }
 

@@ -299,7 +299,7 @@ public class Searcher {
      */
     private Administrator fetchAdmin(Document doc) throws InvalidObjectException {
     	String username = doc.get("username");
-    	return Database.getAdministratorByUsername(username);
+    	return database.getAdministratorByUsername(username);
     }
     
     /**

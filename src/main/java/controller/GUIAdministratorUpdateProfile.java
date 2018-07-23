@@ -41,7 +41,9 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
     private Administrator target;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
-
+    
+    private Database database = Database.getDatabase();
+    		
     /**
      * Initializes the administrator editing screen.
      * Populates the Region drop down menu using region enums.
@@ -67,7 +69,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
      */
     private void loadProfile(String username) {
         try {
-            Administrator administrator = Database.getAdministratorByUsername(username);
+            Administrator administrator = database.getAdministratorByUsername(username);
             populateForm(administrator);
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");

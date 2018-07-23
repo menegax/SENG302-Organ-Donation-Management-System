@@ -15,6 +15,7 @@ import model.Clinician;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums.Region;
+import utility.GlobalEnums.UIRegex;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -236,25 +237,31 @@ public class GUIUserRegister {
     /**
      * Validates the name fields that are common to each account type
      *
-     * @return Whether the fields are valid
+     * @return The error messages if there are any issues with fields.
      */
-    private boolean validateNames() {
-        boolean valid = true;
+    private String validateNames() {
+        String error = "";
         // first name
-        if (!firstnameRegister.getText()
-                .matches("^[-a-zA-Z]+$")) {
-            valid = setInvalid(firstnameRegister);
+        if (!Pattern.matches(UIRegex.FNAME.getValue(), firstnameRegister.getText())) {
+            setInvalid(firstnameRegister);
+            error += "Invalid first name. Must only use letters and hyphens with a max length of 35.\n";
         } else {
             setValid(firstnameRegister);
         }
+        if (!Pattern.matches(UIRegex.MNAME.getValue(), middlenameRegister.getText())) {
+        	setInvalid(middlenameRegister);
+        	error += "Invalid middle names. Must only use letters, spaces and hyphens with a max length of 70.\n";
+        } else {
+        	setValid(middlenameRegister);
+        }
         // last name
-        if (!lastnameRegister.getText()
-                .matches("^[-a-zA-Z]+$")) {
-            valid = setInvalid(lastnameRegister);
+        if (!Pattern.matches(UIRegex.LNAME.getValue(), lastnameRegister.getText())) {
+            setInvalid(lastnameRegister);
+            error += "Invalid last name. Must only use letters and hyphens with a max length of 35.\n";
         } else {
             setValid(lastnameRegister);
         }
-        return valid;
+        return error;
     }
 
     /**
@@ -263,30 +270,35 @@ public class GUIUserRegister {
      * @return Whether the fields are valid
      */
     private boolean validatePatient() {
-        boolean valid = validateNames();
+        String error = validateNames();
         // nhi
-        if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", userIdRegister.getText().toUpperCase())) {
-            valid = setInvalid(userIdRegister);
-            new Alert(Alert.AlertType.ERROR, "NHI must be 3 characters followed by 4 numbers").showAndWait();
+        if (!Pattern.matches(UIRegex.NHI.getValue(), userIdRegister.getText().toUpperCase())) {
+            setInvalid(userIdRegister);
+            error += "NHI must be 3 letters followed by 4 numbers.\n";
         } else if (database.nhiInDatabase((userIdRegister.getText()))) {
             // checks to see if nhi already in use
-            valid = setInvalid(userIdRegister);
-            new Alert(Alert.AlertType.ERROR, "Patient with the given NHI already exists").showAndWait();
+        	setInvalid(userIdRegister);
+            error += "Patient with the given NHI already exists.\n";
         } else {
             setValid(userIdRegister);
         }
         // date of birth
         if (birthRegister.getValue() != null) {
-            if (birthRegister.getValue()
-                    .isAfter(LocalDate.now())) {
-                valid = setInvalid(birthRegister);
+            if (birthRegister.getValue().isAfter(LocalDate.now())) {
+                setInvalid(birthRegister);
+                error += "Date of birth must be before the current date.\n";
             } else {
                 setValid(birthRegister);
             }
         } else {
-            valid = setInvalid(birthRegister);
+        	setInvalid(birthRegister);
+            error += "Date of birth must be before the current date.\n";
         }
-        return valid;
+        if (error.equals("")) {
+        	return true;
+        }
+        new Alert(Alert.AlertType.ERROR, error).showAndWait();
+        return false;
     }
 
     /**
@@ -295,13 +307,18 @@ public class GUIUserRegister {
      * @return Whether the fields are valid
      */
     private boolean validateClinician() {
-        boolean valid = validateNames();
+        String error = validateNames();
         if (regionRegister.getValue() != null) {
-            setValid(birthRegister);
+            setValid(regionRegister);
         } else {
-            valid = setInvalid(regionRegister);
+            setInvalid(regionRegister);
+            error += "A region must be selected.\n";
         }
-        return valid;
+        if (error.equals("")){
+        	return true;
+        }
+        new Alert(Alert.AlertType.ERROR, error).showAndWait();
+        return false;
     }
 
     /**
@@ -310,36 +327,35 @@ public class GUIUserRegister {
      * @return Whether the fields are valid
      */
     private boolean validateAdministrator() {
-        boolean valid = validateNames();
-        String error = "";
-        if (!userIdRegister.getText()
-                .matches("([A-Za-z0-9]+[-]*[_]*)+")) {
-            valid = setInvalid(userIdRegister);
-            error += "Invalid username.\n";
-        } else if (Database.usernameUsed(userIdRegister.getText())) {
-            valid = setInvalid(userIdRegister);
-            error += "Username already in use.\n";
+        String error = validateNames();
+        if (!Pattern.matches(UIRegex.USERNAME.getValue(), userIdRegister.getText().toUpperCase())) {
+            setInvalid(userIdRegister);
+            error += "Invalid username. May only contain letters, numbers, hyphens and underscores with a max length of 30.\n";
+        } else if (database.administratorInDb(userIdRegister.getText().toUpperCase())) {
+            setInvalid(userIdRegister);
+            error += "Invalid username. Username already in use.\n";
         } else {
             setValid(userIdRegister);
         }
         if (passwordTxt.getText().length() < 6) {
-            valid = setInvalid(passwordTxt);
-            error += "Password must be 6 or more characters.\n";
+            setInvalid(passwordTxt);
+            error += "Invalid password. Password must be 6 or more characters.\n";
         } else {
             setValid(passwordTxt);
         }
         if (!verifyPasswordTxt.getText().equals(passwordTxt.getText())) {
-            valid = setInvalid(verifyPasswordTxt);
+            setInvalid(verifyPasswordTxt);
             if (passwordTxt.getText().length() >= 6) {
                 error += "Passwords do not match.\n";
             }
         } else {
             setValid(verifyPasswordTxt);
         }
-        if (!valid) {
-        	new Alert(Alert.AlertType.ERROR, error).showAndWait();
+        if (error.equals("")) {
+        	return true;
         }
-        return valid;
+        new Alert(Alert.AlertType.ERROR, error).showAndWait();
+        return false;
     }
 
     /**

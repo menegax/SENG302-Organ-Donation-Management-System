@@ -88,7 +88,7 @@ public class GUILogin {
                 login.addLoggedInUserToCache(database.getClinicianByID(Integer.parseInt(nhiLogin.getText())));
             } else {
                 checkAdminCredentials();
-                login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
+                login.addLoggedInUserToCache(database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
             Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
             UndoableStage stage = new UndoableStage();

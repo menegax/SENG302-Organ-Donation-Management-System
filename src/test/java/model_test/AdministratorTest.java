@@ -20,10 +20,12 @@ public class AdministratorTest {
 
     private Administrator nonDefaultAdmin;
 
-
+    private Database database;
+    
     @Before
     public void setUp() {
         userActions.setLevel(Level.OFF);
+        database = Database.getDatabase();
         defaultAdmin = new Administrator("admin", "first", new ArrayList<>(), "last", "password");
         nonDefaultAdmin = new Administrator("newAdministrator", "first", new ArrayList<>(), "last", "password");
     }
@@ -63,11 +65,11 @@ public class AdministratorTest {
 
     private void givenDefaultAdmin() {
         try {
-            Database.getAdministratorByUsername(defaultAdmin.getUsername());
+            database.getAdministratorByUsername(defaultAdmin.getUsername());
         }
         catch (IOException e) {
-            Database.addAdministrator(defaultAdmin);
-            assert Database.getAdministrators()
+            database.add(defaultAdmin);
+            assert database.getAdministrators()
                     .contains(defaultAdmin);
         }
     }
@@ -75,18 +77,18 @@ public class AdministratorTest {
 
     private void givenNonDefaultAdmin() {
         try {
-            Database.getAdministratorByUsername(nonDefaultAdmin.getUsername());
+            database.getAdministratorByUsername(nonDefaultAdmin.getUsername());
         }
         catch (IOException e) {
-            Database.addAdministrator(nonDefaultAdmin);
-            assert Database.getAdministrators()
+            database.add(nonDefaultAdmin);
+            assert database.getAdministrators()
                     .contains(nonDefaultAdmin);
         }
     }
 
 
     private void whenDeletingAdmin(Administrator administrator) {
-        Database.deleteAdministrator(administrator);
+        database.delete(administrator);
     }
 
 
@@ -97,7 +99,7 @@ public class AdministratorTest {
 
     private void thenAdminShouldBeRemovedFromDatabase(Administrator administrator) {
         try {
-            Database.getAdministratorByUsername(administrator.getUsername());
+            database.getAdministratorByUsername(administrator.getUsername());
             assert false;
         }
         catch (IOException e) {
@@ -108,7 +110,7 @@ public class AdministratorTest {
 
     private void thenAdminShouldntBeRemovedFromDatabase(Administrator administrator) {
         try {
-            Database.getAdministratorByUsername(administrator.getUsername());
+            database.getAdministratorByUsername(administrator.getUsername());
         }
         catch (IOException e) {
             assert false;

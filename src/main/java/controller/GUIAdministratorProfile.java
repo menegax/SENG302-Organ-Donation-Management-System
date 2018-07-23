@@ -32,6 +32,8 @@ public class GUIAdministratorProfile {
     private Administrator target;
 
     private UserControl userControl = new UserControl();
+    
+    private Database database = Database.getDatabase();
 
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
@@ -71,7 +73,7 @@ public class GUIAdministratorProfile {
     public void deleteProfile() {
         if (!target.getUsername().toLowerCase().equals("admin")) {
             userActions.log(Level.INFO, "Successfully deleted admin profile", new String[]{"Attempted to delete admin profile", target.getUsername()});
-            Database.deleteAdministrator(target);
+            database.delete(target);
             if (!target.getUsername().equals(((Administrator) userControl.getLoggedInUser()).getUsername())) {
                 ((Stage) adminProfilePane.getScene().getWindow()).close();
             }

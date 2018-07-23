@@ -5,46 +5,46 @@ package utility;
  */
 public class GlobalEnums {
 
-	public enum dbFields {
-		FNAME("FName"), MNAMES("MName"), LNAME("LName"), STREET1("Street1"), STREET2("Street2"),
-		SUBURB("Suburb"), REGION("Region"), ZIP("Zip"), MODIFIED("Modified"), BIRTHDATE("Birth"),
-        CREATED("Created"), DEATHDATE("Death"), BIRTHGENDER("BirthGender"), PREFGENDER("PrefGender"),
-        PREFNAME("PrefName"), HEIGHT("Height"), WEIGHT("Weight"), BLOODGROUP("BloodType"),
-        DONATINGORGANS("DonatingOrgans"), RECEIVINGORGANS("ReceivingOrgans"), HOMEPHONE("HomePhone"),
-        WORKPHONE("WorkPhone"), MOBILEPHONE("MobilePhone"), EMAIL("Email"), ECNAME("ECName"),
-        ECRELATIONSHIP("ECRelationship"), ECHOMEPHONE("ECHomePhone"), ECWORKPHONE("ECWorkPhone"),
-        ECMOBILEPHONE("ECMobilePhone"), ECEMAIL("ECEmail"), TIME("Time"), LEVEL("Level"),
-        MESSAGE("Message"), ACTION("Action"), NAME("Name"), DATEDIAGNOSED("DateDiagnosed"),
-        STATE("State"), SUMMARY("Summary"), DESCRIPTION("Description"), PROCEDUREDATE("ProDate"),
-        AFFECTEDORGANS("AffectedOrgans"), WAITLISTORGAN("Organ");
-
-        private String value;
-
-        dbFields(final String value) {
-            this.value = value;
-        }
-
-
-        public String getValue() {
-            return value != null ? value : "Not set";
-        }
-
-
-        @Override
-        public String toString() {
-            return this.getValue() != null ? this.getValue() : "Not set";
-        }
-
-
-        public static dbFields getEnumFromString(String value) {
-            try {
-                return dbFields.valueOf(value.toUpperCase());
-            }
-            catch (IllegalArgumentException e) {
-                return null;
-            }
-        }
-	}
+//	public enum dbFields {
+//		FNAME("FName"), MNAMES("MName"), LNAME("LName"), STREET1("Street1"), STREET2("Street2"),
+//		SUBURB("Suburb"), REGION("Region"), ZIP("Zip"), MODIFIED("Modified"), BIRTHDATE("Birth"),
+//        CREATED("Created"), DEATHDATE("Death"), BIRTHGENDER("BirthGender"), PREFGENDER("PrefGender"),
+//        PREFNAME("PrefName"), HEIGHT("Height"), WEIGHT("Weight"), BLOODGROUP("BloodType"),
+//        DONATINGORGANS("DonatingOrgans"), RECEIVINGORGANS("ReceivingOrgans"), HOMEPHONE("HomePhone"),
+//        WORKPHONE("WorkPhone"), MOBILEPHONE("MobilePhone"), EMAIL("Email"), ECNAME("ECName"),
+//        ECRELATIONSHIP("ECRelationship"), ECHOMEPHONE("ECHomePhone"), ECWORKPHONE("ECWorkPhone"),
+//        ECMOBILEPHONE("ECMobilePhone"), ECEMAIL("ECEmail"), TIME("Time"), LEVEL("Level"),
+//        MESSAGE("Message"), ACTION("Action"), NAME("Name"), DATEDIAGNOSED("DateDiagnosed"),
+//        STATE("State"), SUMMARY("Summary"), DESCRIPTION("Description"), PROCEDUREDATE("ProDate"),
+//        AFFECTEDORGANS("AffectedOrgans"), WAITLISTORGAN("Organ");
+//
+//        private String value;
+//
+//        dbFields(final String value) {
+//            this.value = value;
+//        }
+//
+//
+//        public String getValue() {
+//            return value != null ? value : "Not set";
+//        }
+//
+//
+//        @Override
+//        public String toString() {
+//            return this.getValue() != null ? this.getValue() : "Not set";
+//        }
+//
+//
+//        public static dbFields getEnumFromString(String value) {
+//            try {
+//                return dbFields.valueOf(value.toUpperCase());
+//            }
+//            catch (IllegalArgumentException e) {
+//                return null;
+//            }
+//        }
+//	}
 
 	public enum UIRegex {
 
@@ -53,7 +53,7 @@ public class GlobalEnums {
 		NHI("[A-Z]{3}[0-9]{4}"),                 HOMEPHONE("0[0-9]{8}"),           WORKPHONE("0[0-9]{8}"),
 		MOBILEPHONE("(\\+[0-9]{11}|0[0-9]{9})"), EMAIL("([0-9|a-z|A-Z|.|_|-]+[@][a-z]+([.][a-z])+){0,254}"),
 		RELATIONSHIP("[a-z|-|A-Z]{0,30"),        DISEASENAME("[a-z|-|A-Z]{1,50}"), ZIP("[0-9]{4}"),
-		WEIGHT("[0-9]+([.][0-9])?"),             HEIGHT("[0-9]+([.][0-9])?");
+		WEIGHT("[0-9]+([.][0-9])?"),             HEIGHT("[0-9]+([.][0-9])?"),      USERNAME("[A-Z|0-9|_|-]{0,30}");
 
 		private String value;
 
