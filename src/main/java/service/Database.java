@@ -250,7 +250,6 @@ public class Database {
             saveToDiskClinicians();
             saveToDiskAdministrators();
             screenControl.setIsSaved(true);
-            StatusObservable.getInstance().setStatus("Local changes saved");
         } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }

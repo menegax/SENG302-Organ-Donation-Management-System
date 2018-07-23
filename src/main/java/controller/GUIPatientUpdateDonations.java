@@ -259,7 +259,6 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
         }
         screenControl.setIsSaved(false);
-        StatusObservable.getInstance().setStatus("Patient donations updated");
         userActions.log(INFO, "Updated user donations to: " + newDonations, "Attempted to update donations");
         new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
     }
