@@ -737,6 +737,7 @@ public class Database {
     public void loadAll() {
         loadAllPatients();
         loadAllClinicians();
+        loadAllAdministrators();
         loadTransplantWaitingList();
     }
 
@@ -884,6 +885,23 @@ public class Database {
                 pastDiseases, currentMeds, medHistory, procedures);
     }
 
+    /**
+     * Parses an Administrator object from a string array of its attributes.
+     * @param attr String array of administrators attributes.
+     * @return The Administrator object.
+     */
+    private Administrator parseAdministrator(String[] attr) {
+    	String username = attr[0];
+    	String fName = attr[1];
+        ArrayList<String> mNames = new ArrayList<>();
+        mNames.addAll(Arrays.asList(attr[2].split(" ")));
+        String lName = attr[3];
+    	String salt = attr[4];
+    	String password = attr[5];
+    	Timestamp modified = Timestamp.valueOf(attr[6]);
+    	return new Administrator(username, fName, mNames, lName, salt, password, modified);
+    }
+    
     /**
      * Gets all diseases for a patient and sorts them into two ArrayLists of past and current medications.
      * Returns an ArrayList array of current and past medications.
@@ -1074,6 +1092,25 @@ public class Database {
             return true;
         } catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to read all patients from the database.", "Attempted to read all patients from database.");
+        }
+        return false;
+    }
+    
+    /**
+     * Loads all administrators from the database.
+     * @return True if successfully loads all administrators, false otherwise.
+     */
+    private boolean loadAllAdministrators() {
+        try {
+        	String query = "SELECT * FROM tblAdmins";
+            ArrayList<String[]> adminsRaw = runQuery(query, new String[0]);
+            for (String[] attr : adminsRaw) {
+                administrators.add(parseAdministrator(attr));
+            }
+			userActions.log(Level.INFO, "Successfully imported all administrators from the database.", "Attempted to read all administrators from database.");
+            return true;
+        } catch (SQLException e) {
+			userActions.log(Level.SEVERE, "Failed to read all administrators from the database.", "Attempted to read all administrators from database.");
         }
         return false;
     }
