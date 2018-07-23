@@ -141,7 +141,24 @@
             <scope>system</scope>
             <systemPath>${basedir}/libs/tuiofx/tuiofx-core-0.10.4/0.10.4/tuiofx-core-0.10.4.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <version>3.4.0.905</version>
+        </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <sonar.host.url>http://localhost:9000/</sonar.host.url>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>

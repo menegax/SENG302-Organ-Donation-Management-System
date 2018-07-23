@@ -14,13 +14,14 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import org.tuiofx.Configuration;
 import org.tuiofx.TuioFX;
 import service.Database;
 import utility.GlobalEnums;
-import utility.SearchPatients;
+import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
 import java.io.IOException;
@@ -47,10 +48,12 @@ public class Main extends Application {
         Database.importFromDiskPatients("./patient.json");
         Database.importFromDiskClinicians("./clinician.json");
         Database.importFromDiskWaitlist("./waitlist.json");
+        Database.importFromDiskAdministrators("./administrator.json");
 
         addDummyTestObjects();
         ensureDefaultClinician();
-        SearchPatients.createFullIndex(); // index patients for search, needs to be after importing or adding any patients
+        ensureDefaultAdministrator();
+        Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
         openKeyboard();
 //        TuioFX tuioFX = new TuioFX(primaryStage, Configuration.debug());
@@ -107,7 +110,6 @@ public class Main extends Application {
      * Adds the default clinician if there isn't one already
      */
     private void ensureDefaultClinician() {
-
         // if default clinician 0 not in db, add it
         if (!Database.isClinicianInDb(0)) {
             systemLogger.log(INFO, "Default clinician not in database. Adding default clinician to database.");
@@ -116,6 +118,17 @@ public class Main extends Application {
             }}, "McGraw", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
         }
 
+    }
+
+    /**
+     * Adds the default administrator if there isn't one already
+     */
+    private void ensureDefaultAdministrator() {
+        // if default administrator 'admin' not in db, add it
+        if (!Database.isAdministratorInDb("admin")) {
+            systemLogger.log(INFO, "Default admin not in database. Adding default admin to database.");
+            Database.addAdministrator(new Administrator("admin", "John", new ArrayList<>(), "Smith", "password"));
+        }
     }
 
     /**

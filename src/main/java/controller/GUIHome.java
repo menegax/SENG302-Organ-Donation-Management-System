@@ -18,6 +18,7 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
@@ -50,21 +51,36 @@ public class GUIHome implements TouchscreenCapable {
     private TouchPaneController homeTouchPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+    
+    private UserControl userControl = new UserControl();
 
     @FXML
     public void initialize() {
-        UserControl userControl = new UserControl();
         try {
             if (userControl.getLoggedInUser() instanceof Patient){
                 addTabsPatient();
                 setUpColouredBar(userControl.getLoggedInUser(), "Patient");
             } else if (userControl.getLoggedInUser() instanceof Clinician) {
-                if (userControl.getTargetPatient() != null) {
+                if (userControl.getTargetUser() != null) {
                     addTabsForPatientClinician(); // if we are a clinician looking at a patient
-                    setUpColouredBar(userControl.getTargetPatient(), "Patient");
+                    setUpColouredBar(userControl.getTargetUser(), "Patient");
                 } else {
                     addTabsClinician();
                     setUpColouredBar(userControl.getLoggedInUser(), "Clinician");
+                }
+            } else if (userControl.getLoggedInUser() instanceof Administrator) {
+                if (userControl.getTargetUser() instanceof Patient) {
+                    addTabsForPatientClinician();
+                    setUpColouredBar(userControl.getTargetUser(), "Patient");
+                } else if (userControl.getTargetUser() instanceof Clinician) {
+                    addTabsClinicianAdministrator();
+                    setUpColouredBar(userControl.getTargetUser(), "Clinician");
+                } else if (userControl.getTargetUser() instanceof Administrator) {
+                    addTabsAdministrator();
+                    setUpColouredBar(userControl.getTargetUser(), "Administrator");
+                } else {
+                	addTabsAdministrator();
+                	setUpColouredBar(userControl.getLoggedInUser(), "Administrator");
                 }
             }
             homeTouchPane = new TouchPaneController(homePane);
@@ -74,7 +90,8 @@ public class GUIHome implements TouchscreenCapable {
             homePane.setOnScroll(this::scrollWindow);
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
-            systemLogger.log(SEVERE, "Failed to load home scene and its fxmls", Arrays.toString(e.getStackTrace()));
+            systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -153,6 +170,28 @@ public class GUIHome implements TouchscreenCapable {
         createTab("History", "/scene/clinicianHistory.fxml");
     }
 
+    /**
+     * Adds tabs for a logged in administrator
+     * @throws IOException- if fxml cannot be located
+     */
+    private void addTabsAdministrator() throws IOException {
+        createTab("Profile", "/scene/administratorProfile.fxml");
+        createTab("Update", "/scene/administratorProfileUpdate.fxml");
+        createTab("Register User", "/scene/userRegister.fxml");
+        createTab("Search Users", "/scene/administratorSearchUsers.fxml");
+        createTab("Transplant Waiting List", "/scene/clinicianWaitingList.fxml");
+        createTab("History", "/scene/adminHistory.fxml");
+    }
+
+    /**
+     * Adds tabs for an administrator viewing a clinician
+     * @throws IOException- if fxml cannot be located
+     */
+    private void addTabsClinicianAdministrator() throws IOException {
+        createTab("Profile", "/scene/clinicianProfile.fxml");
+        createTab("Update", "/scene/clinicianProfileUpdate.fxml");
+    }
+
 
     private void logOut() {
         systemLogger.log(FINE, "User trying to log out");
@@ -160,6 +199,7 @@ public class GUIHome implements TouchscreenCapable {
         new UserControl().rmLoggedInUserCache();
         screenControl.setUpNewLogin(); // ONLY FOR SINGLE USER SUPPORT. REMOVE WHEN MULTI USER SUPPORT
         screenControl.removeTUIOFX();
+        System.out.println("tuiofx removed");
     }
 
     /**
@@ -190,28 +230,29 @@ public class GUIHome implements TouchscreenCapable {
             Database.saveToDisk();
             userActions.log(INFO, "Successfully saved to disk", "Attempted to save to disk");
         });
-        Menu subMenuImport = new Menu("Import"); // import submenu
-        MenuItem menu2Item2 = new MenuItem("Import patients...");
-        menu2Item2.setAccelerator(screenControl.getImportt());
-        menu2Item2.setOnAction(event -> {
-            File file = new FileChooser().showOpenDialog(stage);
-            if (file != null) {
-                Database.importFromDiskPatients(file.getAbsolutePath());
-                userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
-                userActions.log(INFO, "Imported patient file from disk", "Attempted to import file from disk");
-            }
-        });
-        MenuItem menu2Item3 = new MenuItem("Import clinicians...");
-        menu2Item3.setOnAction(event -> {
-            File file = new FileChooser().showOpenDialog(stage);
-            if (file != null) {
-                Database.importFromDiskPatients(file.getAbsolutePath());
-                userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
-                userActions.log(INFO, "Imported clinician file from disk", "Attempted to import file from disk");
-            }
-        });
-        subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
-        menu2.getItems().addAll(menu2Item1, subMenuImport);
+        if (userControl.getLoggedInUser() instanceof Administrator) {
+            Menu subMenuImport = new Menu("Import"); // import submenu
+            MenuItem menu2Item2 = new MenuItem("Import patients...");
+            menu2Item2.setAccelerator(screenControl.getImportt());
+            menu2Item2.setOnAction(event -> {
+                File file = new FileChooser().showOpenDialog(stage);
+                if (file != null) {
+                    Database.importFromDiskPatients(file.getAbsolutePath());
+                    userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
+                }
+            });
+            MenuItem menu2Item3 = new MenuItem("Import clinicians...");
+            menu2Item3.setOnAction(event -> {
+                File file = new FileChooser().showOpenDialog(stage);
+                if (file != null) {
+                    Database.importFromDiskPatients(file.getAbsolutePath());
+                    userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
+                }
+            });
+            subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
+            menu2.getItems().addAll(subMenuImport);
+        }
+        menu2.getItems().addAll(menu2Item1);
 
         // EDIT
 //        Menu menu3 = new Menu("Edit");
