@@ -1,9 +1,23 @@
 package controller;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -16,14 +30,8 @@ import utility.StatusObservable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
-
-import static java.util.logging.Level.*;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
 
 public class GUIHome implements Observer {
 
@@ -38,9 +46,6 @@ public class GUIHome implements Observer {
 
     @FXML
     private Label userNameDisplay;
-
-    @FXML
-    private Label userTypeDisplay;
 
     @FXML
     private Label statusLbl;
@@ -66,20 +71,20 @@ public class GUIHome implements Observer {
             if (userControl.getLoggedInUser() instanceof Patient) {
                 homeTarget = userControl.getLoggedInUser();
                 addTabsPatient();
-                setUpColouredBar(userControl.getLoggedInUser(), "Patient");
+                setUpColouredBar(userControl.getLoggedInUser());
             }
             else if (userControl.getLoggedInUser() instanceof Clinician) {
                 // Clinician viewing a patient
                 if (userControl.getTargetUser() != null) {
                     homeTarget = userControl.getTargetUser();
                     addTabsForPatientClinician(); // if we are a clinician looking at a patient
-                    setUpColouredBar(userControl.getTargetUser(), "Patient");
+                    setUpColouredBar(userControl.getTargetUser());
                 }
                 // Clinician viewing themself
                 else {
                     homeTarget = userControl.getLoggedInUser();
                     addTabsClinician();
-                    setUpColouredBar(userControl.getLoggedInUser(), "Clinician");
+                    setUpColouredBar(userControl.getLoggedInUser());
                 }
             }
             else if (userControl.getLoggedInUser() instanceof Administrator) {
@@ -87,23 +92,23 @@ public class GUIHome implements Observer {
                 if (userControl.getTargetUser() instanceof Patient) {
                     homeTarget = userControl.getTargetUser();
                     addTabsForPatientClinician();
-                    setUpColouredBar(userControl.getTargetUser(), "Patient");
+                    setUpColouredBar(userControl.getTargetUser());
                 }
                 // admin viewing clinician
                 else if (userControl.getTargetUser() instanceof Clinician) {
                     homeTarget = userControl.getTargetUser();
                     addTabsClinicianAdministrator();
-                    setUpColouredBar(userControl.getTargetUser(), "Clinician");
+                    setUpColouredBar(userControl.getTargetUser());
                 }
                 // admin viewing admin
                 else if (userControl.getTargetUser() instanceof Administrator) {
                     homeTarget = userControl.getTargetUser();
                     addTabsAdministrator();
-                    setUpColouredBar(userControl.getTargetUser(), "Administrator");
+                    setUpColouredBar(userControl.getTargetUser());
                 }
                 else {
                     addTabsAdministrator();
-                    setUpColouredBar(userControl.getLoggedInUser(), "Administrator");
+                    setUpColouredBar(userControl.getLoggedInUser());
                 }
             }
             addStageListener();
@@ -169,32 +174,30 @@ public class GUIHome implements Observer {
 
         // If clinician viewing patient
         if (userControl.getTargetUser() != null) {
+            // viewing patient
             if (userControl.getTargetUser() instanceof Patient) {
-                homeStage.setTitle("Patient " + ((Patient) homeTarget).getNhiNumber()); //todo fix
+                homeStage.setTitle("Patient " + ((Patient) homeTarget).getNhiNumber());
             }
+            // viewing clinician
             else if (userControl.getTargetUser() instanceof Clinician) {
                 homeStage.setTitle("Clinician " + ((Clinician) homeTarget).getStaffID());
             }
+            // viewing admin
             else if (userControl.getTargetUser() instanceof Administrator) {
                 homeStage.setTitle("Administrator " + ((Administrator) homeTarget).getUsername());
             }
         }
-
     }
 
 
     /**
-     * Sets to the coloured bar at top of GUI the user name and type
+     * Sets to the coloured bar at top of GUI the user name
      *
      * @param user the currently logged in user, or observed patient
      */
-    private void setUpColouredBar(User user, String userType) {
-        user.addPropertyChangeListener(e -> {
-            userNameDisplay.setText(user.getNameConcatenated());
-            userTypeDisplay.setText(userType);
-        });
+    private void setUpColouredBar(User user) {
+        user.addPropertyChangeListener(e -> userNameDisplay.setText(user.getNameConcatenated()));
         userNameDisplay.setText(user.getNameConcatenated());
-        userTypeDisplay.setText(userType);
     }
 
 

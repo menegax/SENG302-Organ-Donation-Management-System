@@ -31,20 +31,29 @@ public class UserActionHistory {
 
         userActions.setUseParentHandlers(false); // disables default console userActions in parent
 
-        Handler patientHandler = new Handler() {
+        Handler userHandler = new Handler() {
             public void publish(LogRecord logRecord) {
                 Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
 
                 // get logged in patient if it exists
                 Object loggedInUser = new UserControl().getLoggedInUser();
 
-                if (loggedInUser instanceof Patient) { //Add a patient record if a patient is logged in
+                // PATIENT RECORDS
+                if (loggedInUser instanceof Patient) {
+
+                    // Add a patient record if a patient is logged in
                     ((Patient) loggedInUser).getUserActionsList()
                             .add(new PatientActionRecord(currentTimeStamp,
                                     logRecord.getLevel(),
                                     StringUtils.capitalize(logRecord.getParameters()[0].toString()),
                                     StringUtils.capitalize(logRecord.getMessage())));
-                } else if (loggedInUser instanceof Clinician) { //Add a clinician record if a clinician is logged in
+
+                }
+
+                // CLINICIAN RECORDS
+                else if (loggedInUser instanceof Clinician) {
+
+                    //Add a clinician record if a clinician is logged in
                     String nhiParam = null;
                     //If there are more than 1 parameter, in which case the target nhi is provided as the second parameter
                     if (logRecord.getParameters().length >= 2) {
@@ -56,7 +65,12 @@ public class UserActionHistory {
                                     StringUtils.capitalize(logRecord.getParameters()[0].toString()),
                                     StringUtils.capitalize(logRecord.getMessage()),
                                     nhiParam));
-                } else if (loggedInUser instanceof Administrator) { //Add a administrator record if a administrator is logged in
+                }
+
+                // ADMINISTRATOR RECORDS
+                else if (loggedInUser instanceof Administrator) {
+
+                    //Add an administrator record if a administrator is logged in
                     String targetParam = null;
                     //If there are more than 1 parameter, in which case the target ID is provided as the second parameter
                     if (logRecord.getParameters().length >= 2) {
@@ -69,6 +83,9 @@ public class UserActionHistory {
                                     StringUtils.capitalize(logRecord.getMessage()),
                                     targetParam));
                 }
+
+                // Show resulting action in GUI status bar
+                StatusObservable.getInstance().setStatus(logRecord.getMessage());
             }
 
             @Override
@@ -80,7 +97,7 @@ public class UserActionHistory {
             public void close() throws SecurityException {
             }
         };
-        userActions.addHandler(patientHandler);
+        userActions.addHandler(userHandler);
 
         // Console handler
         Handler console = new ConsoleHandler();

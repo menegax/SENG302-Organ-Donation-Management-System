@@ -14,38 +14,47 @@ import java.util.Set;
  * using setStatus, the current observers are notified.
  */
 public class StatusObservable extends Observable {
+
     //Singleton instance
     private static StatusObservable instance = new StatusObservable();
 
     private String status;
+
     private Set<Observer> observers;
+
     //The clearStatus event
     private Timeline timeline;
+
 
     private StatusObservable() {
         status = "";
         observers = new HashSet<>();
     }
 
+
     public static StatusObservable getInstance() {
         return instance;
     }
 
+
     /**
      * Adds an observer to the current set of observers
      * This observer will be an instance of GUIHome
+     *
      * @param observer The new observer to add
      */
     public void addObserver(Observer observer) {
         observers.add(observer);
     }
 
+
     /**
      * Updates the status text and notifies observers of the new value
      * After 10 seconds, the status text will be cleared
+     *
      * @param text The new status text
      */
-    public void setStatus(String text) {
+    void setStatus(String text) {
         //If there is an existing clear event, clear it
         if (timeline != null) {
             timeline.stop();
@@ -53,9 +62,10 @@ public class StatusObservable extends Observable {
         status = text;
         notifyObservers();
 
-        timeline = new Timeline(new KeyFrame(Duration.seconds(10), e -> clearStatus()));
+        timeline = new Timeline(new KeyFrame(Duration.seconds(5), e -> clearStatus()));
         timeline.play();
     }
+
 
     /**
      * Resets the status to an empty string and notifies observers of this new value
@@ -64,6 +74,7 @@ public class StatusObservable extends Observable {
         status = "";
         notifyObservers();
     }
+
 
     /**
      * Notifies each observer (instances of GUIHome) to perform an update.

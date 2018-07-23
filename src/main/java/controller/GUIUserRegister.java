@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 import static utility.UserActionHistory.userActions;
 
 public class GUIUserRegister {
@@ -314,23 +315,23 @@ public class GUIUserRegister {
         if (!userIdRegister.getText()
                 .matches("([A-Za-z0-9]+[-]*[_]*)+")) {
             valid = setInvalid(userIdRegister);
-            error += "Invalid username.\n";
+            error += "Invalid username. ";
         } else if (Database.usernameUsed(userIdRegister.getText())) {
             valid = setInvalid(userIdRegister);
-            error += "Username already in use.\n";
+            error += "Username already in use. ";
         } else {
             setValid(userIdRegister);
         }
         if (passwordTxt.getText().length() < 6) {
             valid = setInvalid(passwordTxt);
-            error += "Password must be 6 or more characters.\n";
+            error += "Password must be 6 or more characters.";
         } else {
             setValid(passwordTxt);
         }
         if (!verifyPasswordTxt.getText().equals(passwordTxt.getText())) {
             valid = setInvalid(verifyPasswordTxt);
             if (passwordTxt.getText().length() >= 6) {
-                error += "Passwords do not match.\n";
+                error += "Passwords do not match.";
             }
         } else {
             setValid(verifyPasswordTxt);
