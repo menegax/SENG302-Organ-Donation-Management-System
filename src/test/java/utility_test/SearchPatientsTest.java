@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
 import model.Patient;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -20,6 +21,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import service.Database;
+import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.SearchPatients;
 
@@ -306,10 +308,12 @@ public class SearchPatientsTest {
         //setup with region of null
         d1 = new Patient("abc1230", "Bob", null, "Bobby", LocalDate.of(1997, 8, 19));
         d2 = new Patient("abc1231", "aoc", null, "Bobby", LocalDate.of(2001, 9, 20));
+        d3 = new Patient("abc1232", "aoc", null, "Bobby", LocalDate.of(2001, 9, 20));
         d1.setRegion(Region.CANTERBURY);
 
         Database.addPatient(d1);
         Database.addPatient(d2);
+        Database.addPatient(d3);
 
         //search with no name
         ArrayList<Patient> results = SearchPatients.search("", filter);
@@ -337,7 +341,57 @@ public class SearchPatientsTest {
         Assert.assertEquals(2, results.size());
 
         hasRegions(results);
+
+        //reset filter
+        filter.replace(FilterOption.REGION,  filter.get(FilterOption.REGION), GlobalEnums.NONE_ID);
+        results = SearchPatients.search("", filter);
+
+        Assert.assertEquals(3, results.size());
+
     }
+
+
+    /**
+     *
+     */
+    @Test
+    public void testFilterOrganWithNameSearch() {
+        Database.resetDatabase();
+        filter.clear();
+
+        //filter region
+        filter.put(FilterOption.DONATIONS, Organ.BONEMARROW.toString());
+
+        //setup with region of null
+        d1 = new Patient("abc1230", "a", null, "Bobby", LocalDate.of(1997, 8, 19));
+        d2 = new Patient("abc1231", "b", null, "Bobby", LocalDate.of(2001, 9, 20));
+        d3 = new Patient("abc1232", "c", null, "Bobby", LocalDate.of(1997, 8, 19));
+        d4 = new Patient("abc1233", "d", null, "Bobby", LocalDate.of(2001, 9, 20));
+        d1.setDonations(new ArrayList<Organ>(){{add(Organ.BONEMARROW);}});
+
+        Database.addPatient(d1);
+        Database.addPatient(d2);
+        Database.addPatient(d3);
+        Database.addPatient(d4);
+
+        ArrayList<Patient> results = SearchPatients.search("", filter);
+        Assert.assertEquals(1, results.size());
+
+        hasOgrans(results, Organ.BONEMARROW);
+
+
+    }
+
+
+    /**
+     * Checks donations of a patient
+     */
+    private void hasOgrans(ArrayList<Patient> res, Organ organ) {
+        for (Patient patient : res) {
+            Assert.assertTrue(patient.getDonations().contains(organ));
+        }
+    }
+
 
     /**
      * check that all have correct region
@@ -348,6 +402,7 @@ public class SearchPatientsTest {
             Assert.assertEquals(Region.CANTERBURY, patient.getRegion());
         }
     }
+
     /**
      * Reset the logging level
      */
