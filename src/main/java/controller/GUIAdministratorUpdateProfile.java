@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import model.Administrator;
@@ -32,16 +33,20 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
 
     @FXML
     private TextField firstnameTxt;
+
     @FXML
     private TextField lastnameTxt;
+
     @FXML
     private TextField middlenameTxt;
+
     @FXML
     private PasswordField passwordTxt;
 
     private Administrator target;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
 
     /**
      * Initializes the administrator editing screen.
@@ -53,12 +58,15 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
         UserControl userControl = new UserControl();
         if (userControl.getTargetUser() instanceof Administrator) {
             target = (Administrator) userControl.getTargetUser();
-        } else {
+        }
+        else {
             target = (Administrator) userControl.getLoggedInUser();
         }
         loadProfile(target.getUsername());
         setUpStateHistory();
+
     }
+
 
     /**
      * Loads the currently logged in administrator from the Database and populates the tables using the logged
@@ -70,10 +78,12 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
         try {
             Administrator administrator = Database.getAdministratorByUsername(username);
             populateForm(administrator);
-        } catch (InvalidObjectException e) {
+        }
+        catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }
+
 
     /**
      * Creates a list of control elements using all editable nodes on the update screen and initializes
@@ -88,6 +98,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
         statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPROFILEUPDATE);
     }
 
+
     /**
      * Populates the update screen using the current administrator attributes
      *
@@ -95,9 +106,13 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
      */
     private void populateForm(Administrator administrator) {
         //adds last modified date only if clinician has been edited before
-        if (target.getModified() != null)
-            lastModifiedLbl.setText("Last Updated: " + administrator.getModified().toString());
-        else lastModifiedLbl.setText("Last Updated: n/a");
+        if (target.getModified() != null) {
+            lastModifiedLbl.setText("Last Updated: " + administrator.getModified()
+                    .toString());
+        }
+        else {
+            lastModifiedLbl.setText("Last Updated: n/a");
+        }
         firstnameTxt.setText(administrator.getFirstName());
         lastnameTxt.setText(administrator.getLastName());
         for (String name : administrator.getMiddleNames()) {
@@ -105,17 +120,20 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
         }
     }
 
+
     /**
      * Checks fields for validity before setting administrators's updated attributes and returning to profile.
      * Changes are saved for the session, but are only persistently saved by calling save from the home page
      */
     public void saveProfile() {
         Boolean valid = true;
-        if (firstnameTxt.getText().length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", firstnameTxt.getText())) {
+        if (firstnameTxt.getText()
+                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", firstnameTxt.getText())) {
             valid = false;
             setInvalid(firstnameTxt);
         }
-        if (lastnameTxt.getText().length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", lastnameTxt.getText())) {
+        if (lastnameTxt.getText()
+                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", lastnameTxt.getText())) {
             valid = false;
             setInvalid(lastnameTxt);
         }
@@ -123,7 +141,9 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
             valid = false;
             setInvalid(middlenameTxt);
         }
-        if (passwordTxt.getText().length() > 0 && passwordTxt.getText().length() < 6) {
+        if (passwordTxt.getText()
+                .length() > 0 && passwordTxt.getText()
+                .length() < 6) {
             valid = false;
             setInvalid(passwordTxt);
         }
@@ -131,30 +151,37 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
         if (valid) {
             target.setFirstName(firstnameTxt.getText());
             target.setLastName(lastnameTxt.getText());
-            List<String> middlenames = Arrays.asList(middlenameTxt.getText().split(" "));
-            ArrayList middles = new ArrayList();
-            middles.addAll(middlenames);
+            List<String> middlenames = Arrays.asList(middlenameTxt.getText()
+                    .split(" "));
+            ArrayList middles = new ArrayList(middlenames);
             target.setMiddleNames(middles);
-            if (passwordTxt.getText().length() > 0) {
+            if (passwordTxt.getText()
+                    .length() > 0) {
                 target.setPassword(passwordTxt.getText());
             }
 
             target.userModified();
             screenControl.setIsSaved(false);
-            userActions.log(Level.INFO, "Successfully updated admin profile", new String[]{"Attempted to update admin profile", target.getUsername()});
-            new Alert(Alert.AlertType.INFORMATION, "Admin successfully updated", ButtonType.OK).showAndWait();
-        } else {
-            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
+            userActions.log(Level.INFO,
+                    "Successfully updated admin profile",
+                    new String[] { "Attempted to update admin profile", target.getUsername() });
+        }
+        else {
+            userActions.log(Level.INFO, "Failed to update admin profile", new String[] { "Attempted to update admin profile", target.getUsername() });
+            //            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }
     }
+
 
     /***
      * Applies the invalid class to the target control
      * @param target The target to add the class to
      */
     private void setInvalid(Control target) {
-        target.getStyleClass().add("invalid");
+        target.getStyleClass()
+                .add("invalid");
     }
+
 
     /**
      * Removes the invalid class from the target control if it has it
@@ -162,10 +189,13 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
      * @param target The target to remove the class from
      */
     private void setValid(Control target) {
-        if (target.getStyleClass().contains("invalid")) {
-            target.getStyleClass().remove("invalid");
+        if (target.getStyleClass()
+                .contains("invalid")) {
+            target.getStyleClass()
+                    .remove("invalid");
         }
     }
+
 
     /**
      * Checks if the keyevent target was a textfield. If so, if the target has the invalid class, it is removed.
@@ -173,7 +203,8 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
      * @param e The KeyEvent instance
      */
     public void onKeyReleased(KeyEvent e) {
-        if (e.getTarget().getClass() == TextField.class) {
+        if (e.getTarget()
+                .getClass() == TextField.class) {
             TextField target = (TextField) e.getTarget();
             setValid(target);
         }
