@@ -122,7 +122,7 @@ public class GlobalEnums {
      */
     public enum Organ {
         LIVER("liver"), KIDNEY("kidney"), PANCREAS("pancreas"), HEART("heart"), LUNG("lung"), INTESTINE("intestine"), CORNEA("cornea"), MIDDLEEAR(
-                "middle ear"), SKIN("skin"), BONE("bone"), BONE_MARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
+                "middle ear"), SKIN("skin"), BONE("bone"), BONEMARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
 
         private String value;
 
@@ -145,7 +145,8 @@ public class GlobalEnums {
 
         public static Organ getEnumFromString(String value) {
             try {
-                return Organ.valueOf(value.toUpperCase());
+                String test = value.replaceAll(" ", "").toUpperCase();
+                return Organ.valueOf(test);
             }
             catch (IllegalArgumentException e) {
                 return null;

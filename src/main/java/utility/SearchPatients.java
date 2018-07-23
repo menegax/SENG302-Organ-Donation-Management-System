@@ -187,7 +187,7 @@ public class SearchPatients {
      * @param inputName The name you want to search for.
      * @return ArrayList of the patients it found as a result of the search.
      */
-    public static ArrayList<Patient> searchByName(String inputName, Map<FilterOption, String> filter) {
+    public static ArrayList<Patient> search(String inputName, Map<FilterOption, String> filter) {
         ArrayList<Patient> results = new ArrayList<>();
         if (inputName.isEmpty()) {
             for (Patient patient : getDefaultResults()) {
@@ -285,10 +285,10 @@ public class SearchPatients {
         }
 
 
-            if (patient.getAge() > Integer.parseInt(filter.get(FilterOption.AGEUPPER))
-                    || patient.getAge() < Integer.parseInt(filter.get(FilterOption.AGELOWER))) {
-                return false;
-            }
+        if (patient.getAge() > Integer.parseInt(filter.get(FilterOption.AGEUPPER))
+                || patient.getAge() < Integer.parseInt(filter.get(FilterOption.AGELOWER))) {
+            return false;
+        }
 
         return true;
     }

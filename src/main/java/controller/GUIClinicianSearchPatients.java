@@ -179,7 +179,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             masterData.clear();
-            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
             filteredData.setPredicate(patient -> true);
         });
 
@@ -213,7 +213,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                         //return SearchPatients.searchByGender(newValue).contains(patient);
                         return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() ); // ------------------------------this is where it fails!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
-                    return SearchPatients.searchByName(newValue, filter)
+                    return SearchPatients.search(newValue, filter)
                             .contains(patient);
                 }));
     }
@@ -325,52 +325,52 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         regionFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.REGION, filter.get(FilterOption.REGION), newValue);
-            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
         }));
 
         //4.
         donationFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.DONATIONS, filter.get(FilterOption.DONATIONS), newValue);
-            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
         }));
 
         //5.
         recievingFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.REQUESTEDDONATIONS, filter.get(FilterOption.REQUESTEDDONATIONS), newValue);
-            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
         }));
 
         //6.
         birthGenderFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.BIRTHGENDER, filter.get(FilterOption.BIRTHGENDER), newValue);
-            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
         }));
 
         isDonorCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.DONOR, filter.get(FilterOption.DONOR), newValue.toString());
-            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
         }));
 
         isRecieverCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.RECIEVER, filter.get(FilterOption.RECIEVER), newValue.toString());
-            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
         }));
 
         rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.AGEUPPER, filter.get(FilterOption.AGEUPPER), String.valueOf(newValue.intValue()));
-            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
         }));
 
         rangeSlider.lowValueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.AGELOWER, filter.get(FilterOption.AGELOWER), String.valueOf(newValue.intValue()));
-            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
         }));
     }
 

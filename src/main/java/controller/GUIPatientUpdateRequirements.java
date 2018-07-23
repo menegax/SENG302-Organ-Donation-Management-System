@@ -180,9 +180,9 @@ public class GUIPatientUpdateRequirements extends UndoableController{
                 boneCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.BONE);
             }
-            if (organs.contains(GlobalEnums.Organ.BONE_MARROW)) {
+            if (organs.contains(GlobalEnums.Organ.BONEMARROW)) {
                 bonemarrowCB.setSelected(true);
-                initialRequirements.add(GlobalEnums.Organ.BONE_MARROW);
+                initialRequirements.add(GlobalEnums.Organ.BONEMARROW);
             }
             if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) {
                 connectivetissueCB.setSelected(true);
@@ -256,10 +256,10 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             target.removeRequired(GlobalEnums.Organ.BONE);
         }
         if (bonemarrowCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.BONE_MARROW);
-            finalRequirements.add(GlobalEnums.Organ.BONE_MARROW);
+            target.addRequired(GlobalEnums.Organ.BONEMARROW);
+            finalRequirements.add(GlobalEnums.Organ.BONEMARROW);
         } else {
-            target.removeRequired(GlobalEnums.Organ.BONE_MARROW);
+            target.removeRequired(GlobalEnums.Organ.BONEMARROW);
         }
         if (connectivetissueCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
