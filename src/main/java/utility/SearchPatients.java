@@ -3,6 +3,7 @@ package utility;
 import static utility.UserActionHistory.userActions;
 
 import model.Patient;
+import utility.GlobalEnums.*;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -36,11 +37,6 @@ public class SearchPatients {
 
     private static int NUM_RESULTS = 30;
 
-    private enum filterOption {
-
-    }
-
-
 
     /**
      * Initializes the index writer in RAM.
@@ -65,9 +61,6 @@ public class SearchPatients {
             }
         }
         patientDoc.add(new StringField("lName", patient.getLastName().toUpperCase(), Field.Store.YES));
-        if (patient.getBirthGender() != null) {
-            patientDoc.add(new StringField("birthGender", patient.getBirthGender().toString().toUpperCase(), Field.Store.YES));
-        }
         return patientDoc;
     }
 
@@ -194,7 +187,7 @@ public class SearchPatients {
      * @param inputName The name you want to search for.
      * @return ArrayList of the patients it found as a result of the search.
      */
-    public static ArrayList<Patient> searchByName(String inputName, Map filter) {
+    public static ArrayList<Patient> searchByName(String inputName, Map<FilterOption, String> filter) {
         ArrayList<Patient> results = new ArrayList<>();
         if (inputName.isEmpty()) {
             for (Patient patient : getDefaultResults()) {
@@ -214,7 +207,6 @@ public class SearchPatients {
             queries.add(new FuzzyQuery(new Term("fName", name.toUpperCase()), 2));
             queries.add(new FuzzyQuery(new Term("mName", name.toUpperCase()), 2));
             queries.add(new FuzzyQuery(new Term("lName", name.toUpperCase()), 2));
-            queries.add(new FuzzyQuery(new Term("birthGender", name.toUpperCase()), 0));
         }
 
         TopDocs docs;
@@ -223,24 +215,19 @@ public class SearchPatients {
             Patient patient;
             for (FuzzyQuery query : queries) {
                 docs = searchQuery(query);
-                for (ScoreDoc doc : docs.scoreDocs) {
-                    allDocs.add(doc);
-                }
+                allDocs.addAll(Arrays.asList(docs.scoreDocs));
             }
 
-            allDocs.sort(new Comparator<ScoreDoc>() {
-                @Override
-                public int compare(ScoreDoc o1, ScoreDoc o2) {
-                    int comparison = new Float(o2.score).compareTo(o1.score);
-                    if (comparison == 0) {
-                        try {
-                            comparison = fetchPatient(o1).getNameConcatenated().compareTo(fetchPatient(o2).getNameConcatenated());
-                        } catch (IOException e) {
-                            userActions.log(Level.SEVERE, "Unable to get patient from database", "Attempted to get patient from database");
-                        }
+            allDocs.sort((o1, o2) -> {
+                int comparison = Float.compare(o2.score, o1.score);
+                if (comparison == 0) {
+                    try {
+                        comparison = fetchPatient(o1).getNameConcatenated().compareTo(fetchPatient(o2).getNameConcatenated());
+                    } catch (IOException e) {
+                        userActions.log(Level.SEVERE, "Unable to get patient from database", "Attempted to get patient from database");
                     }
-                    return comparison;
                 }
+                return comparison;
             });
 
             int docCount = 0;
@@ -265,16 +252,45 @@ public class SearchPatients {
     }
 
 
-    private static boolean matchesFilter(Patient patient, Map filter) {
+    private static boolean matchesFilter(Patient patient, Map<FilterOption, String> filter) {
         if (filter == null) {
             return false;
         }
-        if (filter.get(GlobalEnums.FilterOption.REGION) != null && patient.getRegion() != null &&
-                patient.getRegion().toString().equals(filter.get(GlobalEnums.FilterOption.REGION))) {
-            return true;
+        if (!filter.get(GlobalEnums.FilterOption.REGION).equals(GlobalEnums.NONE_ID)) {
+            Region region = Region.getEnumFromString(filter.get(FilterOption.REGION));
+            if (patient.getRegion() == null || !patient.getRegion().equals(region)) {
+                return false;
+            }
+        }
+        if (!filter.get(GlobalEnums.FilterOption.DONATIONS).equals(GlobalEnums.NONE_ID)) {
+            Organ donatingOrgan = Organ.getEnumFromString(filter.get(FilterOption.DONATIONS));
+            if (patient.getDonations() == null || !patient.getDonations().contains(donatingOrgan)) return false;
+        }
+        if (!filter.get(GlobalEnums.FilterOption.REQUESTEDDONATIONS).equals(GlobalEnums.NONE_ID)) {
+            Organ requestedOrgans = Organ.getEnumFromString(filter.get(FilterOption.REQUESTEDDONATIONS));
+            if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().contains(requestedOrgans))
+                return false;
+        }
+        if (!filter.get(FilterOption.BIRTHGENDER).equals(GlobalEnums.NONE_ID)) {
+            BirthGender birthGender = BirthGender.getEnumFromString(filter.get(FilterOption.BIRTHGENDER));
+            if (patient.getBirthGender() == null || !patient.getBirthGender().equals(birthGender)) return false;
+        }
+        if (Boolean.valueOf(filter.get(FilterOption.RECIEVER)).equals(true)
+                && patient.getRequiredOrgans().size() == 0) {
+            return false;
+        }
+        if (Boolean.valueOf(filter.get(FilterOption.DONOR)).equals(true)
+                && patient.getDonations().size() == 0) {
+            return false;
         }
 
-        return false;
+
+            if (patient.getAge() > Integer.parseInt(filter.get(FilterOption.AGEUPPER))
+                    || patient.getAge() < Integer.parseInt(filter.get(FilterOption.AGELOWER))) {
+                return false;
+            }
+
+        return true;
     }
 
     private static boolean noFilterSelected(Map filter){
@@ -282,7 +298,7 @@ public class SearchPatients {
             return false;
         }
         for (Object value : filter.values()) {
-            if (value != null && !value.toString().equals(GlobalEnums.NONE_ID)) {
+            if (value != null && !value.toString().equals(GlobalEnums.NONE_ID) && !value.equals("0") && !value.equals("100")) {
                 return false;
             }
         }

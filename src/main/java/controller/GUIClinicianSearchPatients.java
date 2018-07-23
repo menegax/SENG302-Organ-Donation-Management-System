@@ -95,9 +95,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
+        setupAgeSliderListeners();
         populateDropdowns();
         FilteredList<Patient> filteredData = setupTableColumnsAndData();
-        setupAgeSliderListeners();
         setupSearchingListener(filteredData);
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
@@ -176,9 +176,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             }
         });
 
-
-        filter.put(FilterOption.REGION, regionFilter.getValue());
-
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             masterData.clear();
@@ -186,15 +183,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             filteredData.setPredicate(patient -> true);
         });
 
-        //3.
-        regionFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
-            masterData.clear();
-            filter.replace(FilterOption.REGION, filter.get(FilterOption.REGION), newValue);
-            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
-        }));
-
-
-
+        setupFilterOptions();
 
         // wrap the FilteredList in a SortedList.
         SortedList<Patient> sortedData = new SortedList<>(filteredData);
@@ -288,6 +277,11 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
     @FXML
     public void clearFilterOptions() {
+        recievingFilter.getSelectionModel().select(GlobalEnums.NONE_ID);
+        donationFilter.getSelectionModel().select(GlobalEnums.NONE_ID);
+        regionFilter.getSelectionModel().select(GlobalEnums.NONE_ID);
+        recievingFilter.getSelectionModel().select(GlobalEnums.NONE_ID);
+        birthGenderFilter.getSelectionModel().select(GlobalEnums.NONE_ID);
         rangeSlider.setLowValue(0);
         rangeSlider.setHighValue(100);
         searchEntry.clear();
@@ -310,10 +304,75 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         }
         birthGenderFilter.getItems().add(GlobalEnums.NONE_ID);
         for (BirthGender gender : BirthGender.values()) {
-            donationFilter.getItems().add(StringUtils.capitalize(gender.getValue()));
+            birthGenderFilter.getItems().add(StringUtils.capitalize(gender.getValue()));
         }
     }
 
+    /**
+     *
+     */
+    private void setupFilterOptions() {
+        filter.put(FilterOption.REGION, GlobalEnums.NONE_ID);
+        filter.put(FilterOption.DONATIONS, GlobalEnums.NONE_ID);
+        filter.put(FilterOption.REQUESTEDDONATIONS, GlobalEnums.NONE_ID);
+        filter.put(FilterOption.AGEUPPER, "100");
+        filter.put(FilterOption.AGELOWER, "0");
+        filter.put(FilterOption.BIRTHGENDER, GlobalEnums.NONE_ID);
+        filter.put(FilterOption.DONOR, String.valueOf(isDonorCheckbox.isSelected()));
+        filter.put(FilterOption.RECIEVER,String.valueOf(isRecieverCheckbox.isSelected()));
+
+        //3.
+        regionFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            masterData.clear();
+            filter.replace(FilterOption.REGION, filter.get(FilterOption.REGION), newValue);
+            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+        }));
+
+        //4.
+        donationFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            masterData.clear();
+            filter.replace(FilterOption.DONATIONS, filter.get(FilterOption.DONATIONS), newValue);
+            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+        }));
+
+        //5.
+        recievingFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            masterData.clear();
+            filter.replace(FilterOption.REQUESTEDDONATIONS, filter.get(FilterOption.REQUESTEDDONATIONS), newValue);
+            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+        }));
+
+        //6.
+        birthGenderFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            masterData.clear();
+            filter.replace(FilterOption.BIRTHGENDER, filter.get(FilterOption.BIRTHGENDER), newValue);
+            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+        }));
+
+        isDonorCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            masterData.clear();
+            filter.replace(FilterOption.DONOR, filter.get(FilterOption.DONOR), newValue.toString());
+            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+        }));
+
+        isRecieverCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            masterData.clear();
+            filter.replace(FilterOption.RECIEVER, filter.get(FilterOption.RECIEVER), newValue.toString());
+            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+        }));
+
+        rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> {
+            masterData.clear();
+            filter.replace(FilterOption.AGEUPPER, filter.get(FilterOption.AGEUPPER), String.valueOf(newValue.intValue()));
+            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+        }));
+
+        rangeSlider.lowValueProperty().addListener(((observable, oldValue, newValue) -> {
+            masterData.clear();
+            filter.replace(FilterOption.AGELOWER, filter.get(FilterOption.AGELOWER), String.valueOf(newValue.intValue()));
+            masterData.addAll(SearchPatients.searchByName(searchEntry.getText(), filter));
+        }));
+    }
 
     /**
      * Adds all db data via constructor

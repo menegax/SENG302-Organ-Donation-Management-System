@@ -8,7 +8,7 @@ public class GlobalEnums {
     public final static String NONE_ID = "None";
 
     public enum FilterOption {
-        REQUESTEDDONATIONS, DONATIONS, REGION, AGE
+        REQUESTEDDONATIONS, DONATIONS, REGION, AGEUPPER, AGELOWER, BIRTHGENDER, DONOR, RECIEVER
     }
 
 
@@ -34,7 +34,7 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static PreferredGender getEnumFromString(String value) {
             try {
                 return PreferredGender.valueOf(value.toUpperCase());
             }
@@ -69,7 +69,7 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static BirthGender getEnumFromString(String value) {
             try {
                 return BirthGender.valueOf(value.toUpperCase());
             }
@@ -106,7 +106,7 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static Region getEnumFromString(String value) {
             try {
                 return Region.valueOf(value.toUpperCase()
                         .replaceAll("\\s+", ""));
@@ -143,7 +143,7 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static Organ getEnumFromString(String value) {
             try {
                 return Organ.valueOf(value.toUpperCase());
             }
@@ -179,7 +179,7 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static BloodGroup getEnumFromString(String value) {
             try {
                 return BloodGroup.valueOf(value.toUpperCase()
                         .replaceAll("\\s+", "_"));
@@ -231,7 +231,7 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static DiseaseState getEnumFromString(String value) {
             try {
                 return DiseaseState.valueOf(value.toUpperCase());
             }

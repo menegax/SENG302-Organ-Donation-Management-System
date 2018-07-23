@@ -139,10 +139,10 @@ public class GUIHome {
      * @throws IOException- if fxml cannot be located
      */
     private void addTabsForPatientClinician() throws IOException{
-        createTab(TabName.REQUESTEDDONATIONS, "/scene/patientUpdateRequirements.fxml");
-        createTab(TabName.MEDICATIONS, "/scene/patientMedications.fxml");
         createTab(TabName.PROFILE, "/scene/patientProfile.fxml");
         createTab(TabName.UPDATE, "/scene/patientUpdateProfile.fxml");
+        createTab(TabName.REQUESTEDDONATIONS, "/scene/patientUpdateRequirements.fxml");
+        createTab(TabName.MEDICATIONS, "/scene/patientMedications.fxml");
         createTab(TabName.DONATIONS, "/scene/patientUpdateDonations.fxml");
         createTab(TabName.CONTACTDETAILS, "/scene/patientUpdateContacts.fxml");
         createTab(TabName.DISEASEHISTORY, "/scene/clinicianDiagnosis.fxml");
