@@ -1138,6 +1138,8 @@ public class Database {
     		return deletePatient((Patient) object);
     	} else if (object instanceof Clinician) {
     		return deleteClinician((Clinician) object);
+    	} else if (object instanceof Administrator) {
+    		return deleteAdministrator((Administrator) object);
     	}
     	return false;
     }
@@ -1146,11 +1148,19 @@ public class Database {
      * Removes from the administrators HashSet the given administrator
      * @param administrator The administrator being removed from set
      */
-    private void deleteAdministrator(Administrator administrator) {
-        if (!administrator.getUsername().toLowerCase().equals("admin")) {
-            searcher.removeIndex(administrator);
-            administrators.remove(administrator);
-        }
+    private boolean deleteAdministrator(Administrator admin) {
+    	String username = admin.getUsername();
+        String query = "DELETE FROM tblAdmins WHERE Username = ?";
+        String[] param = {String.valueOf(username)};
+    	try {
+			runQuery(query, param);
+			administrators.remove(admin);
+			searcher.removeIndex(admin);
+			return true;
+		} catch (SQLException e) {
+			userActions.log(Level.SEVERE, "Couldn't delete admin " + username + " from the database. " + e.getMessage(), "Attempted to delete admin " + username + " from the database.");
+		}
+    	return false;
     }
     
     /**
@@ -1165,6 +1175,7 @@ public class Database {
     	try {
 			runQuery(query, param);
 			clinicians.remove(clinician);
+			searcher.removeIndex(clinician);
 			return true;
 		} catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Couldn't delete clinician " + String.valueOf(staffID) + " from the database. " + e.getMessage(), "Attempted to delete clinician " + staffID + " from the database.");
