@@ -1,5 +1,6 @@
 import cli.CLIMain;
 import controller.Main;
+import controller.TuioFXApplication;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +13,11 @@ public class App {
 
         if (argArrayList.contains("cli")) {
             CLIMain.main(null);
-        } else {
+        }
+        else if (argArrayList.contains("touch")) {
+            TuioFXApplication.main(null);
+        }
+        else {
             Main.main(null);
         }
     }
