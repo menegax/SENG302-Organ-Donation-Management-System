@@ -3,6 +3,7 @@ package controller_test;
 import com.sun.javafx.application.PlatformImpl;
 import controller.ScreenControl;
 import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import utility.undoRedo.UndoableStage;
@@ -28,7 +29,6 @@ public class ScreenControlTest {
     @BeforeClass
     public static void setup() {
         userActions.setLevel(Level.OFF);
-        PlatformImpl.startup(() -> {});
     }
 
     /**
@@ -37,6 +37,7 @@ public class ScreenControlTest {
      */
     @Test
     public void testSetIsSaved() {
+        new JFXPanel(); // initialises javaFX toolkit for testing
         Platform.runLater(() -> { // Means that stages are created on JavaFX thread not main thread
             screenControl.reset();
             givenTestTitleStagesAdded();
