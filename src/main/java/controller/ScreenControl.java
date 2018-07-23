@@ -400,13 +400,8 @@ public class ScreenControl {
         }
     }
 
-    /**
-     * Resets the data in ScreenControl
-     */
-    public void reset() {
-        isSaved = true;
-        userStages = new HashMap<>();
-        applicationStages = new HashMap<>();
+    public boolean getIsSaved() {
+        return isSaved;
     }
 }
 

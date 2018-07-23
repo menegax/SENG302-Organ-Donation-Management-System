@@ -9,15 +9,10 @@ import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 import de.codecentric.centerdevice.MenuToolkit;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -296,13 +291,41 @@ public class GUIHome implements Observer {
         createTab("Update", "/scene/clinicianProfileUpdate.fxml");
     }
 
-
-    private void logOut() {
+    /**
+     * Called when logout button is pressed by user
+     * Checks for unsaved changes before logging out
+     */
+    private void attemptLogOut() {
         systemLogger.log(FINE, "User trying to log out");
+        if (!screenControl.getIsSaved()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Would you like to save all unsaved changes?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+            alert.setTitle("Unsaved changes");
+;
+            alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
+                Database.saveToDisk();
+                logOut();
+            });
+            alert.getDialogPane().lookupButton(ButtonType.NO).addEventFilter(ActionEvent.ACTION, event -> logOut());
+            alert.showAndWait();
+        } else {
+            logOut();
+        }
+    }
+
+    /**
+     * Logs the user out of the application
+     */
+    private void logOut() {
         screenControl.closeAllUserStages(new UserControl().getLoggedInUser());
         new UserControl().rmLoggedInUserCache();
-
         screenControl.setUpNewLogin(); // ONLY FOR SINGLE USER SUPPORT. REMOVE WHEN MULTI USER SUPPORT
+
+        // Resets all local changes
+        Database.resetDatabase();
+        Database.importFromDiskPatients("./patient.json");
+        Database.importFromDiskClinicians("./clinician.json");
+        Database.importFromDiskWaitlist("./waitlist.json");
+        Database.importFromDiskAdministrators("./administrator.json");
     }
 
 
@@ -321,7 +344,7 @@ public class GUIHome implements Observer {
         MenuItem menu1Item1 = new MenuItem("Log out");
         menu1Item1.setAccelerator(screenControl.getLogOut());
         menu1Item1.setOnAction(event -> {
-            logOut();
+            attemptLogOut();
             userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
         });
         menu1.getItems()
