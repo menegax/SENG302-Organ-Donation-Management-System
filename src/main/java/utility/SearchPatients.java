@@ -273,6 +273,7 @@ public class SearchPatients {
                 patient.getRegion().toString().equals(filter.get(GlobalEnums.FilterOption.REGION))) {
             return true;
         }
+
         return false;
     }
 
@@ -281,7 +282,7 @@ public class SearchPatients {
             return false;
         }
         for (Object value : filter.values()) {
-            if (value != null && !value.toString().isEmpty()) {
+            if (value != null && !value.toString().equals(GlobalEnums.NONE_ID)) {
                 return false;
             }
         }

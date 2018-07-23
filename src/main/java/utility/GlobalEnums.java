@@ -5,9 +5,10 @@ package utility;
  */
 public class GlobalEnums {
 
+    public final static String NONE_ID = "None";
 
     public enum FilterOption {
-        ORGAN, REQUESTEDDONATIONS, DONATIONS, REGION, AGE
+        REQUESTEDDONATIONS, DONATIONS, REGION, AGE
     }
 
 

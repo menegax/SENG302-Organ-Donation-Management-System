@@ -19,6 +19,7 @@ import javafx.scene.text.Text;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.RangeSlider;
+import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.SearchPatients;
 import utility.undoRedo.StatesHistoryScreen;
@@ -67,7 +68,13 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     private GridPane sliderGrid;
 
     @FXML
-    private ComboBox<String> organFilter;
+    private ComboBox<String> recievingFilter;
+
+    @FXML
+    private ComboBox<String> donationFilter;
+
+    @FXML
+    private ComboBox<String> birthGenderFilter;
 
     @FXML
     private ComboBox<String> regionFilter;
@@ -77,7 +84,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private RangeSlider rangeSlider;
-    Map<FilterOption, String> filter = new HashMap<>();
+
+    private Map<FilterOption, String> filter = new HashMap<>();
 
     /**
      * Initialises the data within the table to all patients
@@ -288,26 +296,24 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     }
 
     private void populateDropdowns() {
-        regionFilter.getItems().add(""); //for empty selection
+        regionFilter.getItems().add(GlobalEnums.NONE_ID); //for empty selection
         for (Region region : Region.values()) { //add values to region choice box
             regionFilter.getItems().add(StringUtils.capitalize(region.getValue()));
         }
-//        organSelection.getItems().add("");
-//        for (Organ organ : Organ.values()) {
-//            organSelection.getItems().add(StringUtils.capitalize(organ.getValue()));
-//        }
+        donationFilter.getItems().add(GlobalEnums.NONE_ID);
+        for (Organ organ : Organ.values()) {
+            donationFilter.getItems().add(StringUtils.capitalize(organ.getValue()));
+        }
+        recievingFilter.getItems().add(GlobalEnums.NONE_ID);
+        for (Organ organ : Organ.values()) {
+            recievingFilter.getItems().add(StringUtils.capitalize(organ.getValue()));
+        }
+        birthGenderFilter.getItems().add(GlobalEnums.NONE_ID);
+        for (BirthGender gender : BirthGender.values()) {
+            donationFilter.getItems().add(StringUtils.capitalize(gender.getValue()));
+        }
     }
 
-    private String buildSearchQuery() {
-        StringBuilder query = new StringBuilder();
-        if (!searchEntry.getText().equals("")) {
-            query.append(searchEntry.getText()).append(" ");
-        }
-        if (regionFilter.getValue() != null && !regionFilter.getValue().equals("")) {
-            query.append(regionFilter.getValue()).append(" ");
-        }
-        return query.toString();
-    }
 
     /**
      * Adds all db data via constructor
