@@ -42,12 +42,6 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
         screenControl.show(uuid, loginScreen);
-        
-        // add objects
-//        database.importFromDiskPatients("./patient.json");
-//        database.importFromDiskClinicians("./clinician.json");
-//        database.importFromDiskWaitlist("./waitlist.json");
-//        database.importFromDiskAdministrators("./administrator.json");
 
         addDummyTestObjects();
         ensureDefaultClinician();
@@ -123,7 +117,7 @@ public class Main extends Application {
         // if default administrator 'admin' not in db, add it
         if (!database.administratorInDb("ADMIN")) {
             systemLogger.log(INFO, "Default admin not in database. Adding default admin to database.");
-            database.addAdministrator(new Administrator("ADMIN", "John", new ArrayList<>(), "Smith", "password"));
+            database.add(new Administrator("ADMIN", "John", new ArrayList<>(), "Smith", "password"));
         }
     }
 

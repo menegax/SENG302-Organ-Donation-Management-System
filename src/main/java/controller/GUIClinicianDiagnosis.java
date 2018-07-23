@@ -303,7 +303,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
     public void saveDiagnoses() {
         target.setCurrentDiseases(currentDiseases);
         target.setPastDiseases(pastDiseases);
-        database.saveToDisk();
+        database.updateDatabase();
         userActions.log( Level.FINE, "Successfully saved patient diseases", "Successfully saved patient " + target.getNhiNumber() + "diseases");
         new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
         changed = false;

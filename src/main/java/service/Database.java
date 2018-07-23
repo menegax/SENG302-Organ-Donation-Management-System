@@ -712,7 +712,6 @@ public class Database {
     	return false;
     }
 
-    //TODO shouldnt be used
     /**
      * Saves a transplant request into the database.
      * @param request The transplant request to save.
@@ -813,7 +812,6 @@ public class Database {
         return new String[14];
     }
 
-    //TODO Talk to Maree
     /**
      * Creates a patient object from a string array of attributes retrieved from the server
      * @param attr String array of attributes
@@ -865,7 +863,6 @@ public class Database {
         ArrayList<PatientActionRecord> records = loadPatientLogs(nhi);
 
         String[] contactAttr = new String[15];
-        //TODO rewrite method to do medication history and current assigning within load method
         contactAttr = parsePatientContacts(nhi);
         GlobalEnums.Region region = null;
         if (contactAttr[3] != null) {
@@ -1145,8 +1142,9 @@ public class Database {
     }
 
     /**
-     * Removes from the administrators HashSet the given administrator
-     * @param administrator The administrator being removed from set
+     * Deletes a Administrator from the database and application.
+     * @param admin The Administrator to delete.
+     * @return True if successfully deleted admin, otherwise false.
      */
     private boolean deleteAdministrator(Administrator admin) {
     	String username = admin.getUsername();
@@ -1229,7 +1227,6 @@ public class Database {
         return false;
     }
 
-//TODO Really want to redo this cause its not the best really. Can actually use the patient name search for this.
     /**
      * Searches patients by NHI
      *
@@ -1245,7 +1242,6 @@ public class Database {
         return null;
     }
 
-    //TODO same said for this
     /**
      * Searches for a clinician by staffID.
      * @param staffID The staff ID of the clinician searching for.
@@ -1317,6 +1313,25 @@ public class Database {
     	return false;
     }
     
+    private boolean updateAllAdministrators() {
+    	String[] params = new String[0];
+    	String query = new String();
+    	for (Administrator admin : getAdministrators()) {
+    		if (admin.getChanged()) {
+    			query += UPDATEADMINQUERYSTRING;
+    			params = ArrayUtils.addAll(params, getAdministratorAttributes(admin));
+    		}
+    	}
+    	try {
+			runQuery(query, params);
+			userActions.log(Level.INFO, "Successfully updated all administrators in database.", "Attempted to update all administrators in database.");
+			return true;
+		} catch (SQLException e) {
+			userActions.log(Level.SEVERE, "Failed to update all administrator in database." + e.getMessage(), "Attempted to update all administrators in database.");
+		}
+    	return false;
+    }
+    
     /**
      * Pushes all local changes to the database.
      * @return True if everything was successfully updated, false otherwise.
@@ -1324,7 +1339,8 @@ public class Database {
     public boolean updateDatabase() {
     	boolean patientUpdate = updateAllPatients();
     	boolean clinicianUpdate = updateAllClinicians();
-    	return patientUpdate && clinicianUpdate;
+    	boolean adminUpdate = updateAllAdministrators();
+    	return patientUpdate && clinicianUpdate && adminUpdate;
     }
 
 
@@ -1390,7 +1406,6 @@ public class Database {
         writer.write(json);
         writer.close();
     }
-//TODO what to we do with this?
 
     /**
      * Writes database administrators to file on disk
@@ -1413,6 +1428,7 @@ public class Database {
      *
      * @param fileName file to import from
      */
+    @Deprecated
     public void importFromDiskPatients(String fileName) {
         Gson gson = new Gson();
         BufferedReader br;
@@ -1511,6 +1527,7 @@ public class Database {
     public void resetLocalDatabase() {
         patients = new HashSet<>();
         clinicians = new HashSet<>();
+        administrators = new HashSet<>();
         organWaitingList = new OrganWaitlist();
     }
 
@@ -1522,32 +1539,6 @@ public class Database {
 
     public Set<Clinician> getClinicians() {
         return clinicians;
-    }
-//TODO remove
-    public int showPatients() throws SQLException {
-    	String query = "SELECT * FROM tblPatients";
-    	ArrayList<String[]> results = runQuery(query, new String[0]);
-    	System.out.println("Patients: ");
-    	for (String[] result : results) {
-    		for (String param : result) {
-    			System.out.print(param + ", ");
-    		}
-    		System.out.println();
-    	}
-     	return results.size();
-    }
-//TODO What is this used for?
-    public int showClinicians() throws SQLException {
-    	String query = "SELECT * FROM tblClinicians";
-    	ArrayList<String[]> results = runQuery(query, new String[0]);
-    	System.out.println("Clinicians: ");
-    	for (String[] result : results) {
-    		for (String param : result) {
-    			System.out.print(param + ", ");
-    		}
-    		System.out.println();
-    	}
-    	return results.size();
     }
 
     /**
@@ -1568,41 +1559,7 @@ public class Database {
     	return false;
     }
 
-    public int showPatients2() {
-    	for (Patient patient : getPatients()) {
-    		System.out.println(patient);
-    	}
-    	return getPatients().size();
+    public  Set<Administrator> getAdministrators() { 
+    	return administrators; 
     }
-
-    public int showClinicians2() {
-    	for (Clinician clinician : getClinicians()) {
-    		System.out.println(clinician);
-    	}
-    	return getClinicians().size();
-    }
-
-//    //TODO for testing only
-//    public static void main(String[] argv) {
-//        try {
-//            Database test = Database.getDatabase();
-//            Clinician clin = new Clinician(11, "First", new ArrayList<String>(), "LastlyButSecond", Region.CANTERBURY);
-//            Patient pat = new Patient("YGH4562", "Pat", new ArrayList<String>(), "Laffety", LocalDate.of(1998, 1, 8), new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), null, GlobalEnums.BirthGender.MALE, GlobalEnums.PreferredGender.MAN, "Pat", 1.7, 56.0, GlobalEnums.BloodGroup.O_POSITIVE, new ArrayList<Organ>(), new ArrayList<Organ>(), "Street 1", "Street 2", "Suburb", GlobalEnums.Region.CANTERBURY, 7020, "035441143", "0", "0220918384", "plaffey@mail.com", "EC", "Relationship", "0", "0", "0", "Email@email.com", new ArrayList<PatientActionRecord>(), new ArrayList<Disease>(), new ArrayList<Disease>(), new ArrayList<Medication>(), new ArrayList<Medication>(), new ArrayList<Procedure>());
-//
-//            int patientsDb = test.showPatients();
-//            int cliniciansDb = test.showClinicians();
-//            int patientsApp = test.showPatients2();
-//            int cliniciansApp = test.showClinicians2();
-//
-//            System.out.println("\nNumber of patients in database: " + String.valueOf(patientsDb));
-//            System.out.println("Number of clinicians in database: " + String.valueOf(cliniciansDb));
-//            System.out.println("\nNumber of patients in app: " + String.valueOf(patientsApp));
-//            System.out.println("Number of clinicians in app: " + String.valueOf(cliniciansApp));
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    public  Set<Administrator> getAdministrators() { return administrators; }
 }

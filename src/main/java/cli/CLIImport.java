@@ -21,7 +21,6 @@ public class CLIImport implements Runnable {
     Database database = Database.getDatabase();
 
     public void run() {
-        database.importFromDiskPatients(fileName);
         userActions.log(Level.INFO, "Successfully imported", "Attempted to import patients");
     }
 
