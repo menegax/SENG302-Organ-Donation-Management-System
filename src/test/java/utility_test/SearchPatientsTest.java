@@ -1,19 +1,16 @@
 package utility_test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static utility.UserActionHistory.userActions;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 import model.Patient;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -24,8 +21,6 @@ import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.SearchPatients;
-
-import javax.xml.crypto.Data;
 
 public class SearchPatientsTest {
 
@@ -64,7 +59,19 @@ public class SearchPatientsTest {
 	 * Tests alphabetical ordering on equally close names from search after a patients name has been chnaged.
 	 */
 	@Test
-	public void testEqualSearchOrderingAfterNameUpdate() throws IOException {
+	public void testEqualSearchOrderingAfterNameUpdate() {
+
+	    Database.resetDatabase();
+
+        d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
+        d2 = new Patient("def1234", "Patik", new ArrayList<String>(), "Laffey", LocalDate.now());
+        d3 = new Patient("ghi1234", "George", new ArrayList<String>(), "Romera", LocalDate.now());
+        d4 = new Patient("jkl1234", "George", new ArrayList<String>(), "Bobington", LocalDate.now());
+
+        Database.addPatient(d4);
+        Database.addPatient(d3);
+        Database.addPatient(d2);
+        Database.addPatient(d1);
 
 		// Change last name of George Romero to come before George Bobington
 		d3.setLastName("Addington");
@@ -135,7 +142,7 @@ public class SearchPatientsTest {
         ArrayList<Patient> results = SearchPatients.search("A B C D E F Z Y X W V U", null);
 
         // The returned result should be exactly 30
-        assertTrue(results.size() == 30);
+        assertEquals(30, results.size());
     }
 
     /**
@@ -214,7 +221,9 @@ public class SearchPatientsTest {
      */
     @Test
     public void testSearchAfterNameUpdate() throws IOException {
-
+        Database.resetDatabase();
+        d1 = new Patient("abc1234", "Pat", null, "Lafey", LocalDate.now());
+        Database.addPatient(d1);
         // When first name of patient changed
         Database.getPatientByNhi("abc1234").setFirstName("Andrew");
 
@@ -295,7 +304,8 @@ public class SearchPatientsTest {
 
 
     /**
-     * Test filtering of region
+     *
+     * @throws InvalidObjectException -
      */
     @Test
     public void testFilterRegionWithNameSearch() throws InvalidObjectException {
@@ -309,12 +319,12 @@ public class SearchPatientsTest {
         d1 = new Patient("abc1230", "Bob", null, "Bobby", LocalDate.of(1997, 8, 19));
         d2 = new Patient("abc1231", "aoc", null, "Bobby", LocalDate.of(2001, 9, 20));
         d3 = new Patient("abc1232", "aoc", null, "Bobby", LocalDate.of(2001, 9, 20));
-        d1.setRegion(Region.CANTERBURY);
 
         Database.addPatient(d1);
         Database.addPatient(d2);
         Database.addPatient(d3);
 
+        d1.setRegion(Region.CANTERBURY);
         //search with no name
         ArrayList<Patient> results = SearchPatients.search("", filter);
 
@@ -353,38 +363,167 @@ public class SearchPatientsTest {
 
     /**
      *
+     * @throws InvalidObjectException -
      */
     @Test
-    public void testFilterOrganWithNameSearch() {
-        Database.resetDatabase();
-        filter.clear();
+    public void testFilterOrganWithNameSearch() throws InvalidObjectException {
+        addPatientsToDB();
 
         //filter region
         filter.put(FilterOption.DONATIONS, Organ.BONEMARROW.toString());
 
-        //setup with region of null
-        d1 = new Patient("abc1230", "a", null, "Bobby", LocalDate.of(1997, 8, 19));
-        d2 = new Patient("abc1231", "b", null, "Bobby", LocalDate.of(2001, 9, 20));
-        d3 = new Patient("abc1232", "c", null, "Bobby", LocalDate.of(1997, 8, 19));
-        d4 = new Patient("abc1233", "d", null, "Bobby", LocalDate.of(2001, 9, 20));
-        d1.setDonations(new ArrayList<Organ>(){{add(Organ.BONEMARROW);}});
-
-        Database.addPatient(d1);
-        Database.addPatient(d2);
-        Database.addPatient(d3);
-        Database.addPatient(d4);
-
+        Database.getPatientByNhi("abc1230").setDonations(new ArrayList<Organ>(){{add(Organ.BONEMARROW);}});
         ArrayList<Patient> results = SearchPatients.search("", filter);
         Assert.assertEquals(1, results.size());
 
         hasOgrans(results, Organ.BONEMARROW);
 
+        //d2 - bone marrow
+        Database.getPatientByNhi("abc1231").setDonations(new ArrayList<Organ>(){{add(Organ.BONEMARROW);}});
 
+        results = SearchPatients.search("", filter);
+        Assert.assertEquals(2, results.size());
+
+        hasOgrans(results, Organ.BONEMARROW);
+
+        //d3 - kidney
+        Database.getPatientByNhi("abc1232").setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+
+        results = SearchPatients.search("", filter);
+        Assert.assertEquals(2, results.size());
+
+        hasOgrans(results, Organ.BONEMARROW);
+
+        //d3 - heart
+        Database.getPatientByNhi("abc1232").setDonations(new ArrayList<Organ>(){{add(Organ.HEART);}});
+
+        // update filter
+        filter.put(FilterOption.DONATIONS, Organ.HEART.toString());
+        results = SearchPatients.search("", filter);
+        Assert.assertEquals(1, results.size());
+
+        hasOgrans(results, Organ.HEART);
     }
 
 
     /**
-     * Checks donations of a patient
+     *
+     * @throws InvalidObjectException -
+     */
+    @Test
+    public void testFilterBirthGender() throws InvalidObjectException {
+        addPatientsToDB();
+
+        //filter region
+        filter.put(FilterOption.BIRTHGENDER, BirthGender.FEMALE.toString());
+
+        //d1 - only one female
+        Database.getPatientByNhi("abc1230").setBirthGender(BirthGender.FEMALE);
+        ArrayList<Patient> results = SearchPatients.search("", filter);
+        Assert.assertEquals(1, results.size());
+        hasBirthGender(results, BirthGender.FEMALE);
+
+        //d2 - 2 females
+        Database.getPatientByNhi("abc1231").setBirthGender(BirthGender.FEMALE);
+        results = SearchPatients.search("", filter);
+        Assert.assertEquals(2, results.size());
+        hasBirthGender(results, BirthGender.FEMALE);
+
+        //d2 - 1 male
+        filter.replace(FilterOption.BIRTHGENDER, filter.get(FilterOption.BIRTHGENDER), BirthGender.MALE.toString());
+        Database.getPatientByNhi("abc1232").setBirthGender(BirthGender.MALE);
+        results = SearchPatients.search("", filter);
+        Assert.assertEquals(1, results.size());
+        hasBirthGender(results, BirthGender.MALE);
+    }
+
+
+    /**
+     *
+     *
+     */
+    @Test
+    public void testFilterAge(){
+        addPatientsToDB();
+
+        //from 10 -100
+        filter.put(FilterOption.AGELOWER, "10");
+        filter.put(FilterOption.AGEUPPER, "100");
+        ArrayList<Patient> results = SearchPatients.search("", filter);
+        Assert.assertEquals(4, results.size());
+        hasAge(results, 10, 100);
+
+        //from 11 - 100
+        filter.put(FilterOption.AGELOWER, "11");
+        results = SearchPatients.search("", filter);
+        Assert.assertEquals(3, results.size());
+        hasAge(results, 11, 100);
+
+        //from 11 - 99
+        filter.put(FilterOption.AGEUPPER, "99");
+        results = SearchPatients.search("", filter);
+        Assert.assertEquals(2, results.size());
+        hasAge(results, 11, 99);
+
+
+        //from 11 - 59
+        filter.put(FilterOption.AGEUPPER, "59");
+        results = SearchPatients.search("", filter);
+        Assert.assertEquals(1, results.size());
+        hasAge(results, 11, 59);
+
+        //from 11 - 12
+        filter.put(FilterOption.AGEUPPER, "12");
+        results = SearchPatients.search("", filter);
+        Assert.assertEquals(0, results.size());
+        hasAge(results, 11, 12);
+    }
+
+
+    /**
+     *
+     */
+    private void addPatientsToDB() {
+        Database.resetDatabase();
+        filter.clear();
+        d1 = new Patient("abc1230", "a", null, "Bobby", LocalDate.of(LocalDate.now().getYear() - 10,
+                1, 1));
+        d2 = new Patient("abc1231", "b", null, "Bobby", LocalDate.of(LocalDate.now().getYear() - 100,
+                1, 1));
+        d3 = new Patient("abc1232", "c", null, "Bobby", LocalDate.of(LocalDate.now().getYear() - 60,
+                1, 1));
+        d4 = new Patient("abc1233", "d", null, "Bobby", LocalDate.of(LocalDate.now().getYear() - 19,
+                1, 1));
+
+        Database.addPatient(d1);
+        Database.addPatient(d2);
+        Database.addPatient(d3);
+        Database.addPatient(d4);
+    }
+
+
+    private void hasAge(ArrayList<Patient> res, int greaterThan, int lessThan) {
+        for (Patient patient : res) {
+            Assert.assertTrue(patient.getAge() >= greaterThan);
+            Assert.assertTrue(patient.getAge() <= lessThan);
+        }
+    }
+    /**
+     *
+     * @param res - results to check
+     * @param gender -
+     */
+    private void hasBirthGender(ArrayList<Patient> res, BirthGender gender) {
+        for (Patient patient : res) {
+            Assert.assertEquals(gender, patient.getBirthGender());
+
+        }
+    }
+
+    /**
+     *
+     * @param res - results to check
+     * @param organ -
      */
     private void hasOgrans(ArrayList<Patient> res, Organ organ) {
         for (Patient patient : res) {
