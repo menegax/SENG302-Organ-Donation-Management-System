@@ -274,7 +274,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
         systemLogger.log(Level.FINEST, "Setting patient profile for update...");
         Boolean valid = true;
 
-        Alert invalidInfo = new Alert(Alert.AlertType.WARNING);
         StringBuilder invalidContent = new StringBuilder("Please fix the following errors:\n");
 
         // nhi
@@ -494,15 +493,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
                         .getSelectedItem()));
             }
             screenControl.setIsSaved(false);
-            new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
             userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", target.getNhiNumber()});
         }
         else {
             systemLogger.log(Level.WARNING, "Failed to update patient profile due to invalid fields:\n" + invalidContent);
-            userActions.log(Level.WARNING, "Failed to update patient profile due to invalid fields", "Attempted to update patient profile");
-            invalidContent.append("\nYour changes have not been saved.");
-            invalidInfo.setContentText(invalidContent.toString());
-            invalidInfo.show();
+            userActions.log(Level.WARNING, invalidContent.toString(), "Attempted to update patient profile");
         }
     }
 

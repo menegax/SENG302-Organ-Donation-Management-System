@@ -82,9 +82,8 @@ public class GUIPatientUpdateContacts extends UndoableController {
         boolean valid = setPatientContactDetails();
         if (valid) {
             screenControl.setIsSaved(false);
-            new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
         } else {
-            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
+            userActions.log(Level.WARNING,"Invalid fields", "Attempted to set invalid contact details");
         }
     }
 

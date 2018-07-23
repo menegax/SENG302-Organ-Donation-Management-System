@@ -388,18 +388,14 @@ public class GUIPatientMedications extends UndoableController {
             }
             else {
                 userActions.log(Level.WARNING,
-                        "Medication already exists",
+                        "Medication already registered",
                         new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
-                Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is already registered");
-                err.show();
             }
         }
         else {
             userActions.log(Level.WARNING,
                     "Invalid medication registration",
                     new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
-            Alert err = new Alert(Alert.AlertType.ERROR, "'" + medication + "' is invalid for registration");
-            err.show();
         }
     }
 
@@ -412,17 +408,13 @@ public class GUIPatientMedications extends UndoableController {
      */
     private void removeMedication(ArrayList<String> medications) {
         for (String medication : medications) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confirm deletion of " + medication + "?");
-            final Button dialogOK = (Button) alert.getDialogPane()
-                    .lookupButton(ButtonType.OK);
-            dialogOK.addEventFilter(ActionEvent.ACTION, event -> performDelete(medication));
-            alert.show();
+            performDelete(medication);
         }
     }
 
 
     /**
-     * Called when the user confirms the deletion of the selected medication(s) in the alert window.
+     * Deletes a specified medication
      */
     private void performDelete(String medication) {
         if (history.contains(medication)) {
@@ -603,7 +595,7 @@ public class GUIPatientMedications extends UndoableController {
             }
             displayIngredients(ingredients);
         } else {
-            new Alert(Alert.AlertType.ERROR, "Unable to retrieve interactions between selected medications", ButtonType.OK).show();
+            userActions.log(Level.WARNING, "Unable to retrieve interactions", "Attempted to retrieve interactions between two medications");
         }
     }
 
@@ -613,7 +605,6 @@ public class GUIPatientMedications extends UndoableController {
      */
     @FXML
     public void reviewInteractions() {
-        Alert alert = new Alert(Alert.AlertType.WARNING, "Drug interactions not available. Please select 2 medications.");
         ArrayList<String> selectedMedications = new ArrayList<String>() {{
             addAll(currentMedications.getSelectionModel()
                     .getSelectedItems());
@@ -626,12 +617,11 @@ public class GUIPatientMedications extends UndoableController {
                 displayInteractions(interaction.getInteractionsWithDurations(), selectedMedications.get(0), selectedMedications.get(1));
             }
             catch (IOException e) {
-                alert.setContentText("Drug interactions not available, either this study has not been completed or" + " drugs provided don't exist.");
-                alert.show();
+                userActions.log(Level.WARNING, "Drug interactions not available, either this study has not been completed or" + " drugs provided don't exist.", "Attempted to view drug interactions");
             }
         }
         else {
-            alert.show();
+            userActions.log(Level.WARNING, "Drug interactions not available. Please select 2 medications.", "Attempted to view drug interactions");
         }
     }
 

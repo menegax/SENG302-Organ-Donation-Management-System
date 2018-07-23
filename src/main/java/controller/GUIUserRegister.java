@@ -266,11 +266,11 @@ public class GUIUserRegister {
         // nhi
         if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", userIdRegister.getText().toUpperCase())) {
             valid = setInvalid(userIdRegister);
-            new Alert(Alert.AlertType.ERROR, "NHI must be 3 characters followed by 4 numbers").showAndWait();
+            userActions.log(Level.WARNING, "NHI must be 3 characters followed by 4 numbers", "Attempted to create patient with invalid NHI");
         } else if (Database.isPatientInDb(userIdRegister.getText())) {
             // checks to see if nhi already in use
             valid = setInvalid(userIdRegister);
-            new Alert(Alert.AlertType.ERROR, "Patient with the given NHI already exists").showAndWait();
+            userActions.log(Level.WARNING, "Patient with the given NHI already exists", "Attempted to create patient with invalid NHI");
         } else {
             setValid(userIdRegister);
         }
@@ -336,7 +336,7 @@ public class GUIUserRegister {
             setValid(verifyPasswordTxt);
         }
         if (!valid) {
-        	new Alert(Alert.AlertType.ERROR, error).showAndWait();
+            userActions.log(Level.WARNING, error, "Attempted to register administrator with invalid fields");
         }
         return valid;
     }
@@ -369,7 +369,7 @@ public class GUIUserRegister {
         String lastName = lastnameRegister.getText();
         String password = passwordTxt.getText();
         ArrayList<String> middles = new ArrayList<>();
-        String alertMsg;
+        String errorMsg;
         if (!middlenameRegister.getText().equals("")) {
             List<String> middleNames = Arrays.asList(middlenameRegister.getText().split(" "));
             middles = new ArrayList<>(middleNames);
@@ -378,28 +378,28 @@ public class GUIUserRegister {
             LocalDate birth = birthRegister.getValue();
             Database.addPatient(new Patient(id, firstName, middles, lastName, birth));
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
-            alertMsg = "Successfully registered patient with NHI " + id;
+            errorMsg = "Successfully registered patient with NHI " + id;
             screenControl.setIsSaved(false);
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
             int staffID = Database.getNextStaffID();
             Database.addClinician(new Clinician(staffID, firstName, middles, lastName, (Region) Region.getEnumFromString(region)));
             userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
-            alertMsg = "Successfully registered clinician with staff ID " + staffID;
+            errorMsg = "Successfully registered clinician with staff ID " + staffID;
             screenControl.setIsSaved(false);
         } else {
             try {
                 Database.addAdministrator(new Administrator(id, firstName, middles, lastName, password));
                 userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
-                alertMsg = "Successfully registered administrator with username " + id;
+                errorMsg = "Successfully registered administrator with username " + id;
                 screenControl.setIsSaved(false);
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");
-                alertMsg = "Couldn't register administrator, this username is already in use";
+                errorMsg = "Couldn't register administrator, this username is already in use";
             }
         }
         clearFields();
-        new Alert(Alert.AlertType.INFORMATION, alertMsg).showAndWait();
+        userActions.log(Level.INFO, errorMsg);
         if (userControl.getLoggedInUser() == null) {
             returnToPreviousPage();
         }

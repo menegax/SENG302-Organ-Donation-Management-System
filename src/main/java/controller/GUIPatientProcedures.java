@@ -211,7 +211,7 @@ public class GUIPatientProcedures extends UndoableController {
             selectedProcedure = pendingProceduresView.getSelectionModel().getSelectedItem();
         }
         if (selectedProcedure == null) {
-            new Alert(Alert.AlertType.ERROR, "No procedure is selected", ButtonType.OK).show();
+            userActions.log(Level.WARNING, "No procedure selected", "Attempted to edit a procedure");
             return;
         }
         try {
@@ -253,15 +253,10 @@ public class GUIPatientProcedures extends UndoableController {
         }
         if (selectedProcedure != null) {
             final Procedure finalProcedure = selectedProcedure;
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to remove: " + selectedProcedure.getSummary() + "?");
-            Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
-            dialogOK.addEventFilter(ActionEvent.ACTION, event -> {
-                patient.removeProcedure(finalProcedure);
-                screenControl.setIsSaved(false);
-                userActions.log(INFO, "Removed procedure " + finalProcedure.getSummary(), new String[]{"Attempted to remove a procedure", patient.getNhiNumber()});
-                setupTables();
-            });
-            alert.show();
+            patient.removeProcedure(finalProcedure);
+            screenControl.setIsSaved(false);
+            userActions.log(INFO, "Removed procedure " + finalProcedure.getSummary(), new String[]{"Attempted to remove a procedure", patient.getNhiNumber()});
+            setupTables();
         }
     }
 

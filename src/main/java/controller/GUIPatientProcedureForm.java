@@ -136,11 +136,7 @@ public class GUIPatientProcedureForm  {
             userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", patient.getNhiNumber()});
             goBackToProcedures();
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +
-                    "patients DOB. There must be a summary. A summary, and description, if any, must contain " +
-                    "alphabetic or numerical character(s), hyphens or spaces");
-            alert.setHeaderText( "Field input(s) are invalid!" );
-            alert.show();
+            userActions.log(Level.WARNING, "Invalid procedure inputs entered", "Attempted to edit procedure with invalid inputs");
         }
     }
 
@@ -163,11 +159,7 @@ public class GUIPatientProcedureForm  {
             userActions.log(Level.INFO, "Added procedure " + procedure.getSummary(), new String[]{"Attempted to add a procedure", patient.getNhiNumber()});
             goBackToProcedures();
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Date must be entered and not be before " +
-                    "patients DOB. There must be a summary. A summary, and description, if any, must contain " +
-                    "alphabetic or numerical character(s), or ',.%() or spaces");
-            alert.setHeaderText( "Field input(s) are invalid!" );
-            alert.show();
+            userActions.log(Level.WARNING, "Invalid inputs for procedure entered", "Attempted to create procedure with invalid inputs");
         }
     }
 

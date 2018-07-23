@@ -260,10 +260,10 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
      * (but not saved) to the current updated diagnosis information and the diagnoses view screen is returned to.
      *
      * If the operation is adding a diagnosis, the operation is checked for validity for adding. If the add is
-     * valid, the new diagnosis is added to the patient's current diagnoses. Otherwise an alert is shown and no new
+     * valid, the new diagnosis is added to the patient's current diagnoses. Otherwise a message is shown and no new
      * dignosis
      *
-     * If the update is invalid, an alert is shown with the errors in question explained in the alert information.
+     * If the update is invalid, a message is shown with the errors in question explained in the message information.
      * The stage is not closed in this case.
      */
     public void completeUpdate() {
@@ -312,10 +312,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
                 errorString += "A chronic disease can not be cured. Please remove the chronic tag and save the diagnosis" +
                         " before marking this disease as cured.\n\n";
             }
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Could not update diagnosis");
-            alert.setContentText(errorString);
-            alert.showAndWait();
+            userActions.log(Level.WARNING, errorString, "Attempted to update diagnosis with invalid fields");
         }
     }
 }

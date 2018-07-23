@@ -228,14 +228,12 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
                     .getSelectedItem()
                     .toString()));
-            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
             userActions.log(Level.INFO, "Successfully updated clinician profile", new String[]{"Attempted to update clinician profile", String.valueOf(target.getStaffID())});
             target.userModified();
             screenControl.setIsSaved(false);
-            new Alert(Alert.AlertType.INFORMATION, "Local changes have been made", ButtonType.OK).show();
         }
         else {
-            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
+            userActions.log(Level.WARNING, "Invalid fields", "Attempted to update clinician profile with invalid fields");
         }
     }
 
