@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import service.Database;
+import utility.StatusObservable;
 
 import java.util.logging.Level;
 
