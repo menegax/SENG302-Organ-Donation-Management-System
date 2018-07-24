@@ -112,7 +112,7 @@ public class GUIClinicianWaitingList {
                     Parent root = fxmlLoader.load();
                     UndoableStage popUpStage = new UndoableStage();
                     screenControl.addStage(popUpStage.getUUID(), popUpStage);
-                    screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
+                    screenControl.show(popUpStage.getUUID(), root);
                     openProfiles.add(request);
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request )));
@@ -123,6 +123,7 @@ public class GUIClinicianWaitingList {
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");
                     new Alert(Alert.AlertType.ERROR, "Unable to open patient edit window", ButtonType.OK).show();
+                    e.printStackTrace();
                 }
             }
         });

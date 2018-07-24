@@ -465,7 +465,9 @@ public class Database {
         attr[0] = request.getReceiverNhi();
         attr[1] = request.getRequestDate().toString();
         attr[2] = request.getRequestedOrgan().toString();
-        attr[3] = request.getRequestRegion().toString();
+        if(request.getRequestRegion() != null) {
+            attr[3] = request.getRequestRegion().toString();
+        }
         return attr;
     }
 
@@ -1151,8 +1153,11 @@ public class Database {
             for (String[] attr : waitlistRaw) {
                 String nhi = attr[0];
                 LocalDate date = LocalDate.parse(attr[1]);
-                GlobalEnums.Organ organ = GlobalEnums.Organ.valueOf(attr[2]);
-                GlobalEnums.Region region = GlobalEnums.Region.valueOf(attr[3]);
+                GlobalEnums.Organ organ = GlobalEnums.Organ.valueOf(attr[2].toUpperCase());
+                GlobalEnums.Region region = null;
+                if(attr[3] != null) {
+                    region = GlobalEnums.Region.valueOf(attr[3].toUpperCase());
+                }
                 Patient patient = getPatientByNhi(nhi);
                 if (patient != null) {
                 	String name = patient.getNameConcatenated();

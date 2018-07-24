@@ -56,7 +56,7 @@
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <TextField fx:id="firstnameUpdateTxt" focusTraversable="false" prefWidth="320.0" promptText="First name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="firstnameTxt" focusTraversable="false" prefWidth="320.0" promptText="First name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label ellipsisString=".." text="Middle Name(s):" textAlignment="RIGHT" wrapText="true" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="5.0" />
