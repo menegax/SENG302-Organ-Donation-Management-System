@@ -315,7 +315,9 @@ public class GUIHome implements Observer {
                 System.out.println("Have a nice day"); //tod rm
             });
             alert.showAndWait();
-        } // else do nothing
+        } else {
+            logOut();
+        }
     }
 
     /**
@@ -458,7 +460,7 @@ public class GUIHome implements Observer {
     /**
      * Adds an asterisk from the username display
      */
-    public void addAsterisk() {
+    void addAsterisk() {
         if (!userNameDisplay.getText().contains("*")) {
             userNameDisplay.setText(userNameDisplay.getText() + "*");
         }
@@ -467,7 +469,7 @@ public class GUIHome implements Observer {
     /**
      * Removes the asterisk from the username display
      */
-    public void removeAsterisk() {
+    void removeAsterisk() {
         userNameDisplay.setText(userNameDisplay.getText().replace("*", ""));
     }
 }
