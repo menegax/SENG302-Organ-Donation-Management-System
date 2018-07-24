@@ -2,13 +2,14 @@ package model;
 
 import utility.GlobalEnums.Organ;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
 
 /**
  * Represents a procedure performed or to be performed on a patient
  */
-public class Procedure {
+public class Procedure implements Serializable {
 
     private String summary;
     private String description;

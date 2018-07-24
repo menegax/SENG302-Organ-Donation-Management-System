@@ -10,8 +10,10 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
+import model.User;
 import utility.GlobalEnums;
 import utility.StatusObservable;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
 
@@ -292,7 +294,10 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             }
             currentPatient.sortDiseases();
             if(isAdd) {
-                currentPatient.getCurrentDiseases().add(target);
+                Patient after = (Patient) currentPatient.deepClone();
+                after.getCurrentDiseases().add(target);
+                Action action = new Action(currentPatient, after);
+                statesHistoryScreen.addAction(action);
             }
             screenControl.setIsSaved(false);
             screenControl.closeStage(((UndoableStage)doneButton.getScene().getWindow()).getUUID());
