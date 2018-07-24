@@ -515,9 +515,6 @@ public class SearchPatientsTest {
         areDonorsAndRecievers(results);
     }
 
-
-    @Test
-
     /**
      * Adds a set of patients to the db, also clears and resets
      */
