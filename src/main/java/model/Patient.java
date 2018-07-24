@@ -908,6 +908,16 @@ public class Patient extends User {
 
     public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
 
+    @Override
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    @Override
+    public String getLastName() {
+        return this.lastName;
+    }
+
     //!!??
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
