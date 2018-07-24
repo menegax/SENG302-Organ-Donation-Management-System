@@ -27,20 +27,23 @@ import static utility.UserActionHistory.userActions;
 
 public class Database {
 
-    private Set<Patient> patients;
+    private static Set<Patient> patients;
 
-    private Set<Clinician> clinicians;
+    private static Set<Clinician> clinicians;
 
-    private OrganWaitlist organWaitingList;
+    private static OrganWaitlist organWaitingList;
 
     private static Database database = null;
 
     private Connection conn;
 
-    private Set<Administrator> administrators = new HashSet<>();
+    private static Set<Administrator> administrators = new HashSet<>();
 
     private int curStaffID = 0;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private static Searcher searcher = Searcher.getSearcher();
 
     private final String UPDATEPATIENTQUERYSTRING = "INSERT INTO tblPatients "
             + "(Nhi, FName, MName, LName, Birth, Created, Modified, Death, BirthGender, "
@@ -351,8 +354,6 @@ public class Database {
         return contactAttr;
     }
 
-    private static ScreenControl screenControl = ScreenControl.getScreenControl();
-    private static Set<Administrator> administrators = new HashSet<>();
     /**
      * Gets a clinician's attributes and stores them in a String array
      *
@@ -1238,9 +1239,10 @@ public class Database {
     	return false;
     }
 
-    /**
+    /** //todo
      * Deletes a patient from the database and application.
-     * @param nhi The NHI of the patient to remove.
+     * @param patient
+     * @param searcher
      * @return True if the patient was removed, false otherwise.
      */
     private boolean deletePatient(Patient patient, Searcher searcher) {
@@ -1503,24 +1505,6 @@ public class Database {
         } catch (FileNotFoundException e) {
             systemLogger.log(Level.INFO, "Successfully imported patients from file");
         }
-    }
-
-    /**
-     * Imports the organ waitlist from the selected directory
-     * @param filename file to import from
-     */
-    @SuppressWarnings("unused")
-	@Deprecated
-    public void importFromDiskWaitlist(String filename) {
-        Gson gson = new Gson();
-
-            InputStream in = ClassLoader.class.getResourceAsStream(filename);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            //organWaitingList = gson.fromJson(br, OrganWaitlist.class);
-//        catch (Exception e) {
-//            userActions.log(Level.WARNING, "Failed to import patients from file", "Attempted to read patient file");
-//        }
-
     }
 
     /**

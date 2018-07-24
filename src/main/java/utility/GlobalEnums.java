@@ -1,5 +1,7 @@
 package utility;
 
+import java.util.Arrays;
+
 /**
  * Enumerations for the entire app to use
  */
@@ -271,13 +273,9 @@ public class GlobalEnums {
 
 
         public static BloodGroup getEnumFromString(String value) {
-            try {
-                return BloodGroup.valueOf(value.toUpperCase()
-                        .replaceAll("\\s+", "_"));
-            }
-            catch (IllegalArgumentException e) {
-                return null;
-            }
+            return Arrays.stream(BloodGroup.values())
+                    .filter(v -> v.value.equals(value))
+                    .findFirst().orElseThrow(() -> new IllegalArgumentException(""));
         }
     }
 

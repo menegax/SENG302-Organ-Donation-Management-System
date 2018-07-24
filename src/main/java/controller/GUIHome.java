@@ -326,7 +326,6 @@ public class GUIHome implements Observer {
             alert.setTitle("Unsaved changes");
             alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
                 systemLogger.log(FINE, "User trying to log out");
-                Database.saveToDisk();
                 logOut();
             });
             alert.getDialogPane().lookupButton(ButtonType.NO).addEventFilter(ActionEvent.ACTION, event -> {
@@ -351,13 +350,6 @@ public class GUIHome implements Observer {
         screenControl.setUpNewLogin(); // ONLY FOR SINGLE USER SUPPORT. REMOVE WHEN MULTI USER SUPPORT
         screenControl.setIsSaved(true);
         userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
-
-        // Resets all local changes
-        Database.resetDatabase();
-        Database.importFromDiskPatients("./patient.json");
-        Database.importFromDiskClinicians("./clinician.json");
-        Database.importFromDiskWaitlist("./waitlist.json");
-        Database.importFromDiskAdministrators("./administrator.json");
     }
 
 

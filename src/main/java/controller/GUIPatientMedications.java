@@ -1,5 +1,6 @@
 package controller;
 
+import model.*;
 import service.APIHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -14,10 +15,6 @@ import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import model.Clinician;
-import model.DrugInteraction;
-import model.Medication;
-import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 import service.TextWatcher;
@@ -181,6 +178,9 @@ public class GUIPatientMedications extends UndoableController {
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         } else if (user instanceof Clinician) {
+            viewedPatient = (Patient) userControl.getTargetUser();
+            loadProfile(viewedPatient.getNhiNumber());
+        } else if (user instanceof Administrator) {
             viewedPatient = (Patient) userControl.getTargetUser();
             loadProfile(viewedPatient.getNhiNumber());
         }
@@ -373,11 +373,8 @@ public class GUIPatientMedications extends UndoableController {
                     .toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
-                target.getCurrentMedications()
-                        .add(new Medication(medication));
-                userActions.log(Level.INFO,
-                        "Added medication: " + medication,
-                        new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
+                target.getCurrentMedications().add(new Medication(medication));
+                userActions.log(Level.INFO, "Added medication: " + medication, new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
                 viewCurrentMedications();
                 newMedication.clear();
                 screenControl.setIsSaved(false);

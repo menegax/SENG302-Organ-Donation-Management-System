@@ -183,7 +183,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
      */
     private boolean isValidUpdate() {
         boolean valid = true;
-        if(!Pattern.matches(UIRegex.DISEASENAME.getValue(), diseaseNameTextField.getText())) {
+        if(!Pattern.matches(GlobalEnums.UIRegex.DISEASENAME.getValue(), diseaseNameTextField.getText())) {
             valid = false;
             setInvalid(diseaseNameTextField);
         } else {

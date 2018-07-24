@@ -284,17 +284,15 @@ public class GUIPatientUpdateProfile extends UndoableController {
             invalidContent.append("NHI must be three letters followed by four numbers. ");
         }
 
-        try{
+
             // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
-            if (database.nhiInDatabase(nhiTxt.getText())) {
+            if (database.getPatientByNhi(nhiTxt.getText()).getUuid()  != target.getUuid()) {
                 valid = setInvalid(nhiTxt);
                 invalidContent.append("NHI is already in use\n");
             } else {
                 setValid(nhiTxt);
             }
-        } catch (InvalidObjectException e) {
-            setInvalid(nhiTxt);
-        }
+
 
 
 
@@ -375,8 +373,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         // blood group
         if (bloodGroupDD.getValue() != null) {
-            String bgStr = bloodGroupDD.getValue()
-                    .replace(' ', '_');
+            String bgStr = bloodGroupDD.getValue();
             Enum bloodgroup = BloodGroup.getEnumFromString(bgStr);
             if (bloodgroup == null) {
                 valid = setInvalid(bloodGroupDD);

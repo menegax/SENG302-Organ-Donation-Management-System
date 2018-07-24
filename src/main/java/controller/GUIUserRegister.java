@@ -241,29 +241,26 @@ public class GUIUserRegister {
      *
      * @return The error messages if there are any issues with fields.
      */
-    private String validateNames() {
-        String error = "";
+    private boolean validateNames() {
+        boolean valid = true;
         // first name
         if (!Pattern.matches(UIRegex.FNAME.getValue(), firstnameRegister.getText())) {
-            setInvalid(firstnameRegister);
-            error += "Invalid first name. Must only use letters and hyphens with a max length of 35.\n";
+            valid = setInvalid(firstnameRegister);
         } else {
             setValid(firstnameRegister);
         }
         if (!Pattern.matches(UIRegex.MNAME.getValue(), middlenameRegister.getText())) {
-        	setInvalid(middlenameRegister);
-        	error += "Invalid middle names. Must only use letters, spaces and hyphens with a max length of 70.\n";
+            valid = setInvalid(middlenameRegister);
         } else {
         	setValid(middlenameRegister);
         }
         // last name
         if (!Pattern.matches(UIRegex.LNAME.getValue(), lastnameRegister.getText())) {
-            setInvalid(lastnameRegister);
-            error += "Invalid last name. Must only use letters and hyphens with a max length of 35.\n";
+            valid = setInvalid(lastnameRegister);
         } else {
             setValid(lastnameRegister);
         }
-        return error;
+        return valid;
     }
 
     /**
@@ -304,18 +301,13 @@ public class GUIUserRegister {
      * @return Whether the fields are valid
      */
     private boolean validateClinician() {
-        String error = validateNames();
+        boolean valid = validateNames();
         if (regionRegister.getValue() != null) {
             setValid(regionRegister);
         } else {
-            setInvalid(regionRegister);
-            error += "A region must be selected.\n";
+            valid = setInvalid(regionRegister);
         }
-        if (error.equals("")){
-        	return true;
-        }
-        new Alert(Alert.AlertType.ERROR, error).showAndWait();
-        return false;
+        return valid;
     }
 
     /**
