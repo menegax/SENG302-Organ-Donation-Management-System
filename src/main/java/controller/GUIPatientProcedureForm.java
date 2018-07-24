@@ -79,7 +79,7 @@ public class GUIPatientProcedureForm  {
         this.procedure = procedure;
         //todo modularise and design out into .equals
         for (Procedure iprocedure : patientClone.getProcedures()) {
-            if (iprocedure.getDate() == procedure.getDate() && iprocedure.getSummary().equals(procedure.getSummary())) {
+            if (iprocedure.getDate().equals(procedure.getDate()) && iprocedure.getSummary().equals(procedure.getSummary())) {
                 procedureClone = iprocedure;
             }
         }

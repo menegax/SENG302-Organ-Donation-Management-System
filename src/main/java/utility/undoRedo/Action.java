@@ -12,6 +12,7 @@ public class Action {
     private User before;
     private User current;
     private User after;
+    private boolean isExecuted;
 
     ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -52,6 +53,7 @@ public class Action {
             current.setAttributes(after);
         }
         screenControl.setIsSaved(false);
+        isExecuted = true;
     }
 
     /**
@@ -68,5 +70,10 @@ public class Action {
             current.setAttributes(before);
         }
         screenControl.setIsSaved(false);
+        isExecuted = false;
+    }
+
+    public boolean isExecuted() {
+        return isExecuted;
     }
 }

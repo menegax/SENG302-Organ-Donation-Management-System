@@ -34,7 +34,7 @@ public class StateHistoryListView extends StateHistoryControl {
      * Sets the listView to the state before the current state
      */
     public boolean undo() {
-        return true;
+        return false;
         /*if (index != 0) {
             index -= 1;
 //            ((ListView<Object>) control).getItems().clear();
@@ -50,7 +50,7 @@ public class StateHistoryListView extends StateHistoryControl {
      * Resets the listView to the state immediately prior to an undo
      */
     public boolean redo() {
-        return true;
+        return false;
         /*if (index + 1 < states.size()) {
             index += 1;
 //            ((ListView<Object>) control).getItems().clear();

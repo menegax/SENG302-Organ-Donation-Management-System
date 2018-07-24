@@ -277,17 +277,18 @@ public class StatesHistoryScreen {
      */
     public boolean undo() {
         undone = true; // change to true as to not trigger listeners to store
-        for (StateHistoryControl stateHistory : stateHistories) {
-            boolean success = stateHistory.undo();
-            if (!success) {
-                return false;
-            }
-        }
-        if (actions.get(index) != null) {
+        if (actions.get(index) != null && actions.get(index).isExecuted()) {
             actions.get(index).unexecute();
             userActions.log(Level.INFO, "Local change undone", "User undoed through local change");
+        } else {
+            for (StateHistoryControl stateHistory : stateHistories) {
+                boolean success = stateHistory.undo();
+                if (!success) {
+                    return false;
+                }
+            }
+            index -= 1;
         }
-        index -= 1;
         undone = false;
         return true;
     }
@@ -299,16 +300,17 @@ public class StatesHistoryScreen {
      */
     public boolean redo() {
         redone = true; // change to true as to not trigger listeners to store
-        for (StateHistoryControl stateHistory : stateHistories) {
-            boolean success = stateHistory.redo();
-            if (!success) {
-                return false;
-            }
-        }
-        index += 1;
-        if (actions.get(index) != null) {
+        if (actions.get(index) != null && !actions.get(index).isExecuted()) {
             actions.get(index).execute();
             userActions.log(Level.INFO, "Local change redone", "User redoed through local change");
+        } else {
+            for (StateHistoryControl stateHistory : stateHistories) {
+                boolean success = stateHistory.redo();
+                if (!success) {
+                    return false;
+                }
+            }
+            index += 1;
         }
         redone = false;
         return true;
@@ -377,5 +379,13 @@ public class StatesHistoryScreen {
      */
     public UndoableStage getUndoableStage() {
         return undoableStage;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

@@ -75,18 +75,6 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
      */
     public static void setDisease(Disease disease) {
         target = disease;
-        for (Disease idisease : patientClone.getCurrentDiseases()) {
-            // todo replace with .equals
-            if (idisease.getDiseaseName().equals(disease.getDiseaseName()) && idisease.getDateDiagnosed() == disease.getDateDiagnosed()) {
-                targetClone = idisease;
-            }
-        }
-        for (Disease idisease : patientClone.getPastDiseases()) {
-            // todo replace with .equals
-            if (idisease.getDiseaseName().equals(disease.getDiseaseName()) && idisease.getDateDiagnosed() == disease.getDateDiagnosed()) {
-                targetClone = idisease;
-            }
-        }
     }
 
     /**
@@ -108,6 +96,23 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
         patientClone = (Patient) currentPatient.deepClone();
         if(isAdd) {
             targetClone = new Disease(null, null);
+        } else {
+            if (patientClone.getCurrentDiseases() != null) {
+                for (Disease idisease : patientClone.getCurrentDiseases()) {
+                    // todo replace with .equals
+                    if (idisease.getDiseaseName().equals(target.getDiseaseName()) && idisease.getDateDiagnosed().equals(target.getDateDiagnosed())) {
+                        targetClone = idisease;
+                    }
+                }
+            }
+            if (patientClone.getPastDiseases() != null) {
+                for (Disease idisease : patientClone.getPastDiseases()) {
+                    // todo replace with .equals
+                    if (idisease.getDiseaseName().equals(target.getDiseaseName()) && idisease.getDateDiagnosed().equals(target.getDateDiagnosed())) {
+                        targetClone = idisease;
+                    }
+                }
+            }
         }
         populateDropdown();
         populateForm();

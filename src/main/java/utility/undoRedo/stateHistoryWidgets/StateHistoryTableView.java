@@ -33,29 +33,31 @@ public class StateHistoryTableView extends StateHistoryControl {
      * Sets the tableView to the state before the current state
      */
     public boolean undo() {
-        if (index != 0) {
-            index -= 1;
+        return false;
+//        if (index != 0) {
+//            index -= 1;
 //            ((TableView<Object>) control).getItems().clear();
 //            for (Object object : (ArrayList<Object>) states.get(index)) {
 //                ((TableView<Object>) control).getItems().add(object);
 //            }
-            return true;
-        }
-        return false;
+//            return true;
+//        }
+//        return false;
     }
 
     /**
      * Resets the tableView to the state immediately prior to an undo
      */
     public boolean redo() {
-        if (index + 1 < states.size()) {
-            index += 1;
+        return false;
+//        if (index + 1 < states.size()) {
+//            index += 1;
 //            ((TableView<Object>) control).getItems().clear();
 //            for (Object object : (ArrayList<Object>) states.get(index)) {
 //                ((TableView<Object>) control).getItems().add(object);
 //            }
-            return true;
-        }
-        return false;
+//            return true;
+//        }
+//        return false;
     }
 }
