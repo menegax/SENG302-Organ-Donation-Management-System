@@ -6,9 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
+import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.OrganWaitlist;
 import utility.undoRedo.StatesHistoryScreen;
@@ -18,6 +18,8 @@ import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -26,7 +28,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * This class is the controller for editing a patients required organs only accessible by the clinician
  */
-public class GUIPatientUpdateRequirements extends UndoableController {
+public class GUIPatientUpdateRequirements extends UndoableController{
 
     @FXML
     private CheckBox liverCB;
@@ -66,7 +68,7 @@ public class GUIPatientUpdateRequirements extends UndoableController {
 
 
     @FXML
-    private AnchorPane patientRequirementsAnchorPane;
+    private GridPane patientRequirementsPane;
 
     private Patient target;
 
@@ -89,11 +91,11 @@ public class GUIPatientUpdateRequirements extends UndoableController {
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         }
-        if (userControl.getTargetPatient() != null) {
-            loadProfile((userControl.getTargetPatient()).getNhiNumber());
+        if (userControl.getTargetUser() != null) {
+            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
         }
         // Enter key triggers log in
-        patientRequirementsAnchorPane.setOnKeyPressed(e -> {
+        patientRequirementsPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveRequirements();
             }
@@ -267,8 +269,7 @@ public class GUIPatientUpdateRequirements extends UndoableController {
         }
         deregistrationReason();
         createOrganRequests();
-        Database.saveToDisk();
-        goToProfile();
+        new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
     }
 
     /**
@@ -321,28 +322,6 @@ public class GUIPatientUpdateRequirements extends UndoableController {
         }
         for (GlobalEnums.Organ organ : target.getRequiredOrgans()) {
             waitlist.add(target, organ);
-        }
-    }
-
-    /**
-     * Goes back to the profile view
-     */
-    public void goToProfile() {
-        if (userControl.getLoggedInUser() instanceof Patient) {
-            try {
-                screenControl.show(patientRequirementsAnchorPane, "/scene/patientProfile.fxml");
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen", "attempted to navigate from the required organs page to the profile page");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
-            }
-        } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-            try {
-                ScreenControl.loadPopUpPane(patientRequirementsAnchorPane.getScene(), fxmlLoader);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the requirements page to the profile page in popup");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
-            }
         }
     }
 

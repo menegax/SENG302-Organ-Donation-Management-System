@@ -66,7 +66,7 @@ public class GUIRequiredOrganDeregistrationReason {
      */
     public void initialize() {
         userControl = new UserControl();
-        target = userControl.getTargetPatient();
+        target = (Patient) userControl.getTargetUser();
         populateDropdown();
         populateForm();
         dateOfDeath.setDisable(true);
@@ -120,7 +120,8 @@ public class GUIRequiredOrganDeregistrationReason {
     }
 
     /**
-     * sets the label with organ name
+     * Sets the label with organ name
+     * @param organ the organ being set to label
      */
     public void setOrgan(GlobalEnums.Organ organ) {
         this.organ = organ;
@@ -194,7 +195,7 @@ public class GUIRequiredOrganDeregistrationReason {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         }
         if (confirmed){
-            Stage reasonStage = (Stage)requiredOrganDeregistrationReasonPane.getScene().getWindow();
+            Stage reasonStage = (Stage)reasons.getScene().getWindow();
             reasonStage.close();
         }
         //GUIPatientUpdateRequirements.setClosed(true);

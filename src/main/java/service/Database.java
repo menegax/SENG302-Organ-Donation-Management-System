@@ -1,9 +1,10 @@
 package service;
 
 import com.google.gson.Gson;
+import model.Administrator;
 import model.Clinician;
 import model.Patient;
-import utility.SearchPatients;
+import utility.Searcher;
 
 import java.io.*;
 import java.util.Comparator;
@@ -12,6 +13,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class Database {
@@ -21,13 +23,14 @@ public class Database {
     public static OrganWaitlist getWaitingList() {
     	return organWaitingList;
     }
-    
+
     private static Set<Patient> patients = new HashSet<>();
 
     private static Set<Clinician> clinicians = new HashSet<>();
 
+    private static Set<Administrator> administrators = new HashSet<>();
 
-
+    private static Searcher searcher = Searcher.getSearcher();
 
     /**
      * Adds a patient to the database
@@ -39,7 +42,7 @@ public class Database {
             newPatient.ensureValidNhi();
             newPatient.ensureUniqueNhi();
             patients.add(newPatient);
-            SearchPatients.addIndex(newPatient);
+            searcher.addIndex(newPatient);
             userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
         }
         catch (IllegalArgumentException o) {
@@ -111,6 +114,21 @@ public class Database {
         return false;
     }
 
+    /**
+     * Checks if an administrator with the given username exists in the database
+     *
+     * @param username the username of the administrator to search for
+     * @return true if exists else false
+     */
+    public static boolean isAdministratorInDb(String username) {
+        for (Administrator a : getAdministrators()) {
+            if (a.getUsername().equals(username.toUpperCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Searches clinicians by staffID
@@ -126,6 +144,15 @@ public class Database {
             }
         }
         throw new InvalidObjectException("Clinician with staff ID number " + staffID + " does not exist.");
+    }
+
+    public static Administrator getAdministratorByUsername(String username) throws InvalidObjectException {
+        for (Administrator a : getAdministrators()) {
+            if (a.getUsername().equals(username)) {
+                return a;
+            }
+        }
+        throw new InvalidObjectException("Administrator with username " + " does not exist");
     }
 
     /**
@@ -151,6 +178,7 @@ public class Database {
 
         if (newClinician.getStaffID() == Database.getNextStaffID()) {
             clinicians.add(newClinician);
+            searcher.addIndex(newClinician);
             userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
         }
 
@@ -158,6 +186,27 @@ public class Database {
             userActions.log(Level.WARNING, "Couldn't add clinician due to invalid field staffID", "Attempted to add a clinician");
             throw new IllegalArgumentException("staffID");
         }
+    }
+
+    public static void addAdministrator(Administrator administrator) throws IllegalArgumentException {
+        if (!Pattern.matches("^[-a-zA-Z]+$", administrator.getFirstName())) {
+            userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field: first name", "Attempted to add a administrator");
+            throw new IllegalArgumentException("firstname");
+        }
+
+        if (!Pattern.matches("^[-a-zA-Z]+$", administrator.getLastName())) {
+            userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field: last name", "Attempted to add an administrator");
+            throw new IllegalArgumentException("lastname");
+        }
+
+        for (Administrator admin : administrators) {
+            if (admin.getUsername().toLowerCase().equals(administrator.getUsername().toLowerCase())) {
+                userActions.log(Level.WARNING, "Couldn't add administrator due to invalid field username", "Attempted to add an administrator");
+                throw new IllegalArgumentException("admin username");
+            }
+        }
+        administrators.add(administrator);
+        userActions.log(Level.INFO, "Successfully added administrator " + administrator.getUsername(), "Attempted to add an administrator");
     }
 
     /**
@@ -168,16 +217,26 @@ public class Database {
     public static int getNextStaffID() {
         if (clinicians.size() == 0) {
             return 0;
-        }
-        else {
+        } else {
             int currentID = clinicians.stream()
-                    .max(Comparator.comparing(Clinician::getStaffID))
+                    .max( Comparator.comparing( Clinician::getStaffID ) )
                     .get()
                     .getStaffID();
             return currentID + 1;
         }
     }
 
+    public static boolean usernameUsed(String username) {
+    	username = username.toUpperCase();
+    	boolean exisits = false;
+    	for (Administrator admin: getAdministrators()) {
+    		if (admin.getUsername().equals(username)) {
+    			exisits = true;
+    		}
+    	}
+    	return exisits;
+    }
+    
     /**
      * Calls all sub-methods to save data to disk
      */
@@ -186,6 +245,7 @@ public class Database {
             saveToDiskPatients();
             saveToDiskWaitlist();
             saveToDiskClinicians();
+            saveToDiskAdministrators();
         } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
@@ -204,7 +264,7 @@ public class Database {
         writer.write(json);
         writer.close();
     }
-    
+
     /**
      * Writes database patients to file on disk
      *
@@ -236,6 +296,21 @@ public class Database {
     }
 
     /**
+     * Writes database administrators to file on disk
+     *
+     * @throws IOException when the file cannot be found nor created
+     */
+    private static void saveToDiskAdministrators() throws IOException {
+        Gson gson = new Gson();
+        String json = gson.toJson(administrators);
+
+        String adminPath = "./";
+        Writer writer = new FileWriter(new File(adminPath, "administrator.json"));
+        writer.write(json);
+        writer.close();
+    }
+
+    /**
      * Reads patient data from disk
      * @param fileName file to import from
      */
@@ -253,22 +328,14 @@ public class Database {
                     userActions.log(Level.WARNING, "Error importing donor from file", "Attempted to import donor from file");
                 }
             }
+            systemLogger.log(Level.INFO, "Successfully imported patients from file");
         }
         catch (FileNotFoundException e) {
             userActions.log(Level.WARNING, "Patient import file not found", "Attempted to read patient file");
         }
-    }
-
-    /**
-     * Imports the organ waitlist from the selected directory
-     * @param filename file to import from
-     */
-    public static void importFromDiskWaitlist(String filename) {
-        Gson gson = new Gson();
-
-            InputStream in = ClassLoader.class.getResourceAsStream(filename);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            organWaitingList = gson.fromJson(br, OrganWaitlist.class);
+        catch (Exception e) {
+            userActions.log(Level.WARNING, "Failed to import patients from file", "Attempted to read patient file");
+        }
 
     }
 
@@ -289,9 +356,92 @@ public class Database {
                     userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
                 }
             }
+            systemLogger.log(Level.INFO, "Successfully imported clinician from file");
         }
         catch (FileNotFoundException e) {
-            userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
+            userActions.log(Level.WARNING, "Clinician import file not found", "Attempted to read clinician file");
+        }
+        catch (Exception e) {
+            userActions.log(Level.WARNING, "Failed to import clinicians from file", "Attempted to read clinician file");
+        }
+
+    }
+
+    /**
+     * Reads administrator data from disk
+     * @param fileName file to import from
+     */
+    public static void importFromDiskAdministrators(String fileName) {
+        Gson gson = new Gson();
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(fileName));
+            Administrator[] administrators = gson.fromJson(br, Administrator[].class);
+            for (Administrator a : administrators) {
+                try {
+                    Database.addAdministrator(a);
+                } catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Error importing administrator from file", "Attempted to import administrator from file");
+                }
+            }
+        }
+        catch (FileNotFoundException e) {
+            userActions.log(Level.WARNING, "Administrator import file not found", "Attempted to read administrator file");
+        }
+        catch (Exception e) {
+            userActions.log(Level.WARNING, "Failed to import administrators from file", "Attempted to read administrator file");
+        }
+    }
+
+    /**
+     * Imports the organ waitlist from the selected directory
+     * @param filename file to import from
+     */
+    public static void importFromDiskWaitlist(String filename) {
+        Gson gson = new Gson();
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(filename));
+            organWaitingList = gson.fromJson(br, OrganWaitlist.class);
+            systemLogger.log(Level.INFO, "Successfully imported organ waiting list from file");
+        }
+        catch (FileNotFoundException e) {
+            userActions.log(Level.WARNING, "Waitlist import file not found", "Attempted to read waitlist file");
+        }
+        catch (Exception e) {
+            userActions.log(Level.WARNING, "Failed to import from waitlist file", "Attempted to read watilist file");
+        }
+
+    }
+
+    /**
+     * Removes from the clinicians HashSet the given clinician
+     * @param clinician The clinician being removed from set
+     */
+    public static void deleteClinician(Clinician clinician) {
+        if (clinician.getStaffID() != 0) {
+            searcher.removeIndex(clinician);
+            clinicians.remove(clinician);
+        }
+    }
+
+    /**
+     * Removes from the patients HashSet the given patient
+     * @param patient The patient being removed from set
+     */
+    public static void deletePatient(Patient patient) {
+        searcher.removeIndex(patient);
+        patients.remove( patient );
+    }
+
+    /**
+     * Removes from the administrators HashSet the given administrator
+     * @param administrator The administrator being removed from set
+     */
+    public static void deleteAdministrator(Administrator administrator) {
+        if (!administrator.getUsername().toLowerCase().equals("admin")) {
+            searcher.removeIndex(administrator);
+            administrators.remove(administrator);
         }
     }
 
@@ -309,8 +459,9 @@ public class Database {
         return patients;
     }
 
-
     public static Set<Clinician> getClinicians() {
         return clinicians;
     }
+
+    public static Set<Administrator> getAdministrators() { return administrators; }
 }

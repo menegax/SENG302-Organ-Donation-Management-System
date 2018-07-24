@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
+import model.User;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
@@ -27,7 +28,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller class to control GUI Clinician updating screen.
  */
-public class GUIClinicianUpdateProfile extends UndoableController{
+public class GUIClinicianUpdateProfile extends UndoableController {
 
     @FXML
     public AnchorPane clinicianUpdateAnchorPane;
@@ -39,24 +40,30 @@ public class GUIClinicianUpdateProfile extends UndoableController{
     private TextField staffId;
 
     @FXML
-    private TextField firstnameTxt;
+    private TextField firstnameUpdateTxt;
+
     @FXML
     private TextField lastnameTxt;
+
     @FXML
     private TextField middlenameTxt;
 
     @FXML
     private TextField street1Txt;
+
     @FXML
     private TextField street2Txt;
+
     @FXML
     private TextField suburbTxt;
+
     @FXML
     private ChoiceBox regionDD;
 
     private Clinician target;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
 
     /**
      * Initializes the clinician editing screen.
@@ -73,18 +80,25 @@ public class GUIClinicianUpdateProfile extends UndoableController{
         regionDD.setItems(regionsOL);
 
         // Registering a change event to clear the invalid class
-        regionDD.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> setValid(regionDD));
+        regionDD.getSelectionModel()
+                .selectedIndexProperty()
+                .addListener((observable, oldValue, newValue) -> setValid(regionDD));
         UserControl userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
-        if (user instanceof Clinician){
-            loadProfile(((Clinician) user).getStaffID());
+        User loggedIn = userControl.getLoggedInUser();
+        if (loggedIn instanceof Clinician){
+            target = (Clinician) loggedIn;
+        } else {
+            target = (Clinician) userControl.getTargetUser();
         }
+        loadProfile(target.getStaffID());
         setUpStateHistory();
     }
+
 
     /**
      * Loads the currently logged in clinician from the Database and populates the tables using the logged
      * in clinician's attributes.
+     *
      * @param staffId ID of clinician to load
      */
     private void loadProfile(int staffId) {
@@ -92,10 +106,12 @@ public class GUIClinicianUpdateProfile extends UndoableController{
             Clinician clinician = Database.getClinicianByID(staffId);
             target = clinician;
             populateForm(clinician);
-        } catch (InvalidObjectException e) {
+        }
+        catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }
+
 
     /**
      * Creates a list of control elements using all editable nodes on the update screen and initializes
@@ -104,7 +120,7 @@ public class GUIClinicianUpdateProfile extends UndoableController{
     private void setUpStateHistory() {
         controls = new ArrayList<Control>() {{
             add(staffId);
-            add(firstnameTxt);
+            add(firstnameUpdateTxt);
             add(lastnameTxt);
             add(middlenameTxt);
             add(street1Txt);
@@ -115,27 +131,43 @@ public class GUIClinicianUpdateProfile extends UndoableController{
         statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPROFILEUPDATE);
     }
 
+
     /**
      * Populates the update screen using the current clinician attributes
+     *
      * @param clinician logged in clinician
      */
     private void populateForm(Clinician clinician) {
         //adds last modified date only if clinician has been edited before
-        if(target.getModified() != null) lastModifiedLbl.setText("Last Updated: " + clinician.getModified().toString());
-        else lastModifiedLbl.setText("Last Updated: n/a");
+        if (target.getModified() != null) {
+            lastModifiedLbl.setText("Last Updated: " + clinician.getModified()
+                    .toString());
+        }
+        else {
+            lastModifiedLbl.setText("Last Updated: n/a");
+        }
         staffId.setText(Integer.toString(clinician.getStaffID()));
-        firstnameTxt.setText(clinician.getFirstName());
+        firstnameUpdateTxt.setText(clinician.getFirstName());
         lastnameTxt.setText(clinician.getLastName());
         for (String name : clinician.getMiddleNames()) {
             middlenameTxt.setText(middlenameTxt.getText() + name + " ");
         }
-        if (clinician.getStreet1() != null) street1Txt.setText(clinician.getStreet1());
-        if (clinician.getStreet2() != null) street2Txt.setText(clinician.getStreet2());
-        if (clinician.getSuburb() != null) suburbTxt.setText(clinician.getSuburb());
+        if (clinician.getStreet1() != null) {
+            street1Txt.setText(clinician.getStreet1());
+        }
+        if (clinician.getStreet2() != null) {
+            street2Txt.setText(clinician.getStreet2());
+        }
+        if (clinician.getSuburb() != null) {
+            suburbTxt.setText(clinician.getSuburb());
+        }
         if (clinician.getRegion() != null) {
-            regionDD.getSelectionModel().select(clinician.getRegion().getValue());
+            regionDD.getSelectionModel()
+                    .select(clinician.getRegion()
+                            .getValue());
         }
     }
+
 
     /**
      * Checks fields for validity before setting clinician's updated attributes and returning to profile.
@@ -147,11 +179,14 @@ public class GUIClinicianUpdateProfile extends UndoableController{
             valid = false;
             setInvalid(staffId);
         }
-        if (firstnameTxt.getText().length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", firstnameTxt.getText())) {
+        String newName = firstnameUpdateTxt.getText();
+        if (firstnameUpdateTxt.getText()
+                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", newName)) {
             valid = false;
-            setInvalid(firstnameTxt);
+            setInvalid(firstnameUpdateTxt);
         }
-        if (lastnameTxt.getText().length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", lastnameTxt.getText())) {
+        if (lastnameTxt.getText()
+                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", lastnameTxt.getText())) {
             valid = false;
             setInvalid(lastnameTxt);
         }
@@ -159,11 +194,11 @@ public class GUIClinicianUpdateProfile extends UndoableController{
             valid = false;
             setInvalid(middlenameTxt);
         }
-        if (!Pattern.matches("[a-z|A-Z ]{0,50}", street1Txt.getText())) {
+        if (!Pattern.matches("[0-9|a-z|A-Z ]{0,50}", street1Txt.getText())) {
             valid = false;
             setInvalid(street1Txt);
         }
-        if (!Pattern.matches("[a-z|A-Z ]{0,50}", street2Txt.getText())) {
+        if (!Pattern.matches("[0-9|a-z|A-Z ]{0,50}", street2Txt.getText())) {
             valid = false;
             setInvalid(street2Txt);
         }
@@ -171,42 +206,45 @@ public class GUIClinicianUpdateProfile extends UndoableController{
             valid = false;
             setInvalid(suburbTxt);
         }
-        if (regionDD.getSelectionModel().getSelectedIndex() == -1) { // If the selected item is nothing
+        if (regionDD.getSelectionModel()
+                .getSelectedIndex() == -1) { // If the selected item is nothing
             valid = false;
             setInvalid(regionDD);
         }
         // If all the fields are entered correctly
         if (valid) {
             target.setStaffID(Integer.parseInt(staffId.getText()));
-            target.setFirstName(firstnameTxt.getText());
+            target.setFirstName(firstnameUpdateTxt.getText());
             target.setLastName(lastnameTxt.getText());
-            List<String> middlenames = Arrays.asList(middlenameTxt.getText().split(" "));
-            ArrayList middles = new ArrayList();
-            middles.addAll(middlenames);
+            List<String> middlenames = Arrays.asList(middlenameTxt.getText()
+                    .split(" "));
+            ArrayList<String> middles = new ArrayList<>(middlenames);
             target.setMiddleNames(middles);
 
             target.setStreet1(street1Txt.getText());
             target.setStreet2(street2Txt.getText());
             target.setSuburb(suburbTxt.getText());
-            target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel().getSelectedItem().toString()));
-            target.clinicianModified();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Clinician successfully updated", ButtonType.OK);
-            final Button dialogOK = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
-            dialogOK.addEventFilter(ActionEvent.ACTION, event -> goBackToProfile());
-            alert.show();
-//            goBackToProfile();
-        } else {
+            target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
+                    .getSelectedItem()
+                    .toString()));
+            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+            userActions.log(Level.INFO, "Successfully updated clinician profile", new String[]{"Attempted to update clinician profile", String.valueOf(target.getStaffID())});
+        }
+        else {
             new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
         }
     }
+
 
     /***
      * Applies the invalid class to the target control
      * @param target The target to add the class to
      */
     private void setInvalid(Control target) {
-        target.getStyleClass().add("invalid");
+        target.getStyleClass()
+                .add("invalid");
     }
+
 
     /**
      * Removes the invalid class from the target control if it has it
@@ -214,10 +252,13 @@ public class GUIClinicianUpdateProfile extends UndoableController{
      * @param target The target to remove the class from
      */
     private void setValid(Control target) {
-        if (target.getStyleClass().contains("invalid")) {
-            target.getStyleClass().remove("invalid");
+        if (target.getStyleClass()
+                .contains("invalid")) {
+            target.getStyleClass()
+                    .remove("invalid");
         }
     }
+
 
     /**
      * Checks if the keyevent target was a textfield. If so, if the target has the invalid class, it is removed.
@@ -225,11 +266,13 @@ public class GUIClinicianUpdateProfile extends UndoableController{
      * @param e The KeyEvent instance
      */
     public void onKeyReleased(KeyEvent e) {
-        if (e.getTarget().getClass() == TextField.class) {
+        if (e.getTarget()
+                .getClass() == TextField.class) {
             TextField target = (TextField) e.getTarget();
             setValid(target);
         }
     }
+
 
     /**
      * Navigates back to the profile window
@@ -237,7 +280,8 @@ public class GUIClinicianUpdateProfile extends UndoableController{
     public void goBackToProfile() {
         try {
             screenControl.show(clinicianUpdateAnchorPane, "/scene/clinicianProfile.fxml");
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load clinician profile").show();
             userActions.log(SEVERE, "Failed to load clinician profile", "Attempted to load clinician profile");
         }

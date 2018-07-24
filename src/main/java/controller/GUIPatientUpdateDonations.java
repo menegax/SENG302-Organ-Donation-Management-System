@@ -8,6 +8,9 @@ import javafx.scene.control.Control;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
+import javafx.scene.control.Control;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.layout.GridPane;
 import model.Patient;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
@@ -20,6 +23,7 @@ import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateDonations extends UndoableController {
@@ -61,7 +65,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
     private CheckBox connectivetissueCB;
 
     @FXML
-    private AnchorPane patientDonationsAnchorPane;
+    private GridPane patientDonationsAnchorPane;
 
     private Patient target;
 
@@ -79,8 +83,8 @@ public class GUIPatientUpdateDonations extends UndoableController {
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         }
-        if (userControl.getTargetPatient() != null) {
-            loadProfile((userControl.getTargetPatient()).getNhiNumber());
+        if (userControl.getTargetUser() != null) {
+            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
         }
 
         // Enter key triggers log in
@@ -254,30 +258,6 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
         }
         userActions.log(INFO, "Updated user donations to: " + newDonations, "Attempted to update donations");
-        Database.saveToDisk();
-        goToProfile();
-    }
-
-
-    /**
-     * Navigates to the patient profile screen
-     */
-    public void goToProfile() {
-        if (userControl.getLoggedInUser() instanceof Patient) {
-            try {
-                screenControl.show(patientDonationsAnchorPane, "/scene/patientProfile.fxml");
-            } catch (IOException e) {
-                new Alert((Alert.AlertType.ERROR), "Unable to patient profile").show();
-                userActions.log(SEVERE, "Failed to load patient profile", "Attempted to load patient profile");
-            }
-        } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProfile.fxml"));
-            try {
-                ScreenControl.loadPopUpPane(patientDonationsAnchorPane.getScene(), fxmlLoader);
-            } catch (IOException e) {
-                userActions.log(Level.SEVERE, "Error loading profile screen in popup", "attempted to navigate from the donation page to the profile page in popup");
-                new Alert(Alert.AlertType.WARNING, "Error loading profile page", ButtonType.OK).show();
-            }
-        }
+        new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
     }
 }
