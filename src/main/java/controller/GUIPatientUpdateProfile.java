@@ -344,11 +344,20 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
 
         // zip
-        if (!Pattern.matches(UIRegex.ZIP.getValue(), zipTxt.getText())) {
-            valid = setInvalid(zipTxt);
-            invalidContent.append("Zip must be four digits\n");
+        if (!zipTxt.getText().equals("")) {
+            try {
+                if (!Pattern.matches(UIRegex.ZIP.getValue(), zipTxt.getText())) {
+                    valid = setInvalid(zipTxt);
+                    invalidContent.append("Zip must be four digits. ");
+                } else {
+                    Integer.parseInt(zipTxt.getText());
+                    setValid(zipTxt);
+                }
+            } catch (NumberFormatException e) {
+                valid = setInvalid(zipTxt);
+                invalidContent.append("Zip must be four digits. ");
+            }
         } else {
-        	Integer.parseInt(zipTxt.getText());
             setValid(zipTxt);
         }
 

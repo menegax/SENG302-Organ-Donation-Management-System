@@ -378,6 +378,7 @@ public class GUIHome implements Observer {
         MenuItem menu2Item1 = new MenuItem("Save");
         menu2Item1.setAccelerator(screenControl.getSave());
         menu2Item1.setOnAction(event -> {
+            screenControl.setIsSaved(true);
             database.updateDatabase();
             userActions.log(INFO, "Successfully saved to disk", "Attempted to save to disk");
         });
