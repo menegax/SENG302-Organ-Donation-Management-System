@@ -275,6 +275,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         }));
     }
 
+    /**
+     * Resets the filter selections
+     */
     @FXML
     public void clearFilterOptions() {
         recievingFilter.getSelectionModel().select(GlobalEnums.NONE_ID);
@@ -289,6 +292,10 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         isDonorCheckbox.setSelected(false);
     }
 
+
+    /**
+     * Populate dropdowns with enum values
+     */
     private void populateDropdowns() {
         regionFilter.getItems().add(GlobalEnums.NONE_ID); //for empty selection
         for (Region region : Region.values()) { //add values to region choice box
@@ -309,7 +316,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     }
 
     /**
-     *
+     * Add listeners to the filter options and set up default filter (not selected)
      */
     private void setupFilterOptions() {
         filter.put(FilterOption.REGION, GlobalEnums.NONE_ID);
