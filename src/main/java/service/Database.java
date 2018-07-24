@@ -770,7 +770,7 @@ public class Database {
         }
         String[] organArray = organs.split(",");
         for (String organ : organArray) {
-            organArrayList.add(GlobalEnums.Organ.valueOf(organ.toUpperCase()));
+            organArrayList.add(GlobalEnums.Organ.getEnumFromString(organ.toUpperCase()));
         }
 		userActions.log(Level.INFO, "Successfully loaded all organs for patient.", "Attempted load all organs for patient.");
         return organArrayList;
