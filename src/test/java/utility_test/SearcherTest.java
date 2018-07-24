@@ -243,7 +243,7 @@ public class SearcherTest {
         database.update(d3);
         database.update(d2);
         database.update(d1);
-
+        refreshDatabase();
         refreshIndex();
 
         // When searching patients
