@@ -247,6 +247,15 @@ public class GUIUserRegister {
         } else {
             setValid(firstnameRegister);
         }
+
+        // middle name
+        if (!middlenameRegister.getText()
+                .matches("^([-a-zA-Z]*|[ ])*$")) {
+            valid = setInvalid(middlenameRegister);
+        } else {
+            setValid(middlenameRegister);
+        }
+
         // last name
         if (!lastnameRegister.getText()
                 .matches("^[-a-zA-Z]+$")) {
@@ -297,7 +306,7 @@ public class GUIUserRegister {
     private boolean validateClinician() {
         boolean valid = validateNames();
         if (regionRegister.getValue() != null) {
-            setValid(birthRegister);
+            setValid(regionRegister);
         } else {
             valid = setInvalid(regionRegister);
         }
@@ -313,7 +322,7 @@ public class GUIUserRegister {
         boolean valid = validateNames();
         String error = "";
         if (!userIdRegister.getText()
-                .matches("([A-Za-z0-9]+[-]*[_]*)+")) {
+                .matches("[A-Za-z0-9_]+")) {
             valid = setInvalid(userIdRegister);
             error += "Invalid username. ";
         } else if (Database.usernameUsed(userIdRegister.getText())) {
@@ -387,6 +396,7 @@ public class GUIUserRegister {
             Database.addClinician(new Clinician(staffID, firstName, middles, lastName, (Region) Region.getEnumFromString(region)));
             userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
             errorMsg = "Successfully registered clinician with staff ID " + staffID;
+            clearFields();
             screenControl.setIsSaved(false);
         } else {
             try {
@@ -400,7 +410,7 @@ public class GUIUserRegister {
             }
         }
         clearFields();
-        userActions.log(Level.INFO, errorMsg);
+        userActions.log(Level.INFO, errorMsg, "Attempted to register a new user");
         if (userControl.getLoggedInUser() == null) {
             returnToPreviousPage();
         }
