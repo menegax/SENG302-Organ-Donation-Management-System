@@ -104,6 +104,7 @@ public class UndoableStage extends Stage {
             userActions.log(Level.SEVERE, "Error loading screen", "Attempted to navigate screens during " + method);
         }
         UndoableController controller = fxmlLoader.getController();
+        undoRedoControl.setActions(statesHistoryScreens.get(index).getActions(), controller.getStatesHistory());
         undoRedoControl.setStates(statesHistoryScreens.get(index), controller.getControls());
         undoRedoControl.setStatesHistoryScreen(controller, statesHistoryScreens.get(index));
         statesHistoryScreens.set(index, controller.getStatesHistory());

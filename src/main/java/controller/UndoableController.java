@@ -1,11 +1,13 @@
 package controller;
 
 import javafx.scene.control.Control;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryControl;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class for a controller who controls an undoable screen
@@ -39,4 +41,13 @@ public abstract class UndoableController {
     public StatesHistoryScreen getStatesHistory() {
         return statesHistoryScreen;
     }
+
+    /**
+     * Gets the actions map for this undoableController
+     * @return the actions map of this controller
+     */
+    public Map<Integer, Action> getActions() {
+        return statesHistoryScreen.getActions();
+    }
+
 }
