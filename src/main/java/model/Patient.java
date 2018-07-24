@@ -33,8 +33,6 @@ public class Patient extends User {
     @Parsed(field = "first_names")
     private String firstName;
 
-    private ArrayList<String> middleNames;
-
     @Parsed(field = "last_names")
     private String lastName;
 
@@ -386,10 +384,9 @@ public class Patient extends User {
             this.lastName = lastName;
         }
         if ((!lastName.equals(this.lastName))) {
-        	SearchPatients.removeIndex(this);
+        	Searcher.getSearcher().removeIndex(this);
             this.lastName = lastName;
-            SearchPatients.addIndex(this);
-            patientModified();
+            Searcher.getSearcher().addIndex(this);
         }
     }
 
@@ -754,7 +751,6 @@ public class Patient extends User {
             this.nhiNumber = nhiNumber.toUpperCase();
             Searcher.getSearcher().removeIndex(this);
             Searcher.getSearcher().addIndex(this);
-            patientModified();
         }
     }
 

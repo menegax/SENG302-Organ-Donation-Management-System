@@ -22,6 +22,8 @@ public abstract class User {
 
     protected Timestamp modified;
 
+    public User(){}
+
     public User(String firstName, List<String> middleNames, String lastName) {
         this.firstName = firstName;
         this.middleNames = middleNames;
