@@ -3,7 +3,6 @@ package utility;
 import static utility.GlobalEnums.NONE_ID;
 import static utility.SystemLogger.systemLogger;
 
-import com.sun.istack.internal.Nullable;
 import utility.GlobalEnums.*;
 import model.Administrator;
 import model.Clinician;
@@ -430,7 +429,7 @@ public class Searcher {
      * @param numResults The maximum number of search results to find.
      * @return The search results as a List of User objects.
      */
-    public List<User> search(String input, UserTypes[] types, int numResults, @Nullable Map<FilterOption, String> filter) {
+    public List<User> search(String input, UserTypes[] types, int numResults, Map<FilterOption, String> filter) {
         List<User> results = new ArrayList<>();
         if (input.isEmpty()) {
             if (filter != null) {
