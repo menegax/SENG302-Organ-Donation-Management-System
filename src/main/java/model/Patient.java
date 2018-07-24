@@ -455,6 +455,7 @@ public class Patient extends User {
         userModified();
     }
 
+    public Timestamp getCREATED() {return CREATED;}
     /**
      * Refreshes the status of the patient to the correct status
      * Always called after patient is modified
