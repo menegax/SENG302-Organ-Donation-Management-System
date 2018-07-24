@@ -166,8 +166,6 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             lastModifiedLbl.setText("Last Updated: n/a");
         }
         staffId.setText(Integer.toString(clinician.getStaffID()));
-        System.out.println(firstnameTxt);
-        System.out.println(lastnameTxt);
         firstnameTxt.setText(clinician.getFirstName());
         lastnameTxt.setText(clinician.getLastName());
         for (String name : clinician.getMiddleNames()) {

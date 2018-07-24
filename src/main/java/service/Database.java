@@ -69,7 +69,7 @@ public class Database {
     		+ "Street2 = VALUES (Street2), "
     		+ "Suburb = VALUES (Suburb), "
     		+ "Region = VALUES (Region), "
-    		+ "Modified = VALUES (Modified)";
+    		+ "Modified = VALUES (Modified); ";
 
     private final String UPDATEPATIENTCONTACTQUERYSTRING = "INSERT INTO tblPatientContact "
     		+ "(Patient, Street1, Street2, Suburb, Region, Zip, HomePhone, WorkPhone, "
@@ -551,6 +551,7 @@ public class Database {
             attr = ArrayUtils.addAll(attr, getProcedureAttributes(patient, procedure));
             query += ";" + UPDATEPATIENTPROCEDURESQUERYSTRING;
         }
+        query += "; ";
         String[] packagedQuery = {query};
         return new String[][] {packagedQuery, attr};
     }
@@ -761,7 +762,7 @@ public class Database {
         }
         String[] organArray = organs.split(",");
         for (String organ : organArray) {
-            organArrayList.add(GlobalEnums.Organ.valueOf(organ));
+            organArrayList.add(GlobalEnums.Organ.valueOf(organ.toUpperCase()));
         }
 		userActions.log(Level.INFO, "Successfully loaded all organs for patient.", "Attempted load all organs for patient.");
         return organArrayList;
