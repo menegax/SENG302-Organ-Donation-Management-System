@@ -336,14 +336,14 @@ public class SearcherTest {
         d1 = new Patient("abc1230", "Bob", null, "Bobby", LocalDate.of(1997, 8, 19));
         d2 = new Patient("abc1231", "aoc", null, "Bobby", LocalDate.of(2001, 9, 20));
         d3 = new Patient("abc1232", "aoc", null, "Bobby", LocalDate.of(2001, 9, 20));
+        d1.setRegion(Region.CANTERBURY);
 
         Database.addPatient(d1);
         Database.addPatient(d2);
         Database.addPatient(d3);
-        
+
         searcher.createFullIndex();
 
-        d1.setRegion(Region.CANTERBURY);
         //search with no name
         List<User> results = Searcher.getSearcher().search("",new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 

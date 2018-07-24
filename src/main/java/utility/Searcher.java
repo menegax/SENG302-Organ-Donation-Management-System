@@ -389,8 +389,6 @@ public class Searcher {
             @Override
             public int compare(ScoreDoc o1, ScoreDoc o2) {
                 int comparison = Float.compare(o2.score, o1.score);
-                User u = fetchUser(o1);
-                User i = fetchUser(o2);
                 if (comparison == 0) {
                     comparison = fetchUser(o1).getNameConcatenated().compareTo(fetchUser(o2).getNameConcatenated());
                 }
@@ -456,13 +454,15 @@ public class Searcher {
 
         results = createUsers(allDocs, numResults);
 
-        List<User> filteredResults = new ArrayList<>(results);
+        List<User> filteredResults = new ArrayList<>();
         if (filter != null) {
             for (User result : results) {
                 if (matchesFilter((Patient) result, filter)) {
                     filteredResults.add(result);
                 }
             }
+        } else {
+            return results;
         }
         return filteredResults;
     }
