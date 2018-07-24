@@ -30,12 +30,6 @@ public class Patient extends User {
 
     private final Timestamp CREATED;
 
-    @Parsed(field = "first_names")
-    private String firstName;
-
-    @Parsed(field = "last_names")
-    private String lastName;
-
     private String preferredName;
 
     @Parsed(field = "date_of_birth")
@@ -907,16 +901,6 @@ public class Patient extends User {
     }
 
     public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
-
-    @Override
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    @Override
-    public String getLastName() {
-        return this.lastName;
-    }
 
     //!!??
     public String toString() {

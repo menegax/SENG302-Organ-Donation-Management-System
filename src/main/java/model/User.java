@@ -1,5 +1,6 @@
 package model;
 
+import com.univocity.parsers.annotations.Parsed;
 import utility.Searcher;
 
 import java.beans.PropertyChangeEvent;
@@ -14,10 +15,12 @@ public abstract class User {
 
     private final UUID uuid = UUID.randomUUID();
 
+    @Parsed(field = "first_names")
     protected String firstName;
 
     protected List<String> middleNames;
 
+    @Parsed(field = "last_names")
     protected String lastName;
 
     protected Timestamp modified;
