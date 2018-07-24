@@ -6,6 +6,7 @@ import utility.GlobalEnums;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -37,6 +38,7 @@ public class Clinician extends User {
         super(firstName, middleNames, lastName);
         this.staffID = staffID;
         this.region = region;
+        super.modified = new Timestamp(System.currentTimeMillis());
     }
 
     /**
@@ -58,6 +60,7 @@ public class Clinician extends User {
         this.street2 = street2;
         this.suburb = suburb;
         this.region = region;
+        super.modified = new Timestamp(System.currentTimeMillis());
     }
 
     public int getStaffID() {

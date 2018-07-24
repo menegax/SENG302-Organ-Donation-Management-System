@@ -20,6 +20,7 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
@@ -82,8 +83,9 @@ public class GUIPatientUpdateContacts extends UndoableController {
         boolean valid = setPatientContactDetails();
         if (valid) {
             screenControl.setIsSaved(false);
+            userActions.log(INFO, "Successfully saved contact details", "Attempted to set invalid contact details");
         } else {
-            userActions.log(Level.WARNING,"Invalid fields", "Attempted to set invalid contact details");
+            userActions.log(Level.WARNING,"Failed to save contact details due to invalid fields", "Attempted to set invalid contact details");
         }
     }
 

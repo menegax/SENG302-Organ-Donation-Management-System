@@ -274,7 +274,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         systemLogger.log(Level.FINEST, "Setting patient profile for update...");
         Boolean valid = true;
 
-        StringBuilder invalidContent = new StringBuilder("Please fix the following errors:");
+        StringBuilder invalidContent = new StringBuilder();
 
         // nhi
         if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}",
@@ -288,7 +288,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
             if (Database.getPatientByNhi(nhiTxt.getText()).getUuid() != target.getUuid()) {
                 valid = setInvalid(nhiTxt);
-                invalidContent.append("NHI is already in use. ");
+                invalidContent.append("NHI is already in use");
             } else {
                 setValid(nhiTxt);
             }
@@ -318,7 +318,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         if (!middlenameTxt.getText()
                 .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)*")) {
             valid = setInvalid(middlenameTxt);
-            invalidContent.append("Middle name(s) must be letters, ., or -. ");
+            invalidContent.append("Middle name(s) must be letters, ., or -.");
         } else {
             setValid(middlenameTxt);
         }
@@ -496,8 +496,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", target.getNhiNumber()});
         }
         else {
-            systemLogger.log(Level.WARNING, "Failed to update patient profile due to invalid fields: " + invalidContent);
-            userActions.log(Level.WARNING, invalidContent.toString(), "Attempted to update patient profile");
+            userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", target.getNhiNumber()});
         }
     }
 

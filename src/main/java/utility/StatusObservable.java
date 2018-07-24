@@ -15,14 +15,14 @@ import java.util.Set;
  */
 public class StatusObservable extends Observable {
 
-    //Singleton instance
+    // Singleton instance
     private static StatusObservable instance = new StatusObservable();
 
     private String status;
 
     private Set<Observer> observers;
 
-    //The clearStatus event
+    // The clearStatus event
     private Timeline timeline;
 
 
