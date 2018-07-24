@@ -50,6 +50,25 @@ public class GUIHome implements Observer {
 
     private UserControl userControl = new UserControl();
 
+    private  enum TabName {
+        PROFILE("Profile"), UPDATE("Update"), DONATIONS("Donations"), CONTACTDETAILS("Contact Details"),
+        DISEASEHISTORY("View Disease History"), HISTORY("History"), PROCEDURES("Procedures"),
+        TRANSPLANTWAITINGLIST("Transplant Waiting List"), SEARCHPATIENTS("Search Patients"),
+        REQUESTEDDONATIONS("Requested Donations"), MEDICATIONS("Medications"), SEARCHPUSERS("Search Users"),
+        USERREGISTER("User Register");
+
+        private String value;
+
+        TabName(String value) {
+            this.value = value;
+        }
+
+        public String toString() {
+            return this.value;
+        }
+
+    }
+
     private Stage homeStage;
 
     /**
@@ -205,17 +224,18 @@ public class GUIHome implements Observer {
      * @param title    - title of the new tab
      * @param fxmlPath - path of the fxml to be loaded
      */
-    private void createTab(String title, String fxmlPath) throws IOException {
+    private void createTab(TabName title, String fxmlPath) throws IOException {
         Tab newTab = new Tab();
-        newTab.setText(title);
-        newTab.setOnSelectionChanged(event -> {
-            try {
-                newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
-            }
-            catch (IOException e) {
-                systemLogger.log(SEVERE, "Failed to create tab", e);
-            }
-        });
+        newTab.setText(title.toString());
+        if (!title.equals(TabName.SEARCHPATIENTS)) {
+            newTab.setOnSelectionChanged(event -> {
+                try {
+                    newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
+                } catch (IOException e) {
+                    systemLogger.log(SEVERE, "Failed to create tab", e);
+                }
+            });
+        }
         newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
         horizontalTabPane.getTabs()
                 .add(newTab);
@@ -228,13 +248,13 @@ public class GUIHome implements Observer {
      * @exception IOException - if fxml cannot be located
      */
     private void addTabsPatient() throws IOException {
-        createTab("Profile", "/scene/patientProfile.fxml");
-        createTab("Update", "/scene/patientUpdateProfile.fxml");
-        createTab("Donations", "/scene/patientUpdateDonations.fxml");
-        createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
-        createTab("View Disease History", "/scene/clinicianDiagnosis.fxml");
-        createTab("History", "/scene/patientHistory.fxml");
-        createTab("Procedures", "/scene/patientProcedures.fxml");
+        createTab(TabName.PROFILE, "/scene/patientProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/patientUpdateProfile.fxml");
+        createTab(TabName.DONATIONS, "/scene/patientUpdateDonations.fxml");
+        createTab(TabName.CONTACTDETAILS, "/scene/patientUpdateContacts.fxml");
+        createTab(TabName.DISEASEHISTORY, "/scene/clinicianDiagnosis.fxml");
+        createTab(TabName.HISTORY, "/scene/patientHistory.fxml");
+        createTab(TabName.PROCEDURES, "/scene/patientProcedures.fxml");
     }
 
 
@@ -243,15 +263,15 @@ public class GUIHome implements Observer {
      *
      * @exception IOException- if fxml cannot be located
      */
-    private void addTabsForPatientClinician() throws IOException {
-        createTab("Profile", "/scene/patientProfile.fxml");
-        createTab("Update", "/scene/patientUpdateProfile.fxml");
-        createTab("Medications", "/scene/patientMedications.fxml");
-        createTab("Donations", "/scene/patientUpdateDonations.fxml");
-        createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
-        createTab("Requested Donations", "/scene/patientUpdateRequirements.fxml");
-        createTab("View Diseases", "/scene/clinicianDiagnosis.fxml");
-        createTab("Procedures", "/scene/patientProcedures.fxml");
+    private void addTabsForPatientClinician() throws IOException{
+        createTab(TabName.PROFILE, "/scene/patientProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/patientUpdateProfile.fxml");
+        createTab(TabName.MEDICATIONS, "/scene/patientMedications.fxml");
+        createTab(TabName.DONATIONS, "/scene/patientUpdateDonations.fxml");
+        createTab(TabName.CONTACTDETAILS, "/scene/patientUpdateContacts.fxml");
+        createTab(TabName.REQUESTEDDONATIONS, "/scene/patientUpdateRequirements.fxml");
+        createTab(TabName.DISEASEHISTORY, "/scene/clinicianDiagnosis.fxml");
+        createTab(TabName.PROCEDURES, "/scene/patientProcedures.fxml");
     }
 
 
@@ -261,11 +281,11 @@ public class GUIHome implements Observer {
      * @exception IOException- if fxml cannot be located
      */
     private void addTabsClinician() throws IOException {
-        createTab("Profile", "/scene/clinicianProfile.fxml");
-        createTab("Update", "/scene/clinicianProfileUpdate.fxml");
-        createTab("Search Patients", "/scene/clinicianSearchPatients.fxml");
-        createTab("Transplant Waiting List", "/scene/clinicianWaitingList.fxml");
-        createTab("History", "/scene/clinicianHistory.fxml");
+        createTab(TabName.PROFILE, "/scene/clinicianProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/clinicianProfileUpdate.fxml");
+        createTab(TabName.SEARCHPATIENTS, "/scene/clinicianSearchPatients.fxml");
+        createTab(TabName.TRANSPLANTWAITINGLIST, "/scene/clinicianWaitingList.fxml");
+        createTab(TabName.HISTORY, "/scene/clinicianHistory.fxml");
     }
 
 
@@ -275,12 +295,12 @@ public class GUIHome implements Observer {
      * @exception IOException- if fxml cannot be located
      */
     private void addTabsAdministrator() throws IOException {
-        createTab("Profile", "/scene/administratorProfile.fxml");
-        createTab("Update", "/scene/administratorProfileUpdate.fxml");
-        createTab("Register User", "/scene/userRegister.fxml");
-        createTab("Search Users", "/scene/administratorSearchUsers.fxml");
-        createTab("Transplant Waiting List", "/scene/clinicianWaitingList.fxml");
-        createTab("History", "/scene/adminHistory.fxml");
+        createTab(TabName.PROFILE, "/scene/administratorProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/administratorProfileUpdate.fxml");
+        createTab(TabName.USERREGISTER, "/scene/userRegister.fxml");
+        createTab(TabName.SEARCHPUSERS, "/scene/administratorSearchUsers.fxml");
+        createTab(TabName.TRANSPLANTWAITINGLIST, "/scene/clinicianWaitingList.fxml");
+        createTab(TabName.HISTORY, "/scene/adminHistory.fxml");
     }
 
 
@@ -290,8 +310,8 @@ public class GUIHome implements Observer {
      * @exception IOException- if fxml cannot be located
      */
     private void addTabsClinicianAdministrator() throws IOException {
-        createTab("Profile", "/scene/clinicianProfile.fxml");
-        createTab("Update", "/scene/clinicianProfileUpdate.fxml");
+        createTab(TabName.PROFILE, "/scene/clinicianProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/clinicianProfileUpdate.fxml");
     }
 
     /**

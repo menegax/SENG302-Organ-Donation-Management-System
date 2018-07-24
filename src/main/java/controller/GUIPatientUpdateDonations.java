@@ -1,15 +1,11 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
-import javafx.scene.control.Control;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.GridPane;
 import model.Patient;
 import utility.StatusObservable;
@@ -17,14 +13,11 @@ import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
 
-import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateDonations extends UndoableController {
@@ -162,7 +155,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
         if (organs.contains(GlobalEnums.Organ.BONE)) {
             boneCB.setSelected(true);
         }
-        if (organs.contains(GlobalEnums.Organ.BONE_MARROW)) {
+        if (organs.contains(GlobalEnums.Organ.BONEMARROW)) {
             bonemarrowCB.setSelected(true);
         }
         if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) {
@@ -245,10 +238,10 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
         }
         if (bonemarrowCB.isSelected()) {
-            target.addDonation(GlobalEnums.Organ.BONE_MARROW);
-            newDonations.add(GlobalEnums.Organ.BONE_MARROW.toString());
+            target.addDonation(GlobalEnums.Organ.BONEMARROW);
+            newDonations.add(GlobalEnums.Organ.BONEMARROW.toString());
         } else {
-            target.removeDonation(GlobalEnums.Organ.BONE_MARROW);
+            target.removeDonation(GlobalEnums.Organ.BONEMARROW);
 
         }
         if (connectivetissueCB.isSelected()) {
