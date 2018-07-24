@@ -749,8 +749,8 @@ public class Patient extends User {
             this.nhiNumber = nhiNumber;
         }
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
-            this.nhiNumber = nhiNumber.toUpperCase();
             Searcher.getSearcher().removeIndex(this);
+            this.nhiNumber = nhiNumber.toUpperCase();
             Searcher.getSearcher().addIndex(this);
         }
     }
