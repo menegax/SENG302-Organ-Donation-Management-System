@@ -325,8 +325,6 @@ public class Searcher {
                     return fetchClinician(thisDoc);
                 case ADMIN:
                     return fetchAdmin(thisDoc);
-                default:
-                    return null;
             }
         } catch (IOException e) {
             UserActionHistory.userActions.log(Level.SEVERE, "Unable to query search index.", "Attempted to retrieve document from index.");
@@ -458,7 +456,7 @@ public class Searcher {
 
         results = createUsers(allDocs, numResults);
 
-        List<User> filteredResults = new ArrayList<>();
+        List<User> filteredResults = new ArrayList<>(results);
         if (filter != null) {
             for (User result : results) {
                 if (matchesFilter((Patient) result, filter)) {

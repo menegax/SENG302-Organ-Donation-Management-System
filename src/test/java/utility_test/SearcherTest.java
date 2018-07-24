@@ -43,7 +43,7 @@ public class SearcherTest {
     @BeforeClass
     public static void setUp() {
         Database.resetDatabase();
-        userActions.setLevel(Level.OFF);
+        userActions.setLevel(Level.ALL);
 
         // Given patients in a db
         d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
@@ -127,6 +127,9 @@ public class SearcherTest {
     @Test
     public void testNumberOfResults(){
 
+    	Database.resetDatabase();
+    	searcher.clearIndex();
+    	
     	// Create more than 36 patients
     	String[] firstNames = {"A", "B", "C", "D", "E", "F"};
     	String[] lastNames = {"Z", "Y", "X", "W", "V", "U"};
@@ -143,13 +146,17 @@ public class SearcherTest {
     			count += 1;
     		}
     	}
-
+    	searcher.createFullIndex();
+    	
     	// For a number of patients more than 30
     	assertTrue(Database.getPatients().size() > 30);
 
         // Search to match all 36 added patients.
         List<User> results = searcher.search("A B C D E F Z Y X W V U", new UserTypes[] {UserTypes.PATIENT}, 30, null);
-
+        for (User result: results) {
+        	System.out.println(result);
+        }
+        
         // The returned result should be exactly 30
         assertEquals(30, results.size());
     }
@@ -319,6 +326,7 @@ public class SearcherTest {
     @Test
     public void testFilterRegionWithNameSearch() throws InvalidObjectException {
         Database.resetDatabase();
+        searcher.clearIndex();
         filter.clear();
 
         //filter region
@@ -332,6 +340,8 @@ public class SearcherTest {
         Database.addPatient(d1);
         Database.addPatient(d2);
         Database.addPatient(d3);
+        
+        searcher.createFullIndex();
 
         d1.setRegion(Region.CANTERBURY);
         //search with no name
@@ -347,6 +357,8 @@ public class SearcherTest {
 
         //update region
         Database.getPatientByNhi("abc1231").setRegion(Region.CANTERBURY);
+        
+        
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 
         //2 results with region CANTERBURY
@@ -558,6 +570,7 @@ public class SearcherTest {
      * Adds a set of patients to the db, also clears and resets
      */
     private void addPatientsToDB() {
+    	searcher.clearIndex();
         Database.resetDatabase();
         filter.clear();
         d1 = new Patient("abc1230", "a", null, "Bobby", LocalDate.of(LocalDate.now().getYear() - 10,
@@ -573,6 +586,7 @@ public class SearcherTest {
         Database.addPatient(d2);
         Database.addPatient(d3);
         Database.addPatient(d4);
+        searcher.createFullIndex();
     }
 
 
