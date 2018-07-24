@@ -455,14 +455,15 @@ public class Searcher {
 
         results = createUsers(allDocs, numResults);
 
+        List<User> filteredResults = new ArrayList<>();
         if (filter != null) {
             for (User result : results) {
-                if (!matchesFilter((Patient) result, filter)){
-                    results.remove(result);
+                if (matchesFilter((Patient) result, filter)) {
+                    filteredResults.add(result);
                 }
             }
         }
-        return results;
+        return filteredResults;
     }
 
     /**

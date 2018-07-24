@@ -23,7 +23,6 @@ import org.junit.Test;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
-import utility.SearchPatients;
 import utility.GlobalEnums.UserTypes;
 import utility.Searcher;
 
@@ -59,7 +58,7 @@ public class SearcherTest {
         searcher = Searcher.getSearcher();
 
         searcher.clearIndex();
-        
+
         // Given an index
         searcher.createFullIndex();
     }
@@ -108,7 +107,7 @@ public class SearcherTest {
 
     	// For a name search of George
     	List<User> results = searcher.search("George", new UserTypes[] {UserTypes.PATIENT}, 30, null);
-    	
+
     	// Get indices of the two Georges
     	int d3index = results.indexOf(d3);
     	int d4index = results.indexOf(d4);
@@ -238,7 +237,7 @@ public class SearcherTest {
 
         // Then searching by new first name returns correct results
         List<User> results = searcher.search("Ande Lafey", new UserTypes[] {UserTypes.PATIENT}, 30, null);
- 
+
         assertTrue(results.contains(Database.getPatientByNhi("abc1234")));
     }
 
@@ -335,26 +334,26 @@ public class SearcherTest {
 
         d1.setRegion(Region.CANTERBURY);
         //search with no name
-        ArrayList<Patient> results = SearchPatients.search("", filter);
+        List<User> results = Searcher.getSearcher().search("",new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 
         //only 1 should result
         Assert.assertEquals(1, results.size());
 
         //check that all have correct region
-        for (Patient patient : results) {
-            Assert.assertEquals(Region.CANTERBURY, patient.getRegion());
+        for (User patient : results) {
+            Assert.assertEquals(Region.CANTERBURY, ((Patient)patient).getRegion());
         }
 
         //update region
         Database.getPatientByNhi("abc1231").setRegion(Region.CANTERBURY);
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 
         //2 results with region CANTERBURY
         Assert.assertEquals(2, results.size());
 
         hasRegions(results);
 
-        results = SearchPatients.search("aoc", filter);
+        results = Searcher.getSearcher().search("aoc", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 
         //1 results with region CANTERBURY and search
         Assert.assertEquals(2, results.size());
@@ -363,7 +362,7 @@ public class SearcherTest {
 
         //reset filter
         filter.replace(FilterOption.REGION,  filter.get(FilterOption.REGION), GlobalEnums.NONE_ID);
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("aoc", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 
         Assert.assertEquals(3, results.size());
 
@@ -382,7 +381,7 @@ public class SearcherTest {
         filter.put(FilterOption.DONATIONS, Organ.BONEMARROW.toString());
 
         Database.getPatientByNhi("abc1230").setDonations(new ArrayList<Organ>(){{add(Organ.BONEMARROW);}});
-        ArrayList<Patient> results = SearchPatients.search("", filter);
+        List<User>  results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(1, results.size());
 
         hasOrgans(results, Organ.BONEMARROW);
@@ -390,7 +389,7 @@ public class SearcherTest {
         //d2 - bone marrow
         Database.getPatientByNhi("abc1231").setDonations(new ArrayList<Organ>(){{add(Organ.BONEMARROW);}});
 
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(2, results.size());
 
         hasOrgans(results, Organ.BONEMARROW);
@@ -398,7 +397,7 @@ public class SearcherTest {
         //d3 - kidney
         Database.getPatientByNhi("abc1232").setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
 
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(2, results.size());
 
         hasOrgans(results, Organ.BONEMARROW);
@@ -408,7 +407,7 @@ public class SearcherTest {
 
         // update filter
         filter.put(FilterOption.DONATIONS, Organ.HEART.toString());
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(1, results.size());
 
         hasOrgans(results, Organ.HEART);
@@ -428,20 +427,20 @@ public class SearcherTest {
 
         //d1 - only one female
         Database.getPatientByNhi("abc1230").setBirthGender(BirthGender.FEMALE);
-        ArrayList<Patient> results = SearchPatients.search("", filter);
+        List<User>  results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(1, results.size());
         hasBirthGender(results, BirthGender.FEMALE);
 
         //d2 - 2 females
         Database.getPatientByNhi("abc1231").setBirthGender(BirthGender.FEMALE);
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(2, results.size());
         hasBirthGender(results, BirthGender.FEMALE);
 
         //d2 - 1 male
         filter.replace(FilterOption.BIRTHGENDER, filter.get(FilterOption.BIRTHGENDER), BirthGender.MALE.toString());
         Database.getPatientByNhi("abc1232").setBirthGender(BirthGender.MALE);
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(1, results.size());
         hasBirthGender(results, BirthGender.MALE);
     }
@@ -457,32 +456,32 @@ public class SearcherTest {
         //from 10 -100
         filter.put(FilterOption.AGELOWER, "10");
         filter.put(FilterOption.AGEUPPER, "100");
-        ArrayList<Patient> results = SearchPatients.search("", filter);
+        List<User> results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(4, results.size());
         hasAge(results, 10, 100);
 
         //from 11 - 100
         filter.put(FilterOption.AGELOWER, "11");
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(3, results.size());
         hasAge(results, 11, 100);
 
         //from 11 - 99
         filter.put(FilterOption.AGEUPPER, "99");
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(2, results.size());
         hasAge(results, 11, 99);
 
 
         //from 11 - 59
         filter.put(FilterOption.AGEUPPER, "59");
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(1, results.size());
         hasAge(results, 11, 59);
 
         //from 11 - 12
         filter.put(FilterOption.AGEUPPER, "12");
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(0, results.size());
         hasAge(results, 11, 12);
     }
@@ -497,13 +496,13 @@ public class SearcherTest {
         addPatientsToDB();
         filter.put(FilterOption.DONOR, "true");
 
-        ArrayList<Patient> results = SearchPatients.search("", filter);
+        List<User>  results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(0, results.size());
         areDonors(results);
 
         //one donor
         Database.getPatientByNhi("abc1230").setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(1, results.size());
         areDonors(results);
 
@@ -511,7 +510,7 @@ public class SearcherTest {
         filter.clear();
         filter.put(FilterOption.RECIEVER, "true");
         Database.getPatientByNhi("abc1231").setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(1, results.size());
         areRecievers(results);
 
@@ -519,7 +518,7 @@ public class SearcherTest {
         //both donor and reciever
         filter.put(FilterOption.DONOR, "true");
         Database.getPatientByNhi("abc1230").setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
-        results = SearchPatients.search("", filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(1, results.size());
         areDonorsAndRecievers(results);
     }
@@ -550,7 +549,7 @@ public class SearcherTest {
         filter.put(FilterOption.BIRTHGENDER, BirthGender.FEMALE.getValue());
         filter.put(FilterOption.DONOR, "true");
 
-        ArrayList<Patient> results = SearchPatients.search("a", filter);
+        List<User>  results = Searcher.getSearcher().search("a", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         assertEquals(1, results.size());
     }
 
@@ -580,10 +579,10 @@ public class SearcherTest {
      * Checks the results have the correct status
      * @param res - results to check
      */
-    private void areDonorsAndRecievers(ArrayList<Patient> res) {
-        for (Patient patient : res) {
-            Assert.assertTrue(patient.getRequiredOrgans().size() > 0);
-            Assert.assertTrue(patient.getDonations().size() > 0);
+    private void areDonorsAndRecievers(List<User> res) {
+        for (User patient : res) {
+            Assert.assertTrue(((Patient)patient).getRequiredOrgans().size() > 0);
+            Assert.assertTrue(((Patient)patient).getDonations().size() > 0);
         }
     }
 
@@ -591,9 +590,9 @@ public class SearcherTest {
      * Checks the results have the correct status
      * @param res - results to check
      */
-    private void areRecievers(ArrayList<Patient> res) {
-        for (Patient patient : res) {
-            Assert.assertTrue(patient.getRequiredOrgans().size() > 0);
+    private void areRecievers(List<User> res) {
+        for (User patient : res) {
+            Assert.assertTrue(((Patient)patient).getRequiredOrgans().size() > 0);
         }
     }
 
@@ -601,9 +600,9 @@ public class SearcherTest {
      * Checks the results have the correct status
      * @param res - results to check
      */
-    private void areDonors(ArrayList<Patient> res) {
-        for (Patient patient : res) {
-            Assert.assertTrue(patient.getDonations().size() > 0);
+    private void areDonors(List<User> res) {
+        for (User patient : res) {
+            Assert.assertTrue(((Patient)patient).getDonations().size() > 0);
         }
     }
 
@@ -613,10 +612,10 @@ public class SearcherTest {
      * @param greaterThan - age the patient should be older than or equal
      * @param lessThan - age the patient should be younger than or equal
      */
-    private void hasAge(ArrayList<Patient> res, int greaterThan, int lessThan) {
-        for (Patient patient : res) {
-            Assert.assertTrue(patient.getAge() >= greaterThan);
-            Assert.assertTrue(patient.getAge() <= lessThan);
+    private void hasAge(List<User> res, int greaterThan, int lessThan) {
+        for (User patient : res) {
+            Assert.assertTrue(((Patient)patient).getAge() >= greaterThan);
+            Assert.assertTrue(((Patient)patient).getAge() <= lessThan);
         }
     }
     /**
@@ -624,9 +623,9 @@ public class SearcherTest {
      * @param res - results to check
      * @param gender -
      */
-    private void hasBirthGender(ArrayList<Patient> res, BirthGender gender) {
-        for (Patient patient : res) {
-            Assert.assertEquals(gender, patient.getBirthGender());
+    private void hasBirthGender(List<User> res, BirthGender gender) {
+        for (User patient : res) {
+            Assert.assertEquals(gender, ((Patient)patient).getBirthGender());
 
         }
     }
@@ -636,9 +635,9 @@ public class SearcherTest {
      * @param res - results to check
      * @param organ -
      */
-    private void hasOrgans(ArrayList<Patient> res, Organ organ) {
-        for (Patient patient : res) {
-            Assert.assertTrue(patient.getDonations().contains(organ));
+    private void hasOrgans(List<User> res, Organ organ) {
+        for (User patient : res) {
+            Assert.assertTrue(((Patient)patient).getDonations().contains(organ));
         }
     }
 
@@ -647,9 +646,9 @@ public class SearcherTest {
      * check that all have correct region
      * @param res - results of search to check
      */
-    private void hasRegions(ArrayList<Patient> res) {
-        for (Patient patient : res) {
-            Assert.assertEquals(Region.CANTERBURY, patient.getRegion());
+    private void hasRegions(List<User> res) {
+        for (User patient : res) {
+            Assert.assertEquals(Region.CANTERBURY, ((Patient) patient).getRegion());
         }
     }
 

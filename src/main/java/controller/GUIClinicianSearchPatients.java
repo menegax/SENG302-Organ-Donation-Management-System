@@ -364,52 +364,60 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         regionFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.REGION, filter.get(FilterOption.REGION), newValue);
-            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
+            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         //4.
         donationFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.DONATIONS, filter.get(FilterOption.DONATIONS), newValue);
-            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
+            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         //5.
         recievingFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.REQUESTEDDONATIONS, filter.get(FilterOption.REQUESTEDDONATIONS), newValue);
-            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
+            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         //6.
         birthGenderFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.BIRTHGENDER, filter.get(FilterOption.BIRTHGENDER), newValue);
-            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
+            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         isDonorCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.DONOR, filter.get(FilterOption.DONOR), newValue.toString());
-            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
+            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         isRecieverCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.RECIEVER, filter.get(FilterOption.RECIEVER), newValue.toString());
-            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
+            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.AGEUPPER, filter.get(FilterOption.AGEUPPER), String.valueOf(newValue.intValue()));
-            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
+            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         rangeSlider.lowValueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.AGELOWER, filter.get(FilterOption.AGELOWER), String.valueOf(newValue.intValue()));
-            masterData.addAll(SearchPatients.search(searchEntry.getText(), filter));
+            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
         }));
     }
 
