@@ -424,5 +424,9 @@ public class ScreenControl {
     public boolean getIsSaved() {
         return isSaved;
     }
+
+    public Set<Stage> getUsersStages(User user) {
+        return userStages.get(user);
+    }
 }
 
