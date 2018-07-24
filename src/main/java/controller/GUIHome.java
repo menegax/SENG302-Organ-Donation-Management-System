@@ -319,9 +319,7 @@ public class GUIHome implements Observer {
                 systemLogger.log(FINE, "User trying to log out");
                 logOut();
             });
-            alert.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, event -> {
-                System.out.println("Have a nice day"); //tod rm
-            });
+            alert.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, event -> {});
             alert.showAndWait();
         } else {
             logOut();

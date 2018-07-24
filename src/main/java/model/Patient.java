@@ -251,6 +251,7 @@ public class Patient extends User {
         setNhiNumber(newPatientAttributes.getNhiNumber());
         setCurrentDiseases(newPatientAttributes.getCurrentDiseases());
         setPastDiseases(newPatientAttributes.getPastDiseases());
+        setProcedures(newPatientAttributes.getProcedures());
         setStatus(newPatientAttributes.getStatus());
         setContactEmailAddress(newPatientAttributes.getContactEmailAddress());
         setContactHomePhone(newPatientAttributes.getContactHomePhone());
@@ -888,6 +889,10 @@ public class Patient extends User {
                 currentDiseases.remove(disease);
             }
         }
+    }
+
+    public void setProcedures(List<Procedure> procedures) {
+        this.procedures = procedures;
     }
 
     public void addProcedure(Procedure procedure) {

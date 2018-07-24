@@ -47,7 +47,6 @@ public class StatesHistoryScreen {
      * @param undoableScreen the enum of the screen this StatesHistoryScreen represents
      */
     public StatesHistoryScreen(List<Control> controls, UndoableScreen undoableScreen) {
-        System.out.println("FIRE");
         this.undoableScreen = undoableScreen;
         addToUndoableStage(controls.get(0));
         for (Object control : controls) {
@@ -284,10 +283,7 @@ public class StatesHistoryScreen {
                 return false;
             }
         }
-        System.out.println("undo action size");
-        System.out.println(actions.size());
         if (actions.get(index) != null) {
-            System.out.println("HI");
             actions.get(index).unexecute();
             userActions.log(Level.INFO, "Local change undone", "User undoed through local change");
         }
@@ -310,11 +306,7 @@ public class StatesHistoryScreen {
             }
         }
         index += 1;
-        System.out.println("redo action size");
-        System.out.println(actions.size());
-        System.out.println(actions.keySet());
         if (actions.get(index) != null) {
-            System.out.println("REDO");
             actions.get(index).execute();
             userActions.log(Level.INFO, "Local change redone", "User redoed through local change");
         }
@@ -372,8 +364,6 @@ public class StatesHistoryScreen {
      * @return the current actions map
      */
     public Map<Integer, Action> getActions() {
-        System.out.println("getActions size");
-        System.out.println(actions.size());
         return actions;
     }
 
