@@ -122,7 +122,6 @@ public class GUIClinicianWaitingList {
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");
                     new Alert(Alert.AlertType.ERROR, "Unable to open patient edit window", ButtonType.OK).show();
-                    e.printStackTrace();
                 }
             }
         });
