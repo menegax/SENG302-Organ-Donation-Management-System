@@ -107,7 +107,6 @@ public class GUILogin implements TouchscreenCapable {
             Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
             UndoableStage stage = new UndoableStage();
             screenControl.addStage(stage.getUUID(), stage);
-            screenControl.setTUIOFX(stage);
             screenControl.show(stage.getUUID(), home);
             screenControl.closeStage(Main.getUuid()); // close login scene after login
         } catch (InvalidObjectException e) {

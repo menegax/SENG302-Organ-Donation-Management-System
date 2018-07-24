@@ -198,7 +198,6 @@ public class GUIHome implements TouchscreenCapable {
         ScreenControl.closeAllUserStages(new UserControl().getLoggedInUser());
         new UserControl().rmLoggedInUserCache();
         screenControl.setUpNewLogin(); // ONLY FOR SINGLE USER SUPPORT. REMOVE WHEN MULTI USER SUPPORT
-        screenControl.removeTUIOFX();
     }
 
     /**

@@ -17,8 +17,6 @@ import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
-import org.tuiofx.Configuration;
-import org.tuiofx.TuioFX;
 import service.Database;
 import utility.GlobalEnums;
 import utility.Searcher;
@@ -56,15 +54,12 @@ public class Main extends Application {
         Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
         openKeyboard();
-//        TuioFX tuioFX = new TuioFX(primaryStage, Configuration.debug());
-//        tuioFX.start();
         primaryStage.show();
     }
 
     public static void main(String[] args) {
         UserActionHistory.setup(); // start user action logs
         SystemLogger.setup();
-        TuioFX.enableJavaFXTouchProperties();
         launch(args);
     }
 
