@@ -41,6 +41,7 @@ public class Clinician extends User {
         super(firstName, middleNames, lastName);
         this.staffID = staffID;
         this.region = region;
+        this.modified = new Timestamp(System.currentTimeMillis());
     }
 
     /**
