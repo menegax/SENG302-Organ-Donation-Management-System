@@ -39,6 +39,14 @@ public class UndoableStage extends Stage {
     private GUIHome guiHome;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+    /**
+     * Constructor for the undoable stage
+     */
+    public UndoableStage() {
+        //set min sizes
+        super.setMinWidth(800);
+        super.setMinHeight(640);
+    }
 
     /**
      * Undoes the previous action and navigates to the appropriate screen where applicable
