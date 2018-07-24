@@ -168,7 +168,7 @@ public class Database {
 		} catch (SQLException e1) {
 			System.err.println("Failed to connect to UC database server.");
 			try {
-				conn = DriverManager.getConnection("jdbc:mysql://122.62.50.128:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+				conn = DriverManager.getConnection("jdbc:mysql://222.154.74.253:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
 			} catch (SQLException e2) {
 				System.err.println("Failed to connect to database mimic from external source.");
 				try {
