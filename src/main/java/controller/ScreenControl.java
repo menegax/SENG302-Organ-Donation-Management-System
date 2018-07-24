@@ -381,8 +381,8 @@ public class ScreenControl {
      */
     private void removeUnsavedAsterisks() {
         for (Stage stage : applicationStages.values()) {
-            if (stage.getTitle() != null) {
-                stage.setTitle(stage.getTitle().replace("*", ""));
+            if (stage instanceof UndoableStage) {
+                ((UndoableStage) stage).getGuiHome().removeAsterisk();
             }
         }
     }
@@ -392,21 +392,14 @@ public class ScreenControl {
      */
     private void addUnsavedAsterisks() {
         for (Stage stage : applicationStages.values()) {
-            if (stage.getTitle() != null) {
-                if (!stage.getTitle().contains("*")) {
-                    stage.setTitle(stage.getTitle() + "*");
-                }
+            if (stage instanceof UndoableStage) {
+                ((UndoableStage) stage).getGuiHome().addAsterisk();
             }
         }
     }
 
-    /**
-     * Resets the data in ScreenControl
-     */
-    public void reset() {
-        isSaved = true;
-        userStages = new HashMap<>();
-        applicationStages = new HashMap<>();
+    public boolean getIsSaved() {
+        return isSaved;
     }
 }
 
