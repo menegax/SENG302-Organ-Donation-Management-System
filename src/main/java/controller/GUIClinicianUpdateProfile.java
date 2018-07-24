@@ -12,6 +12,7 @@ import model.User;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
+import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -85,9 +86,10 @@ public class GUIClinicianUpdateProfile extends UndoableController {
                 .addListener((observable, oldValue, newValue) -> setValid(regionDD));
         UserControl userControl = new UserControl();
         User loggedIn = userControl.getLoggedInUser();
-        if (loggedIn instanceof Clinician){
+        if (loggedIn instanceof Clinician) {
             target = (Clinician) loggedIn;
-        } else {
+        }
+        else {
             target = (Clinician) userControl.getTargetUser();
         }
         loadProfile(target.getStaffID());
@@ -185,31 +187,52 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             valid = false;
             setInvalid(firstnameUpdateTxt);
         }
+        else {
+            setValid(firstnameUpdateTxt);
+        }
         if (lastnameTxt.getText()
                 .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", lastnameTxt.getText())) {
             valid = false;
             setInvalid(lastnameTxt);
         }
+        else {
+            setValid(lastnameTxt);
+        }
         if (!Pattern.matches("[a-z|A-Z ]{0,50}", middlenameTxt.getText())) {
             valid = false;
             setInvalid(middlenameTxt);
+        }
+        else {
+            setValid(middlenameTxt);
         }
         if (!Pattern.matches("[0-9|a-z|A-Z ]{0,50}", street1Txt.getText())) {
             valid = false;
             setInvalid(street1Txt);
         }
+        else {
+            setValid(street1Txt);
+        }
         if (!Pattern.matches("[0-9|a-z|A-Z ]{0,50}", street2Txt.getText())) {
             valid = false;
             setInvalid(street2Txt);
+        }
+        else {
+            setValid(street2Txt);
         }
         if (!Pattern.matches("[a-z|A-Z ]{0,50}", suburbTxt.getText())) {
             valid = false;
             setInvalid(suburbTxt);
         }
+        else {
+            setValid(suburbTxt);
+        }
         if (regionDD.getSelectionModel()
                 .getSelectedIndex() == -1) { // If the selected item is nothing
             valid = false;
             setInvalid(regionDD);
+        }
+        else {
+            setValid(regionDD);
         }
         // If all the fields are entered correctly
         if (valid) {
@@ -227,11 +250,14 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
                     .getSelectedItem()
                     .toString()));
-            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
-            userActions.log(Level.INFO, "Successfully updated clinician profile", new String[]{"Attempted to update clinician profile", String.valueOf(target.getStaffID())});
+            userActions.log(Level.INFO,
+                    "Successfully updated clinician profile",
+                    new String[] { "Attempted to update clinician profile", String.valueOf(target.getStaffID()) });
+            target.userModified();
+            screenControl.setIsSaved(false);
         }
         else {
-            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
+            userActions.log(Level.WARNING, "Invalid fields", "Attempted to update clinician profile with invalid fields");
         }
     }
 
@@ -252,38 +278,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
      * @param target The target to remove the class from
      */
     private void setValid(Control target) {
-        if (target.getStyleClass()
-                .contains("invalid")) {
-            target.getStyleClass()
-                    .remove("invalid");
-        }
-    }
-
-
-    /**
-     * Checks if the keyevent target was a textfield. If so, if the target has the invalid class, it is removed.
-     *
-     * @param e The KeyEvent instance
-     */
-    public void onKeyReleased(KeyEvent e) {
-        if (e.getTarget()
-                .getClass() == TextField.class) {
-            TextField target = (TextField) e.getTarget();
-            setValid(target);
-        }
-    }
-
-
-    /**
-     * Navigates back to the profile window
-     */
-    public void goBackToProfile() {
-        try {
-            screenControl.show(clinicianUpdateAnchorPane, "/scene/clinicianProfile.fxml");
-        }
-        catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load clinician profile").show();
-            userActions.log(SEVERE, "Failed to load clinician profile", "Attempted to load clinician profile");
-        }
+        target.getStyleClass()
+                .remove("invalid");
     }
 }

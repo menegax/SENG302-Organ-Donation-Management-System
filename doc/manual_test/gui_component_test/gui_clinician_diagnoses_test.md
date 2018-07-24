@@ -18,20 +18,20 @@
 
 1. The clinician types a diagnosis name into the text field that is already in the current disease list
 2. The clinician selects the add button
-3. An alert is shown stating the disease is already registered and no disease is added
+3. A message is shown stating the disease is already registered and no disease is added
 
 ###Add a diagnosis already in past
 
 1. The clinician types a diagnosis name into the text field that is already in the past disease list
 2. The clinician selects the add button
-3. An alert is shown stating the disease is already registered
+3. A message is shown stating the disease is already registered
 4. The disease of the same name is moved to the current disease list
 
 ###Add an invalid disease name
 
 1. The clinician types a diagnosis name into the text field that is not valid
 2. The clinician selects the add button
-3. An alert is shown stating the disease name is invalid and no disease is added
+3. A message is shown stating the disease name is invalid and no disease is added
 
 ###Delete a diagnosis
 
