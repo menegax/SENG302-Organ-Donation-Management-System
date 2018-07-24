@@ -1,5 +1,6 @@
 package utility.undoRedo;
 
+import controller.GUIHome;
 import controller.ScreenControl;
 import controller.UndoRedoControl;
 import controller.UndoableController;
@@ -34,6 +35,8 @@ public class UndoableStage extends Stage {
     private final UUID uuid = UUID.randomUUID();
 
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
+
+    private GUIHome guiHome;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -99,7 +102,6 @@ public class UndoableStage extends Stage {
             newTab.setContent(fxmlLoader.load());
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading screen", "Attempted to navigate screens during " + method);
-            new Alert(Alert.AlertType.WARNING, "ERROR loading screen", ButtonType.OK).showAndWait();
         }
         UndoableController controller = fxmlLoader.getController();
         undoRedoControl.setStates(statesHistoryScreens.get(index), controller.getControls());
@@ -138,6 +140,14 @@ public class UndoableStage extends Stage {
      */
     public boolean isChangingStates() {
         return changingStates;
+    }
+
+    public GUIHome getGuiHome() {
+        return guiHome;
+    }
+
+    public void setGuiHome(GUIHome guiHome) {
+        this.guiHome = guiHome;
     }
 
     public void setChangingStates(Boolean changingStates) {

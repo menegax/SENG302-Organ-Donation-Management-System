@@ -2,10 +2,12 @@ package service;
 
 import com.google.gson.Gson;
 import model.Administrator;
+import controller.ScreenControl;
 import model.Clinician;
 import model.Patient;
 import model.User;
 import utility.Searcher;
+import utility.StatusObservable;
 
 import java.io.*;
 import java.util.Comparator;
@@ -29,6 +31,7 @@ public class Database {
 
     private static Set<Clinician> clinicians = new HashSet<>();
 
+    private static ScreenControl screenControl = ScreenControl.getScreenControl();
     private static Set<Administrator> administrators = new HashSet<>();
 
     private static Searcher searcher = Searcher.getSearcher();
@@ -295,6 +298,7 @@ public class Database {
             saveToDiskWaitlist();
             saveToDiskClinicians();
             saveToDiskAdministrators();
+            screenControl.setIsSaved(true);
         } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
@@ -471,6 +475,7 @@ public class Database {
         if (clinician.getStaffID() != 0) {
             searcher.removeIndex(clinician);
             clinicians.remove(clinician);
+            ScreenControl.getScreenControl().setIsSaved(false);
         }
     }
 
@@ -480,7 +485,8 @@ public class Database {
      */
     public static void deletePatient(Patient patient) {
         searcher.removeIndex(patient);
-        patients.remove( patient );
+        patients.remove(patient);
+        ScreenControl.getScreenControl().setIsSaved(false);
     }
 
     /**
@@ -491,6 +497,7 @@ public class Database {
         if (!administrator.getUsername().toLowerCase().equals("admin")) {
             searcher.removeIndex(administrator);
             administrators.remove(administrator);
+            ScreenControl.getScreenControl().setIsSaved(false);
         }
     }
 

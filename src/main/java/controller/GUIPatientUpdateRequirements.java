@@ -11,6 +11,7 @@ import javafx.scene.control.Control;
 import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.OrganWaitlist;
+import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
@@ -269,7 +270,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
         }
         deregistrationReason();
         createOrganRequests();
-        new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+        screenControl.setIsSaved(false);
     }
 
     /**

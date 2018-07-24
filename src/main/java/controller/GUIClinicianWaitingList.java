@@ -111,7 +111,7 @@ public class GUIClinicianWaitingList {
                     Parent root = fxmlLoader.load();
                     UndoableStage popUpStage = new UndoableStage();
                     screenControl.addStage(popUpStage.getUUID(), popUpStage);
-                    screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
+                    screenControl.show(popUpStage.getUUID(), root);
                     openProfiles.add(request);
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request )));
