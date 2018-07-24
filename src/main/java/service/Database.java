@@ -1085,8 +1085,11 @@ public class Database {
         try {
         	String query = "SELECT * FROM tblPatients";
             ArrayList<String[]> patientsRaw = runQuery(query, new String[0]);
+            Patient patient;
             for (String[] attr : patientsRaw) {
-                patients.add(parsePatient(attr));
+            	patient = parsePatient(attr);
+                patients.add(patient);
+                searcher.addIndex(patient);
             }
 			userActions.log(Level.INFO, "Successfully imported all patients from the database.", "Attempted to read all patients from database.");
             return true;
@@ -1104,8 +1107,11 @@ public class Database {
         try {
         	String query = "SELECT * FROM tblAdmins";
             ArrayList<String[]> adminsRaw = runQuery(query, new String[0]);
+            Administrator admin;
             for (String[] attr : adminsRaw) {
-                administrators.add(parseAdministrator(attr));
+            	admin = parseAdministrator(attr);
+                administrators.add(admin);
+                searcher.addIndex(admin);
             }
 			userActions.log(Level.INFO, "Successfully imported all administrators from the database.", "Attempted to read all administrators from database.");
             return true;
@@ -1123,8 +1129,11 @@ public class Database {
         try {
         	String query = "SELECT * FROM tblClinicians";
             ArrayList<String[]> clinicianRaw = runQuery(query, new String[0]);
+            Clinician clinician;
             for (String[] attr : clinicianRaw) {
-                clinicians.add(parseClinician(attr));
+            	clinician = parseClinician(attr);
+                clinicians.add(clinician);
+                searcher.addIndex(clinician);
             }
             return true;
         } catch (SQLException e) {
