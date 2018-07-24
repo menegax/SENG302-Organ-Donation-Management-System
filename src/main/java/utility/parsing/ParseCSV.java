@@ -4,7 +4,10 @@ import com.univocity.parsers.common.processor.BeanListProcessor;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import model.Patient;
+import service.Database;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.Reader;
 import java.util.*;
 
@@ -40,7 +43,7 @@ public class ParseCSV {
         Map<Result, List> results = new HashMap<>();
         results.put(Result.SUCCESS, pats);
         results.put(Result.FAIL, errors);
+      //  results.get(Result.SUCCESS).forEach(x -> Database.addPatient((Patient) x));
         return results;
     }
-
 }

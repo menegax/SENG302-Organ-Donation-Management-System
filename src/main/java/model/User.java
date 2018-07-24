@@ -101,7 +101,9 @@ public abstract class User {
     */
    public void userModified() {
        this.modified = new Timestamp(System.currentTimeMillis());
-       propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "User Modified", null, null));
+       if (propertyChangeSupport != null) {
+           propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "User Modified", null, null));
+       }
    }
 
     public UUID getUuid() {
