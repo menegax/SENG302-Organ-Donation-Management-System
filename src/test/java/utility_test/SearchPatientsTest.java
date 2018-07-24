@@ -304,8 +304,8 @@ public class SearchPatientsTest {
 
 
     /**
-     *
-     * @throws InvalidObjectException -
+     * Check region filter works as intended
+     * @throws InvalidObjectException - patient not in db
      */
     @Test
     public void testFilterRegionWithNameSearch() throws InvalidObjectException {
@@ -362,8 +362,8 @@ public class SearchPatientsTest {
 
 
     /**
-     *
-     * @throws InvalidObjectException -
+     * Check organ filtering
+     * @throws InvalidObjectException - patient not in db
      */
     @Test
     public void testFilterOrganWithNameSearch() throws InvalidObjectException {
@@ -376,7 +376,7 @@ public class SearchPatientsTest {
         ArrayList<Patient> results = SearchPatients.search("", filter);
         Assert.assertEquals(1, results.size());
 
-        hasOgrans(results, Organ.BONEMARROW);
+        hasOrgans(results, Organ.BONEMARROW);
 
         //d2 - bone marrow
         Database.getPatientByNhi("abc1231").setDonations(new ArrayList<Organ>(){{add(Organ.BONEMARROW);}});
@@ -384,7 +384,7 @@ public class SearchPatientsTest {
         results = SearchPatients.search("", filter);
         Assert.assertEquals(2, results.size());
 
-        hasOgrans(results, Organ.BONEMARROW);
+        hasOrgans(results, Organ.BONEMARROW);
 
         //d3 - kidney
         Database.getPatientByNhi("abc1232").setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
@@ -392,7 +392,7 @@ public class SearchPatientsTest {
         results = SearchPatients.search("", filter);
         Assert.assertEquals(2, results.size());
 
-        hasOgrans(results, Organ.BONEMARROW);
+        hasOrgans(results, Organ.BONEMARROW);
 
         //d3 - heart
         Database.getPatientByNhi("abc1232").setDonations(new ArrayList<Organ>(){{add(Organ.HEART);}});
@@ -402,13 +402,13 @@ public class SearchPatientsTest {
         results = SearchPatients.search("", filter);
         Assert.assertEquals(1, results.size());
 
-        hasOgrans(results, Organ.HEART);
+        hasOrgans(results, Organ.HEART);
     }
 
 
     /**
-     *
-     * @throws InvalidObjectException -
+     * Check birth gender filtering
+     @throws InvalidObjectException - patient not in db
      */
     @Test
     public void testFilterBirthGender() throws InvalidObjectException {
@@ -439,8 +439,7 @@ public class SearchPatientsTest {
 
 
     /**
-     *
-     *
+     * Check age filtering on bounds
      */
     @Test
     public void testFilterAge(){
@@ -481,7 +480,46 @@ public class SearchPatientsTest {
 
 
     /**
-     *
+     * Check the status filtering
+     * @throws InvalidObjectException -
+     */
+    @Test
+    public void testIsDonorReceiver() throws InvalidObjectException {
+        addPatientsToDB();
+        filter.put(FilterOption.DONOR, "true");
+
+        ArrayList<Patient> results = SearchPatients.search("", filter);
+        Assert.assertEquals(0, results.size());
+        areDonors(results);
+
+        //one donor
+        Database.getPatientByNhi("abc1230").setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        results = SearchPatients.search("", filter);
+        Assert.assertEquals(1, results.size());
+        areDonors(results);
+
+        //one reciever
+        filter.clear();
+        filter.put(FilterOption.RECIEVER, "true");
+        Database.getPatientByNhi("abc1231").setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        results = SearchPatients.search("", filter);
+        Assert.assertEquals(1, results.size());
+        areRecievers(results);
+
+
+        //both donor and reciever
+        filter.put(FilterOption.DONOR, "true");
+        Database.getPatientByNhi("abc1230").setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        results = SearchPatients.search("", filter);
+        Assert.assertEquals(1, results.size());
+        areDonorsAndRecievers(results);
+    }
+
+
+    @Test
+
+    /**
+     * Adds a set of patients to the db, also clears and resets
      */
     private void addPatientsToDB() {
         Database.resetDatabase();
@@ -502,6 +540,43 @@ public class SearchPatientsTest {
     }
 
 
+    /**
+     * Checks the results have the correct status
+     * @param res - results to check
+     */
+    private void areDonorsAndRecievers(ArrayList<Patient> res) {
+        for (Patient patient : res) {
+            Assert.assertTrue(patient.getRequiredOrgans().size() > 0);
+            Assert.assertTrue(patient.getDonations().size() > 0);
+        }
+    }
+
+    /**
+     * Checks the results have the correct status
+     * @param res - results to check
+     */
+    private void areRecievers(ArrayList<Patient> res) {
+        for (Patient patient : res) {
+            Assert.assertTrue(patient.getRequiredOrgans().size() > 0);
+        }
+    }
+
+    /**
+     * Checks the results have the correct status
+     * @param res - results to check
+     */
+    private void areDonors(ArrayList<Patient> res) {
+        for (Patient patient : res) {
+            Assert.assertTrue(patient.getDonations().size() > 0);
+        }
+    }
+
+    /**
+     * Check results have the correct age
+     * @param res - results to check
+     * @param greaterThan - age the patient should be older than or equal
+     * @param lessThan - age the patient should be younger than or equal
+     */
     private void hasAge(ArrayList<Patient> res, int greaterThan, int lessThan) {
         for (Patient patient : res) {
             Assert.assertTrue(patient.getAge() >= greaterThan);
@@ -525,7 +600,7 @@ public class SearchPatientsTest {
      * @param res - results to check
      * @param organ -
      */
-    private void hasOgrans(ArrayList<Patient> res, Organ organ) {
+    private void hasOrgans(ArrayList<Patient> res, Organ organ) {
         for (Patient patient : res) {
             Assert.assertTrue(patient.getDonations().contains(organ));
         }
