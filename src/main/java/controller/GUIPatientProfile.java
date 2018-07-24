@@ -6,12 +6,9 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import model.Clinician;
 import model.Medication;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Clinician;
 import model.Medication;
@@ -115,7 +112,25 @@ public class GUIPatientProfile {
     private Label receivingTitle;
 
     @FXML
+    private Label prefGenderLbl;
+
+    @FXML
     private Label donatingTitle;
+
+    @FXML
+    private Label firstNameLbl;
+
+    @FXML
+    private Label firstNameValue;
+
+    @FXML
+    private GridPane details;
+
+    @FXML
+    private RowConstraints genderRow;
+
+    @FXML
+    private RowConstraints firstNameRow;
 
     private ListProperty<String> donatingListProperty = new SimpleListProperty<>();
 
@@ -161,6 +176,14 @@ public class GUIPatientProfile {
                             .setMaxWidth(0);
                 }
             }
+
+            genderDeclaration.setVisible(false);
+            genderStatus.setVisible(false);
+            genderRow.setMaxHeight(0);
+            firstNameLbl.setVisible(false);
+            firstNameValue.setVisible(false);
+            firstNameRow.setMaxHeight(0);
+
             user = userControl.getLoggedInUser();
             deleteButton.setVisible( false );
             deleteButton.setDisable( true );
@@ -191,16 +214,10 @@ public class GUIPatientProfile {
         Patient patient = database.getPatientByNhi(nhi);
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
-        if (userControl.getLoggedInUser() instanceof Clinician) {
-            genderDeclaration.setText("Birth Gender: ");
-            genderStatus.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender()
-                    .getValue());
-        }
-        else {
-            genderDeclaration.setText("Gender identity: ");
-            genderStatus.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender()
-                    .getValue());
-        }
+        firstNameValue.setText(patient.getFirstName());
+        genderDeclaration.setText("Birth Gender: ");
+        genderStatus.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue());
+        prefGenderLbl.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender().getValue());
         vitalLbl1.setText(patient.getDeath() == null ? "Alive" : "Deceased");
         dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
