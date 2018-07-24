@@ -426,6 +426,7 @@ public class Database {
         if (clinician.getStaffID() != 0) {
             searcher.removeIndex(clinician);
             clinicians.remove(clinician);
+            ScreenControl.getScreenControl().setIsSaved(false);
         }
     }
 
@@ -435,7 +436,8 @@ public class Database {
      */
     public static void deletePatient(Patient patient) {
         searcher.removeIndex(patient);
-        patients.remove( patient );
+        patients.remove(patient);
+        ScreenControl.getScreenControl().setIsSaved(false);
     }
 
     /**
@@ -446,6 +448,7 @@ public class Database {
         if (!administrator.getUsername().toLowerCase().equals("admin")) {
             searcher.removeIndex(administrator);
             administrators.remove(administrator);
+            ScreenControl.getScreenControl().setIsSaved(false);
         }
     }
 
