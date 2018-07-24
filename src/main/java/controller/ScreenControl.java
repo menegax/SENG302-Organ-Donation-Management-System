@@ -393,7 +393,9 @@ public class ScreenControl {
     private void addUnsavedAsterisks() {
         for (Stage stage : applicationStages.values()) {
             if (stage instanceof UndoableStage) {
-                ((UndoableStage) stage).getGuiHome().addAsterisk();
+                if (((UndoableStage) stage).getGuiHome() != null) {
+                    ((UndoableStage) stage).getGuiHome().addAsterisk();
+                }
             }
         }
     }
