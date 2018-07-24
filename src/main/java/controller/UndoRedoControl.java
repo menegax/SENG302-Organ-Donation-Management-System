@@ -94,7 +94,7 @@ public class UndoRedoControl {
      * @param actions the actions to set to
      * @param statesHistoryScreen the statesHistoryScreen whose actions need to be set
      */
-    public void setActions(Map<Integer, Action> actions, StatesHistoryScreen statesHistoryScreen) {
+    public void setActions(Map<Integer, List<Action>> actions, StatesHistoryScreen statesHistoryScreen) {
         statesHistoryScreen.setActions(actions);
     }
 

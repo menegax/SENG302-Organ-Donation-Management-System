@@ -46,7 +46,7 @@ public abstract class UndoableController {
      * Gets the actions map for this undoableController
      * @return the actions map of this controller
      */
-    public Map<Integer, Action> getActions() {
+    public Map<Integer, List<Action>> getActions() {
         return statesHistoryScreen.getActions();
     }
 

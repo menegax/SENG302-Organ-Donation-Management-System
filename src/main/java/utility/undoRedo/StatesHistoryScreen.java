@@ -36,7 +36,7 @@ public class StatesHistoryScreen {
 
     private UndoableStage undoableStage;
 
-    private Map<Integer, Action> actions = new HashMap<>();
+    private Map<Integer, List<Action>> actions = new HashMap<>();
 
     private int index = 0;
 
@@ -277,9 +277,16 @@ public class StatesHistoryScreen {
      */
     public boolean undo() {
         undone = true; // change to true as to not trigger listeners to store
-        if (actions.get(index) != null && actions.get(index).isExecuted()) {
-            actions.get(index).unexecute();
-            userActions.log(Level.INFO, "Local change undone", "User undoed through local change");
+        if (actions.get(index) != null) {
+            for (int i = actions.get(index).size() - 1; i >= 0; i--) {
+                if (actions.get(index).get(i).isExecuted()) {
+                    actions.get(index).get(i).unexecute();
+                    userActions.log(Level.INFO, "Local change undone", "User undoed through local change");
+                    undone = false;
+                    return true;
+                }
+            }
+            return false;
         } else {
             for (StateHistoryControl stateHistory : stateHistories) {
                 boolean success = stateHistory.undo();
@@ -300,9 +307,16 @@ public class StatesHistoryScreen {
      */
     public boolean redo() {
         redone = true; // change to true as to not trigger listeners to store
-        if (actions.get(index) != null && !actions.get(index).isExecuted()) {
-            actions.get(index).execute();
-            userActions.log(Level.INFO, "Local change redone", "User redoed through local change");
+        if (actions.get(index) != null) {
+            for (Action action : actions.get(index)) {
+                if (!action.isExecuted()) {
+                    action.execute();
+                    userActions.log(Level.INFO, "Local change redone", "User redoed through local change");
+                    undone = false;
+                    return true;
+                }
+            }
+            return false;
         } else {
             for (StateHistoryControl stateHistory : stateHistories) {
                 boolean success = stateHistory.redo();
@@ -358,18 +372,22 @@ public class StatesHistoryScreen {
      * @param action the new action to add
      */
     public void addAction(Action action) {
-        actions.put(index, action);
+        if (actions.get(index) == null) {
+            actions.put(index, new ArrayList<Action>(){{add(action);}});
+        } else {
+            actions.get(index).add(action);
+        }
     }
 
     /**
      * Returns the current actions map, used for passing the existing action map to a new instance of StatesHistoryScreen
      * @return the current actions map
      */
-    public Map<Integer, Action> getActions() {
+    public Map<Integer, List<Action>> getActions() {
         return actions;
     }
 
-    public void setActions(Map<Integer, Action> actions) {
+    public void setActions(Map<Integer, List<Action>> actions) {
         this.actions = actions;
     }
 

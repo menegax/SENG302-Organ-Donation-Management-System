@@ -50,6 +50,8 @@ public class GUIPatientMedications extends UndoableController {
 
     private Patient target;
 
+    private Patient after;
+
     @FXML
     public GridPane medicationPane;
 
@@ -199,14 +201,14 @@ public class GUIPatientMedications extends UndoableController {
     private void loadProfile(String nhi) {
         try {
             target = Database.getPatientByNhi(nhi);
-
-            if (target.getCurrentMedications() == null) {
-                target.setCurrentMedications(new ArrayList<>());
+            after = (Patient) target.deepClone();
+            if (after.getCurrentMedications() == null) {
+                after.setCurrentMedications(new ArrayList<>());
             }
             viewCurrentMedications();
 
-            if (target.getMedicationHistory() == null) {
-                target.setMedicationHistory(new ArrayList<>());
+            if (after.getMedicationHistory() == null) {
+                after.setMedicationHistory(new ArrayList<>());
             }
             viewPastMedications();
             refreshReview();
@@ -216,7 +218,7 @@ public class GUIPatientMedications extends UndoableController {
         catch (InvalidObjectException e) {
             userActions.log(SEVERE,
                     "Error loading logged in user",
-                    new String[] { "Attempted to load patient profile", target.getNhiNumber() });
+                    new String[] { "Attempted to load patient profile", after.getNhiNumber() });
         }
     }
 
@@ -337,7 +339,7 @@ public class GUIPatientMedications extends UndoableController {
     private void viewCurrentMedications() {
         clearSelections();
         current = new ArrayList<>();
-        target.getCurrentMedications()
+        after.getCurrentMedications()
                 .forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set(FXCollections.observableArrayList(current));
         currentMedications.itemsProperty()
@@ -352,7 +354,7 @@ public class GUIPatientMedications extends UndoableController {
     private void viewPastMedications() {
         clearSelections();
         history = new ArrayList<>();
-        target.getMedicationHistory()
+        after.getMedicationHistory()
                 .forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set(FXCollections.observableArrayList(history));
         pastMedications.itemsProperty()
@@ -374,7 +376,6 @@ public class GUIPatientMedications extends UndoableController {
                     .toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
-                Patient after = (Patient) target.deepClone();
                 after.getCurrentMedications()
                         .add(new Medication(medication));
                 statesHistoryScreen.addAction(new Action(target, after));
@@ -421,7 +422,7 @@ public class GUIPatientMedications extends UndoableController {
      */
     private void performDelete(String medication) {
         if (history.contains(medication)) {
-            target.getMedicationHistory()
+            after.getMedicationHistory()
                     .remove(history.indexOf(medication));
             userActions.log(Level.INFO,
                     "Deleted medication: " + medication,
@@ -429,7 +430,7 @@ public class GUIPatientMedications extends UndoableController {
             viewPastMedications();
         }
         else if (current.contains(medication)) {
-            target.getCurrentMedications()
+            after.getCurrentMedications()
                     .remove(current.indexOf(medication));
             userActions.log(Level.INFO,
                     "Deleted medication: " + medication,
@@ -437,7 +438,7 @@ public class GUIPatientMedications extends UndoableController {
 
             viewCurrentMedications();
         }
-        screenControl.setIsSaved(false);
+        statesHistoryScreen.addAction(new Action(target, after));
     }
 
 
@@ -450,18 +451,18 @@ public class GUIPatientMedications extends UndoableController {
     private void moveToCurrent(ArrayList<String> medications) {
         for (String medication : medications) {
             if (history.contains(medication)) {
-                target.getMedicationHistory()
+                after.getMedicationHistory()
                         .remove(history.indexOf(medication));
 
                 if (!current.contains(medication)) {
-                    target.getCurrentMedications()
+                    after.getCurrentMedications()
                             .add(new Medication(medication));
                     viewCurrentMedications();
                 }
                 userActions.log(Level.INFO,
                         "Moved medication to current: " + medication,
-                        new String[] { "Attempted to move medication " + medication + " to current medications", target.getNhiNumber() });
-                screenControl.setIsSaved(false);
+                        new String[] { "Attempted to move medication " + medication + " to current medications", after.getNhiNumber() });
+                statesHistoryScreen.addAction(new Action(target, after));
                 viewPastMedications();
             }
         }
@@ -477,18 +478,18 @@ public class GUIPatientMedications extends UndoableController {
     private void moveToHistory(ArrayList<String> medications) {
         for (String medication : medications) {
             if (current.contains(medication)) {
-                target.getCurrentMedications()
+                after.getCurrentMedications()
                         .remove(current.indexOf(medication));
 
                 if (!history.contains(medication)) {
-                    target.getMedicationHistory()
+                    after.getMedicationHistory()
                             .add(new Medication(medication));
                     viewPastMedications();
                 }
                 userActions.log(Level.INFO,
                         "Moved medication to past: " + medication,
-                        new String[] { "Attempted to move medication " + medication + " to past medications", target.getNhiNumber() });
-                screenControl.setIsSaved(false);
+                        new String[] { "Attempted to move medication " + medication + " to past medications", after.getNhiNumber() });
+                statesHistoryScreen.addAction(new Action(target, after));
                 viewCurrentMedications();
             }
         }

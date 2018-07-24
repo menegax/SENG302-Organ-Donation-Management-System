@@ -241,7 +241,6 @@ public class GUIHome implements Observer {
     private void createTab(TabName title, String fxmlPath) throws IOException {
         Tab newTab = new Tab();
         newTab.setText(title.toString());
-        if (!title.equals(TabName.SEARCHPATIENTS)) {
             newTab.setOnSelectionChanged(event -> {
                 try {
                     newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
@@ -249,7 +248,6 @@ public class GUIHome implements Observer {
                     systemLogger.log(SEVERE, "Failed to create tab", e);
                 }
             });
-        }
         horizontalTabPane.getTabs().add(newTab);
     }
 
