@@ -42,6 +42,9 @@ public class UndoableStage extends Stage {
      */
     public UndoableStage() {
         super();
+        //set min sizes
+        super.setMinWidth(800);
+        super.setMinHeight(640);
 //        this.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
 //            if (KeyCodeCombination.keyCombination(undoRedoControl.undoShortcut).match(event)) {
 //                undo();
