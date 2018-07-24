@@ -283,11 +283,11 @@ public class StatesHistoryScreen {
                 return false;
             }
         }
-        index -= 1;
         if (actions.get(index) != null) {
             actions.get(index).unexecute();
             userActions.log(Level.INFO, "Local change undone", "User undoed through local change");
         }
+        index -= 1;
         undone = false;
         return true;
     }
