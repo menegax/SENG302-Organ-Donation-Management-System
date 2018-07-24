@@ -22,7 +22,6 @@ import org.controlsfx.control.RangeSlider;
 import model.User;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
-import utility.SearchPatients;
 import utility.GlobalEnums.UserTypes;
 import utility.Searcher;
 import utility.undoRedo.StatesHistoryScreen;

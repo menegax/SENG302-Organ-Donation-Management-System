@@ -3,6 +3,7 @@ package utility;
 import static utility.GlobalEnums.NONE_ID;
 import static utility.SystemLogger.systemLogger;
 
+import com.sun.istack.internal.Nullable;
 import utility.GlobalEnums.*;
 import model.Administrator;
 import model.Clinician;
@@ -390,6 +391,8 @@ public class Searcher {
             @Override
             public int compare(ScoreDoc o1, ScoreDoc o2) {
                 int comparison = Float.compare(o2.score, o1.score);
+                User u = fetchUser(o1);
+                User i = fetchUser(o2);
                 if (comparison == 0) {
                     comparison = fetchUser(o1).getNameConcatenated().compareTo(fetchUser(o2).getNameConcatenated());
                 }
@@ -430,7 +433,7 @@ public class Searcher {
      * @param numResults The maximum number of search results to find.
      * @return The search results as a List of User objects.
      */
-    public List<User> search(String input, UserTypes[] types, int numResults, Map<FilterOption, String> filter) {
+    public List<User> search(String input, UserTypes[] types, int numResults, @Nullable Map<FilterOption, String> filter) {
         List<User> results = new ArrayList<>();
         if (input.isEmpty()) {
             if (filter != null) {

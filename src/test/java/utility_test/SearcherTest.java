@@ -97,6 +97,7 @@ public class SearcherTest {
 
     	// Ensure George Addington comes before George Bobington
     	assertTrue(d4index > d3index);
+
 	}
 
     /**
