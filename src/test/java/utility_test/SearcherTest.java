@@ -14,6 +14,7 @@ import model.Patient;
 import model.User;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,10 +24,6 @@ import utility.Searcher;
 
 public class SearcherTest {
 
-	private static Patient d1;
-	private static Patient d2;
-	private static Patient d3;
-	private static Patient d4;
 	private static Searcher searcher;
 	private static Database database;
 	
@@ -36,27 +33,26 @@ public class SearcherTest {
     @BeforeClass
     public static void setUp() {
     	database = Database.getDatabase();
-        database.resetLocalDatabase();
         userActions.setLevel(Level.OFF);
         
-        // Given patients in a db
-        d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
-        d2 = new Patient("def1234", "Patik", new ArrayList<String>(), "Laffey", LocalDate.now());
-        d3 = new Patient("ghi1234", "George", new ArrayList<String>(), "Romera", LocalDate.now());
-        d4 = new Patient("jkl1234", "George", new ArrayList<String>(), "Bobington", LocalDate.now());
-        database.add(d4);
-        database.add(d3);
-        database.add(d2);
-        database.add(d1);
-        
         searcher = Searcher.getSearcher();
-        
-        searcher.clearIndex();
-        
-        // Given an index
-        searcher.createFullIndex();
     }
 
+    @Before
+    public void beforeTest() {
+        // Given patients in a db
+        Patient d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
+        Patient d2 = new Patient("def1234", "Patik", new ArrayList<String>(), "Laffey", LocalDate.now());
+        Patient d3 = new Patient("ghi1234", "George", new ArrayList<String>(), "Romera", LocalDate.now());
+        Patient d4 = new Patient("jkl1234", "George", new ArrayList<String>(), "Bobington", LocalDate.now());
+        database.update(d4);
+        database.update(d3);
+        database.update(d2);
+        database.update(d1);
+        refreshDatabase();
+        refreshIndex();
+    }
+    
 	/**
 	 * Tests alphabetical ordering on equally close names from search after a patients name has been chnaged.
 	 */
@@ -64,20 +60,23 @@ public class SearcherTest {
 	public void testEqualSearchOrderingAfterNameUpdate() throws IOException {
 		
 		// Change last name of George Romero to come before George Bobington
-		d3.setLastName("Addington");
+		database.getPatientByNhi("GHI1234").setLastName("Addington");
+		
+		refreshIndex();
 		
 		// For a name search of George
     	List<User> results = searcher.search("George", new UserTypes[] {UserTypes.PATIENT}, 30);
 
     	// Get indices of the two Georges
-    	int d3index = results.indexOf(d3); 
-    	int d4index = results.indexOf(d4);
+    	int d3index = results.indexOf(database.getPatientByNhi("GHI1234")); 
+    	int d4index = results.indexOf(database.getPatientByNhi("JKL1234"));
 
     	// Ensure both Georges are in the results
     	assertTrue(d3index != -1);
     	assertTrue(d4index != -1);
 
     	// Ensure George Addington comes before George Bobington
+
     	assertTrue(d4index > d3index);
 	}
 	
@@ -86,18 +85,21 @@ public class SearcherTest {
      */
     @Test
     public void testEqualSearchOrdering(){
+    	beforeTest();
+    	
+    	refreshIndex();
     	
     	// For a name search of George
     	List<User> results = searcher.search("George", new UserTypes[] {UserTypes.PATIENT}, 30);
     	
     	// Get indices of the two Georges
-    	int d3index = results.indexOf(d3); 
-    	int d4index = results.indexOf(d4);
+    	int d3index = results.indexOf(database.getPatientByNhi("GHI1234")); 
+    	int d4index = results.indexOf(database.getPatientByNhi("JKL1234"));
     	
     	// Ensure both Georges are in the results
     	assertTrue(d3index != -1);
     	assertTrue(d4index != -1);
-    	
+
     	// Ensure George Bobington comes before George Romero
     	assertTrue(d4index < d3index);
     }
@@ -120,7 +122,7 @@ public class SearcherTest {
     	int count = 0;
     	for (String lName : lastNames) {
     		for (String fName : firstNames) {
-    			database.add(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
+    			database.update((new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3))));
     			count += 1;
     		}
     	}
@@ -153,7 +155,7 @@ public class SearcherTest {
     	int count = 0;
     	for (String lName : lastNames) {
     		for (String fName : firstNames) {
-    			database.add(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
+    			database.update(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
     			count += 1;
     		}
     	}
@@ -174,29 +176,15 @@ public class SearcherTest {
      */
     @Test
     public void testSearchByName() throws IOException {
-    	//Bug with setup() means it has to be copied here or wont work
-        database.resetLocalDatabase();
-
-        // Given patients in a db
-        d1 = new Patient("abc1234", "Pat", null, "Laff", LocalDate.now());
-        d2 = new Patient("def1234", "Patik", null, "Laffey", LocalDate.now());
-        d3 = new Patient("ghi1234", "George", null, "Romera", LocalDate.now());
-        d4 = new Patient("jkl1234", "George", null, "Bobington", LocalDate.now());
-        database.add(d4);
-        database.add(d3);
-        database.add(d2);
-        database.add(d1);
-
-        searcher.clearIndex();
-
-        // Given an index
-        searcher.createFullIndex();
+    	beforeTest();
+    	
+    	refreshIndex();
 
         // When index searched for a single specific patient
         List<User> results = searcher.search("Pat Bobinton", new UserTypes[] {UserTypes.PATIENT}, 30);
 
         // Should contain Pat Laff
-        assertTrue(results.contains(database.getPatientByNhi("abc1234")));
+        assertTrue(results.contains(database.getPatientByNhi("ABC1234")));
         // Should contain Patik Laffey
         assertTrue(results.contains(database.getPatientByNhi("def1234")));
         // Shouldn't contain George Romera
@@ -228,17 +216,13 @@ public class SearcherTest {
     @Test
     public void testSearchAfterNhiUpdate() throws IOException {
     	//Bug with setup() means it has to be copied here or wont work
-        database.resetLocalDatabase();
-
-        database.loadAll();
-
         searcher.clearIndex();
 
         // Given an index
-        searcher.createFullIndex();
+        
     	String name = database.getPatientByNhi("def1234").getFirstName();
     	database.getPatientByNhi("def1234").setNhiNumber("def5678");
-
+    	searcher.createFullIndex();
     	List<User> results = searcher.search(name, new UserTypes[] {UserTypes.PATIENT}, 30);
 
     	assertTrue(results.contains(database.getPatientByNhi("def5678")));
@@ -249,22 +233,18 @@ public class SearcherTest {
      */
     @Test
     public void testSearchUnusualNameResults() {
-        database.resetLocalDatabase();
 
         // Given patients in a db
-        d1 = new Patient("abc9876", "Joe", null, "Plaffer", LocalDate.now());
-        d2 = new Patient("def9876", "Johnothan", null, "zzne", LocalDate.now());
-        d3 = new Patient("ghi9876", "John", null, "Romera", LocalDate.now());
-        d4 = new Patient("jkl9876", "Samantha", null, "Fon", LocalDate.now());
-        database.add(d4);
-        database.add(d3);
-        database.add(d2);
-        database.add(d1);
+    	Patient d1 = new Patient("abc9876", "Joe", new ArrayList<String>(), "Plaffer", LocalDate.now());
+    	Patient d2 = new Patient("def9876", "Johnothan", new ArrayList<String>(), "zzne", LocalDate.now());
+    	Patient d3 = new Patient("ghi9876", "John", new ArrayList<String>(), "Romera", LocalDate.now());
+    	Patient d4 = new Patient("jkl9876", "Samantha", new ArrayList<String>(), "Fon", LocalDate.now());
+        database.update(d4);
+        database.update(d3);
+        database.update(d2);
+        database.update(d1);
 
-        searcher.clearIndex();
-
-        // Given an index
-        searcher.createFullIndex();
+        refreshIndex();
 
         // When searching patients
     	List<User> results = searcher.search("Jone", new UserTypes[] {UserTypes.PATIENT}, 30);
@@ -282,6 +262,16 @@ public class SearcherTest {
     	assertTrue(results.contains(d4));
     }
 
+    private void refreshIndex() {
+        searcher.clearIndex();
+        searcher.createFullIndex();
+    }
+    
+    private void refreshDatabase() {
+    	database.resetLocalDatabase();
+    	database.loadAll();
+    }
+    
     /**
      * Reset the logging level
      */
