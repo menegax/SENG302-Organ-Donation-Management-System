@@ -3,9 +3,10 @@ package model;
 import utility.GlobalEnums.DiseaseState;
 
 import java.io.InvalidObjectException;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Disease {
+public class Disease implements Serializable {
 
     private String diseaseName;
 
