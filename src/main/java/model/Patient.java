@@ -472,7 +472,7 @@ public class Patient extends User {
     public void setBirthGender(BirthGender gender) {
             this.birthGender = gender;
 
-            if (getPreferredGender() == null) {
+            if (getPreferredGender() == null && gender != null) {
                 if (gender.getValue().equals("Male")) {
                     setPreferredGender( PreferredGender.MAN );
                 } else {

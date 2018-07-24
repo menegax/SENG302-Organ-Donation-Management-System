@@ -1,5 +1,6 @@
 package utility_test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static utility.UserActionHistory.userActions;
@@ -130,7 +131,7 @@ public class SearcherTest {
         List<User> results = searcher.search("A B C D E F Z Y X W V U", new UserTypes[] {UserTypes.PATIENT}, 30);
 
         // The returned result should be exactly 30
-        assertTrue(results.size() == 30);
+        assertEquals(30, results.size());
     }
     
     /**
