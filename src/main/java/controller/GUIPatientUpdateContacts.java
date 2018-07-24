@@ -13,6 +13,7 @@ import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 import utility.StatusObservable;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -82,7 +83,6 @@ public class GUIPatientUpdateContacts extends UndoableController {
     public void saveContactDetails() {
         boolean valid = setPatientContactDetails();
         if (valid) {
-            screenControl.setIsSaved(false);
             userActions.log(INFO, "Successfully saved contact details", "Attempted to set invalid contact details");
         } else {
             userActions.log(Level.WARNING,"Failed to save contact details due to invalid fields", "Attempted to set invalid contact details");
@@ -208,95 +208,100 @@ public class GUIPatientUpdateContacts extends UndoableController {
      */
     private boolean setPatientContactDetails() {
         boolean valid = true;
+        Patient after = (Patient) target.deepClone();
         if (!(homePhoneField.getText().equals("")) && homePhoneField.getText().matches("[0-9]+")) {
-            target.setHomePhone(homePhoneField.getText());
+            after.setHomePhone(homePhoneField.getText());
             setValid(homePhoneField);
         } else if (homePhoneField.getText().equals("")) {
-            target.setHomePhone(null);
+            after.setHomePhone(null);
             setValid(homePhoneField);
         } else {
             valid = setInvalid(homePhoneField);
         }
         if (!(mobilePhoneField.getText().equals("")) && mobilePhoneField.getText().matches("[0-9]+")) {
-            target.setMobilePhone(mobilePhoneField.getText());
+            after.setMobilePhone(mobilePhoneField.getText());
             setValid(mobilePhoneField);
         } else if (mobilePhoneField.getText().equals("")) {
-            target.setMobilePhone(null);
+            after.setMobilePhone(null);
             setValid(mobilePhoneField);
         } else {
             valid = setInvalid(mobilePhoneField);
         }
         if (!(workPhoneField.getText().equals("")) && workPhoneField.getText().matches("[0-9]+")) {
-            target.setWorkPhone(workPhoneField.getText());
+            after.setWorkPhone(workPhoneField.getText());
             setValid(workPhoneField);
         } else if (workPhoneField.getText().equals("")) {
-            target.setWorkPhone(null);
+            after.setWorkPhone(null);
             setValid(workPhoneField);
         } else {
             valid = setInvalid(workPhoneField);
         }
         if (emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
-            target.setEmailAddress(emailAddressField.getText());
+            after.setEmailAddress(emailAddressField.getText());
             setValid(emailAddressField);
         } else if (emailAddressField.getText().equals("")) {
-            target.setEmailAddress(null);
+            after.setEmailAddress(null);
             setValid(emailAddressField);
         } else {
             valid = setInvalid(emailAddressField);
         }
         if (contactRelationshipField.getText().matches("([A-Za-z]+[\\s]*)*")) {
-            target.setContactRelationship(contactRelationshipField.getText());
+            after.setContactRelationship(contactRelationshipField.getText());
             setValid(contactRelationshipField);
         } else if (contactRelationshipField.getText().equals("")) {
-            target.setContactRelationship(null);
+            after.setContactRelationship(null);
             setValid(contactRelationshipField);
         } else {
             valid = setInvalid(contactRelationshipField);
         }
         if (contactNameField.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
-            target.setContactName(contactNameField.getText());
+            after.setContactName(contactNameField.getText());
             setValid(contactNameField);
         } else if (contactNameField.getText().equals("")) {
-            target.setContactName(null);
+            after.setContactName(null);
             setValid(contactNameField);
         } else {
             valid = setInvalid(contactNameField);
         }
         if (!(contactHomePhoneField.getText().equals("")) && contactHomePhoneField.getText().matches("[0-9]+")) {
-            target.setContactHomePhone(contactHomePhoneField.getText());
+            after.setContactHomePhone(contactHomePhoneField.getText());
             setValid(contactHomePhoneField);
         } else if (contactHomePhoneField.getText().equals("")) {
-            target.setContactHomePhone(null);
+            after.setContactHomePhone(null);
             setValid(contactHomePhoneField);
         } else {
             valid = setInvalid(contactHomePhoneField);
         }
         if (!(contactMobilePhoneField.getText().equals("")) && contactMobilePhoneField.getText().matches("[0-9]+")) {
-            target.setContactMobilePhone(contactMobilePhoneField.getText());
+            after.setContactMobilePhone(contactMobilePhoneField.getText());
             setValid(contactMobilePhoneField);
         } else if (contactMobilePhoneField.getText().equals("")) {
-            target.setContactMobilePhone(null);
+            after.setContactMobilePhone(null);
             setValid(contactMobilePhoneField);
         } else {
             valid = setInvalid(contactMobilePhoneField);
         }
         if (!(contactWorkPhoneField.getText().equals("")) && contactWorkPhoneField.getText().matches("[0-9]+")) {
-            target.setContactWorkPhone(contactWorkPhoneField.getText());
+            after.setContactWorkPhone(contactWorkPhoneField.getText());
             setValid(contactWorkPhoneField);
         } else if (contactWorkPhoneField.getText().equals("")) {
-            target.setContactWorkPhone(null);
+            after.setContactWorkPhone(null);
             setValid(contactWorkPhoneField);
         } else {
             valid = setInvalid(contactWorkPhoneField);
         }
         if (contactEmailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
-            target.setContactEmailAddress(contactEmailAddressField.getText());
+            after.setContactEmailAddress(contactEmailAddressField.getText());
             setValid(contactEmailAddressField);
         } else if (contactEmailAddressField.getText().equals("")) {
-            target.setContactEmailAddress(null);
+            after.setContactEmailAddress(null);
             setValid(contactEmailAddressField);
         } else {
             valid = setInvalid(contactEmailAddressField);
+        }
+        if (valid) {
+            Action action = new Action(target, after);
+            statesHistoryScreen.addAction(action);
         }
         return valid;
     }
