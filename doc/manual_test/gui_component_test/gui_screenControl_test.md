@@ -24,4 +24,6 @@ Repeat following test for procedures and diseases
 
 ### 24/07/2018 - Josh
 
-Test 1: ... todo
+Test 1: PASS
+
+Test 2: PASS
