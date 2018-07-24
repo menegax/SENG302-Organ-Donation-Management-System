@@ -43,14 +43,6 @@ public class ClinicianTest {
     }
 
     /**
-     * Verify creation of a new clinician with an invalid first name results in an exception
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testIllegalFirstName() {
-        database.add(new Clinician(100, "23-%%d", new ArrayList<>(), "Everyman", GlobalEnums.Region.GISBORNE));
-    }
-
-    /**
      * Verifys db level getting of a clinician by id
      */
     @Test

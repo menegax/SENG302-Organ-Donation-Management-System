@@ -36,7 +36,7 @@ public class PatientTest {
 
         userActions.setLevel(Level.OFF);
 
-        testPatient = new Patient("ABC1234", "James", null, "Wallace",
+        testPatient = new Patient("ABC1234", "James", new ArrayList<String>(), "Wallace",
                 LocalDate.of(1970, 2, 12));
 
         database.add(new Patient("XYZ9876", "Joe", new ArrayList<String>() {{
@@ -44,10 +44,10 @@ public class PatientTest {
         }},
                 "Bloggs", LocalDate.of(1994, 12, 12)));
 
-        database.add(new Patient("DEF4567", "Bob", null, "Bobby",
+        database.add(new Patient("DEF4567", "Bob", new ArrayList<String>(), "Bobby",
                 LocalDate.of(1994, 12, 12)));
 
-        testPatient1 = new Patient("JJJ1234", "Rex", null, "Petsberg",
+        testPatient1 = new Patient("JJJ1234", "Rex", new ArrayList<String>(), "Petsberg",
                 LocalDate.of(1977, 6, 16));
     }
 

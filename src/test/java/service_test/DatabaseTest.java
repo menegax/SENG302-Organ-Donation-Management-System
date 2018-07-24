@@ -153,10 +153,9 @@ public class DatabaseTest {
 
 	@Test
 	public void testAddExistingClinician() {
-		try {
-			testDb.add(clinician);
+		if (testDb.add(clinician)) {
 			fail("Didn't catch clinician already existing when adding.");
-		} catch (IllegalArgumentException e1) {
+		} else {
 			String query = "SELECT * FROM tblClinicians WHERE StaffID = 1234";
 			try {
 				ArrayList<String[]> results = testDb.runQuery(query, new String[0]);

@@ -63,6 +63,7 @@ public class Clinician extends User {
         this.street2 = street2;
         this.suburb = suburb;
         this.region = region;
+        this.modified = new Timestamp(System.currentTimeMillis());
     }
 
     /**

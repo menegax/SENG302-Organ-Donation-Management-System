@@ -301,7 +301,9 @@ public class Database {
         if (patient.getBirthGender() != null) {
             attr[8] = patient.getBirthGender().toString().substring(0, 1);
         }
-        attr[9] = patient.getPreferredGender().toString().substring(0, 1);
+        if (patient.getPreferredGender() != null) {
+        	attr[9] = patient.getPreferredGender().toString().substring(0, 1);
+        }
         attr[10] = patient.getPreferredName();
         attr[11] = String.valueOf(patient.getHeight() * 100);
         attr[12] = String.valueOf(patient.getWeight());
