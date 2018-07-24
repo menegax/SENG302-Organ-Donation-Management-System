@@ -213,12 +213,12 @@ public class SearcherTest {
     public void testSearchAfterNameUpdate() throws IOException {
 
         // When first name of patient changed
-        database.getPatientByNhi("abc1234").setFirstName("Andrew");
+        database.getPatientByNhi("ABC1234").setFirstName("Andrew");
 
         // Then searching by new first name returns correct results
         List<User> results = searcher.search("Ande Lafey", new UserTypes[] {UserTypes.PATIENT}, 30);
  
-        assertTrue(results.contains(database.getPatientByNhi("abc1234")));
+        assertTrue(results.contains(database.getPatientByNhi("ABC1234")));
     }
 
     /**
@@ -230,15 +230,7 @@ public class SearcherTest {
     	//Bug with setup() means it has to be copied here or wont work
         database.resetLocalDatabase();
 
-        // Given patients in a db
-        d1 = new Patient("abc1234", "Pat", null, "Laff", LocalDate.now());
-        d2 = new Patient("def1234", "Patik", null, "Laffey", LocalDate.now());
-        d3 = new Patient("ghi1234", "George", null, "Romera", LocalDate.now());
-        d4 = new Patient("jkl1234", "George", null, "Bobington", LocalDate.now());
-        database.add(d4);
-        database.add(d3);
-        database.add(d2);
-        database.add(d1);
+        database.loadAll();
 
         searcher.clearIndex();
 
