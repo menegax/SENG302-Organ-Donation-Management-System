@@ -105,6 +105,13 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     public void initialize(URL url, ResourceBundle rb) {
         setupAgeSliderListeners();
         populateDropdowns();
+        setupFilterOptions();
+        List<User> defaultUsers = searcher.getDefaultResults(new UserTypes[] {UserTypes.PATIENT}, filter);
+        List<Patient> defaultPatients = new ArrayList<Patient>();
+        for (User user: defaultUsers) {
+            defaultPatients.add((Patient)user);
+        }
+        masterData.addAll(defaultPatients);
         FilteredList<Patient> filteredData = setupTableColumnsAndData();
         setupSearchingListener(filteredData);
         setupDoubleClickToPatientEdit();
@@ -188,9 +195,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             masterData.clear();
-            List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT}, NUMRESULTS);
+            List<User> results = searcher.search(newValue, new UserTypes[]{UserTypes.PATIENT}, NUMRESULTS, filter);
             for (User user : results) {
-            	masterData.add((Patient)user);
+                masterData.add((Patient) user);
             }
             filteredData.setPredicate(patient -> true);
         });
@@ -218,7 +225,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     	UserTypes[] types = new UserTypes[]{UserTypes.PATIENT};
     	masterData.clear();
     	List<Patient> tempPatients = new ArrayList<Patient>();
-    	List<User> users = searcher.getDefaultResults(types);
+    	List<User> users = searcher.getDefaultResults(types, filter);
     	for (User user: users) {
     		tempPatients.add((Patient)user);
     	}
@@ -234,7 +241,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                         //return Searcher.searchByGender(newValue).contains(patient);
                         return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() ); // ------------------------------this is where it fails!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
-                    List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT}, NUMRESULTS);
+                    List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT}, NUMRESULTS, filter);
                     List<Patient> patients = new ArrayList<Patient>();
                     for (User user : results) {
                     	patients.add((Patient)user);
@@ -410,12 +417,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * Adds all db data via constructor
      */
     public GUIClinicianSearchPatients() {
-    	List<User> defaultUsers = searcher.getDefaultResults(new UserTypes[] {UserTypes.PATIENT});
-    	List<Patient> defaultPatients = new ArrayList<Patient>();
-    	for (User user: defaultUsers) {
-    		defaultPatients.add((Patient)user);
-    	}
-        masterData.addAll(defaultPatients);
+
     }
 
     /**

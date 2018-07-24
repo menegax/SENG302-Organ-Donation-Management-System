@@ -50,7 +50,8 @@ public class GUIHome {
         PROFILE("Profile"), UPDATE("Update"), DONATIONS("Donations"), CONTACTDETAILS("Contact Details"),
         DISEASEHISTORY("View Disease History"), HISTORY("History"), PROCEDURES("Procedures"),
         TRANSPLANTWAITINGLIST("Transplant Waiting List"), SEARCHPATIENTS("Search Patients"),
-        REQUESTEDDONATIONS("Requested Donations"), MEDICATIONS("Medications");
+        REQUESTEDDONATIONS("Requested Donations"), MEDICATIONS("Medications"), SEARCHPUSERS("Search Users"),
+        USERREGISTER("User Register");
 
         private String value;
 
@@ -184,12 +185,12 @@ public class GUIHome {
      * @throws IOException- if fxml cannot be located
      */
     private void addTabsAdministrator() throws IOException {
-        createTab("Profile", "/scene/administratorProfile.fxml");
-        createTab("Update", "/scene/administratorProfileUpdate.fxml");
-        createTab("Register User", "/scene/userRegister.fxml");
-        createTab("Search Users", "/scene/administratorSearchUsers.fxml");
-        createTab("Transplant Waiting List", "/scene/clinicianWaitingList.fxml");
-        createTab("History", "/scene/adminHistory.fxml");
+        createTab(TabName.PROFILE, "/scene/administratorProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/administratorProfileUpdate.fxml");
+        createTab(TabName.USERREGISTER, "/scene/userRegister.fxml");
+        createTab(TabName.SEARCHPUSERS, "/scene/administratorSearchUsers.fxml");
+        createTab(TabName.TRANSPLANTWAITINGLIST, "/scene/clinicianWaitingList.fxml");
+        createTab(TabName.HISTORY, "/scene/adminHistory.fxml");
     }
 
     /**
@@ -197,8 +198,8 @@ public class GUIHome {
      * @throws IOException- if fxml cannot be located
      */
     private void addTabsClinicianAdministrator() throws IOException {
-        createTab("Profile", "/scene/clinicianProfile.fxml");
-        createTab("Update", "/scene/clinicianProfileUpdate.fxml");
+        createTab(TabName.PROFILE, "/scene/clinicianProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/clinicianProfileUpdate.fxml");
     }
 
 

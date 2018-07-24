@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static utility.UserActionHistory.userActions;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,7 +86,7 @@ public class SearcherTest {
 		d3.setLastName("Addington");
 
 		// For a name search of George
-    	List<User> results = searcher.search("George", new UserTypes[] {UserTypes.PATIENT}, 30);
+    	List<User> results = searcher.search("George", new UserTypes[] {UserTypes.PATIENT}, 30, null);
 
     	// Get indices of the two Georges
     	int d3index = results.indexOf(d3);
@@ -106,7 +107,7 @@ public class SearcherTest {
     public void testEqualSearchOrdering(){
 
     	// For a name search of George
-    	List<User> results = searcher.search("George", new UserTypes[] {UserTypes.PATIENT}, 30);
+    	List<User> results = searcher.search("George", new UserTypes[] {UserTypes.PATIENT}, 30, null);
     	
     	// Get indices of the two Georges
     	int d3index = results.indexOf(d3);
@@ -147,7 +148,7 @@ public class SearcherTest {
     	assertTrue(Database.getPatients().size() > 30);
 
         // Search to match all 36 added patients.
-        List<User> results = searcher.search("A B C D E F Z Y X W V U", new UserTypes[] {UserTypes.PATIENT}, 30);
+        List<User> results = searcher.search("A B C D E F Z Y X W V U", new UserTypes[] {UserTypes.PATIENT}, 30, null);
 
         // The returned result should be exactly 30
         assertEquals(30, results.size());
@@ -180,7 +181,7 @@ public class SearcherTest {
     	assertTrue(Database.getPatients().size() > 30);
 
         // Blank search to return maximum number of results. EG every patient.
-        List<User> results = searcher.search("", new UserTypes[] {UserTypes.PATIENT}, 30);
+        List<User> results = searcher.search("", new UserTypes[] {UserTypes.PATIENT}, 30, null);
 
         // The returned result should be less than or equal to 30
         assertTrue(results.size() <= 30);
@@ -211,7 +212,7 @@ public class SearcherTest {
         searcher.createFullIndex();
 
         // When index searched for a single specific patient
-        List<User> results = searcher.search("Pat Bobinton", new UserTypes[] {UserTypes.PATIENT}, 30);
+        List<User> results = searcher.search("Pat Bobinton", new UserTypes[] {UserTypes.PATIENT}, 30, null);
 
         // Should contain Pat Laff
         assertTrue(results.contains(Database.getPatientByNhi("abc1234")));
@@ -236,7 +237,7 @@ public class SearcherTest {
         Database.getPatientByNhi("abc1234").setFirstName("Andrew");
 
         // Then searching by new first name returns correct results
-        List<User> results = searcher.search("Ande Lafey", new UserTypes[] {UserTypes.PATIENT}, 30);
+        List<User> results = searcher.search("Ande Lafey", new UserTypes[] {UserTypes.PATIENT}, 30, null);
  
         assertTrue(results.contains(Database.getPatientByNhi("abc1234")));
     }
@@ -267,7 +268,7 @@ public class SearcherTest {
     	String name = Database.getPatientByNhi("def1234").getFirstName();
     	Database.getPatientByNhi("def1234").setNhiNumber("def5678");
 
-    	List<User> results = searcher.search(name, new UserTypes[] {UserTypes.PATIENT}, 30);
+    	List<User> results = searcher.search(name, new UserTypes[] {UserTypes.PATIENT}, 30, null);
 
     	assertTrue(results.contains(Database.getPatientByNhi("def5678")));
     }
@@ -295,7 +296,7 @@ public class SearcherTest {
         searcher.createFullIndex();
 
         // When searching patients
-    	List<User> results = searcher.search("Jone", new UserTypes[] {UserTypes.PATIENT}, 30);
+    	List<User> results = searcher.search("Jone", new UserTypes[] {UserTypes.PATIENT}, 30, null);
 
     	// Should contain Joe Plaffer, remove 'n' for Joe
     	assertTrue(results.contains(d1));
