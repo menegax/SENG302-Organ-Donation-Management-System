@@ -3,6 +3,7 @@ package utility;
 import static java.util.logging.Level.INFO;
 
 import controller.UserControl;
+import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,7 @@ public class UserActionHistory {
      * Sets up custom logger class.
      * Disables parent inheritance and adds custom console and file handlers.
      */
-    static public void setup() {
+    public static void setup() {
 
         userActions.setUseParentHandlers(false); // disables default console userActions in parent
 
@@ -55,6 +56,18 @@ public class UserActionHistory {
                                     StringUtils.capitalize(logRecord.getParameters()[0].toString()),
                                     StringUtils.capitalize(logRecord.getMessage()),
                                     nhiParam));
+                } else if (loggedInUser instanceof Administrator) { //Add a administrator record if a administrator is logged in
+                    String targetParam = null;
+                    //If there are more than 1 parameter, in which case the target ID is provided as the second parameter
+                    if (logRecord.getParameters().length >= 2) {
+                        targetParam = logRecord.getParameters()[1].toString().toUpperCase();
+                    }
+                    ((Administrator) loggedInUser).getAdminActionsList()
+                            .add(new AdministratorActionRecord(currentTimeStamp,
+                                    logRecord.getLevel(),
+                                    StringUtils.capitalize(logRecord.getParameters()[0].toString()),
+                                    StringUtils.capitalize(logRecord.getMessage()),
+                                    targetParam));
                 }
             }
 

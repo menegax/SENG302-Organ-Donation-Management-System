@@ -110,9 +110,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
         Object user = userControl.getLoggedInUser();
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
-        }
-       else if (userControl.getTargetPatient() != null) {
-            loadProfile((userControl.getTargetPatient()).getNhiNumber());
+        } else if (userControl.getTargetUser() != null) {
+            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
         }
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
@@ -494,7 +493,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                         .getSelectedItem()));
             }
             new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
-            userActions.log(Level.INFO, "Successfully updated patient profile", "Attempted to update patient profile");
+            userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", target.getNhiNumber()});
         }
         else {
             systemLogger.log(Level.WARNING, "Failed to update patient profile due to invalid fields:\n" + invalidContent);
