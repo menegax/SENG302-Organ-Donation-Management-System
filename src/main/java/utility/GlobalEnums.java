@@ -71,6 +71,13 @@ public class GlobalEnums {
         }
 	}
 
+    public final static String NONE_ID = "None";
+
+    public enum FilterOption {
+        REQUESTEDDONATIONS, DONATIONS, REGION, AGEUPPER, AGELOWER, BIRTHGENDER, DONOR, RECIEVER
+    }
+
+
     /**
      * Enumerates all options for preferred gender
      */
@@ -91,6 +98,7 @@ public class GlobalEnums {
         public String toString() {
             return this.getValue() != null ? this.getValue() : "Not set";
         }
+
 
         public static PreferredGender getEnumFromString(String value) {
             try {
@@ -147,6 +155,7 @@ public class GlobalEnums {
             return this.getValue() != null ? this.getValue() : "Not set";
         }
 
+
         public static BirthGender getEnumFromString(String value) {
             try {
                 return BirthGender.valueOf(value.toUpperCase());
@@ -183,6 +192,7 @@ public class GlobalEnums {
             return this.getValue();
         }
 
+
         public static Region getEnumFromString(String value) {
             try {
                 return Region.valueOf(value.toUpperCase()
@@ -203,7 +213,7 @@ public class GlobalEnums {
      */
     public enum Organ {
         LIVER("liver"), KIDNEY("kidney"), PANCREAS("pancreas"), HEART("heart"), LUNG("lung"), INTESTINE("intestine"), CORNEA("cornea"), MIDDLEEAR(
-                "middle ear"), SKIN("skin"), BONE("bone"), BONE_MARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
+                "middle ear"), SKIN("skin"), BONE("bone"), BONEMARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
 
         private String value;
 
@@ -223,9 +233,10 @@ public class GlobalEnums {
             return this.getValue();
         }
 
+
         public static Organ getEnumFromString(String value) {
             try {
-                return Organ.valueOf(value.toUpperCase());
+                return Organ.valueOf(value.replaceAll(" ", "").toUpperCase());
             }
             catch (IllegalArgumentException e) {
                 return null;
@@ -257,6 +268,7 @@ public class GlobalEnums {
         public String toString() {
             return this.getValue();
         }
+
 
         public static BloodGroup getEnumFromString(String value) {
             try {
@@ -310,7 +322,7 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static DiseaseState getEnumFromString(String value) {
             try {
                 return DiseaseState.valueOf(value.toUpperCase());
             }

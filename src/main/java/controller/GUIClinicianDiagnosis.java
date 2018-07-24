@@ -12,6 +12,7 @@ import model.Disease;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
+import utility.StatusObservable;
 import utility.undoRedo.UndoableStage;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -125,16 +126,12 @@ public class GUIClinicianDiagnosis extends UndoableController{
             target = (Patient) userControl.getLoggedInUser();
             addDiagnosisButton.setVisible(false);
             addDiagnosisButton.setDisable(true);
-            saveButton.setVisible(false);
-            saveButton.setDisable(true);
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
         } else {
             target = (Patient) userControl.getTargetUser();
             addDiagnosisButton.setVisible(true);
             addDiagnosisButton.setDisable(false);
-            saveButton.setVisible(true);
-            saveButton.setDisable(false);
             deleteButton.setVisible(true);
             deleteButton.setDisable(false);
         }
@@ -365,18 +362,17 @@ public class GUIClinicianDiagnosis extends UndoableController{
             pastDiseases.remove(pastDiagnosesView.getSelectionModel().getSelectedItem());
             deletedPast.add(pastDiagnosesView.getSelectionModel().getSelectedItem());
             loadPastDiseases();
+            screenControl.setIsSaved(false);
             userActions.log(Level.FINE, "Successfully deleted a disease",  pastDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
-            new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis deleted successfully", ButtonType.OK).show();
         } else if (currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
             changed = true;
             currentDiseases.remove(currentDiagnosesView.getSelectionModel().getSelectedItem());
             deletedCurrent.add(currentDiagnosesView.getSelectionModel().getSelectedItem());
             loadCurrentDiseases();
+            screenControl.setIsSaved(false);
             userActions.log(Level.WARNING, "Successfully deleted a disease", currentDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
-            new Alert(Alert.AlertType.CONFIRMATION, "Diagnosis deleted successfully", ButtonType.OK).show();
         } else {
-            userActions.log(Level.WARNING, "Failed to delete a disease", "disease failed to be deleted");
-            new Alert(Alert.AlertType.WARNING, "No Diagnosis selected", ButtonType.OK).show();
+            userActions.log(Level.WARNING, "No diagnosis selected to delete", "disease failed to be deleted");
         }
         updateDiagnosesLists();
     }

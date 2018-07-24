@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
+import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.util.regex.Pattern;
 
 import utility.GlobalEnums.UIRegex;
 
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
@@ -97,11 +99,12 @@ public class GUIPatientUpdateContacts extends UndoableController {
     @FXML
     public void saveContactDetails() {
         boolean valid = setPatientContactDetails();
-        if(valid) {
+        if (valid) {
             database.updateDatabase();
-            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+            screenControl.setIsSaved(false);
+            userActions.log(INFO, "Successfully saved contact details", "Attempted to set invalid contact details");
         } else {
-            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
+            userActions.log(Level.WARNING,"Failed to save contact details due to invalid fields", "Attempted to set invalid contact details");
         }
     }
 

@@ -6,7 +6,12 @@ import utility.GlobalEnums;
 
 
 import utility.PatientActionRecord;
+import model.Administrator;
+import controller.ScreenControl;
+import model.Clinician;
+import model.Patient;
 import utility.Searcher;
+import utility.StatusObservable;
 
 
 import java.io.*;
@@ -33,7 +38,7 @@ public class Database {
     private Connection conn;
 
     private Set<Administrator> administrators = new HashSet<>();
-    
+
     private int curStaffID = 0;
 
 
@@ -117,7 +122,7 @@ public class Database {
             + "ON DUPLICATE KEY UPDATE "
             + "Description = VALUES (Description), "
             + "AffectedOrgans = VALUES (AffectedOrgans)";
-    
+
     private final String UPDATEADMINQUERYSTRING = "INSERT INTO tblAdmins "
     		+ "(Username, FName, MName, LName, Salt, Password, Modified) "
     		+ "VALUES (?, ?, ?, ?, ?, ?, ?) "
@@ -149,7 +154,7 @@ public class Database {
      * @return The instance of the database for Singleton.
      */
     public static Database getDatabase() {
-    	
+
         if (database == null) {
             database = new Database();
         }
@@ -188,7 +193,7 @@ public class Database {
     	}
     	return curStaffID;
     }
-    
+
     /**
      * Runs a SQL query on the database.
      *
@@ -346,6 +351,8 @@ public class Database {
         return contactAttr;
     }
 
+    private static ScreenControl screenControl = ScreenControl.getScreenControl();
+    private static Set<Administrator> administrators = new HashSet<>();
     /**
      * Gets a clinician's attributes and stores them in a String array
      *
@@ -382,7 +389,7 @@ public class Database {
     	adminAttr[6] = admin.getModified().toString();
     	return adminAttr;
     }
-    
+
     /**
      * Gets all attributes for a medication object
      *
@@ -590,7 +597,7 @@ public class Database {
 		}
     	return false;
     }
-    
+
     /**
      * Checks if the given NHI exists in the database.
      * @param nhi The NHI to check.
@@ -656,7 +663,7 @@ public class Database {
 		userActions.log(Level.SEVERE, "Failed added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
 		return false;
     }
-    
+
     private boolean addAdministrator(Administrator admin, Searcher searcher) {
     	if (inDatabase(admin)) {
             userActions.log(Level.SEVERE, "Failed to add administrator to database, username " + admin.getUsername() + " already exisits.", "Attempted to add new administrator to database.");
@@ -909,7 +916,7 @@ public class Database {
     	Timestamp modified = Timestamp.valueOf(attr[6]);
     	return new Administrator(username, fName, mNames, lName, salt, password, modified);
     }
-    
+
     /**
      * Gets all diseases for a patient and sorts them into two ArrayLists of past and current medications.
      * Returns an ArrayList array of current and past medications.
@@ -1103,7 +1110,7 @@ public class Database {
         }
         return false;
     }
-    
+
     /**
      * Loads all administrators from the database.
      * @return True if successfully loads all administrators, false otherwise.
@@ -1210,7 +1217,7 @@ public class Database {
 		}
     	return false;
     }
-    
+
     /**
      * Deletes a clinician from the database and application.
      * @param clinician The clinician to delete.
@@ -1362,7 +1369,7 @@ public class Database {
 		}
     	return false;
     }
-    
+
     private boolean updateAllAdministrators() {
     	String[] params = new String[0];
     	String query = new String();
@@ -1381,7 +1388,7 @@ public class Database {
 		}
     	return false;
     }
-    
+
     /**
      * Pushes all local changes to the database.
      * @return True if everything was successfully updated, false otherwise.
@@ -1404,6 +1411,7 @@ public class Database {
 //            saveToDiskWaitlist();
             saveToDiskClinicians();
             saveToDiskAdministrators();
+            screenControl.setIsSaved(true);
         } catch (IOException e) {
             userActions.log(Level.SEVERE, e.getMessage(), "attempted to save to disk");
         }
@@ -1572,6 +1580,61 @@ public class Database {
     }
 
     /**
+     * Imports the organ waitlist from the selected directory
+     * @param filename file to import from
+     */
+    public static void importFromDiskWaitlist(String filename) {
+        Gson gson = new Gson();
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(filename));
+            organWaitingList = gson.fromJson(br, OrganWaitlist.class);
+            systemLogger.log(Level.INFO, "Successfully imported organ waiting list from file");
+        }
+        catch (FileNotFoundException e) {
+            userActions.log(Level.WARNING, "Waitlist import file not found", "Attempted to read waitlist file");
+        }
+        catch (Exception e) {
+            userActions.log(Level.WARNING, "Failed to import from waitlist file", "Attempted to read watilist file");
+        }
+
+    }
+
+    /**
+     * Removes from the clinicians HashSet the given clinician
+     * @param clinician The clinician being removed from set
+     */
+    public static void deleteClinician(Clinician clinician) {
+        if (clinician.getStaffID() != 0) {
+            searcher.removeIndex(clinician);
+            clinicians.remove(clinician);
+            ScreenControl.getScreenControl().setIsSaved(false);
+        }
+    }
+
+    /**
+     * Removes from the patients HashSet the given patient
+     * @param patient The patient being removed from set
+     */
+    public static void deletePatient(Patient patient) {
+        searcher.removeIndex(patient);
+        patients.remove(patient);
+        ScreenControl.getScreenControl().setIsSaved(false);
+    }
+
+    /**
+     * Removes from the administrators HashSet the given administrator
+     * @param administrator The administrator being removed from set
+     */
+    public static void deleteAdministrator(Administrator administrator) {
+        if (!administrator.getUsername().toLowerCase().equals("admin")) {
+            searcher.removeIndex(administrator);
+            administrators.remove(administrator);
+            ScreenControl.getScreenControl().setIsSaved(false);
+        }
+    }
+
+    /**
      * Clears the database of all patients
      */
     public void resetLocalDatabase() {
@@ -1609,7 +1672,7 @@ public class Database {
     	return false;
     }
 
-    public  Set<Administrator> getAdministrators() { 
-    	return administrators; 
+    public  Set<Administrator> getAdministrators() {
+    	return administrators;
     }
 }

@@ -38,7 +38,7 @@ public class CLIPatientDonations implements Runnable {
             "MIDDLEEAR\n" +
             "SKIN\n" +
             "BONE\n" +
-            "BONE_MARROW\n" +
+            "BONEMARROW\n" +
             "CONNECTIVETISSUE")
     private ArrayList<String> newDonations;
 

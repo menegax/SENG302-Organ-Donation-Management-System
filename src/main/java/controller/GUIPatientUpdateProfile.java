@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums.*;
+import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -269,35 +270,38 @@ public class GUIPatientUpdateProfile extends UndoableController {
     }
 
     /**
-     * Saves profile changes after checking each field for validity
+     * Sets profile changes after checking each field for validity
      */
     public void saveProfileUpdater() {
-        systemLogger.log(Level.FINEST, "Saving patient profile for update...");
+        systemLogger.log(Level.FINEST, "Setting patient profile for update...");
         Boolean valid = true;
 
-        Alert invalidInfo = new Alert(Alert.AlertType.WARNING);
-        StringBuilder invalidContent = new StringBuilder("Please fix the following errors:\n");
+        StringBuilder invalidContent = new StringBuilder();
 
         // nhi
         if (!Pattern.matches(UIRegex.NHI.getValue(), nhiTxt.getText().toUpperCase())) {
             valid = setInvalid(nhiTxt);
-            invalidContent.append("NHI must be three letters followed by four numbers\n");
+            invalidContent.append("NHI must be three letters followed by four numbers. ");
         }
 
-
-        // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
-        if (database.nhiInDatabase(nhiTxt.getText())) {
-            valid = setInvalid(nhiTxt);
-            invalidContent.append("NHI is already in use\n");
-        } else {
-            setValid(nhiTxt);
+        try{
+            // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
+            if (database.nhiInDatabase(nhiTxt.getText())) {
+                valid = setInvalid(nhiTxt);
+                invalidContent.append("NHI is already in use\n");
+            } else {
+                setValid(nhiTxt);
+            }
+        } catch (InvalidObjectException e) {
+            setInvalid(nhiTxt);
         }
+
 
 
         // first name
         if (!Pattern.matches(UIRegex.FNAME.getValue(), firstnameTxt.getText())) {
             valid = setInvalid(firstnameTxt);
-            invalidContent.append("First name must be letters, ., or -.\n");
+            invalidContent.append("First name must be letters, ., or -. ");
         } else {
             setValid(firstnameTxt);
         }
@@ -305,7 +309,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         // last name
         if (!Pattern.matches(UIRegex.LNAME.getValue(), lastnameTxt.getText())) {
             valid = setInvalid(lastnameTxt);
-            invalidContent.append("Last name must be letters, ., or -.\n");
+            invalidContent.append("Last name must be letters, ., or -. ");
         } else {
             setValid(lastnameTxt);
         }
@@ -313,7 +317,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         //middle names
         if (!Pattern.matches(UIRegex.MNAME.getValue(), middlenameTxt.getText())) {
             valid = setInvalid(middlenameTxt);
-            invalidContent.append("Middle name(s) must be letters, ., or -.\n");
+            invalidContent.append("Middle name(s) must be letters, ., or -.");
         } else {
             setValid(middlenameTxt);
         }
@@ -332,7 +336,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                     .getSelectedItem());
             if (region == null) {
                 valid = setInvalid(regionDD);
-                invalidContent.append("Region must be a valid selection from the dropdown\n");
+                invalidContent.append("Region must be a valid selection from the dropdown. ");
             } else {
                 setValid(regionDD);
             }
@@ -376,7 +380,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             Enum bloodgroup = BloodGroup.getEnumFromString(bgStr);
             if (bloodgroup == null) {
                 valid = setInvalid(bloodGroupDD);
-                invalidContent.append("Blood group must be a valid selection\n");
+                invalidContent.append("Blood group must be a valid selection. ");
             } else {
                 setValid(bloodGroupDD);
             }
@@ -388,7 +392,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         if (dobDate.getValue() != null) {
             if (dobDate.getValue().isAfter(LocalDate.now())) {
                 valid = setInvalid(dobDate);
-                invalidContent.append("Date of birth must be a valid date either today or earlier and must be before date of death\n");
+                invalidContent.append("Date of birth must be a valid date either today or earlier and must be before date of death. ");
             } else {
                 setValid(dobDate);
             }
@@ -402,7 +406,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                     .isBefore(dobDate.getValue())) || dateOfDeath.getValue()
                     .isAfter(LocalDate.now())) {
                 valid = setInvalid(dateOfDeath);
-                invalidContent.append("Date of death must be a valid date either today or earlier and must be after date of birth\n");
+                invalidContent.append("Date of death must be a valid date either today or earlier and must be after date of birth. ");
             } else {
                 setValid(dateOfDeath);
             }
@@ -469,15 +473,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 target.setBloodGroup((BloodGroup) BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
                         .getSelectedItem()));
             }
-            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+            screenControl.setIsSaved(false);
             userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", target.getNhiNumber()});
         }
         else {
-            systemLogger.log(Level.WARNING, "Failed to update patient profile due to invalid fields:\n" + invalidContent);
-            userActions.log(Level.WARNING, "Failed to update patient profile due to invalid fields", "Attempted to update patient profile");
-            invalidContent.append("\nYour changes have not been saved.");
-            invalidInfo.setContentText(invalidContent.toString());
-            invalidInfo.show();
+            userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", target.getNhiNumber()});
         }
     }
 

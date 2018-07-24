@@ -11,6 +11,7 @@ import javafx.scene.control.Control;
 import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.OrganWaitlist;
+import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
@@ -187,9 +188,9 @@ public class GUIPatientUpdateRequirements extends UndoableController{
                 boneCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.BONE);
             }
-            if (organs.contains(GlobalEnums.Organ.BONE_MARROW)) {
+            if (organs.contains(GlobalEnums.Organ.BONEMARROW)) {
                 bonemarrowCB.setSelected(true);
-                initialRequirements.add(GlobalEnums.Organ.BONE_MARROW);
+                initialRequirements.add(GlobalEnums.Organ.BONEMARROW);
             }
             if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) {
                 connectivetissueCB.setSelected(true);
@@ -263,10 +264,10 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             target.removeRequired(GlobalEnums.Organ.BONE);
         }
         if (bonemarrowCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.BONE_MARROW);
-            finalRequirements.add(GlobalEnums.Organ.BONE_MARROW);
+            target.addRequired(GlobalEnums.Organ.BONEMARROW);
+            finalRequirements.add(GlobalEnums.Organ.BONEMARROW);
         } else {
-            target.removeRequired(GlobalEnums.Organ.BONE_MARROW);
+            target.removeRequired(GlobalEnums.Organ.BONEMARROW);
         }
         if (connectivetissueCB.isSelected()) {
             target.addRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
@@ -276,7 +277,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
         }
         deregistrationReason();
         createOrganRequests();
-        new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+        screenControl.setIsSaved(false);
     }
 
     /**

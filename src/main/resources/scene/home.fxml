@@ -2,11 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioMenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -17,33 +13,9 @@
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
-            <MenuBar fx:id="menuBar">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <RadioMenuItem mnemonicParsing="false" selected="true" text="Unspecified Action" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
+            <MenuBar fx:id="menuBar" />
             <HBox alignment="CENTER" prefHeight="60.0" prefWidth="1200.0" styleClass="colouredBar" stylesheets="@../css/guiStyle.css">
              <children>
-                 <Label fx:id="userTypeDisplay" minHeight="40.0" styleClass="colouredBarText" stylesheets="@../css/guiStyle.css" text="">
-                     <HBox.margin>
-                        <Insets right="50.0" />
-                     </HBox.margin></Label>
                  <Label fx:id="userNameDisplay" alignment="CENTER" contentDisplay="CENTER" minHeight="40.0" styleClass="colouredBarText" stylesheets="@../css/guiStyle.css" text="">
                      <HBox.margin>
                         <Insets />
@@ -54,7 +26,10 @@
       </VBox>
    </top>
    <bottom>
-      <AnchorPane maxHeight="25.0" minHeight="25.0" style="-fx-background-color: gray;" BorderPane.alignment="CENTER" />
+      <AnchorPane maxHeight="25.0" minHeight="25.0" style="-fx-background-color: gray;" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="statusLbl" textFill="WHITE" textOverrun="CLIP" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="4.0" />
+         </children></AnchorPane>
    </bottom>
    <center>
       <TabPane fx:id="horizontalTabPane" prefHeight="200.0" prefWidth="1205.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
