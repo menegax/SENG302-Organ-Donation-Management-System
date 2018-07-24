@@ -286,16 +286,14 @@ public class StatesHistoryScreen {
                     return true;
                 }
             }
-            return false;
-        } else {
-            for (StateHistoryControl stateHistory : stateHistories) {
-                boolean success = stateHistory.undo();
-                if (!success) {
-                    return false;
-                }
-            }
-            index -= 1;
         }
+        for (StateHistoryControl stateHistory : stateHistories) {
+            Boolean success = stateHistory.undo();
+            if (!success) {
+                return false;
+            }
+        }
+        index -= 1;
         undone = false;
         return true;
     }
@@ -316,16 +314,14 @@ public class StatesHistoryScreen {
                     return true;
                 }
             }
-            return false;
-        } else {
-            for (StateHistoryControl stateHistory : stateHistories) {
-                boolean success = stateHistory.redo();
-                if (!success) {
-                    return false;
-                }
-            }
-            index += 1;
         }
+        for (StateHistoryControl stateHistory : stateHistories) {
+            Boolean success = stateHistory.redo();
+            if (!success) {
+                return false;
+            }
+        }
+        index += 1;
         redone = false;
         return true;
     }
