@@ -47,6 +47,7 @@ public class StatesHistoryScreen {
      * @param undoableScreen the enum of the screen this StatesHistoryScreen represents
      */
     public StatesHistoryScreen(List<Control> controls, UndoableScreen undoableScreen) {
+        System.out.println("FIRE");
         this.undoableScreen = undoableScreen;
         addToUndoableStage(controls.get(0));
         for (Object control : controls) {
@@ -200,7 +201,7 @@ public class StatesHistoryScreen {
         stateHistories.add(new StateHistoryTableView( (TableView<Object>) tableView ));
         ((TableView<Object>) tableView).itemsProperty().addListener((observable, oldValue, newValue) -> {
                     if (((oldValue == null || newValue == null) || !newValue.equals(oldValue))) {
-                        store();
+                        //store();
                     }
                 });
     }
@@ -214,7 +215,7 @@ public class StatesHistoryScreen {
         stateHistories.add(new StateHistoryListView( (ListView<Object>) listView ));
         ((ListView<Object>) listView).itemsProperty().addListener((observable, oldValue, newValue) -> {
             if (((oldValue == null || newValue == null) || !newValue.equals(oldValue)) && ((ListView<Object>) listView).focusedProperty().getValue()) {
-                store();
+                //store();
             }
         });
     }
@@ -283,11 +284,14 @@ public class StatesHistoryScreen {
                 return false;
             }
         }
-        index -= 1;
+        System.out.println("undo action size");
+        System.out.println(actions.size());
         if (actions.get(index) != null) {
+            System.out.println("HI");
             actions.get(index).unexecute();
             userActions.log(Level.INFO, "Local change undone", "User undoed through local change");
         }
+        index -= 1;
         undone = false;
         return true;
     }
@@ -305,11 +309,15 @@ public class StatesHistoryScreen {
                 return false;
             }
         }
+        index += 1;
+        System.out.println("redo action size");
+        System.out.println(actions.size());
+        System.out.println(actions.keySet());
         if (actions.get(index) != null) {
+            System.out.println("REDO");
             actions.get(index).execute();
             userActions.log(Level.INFO, "Local change redone", "User redoed through local change");
         }
-        index += 1;
         redone = false;
         return true;
     }
@@ -357,6 +365,20 @@ public class StatesHistoryScreen {
      */
     public void addAction(Action action) {
         actions.put(index, action);
+    }
+
+    /**
+     * Returns the current actions map, used for passing the existing action map to a new instance of StatesHistoryScreen
+     * @return the current actions map
+     */
+    public Map<Integer, Action> getActions() {
+        System.out.println("getActions size");
+        System.out.println(actions.size());
+        return actions;
+    }
+
+    public void setActions(Map<Integer, Action> actions) {
+        this.actions = actions;
     }
 
     /**

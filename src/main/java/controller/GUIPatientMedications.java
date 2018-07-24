@@ -23,6 +23,7 @@ import utility.GlobalEnums;
 import service.TextWatcher;
 import utility.GlobalEnums;
 import utility.StatusObservable;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -373,8 +374,10 @@ public class GUIPatientMedications extends UndoableController {
                     .toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
-                target.getCurrentMedications()
+                Patient after = (Patient) target.deepClone();
+                after.getCurrentMedications()
                         .add(new Medication(medication));
+                statesHistoryScreen.addAction(new Action(target, after));
                 userActions.log(Level.INFO,
                         "Added medication: " + medication,
                         new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });

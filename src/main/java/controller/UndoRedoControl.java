@@ -1,11 +1,13 @@
 package controller;
 
 import javafx.scene.control.*;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Includes methods to assist with undo and redo functionality across the whole application
@@ -84,6 +86,10 @@ public class UndoRedoControl {
             // Unchecked type call will always be safe
             ((ListView) control).getItems().setAll((ArrayList) state);
         }
+    }
+
+    public void setActions(Map<Integer, Action> actions, StatesHistoryScreen statesHistoryScreen) {
+        statesHistoryScreen.setActions(actions);
     }
 
     /**
