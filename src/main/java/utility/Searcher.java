@@ -485,37 +485,44 @@ public class Searcher {
         if (filter == null) {
             return false;
         }
-        if (filter.get(GlobalEnums.FilterOption.REGION) != null && !filter.get(GlobalEnums.FilterOption.REGION).equals(NONE_ID)) {
-            GlobalEnums.Region region = GlobalEnums.Region.getEnumFromString(filter.get(GlobalEnums.FilterOption.REGION));
-            if (patient.getRegion() == null || !patient.getRegion().equals(region)) {
-                return false;
-            }
-        }
-        if (filter.get(GlobalEnums.FilterOption.DONATIONS) != null && !filter.get(GlobalEnums.FilterOption.DONATIONS).equals(NONE_ID)) {
-            GlobalEnums.Organ donatingOrgan = GlobalEnums.Organ.getEnumFromString(filter.get(GlobalEnums.FilterOption.DONATIONS));
-            if (patient.getDonations() == null || !patient.getDonations().contains(donatingOrgan)) return false;
-        }
-        if (filter.get(GlobalEnums.FilterOption.REQUESTEDDONATIONS) != null && !filter.get(GlobalEnums.FilterOption.REQUESTEDDONATIONS).equals(NONE_ID)) {
-            GlobalEnums.Organ requestedOrgans = GlobalEnums.Organ.getEnumFromString(filter.get(GlobalEnums.FilterOption.REQUESTEDDONATIONS));
-            if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().contains(requestedOrgans))
-                return false;
-        }
-        if (filter.get(GlobalEnums.FilterOption.BIRTHGENDER) != null && !filter.get(GlobalEnums.FilterOption.BIRTHGENDER).equals(NONE_ID)) {
-            GlobalEnums.BirthGender birthGender = GlobalEnums.BirthGender.getEnumFromString(filter.get(GlobalEnums.FilterOption.BIRTHGENDER));
-            if (patient.getBirthGender() == null || !patient.getBirthGender().equals(birthGender)) return false;
-        }
-        if (filter.get(GlobalEnums.FilterOption.RECIEVER) != null && Boolean.valueOf(filter.get(GlobalEnums.FilterOption.RECIEVER)).equals(true)
-                && patient.getRequiredOrgans().size() == 0) {
-            return false;
-        }
-        if (filter.get(GlobalEnums.FilterOption.DONOR) != null && Boolean.valueOf(filter.get(GlobalEnums.FilterOption.DONOR)).equals(true)
-                && patient.getDonations().size() == 0) {
-            return false;
-        }
-        if (filter.get(GlobalEnums.FilterOption.AGEUPPER) != null && filter.get(GlobalEnums.FilterOption.AGELOWER) != null) {
-            if (patient.getAge() > Integer.parseInt(filter.get(GlobalEnums.FilterOption.AGEUPPER))
-                    || patient.getAge() < Integer.parseInt(filter.get(GlobalEnums.FilterOption.AGELOWER))) {
-                return false;
+        for(FilterOption option : filter.keySet()) {
+            if (!filter.get(option).equals(NONE_ID)) { //check each fiter entry to see if its been selected
+                switch (option) {
+                    case REGION: {
+                        Region region = Region.getEnumFromString(filter.get(option));
+                        if (patient.getRegion() == null || !patient.getRegion().equals(region)) { return false; }
+                        break;
+                    }
+                    case DONATIONS: {
+                        Organ donations = Organ.getEnumFromString(filter.get(option));
+                        if (patient.getDonations() == null || !patient.getDonations().contains(donations)) { return false; }
+                        break;
+                    }
+                    case REQUESTEDDONATIONS: {
+                        Organ requestedOrgans = Organ.getEnumFromString(filter.get(option));
+                        if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().contains(requestedOrgans)){ return false; }
+                        break;
+                    }
+                    case BIRTHGENDER: {
+                        BirthGender birthGender = BirthGender.getEnumFromString(filter.get(option));
+                        if (patient.getBirthGender() == null || !patient.getBirthGender().equals(birthGender)){ return false; }
+                        break;
+                    }
+                    case DONOR: {
+                        if (Boolean.valueOf(filter.get(option)).equals(true) && patient.getDonations().size() == 0) { return false; }
+                        break;
+                    }
+                    case RECIEVER: {
+                        if (Boolean.valueOf(filter.get(option)).equals(true) && patient.getRequiredOrgans().size() == 0) { return false; }
+                        break;
+                    }
+                    case AGEUPPER:
+                    case AGELOWER: {
+                        if (patient.getAge() > Integer.parseInt(filter.get(FilterOption.AGEUPPER))
+                                || patient.getAge() < Integer.parseInt(filter.get(FilterOption.AGELOWER))) { return false; }
+                        break;
+                    }
+                }
             }
         }
         return true;

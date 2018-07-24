@@ -171,6 +171,7 @@ public class GUIClinicianWaitingList {
 
         //add listener to organ choice box and add predicate
         organSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
+
             if (newValue.equals(GlobalEnums.NONE_ID)) {
                 if (regionSelection.getValue() == null || regionSelection.getValue().equals(GlobalEnums.NONE_ID)) { //check if region selection is null or ""
                     return true;

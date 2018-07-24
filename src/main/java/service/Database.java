@@ -298,7 +298,7 @@ public class Database {
         String[] attr = new String[16];
         attr[0] = patient.getNhiNumber();
         attr[1] = patient.getFirstName();
-        attr[2] = String.join(" ", patient.getMiddleNames());
+        attr[2] = patient.getMiddleNames() == null ? "" :String.join(" ", patient.getMiddleNames());
         attr[3] = patient.getLastName();
         attr[4] = patient.getBirth().toString();
         attr[5] = patient.getCREATED().toString();
