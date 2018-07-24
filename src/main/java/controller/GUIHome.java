@@ -131,6 +131,7 @@ public class GUIHome implements Observer {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());
         }
+        stage.setChangingStates(false);
     }
 
 
@@ -177,7 +178,6 @@ public class GUIHome implements Observer {
             // Methods to call after initialize
             setStageTitle();
         }
-        stage.setChangingStates(false);
     }
 
     /**
