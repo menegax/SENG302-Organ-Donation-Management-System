@@ -197,3 +197,7 @@ This means there should not be other action listeners for global or stage-level 
  human-intensive manual testing method. In truth, we seem to believe manual testing will take less time and effort than TestFX at this point. This 
  will and has led to 0% test coverage on the `controller` package. We expect that. With comprehensive manual testing in addition to smoke testing we 
  will effectively have 100% test coverage through manual testing.
+ 
+ ### Undo/Redo Admin register users
+ On the register users screen as an administrator, fields will be cleared if and only if the radio buttons are clicked by the user.  
+ If different radio buttons are selected through undo/redo, the inputs will instead persist.
