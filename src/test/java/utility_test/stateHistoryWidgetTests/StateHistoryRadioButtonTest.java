@@ -16,7 +16,6 @@ import static utility.UserActionHistory.userActions;
 /**
  * Junit test class for the StateHistoryRadioButton
  */
-@Ignore
 public class StateHistoryRadioButtonTest {
 
     private static RadioButton radioButton;
