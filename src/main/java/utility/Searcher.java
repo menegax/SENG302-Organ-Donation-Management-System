@@ -248,7 +248,8 @@ public class Searcher {
         List<User> defaultResults = new ArrayList<>();
         if (typesList.contains(UserTypes.PATIENT)) {
             for (Patient patient : Database.getPatients()) {
-                if (matchesFilter(patient, filter)) {
+                if (filter == null) defaultResults.add(patient);
+                else if (matchesFilter(patient, filter)) {
                     defaultResults.add(patient);
                 }
             }
