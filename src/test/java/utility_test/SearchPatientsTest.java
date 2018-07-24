@@ -515,6 +515,36 @@ public class SearchPatientsTest {
         areDonorsAndRecievers(results);
     }
 
+
+    @Test
+    public void testAllFilterCombo() throws InvalidObjectException {
+        addPatientsToDB();
+
+        //set regions
+        Database.getPatientByNhi("abc1230").setRegion(Region.CANTERBURY);
+        Database.getPatientByNhi("abc1231").setRegion(Region.CANTERBURY);
+        Database.getPatientByNhi("abc1232").setRegion(Region.AUCKLAND);
+        Database.getPatientByNhi("abc1233").setRegion(Region.MANAWATU);
+
+        //set donations, set requireds
+        Database.getPatientByNhi("abc1230").setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        Database.getPatientByNhi("abc1231").setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.LIVER);}});
+
+        //set genders
+        Database.getPatientByNhi("abc1230").setBirthGender(BirthGender.FEMALE);
+        Database.getPatientByNhi("abc1231").setBirthGender(BirthGender.MALE);
+        Database.getPatientByNhi("abc1232").setBirthGender(BirthGender.MALE);
+        Database.getPatientByNhi("abc1233").setBirthGender(BirthGender.FEMALE);
+
+        filter.put(FilterOption.REGION, Region.CANTERBURY.getValue());
+        filter.put(FilterOption.DONATIONS, Organ.KIDNEY.toString());
+        filter.put(FilterOption.BIRTHGENDER, BirthGender.FEMALE.getValue());
+        filter.put(FilterOption.DONOR, "true");
+
+        ArrayList<Patient> results = SearchPatients.search("a", filter);
+        assertEquals(1, results.size());
+    }
+
     /**
      * Adds a set of patients to the db, also clears and resets
      */

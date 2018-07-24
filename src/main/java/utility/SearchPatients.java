@@ -253,6 +253,14 @@ public class SearchPatients {
     }
 
 
+
+    /**
+     *  Check if a patient matches the filter criteria
+     * @param patient - patient to check filter against
+     * @param filter - filter to use
+     * @return - bool if a match
+     */
+    //do not git annotate :(
     private static boolean matchesFilter(Patient patient, Map<FilterOption, String> filter) {
         if (filter == null) {
             return false;
@@ -284,18 +292,20 @@ public class SearchPatients {
                 && patient.getDonations().size() == 0) {
             return false;
         }
-
-
         if (filter.get(FilterOption.AGEUPPER) != null &&  filter.get(FilterOption.AGELOWER) != null) {
             if (patient.getAge() > Integer.parseInt(filter.get(FilterOption.AGEUPPER))
                     || patient.getAge() < Integer.parseInt(filter.get(FilterOption.AGELOWER))) {
                 return false;
             }
         }
-
         return true;
     }
 
+    /**
+     * Checks a filter to see if any are selected
+     * @param filter - filter to check
+     * @return bool if any filters are selected
+     */
     private static boolean noFilterSelected(Map filter){
         if (filter == null) {
             return false;
