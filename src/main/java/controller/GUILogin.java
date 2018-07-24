@@ -9,6 +9,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Administrator;
+import model.Patient;
 import model.User;
 import service.Database;
 import utility.undoRedo.UndoableStage;
@@ -83,7 +84,8 @@ public class GUILogin {
         ScreenControl screenControl = ScreenControl.getScreenControl();
         try {
             if (patient.isSelected()) {
-                login.addLoggedInUserToCache(database.getPatientByNhi(nhiLogin.getText()));
+                Patient patient = database.getPatientByNhi(nhiLogin.getText()); //TODO: db throws null now
+                login.addLoggedInUserToCache(patient);
             } else if (clinician.isSelected()) {
                 login.addLoggedInUserToCache(database.getClinicianByID(Integer.parseInt(nhiLogin.getText())));
             } else {
