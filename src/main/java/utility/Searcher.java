@@ -49,12 +49,12 @@ public class Searcher {
     
     private static Searcher instance = null;
     
-    private Database database = Database.getDatabase();
+    private Database database;
 
     public Searcher() {
     	try {
 			indexWriter = initializeWriter();
-			createFullIndex();
+			database = Database.getDatabase();
             systemLogger.log(Level.INFO, "Successfully initialized index writer.");
 		} catch (IOException e) {
             systemLogger.log(Level.SEVERE, "Failed to initialize index writer.");
@@ -186,6 +186,10 @@ public class Searcher {
         }
     }
 
+    public void updateIndex(User user) {
+    	removeIndex(user);
+    	addIndex(user);
+    }
 
     public  void removeIndex(User user) {
     	Term toDel = null;

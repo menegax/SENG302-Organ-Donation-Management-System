@@ -92,8 +92,6 @@ public class Patient extends User {
     private ArrayList<Disease> pastDiseases = new ArrayList<>();
 
     private GlobalEnums.Organ removedOrgan;
-    
-    private Searcher searcher = Searcher.getSearcher();
 
     /**
      * Constructor for the patient class. Initializes basic attributes and adds listeners for status changes
@@ -744,7 +742,6 @@ public class Patient extends User {
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
             Searcher.getSearcher().removeIndex(this);
         	this.nhiNumber = nhiNumber.toUpperCase();
-            searcher.addIndex(this);
         	userModified();
         }
     }

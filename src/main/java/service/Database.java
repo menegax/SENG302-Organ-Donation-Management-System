@@ -33,8 +33,6 @@ public class Database {
     private Connection conn;
 
     private Set<Administrator> administrators = new HashSet<>();
-
-    private Searcher searcher = Searcher.getSearcher();
     
     private int curStaffID = 0;
 
@@ -151,6 +149,7 @@ public class Database {
      * @return The instance of the database for Singleton.
      */
     public static Database getDatabase() {
+    	
         if (database == null) {
             database = new Database();
         }
@@ -241,12 +240,13 @@ public class Database {
      * @return True if added object to database, false otherwise.
      */
     public boolean add(Object object) {
+    	Searcher searcher = Searcher.getSearcher();
         if (object instanceof Patient) {
-            return addPatient((Patient) object);
+            return addPatient((Patient) object, searcher);
         } else if (object instanceof Clinician) {
-            return addClinician((Clinician) object);
+            return addClinician((Clinician) object, searcher);
         } else if (object instanceof Administrator) {
-        	return addAdministrator((Administrator) object);
+        	return addAdministrator((Administrator) object, searcher);
         }
         return false;
     }
@@ -474,12 +474,13 @@ public class Database {
      * @return True if the object was update or created, false otherwise.
      */
     public boolean update(Object object) {
+    	Searcher searcher = Searcher.getSearcher();
         if (object instanceof Patient) {
-			return updatePatient((Patient) object);
+			return updatePatient((Patient) object, searcher);
         } else if (object instanceof Clinician) {
-        	return updateClinician((Clinician) object);
+        	return updateClinician((Clinician) object, searcher);
         } else if (object instanceof Administrator) {
-        	return updateAdministrator((Administrator) object);
+        	return updateAdministrator((Administrator) object, searcher);
         }
         return false;
     }
@@ -489,14 +490,14 @@ public class Database {
      * @param patient The patient to update.
      * @return True if patient updated in database, false otherwise.
      */
-    private boolean updatePatient(Patient patient) {
+    private boolean updatePatient(Patient patient, Searcher searcher) {
     	String[][] info = getPreparedUpdatePatientQuery(patient);
     	String query = info[0][0];
     	String[] attr = info[1];
         //Run all queries
         try {
 			runQuery(query, attr);
-			searcher.addIndex(patient);
+			searcher.updateIndex(patient);
 			userActions.log(Level.INFO, "Updated patient attributes in database.", "Attempted to update patient attributes in database.");
 			return true;
 		} catch (SQLException e) {
@@ -554,11 +555,12 @@ public class Database {
      * Updates a clinician in the database.
      * @param clinician The clinician to update.
      */
-    private boolean updateClinician(Clinician clinician) {
+    private boolean updateClinician(Clinician clinician, Searcher searcher) {
     	String[] attr = getClinicianAttributes(clinician);
     	try {
 			runQuery(UPDATECLINICIANQUERYSTRING, attr);
 			userActions.log(Level.INFO, "Updated clinician attributes in database.", "Attempted to update clinician attributes in database.");
+			searcher.updateIndex(clinician);
 			return true;
 		} catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to update clinician in database.");
@@ -571,11 +573,12 @@ public class Database {
      * @param admin The Administrator to update.
      * @return True if successfully updated, otherwise false.
      */
-    private boolean updateAdministrator(Administrator admin) {
+    private boolean updateAdministrator(Administrator admin, Searcher searcher) {
     	String[] attr = getAdministratorAttributes(admin);
     	try {
 			runQuery(UPDATEADMINQUERYSTRING, attr);
 			userActions.log(Level.INFO, "Updated administrator attributes in database.", "Attempted to update administrator attributes in database.");
+			searcher.updateIndex(admin);
 			return true;
 		} catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to update administrator in database.");
@@ -609,13 +612,13 @@ public class Database {
      * @return True if added patient to database, false otherwise.
      * @throws IllegalArgumentException Throws if NHI already in use.
      */
-    private boolean addPatient(Patient newPatient) throws IllegalArgumentException {
+    private boolean addPatient(Patient newPatient, Searcher searcher) throws IllegalArgumentException {
         if (inDatabase(newPatient)) {
             userActions.log(Level.SEVERE, "Failed to add patient to database, NHI already exisits.", "Attempted to add new patient to database.");
-            throw new IllegalArgumentException("NHI " + newPatient.getNhiNumber() + " already in use.");
+            return false;
         } else {
         	//Adds Patient to the database
-            if (updatePatient(newPatient)) {
+            if (update(newPatient)) {
                 //Add Patient to application
                 patients.add(newPatient);
                 //Add Patient to search index
@@ -634,12 +637,12 @@ public class Database {
      * @return True if the clinician was added, false otherwise.
 	 * @throws IllegalArgumentException Throws if Staff ID already in use.
      */
-    private boolean addClinician(Clinician newClinician) throws IllegalArgumentException {
+    private boolean addClinician(Clinician newClinician, Searcher searcher) throws IllegalArgumentException {
     	if (inDatabase(newClinician)) {
             userActions.log(Level.SEVERE, "Failed to add clinician to database, staff ID " + newClinician.getStaffID() + " already exisits.", "Attempted to add new clinician to database.");
             return false;
     	}
-		if (updateClinician(newClinician)) {
+		if (update(newClinician)) {
 			clinicians.add(newClinician);
 			searcher.addIndex(newClinician);
 			userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
@@ -649,12 +652,12 @@ public class Database {
 		return false;
     }
     
-    private boolean addAdministrator(Administrator admin) {
+    private boolean addAdministrator(Administrator admin, Searcher searcher) {
     	if (inDatabase(admin)) {
             userActions.log(Level.SEVERE, "Failed to add administrator to database, username " + admin.getUsername() + " already exisits.", "Attempted to add new administrator to database.");
             return false;
     	}
-    	if (updateAdministrator(admin)) {
+    	if (update(admin)) {
             administrators.add(admin);
             searcher.addIndex(admin);
             userActions.log(Level.INFO, "Successfully added administrator " + admin.getUsername(), "Attempted to add an administrator");
@@ -1085,11 +1088,8 @@ public class Database {
         try {
         	String query = "SELECT * FROM tblPatients";
             ArrayList<String[]> patientsRaw = runQuery(query, new String[0]);
-            Patient patient;
             for (String[] attr : patientsRaw) {
-            	patient = parsePatient(attr);
-                patients.add(patient);
-                searcher.addIndex(patient);
+                patients.add(parsePatient(attr));
             }
 			userActions.log(Level.INFO, "Successfully imported all patients from the database.", "Attempted to read all patients from database.");
             return true;
@@ -1107,11 +1107,8 @@ public class Database {
         try {
         	String query = "SELECT * FROM tblAdmins";
             ArrayList<String[]> adminsRaw = runQuery(query, new String[0]);
-            Administrator admin;
             for (String[] attr : adminsRaw) {
-            	admin = parseAdministrator(attr);
-                administrators.add(admin);
-                searcher.addIndex(admin);
+                administrators.add(parseAdministrator(attr));
             }
 			userActions.log(Level.INFO, "Successfully imported all administrators from the database.", "Attempted to read all administrators from database.");
             return true;
@@ -1129,12 +1126,10 @@ public class Database {
         try {
         	String query = "SELECT * FROM tblClinicians";
             ArrayList<String[]> clinicianRaw = runQuery(query, new String[0]);
-            Clinician clinician;
             for (String[] attr : clinicianRaw) {
-            	clinician = parseClinician(attr);
-                clinicians.add(clinician);
-                searcher.addIndex(clinician);
+                clinicians.add(parseClinician(attr));
             }
+			userActions.log(Level.INFO, "Successfully imported all clinicians from the database.", "Attempted to read all clinicians from database.");
             return true;
         } catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to read all clinicians from the database." + e.getMessage(), "Attempted to read all clinicians from the database.");
@@ -1177,12 +1172,13 @@ public class Database {
      * @return True if the object was successfully deleted, false otherwise.
      */
     public boolean delete(Object object) {
+    	Searcher searcher = Searcher.getSearcher();
     	if (object instanceof Patient) {
-    		return deletePatient((Patient) object);
+    		return deletePatient((Patient) object, searcher);
     	} else if (object instanceof Clinician) {
-    		return deleteClinician((Clinician) object);
+    		return deleteClinician((Clinician) object, searcher);
     	} else if (object instanceof Administrator) {
-    		return deleteAdministrator((Administrator) object);
+    		return deleteAdministrator((Administrator) object, searcher);
     	}
     	return false;
     }
@@ -1192,7 +1188,7 @@ public class Database {
      * @param admin The Administrator to delete.
      * @return True if successfully deleted admin, otherwise false.
      */
-    private boolean deleteAdministrator(Administrator admin) {
+    private boolean deleteAdministrator(Administrator admin, Searcher searcher) {
     	String username = admin.getUsername();
         String query = "DELETE FROM tblAdmins WHERE Username = ?";
         String[] param = {String.valueOf(username)};
@@ -1212,7 +1208,7 @@ public class Database {
      * @param clinician The clinician to delete.
      * @return True if successfully deletes clinician, otherwise false.
      */
-    private boolean deleteClinician(Clinician clinician) {
+    private boolean deleteClinician(Clinician clinician, Searcher searcher) {
     	int staffID = clinician.getStaffID();
     	String query = "DELETE FROM tblClinicians WHERE StaffID = ?";
     	String[] param = {String.valueOf(staffID)};
@@ -1232,7 +1228,7 @@ public class Database {
      * @param nhi The NHI of the patient to remove.
      * @return True if the patient was removed, false otherwise.
      */
-    private boolean deletePatient(Patient patient) {
+    private boolean deletePatient(Patient patient, Searcher searcher) {
     	String nhi = patient.getNhiNumber();
     	String query = "";
     	String[] params = new String[7];
@@ -1483,7 +1479,7 @@ public class Database {
             Patient[] patient = gson.fromJson(br, Patient[].class);
             for (Patient d : patient) {
                 try {
-                    addPatient(d);
+                    add(d);
                 } catch (IllegalArgumentException e) {
                     userActions.log(Level.WARNING, "Error importing donor from file", "Attempted to import donor from file");
                 }
@@ -1525,7 +1521,7 @@ public class Database {
             Clinician[] clinician = gson.fromJson(br, Clinician[].class);
             for (Clinician c : clinician) {
                 try {
-                    addClinician(c);
+                    add(c);
                 } catch (IllegalArgumentException e) {
                     userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
                 }
@@ -1553,7 +1549,7 @@ public class Database {
             Administrator[] administrators = gson.fromJson(br, Administrator[].class);
             for (Administrator a : administrators) {
                 try {
-                    database.addAdministrator(a);
+                    database.add(a);
                 } catch (IllegalArgumentException e) {
                     userActions.log(Level.WARNING, "Error importing administrator from file", "Attempted to import administrator from file");
                 }
