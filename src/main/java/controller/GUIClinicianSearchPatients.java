@@ -150,7 +150,11 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
 
                     // When pop up is closed, refresh the table
-                    popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
+                    popUpStage.setOnHiding(event -> Platform.runLater(() -> {
+                        masterData.clear();
+                        Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+                                NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
+                    }));
                 }
                 catch (IOException e) {
                     userActions.log(Level.SEVERE,
