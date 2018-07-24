@@ -1,5 +1,6 @@
 package utility.undoRedo;
 
+import controller.ScreenControl;
 import model.User;
 import service.Database;
 
@@ -11,6 +12,8 @@ public class Action {
     private User before;
     private User current;
     private User after;
+
+    ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Constructor for the action
@@ -32,6 +35,7 @@ public class Action {
             this.after = after.deepClone();
         }
         execute();
+        screenControl.setIsSaved(false);
     }
 
     /**
@@ -47,6 +51,7 @@ public class Action {
         } else {
             current.setAttributes(after);
         }
+        screenControl.setIsSaved(false);
     }
 
     /**
@@ -62,5 +67,6 @@ public class Action {
         } else {
             current.setAttributes(before);
         }
+        screenControl.setIsSaved(false);
     }
 }
