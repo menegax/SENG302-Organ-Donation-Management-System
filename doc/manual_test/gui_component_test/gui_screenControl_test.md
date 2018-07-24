@@ -2,7 +2,7 @@
 
 ### Asterisk test
 
-##### Base Stages
+##### 1 Base Stages
 For each of Clinician, Admin, Patient
 1. Log in as user
 2. Navigate to tab
@@ -12,7 +12,7 @@ For each of Clinician, Admin, Patient
 -> Title should no longer have asterisk
 5. Repeat steps 2-4 for each editable tab
 
-#####Pop-up stages
+##### 2 Pop-up stages
 Repeat following test for procedures and diseases
 1. Log in as a clinician
 2. Open add item  
@@ -22,4 +22,6 @@ Repeat following test for procedures and diseases
 4. Open add item  
 -> Pop-up should not have a title (incl. no asterisk)
 
+### 24/07/2018 - Josh
 
+Test 1: ... todo

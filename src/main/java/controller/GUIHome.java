@@ -299,20 +299,23 @@ public class GUIHome implements Observer {
      * Checks for unsaved changes before logging out
      */
     private void attemptLogOut() {
-        systemLogger.log(FINE, "User trying to log out");
         if (!screenControl.getIsSaved()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Would you like to save all unsaved changes?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
             alert.setTitle("Unsaved changes");
-;
             alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
+                systemLogger.log(FINE, "User trying to log out");
                 Database.saveToDisk();
                 logOut();
             });
-            alert.getDialogPane().lookupButton(ButtonType.NO).addEventFilter(ActionEvent.ACTION, event -> logOut());
+            alert.getDialogPane().lookupButton(ButtonType.NO).addEventFilter(ActionEvent.ACTION, event -> {
+                systemLogger.log(FINE, "User trying to log out");
+                logOut();
+            });
+            alert.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, event -> {
+                System.out.println("Have a nice day"); //tod rm
+            });
             alert.showAndWait();
-        } else {
-            logOut();
-        }
+        } // else do nothing
     }
 
     /**
@@ -322,6 +325,7 @@ public class GUIHome implements Observer {
         screenControl.closeAllUserStages(new UserControl().getLoggedInUser());
         new UserControl().rmLoggedInUserCache();
         screenControl.setUpNewLogin(); // ONLY FOR SINGLE USER SUPPORT. REMOVE WHEN MULTI USER SUPPORT
+        userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
 
         // Resets all local changes
         Database.resetDatabase();
@@ -348,7 +352,6 @@ public class GUIHome implements Observer {
         menu1Item1.setAccelerator(screenControl.getLogOut());
         menu1Item1.setOnAction(event -> {
             attemptLogOut();
-            userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
         });
         menu1.getItems()
                 .addAll(menu1Item1);
