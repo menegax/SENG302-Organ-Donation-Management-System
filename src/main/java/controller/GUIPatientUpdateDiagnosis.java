@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import static utility.GlobalEnums.UndoableScreen.CLINICIANDIAGNOSIS;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -50,7 +51,6 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
 
     private UserControl userControl;
 
-    // todo re-engineer to not be static
     /**
      * Diagnosis being updated
      */
@@ -67,7 +67,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
     private static boolean isAdd;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
-
+    private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
     /**
      * Sets the diagnosis that is being updated
@@ -99,16 +99,14 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
         } else {
             if (patientClone.getCurrentDiseases() != null) {
                 for (Disease idisease : patientClone.getCurrentDiseases()) {
-                    // todo replace with .equals
-                    if (idisease.getDiseaseName().equals(target.getDiseaseName()) && idisease.getDateDiagnosed().equals(target.getDateDiagnosed())) {
+                    if (idisease.equals(target)) {
                         targetClone = idisease;
                     }
                 }
             }
             if (patientClone.getPastDiseases() != null) {
                 for (Disease idisease : patientClone.getPastDiseases()) {
-                    // todo replace with .equals
-                    if (idisease.getDiseaseName().equals(target.getDiseaseName()) && idisease.getDateDiagnosed().equals(target.getDateDiagnosed())) {
+                    if (idisease.equals(target)) {
                         targetClone = idisease;
                     }
                 }
@@ -121,7 +119,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             add(diagnosisDate);
             add(tagsDD);
         }};
-        //statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDIAGNOSIS); todo make work
+        //statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDIAGNOSIS);
     }
 
     /**
@@ -318,15 +316,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             }
             patientClone.sortDiseases();
             Action action = new Action(currentPatient, patientClone);
-            for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
-                if (stage instanceof UndoableStage) {
-                    for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
-                        if (statesHistoryScreen.getUndoableScreen().equals(GlobalEnums.UndoableScreen.CLINICIANDIAGNOSIS)) {
-                            statesHistoryScreen.addAction(action);
-                        }
-                    }
-                }
-            }
+            undoRedoControl.addAction(action, CLINICIANDIAGNOSIS);
 
             screenControl.closeStage(((UndoableStage)doneButton.getScene().getWindow()).getUUID());
         } else {

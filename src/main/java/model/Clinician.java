@@ -65,7 +65,6 @@ public class Clinician extends User {
 
     /**
      * Sets the attributes of the clinician to the attributes of the provided clinician
-     * TODO desgin better
      * @param newUserAttributes a user whose attributes this function copies
      */
     public void setAttributes(User newUserAttributes) {

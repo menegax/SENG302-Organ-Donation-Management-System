@@ -102,9 +102,7 @@ public class Disease implements Serializable {
         }
         if(o instanceof Disease) {
             Disease d = (Disease) o;
-            if(d.getDiseaseName().equals(this.diseaseName)) {
-                return d.getDateDiagnosed().equals(this.dateDiagnosed);
-            }
+            return d.getDateDiagnosed().equals(this.dateDiagnosed) && (d.getDiseaseName().equals(this.diseaseName));
         }
         return false;
     }

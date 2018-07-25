@@ -61,4 +61,13 @@ public class Procedure implements Serializable {
     public void setAffectedDonations(Set<Organ> affectedDonations) {
         this.affectedDonations = affectedDonations;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Procedure) {
+            Procedure p = (Procedure) obj;
+            return p.getSummary().equals(summary) && p.getDate().equals(date);
+        }
+        return false;
+    }
 }

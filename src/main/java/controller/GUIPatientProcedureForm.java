@@ -56,6 +56,7 @@ public class GUIPatientProcedureForm  {
     private Procedure procedureClone;
     private ScreenControl screenControl = ScreenControl.getScreenControl();
     private UserControl userControl = new UserControl();
+    private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
     /**
      * Initial setup. Sets up undo/redo, Populates the affected organs dropdown
@@ -77,9 +78,8 @@ public class GUIPatientProcedureForm  {
     void setupEditing(Procedure procedure) {
         isEditInstance = true;
         this.procedure = procedure;
-        //todo modularise and design out into .equals
         for (Procedure iprocedure : patientClone.getProcedures()) {
-            if (iprocedure.getDate().equals(procedure.getDate()) && iprocedure.getSummary().equals(procedure.getSummary())) {
+            if (procedure.equals(iprocedure)) {
                 procedureClone = iprocedure;
             }
         }
@@ -146,17 +146,8 @@ public class GUIPatientProcedureForm  {
             this.procedureClone.setDescription(descriptionInput.getText());
             this.procedureClone.setAffectedDonations(affectedDonations);
             this.procedureClone.setDate(dateInput.getValue());
-            // todo modularise out (into screenControl?? - undoredoControl??)
             Action action = new Action(patient, patientClone);
-            for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
-                if (stage instanceof UndoableStage) {
-                    for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
-                        if (statesHistoryScreen.getUndoableScreen().equals(GlobalEnums.UndoableScreen.PATIENTPROCEDURES)) {
-                            statesHistoryScreen.addAction(action);
-                        }
-                    }
-                }
-            }
+            undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
             userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", patient.getNhiNumber()});
             goBackToProcedures();
         } else {
@@ -180,15 +171,7 @@ public class GUIPatientProcedureForm  {
                     dateInput.getValue(), affectedDonations );
             patientClone.addProcedure( procedureClone );
             Action action = new Action(patient, patientClone);
-            for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
-                if (stage instanceof UndoableStage) {
-                    for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
-                        if (statesHistoryScreen.getUndoableScreen().equals(GlobalEnums.UndoableScreen.PATIENTPROCEDURES)) {
-                            statesHistoryScreen.addAction(action);
-                        }
-                    }
-                }
-            }
+            undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
             userActions.log(Level.INFO, "Added procedure " + procedureClone.getSummary(), new String[]{"Attempted to add a procedure", patientClone.getNhiNumber()});
             goBackToProcedures();
         } else {

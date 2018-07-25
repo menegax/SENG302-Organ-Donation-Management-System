@@ -1,8 +1,11 @@
 package controller;
 
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+import utility.GlobalEnums;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,6 +21,9 @@ public class UndoRedoControl {
 //    public String redoShortcut = "Ctrl+Y";
 
     private static UndoRedoControl undoRedoControl;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    private UserControl userControl = new UserControl();
 
     private UndoRedoControl() {
 
@@ -96,6 +102,23 @@ public class UndoRedoControl {
      */
     public void setActions(Map<Integer, List<Action>> actions, StatesHistoryScreen statesHistoryScreen) {
         statesHistoryScreen.setActions(actions);
+    }
+
+    /**
+     * Adds an action to the stateHistoryScreen of the undoableScreen provided
+     * @param action the action to have
+     * @param undoableScreen the undoable screen of the statesHistoryScreen to add it to
+     */
+    public void addAction(Action action, GlobalEnums.UndoableScreen undoableScreen) {
+        for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
+            if (stage instanceof UndoableStage) {
+                for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
+                    if (statesHistoryScreen.getUndoableScreen().equals(undoableScreen)) {
+                        statesHistoryScreen.addAction(action);
+                    }
+                }
+            }
+        }
     }
 
     /**

@@ -227,7 +227,6 @@ public class Patient extends User {
 
     /**
      * Sets the attributes of the patient to the attributes of the provided patient
-     * TODO desgin better
      * @param newUserAttributes a user whose attributes this function copies
      */
     public void setAttributes(User newUserAttributes) {

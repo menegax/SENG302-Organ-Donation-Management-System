@@ -140,11 +140,10 @@ public class UndoableStage extends Stage {
      * Adds listeners for undo/redo for undoable pop-ups (procedures, diagnoses)
      */
     public void setPopUp() {
-        // todo magic strings
         this.getScene().setOnKeyPressed(event ->  {
-            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+            if (screenControl.getUndo().match(event)) {
                 undo();
-            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+            } else if (screenControl.getRedo().match(event)) {
                 redo();
             }
         });
