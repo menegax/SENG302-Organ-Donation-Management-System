@@ -3,6 +3,7 @@ package utility_test.stateHistoryWidgetTests;
 import com.sun.javafx.application.PlatformImpl;
 import javafx.scene.control.CheckBox;
 import org.junit.Ignore;
+import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryCheckBox;
 import org.junit.BeforeClass;
 import org.junit.Test;

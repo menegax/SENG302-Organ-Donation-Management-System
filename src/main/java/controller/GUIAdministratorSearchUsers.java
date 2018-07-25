@@ -76,7 +76,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         controls = new ArrayList<Control>() {{
             add(searchEntry);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANSEARCHPATIENTS);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
     }
 
     /**
@@ -122,7 +122,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     private FilteredList<User> setupTableColumnsAndData() {
     	UserTypes[] types = new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN};
     	masterData.clear();
-    	masterData.addAll(searcher.getDefaultResults(types));
+    	masterData.addAll(searcher.getDefaultResults(types, null));
         // initialize columns
         columnName.setCellValueFactory(d -> d.getValue()
                 .getNameConcatenated() != null ? new SimpleStringProperty(d.getValue()
@@ -148,9 +148,9 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
             masterData.clear();
             List<User> results;
             if (newValue == null || newValue.isEmpty()) {
-                results = searcher.getDefaultResults(new UserTypes[] { UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN });
+                results = searcher.getDefaultResults(new UserTypes[] { UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN }, null);
             } else {
-                results = searcher.search(newValue, new UserTypes[] { UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN }, NUMRESULTS);
+                results = searcher.search(newValue, new UserTypes[] { UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN }, NUMRESULTS, null);
             }
             masterData.addAll(results);
             filteredData.setPredicate(patient -> true);
@@ -181,7 +181,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
-                    List<User> results = searcher.search(newValue, new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, NUMRESULTS);
+                    List<User> results = searcher.search(newValue, new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, NUMRESULTS, null);
                     return results.contains(user);
                 }));
     }
@@ -221,7 +221,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
      * Adds all db data via constructor
      */
     public GUIAdministratorSearchUsers() {
-        masterData.addAll(searcher.getDefaultResults(new UserTypes[]{UserTypes.ADMIN, UserTypes.CLINICIAN, UserTypes.PATIENT}));
+        masterData.addAll(searcher.getDefaultResults(new UserTypes[]{UserTypes.ADMIN, UserTypes.CLINICIAN, UserTypes.PATIENT}, null));
     }
 
     /**
@@ -230,7 +230,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     private void tableRefresh() {
         UserTypes[] types = new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN};
         masterData.clear();
-        masterData.addAll(searcher.getDefaultResults(types));
+        masterData.addAll(searcher.getDefaultResults(types, null));
         userDataTable.refresh();
     }
 }

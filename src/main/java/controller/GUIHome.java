@@ -9,10 +9,12 @@ import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 import de.codecentric.centerdevice.MenuToolkit;
+import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -20,7 +22,11 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
+import org.tuiofx.TuioFX;
 import service.Database;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
+import utility.undoRedo.UndoableStage;
 import utility.StatusObservable;
 import utility.undoRedo.UndoableStage;
 
@@ -29,7 +35,7 @@ import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
-public class GUIHome implements Observer {
+public class GUIHome implements Observer, TouchscreenCapable {
 
     @FXML
     public BorderPane homePane;
@@ -46,9 +52,30 @@ public class GUIHome implements Observer {
     @FXML
     private Label statusLbl;
 
+    private TouchPaneController homeTouchPane;
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private UserControl userControl = new UserControl();
+
+    private  enum TabName {
+        PROFILE("Profile"), UPDATE("Update"), DONATIONS("Donations"), CONTACTDETAILS("Contact Details"),
+        DISEASEHISTORY("View Disease History"), HISTORY("History"), PROCEDURES("Procedures"),
+        TRANSPLANTWAITINGLIST("Transplant Waiting List"), SEARCHPATIENTS("Search Patients"),
+        REQUESTEDDONATIONS("Requested Donations"), MEDICATIONS("Medications"), SEARCHPUSERS("Search Users"),
+        USERREGISTER("User Register");
+
+        private String value;
+
+        TabName(String value) {
+            this.value = value;
+        }
+
+        public String toString() {
+            return this.value;
+        }
+
+    }
 
     private Stage homeStage;
 
@@ -62,14 +89,27 @@ public class GUIHome implements Observer {
     public void initialize() {
         StatusObservable statusObservable = StatusObservable.getInstance();
         statusObservable.addObserver(this);
+        horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty()
+                .addListener((observable1, oldStage, newStage) -> {
+            setUpMenuBar((UndoableStage) newStage);
+            addTabs((UndoableStage) newStage);
+        }));
+    }
+
+    /**
+     * Detects the appropriate user and adds the tabs to the tab bar accordingly
+     * @param stage the stage the horizontal tab is on
+     */
+    private void addTabs(UndoableStage stage) {
+        UserControl userControl = new UserControl();
+        stage.setChangingStates(true);
         try {
             // Patient viewing themself
             if (userControl.getLoggedInUser() instanceof Patient) {
                 homeTarget = userControl.getLoggedInUser();
                 addTabsPatient();
                 setUpColouredBar(userControl.getLoggedInUser());
-            }
-            else if (userControl.getLoggedInUser() instanceof Clinician) {
+            } else if (userControl.getLoggedInUser() instanceof Clinician) {
                 // Clinician viewing a patient
                 if (userControl.getTargetUser() != null) {
                     homeTarget = userControl.getTargetUser();
@@ -82,8 +122,7 @@ public class GUIHome implements Observer {
                     addTabsClinician();
                     setUpColouredBar(userControl.getLoggedInUser());
                 }
-            }
-            else if (userControl.getLoggedInUser() instanceof Administrator) {
+            } else if (userControl.getLoggedInUser() instanceof Administrator) {
                 // admin viewing patient
                 if (userControl.getTargetUser() instanceof Patient) {
                     homeTarget = userControl.getTargetUser();
@@ -101,21 +140,25 @@ public class GUIHome implements Observer {
                     homeTarget = userControl.getTargetUser();
                     addTabsAdministrator();
                     setUpColouredBar(userControl.getTargetUser());
-                }
-                else {
+                } else {
                     addTabsAdministrator();
                     setUpColouredBar(userControl.getLoggedInUser());
                 }
             }
+            homeTouchPane = new TouchPaneController(homePane);
+            horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty().addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
+            homePane.setOnZoom(this::zoomWindow);
+            homePane.setOnRotate(this::rotateWindow);
+            homePane.setOnScroll(this::scrollWindow);
             addStageListener();
             horizontalTabPane.sceneProperty()
                     .addListener((observable, oldScene, newScene) -> newScene.windowProperty()
                             .addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());
         }
+        stage.setChangingStates(false);
     }
 
 
@@ -135,16 +178,14 @@ public class GUIHome implements Observer {
                                                 setStageTitle();
                                             }
                                         });
-                            }
-                            else {
+                            } else {
                                 homeStage = (Stage) newScene.getWindow();
                                 // Methods to call after initialize
                                 setStageTitle();
                             }
                         }
                     });
-        }
-        else if (homePane.getScene()
+        } else if (homePane.getScene()
                 .getWindow() == null) {
             homePane.getScene()
                     .windowProperty()
@@ -155,8 +196,7 @@ public class GUIHome implements Observer {
                             setStageTitle();
                         }
                     });
-        }
-        else {
+        } else {
             homeStage = (Stage) homePane.getScene()
                     .getWindow();
             // Methods to call after initialize
@@ -198,100 +238,92 @@ public class GUIHome implements Observer {
         userNameDisplay.setText(user.getNameConcatenated());
     }
 
-
     /**
      * Creates and adds tab to the tab pane
-     *
-     * @param title    - title of the new tab
+     * @param title - title of the new tab
      * @param fxmlPath - path of the fxml to be loaded
      */
-    private void createTab(String title, String fxmlPath) throws IOException {
+    private void createTab(TabName title, String fxmlPath) throws IOException {
         Tab newTab = new Tab();
-        newTab.setText(title);
-        newTab.setOnSelectionChanged(event -> {
-            try {
-                newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
-            }
-            catch (IOException e) {
-                systemLogger.log(SEVERE, "Failed to create tab", e);
-            }
-        });
-        newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
-        horizontalTabPane.getTabs()
-                .add(newTab);
+        newTab.setText(title.toString());
+            newTab.setOnSelectionChanged(event -> {
+                try {
+                    newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
+                } catch (IOException e) {
+                    systemLogger.log(SEVERE, "Failed to create tab", e);
+                }
+            });
+        horizontalTabPane.getTabs().add(newTab);
     }
-
 
     /**
      * Adds tabs to the home tab pane for a patient logged in
      *
-     * @exception IOException - if fxml cannot be located
+     * @throws IOException - if fxml cannot be located
      */
     private void addTabsPatient() throws IOException {
-        createTab("Profile", "/scene/patientProfile.fxml");
-        createTab("Update", "/scene/patientUpdateProfile.fxml");
-        createTab("Donations", "/scene/patientUpdateDonations.fxml");
-        createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
-        createTab("View Disease History", "/scene/clinicianDiagnosis.fxml");
-        createTab("History", "/scene/patientHistory.fxml");
-        createTab("Procedures", "/scene/patientProcedures.fxml");
+        createTab(TabName.PROFILE, "/scene/patientProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/patientUpdateProfile.fxml");
+        createTab(TabName.DONATIONS, "/scene/patientUpdateDonations.fxml");
+        createTab(TabName.CONTACTDETAILS, "/scene/patientUpdateContacts.fxml");
+        createTab(TabName.DISEASEHISTORY, "/scene/clinicianDiagnosis.fxml");
+        createTab(TabName.HISTORY, "/scene/patientHistory.fxml");
+        createTab(TabName.PROCEDURES, "/scene/patientProcedures.fxml");
     }
 
 
     /**
      * Adds tabs for a clinician viewing a patient
      *
-     * @exception IOException- if fxml cannot be located
+     * @throws IOException- if fxml cannot be located
      */
-    private void addTabsForPatientClinician() throws IOException {
-        createTab("Profile", "/scene/patientProfile.fxml");
-        createTab("Update", "/scene/patientUpdateProfile.fxml");
-        createTab("Medications", "/scene/patientMedications.fxml");
-        createTab("Donations", "/scene/patientUpdateDonations.fxml");
-        createTab("Contact Details", "/scene/patientUpdateContacts.fxml");
-        createTab("Requested Donations", "/scene/patientUpdateRequirements.fxml");
-        createTab("View Diseases", "/scene/clinicianDiagnosis.fxml");
-        createTab("Procedures", "/scene/patientProcedures.fxml");
+    private void addTabsForPatientClinician() throws IOException{
+        createTab(TabName.PROFILE, "/scene/patientProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/patientUpdateProfile.fxml");
+        createTab(TabName.MEDICATIONS, "/scene/patientMedications.fxml");
+        createTab(TabName.DONATIONS, "/scene/patientUpdateDonations.fxml");
+        createTab(TabName.CONTACTDETAILS, "/scene/patientUpdateContacts.fxml");
+        createTab(TabName.REQUESTEDDONATIONS, "/scene/patientUpdateRequirements.fxml");
+        createTab(TabName.DISEASEHISTORY, "/scene/clinicianDiagnosis.fxml");
+        createTab(TabName.PROCEDURES, "/scene/patientProcedures.fxml");
     }
 
 
     /**
      * Adds tabs for a logged in clinician
      *
-     * @exception IOException- if fxml cannot be located
+     * @throws IOException- if fxml cannot be located
      */
     private void addTabsClinician() throws IOException {
-        createTab("Profile", "/scene/clinicianProfile.fxml");
-        createTab("Update", "/scene/clinicianProfileUpdate.fxml");
-        createTab("Search Patients", "/scene/clinicianSearchPatients.fxml");
-        createTab("Transplant Waiting List", "/scene/clinicianWaitingList.fxml");
-        createTab("History", "/scene/clinicianHistory.fxml");
+        createTab(TabName.PROFILE, "/scene/clinicianProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/clinicianProfileUpdate.fxml");
+        createTab(TabName.SEARCHPATIENTS, "/scene/clinicianSearchPatients.fxml");
+        createTab(TabName.TRANSPLANTWAITINGLIST, "/scene/clinicianWaitingList.fxml");
+        createTab(TabName.HISTORY, "/scene/clinicianHistory.fxml");
     }
-
 
     /**
      * Adds tabs for a logged in administrator
      *
-     * @exception IOException- if fxml cannot be located
+     * @throws IOException- if fxml cannot be located
      */
     private void addTabsAdministrator() throws IOException {
-        createTab("Profile", "/scene/administratorProfile.fxml");
-        createTab("Update", "/scene/administratorProfileUpdate.fxml");
-        createTab("Register User", "/scene/userRegister.fxml");
-        createTab("Search Users", "/scene/administratorSearchUsers.fxml");
-        createTab("Transplant Waiting List", "/scene/clinicianWaitingList.fxml");
-        createTab("History", "/scene/adminHistory.fxml");
+        createTab(TabName.PROFILE, "/scene/administratorProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/administratorProfileUpdate.fxml");
+        createTab(TabName.USERREGISTER, "/scene/administratorUserRegister.fxml");
+        createTab(TabName.SEARCHPUSERS, "/scene/administratorSearchUsers.fxml");
+        createTab(TabName.TRANSPLANTWAITINGLIST, "/scene/clinicianWaitingList.fxml");
+        createTab(TabName.HISTORY, "/scene/adminHistory.fxml");
     }
-
 
     /**
      * Adds tabs for an administrator viewing a clinician
      *
-     * @exception IOException- if fxml cannot be located
+     * @throws IOException- if fxml cannot be located
      */
     private void addTabsClinicianAdministrator() throws IOException {
-        createTab("Profile", "/scene/clinicianProfile.fxml");
-        createTab("Update", "/scene/clinicianProfileUpdate.fxml");
+        createTab(TabName.PROFILE, "/scene/clinicianProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/clinicianProfileUpdate.fxml");
     }
 
     /**
@@ -312,7 +344,7 @@ public class GUIHome implements Observer {
                 logOut();
             });
             alert.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, event -> {
-                System.out.println("Have a nice day"); //tod rm
+
             });
             alert.showAndWait();
         } else {
@@ -338,11 +370,11 @@ public class GUIHome implements Observer {
         Database.importFromDiskAdministrators("./administrator.json");
     }
 
-
     /**
      * Creates a native-looking MacOS menu bar for the application
      */
     private void setUpMenuBar(Stage stage) {
+        screenControl.addStageTab(stage, horizontalTabPane);
 
         // Create a new menu bar
         MenuBar bar = new MenuBar();
@@ -356,8 +388,7 @@ public class GUIHome implements Observer {
         menu1Item1.setOnAction(event -> {
             attemptLogOut();
         });
-        menu1.getItems()
-                .addAll(menu1Item1);
+        menu1.getItems().addAll(menu1Item1);
 
         // FILE
         Menu menu2 = new Menu("File");
@@ -386,27 +417,21 @@ public class GUIHome implements Observer {
                     userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
                 }
             });
-            subMenuImport.getItems()
-                    .addAll(menu2Item2, menu2Item3);
-            menu2.getItems()
-                    .addAll(subMenuImport);
+            subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
+            menu2.getItems().addAll(subMenuImport);
         }
-        menu2.getItems()
-                .addAll(menu2Item1);
+        menu2.getItems().addAll(menu2Item1);
 
-        // EDIT
-        //        Menu menu3 = new Menu("Edit");
-        //        MenuItem menu3Item1 = new MenuItem("Undo");
-        //        menu3Item1.setAccelerator(screenControl.getUndo());
-        //        menu3Item1.setOnAction(event -> ((UndoableStage) stage).undo());
-        //        MenuItem menu3Item2 = new MenuItem("Redo");
-        //        menu3Item2.setAccelerator(screenControl.getRedo());
-        //        menu3Item2.setOnAction(event -> System.out.println("Redo clicked"));
-        //        menu3.getItems()
-        //                .addAll(menu3Item1, menu3Item2);
+        Menu menu3 = new Menu("Edit");
+        MenuItem menu3Item1 = new MenuItem("Undo");
+        menu3Item1.setAccelerator(screenControl.getUndo());
+        menu3Item1.setOnAction(event -> ((UndoableStage) stage).undo());
+        MenuItem menu3Item2 = new MenuItem("Redo");
+        menu3Item2.setAccelerator(screenControl.getRedo());
+        menu3Item2.setOnAction(event -> ((UndoableStage) stage).redo());
+        menu3.getItems().addAll(menu3Item1, menu3Item2);
 
-        bar.getMenus()
-                .addAll(menu1, menu2);
+        bar.getMenus().addAll(menu1, menu2, menu3);
 
         boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless")
                 .equals("true");
@@ -424,12 +449,11 @@ public class GUIHome implements Observer {
                         .add(0, tk.createDefaultApplicationMenu(screenControl.getAppName())); // set leftmost MacOS system menu
                 tk.setMenuBar(stage, bar);
                 systemLogger.log(FINER, "Set MacOS menu bar");
-            }
-            else {// if windows
+            } else {// if windows
                 menuBar.getMenus()
                         .clear();
                 menuBar.getMenus()
-                        .addAll(menu1, menu2);
+                        .addAll(menu1, menu2, menu3);
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
             }
         }
@@ -467,10 +491,28 @@ public class GUIHome implements Observer {
         }
     }
 
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        homeTouchPane.zoomPane(zoomEvent);
+    }
+
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        homeTouchPane.rotatePane(rotateEvent);
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        if (scrollEvent.isDirect()) {
+            homeTouchPane.scrollPane(scrollEvent);
+        }
+    }
+
     /**
      * Removes the asterisk from the username display
      */
     void removeAsterisk() {
         userNameDisplay.setText(userNameDisplay.getText().replace("*", ""));
     }
+
 }

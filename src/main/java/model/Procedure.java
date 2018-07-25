@@ -2,13 +2,14 @@ package model;
 
 import utility.GlobalEnums.Organ;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
 
 /**
  * Represents a procedure performed or to be performed on a patient
  */
-public class Procedure {
+public class Procedure implements Serializable {
 
     private String summary;
     private String description;
@@ -59,5 +60,14 @@ public class Procedure {
 
     public void setAffectedDonations(Set<Organ> affectedDonations) {
         this.affectedDonations = affectedDonations;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Procedure) {
+            Procedure p = (Procedure) obj;
+            return p.getSummary().equals(summary) && p.getDate().equals(date);
+        }
+        return false;
     }
 }

@@ -4,19 +4,21 @@ import controller.GUIHome;
 import controller.ScreenControl;
 import controller.UndoRedoControl;
 import controller.UndoableController;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -25,6 +27,8 @@ import static utility.UserActionHistory.userActions;
 public class UndoableStage extends Stage {
 
     private List<StatesHistoryScreen> statesHistoryScreens = new ArrayList<>();
+
+    private Map<StatesHistoryScreen, Tab> tabMap = new HashMap<>();
 
     private int index = -1;
 
@@ -36,19 +40,14 @@ public class UndoableStage extends Stage {
 
     private GUIHome guiHome;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
     /**
      * Constructor for the undoable stage
-     * Sets up the action listeners for undo and redo
      */
     public UndoableStage() {
-        super();
-//        this.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-//            if (KeyCodeCombination.keyCombination(undoRedoControl.undoShortcut).match(event)) {
-//                undo();
-//            } else if (KeyCodeCombination.keyCombination(undoRedoControl.redoShortcut).match(event)) {
-//                redo();
-//            }
-//        });
+        //set min sizes
+        super.setMinWidth(800);
+        super.setMinHeight(640);
     }
 
     /**
@@ -96,6 +95,9 @@ public class UndoableStage extends Stage {
     public void store() {
         if (!changingStates) {
             statesHistoryScreens = new ArrayList<>(statesHistoryScreens.subList(0, index + 1));
+            for (StatesHistoryScreen statesHistoryScreen : statesHistoryScreens) {
+                statesHistoryScreen.notifyStoreComplete();
+            }
         }
     }
 
@@ -104,17 +106,20 @@ public class UndoableStage extends Stage {
      * @param method whether this was called from an undo or redo
      */
     private void navigateToScreen(String method) {
+        Tab newTab = tabMap.get(statesHistoryScreens.get(index));
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/" + (statesHistoryScreens.get(index)).getUndoableScreen().toString() + ".fxml"));
         try {
-            ScreenControl screenControl = ScreenControl.getScreenControl();
-            screenControl.show(uuid, fxmlLoader.load());
+            newTab.setContent(fxmlLoader.load());
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Error loading screen", "Attempted to navigate screens during " + method);
         }
         UndoableController controller = fxmlLoader.getController();
+        undoRedoControl.setActions(statesHistoryScreens.get(index).getActions(), controller.getStatesHistory());
         undoRedoControl.setStates(statesHistoryScreens.get(index), controller.getControls());
         undoRedoControl.setStatesHistoryScreen(controller, statesHistoryScreens.get(index));
         statesHistoryScreens.set(index, controller.getStatesHistory());
+        screenControl.getTabPane(this).getSelectionModel().select(newTab);
+        tabMap.put(controller.getStatesHistory(), newTab);
     }
 
     /**
@@ -127,8 +132,22 @@ public class UndoableStage extends Stage {
             index += 1;
             statesHistoryScreens = new ArrayList<>(statesHistoryScreens.subList(0, index));
             statesHistoryScreens.add(statesHistoryScreen);
+            tabMap.put(statesHistoryScreen, screenControl.getTabPane(this).getSelectionModel().getSelectedItem());
         }
     }
+
+//    /**
+//     * Adds listeners for undo/redo for undoable pop-ups (procedures, diagnoses)
+//     */
+//    public void setPopUp() {
+//        this.getScene().setOnKeyPressed(event ->  {
+//            if (screenControl.getUndo().match(event)) {
+//                undo();
+//            } else if (screenControl.getRedo().match(event)) {
+//                redo();
+//            }
+//        });
+//    }
 
     /**
      * Gets the UUID of the stage
@@ -153,5 +172,17 @@ public class UndoableStage extends Stage {
 
     public void setGuiHome(GUIHome guiHome) {
         this.guiHome = guiHome;
+    }
+
+    public void setChangingStates(Boolean changingStates) {
+        this.changingStates = changingStates;
+    }
+
+    public boolean getChangingStates() {
+        return this.changingStates;
+    }
+
+    public List<StatesHistoryScreen> getStatesHistoryScreens() {
+        return statesHistoryScreens;
     }
 }

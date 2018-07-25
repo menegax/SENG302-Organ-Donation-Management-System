@@ -3,9 +3,10 @@ package model;
 import utility.GlobalEnums.DiseaseState;
 
 import java.io.InvalidObjectException;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Disease {
+public class Disease implements Serializable {
 
     private String diseaseName;
 
@@ -101,9 +102,7 @@ public class Disease {
         }
         if(o instanceof Disease) {
             Disease d = (Disease) o;
-            if(d.getDiseaseName().equals(this.diseaseName)) {
-                return d.getDateDiagnosed().equals(this.dateDiagnosed);
-            }
+            return d.getDateDiagnosed().equals(this.dateDiagnosed) && (d.getDiseaseName().equals(this.diseaseName));
         }
         return false;
     }

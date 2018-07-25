@@ -3,19 +3,23 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCode;
+import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import service.Database;
+import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
 import utility.StatusObservable;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -30,7 +34,7 @@ import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import static utility.UserActionHistory.userActions;
 
-public class GUIUserRegister {
+public class GUIUserRegister implements TouchscreenCapable {
 
     public Button doneButton;
 
@@ -77,6 +81,8 @@ public class GUIUserRegister {
 
     private UserControl userControl = new UserControl();
 
+    private TouchPaneController registerTouchPane;
+
     /**
      * Sets up register page GUI elements
      */
@@ -105,13 +111,17 @@ public class GUIUserRegister {
             administratorButton.setDisable(true);
             administratorButton.setVisible(false);
         }
-
         // Enter key
         userRegisterPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 register();
             }
         });
+        registerTouchPane = new TouchPaneController(userRegisterPane);
+        userRegisterPane.setOnZoom(this::zoomWindow);
+        userRegisterPane.setOnRotate(this::rotateWindow);
+        userRegisterPane.setOnScroll(this::scrollWindow);
+
     }
 
     /**
@@ -446,5 +456,23 @@ public class GUIUserRegister {
         target.getStyleClass()
                 .remove("invalid");
     }
+
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        registerTouchPane.zoomPane(zoomEvent);
+    }
+
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        registerTouchPane.rotatePane(rotateEvent);
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        if(scrollEvent.isDirect()) {
+            registerTouchPane.scrollPane(scrollEvent);
+        }
+    }
+
 
 }
