@@ -4,6 +4,7 @@ import com.univocity.parsers.common.processor.BeanListProcessor;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import model.Patient;
+import org.apache.commons.lang3.StringUtils;
 import service.Database;
 
 import javax.xml.crypto.Data;
@@ -25,7 +26,7 @@ public class ParseCSV {
         CsvParserSettings settings = new CsvParserSettings();
         settings.getFormat().setLineSeparator("\n");
         settings.setProcessor(rowProcessor);
-        settings.trimValues(false);
+        settings.setSkipBitsAsWhitespace(false);
         settings.setHeaderExtractionEnabled(true);
         List<List<String>> errors = new ArrayList<>();
         settings.setProcessorErrorHandler((e , objects, context) ->{
@@ -50,5 +51,10 @@ public class ParseCSV {
        Database.getDatabase().importToDb(results.get(Result.SUCCESS));
 
         return results;
+    }
+
+
+    public static void main(String[] argv) {
+        System.out.println(StringUtils.isAsciiPrintable("PlanÃ¡"));
     }
 }
