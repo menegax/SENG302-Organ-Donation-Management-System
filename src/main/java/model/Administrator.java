@@ -65,6 +65,7 @@ public class Administrator extends User {
 		this.salt = salt;
 		this.password = password;
 		this.modified = modified;
+		databaseImport();
 	}
 
 	public String getUsername() {

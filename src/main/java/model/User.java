@@ -108,6 +108,10 @@ public abstract class User {
     public boolean getChanged() {
         return changed;
     }
+    
+    protected void databaseImport() {
+    	changed = false;
+    }
 
     public UUID getUuid() {
         return uuid;

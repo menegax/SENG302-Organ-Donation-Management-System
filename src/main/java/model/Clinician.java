@@ -88,6 +88,7 @@ public class Clinician extends User {
     	this.suburb = suburb;
     	this.region = region;
     	this.modified = modified;
+    	databaseImport();
     }
 
     public int getStaffID() {

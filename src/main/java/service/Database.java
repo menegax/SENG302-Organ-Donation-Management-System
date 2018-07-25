@@ -136,6 +136,11 @@ public class Database {
     		+ "Salt = VALUES (Salt), "
     		+ "Password = VALUES (Password), "
     		+ "Modified = VALUES (Modified)";
+    
+    private final String UPDATETRANSPLANTREQUESTQUERYSTRING = "INSERT INTO tblTransplantWaitList " 
+    		+ "VALUES (?, ?, ?, ?) "
+    		+ "ON DUPLICATE KEY UPDATE "
+    		+ "Patient = Patient";
 
     /**
      * Private constructor for creating instance of Database for Singleton.
@@ -318,10 +323,21 @@ public class Database {
         if(patient.getBloodGroup() != null) {
             attr[13] = patient.getBloodGroup().toString();
         }
-        attr[14] = String.join(",", patient.getDonations().toString())
-                .replaceAll("\\[", "").replaceAll("\\]", "");
-        attr[15] = String.join(",", patient.getRequiredOrgans().toString())
-                .replaceAll("\\[", "").replaceAll("\\]", "");
+        attr[14] = "";
+        for (GlobalEnums.Organ organ: patient.getDonations()) {
+        	attr[14] += organ.toString().toLowerCase() + ",";
+        }
+        if (attr[14].length() > 0) {
+        	attr[14] = attr[14].substring(0, attr[14].length() - 1);
+        }
+
+        attr[15] = "";
+        for (GlobalEnums.Organ organ: patient.getRequiredOrgans()) {
+        	attr[15] += organ.toString().toLowerCase() + ",";
+        }
+        if (attr[15].length() > 0) {
+        	attr[15] = attr[15].substring(0, attr[15].length() - 1);
+        }
         return attr;
     }
 
@@ -664,7 +680,7 @@ public class Database {
 		userActions.log(Level.SEVERE, "Failed added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
 		return false;
     }
-
+    
     private boolean addAdministrator(Administrator admin, Searcher searcher) {
     	if (inDatabase(admin)) {
             userActions.log(Level.SEVERE, "Failed to add administrator to database, username " + admin.getUsername() + " already exisits.", "Attempted to add new administrator to database.");
@@ -733,7 +749,7 @@ public class Database {
      * @param request The transplant request to save.
      * @return True if saved, false otherwise.
      */
-    public boolean saveTransplantRequest(OrganWaitlist.OrganRequest request) {
+    public boolean updateTransplantRequest(OrganWaitlist.OrganRequest request) {
         String[] attr = getTransplantRequestAttributes(request);
         String query = "INSERT INTO tblTransplantWaitList " +
                 "VALUES (?, ?, ?, ?)";
@@ -756,7 +772,7 @@ public class Database {
         loadAllAdministrators();
         loadTransplantWaitingList();
     }
-
+    
     /**
      * Loads all organs for a patient and stores them in an ArrayList.
      * @param organs String of the patients organs.
@@ -1162,7 +1178,7 @@ public class Database {
             for (String[] attr : waitlistRaw) {
                 String nhi = attr[0];
                 LocalDate date = LocalDate.parse(attr[1]);
-                GlobalEnums.Organ organ = GlobalEnums.Organ.valueOf(attr[2].toUpperCase());
+                GlobalEnums.Organ organ = GlobalEnums.Organ.valueOf(attr[2].toUpperCase().replaceAll(" ", ""));
                 GlobalEnums.Region region = null;
                 if(attr[3] != null) {
                     region = GlobalEnums.Region.valueOf(attr[3].toUpperCase());
@@ -1340,6 +1356,7 @@ public class Database {
     		}
     	}
     	try {
+    		//System.out.println(query);
 			runQuery(query, params);
 			userActions.log(Level.INFO, "Successfully updated all patients in database.", "Attempted to update all patients in database.");
 			return true;
@@ -1358,7 +1375,7 @@ public class Database {
     	String query = new String();
     	for (Clinician clinician : getClinicians()) {
     		if (clinician.getChanged()) {
-    			query += UPDATECLINICIANQUERYSTRING;
+    			query += UPDATECLINICIANQUERYSTRING + ";";
     			params = ArrayUtils.addAll(params, getClinicianAttributes(clinician));
     		}
     	}
@@ -1377,7 +1394,7 @@ public class Database {
     	String query = new String();
     	for (Administrator admin : getAdministrators()) {
     		if (admin.getChanged()) {
-    			query += UPDATEADMINQUERYSTRING;
+    			query += UPDATEADMINQUERYSTRING + ";";
     			params = ArrayUtils.addAll(params, getAdministratorAttributes(admin));
     		}
     	}
@@ -1399,10 +1416,33 @@ public class Database {
     	boolean patientUpdate = updateAllPatients();
     	boolean clinicianUpdate = updateAllClinicians();
     	boolean adminUpdate = updateAllAdministrators();
-    	return patientUpdate && clinicianUpdate && adminUpdate;
+    	boolean waitlistUpdate = updateAllTransplantRequests();
+    	return patientUpdate && clinicianUpdate && adminUpdate && waitlistUpdate;
     }
 
-
+    /**
+     * Saves a transplant request into the database.
+     * @param request The transplant request to save.
+     * @return True if saved, false otherwise.
+     */
+    public boolean updateAllTransplantRequests() {
+    	String[] attrs = new String[0];;
+    	String query = "";
+    	for (OrganWaitlist.OrganRequest request: organWaitingList) {
+    		query += UPDATETRANSPLANTREQUESTQUERYSTRING + ";";
+    		attrs = ArrayUtils.addAll(attrs, getTransplantRequestAttributes(request));
+    	}
+        try {
+            runQuery(query, attrs);
+			userActions.log(Level.INFO, "Successfully updated all transplant request to database.", "Attempted to update all transplant request to database.");
+            return true;
+        } catch (SQLException e) {
+			userActions.log(Level.SEVERE, "Failure to update all request to database " + e.getMessage(), "Attempted to update all transplant request.");
+        }
+        return false;
+    }
+    
+    
     /**
      * Calls all sub-methods to save data to disk
      */

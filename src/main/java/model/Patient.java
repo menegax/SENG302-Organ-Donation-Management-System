@@ -165,6 +165,7 @@ public class Patient extends User {
         this.currentMedications = currentMedications;
         this.medicationHistory = medicationHistory;
         this.procedures = procedures;
+        databaseImport();
     }
 
 
