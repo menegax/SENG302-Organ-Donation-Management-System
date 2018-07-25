@@ -7,10 +7,14 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
 import java.util.List;
+import java.io.*;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-public abstract class User {
+import static utility.SystemLogger.systemLogger;
+
+public abstract class User implements Serializable {
 
     private final UUID uuid = UUID.randomUUID();
 
@@ -102,23 +106,52 @@ public abstract class User {
    public void userModified() {
        this.modified = new Timestamp(System.currentTimeMillis());
        changed = true;
-       propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "User Modified", null, null));
+       if(propertyChangeSupport != null) {
+           propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "User Modified", null, null));
+       }
    }
+
+    // transient means that this property is not serialized on saving to disk
+    transient PropertyChangeSupport propertyChangeSupport;
+
 
     public boolean getChanged() {
         return changed;
     }
-    
+
     protected void databaseImport() {
-    	changed = false;
+        changed = false;
     }
+
 
     public UUID getUuid() {
         return uuid;
     }
 
-    // transient means that this property is not serialized on saving to disk
-    transient PropertyChangeSupport propertyChangeSupport;
+    /**
+     * sets the attributes of this user to the same as the one provided
+     * @param newUserAttributes a user whose attributes this function copies
+     */
+    public abstract void setAttributes(User newUserAttributes);
+
+    /**
+     * Returns a deep clone of this user
+     * @return the deep clone
+     */
+    public User deepClone() {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(bos);
+            out.writeObject(this);
+            out.flush();
+            out.close();
+            ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
+            return (User) in.readObject();
+        } catch (Exception e) {
+            systemLogger.log(Level.SEVERE, "Error cloning user");
+        }
+        return null;
+    }
 
     /**
      * Adds a listener to the propertyChangeSupport to be notified on user modification

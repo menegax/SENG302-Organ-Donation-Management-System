@@ -3,10 +3,11 @@ package utility;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.logging.Level;
 
-public class PatientActionRecord {
+public class PatientActionRecord implements Serializable {
 
     private Timestamp timestamp;
 

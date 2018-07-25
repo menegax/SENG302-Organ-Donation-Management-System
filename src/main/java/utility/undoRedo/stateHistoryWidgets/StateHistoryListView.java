@@ -34,28 +34,31 @@ public class StateHistoryListView extends StateHistoryControl {
      * Sets the listView to the state before the current state
      */
     public boolean undo() {
-        if (index != 0) {
+        return false;
+        /*if (index != 0) {
             index -= 1;
-            ((ListView<Object>) control).getItems().clear();
-            for (Object object : (ArrayList<Object>) states.get(index)) {
-                ((ListView<Object>) control).getItems().add(object);
-            }
+//            ((ListView<Object>) control).getItems().clear();
+//            for (Object object : (ArrayList<Object>) states.get(index)) {
+//                ((ListView<Object>) control).getItems().add(object);
+//            }
             return true;
         }
-        return false;
+        return false;*/
     }
 
     /**
      * Resets the listView to the state immediately prior to an undo
      */
     public boolean redo() {
-        if (index + 1 < states.size()) {
-            index += 1;
-            ((ListView<Object>) control).getItems().clear();
-            for (Object object : (ArrayList<Object>) states.get(index)) {
-                ((ListView<Object>) control).getItems().add(object);
-            }            return true;
-        }
         return false;
+        /*if (index + 1 < states.size()) {
+            index += 1;
+//            ((ListView<Object>) control).getItems().clear();
+//            for (Object object : (ArrayList<Object>) states.get(index)) {
+//                ((ListView<Object>) control).getItems().add(object);
+//            }
+            return true;
+        }
+        return false;*/
     }
 }

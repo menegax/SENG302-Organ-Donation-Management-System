@@ -12,6 +12,7 @@ import model.Patient;
 import service.Database;
 import utility.GlobalEnums.*;
 import utility.StatusObservable;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -97,6 +98,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     private Patient target;
 
+    private Patient after;
+
     private UserControl userControl;
 
     Database database = Database.getDatabase();
@@ -155,7 +158,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
        Patient patient = database.getPatientByNhi(nhi);
        if (patient != null) {
             target = patient;
-            populateForm(patient);
+            after = (Patient) patient.deepClone();
+            populateForm(after);
 
             controls = new ArrayList<Control>() {{
                 add(nhiTxt);
@@ -272,6 +276,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
     /**
      * Sets profile changes after checking each field for validity
      */
+    @FXML
     public void saveProfileUpdater() {
         systemLogger.log(Level.FINEST, "Setting patient profile for update...");
         Boolean valid = true;
@@ -422,68 +427,71 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         // if all are valid
         if (valid) {
-            target.setNhiNumber(nhiTxt.getText());
-            target.setFirstName(firstnameTxt.getText());
-            target.setLastName(lastnameTxt.getText());
+            after.setNhiNumber(nhiTxt.getText());
+            after.setFirstName(firstnameTxt.getText());
+            after.setLastName(lastnameTxt.getText());
             if (middlenameTxt.getText()
                     .equals("")) {
-                target.setMiddleNames(new ArrayList<>());
+                after.setMiddleNames(new ArrayList<>());
             } else {
                 List<String> middlenames = Arrays.asList(middlenameTxt.getText()
                         .split(" "));
                 ArrayList<String> middles = new ArrayList<>(middlenames);
-                target.setMiddleNames(middles);
+                after.setMiddleNames(middles);
             }
             if (preferrednameTxt.getText() != null) {
-                target.setPreferredName(preferrednameTxt.getText());
+                after.setPreferredName(preferrednameTxt.getText());
             }
             if (birthGenderMaleRadio.isSelected()) {
-                target.setBirthGender((BirthGender) BirthGender.getEnumFromString("male"));
+                after.setBirthGender((BirthGender) BirthGender.getEnumFromString("male"));
             }
             if (birthGenderFemaleRadio.isSelected()) {
-                target.setBirthGender((BirthGender) BirthGender.getEnumFromString("female"));
+                after.setBirthGender((BirthGender) BirthGender.getEnumFromString("female"));
             }
             if (preferredGenderManRadio.isSelected()) {
-                target.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("man"));
+                after.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("man"));
             }
             if (preferredGenderWomanRadio.isSelected()) {
-                target.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("woman"));
+                after.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("woman"));
             }
             if (preferredGenderNonBinaryRadio.isSelected()) {
-                target.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("nonbinary"));
+                after.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("nonbinary"));
             }
             if (dobDate.getValue() != null) {
-                target.setBirth(dobDate.getValue());
+                after.setBirth(dobDate.getValue());
             }
             if (dateOfDeath.getValue() != null) {
-                target.setDeath(dateOfDeath.getValue());
+                after.setDeath(dateOfDeath.getValue());
             }
-            target.setStreet1(street1Txt.getText());
-            target.setStreet2(street2Txt.getText());
-            target.setSuburb(suburbTxt.getText());
+            after.setStreet1(street1Txt.getText());
+            after.setStreet2(street2Txt.getText());
+            after.setSuburb(suburbTxt.getText());
             if (regionDD.getValue() != null) {
-                target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
+                after.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
                         .getSelectedItem()));
             }
             if (zipTxt.getText() != null) {
-                target.setZip(zipTxt.getText()
+                after.setZip(zipTxt.getText()
                         .equals("") ? 0 : Integer.parseInt(zipTxt.getText()));
             }
             if (weightTxt.getText() != null) {
-                target.setWeight(Double.parseDouble(weightTxt.getText()));
+                after.setWeight(Double.parseDouble(weightTxt.getText()));
             }
             if (heightTxt.getText() != null) {
-                target.setHeight(Double.parseDouble(heightTxt.getText()));
+                after.setHeight(Double.parseDouble(heightTxt.getText()));
             }
             if (bloodGroupDD.getValue() != null) {
-                target.setBloodGroup((BloodGroup) BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
+                after.setBloodGroup((BloodGroup) BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
                         .getSelectedItem()));
             }
-            screenControl.setIsSaved(false);
-            userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", target.getNhiNumber()});
+
+            Action action = new Action(target, after);
+            statesHistoryScreen.addAction(action);
+
+            userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         }
         else {
-            userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", target.getNhiNumber()});
+            userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         }
     }
 

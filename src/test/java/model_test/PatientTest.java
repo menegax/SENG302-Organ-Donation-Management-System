@@ -1,5 +1,6 @@
 package model_test;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -21,7 +22,7 @@ import static utility.UserActionHistory.userActions;
 
 import static org.junit.Assert.*;
 
-public class PatientTest {
+public class PatientTest implements Serializable{
 
     private static Database database = Database.getDatabase();
     private static Patient testPatient; //Patient obj not within the database
@@ -267,6 +268,24 @@ public class PatientTest {
         }};
         checkSameDiseases(currentDiseasesExpected, testPatient.getCurrentDiseases());
         checkSameDiseases(pastDiseasesExpected, testPatient.getPastDiseases());
+    }
+
+    /**
+     * Tests the setAttributes method
+     */
+    @Test
+    public void testSetAttributes() {
+        Patient beforePatient = givenPatient();
+        Patient afterPatient = givenPatient();
+        afterPatient.setFirstName("Different");
+        afterPatient.setMiddleNames(new ArrayList<String>() {{add("Middle"); add("Name");}});
+        beforePatient.setAttributes(afterPatient);
+        assertEquals("Different", beforePatient.getFirstName());
+        assertEquals("Name", beforePatient.getMiddleNames().get(1));
+
+        // checks deep copy has occurred
+        beforePatient.getMiddleNames().remove(0);
+        assertEquals("Middle", afterPatient.getMiddleNames().get(0));
     }
 
     /**

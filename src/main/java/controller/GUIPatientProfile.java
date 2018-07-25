@@ -17,6 +17,9 @@ import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import utility.GlobalEnums;
 import utility.StatusObservable;
+import utility.undoRedo.Action;
+import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -148,10 +151,11 @@ public class GUIPatientProfile {
 
     private UserControl userControl;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
     Database database = Database.getDatabase();
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
@@ -326,6 +330,16 @@ public class GUIPatientProfile {
      */
     public void deleteProfile() {
         Patient patient = (Patient) userControl.getTargetUser();
+        Action action = new Action(patient, null);
+        for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
+            if (stage instanceof UndoableStage) {
+                for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
+                    if (statesHistoryScreen.getUndoableScreen().equals(GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS)) {
+                        statesHistoryScreen.addAction(action);
+                    }
+                }
+            }
+        }
         userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", patient.getNhiNumber()});
         database.delete( patient );
         ((Stage) patientProfilePane.getScene().getWindow()).close();

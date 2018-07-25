@@ -13,6 +13,7 @@ import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 import utility.StatusObservable;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -198,25 +199,13 @@ public class GUIPatientUpdateContacts extends UndoableController {
      * @param nhi The nhi of the patient to load
      */
     private void loadProfile(String nhi) {
-    	Patient patient = database.getPatientByNhi(nhi);
-    	if (patient != null) {
-            target = patient;
-        } else {
-        target = database.getPatientByNhi(nhi);
 
-		ArrayList<Control> controls = new ArrayList<Control>() {{
-		    add(homePhoneField);
-		    add(mobilePhoneField);
-		    add(workPhoneField);
-		    add(emailAddressField);
-		    add(contactNameField);
-		    add(contactRelationshipField);
-		    add(contactHomePhoneField);
-		    add(contactMobilePhoneField);
-		    add(contactWorkPhoneField);
-		    add(contactEmailAddressField);
-		}};
-		statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATECONTACTS);}
+        try {
+            target = database.getPatientByNhi(nhi);
+        }
+        catch (NullPointerException e) {
+            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
+        }
     }
 
 
@@ -226,95 +215,101 @@ public class GUIPatientUpdateContacts extends UndoableController {
      */
     private boolean setPatientContactDetails() {
         boolean valid = true;
+
+        Patient after = (Patient) target.deepClone();
         if (Pattern.matches(UIRegex.HOMEPHONE.getValue(), homePhoneField.getText())) {
-            target.setHomePhone(homePhoneField.getText());
+            after.setHomePhone(homePhoneField.getText());
             setValid(homePhoneField);
         } else if (homePhoneField.getText().equals("")) {
-            target.setHomePhone(null);
+            after.setHomePhone(null);
             setValid(homePhoneField);
         } else {
             valid = setInvalid(homePhoneField);
         }
         if (Pattern.matches(UIRegex.MOBILEPHONE.getValue(), mobilePhoneField.getText())) {
-            target.setMobilePhone(mobilePhoneField.getText());
+            after.setMobilePhone(mobilePhoneField.getText());
             setValid(mobilePhoneField);
         } else if (mobilePhoneField.getText().equals("")) {
-            target.setMobilePhone(null);
+            after.setMobilePhone(null);
             setValid(mobilePhoneField);
         } else {
             valid = setInvalid(mobilePhoneField);
         }
         if (Pattern.matches(UIRegex.WORKPHONE.getValue(), workPhoneField.getText())) {
-            target.setWorkPhone(workPhoneField.getText());
+            after.setWorkPhone(workPhoneField.getText());
             setValid(workPhoneField);
         } else if (workPhoneField.getText().equals("")) {
-            target.setWorkPhone(null);
+            after.setWorkPhone(null);
             setValid(workPhoneField);
         } else {
             valid = setInvalid(workPhoneField);
         }
         if (Pattern.matches(UIRegex.EMAIL.getValue(), emailAddressField.getText())) {
-            target.setEmailAddress(emailAddressField.getText());
+            after.setEmailAddress(emailAddressField.getText());
             setValid(emailAddressField);
         } else if (emailAddressField.getText().equals("")) {
-            target.setEmailAddress(null);
+            after.setEmailAddress(null);
             setValid(emailAddressField);
         } else {
             valid = setInvalid(emailAddressField);
         }
         if (Pattern.matches(UIRegex.RELATIONSHIP.getValue(), contactRelationshipField.getText())) {
-            target.setContactRelationship(contactRelationshipField.getText());
+            after.setContactRelationship(contactRelationshipField.getText());
             setValid(contactRelationshipField);
         } else if (contactRelationshipField.getText().equals("")) {
-            target.setContactRelationship(null);
+            after.setContactRelationship(null);
             setValid(contactRelationshipField);
         } else {
             valid = setInvalid(contactRelationshipField);
         }
         if (Pattern.matches(UIRegex.MNAME.getValue(), contactNameField.getText())) {
-            target.setContactName(contactNameField.getText());
+            after.setContactName(contactNameField.getText());
             setValid(contactNameField);
         } else if (contactNameField.getText().equals("")) {
-            target.setContactName(null);
+            after.setContactName(null);
             setValid(contactNameField);
         } else {
             valid = setInvalid(contactNameField);
         }
         if (Pattern.matches(UIRegex.HOMEPHONE.getValue(), contactHomePhoneField.getText())) {
-            target.setContactHomePhone(contactHomePhoneField.getText());
+            after.setContactHomePhone(contactHomePhoneField.getText());
             setValid(contactHomePhoneField);
         } else if (contactHomePhoneField.getText().equals("")) {
-            target.setContactHomePhone(null);
+            after.setContactHomePhone(null);
             setValid(contactHomePhoneField);
         } else {
             valid = setInvalid(contactHomePhoneField);
         }
         if (Pattern.matches(UIRegex.MOBILEPHONE.getValue(), contactMobilePhoneField.getText())) {
-            target.setContactMobilePhone(contactMobilePhoneField.getText());
+            after.setContactMobilePhone(contactMobilePhoneField.getText());
             setValid(contactMobilePhoneField);
         } else if (contactMobilePhoneField.getText().equals("")) {
-            target.setContactMobilePhone(null);
+            after.setContactMobilePhone(null);
             setValid(contactMobilePhoneField);
         } else {
             valid = setInvalid(contactMobilePhoneField);
         }
         if (Pattern.matches(UIRegex.WORKPHONE.getValue(), contactWorkPhoneField.getText())) {
-            target.setContactWorkPhone(contactWorkPhoneField.getText());
+            after.setContactWorkPhone(contactWorkPhoneField.getText());
             setValid(contactWorkPhoneField);
         } else if (contactWorkPhoneField.getText().equals("")) {
-            target.setContactWorkPhone(null);
+            after.setContactWorkPhone(null);
             setValid(contactWorkPhoneField);
         } else {
             valid = setInvalid(contactWorkPhoneField);
         }
         if (Pattern.matches(UIRegex.EMAIL.getValue(), contactEmailAddressField.getText())) {
-            target.setContactEmailAddress(contactEmailAddressField.getText());
+            after.setContactEmailAddress(contactEmailAddressField.getText());
             setValid(contactEmailAddressField);
         } else if (contactEmailAddressField.getText().equals("")) {
-            target.setContactEmailAddress(null);
+            after.setContactEmailAddress(null);
             setValid(contactEmailAddressField);
         } else {
             valid = setInvalid(contactEmailAddressField);
+        }
+        if (valid) {
+            Action action = new Action(target, after);
+            statesHistoryScreen.addAction(action);
         }
         return valid;
     }

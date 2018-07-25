@@ -10,6 +10,7 @@ import model.Administrator;
 import controller.ScreenControl;
 import model.Clinician;
 import model.Patient;
+import model.User;
 import utility.Searcher;
 import utility.StatusObservable;
 
@@ -44,6 +45,49 @@ public class Database {
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private static Searcher searcher = Searcher.getSearcher();
+    /**
+     * Attempts to add a user to the database
+     * Catches exceptions thrown as they may be called by undo/redo and are created by tests
+     * Will instead log user warnings
+     * @param user the user to be added to the database
+     */
+    public static void addUser(User user) {
+        if (user != null) {
+            if (user instanceof Patient) {
+                try {
+                    database.addPatient((Patient) user, searcher);
+                } catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Failed to add user " + ((Patient) user).getNhiNumber() + ". NHI not unique", "Attempted to add existing patient");
+                }
+            } else if (user instanceof Clinician) {
+                try {
+                    database.addClinician((Clinician) user, searcher);
+                } catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Failed to add user " + ((Clinician) user).getStaffID() + ". Staff ID not unique", "Attempted to add existing clinician");
+                }
+            }
+        } else {
+            userActions.log(Level.WARNING, "New user not added", "Attempted to add null user");
+        }
+    }
+
+    /**
+     * Attempts to remove a user from the database
+     * Catches exceptions thrown as they may be called by undo/redo and are created by tests
+     * Will instead log user warnings
+     * @param user the user to be removed from the database
+     */
+    public static void removeUser(User user) {
+        if (user != null) {
+            if (user instanceof Patient) {
+                patients.remove(user);
+            } else if (user instanceof Clinician) {
+                clinicians.remove(user);
+            }
+        } else {
+            userActions.log(Level.WARNING, "User not removed", "Attempted to remove null user");
+        }
+    }
 
     private final String UPDATEPATIENTQUERYSTRING = "INSERT INTO tblPatients "
             + "(Nhi, FName, MName, LName, Birth, Created, Modified, Death, BirthGender, "
@@ -1331,13 +1375,13 @@ public class Database {
         return null;
     }
 
-    public Administrator getAdministratorByUsername(String username) throws InvalidObjectException {
+    public Administrator getAdministratorByUsername(String username) {
         for (Administrator a : getAdministrators()) {
             if (a.getUsername().equals(username.toUpperCase())) {
                 return a;
             }
         }
-        throw new InvalidObjectException("Administrator with username " + " does not exist");
+        return null;
     }
 
     /**
@@ -1422,7 +1466,6 @@ public class Database {
 
     /**
      * Saves a transplant request into the database.
-     * @param request The transplant request to save.
      * @return True if saved, false otherwise.
      */
     public boolean updateAllTransplantRequests() {

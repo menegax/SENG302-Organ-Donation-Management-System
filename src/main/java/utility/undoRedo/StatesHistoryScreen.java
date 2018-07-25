@@ -7,9 +7,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCodeCombination;
 import utility.undoRedo.stateHistoryWidgets.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 /**
  * Represents the state history of a screen of FXML widgets
@@ -34,6 +35,10 @@ public class StatesHistoryScreen {
     private UndoableScreen undoableScreen;
 
     private UndoableStage undoableStage;
+
+    private Map<Integer, List<Action>> actions = new HashMap<>();
+
+    private int index = 0;
 
     /**
      * Constructor for the StatesHistoryScreen, creates state objects of passed in control items to keep track of
@@ -114,12 +119,11 @@ public class StatesHistoryScreen {
      */
     private void createStateHistoriesTextField(Object entry) {
         stateHistories.add(new StateHistoryTextEntry((TextField) entry));
-        ((TextField) entry).textProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    if (!newValue.equals(oldValue)) {
-                        store();
-                    }
-                });
+        ((TextField) entry).textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.equals(oldValue)) {
+                store();
+            }
+        });
         ((TextField) entry).setOnKeyPressed(event -> {
             if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
                 ((TextField) entry).getParent().requestFocus();
@@ -143,8 +147,7 @@ public class StatesHistoryScreen {
         ((ComboBox<String>) comboBox).getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if ((oldValue == null && newValue != null)
-                            || !newValue.equals(oldValue)) {
+                    if ((oldValue == null && newValue != null) || (oldValue != null && newValue == null) || !newValue.equals(oldValue)) {
                         store();
                     }
                 });
@@ -196,7 +199,7 @@ public class StatesHistoryScreen {
         stateHistories.add(new StateHistoryTableView( (TableView<Object>) tableView ));
         ((TableView<Object>) tableView).itemsProperty().addListener((observable, oldValue, newValue) -> {
                     if (((oldValue == null || newValue == null) || !newValue.equals(oldValue))) {
-                        store();
+                        //store();
                     }
                 });
     }
@@ -210,12 +213,17 @@ public class StatesHistoryScreen {
         stateHistories.add(new StateHistoryListView( (ListView<Object>) listView ));
         ((ListView<Object>) listView).itemsProperty().addListener((observable, oldValue, newValue) -> {
             if (((oldValue == null || newValue == null) || !newValue.equals(oldValue)) && ((ListView<Object>) listView).focusedProperty().getValue()) {
-                store();
+                //store();
             }
         });
     }
 
 
+    /**
+     * Creates state objects for every choiceBox item in the passed in array
+     *
+     * @param choiceBox - object which can be cast to an arraylist<choiceBox>
+     */
     private void createStateHistoriesChoiceBox(Object choiceBox) {
         stateHistories.add( new StateHistoryChoiceBox( (ChoiceBox <String>) choiceBox ) );
         ((ChoiceBox <String>) choiceBox).getSelectionModel()
@@ -252,12 +260,18 @@ public class StatesHistoryScreen {
      * Stores the current state of the screen
      */
     public void store() {
-//        if (!undone && !redone && !undoableStage.isChangingStates()) {
-//            for (StateHistoryControl stateHistory : stateHistories) {
-//                stateHistory.store();
-//            }
-//            undoableStage.store();
-//        }
+        if (!undone && !redone && !undoableStage.isChangingStates()) {
+            index += 1;
+            for (Integer key : actions.keySet()) {
+                if (key >= index) {
+                    actions.remove(key);
+                }
+            }
+            for (StateHistoryControl stateHistory : stateHistories) {
+                stateHistory.store();
+            }
+            undoableStage.store();
+        }
     }
 
 
@@ -267,12 +281,23 @@ public class StatesHistoryScreen {
      */
     public boolean undo() {
         undone = true; // change to true as to not trigger listeners to store
+        if (actions.get(index) != null) {
+            for (int i = actions.get(index).size() - 1; i >= 0; i--) {
+                if (actions.get(index).get(i).isExecuted()) {
+                    actions.get(index).get(i).unexecute();
+                    userActions.log(Level.INFO, "Local change undone", "User undoed through local change");
+                    undone = false;
+                    return true;
+                }
+            }
+        }
         for (StateHistoryControl stateHistory : stateHistories) {
-            boolean success = stateHistory.undo();
+            Boolean success = stateHistory.undo();
             if (!success) {
                 return false;
             }
         }
+        index -= 1;
         undone = false;
         return true;
     }
@@ -284,14 +309,35 @@ public class StatesHistoryScreen {
      */
     public boolean redo() {
         redone = true; // change to true as to not trigger listeners to store
+        if (actions.get(index) != null) {
+            for (Action action : actions.get(index)) {
+                if (!action.isExecuted()) {
+                    action.execute();
+                    userActions.log(Level.INFO, "Local change redone", "User redoed through local change");
+                    undone = false;
+                    return true;
+                }
+            }
+        }
         for (StateHistoryControl stateHistory : stateHistories) {
-            boolean success = stateHistory.redo();
+            Boolean success = stateHistory.redo();
             if (!success) {
                 return false;
             }
         }
+        index += 1;
         redone = false;
         return true;
+    }
+
+    /**
+     * Called when this StatesHistoryScreen's undoable stage completes a store action
+     * Truncates state lists to current index
+     */
+    public void notifyStoreComplete() {
+        for (StateHistoryControl stateHistoryControl : stateHistories) {
+            stateHistoryControl.notifyStoreComplete();
+        }
     }
 
 
@@ -320,4 +366,44 @@ public class StatesHistoryScreen {
         return undoableScreen;
     }
 
+    /**
+     * Adds an action to the actions map for this StatesHistoryScreen
+     * Action is assciated with the current index in the undo/redo stack
+     * @param action the new action to add
+     */
+    public void addAction(Action action) {
+        if (actions.get(index) == null) {
+            actions.put(index, new ArrayList<Action>(){{add(action);}});
+        } else {
+            actions.get(index).add(action);
+        }
+    }
+
+    /**
+     * Returns the current actions map, used for passing the existing action map to a new instance of StatesHistoryScreen
+     * @return the current actions map
+     */
+    public Map<Integer, List<Action>> getActions() {
+        return actions;
+    }
+
+    public void setActions(Map<Integer, List<Action>> actions) {
+        this.actions = actions;
+    }
+
+    /**
+     * Gets the undoable stage this statesHistoryScreen is on
+     * @return the undoableStage
+     */
+    public UndoableStage getUndoableStage() {
+        return undoableStage;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
 }
