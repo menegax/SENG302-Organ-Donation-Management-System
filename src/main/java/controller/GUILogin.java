@@ -9,6 +9,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Administrator;
+import model.Clinician;
 import model.Patient;
 import model.User;
 import service.Database;
@@ -84,10 +85,17 @@ public class GUILogin {
         ScreenControl screenControl = ScreenControl.getScreenControl();
         try {
             if (patient.isSelected()) {
-                Patient patient = database.getPatientByNhi(nhiLogin.getText()); //TODO: db throws null now
+                Patient patient = database.getPatientByNhi(nhiLogin.getText());
+                if (patient == null) {
+                    throw new InvalidObjectException("User doesn't exist");
+                }
                 login.addLoggedInUserToCache(patient);
             } else if (clinician.isSelected()) {
-                login.addLoggedInUserToCache(database.getClinicianByID(Integer.parseInt(nhiLogin.getText())));
+                Clinician clinician = database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
+                if (clinician == null) {
+                    throw new InvalidObjectException("User doesn't exist");
+                }
+                login.addLoggedInUserToCache(clinician);
             } else {
                 checkAdminCredentials();
                 login.addLoggedInUserToCache(database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
@@ -116,6 +124,9 @@ public class GUILogin {
 
     private void checkAdminCredentials() throws InvalidObjectException {
         Administrator admin = database.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
+        if (admin == null) {
+            throw new InvalidObjectException("User doesn't exist");
+        }
         String hashedInput = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password.getText() + admin.getSalt());
         if (!hashedInput.equals(admin.getHashedPassword())) {
             throw new InvalidObjectException("Invalid username/password combination");
