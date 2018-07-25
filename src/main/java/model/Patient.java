@@ -4,6 +4,7 @@ import com.univocity.parsers.annotations.Convert;
 import com.univocity.parsers.annotations.EnumOptions;
 import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.annotations.Validate;
+import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import utility.parsing.DateConverterCSV;
 import utility.parsing.EnumConverterCSV;
@@ -326,17 +327,17 @@ public class Patient extends User {
         StringBuilder concatName;
 
         if (preferredName != null) {
-            concatName = new StringBuilder( preferredName + " " );
+            concatName = new StringBuilder(StringUtils.capitalize(preferredName) + " " );
         } else {
-            concatName = new StringBuilder( firstName + " " );
+            concatName = new StringBuilder(StringUtils.capitalize(firstName) + " " );
         }
         if (middleNames != null && middleNames.size() > 0) {
             for (String middleName : middleNames) {
-                concatName.append(middleName)
+                concatName.append(StringUtils.capitalize(middleName))
                         .append(" ");
             }
         }
-        concatName.append(lastName);
+        concatName.append(StringUtils.capitalize(lastName));
         return concatName.toString();
     }
 

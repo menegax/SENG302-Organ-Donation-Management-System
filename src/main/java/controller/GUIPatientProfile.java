@@ -16,6 +16,7 @@ import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import utility.GlobalEnums;
+import utility.StatusObservable;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;

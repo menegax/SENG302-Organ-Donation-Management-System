@@ -15,6 +15,7 @@ import model.Clinician;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums.Region;
+import utility.StatusObservable;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 import static utility.UserActionHistory.userActions;
 
 public class GUIUserRegister {
@@ -245,6 +247,15 @@ public class GUIUserRegister {
         } else {
             setValid(firstnameRegister);
         }
+
+        // middle name
+        if (!middlenameRegister.getText()
+                .matches("^([-a-zA-Z]*|[ ])*$")) {
+            valid = setInvalid(middlenameRegister);
+        } else {
+            setValid(middlenameRegister);
+        }
+
         // last name
         if (!lastnameRegister.getText()
                 .matches("^[-a-zA-Z]+$")) {
@@ -265,11 +276,11 @@ public class GUIUserRegister {
         // nhi
         if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", userIdRegister.getText().toUpperCase())) {
             valid = setInvalid(userIdRegister);
-            new Alert(Alert.AlertType.ERROR, "NHI must be 3 characters followed by 4 numbers").showAndWait();
+            userActions.log(Level.WARNING, "NHI must be 3 characters followed by 4 numbers", "Attempted to create patient with invalid NHI");
         } else if (Database.isPatientInDb(userIdRegister.getText())) {
             // checks to see if nhi already in use
             valid = setInvalid(userIdRegister);
-            new Alert(Alert.AlertType.ERROR, "Patient with the given NHI already exists").showAndWait();
+            userActions.log(Level.WARNING, "Patient with the given NHI already exists", "Attempted to create patient with invalid NHI");
         } else {
             setValid(userIdRegister);
         }
@@ -295,7 +306,7 @@ public class GUIUserRegister {
     private boolean validateClinician() {
         boolean valid = validateNames();
         if (regionRegister.getValue() != null) {
-            setValid(birthRegister);
+            setValid(regionRegister);
         } else {
             valid = setInvalid(regionRegister);
         }
@@ -311,31 +322,31 @@ public class GUIUserRegister {
         boolean valid = validateNames();
         String error = "";
         if (!userIdRegister.getText()
-                .matches("([A-Za-z0-9]+[-]*[_]*)+")) {
+                .matches("[A-Za-z0-9_]+")) {
             valid = setInvalid(userIdRegister);
-            error += "Invalid username.\n";
+            error += "Invalid username. ";
         } else if (Database.usernameUsed(userIdRegister.getText())) {
             valid = setInvalid(userIdRegister);
-            error += "Username already in use.\n";
+            error += "Username already in use. ";
         } else {
             setValid(userIdRegister);
         }
         if (passwordTxt.getText().length() < 6) {
             valid = setInvalid(passwordTxt);
-            error += "Password must be 6 or more characters.\n";
+            error += "Password must be 6 or more characters.";
         } else {
             setValid(passwordTxt);
         }
         if (!verifyPasswordTxt.getText().equals(passwordTxt.getText())) {
             valid = setInvalid(verifyPasswordTxt);
             if (passwordTxt.getText().length() >= 6) {
-                error += "Passwords do not match.\n";
+                error += "Passwords do not match.";
             }
         } else {
             setValid(verifyPasswordTxt);
         }
         if (!valid) {
-        	new Alert(Alert.AlertType.ERROR, error).showAndWait();
+            userActions.log(Level.WARNING, error, "Attempted to register administrator with invalid fields");
         }
         return valid;
     }
@@ -368,7 +379,7 @@ public class GUIUserRegister {
         String lastName = lastnameRegister.getText();
         String password = passwordTxt.getText();
         ArrayList<String> middles = new ArrayList<>();
-        String alertMsg;
+        String errorMsg = "";
         if (!middlenameRegister.getText().equals("")) {
             List<String> middleNames = Arrays.asList(middlenameRegister.getText().split(" "));
             middles = new ArrayList<>(middleNames);
@@ -377,25 +388,31 @@ public class GUIUserRegister {
             LocalDate birth = birthRegister.getValue();
             Database.addPatient(new Patient(id, firstName, middles, lastName, birth));
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
-            alertMsg = "Successfully registered patient with NHI " + id;
+            errorMsg = "Successfully registered patient with NHI " + id;
+            screenControl.setIsSaved(false);
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
             int staffID = Database.getNextStaffID();
             Database.addClinician(new Clinician(staffID, firstName, middles, lastName, (Region) Region.getEnumFromString(region)));
             userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
-            alertMsg = "Successfully registered clinician with staff ID " + staffID;
+            errorMsg = "Successfully registered clinician with staff ID " + staffID;
+            clearFields();
+            screenControl.setIsSaved(false);
         } else {
             try {
                 Database.addAdministrator(new Administrator(id, firstName, middles, lastName, password));
                 userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
-                alertMsg = "Successfully registered administrator with username " + id;
+                errorMsg = "Successfully registered administrator with username " + id;
+                screenControl.setIsSaved(false);
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");
-                alertMsg = "Couldn't register administrator, this username is already in use";
+                errorMsg = "Couldn't register administrator, this username is already in use";
             }
         }
         clearFields();
-        new Alert(Alert.AlertType.INFORMATION, alertMsg).showAndWait();
+        if (!errorMsg.equals("")) {
+            userActions.log(Level.INFO, errorMsg, "Attempted to register a new user");
+        }
         if (userControl.getLoggedInUser() == null) {
             returnToPreviousPage();
         }
