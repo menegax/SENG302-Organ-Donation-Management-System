@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
+<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="274.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="235.0" />
@@ -22,9 +22,9 @@
    </columnConstraints>
    <rowConstraints>
       <RowConstraints />
-      <RowConstraints minHeight="35.0" prefHeight="25.0" vgrow="NEVER" />
-      <RowConstraints minHeight="60.0" prefHeight="103.00001068115233" vgrow="NEVER" />
-      <RowConstraints maxHeight="78.00001220703126" minHeight="42.999983215332065" prefHeight="78.00001220703126" vgrow="NEVER" />
+      <RowConstraints maxHeight="30.40001220703125" minHeight="16.800006103515624" prefHeight="28.000003051757812" vgrow="NEVER" />
+      <RowConstraints maxHeight="161.59999389648436" minHeight="60.0" prefHeight="150.39999694824218" vgrow="NEVER" />
+      <RowConstraints maxHeight="78.00001220703126" minHeight="37.399993896484375" prefHeight="37.399993896484375" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="362.79998779296875" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
@@ -72,8 +72,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints />
                   <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
+                  <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
+                  <RowConstraints maxHeight="27.199999999999996" minHeight="27.199999999999996" prefHeight="27.199999999999996" />
               </rowConstraints>
                <children>
                   <Text fx:id="ageLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0 - 100" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP">
@@ -102,14 +102,15 @@
                </GridPane.margin>
             </ComboBox>
             <ComboBox fx:id="regionFilter" prefHeight="40.0" prefWidth="210.0" promptText="None" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
-            <CheckBox fx:id="isDonorCheckbox" mnemonicParsing="false" text="Donor" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+            <CheckBox fx:id="isDonorCheckbox" mnemonicParsing="false" text="Donor" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets top="15.0" />
                </GridPane.margin>
                <font>
                   <Font size="36.0" />
-               </font></CheckBox>
-            <CheckBox fx:id="isRecieverCheckbox" mnemonicParsing="false" text="Reciever" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="isRecieverCheckbox" mnemonicParsing="false" text="Reciever" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets top="15.0" />
                </GridPane.margin></CheckBox>
@@ -122,32 +123,42 @@
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></ComboBox>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Birth Gender" GridPane.valignment="TOP">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Birth Gender" GridPane.valignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Donating Organ" GridPane.columnIndex="1" GridPane.valignment="TOP">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Donating Organ" GridPane.columnIndex="1" GridPane.valignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recieving Organ" GridPane.columnIndex="2" GridPane.valignment="TOP">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recieving Organ" GridPane.columnIndex="2" GridPane.valignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Region" GridPane.columnIndex="3" GridPane.valignment="TOP">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Region" GridPane.columnIndex="3" GridPane.valignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-             <Label fx:id="displayX" prefHeight="15.0" text="Display top:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-             <TextField fx:id="valueX" onKeyReleased="#updateSearch" onMouseClicked="#updateSearch" prefHeight="28.0" prefWidth="53.0" styleClass="back" stylesheets="@../css/guiStyle.css" text="30" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-             <Label fx:id="displayY" maxWidth="1000.0" onMouseClicked="#displayAllResults" prefWidth="245.0" styleClass="back" stylesheets="@../css/guiStyle.css" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+             <Label fx:id="displayX" prefHeight="15.0" text="Display top:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets right="5.0" top="15.0" />
+               </GridPane.margin></Label>
+             <TextField fx:id="valueX" minHeight="15.0" onKeyReleased="#updateSearch" onMouseClicked="#updateSearch" prefHeight="15.0" prefWidth="134.0" styleClass="back" stylesheets="@../css/guiStyle.css" text="30" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets right="5.0" top="15.0" />
+               </GridPane.margin></TextField>
+             <Label fx:id="displayY" maxWidth="1000.0" onMouseClicked="#displayAllResults" prefWidth="245.0" styleClass="back" stylesheets="@../css/guiStyle.css" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <padding>
                   <Insets left="5.0" />
-               </padding></Label>
+               </padding>
+               <GridPane.margin>
+                  <Insets top="15.0" />
+               </GridPane.margin>
+            </Label>
          </children>
          <GridPane.margin>
             <Insets left="60.0" right="60.0" />
