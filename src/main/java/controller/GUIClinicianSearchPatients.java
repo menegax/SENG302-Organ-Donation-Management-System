@@ -9,7 +9,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -28,7 +27,6 @@ import utility.Searcher;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
 
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -36,7 +34,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 
 public class GUIClinicianSearchPatients extends UndoableController implements Initializable {
@@ -61,9 +58,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
     @FXML
     private TextField searchEntry;
-
-    @FXML
-    private Label displayX;
 
     @FXML
     private TextField valueX;
@@ -141,13 +135,13 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      */
     private void setupUndoRedo() {
         controls = new ArrayList<Control>() {{
-            add(searchEntry);
-            add(isDonorCheckbox);
-            add(isRecieverCheckbox);
-            add(recievingFilter);
             add(birthGenderFilter);
-            add(donationFilter);
+            add(searchEntry);
+            add(recievingFilter);
+            add(isRecieverCheckbox);
+            add(isDonorCheckbox);
             add(regionFilter);
+            add(donationFilter);
             add(valueX);
         }};
         statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.CLINICIANSEARCHPATIENTS);
@@ -226,12 +220,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 .toString()) : new SimpleStringProperty(""));
 
         // wrap ObservableList in a FilteredList
-        FilteredList<Patient> filteredData = new FilteredList<>(masterData, new Predicate<Patient>() {
-            @Override
-            public boolean test(Patient d) {
-                return true;
-            }
-        });
+        FilteredList<Patient> filteredData = new FilteredList<>(masterData, d -> true);
 
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -265,7 +254,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     private void setupSearchingListener(FilteredList<Patient> filteredData) {
     	UserTypes[] types = new UserTypes[]{UserTypes.PATIENT};
     	masterData.clear();
-    	List<Patient> tempPatients = new ArrayList<Patient>();
+    	List<Patient> tempPatients = new ArrayList<>();
     	List<User> users = searcher.getDefaultResults(types, filter);
     	for (User user: users) {
     		tempPatients.add((Patient)user);
@@ -286,7 +275,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             	        }
                     }
                     if (newValue.toLowerCase().equals( "male" ) || newValue.toLowerCase().equals("female")) {
-                        //return SearchPatients.searchByGender(newValue).contains(patient);
                         return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() ); // ------------------------------this is where it fails!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
                     filteredData.setPredicate(patientCheck -> true);
@@ -420,13 +408,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
         sliderGrid.add(rangeSlider, 0, 4, 3, 1);
 
-        rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> {
-            ageLabel.setText(String.format("%s - %s", ((int) rangeSlider.getLowValue()), String.valueOf(newValue.intValue())));
-        }));
+        rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> ageLabel.setText(String.format("%s - %s", ((int) rangeSlider.getLowValue()), String.valueOf(newValue.intValue())))));
 
-        rangeSlider.lowValueProperty().addListener(((observable, oldValue, newValue) -> {
-            ageLabel.setText(String.format("%s - %s", String.valueOf(newValue.intValue()), (int) rangeSlider.getHighValue()));
-        }));
+        rangeSlider.lowValueProperty().addListener(((observable, oldValue, newValue) -> ageLabel.setText(String.format("%s - %s", String.valueOf(newValue.intValue()), (int) rangeSlider.getHighValue()))));
     }
 
     /**
@@ -543,19 +527,5 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
                     numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
-    }
-
-    /**
-     * Adds all db data via constructor
-     */
-    public GUIClinicianSearchPatients() {
-
-    }
-
-    /**
-     * Refreshes the table data
-     */
-    private void tableRefresh() {
-        patientDataTable.refresh();
     }
 }
