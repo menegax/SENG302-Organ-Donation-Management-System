@@ -304,11 +304,11 @@ public class GUIAdministratorUserRegister extends UndoableController {
         // nhi
         if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", userIdRegister.getText().toUpperCase())) {
             valid = setInvalid(userIdRegister);
-            new Alert(Alert.AlertType.ERROR, "NHI must be 3 characters followed by 4 numbers").showAndWait();
+            userActions.log(Level.WARNING, "NHI must be 3 characters followed by 4 numbers", "Attempted to register new patient");
         } else if (Database.isPatientInDb(userIdRegister.getText())) {
             // checks to see if nhi already in use
             valid = setInvalid(userIdRegister);
-            new Alert(Alert.AlertType.ERROR, "Patient with the given NHI already exists").showAndWait();
+            userActions.log(Level.WARNING, "Patient with the given NHI already exists", "Attempted to register new patient");
         } else {
             setValid(userIdRegister);
         }
@@ -374,7 +374,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
             setValid(verifyPasswordTxt);
         }
         if (!valid) {
-        	new Alert(Alert.AlertType.ERROR, error).showAndWait();
+        	userActions.log(Level.WARNING, error, "Attempted to register new administrator");
         }
         return valid;
     }
