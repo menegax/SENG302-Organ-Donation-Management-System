@@ -115,7 +115,7 @@ public class GUIClinicianWaitingList {
                     popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request )));
 
                     }
-                catch (IOException e) {
+                catch (Exception e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");
