@@ -63,8 +63,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     @FXML
     private TableColumn<Patient, String> columnRegion;
 
-    private final int NUMRESULTS = 30;
-
     @FXML
     private TextField searchEntry;
 
@@ -112,6 +110,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
     private Map<FilterOption, String> filter = new HashMap<>();
 
+    private int numResults = 30;
+
     /**
      * Initialises the data within the table to all patients
      *
@@ -120,12 +120,12 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
-    	displayY.setText( "Display all " + SearchPatients.getAllResults().size() + " profiles" );
+    	displayY.setText( "Display all " + searcher.getDefaultResults(new UserTypes[]{UserTypes.PATIENT}, null).size() + " profiles" );
         setupAgeSliderListeners();
         populateDropdowns();
         setupFilterOptions();
         List<User> defaultUsers = searcher.getDefaultResults(new UserTypes[] {UserTypes.PATIENT}, filter);
-        List<Patient> defaultPatients = new ArrayList<Patient>();
+        List<Patient> defaultPatients = new ArrayList<>();
         for (User user: defaultUsers) {
             defaultPatients.add((Patient)user);
         }
@@ -176,7 +176,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     popUpStage.setOnHiding(event -> Platform.runLater(() -> {
                         masterData.clear();
                         Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
-                                NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
+                                numResults, filter).forEach(x ->  masterData.add((Patient)x));
                     }));
                 }
                 catch (IOException e) {
@@ -199,12 +199,21 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         columnName.setCellValueFactory(d -> d.getValue()
                 .getNameConcatenated() != null ? new SimpleStringProperty(d.getValue()
                 .getNameConcatenated()) : new SimpleStringProperty(""));
-        columnStatus.setCellValueFactory( d -> d.getValue()
-                .getStatus() != null ? new SimpleStringProperty(d.getValue()
-                .getStatus()
-                .toString()) : new SimpleStringProperty(""));
         columnAge.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue()
                 .getAge())));
+        columnStatus.setCellValueFactory(d -> {
+            Patient patient = d.getValue();
+            if (patient.getDonations().size() > 0) {
+                if (patient.getRequiredOrgans().size() > 0) {
+                    return new SimpleStringProperty("Donating & Receiving");
+                } else {
+                    return new SimpleStringProperty("Donating");
+                }
+            } else if (patient.getRequiredOrgans().size() > 0) {
+                return new SimpleStringProperty("Receiving");
+            }
+            return new SimpleStringProperty("--");
+        });
         columnBirthGender.setCellValueFactory(d -> d.getValue()
                 .getBirthGender() != null ? new SimpleStringProperty(d.getValue()
                 .getBirthGender()
@@ -225,7 +234,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             masterData.clear();
-            List<User> results = searcher.search(newValue, new UserTypes[]{UserTypes.PATIENT}, NUMRESULTS, filter);
+            List<User> results = searcher.search(newValue, new UserTypes[]{UserTypes.PATIENT}, numResults, filter);
             for (User user : results) {
                 masterData.add((Patient) user);
             }
@@ -280,7 +289,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     }
                     filteredData.setPredicate(patientCheck -> true);
                     List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT}, numResults, filter);
-                    List<Patient> patients = new ArrayList<Patient>();
+                    List<Patient> patients = new ArrayList<>();
                     for (User user : results) {
                     	patients.add((Patient)user);
                     }
@@ -311,7 +320,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     }
                     filteredData.setPredicate(patientCheck -> true);
                     if (numResults > 0) {
-                    	return SearchPatients.searchByName(search, numResults)
+                    	return searcher.search(search, new UserTypes[]{UserTypes.PATIENT}, numResults, filter)
                     			.contains(patient);
                     }
                     return false;
@@ -321,21 +330,24 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     @FXML
     private void updateSearch() {
     	masterData.clear();
-        int numResults = 30;
         String search = searchEntry.getText();
         String numResultsString = valueX.getText();
         if (!numResultsString.equals("")) {
 	        try {
 	        	numResults = Integer.parseInt(numResultsString);
-	        } catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
 	        	new Alert((Alert.AlertType.ERROR), valueX.getText() + " is not a valid number. \nPlease enter a valid number for the number of search results.").show();
 	        }
+        } else {
+            numResults = 30;
         }
         if (numResults > 0) {
-        	masterData.addAll(SearchPatients.searchByName(search, numResults));
+            for (User user : searcher.search(search, new UserTypes[]{UserTypes.PATIENT}, numResults, filter)) {
+                masterData.add((Patient) user);
+            }
         	patientDataTable.setItems(masterData);
         }
-        displayY.setText( "Display all " + SearchPatients.getAllResults().size() + " profiles" );
+        displayY.setText( "Display all " + searcher.getDefaultResults(new UserTypes[]{UserTypes.PATIENT}, null).size() + " profiles" );
     }
 
     /**
@@ -344,7 +356,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     @FXML
     private void displayAllResults() {
     	masterData.clear();
-        masterData.addAll(SearchPatients.getAllResults());
+    	for (User user : searcher.getDefaultResults(new UserTypes[]{UserTypes.PATIENT}, null)) {
+    	    masterData.add((Patient)user);
+        }
         patientDataTable.setItems(masterData);
     }
 
@@ -353,7 +367,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * @return An integer value representing the total number of profiles returned from the search
      */
     private int getProfileCount() {
-       return SearchPatients.getAllResults().size();
+       return searcher.getDefaultResults(new UserTypes[]{UserTypes.PATIENT}, null).size();
     }
 
     /**
@@ -471,7 +485,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             masterData.clear();
             filter.replace(FilterOption.REGION, filter.get(FilterOption.REGION), newValue);
             Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
-                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
+                    numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         //4.
@@ -479,7 +493,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             masterData.clear();
             filter.replace(FilterOption.DONATIONS, filter.get(FilterOption.DONATIONS), newValue);
             Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
-                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
+                    numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         //5.
@@ -487,7 +501,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             masterData.clear();
             filter.replace(FilterOption.REQUESTEDDONATIONS, filter.get(FilterOption.REQUESTEDDONATIONS), newValue);
             Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
-                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
+                    numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         //6.
@@ -495,35 +509,35 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             masterData.clear();
             filter.replace(FilterOption.BIRTHGENDER, filter.get(FilterOption.BIRTHGENDER), newValue);
             Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
-                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
+                    numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         isDonorCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.DONOR, filter.get(FilterOption.DONOR), newValue.toString());
             Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
-                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
+                    numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         isRecieverCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.RECIEVER, filter.get(FilterOption.RECIEVER), newValue.toString());
             Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
-                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
+                    numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.AGEUPPER, filter.get(FilterOption.AGEUPPER), String.valueOf(newValue.intValue()));
             Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
-                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
+                    numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         rangeSlider.lowValueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.AGELOWER, filter.get(FilterOption.AGELOWER), String.valueOf(newValue.intValue()));
             Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
-                    NUMRESULTS, filter).forEach(x ->  masterData.add((Patient)x));
+                    numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
     }
 

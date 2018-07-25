@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
+<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="274.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="235.0" />
@@ -30,6 +31,7 @@
        <TableView fx:id="patientDataTable" GridPane.columnSpan="3" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS">
          <columns>
              <TableColumn fx:id="columnName" editable="false" minWidth="140.79998779296875" prefWidth="176.0" text="Name" />
+            <TableColumn fx:id="columnStatus" prefWidth="75.0" text="Status" />
              <TableColumn fx:id="columnAge" editable="false" minWidth="0.0" prefWidth="124.79998779296875" text="Age" />
              <TableColumn fx:id="columnBirthGender" editable="false" minWidth="100.0" prefWidth="100.0" text="Birth Gender" />
             <TableColumn fx:id="columnRegion" editable="false" prefWidth="180.0" text="Region" />
@@ -140,6 +142,12 @@
                   <Font size="15.0" />
                </font>
             </Text>
+             <Label fx:id="displayX" prefHeight="15.0" text="Display top:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+             <TextField fx:id="valueX" onKeyReleased="#updateSearch" onMouseClicked="#updateSearch" prefHeight="28.0" prefWidth="53.0" styleClass="back" stylesheets="@../css/guiStyle.css" text="30" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+             <Label fx:id="displayY" maxWidth="1000.0" onMouseClicked="#displayAllResults" prefWidth="245.0" styleClass="back" stylesheets="@../css/guiStyle.css" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+               <padding>
+                  <Insets left="5.0" />
+               </padding></Label>
          </children>
          <GridPane.margin>
             <Insets left="60.0" right="60.0" />

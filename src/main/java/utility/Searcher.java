@@ -433,7 +433,11 @@ public class Searcher {
         List<User> results = new ArrayList<>();
         if (input.isEmpty()) {
             if (filter != null) {
-                return getDefaultResults(types, filter);
+                if (numResults < getDefaultResults(types, filter).size()) {
+                    return getDefaultResults(types, filter).subList(0, numResults);
+                } else {
+                    return getDefaultResults(types, filter);
+                }
             }
             return results;
         }
