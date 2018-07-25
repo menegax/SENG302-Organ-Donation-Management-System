@@ -405,24 +405,33 @@ public class SearcherTest {
         //filter region
         filter.put(FilterOption.BIRTHGENDER, BirthGender.FEMALE.toString());
 
-        //d1 - only one female
-        database.getPatientByNhi("abc1230").setBirthGender(BirthGender.FEMALE);
+        //d1 - female
+        Patient p = database.getPatientByNhi("abc1230");
+        p.setBirthGender(BirthGender.FEMALE);
+        database.update(p);
+
         List<User>  results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(1, results.size());
         hasBirthGender(results, BirthGender.FEMALE);
+        Assert.assertEquals(30, results.size());
 
-        //d2 - 2 females
-        database.getPatientByNhi("abc1231").setBirthGender(BirthGender.FEMALE);
-        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(2, results.size());
-        hasBirthGender(results, BirthGender.FEMALE);
+        //d2 - add 1 male
+        filter.put(FilterOption.BIRTHGENDER, BirthGender.MALE.toString());
+        Patient p1 = database.getPatientByNhi("abc1231");
+        p1.setBirthGender(BirthGender.MALE);
+        database.update(p);
 
-        //d2 - 1 male
-        filter.replace(FilterOption.BIRTHGENDER, filter.get(FilterOption.BIRTHGENDER), BirthGender.MALE.toString());
-        database.getPatientByNhi("abc1232").setBirthGender(BirthGender.MALE);
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(1, results.size());
         hasBirthGender(results, BirthGender.MALE);
+        Assert.assertEquals(1, results.size());
+
+        //d2 - 2 male
+        Patient p3 = database.getPatientByNhi("abc1232");
+        p3.setBirthGender(BirthGender.MALE);
+        database.update(p3);
+
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
+        hasBirthGender(results, BirthGender.MALE);
+        Assert.assertEquals(2, results.size());
     }
 
 
@@ -469,28 +478,28 @@ public class SearcherTest {
 
     /**
      * Check the status filtering
-     * @throws InvalidObjectException -
      */
     @Test
-    public void testIsDonorReceiver() throws InvalidObjectException {
-        filter.put(FilterOption.DONOR, "true");
+    public void testIsDonorReceiver() {
+        filter.put(FilterOption.RECIEVER, "true");
 
         List<User>  results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(0, results.size());
-        areDonors(results);
+        areRecievers(results);
 
-        //one donor
+        //3 donor
+        filter.put(FilterOption.DONOR, "true");
         database.getPatientByNhi("abc1230").setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(1, results.size());
+        Assert.assertEquals(3, results.size());
         areDonors(results);
 
-        //one reciever
+        //two reciever
         filter.clear();
         filter.put(FilterOption.RECIEVER, "true");
         database.getPatientByNhi("abc1231").setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(1, results.size());
+        Assert.assertEquals(2, results.size());
         areRecievers(results);
 
 
@@ -498,29 +507,41 @@ public class SearcherTest {
         filter.put(FilterOption.DONOR, "true");
         database.getPatientByNhi("abc1230").setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(1, results.size());
+        Assert.assertEquals(2, results.size());
         areDonorsAndRecievers(results);
     }
 
 
     @Test
-    public void testAllFilterCombo() throws InvalidObjectException {
+    public void testAllFilterCombo() {
         addPatientsToDB();
         //set regions
-        database.getPatientByNhi("abc1230").setRegion(Region.CANTERBURY);
-        database.getPatientByNhi("abc1231").setRegion(Region.CANTERBURY);
-        database.getPatientByNhi("abc1232").setRegion(Region.AUCKLAND);
-        database.getPatientByNhi("abc1233").setRegion(Region.MANAWATU);
+        Patient p = database.getPatientByNhi("abc1230");
+        p.setRegion(Region.CANTERBURY);
+
+        Patient p1 = database.getPatientByNhi("abc1231");
+        p1.setRegion(Region.CANTERBURY);
+
+        Patient p2 = database.getPatientByNhi("abc1232");
+        p2.setRegion(Region.AUCKLAND);
+
+        Patient p3 = database.getPatientByNhi("abc1233");
+        p3.setRegion(Region.MANAWATU);
 
         //set donations, set requireds
-        database.getPatientByNhi("abc1230").setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
-        database.getPatientByNhi("abc1231").setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.LIVER);}});
+        p.setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        p1.setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.LIVER);}});
 
         //set genders
-        database.getPatientByNhi("abc1230").setBirthGender(BirthGender.FEMALE);
-        database.getPatientByNhi("abc1231").setBirthGender(BirthGender.MALE);
-        database.getPatientByNhi("abc1232").setBirthGender(BirthGender.MALE);
-        database.getPatientByNhi("abc1233").setBirthGender(BirthGender.FEMALE);
+        p.setBirthGender(BirthGender.FEMALE);
+        p1.setBirthGender(BirthGender.MALE);
+        p2.setBirthGender(BirthGender.MALE);
+        p3.setBirthGender(BirthGender.FEMALE);
+
+        database.update(p);
+        database.update(p1);
+        database.update(p2);
+        database.update(p3);
 
         filter.put(FilterOption.REGION, Region.CANTERBURY.getValue());
         filter.put(FilterOption.DONATIONS, Organ.KIDNEY.toString());
