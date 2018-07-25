@@ -4,6 +4,8 @@ import controller.GUIHome;
 import controller.ScreenControl;
 import controller.UndoRedoControl;
 import controller.UndoableController;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -132,6 +134,20 @@ public class UndoableStage extends Stage {
             statesHistoryScreens.add(statesHistoryScreen);
             tabMap.put(statesHistoryScreen, screenControl.getTabPane(this).getSelectionModel().getSelectedItem());
         }
+    }
+
+    /**
+     * Adds listeners for undo/redo for undoable pop-ups (procedures, diagnoses)
+     */
+    public void setPopUp() {
+        // todo magic strings
+        this.getScene().setOnKeyPressed(event ->  {
+            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+                undo();
+            } else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+                redo();
+            }
+        });
     }
 
     /**
