@@ -1,6 +1,7 @@
 package model_test;
 
 import model.Administrator;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import service.Database;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -117,7 +119,9 @@ public class AdministratorTest implements Serializable {
 
     private void thenAdminShouldBeRemovedFromDatabase(Administrator administrator) {
         try {
-            database.getAdministratorByUsername(administrator.getUsername());
+            if(database.getAdministratorByUsername(administrator.getUsername()) == null) {
+                assertTrue(true);
+            }
             assert false;
         }
         catch (NullPointerException e) {

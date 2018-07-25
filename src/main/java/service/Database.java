@@ -14,7 +14,6 @@ import model.User;
 import utility.Searcher;
 import utility.StatusObservable;
 
-
 import java.io.*;
 import java.sql.*;
 import java.time.LocalDate;
@@ -26,7 +25,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-public class Database {
+public class Database implements Serializable {
 
     private static Set<Patient> patients;
 
@@ -36,13 +35,13 @@ public class Database {
 
     private static Database database = null;
 
-    private Connection conn;
+    transient private Connection conn;
 
     private static Set<Administrator> administrators = new HashSet<>();
 
     private int curStaffID = 0;
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    transient private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private static Searcher searcher = Searcher.getSearcher();
     /**
@@ -1400,7 +1399,6 @@ public class Database {
     		}
     	}
     	try {
-    		//System.out.println(query);
 			runQuery(query, params);
 			userActions.log(Level.INFO, "Successfully updated all patients in database.", "Attempted to update all patients in database.");
 			return true;

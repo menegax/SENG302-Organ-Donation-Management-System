@@ -97,7 +97,6 @@ public class Clinician extends User {
      */
     public void setAttributes(User newUserAttributes) {
         Clinician newClinicianAttributes = (Clinician) newUserAttributes.deepClone();
-
         setFirstName(newClinicianAttributes.getFirstName());
         setLastName(newClinicianAttributes.getLastName());
         setMiddleNames(newClinicianAttributes.getMiddleNames());
