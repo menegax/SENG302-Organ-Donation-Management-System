@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.Procedure;
@@ -99,7 +100,7 @@ public class GUIPatientProcedures extends UndoableController {
             addProcedureButton.setVisible(false);
             editProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
-        } else if (userControl.getLoggedInUser() instanceof Clinician) {
+        } else if (userControl.getLoggedInUser() instanceof Clinician || userControl.getLoggedInUser() instanceof Administrator) {
             this.patient = (Patient) userControl.getTargetUser();
             this.patientClone = (Patient) this.patient.deepClone();
             setupTables();
