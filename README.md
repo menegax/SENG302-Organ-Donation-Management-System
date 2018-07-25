@@ -24,10 +24,6 @@ last update 24/07/2018
  1. Deploy the .jar file(s) using Maven
  2. Run the terminal command `java -jar <pathtojar>` to begin the application
  
-## Touchscreen
- 1. Deploy the .jar file(s) using Maven
- 2. Run the terminal command `java -jar <pathtojar> touch` to begin the application
- 
 # Requirements
 * JDK 1.8
  
