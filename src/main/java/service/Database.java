@@ -1324,23 +1324,113 @@ public class Database {
         throw new InvalidObjectException("Administrator with username " + " does not exist");
     }
 
+    private String[] getInitialUpdateQueries() {
+		String[] queries = new String[6];
+    	queries[0] = "INSERT INTO tblPatients "
+    			+ "(Nhi, FName, MName, LName, Birth, Created, Modified, Death, BirthGender, "
+                + "PrefGender, PrefName, Height, Weight, BloodType, DonatingOrgans, ReceivingOrgans) "
+                + "VALUES ";
+    	queries[1] = "INSERT INTO tblPatientContact "
+        		+ "(Patient, Street1, Street2, Suburb, Region, Zip, HomePhone, WorkPhone, "
+        		+ "MobilePhone, Email, ECName, ECRelationship, ECHomePhone, ECWorkPhone, "
+        		+ "ECMobilePhone, ECEmail) VALUES ";
+    	queries[2] = "INSERT INTO tblDiseases "
+                + "(Patient, Name, DateDiagnosed, State) VALUES ";
+    	queries[3] = "INSERT INTO tblMedications (Patient, Name) VALUES ";
+    	queries[4] = "INSERT INTO tblProcedures "
+                + "(Patient, Summary, Description, ProDate, AffectedOrgans) VALUES ";
+    	queries[5] = "INSERT INTO tblPatientLogs "
+                + "(Patient, Time, Level, Message, Action) VALUES ";   	
+    	return queries;
+    }
+    
+    private String[][][] getUpdatePatientQueryArray(Patient patient) {
+    	String[][] params = new String[6][];
+    	String[] queries = new String[6];
+    	//Query to add base patient attributes to database
+    	queries[0] = "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), ";
+    	params[0] = getPatientAttributes(patient);
+    	//Query to add patient contact details to database
+    	queries[1] = "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), ";
+    	params[1] = getPatientContactAttributes(patient);
+        //Queries to add patient diseases details to database
+        ArrayList<Disease> allDiseases = patient.getCurrentDiseases();
+        allDiseases.addAll(patient.getPastDiseases());
+        params[2] = new String[0];
+        queries[2] = "";
+        for (Disease disease : allDiseases) {
+            params[2] = ArrayUtils.addAll(params[2], getDiseaseAttributes(patient, disease));
+            queries[2] += "(?, ?, ?, ?), ";
+         }
+        params[3] = new String[0];
+        queries[3] = "";
+    	//Queries to add patient medication details to database        
+        for (Medication medication : patient.getCurrentMedications()) {
+            params[3] = ArrayUtils.addAll(params[3], getMedicationAttributes(patient, medication, true));
+            queries[3] += "(?, ?), ";
+        }
+
+        for (Medication medication : patient.getMedicationHistory()) {
+        	params[3] = ArrayUtils.addAll(params[3], getMedicationAttributes(patient, medication, false));
+            queries[3] += "(?, ?), ";
+        }
+        //Queries to add patient procedures details to database
+        params[4] = new String[0];
+        queries[4] = "";
+        for(Procedure procedure : patient.getProcedures()) {
+            params[4] = ArrayUtils.addAll(params[4], getProcedureAttributes(patient, procedure));
+            queries[4] += "(?, ?, ?, ?, ?), ";
+        }
+        //Queries to add patient logs details to database
+        params[5] = new String[0];
+        queries[5] = "";
+        for (PatientActionRecord record : patient.getUserActionsList()) {
+            params[5] = ArrayUtils.addAll(params[5], getLogAttributes(patient, record));
+            queries[5] += "(?, ?, ?, ?, ?), ";
+        }
+        String[][] packagedQueries = new String[][] {queries};
+    	return new String[][][] {packagedQueries, params};
+    }
+    
     /**
      * Pushes all local changes to patients to the database.
      * @return True if successfully updated all patients, otherwise false.
      */
     private boolean updateAllPatients() {
-    	String[][] info;
-    	String[] params = new String[0];
-    	String query = new String();
+    	String[][][] info;
+    	String[][] params = new String[6][0];
+
+    	String[] queries = getInitialUpdateQueries();
+    	int queryCount = 0;
+    	int insertCount = 1;
     	for (Patient patient : getPatients()) {
     		if (patient.getChanged()) {
-    			info = getPreparedUpdatePatientQuery(patient);
-    			query += info[0][0];
-    			params = ArrayUtils.addAll(params, info[1]);
+    			info = getUpdatePatientQueryArray(patient);
+    			queryCount = 0;
+    			while (queryCount < info[0].length) {
+    				queries[queryCount] += info[0][0][queryCount];
+    				params[queryCount] = ArrayUtils.addAll(params[queryCount], info[1][queryCount]);
+    				queryCount += 1;
+    			}
+    			
+    			insertCount += 1;
+    		}
+    		if (insertCount == 4000) {
+    			try {
+					runQuery(query, params);
+					queries = getInitialUpdateQueries();
+					params = new String[6][0];
+					insertCount = 1;
+				} catch (SQLException e) {
+					userActions.log(Level.SEVERE, "Failed to update all patients in database." + e.getMessage(), "Attempted to update all patients in database.");
+					return false;
+				}
     		}
     	}
     	try {
-			runQuery(query, params);
+    		if (insertCount > 0) {
+    			runQuery(query, params);
+    		}
 			userActions.log(Level.INFO, "Successfully updated all patients in database.", "Attempted to update all patients in database.");
 			return true;
 		} catch (SQLException e) {
