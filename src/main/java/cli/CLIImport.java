@@ -3,7 +3,11 @@ package cli;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
+import utility.parsing.ParseCSV;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -21,7 +25,20 @@ public class CLIImport implements Runnable {
     Database database = Database.getDatabase();
 
     public void run() {
-        userActions.log(Level.INFO, "Successfully imported", "Attempted to import patients");
+        if (fileName.endsWith(".csv")) {
+            try {
+            Reader reader = new FileReader(fileName);
+            ParseCSV parseCSV = new ParseCSV();
+            parseCSV.parse(reader);
+            } catch (FileNotFoundException e) {
+                userActions.log(Level.SEVERE, "File doesn't exist", "Attempted to import patients");
+            }
+            userActions.log(Level.INFO, "Successfully imported", "Attempted to import patients");
+        } else if (fileName.endsWith(".json")) {
+            Database.getDatabase().importFromDiskPatients(fileName);
+        } else {
+            userActions.log(Level.SEVERE, "Unsupported file typeim", "Attempted to import patients");
+        }
     }
 
 }
