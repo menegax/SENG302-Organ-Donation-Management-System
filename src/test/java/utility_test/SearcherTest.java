@@ -153,9 +153,6 @@ public class SearcherTest {
 
         // Search to match all 36 added patients.
         List<User> results = searcher.search("A B C D E F Z Y X W V U", new UserTypes[] {UserTypes.PATIENT}, 30, null);
-        for (User result: results) {
-        	System.out.println(result);
-        }
         
         // The returned result should be exactly 30
         assertEquals(30, results.size());

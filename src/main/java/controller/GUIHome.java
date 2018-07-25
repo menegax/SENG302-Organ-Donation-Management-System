@@ -337,7 +337,6 @@ public class GUIHome implements Observer, TouchscreenCapable {
                 logOut();
             });
             alert.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, event -> {
-                System.out.println("Have a nice day"); //tod rm
             });
             alert.showAndWait();
         } else {
