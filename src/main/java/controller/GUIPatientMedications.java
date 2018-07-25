@@ -181,7 +181,7 @@ public class GUIPatientMedications extends UndoableController {
                 .setSelectionMode(SelectionMode.MULTIPLE);
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
-        } else if (user instanceof Clinician) {
+        } else {
             viewedPatient = (Patient) userControl.getTargetUser();
             loadProfile(viewedPatient.getNhiNumber());
         }

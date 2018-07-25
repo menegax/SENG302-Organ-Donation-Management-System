@@ -163,7 +163,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
      */
     private void setUpDoubleClickEdit(TableView<Disease> tableView) {
         UndoableStage stage = new UndoableStage();
-        stage.setPopUp();
+        //stage.setPopUp();
         tableView.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && tableView.getSelectionModel().getSelectedItem() != null) {
                 GUIPatientUpdateDiagnosis.setDisease(tableView.getSelectionModel().getSelectedItem());
@@ -192,7 +192,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
         try {
             GUIPatientUpdateDiagnosis.setIsAdd(true);
             UndoableStage stage = new UndoableStage();
-            stage.setPopUp();
+            //stage.setPopUp();
             screenControl.addStage(stage.getUUID(), stage);
             screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/patientUpdateDiagnosis.fxml")));
             stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));

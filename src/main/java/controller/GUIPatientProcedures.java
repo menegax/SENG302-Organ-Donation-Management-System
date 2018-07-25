@@ -192,7 +192,7 @@ public class GUIPatientProcedures extends UndoableController {
     public void addProcedure() {
         try {
             UndoableStage stage = new UndoableStage();
-            stage.setPopUp();
+            //stage.setPopUp();
             screenControl.addStage(stage.getUUID(), stage);
             screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/patientProcedureForm.fxml")));
             stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
@@ -223,7 +223,7 @@ public class GUIPatientProcedures extends UndoableController {
         }
         try {
             UndoableStage stage = new UndoableStage();
-            stage.setPopUp();
+            //stage.setPopUp();
             screenControl.addStage(stage.getUUID(), stage);
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
             screenControl.show(stage.getUUID(),fxmlLoader.load());

@@ -139,15 +139,15 @@ public class UndoableStage extends Stage {
     /**
      * Adds listeners for undo/redo for undoable pop-ups (procedures, diagnoses)
      */
-    public void setPopUp() {
-        this.getScene().setOnKeyPressed(event ->  {
-            if (screenControl.getUndo().match(event)) {
-                undo();
-            } else if (screenControl.getRedo().match(event)) {
-                redo();
-            }
-        });
-    }
+//    public void setPopUp() {
+//        this.getScene().setOnKeyPressed(event ->  {
+//            if (screenControl.getUndo().match(event)) {
+//                undo();
+//            } else if (screenControl.getRedo().match(event)) {
+//                redo();
+//            }
+//        });
+//    }
 
     /**
      * Gets the UUID of the stage
