@@ -49,4 +49,6 @@ last update 03/08/2018
  * HTTPClient
  * FluentAPI
  * TestFX
+ * Sonar
+ * ControlsFX
  
