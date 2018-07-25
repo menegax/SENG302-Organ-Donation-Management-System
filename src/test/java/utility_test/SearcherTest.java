@@ -72,6 +72,7 @@ public class SearcherTest {
 	public void testEqualSearchOrderingAfterNameUpdate() {
 
 	    Database.resetDatabase();
+	    searcher.clearIndex();
 
         d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
         d2 = new Patient("def1234", "Patik", new ArrayList<String>(), "Laffey", LocalDate.now());
@@ -82,6 +83,8 @@ public class SearcherTest {
         Database.addPatient(d3);
         Database.addPatient(d2);
         Database.addPatient(d1);
+        
+        searcher.createFullIndex();
 
 		// Change last name of George Romero to come before George Bobington
 		d3.setLastName("Addington");
