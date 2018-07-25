@@ -478,7 +478,6 @@ public class Searcher {
      * @param filter  - filter to use
      * @return - bool if a match
      */
-    //do not git annotate :(
     private static boolean matchesFilter(Patient patient, Map<GlobalEnums.FilterOption, String> filter) {
         if (filter == null) {
             return false;

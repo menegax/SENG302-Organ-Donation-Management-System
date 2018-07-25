@@ -41,10 +41,6 @@ import java.util.logging.Level;
 
 public class GUIClinicianSearchPatients extends UndoableController implements Initializable {
 
-    private static final int X = 1; // Constant for the maximum default number of profiles returned in a search
-
-    private static int maxResults = 30; // The maximum number of results possible to display
-
     @FXML
     private TableView<Patient> patientDataTable;
 
@@ -432,6 +428,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      */
     @FXML
     public void clearFilterOptions() {
+        valueX.setText("30");
+        updateSearch();
         recievingFilter.getSelectionModel().select(GlobalEnums.NONE_ID);
         donationFilter.getSelectionModel().select(GlobalEnums.NONE_ID);
         regionFilter.getSelectionModel().select(GlobalEnums.NONE_ID);
