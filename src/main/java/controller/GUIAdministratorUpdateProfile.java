@@ -5,9 +5,11 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import model.Administrator;
+import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 import utility.StatusObservable;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.InvalidObjectException;
@@ -93,7 +95,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
             add(lastnameTxt);
             add(middlenameTxt);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPROFILEUPDATE);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORPROFILEUPDATE);
     }
 
 
@@ -159,20 +161,27 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
         }
         // If all the fields are entered correctly
         if (valid) {
-            target.setFirstName(firstnameTxt.getText());
-            target.setLastName(lastnameTxt.getText());
+
+            Administrator after = (Administrator) target.deepClone();
+
+            after.setFirstName(firstnameTxt.getText());
+            after.setLastName(lastnameTxt.getText());
+
             List<String> middlenames = Arrays.asList(middlenameTxt.getText()
                     .split(" "));
             ArrayList middles = new ArrayList();
             middles.addAll(middlenames);
-            target.setMiddleNames(middles);
+            after.setMiddleNames(middles);
             if (passwordTxt.getText()
                     .length() > 0) {
-                target.setPassword(passwordTxt.getText());
+                after.setPassword(passwordTxt.getText());
             }
 
-            target.userModified();
-            screenControl.setIsSaved(false);
+            after.userModified();
+
+            Action action = new Action(target, after);
+            statesHistoryScreen.addAction(action);
+
             userActions.log(Level.INFO, "Successfully updated admin profile", "Attempted to update admin profile");
         }
         else {

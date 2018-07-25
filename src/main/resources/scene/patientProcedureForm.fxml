@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="diagnosisUpdatePane" prefHeight="318.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProcedureForm">
+<GridPane fx:id="procedureUpdatePane" prefHeight="318.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProcedureForm">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="17.600024414062503" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="260.7999755859375" />

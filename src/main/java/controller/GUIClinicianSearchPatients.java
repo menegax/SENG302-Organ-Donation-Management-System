@@ -142,6 +142,12 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     private void setupUndoRedo() {
         controls = new ArrayList<Control>() {{
             add(searchEntry);
+            add(isDonorCheckbox);
+            add(isRecieverCheckbox);
+            add(recievingFilter);
+            add(birthGenderFilter);
+            add(donationFilter);
+            add(regionFilter);
             add(valueX);
         }};
         statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.CLINICIANSEARCHPATIENTS);

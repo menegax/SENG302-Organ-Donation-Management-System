@@ -1,6 +1,8 @@
 package utility_test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.*;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 import java.io.IOException;
@@ -43,7 +45,7 @@ public class SearcherTest {
     @BeforeClass
     public static void setUp() {
         Database.resetDatabase();
-        userActions.setLevel(Level.ALL);
+        userActions.setLevel(Level.OFF);
 
         // Given patients in a db
         d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
@@ -70,6 +72,7 @@ public class SearcherTest {
 	public void testEqualSearchOrderingAfterNameUpdate() {
 
 	    Database.resetDatabase();
+	    searcher.clearIndex();
 
         d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
         d2 = new Patient("def1234", "Patik", new ArrayList<String>(), "Laffey", LocalDate.now());
@@ -80,6 +83,8 @@ public class SearcherTest {
         Database.addPatient(d3);
         Database.addPatient(d2);
         Database.addPatient(d1);
+
+        searcher.createFullIndex();
 
 		// Change last name of George Romero to come before George Bobington
 		d3.setLastName("Addington");
@@ -129,7 +134,7 @@ public class SearcherTest {
 
     	Database.resetDatabase();
     	searcher.clearIndex();
-    	
+
     	// Create more than 36 patients
     	String[] firstNames = {"A", "B", "C", "D", "E", "F"};
     	String[] lastNames = {"Z", "Y", "X", "W", "V", "U"};
@@ -147,16 +152,16 @@ public class SearcherTest {
     		}
     	}
     	searcher.createFullIndex();
-    	
+
     	// For a number of patients more than 30
     	assertTrue(Database.getPatients().size() > 30);
 
         // Search to match all 36 added patients.
         List<User> results = searcher.search("A B C D E F Z Y X W V U", new UserTypes[] {UserTypes.PATIENT}, 30, null);
         for (User result: results) {
-        	System.out.println(result);
+        	systemLogger.log(Level.INFO, result.toString());
         }
-        
+
         // The returned result should be exactly 30
         assertEquals(30, results.size());
     }
@@ -357,8 +362,8 @@ public class SearcherTest {
 
         //update region
         Database.getPatientByNhi("abc1231").setRegion(Region.CANTERBURY);
-        
-        
+
+
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 
         //2 results with region CANTERBURY

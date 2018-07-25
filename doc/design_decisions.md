@@ -178,26 +178,43 @@ stored within the objects if required/decided.
 #### Keyboard Shortcuts
 MenuBar has the ability to set and bind keyboard shortcuts to a stage. Therefore we will use MenuBars to set the keyboard shortcuts. 
 This means there should not be other action listeners for global or stage-level shortcuts. If it has a keyboard shortcut, it belongs as an item in the menubar.
- 
- 
+  
  ## Sprint 5
  
  #### GUI
  We have decided that tabs will not call methods to navigate between themselves on the home screen.  
  This will remove the necessity to find the tabs of the home screen that a tab is on.
  
- ### GUI Testing
+ #### GUI Testing
  TestFX has been essentially component testing the application instead of performing small-scale unit tests. We debated making each GUI controller 
  runnable for the purpose of unit testing single controllers, but realized the unit tests would have minimal meaning without the backend supporting 
  it. Therefore we will be using TestFX controller tests more sparingly and for larger-scale component testing for the entire application.
  
- ### GUI Testing (again)
+ #### GUI Testing (again)
  TestFX has been a huge drain on effort and time from the developers. We've decided to entirely remove all TestFX tests in favor of the more 
  human-intensive manual testing method. In truth, we seem to believe manual testing will take less time and effort than TestFX at this point. This 
  will and has led to 0% test coverage on the `controller` package. We expect that. With comprehensive manual testing in addition to smoke testing we 
  will effectively have 100% test coverage through manual testing.
  
- ### Status bar updates
+ #### Undo/Redo
+ On the register users screen as an administrator, fields will be cleared if and only if the radio buttons are clicked by the user.  
+ If different radio buttons are selected through undo/redo, the inputs will instead persist.  
+ Undoing/Redoing "actions" will consume the whole undo/redo event. The previous key press, etc. will not be undone.  
+ This is because in procedures/diagnosis the user will want to undo actions without reverting to a previous screen (the case otherwise)
+ 
+ ####Touch Screen Controls
+ We decided to use the built in touch commands for zooming and rotating functions, as they are built in events and handlers
+ that are simple to grasp and intuitive control schemes.
+ 
+ ####Multiple User touch interface
+ We decided we would use the external library TUIOFX to implement a multi-user touch interface. This will require the application to be reworked so only one stage is present in the application, with multiple panes as scenes.
+ 
+ ####Base Touchscreen ACs
+ In the original acceptance criteria for base touchscreen functionality, there was a condition that the on-screen keyboard would be rotatable. In this sprint, we found that creating a rotatable keyboard is a story by itself, and so with permission from the PO, we kept the default keyboard that is not rotatable.
+ 
+ In addition, the AC about multiple window touch functionality was not met in this sprint due to the amount of time it would take to implement simultaneous interactions. This would involve changing the setup of our application to be a single stage with multiple panes acting as "windows" to allow for the TUIOFX library to function for multi-user touch interfaces.
+
+ #### Status bar updates
  We decided to use the built in logger we are using to set the status bar text when a log is added. This means that we can rely
  on our existing log additions instead of having to set the status bar text in each controller class. The status bar is updated by 
  using setStatus within the observable StatusObservable, which notifies each of its observers.
