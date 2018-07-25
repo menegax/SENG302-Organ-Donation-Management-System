@@ -26,6 +26,7 @@ import org.tuiofx.TuioFX;
 import service.Database;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
+import utility.undoRedo.UndoableStage;
 import utility.StatusObservable;
 import utility.undoRedo.UndoableStage;
 
@@ -88,6 +89,20 @@ public class GUIHome implements Observer, TouchscreenCapable {
     public void initialize() {
         StatusObservable statusObservable = StatusObservable.getInstance();
         statusObservable.addObserver(this);
+        horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty()
+                .addListener((observable1, oldStage, newStage) -> {
+            setUpMenuBar((UndoableStage) newStage);
+            addTabs((UndoableStage) newStage);
+        }));
+    }
+
+    /**
+     * Detects the appropriate user and adds the tabs to the tab bar accordingly
+     * @param stage the stage the horizontal tab is on
+     */
+    private void addTabs(UndoableStage stage) {
+        UserControl userControl = new UserControl();
+        stage.setChangingStates(true);
         try {
             // Patient viewing themself
             if (userControl.getLoggedInUser() instanceof Patient) {
@@ -143,6 +158,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());
         }
+        stage.setChangingStates(false);
     }
 
 
@@ -222,17 +238,14 @@ public class GUIHome implements Observer, TouchscreenCapable {
         userNameDisplay.setText(user.getNameConcatenated());
     }
 
-
     /**
      * Creates and adds tab to the tab pane
-     *
-     * @param title    - title of the new tab
+     * @param title - title of the new tab
      * @param fxmlPath - path of the fxml to be loaded
      */
     private void createTab(TabName title, String fxmlPath) throws IOException {
         Tab newTab = new Tab();
         newTab.setText(title.toString());
-        if (!title.equals(TabName.SEARCHPATIENTS)) {
             newTab.setOnSelectionChanged(event -> {
                 try {
                     newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
@@ -240,12 +253,8 @@ public class GUIHome implements Observer, TouchscreenCapable {
                     systemLogger.log(SEVERE, "Failed to create tab", e);
                 }
             });
-        }
-        newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
-        horizontalTabPane.getTabs()
-                .add(newTab);
+        horizontalTabPane.getTabs().add(newTab);
     }
-
 
     /**
      * Adds tabs to the home tab pane for a patient logged in
@@ -293,7 +302,6 @@ public class GUIHome implements Observer, TouchscreenCapable {
         createTab(TabName.HISTORY, "/scene/clinicianHistory.fxml");
     }
 
-
     /**
      * Adds tabs for a logged in administrator
      *
@@ -302,12 +310,11 @@ public class GUIHome implements Observer, TouchscreenCapable {
     private void addTabsAdministrator() throws IOException {
         createTab(TabName.PROFILE, "/scene/administratorProfile.fxml");
         createTab(TabName.UPDATE, "/scene/administratorProfileUpdate.fxml");
-        createTab(TabName.USERREGISTER, "/scene/userRegister.fxml");
+        createTab(TabName.USERREGISTER, "/scene/administratorUserRegister.fxml");
         createTab(TabName.SEARCHPUSERS, "/scene/administratorSearchUsers.fxml");
         createTab(TabName.TRANSPLANTWAITINGLIST, "/scene/clinicianWaitingList.fxml");
         createTab(TabName.HISTORY, "/scene/adminHistory.fxml");
     }
-
 
     /**
      * Adds tabs for an administrator viewing a clinician
@@ -337,6 +344,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
                 logOut();
             });
             alert.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, event -> {
+
             });
             alert.showAndWait();
         } else {
@@ -362,11 +370,11 @@ public class GUIHome implements Observer, TouchscreenCapable {
         Database.importFromDiskAdministrators("./administrator.json");
     }
 
-
     /**
      * Creates a native-looking MacOS menu bar for the application
      */
     private void setUpMenuBar(Stage stage) {
+        screenControl.addStageTab(stage, horizontalTabPane);
 
         // Create a new menu bar
         MenuBar bar = new MenuBar();
@@ -380,8 +388,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         menu1Item1.setOnAction(event -> {
             attemptLogOut();
         });
-        menu1.getItems()
-                .addAll(menu1Item1);
+        menu1.getItems().addAll(menu1Item1);
 
         // FILE
         Menu menu2 = new Menu("File");
@@ -410,27 +417,21 @@ public class GUIHome implements Observer, TouchscreenCapable {
                     userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
                 }
             });
-            subMenuImport.getItems()
-                    .addAll(menu2Item2, menu2Item3);
-            menu2.getItems()
-                    .addAll(subMenuImport);
+            subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
+            menu2.getItems().addAll(subMenuImport);
         }
-        menu2.getItems()
-                .addAll(menu2Item1);
+        menu2.getItems().addAll(menu2Item1);
 
-        // EDIT
-        //        Menu menu3 = new Menu("Edit");
-        //        MenuItem menu3Item1 = new MenuItem("Undo");
-        //        menu3Item1.setAccelerator(screenControl.getUndo());
-        //        menu3Item1.setOnAction(event -> ((UndoableStage) stage).undo());
-        //        MenuItem menu3Item2 = new MenuItem("Redo");
-        //        menu3Item2.setAccelerator(screenControl.getRedo());
-        //        menu3Item2.setOnAction(event -> System.out.println("Redo clicked"));
-        //        menu3.getItems()
-        //                .addAll(menu3Item1, menu3Item2);
+        Menu menu3 = new Menu("Edit");
+        MenuItem menu3Item1 = new MenuItem("Undo");
+        menu3Item1.setAccelerator(screenControl.getUndo());
+        menu3Item1.setOnAction(event -> ((UndoableStage) stage).undo());
+        MenuItem menu3Item2 = new MenuItem("Redo");
+        menu3Item2.setAccelerator(screenControl.getRedo());
+        menu3Item2.setOnAction(event -> ((UndoableStage) stage).redo());
+        menu3.getItems().addAll(menu3Item1, menu3Item2);
 
-        bar.getMenus()
-                .addAll(menu1, menu2);
+        bar.getMenus().addAll(menu1, menu2, menu3);
 
         boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless")
                 .equals("true");
@@ -452,7 +453,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
                 menuBar.getMenus()
                         .clear();
                 menuBar.getMenus()
-                        .addAll(menu1, menu2);
+                        .addAll(menu1, menu2, menu3);
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
             }
         }

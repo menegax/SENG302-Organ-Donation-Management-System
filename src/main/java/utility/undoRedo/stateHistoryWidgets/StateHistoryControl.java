@@ -68,6 +68,14 @@ public abstract class StateHistoryControl {
     }
 
     /**
+     * Called when this StateHistory's undoable stage completes a store action
+     * Truncates state lists to current index
+     */
+    public void notifyStoreComplete() {
+        states = new ArrayList<>(states.subList(0, index + 1));
+    }
+
+    /**
      * Sets the undoable stage that this control is on
      */
     void setUpUndoableStage() {

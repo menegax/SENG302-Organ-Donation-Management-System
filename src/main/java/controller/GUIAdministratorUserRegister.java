@@ -3,11 +3,11 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.input.*;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import model.Administrator;
@@ -16,9 +16,7 @@ import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
-import utility.StatusObservable;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -31,10 +29,9 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
 import static utility.UserActionHistory.userActions;
 
-public class GUIUserRegister implements TouchscreenCapable {
+public class GUIAdministratorUserRegister extends UndoableController {
 
     public Button doneButton;
 
@@ -81,8 +78,6 @@ public class GUIUserRegister implements TouchscreenCapable {
 
     private UserControl userControl = new UserControl();
 
-    private TouchPaneController registerTouchPane;
-
     /**
      * Sets up register page GUI elements
      */
@@ -101,27 +96,77 @@ public class GUIUserRegister implements TouchscreenCapable {
             }
             regionRegister.setItems(regions);
             backButton.setVisible(false);
-            backButton.setDisable(true);
             userRegisterPane.getRowConstraints().get(0).setMaxHeight(0);
         } else {
-            patientButton.setDisable(true);
             patientButton.setVisible(false);
-            clinicianButton.setDisable(true);
             clinicianButton.setVisible(false);
-            administratorButton.setDisable(true);
             administratorButton.setVisible(false);
         }
+        setUpUndoRedo();
+        setUpButtonListeners();
+
         // Enter key
         userRegisterPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 register();
             }
         });
-        registerTouchPane = new TouchPaneController(userRegisterPane);
-        userRegisterPane.setOnZoom(this::zoomWindow);
-        userRegisterPane.setOnRotate(this::rotateWindow);
-        userRegisterPane.setOnScroll(this::scrollWindow);
+    }
 
+    /**
+     * Sets up the listeners for the radio buttons to switch controls on selection
+     */
+    private void setUpButtonListeners() {
+        patientButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!oldValue && newValue) {
+                if (!statesHistoryScreen.getUndoableStage().getChangingStates()) {
+                    statesHistoryScreen.getUndoableStage().setChangingStates(true);
+                    clearFields();
+                    statesHistoryScreen.getUndoableStage().setChangingStates(false);
+                }
+                onSelectPatient();
+            }
+        }));
+        clinicianButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!oldValue && newValue) {
+                if (!statesHistoryScreen.getUndoableStage().getChangingStates()) {
+                    statesHistoryScreen.getUndoableStage().setChangingStates(true);
+                    clearFields();
+                    statesHistoryScreen.getUndoableStage().setChangingStates(false);
+                }
+                onSelectClinician();
+            }
+        }));
+        administratorButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!oldValue && newValue) {
+                if (!statesHistoryScreen.getUndoableStage().getChangingStates()) {
+                    statesHistoryScreen.getUndoableStage().setChangingStates(true);
+                    clearFields();
+                    statesHistoryScreen.getUndoableStage().setChangingStates(false);
+                }
+                onSelectAdministrator();
+            }
+        }));
+    }
+
+    /**
+     * Sets up undo redo for this tab
+     */
+    private void setUpUndoRedo() {
+        controls = new ArrayList<Control>(){{
+            add(firstnameRegister);
+            add(lastnameRegister);
+            add(middlenameRegister);
+            add(birthRegister);
+            add(userIdRegister);
+            add(regionRegister);
+            add(passwordTxt);
+            add(verifyPasswordTxt);
+            add(patientButton);
+            add(clinicianButton);
+            add(administratorButton);
+        }};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORUSERREGISTER);
     }
 
     /**
@@ -129,18 +174,12 @@ public class GUIUserRegister implements TouchscreenCapable {
      */
     @FXML
     public void onSelectPatient() {
-        clearFields();
         userIdRegister.setPromptText("NHI Number");
         regionRegister.setVisible(false);
-        regionRegister.setDisable(true);
         birthRegister.setVisible(true);
-        birthRegister.setDisable(false);
         passwordTxt.setVisible(false);
-        passwordTxt.setDisable(true);
         verifyPasswordTxt.setVisible(false);
-        verifyPasswordTxt.setDisable(true);
         userIdRegister.setVisible(true);
-        userIdRegister.setDisable(false);
     }
 
     /**
@@ -148,18 +187,12 @@ public class GUIUserRegister implements TouchscreenCapable {
      */
     @FXML
     public void onSelectClinician() {
-        clearFields();
         userIdRegister.setPromptText("Staff ID");
         regionRegister.setVisible(true);
-        regionRegister.setDisable(false);
         birthRegister.setVisible(false);
-        birthRegister.setDisable(true);
         passwordTxt.setVisible(false);
-        passwordTxt.setDisable(true);
         verifyPasswordTxt.setVisible(false);
-        verifyPasswordTxt.setDisable(true);
         userIdRegister.setVisible(false);
-        userIdRegister.setDisable(true);
     }
 
     /**
@@ -167,18 +200,12 @@ public class GUIUserRegister implements TouchscreenCapable {
      */
     @FXML
     public void onSelectAdministrator() {
-        clearFields();
         userIdRegister.setPromptText("Username");
         regionRegister.setVisible(false);
-        regionRegister.setDisable(true);
         birthRegister.setVisible(false);
-        birthRegister.setDisable(true);
         passwordTxt.setVisible(true);
-        passwordTxt.setDisable(false);
         verifyPasswordTxt.setVisible(true);
-        verifyPasswordTxt.setDisable(false);
         userIdRegister.setVisible(true);
-        userIdRegister.setDisable(false);
     }
 
     /**
@@ -257,15 +284,6 @@ public class GUIUserRegister implements TouchscreenCapable {
         } else {
             setValid(firstnameRegister);
         }
-
-        // middle name
-        if (!middlenameRegister.getText()
-                .matches("^([-a-zA-Z]*|[ ])*$")) {
-            valid = setInvalid(middlenameRegister);
-        } else {
-            setValid(middlenameRegister);
-        }
-
         // last name
         if (!lastnameRegister.getText()
                 .matches("^[-a-zA-Z]+$")) {
@@ -286,11 +304,11 @@ public class GUIUserRegister implements TouchscreenCapable {
         // nhi
         if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", userIdRegister.getText().toUpperCase())) {
             valid = setInvalid(userIdRegister);
-            userActions.log(Level.WARNING, "NHI must be 3 characters followed by 4 numbers", "Attempted to create patient with invalid NHI");
+            userActions.log(Level.WARNING, "NHI must be 3 characters followed by 4 numbers", "Attempted to register new patient");
         } else if (Database.isPatientInDb(userIdRegister.getText())) {
             // checks to see if nhi already in use
             valid = setInvalid(userIdRegister);
-            userActions.log(Level.WARNING, "Patient with the given NHI already exists", "Attempted to create patient with invalid NHI");
+            userActions.log(Level.WARNING, "Patient with the given NHI already exists", "Attempted to register new patient");
         } else {
             setValid(userIdRegister);
         }
@@ -316,7 +334,7 @@ public class GUIUserRegister implements TouchscreenCapable {
     private boolean validateClinician() {
         boolean valid = validateNames();
         if (regionRegister.getValue() != null) {
-            setValid(regionRegister);
+            setValid(birthRegister);
         } else {
             valid = setInvalid(regionRegister);
         }
@@ -332,31 +350,31 @@ public class GUIUserRegister implements TouchscreenCapable {
         boolean valid = validateNames();
         String error = "";
         if (!userIdRegister.getText()
-                .matches("[A-Za-z0-9_]+")) {
+                .matches("([A-Za-z0-9]+[-]*[_]*)+")) {
             valid = setInvalid(userIdRegister);
-            error += "Invalid username. ";
+            error += "Invalid username.\n";
         } else if (Database.usernameUsed(userIdRegister.getText())) {
             valid = setInvalid(userIdRegister);
-            error += "Username already in use. ";
+            error += "Username already in use.\n";
         } else {
             setValid(userIdRegister);
         }
         if (passwordTxt.getText().length() < 6) {
             valid = setInvalid(passwordTxt);
-            error += "Password must be 6 or more characters.";
+            error += "Password must be 6 or more characters.\n";
         } else {
             setValid(passwordTxt);
         }
         if (!verifyPasswordTxt.getText().equals(passwordTxt.getText())) {
             valid = setInvalid(verifyPasswordTxt);
             if (passwordTxt.getText().length() >= 6) {
-                error += "Passwords do not match.";
+                error += "Passwords do not match.\n";
             }
         } else {
             setValid(verifyPasswordTxt);
         }
         if (!valid) {
-            userActions.log(Level.WARNING, error, "Attempted to register administrator with invalid fields");
+        	userActions.log(Level.WARNING, error, "Attempted to register new administrator");
         }
         return valid;
     }
@@ -389,40 +407,31 @@ public class GUIUserRegister implements TouchscreenCapable {
         String lastName = lastnameRegister.getText();
         String password = passwordTxt.getText();
         ArrayList<String> middles = new ArrayList<>();
-        String errorMsg = "";
+        String alertMsg;
         if (!middlenameRegister.getText().equals("")) {
             List<String> middleNames = Arrays.asList(middlenameRegister.getText().split(" "));
             middles = new ArrayList<>(middleNames);
         }
         if (patientButton.isSelected()) {
             LocalDate birth = birthRegister.getValue();
-            Database.addPatient(new Patient(id, firstName, middles, lastName, birth));
+            statesHistoryScreen.addAction(new Action(null, new Patient(id, firstName, middles, lastName, birth)));
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
-            errorMsg = "Successfully registered patient with NHI " + id;
-            screenControl.setIsSaved(false);
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
             int staffID = Database.getNextStaffID();
-            Database.addClinician(new Clinician(staffID, firstName, middles, lastName, (Region) Region.getEnumFromString(region)));
+            statesHistoryScreen.addAction(new Action(null, new Clinician(staffID, firstName, middles, lastName, Region.getEnumFromString(region))));
             userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
-            errorMsg = "Successfully registered clinician with staff ID " + staffID;
-            clearFields();
-            screenControl.setIsSaved(false);
         } else {
             try {
-                Database.addAdministrator(new Administrator(id, firstName, middles, lastName, password));
+                statesHistoryScreen.addAction(new Action(null, new Administrator(id, firstName, middles, lastName, password)));
                 userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
-                errorMsg = "Successfully registered administrator with username " + id;
-                screenControl.setIsSaved(false);
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");
-                errorMsg = "Couldn't register administrator, this username is already in use";
             }
         }
+        statesHistoryScreen.getUndoableStage().setChangingStates(true);
         clearFields();
-        if (!errorMsg.equals("")) {
-            userActions.log(Level.INFO, errorMsg, "Attempted to register a new user");
-        }
+        statesHistoryScreen.getUndoableStage().setChangingStates(false);
         if (userControl.getLoggedInUser() == null) {
             returnToPreviousPage();
         }
@@ -456,23 +465,5 @@ public class GUIUserRegister implements TouchscreenCapable {
         target.getStyleClass()
                 .remove("invalid");
     }
-
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        registerTouchPane.zoomPane(zoomEvent);
-    }
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        registerTouchPane.rotatePane(rotateEvent);
-    }
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        if(scrollEvent.isDirect()) {
-            registerTouchPane.scrollPane(scrollEvent);
-        }
-    }
-
 
 }
