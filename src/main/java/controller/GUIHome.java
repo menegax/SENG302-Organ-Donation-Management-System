@@ -450,7 +450,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
                         .add(0, tk.createDefaultApplicationMenu(screenControl.getAppName())); // set leftmost MacOS system menu
                 tk.setMenuBar(stage, bar);
                 systemLogger.log(FINER, "Set MacOS menu bar");
-            } else {// if windows
+            } else {// if not macos
                 menuBar.getMenus()
                         .clear();
                 menuBar.getMenus()
