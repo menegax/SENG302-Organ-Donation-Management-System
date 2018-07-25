@@ -96,51 +96,51 @@ public class ActionTest {
         thenBeforeClinicianNotIndatabase();
     }
 
-    /**
-     * tests the action unexecute method using patients
-     */
-    @Test
-    public void testPatientUnexecute() throws InvalidObjectException{
-        givenEditedPatient();
-        whenActionCreated();
-        whenActionUnexecuted();
-        thenCurrentEqualsBeforePatient();
+//    /**
+//     * tests the action unexecute method using patients
+//     */
+//    @Test
+//    public void testPatientUnexecute() throws InvalidObjectException{
+//        givenEditedPatient();
+//        whenActionCreated();
+//        whenActionUnexecuted();
+//        thenCurrentEqualsBeforePatient();
+//
+//        reset();
+//        givenNewPatient();
+//        whenActionCreated();
+//        whenActionUnexecuted();
+//        thenAfterPatientNotIndatabase();
+//
+//        reset();
+//        givenDeletedPatient();
+//        whenActionCreated();
+//        whenActionUnexecuted();
+//        thenBeforePatientIndatabase();
+//    }
 
-        reset();
-        givenNewPatient();
-        whenActionCreated();
-        whenActionUnexecuted();
-        thenAfterPatientNotIndatabase();
-
-        reset();
-        givenDeletedPatient();
-        whenActionCreated();
-        whenActionUnexecuted();
-        thenBeforePatientIndatabase();
-    }
-
-    /**
-     * tests the action unexecute method using clincians
-     */
-    @Test
-    public void testClinicianUnexecute() throws InvalidObjectException{
-        givenEditedClinician();
-        whenActionCreated();
-        whenActionUnexecuted();
-        thenCurrentEqualsBeforeClinician();
-
-        reset();
-        givenNewClinician();
-        whenActionCreated();
-        whenActionUnexecuted();
-        thenAfterClinicianNotIndatabase();
-
-        reset();
-        givenDeletedClinician();
-        whenActionCreated();
-        whenActionUnexecuted();
-        thenBeforeClinicianIndatabase();
-    }
+//    /**
+//     * tests the action unexecute method using clincians
+//     */
+//    @Test
+//    public void testClinicianUnexecute() throws InvalidObjectException{
+//        givenEditedClinician();
+//        whenActionCreated();
+//        whenActionUnexecuted();
+//        thenCurrentEqualsBeforeClinician();
+//
+//        reset();
+//        givenNewClinician();
+//        whenActionCreated();
+//        whenActionUnexecuted();
+//        thenAfterClinicianNotIndatabase();
+//
+//        reset();
+//        givenDeletedClinician();
+//        whenActionCreated();
+//        whenActionUnexecuted();
+//        thenBeforeClinicianIndatabase();
+//    }
 
     /**
      * tests the action execute method using patients
@@ -240,57 +240,57 @@ public class ActionTest {
         thenBeforeClinicianNotIndatabase();
     }
 
-    /**
-     * tests the action unexecute method does nothing gracefully using patients
-     */
-    @Test
-    public void testUselessUnexecutePatient() throws InvalidObjectException{
-        givenEditedPatient();
-        whenActionCreated();
-        whenActionUnexecuted();
-        whenActionUnexecuted();
-        thenCurrentEqualsBeforePatient();
+//    /**
+//     * tests the action unexecute method does nothing gracefully using patients
+//     */
+//    @Test
+//    public void testUselessUnexecutePatient() throws InvalidObjectException{
+//        givenEditedPatient();
+//        whenActionCreated();
+//        whenActionUnexecuted();
+//        whenActionUnexecuted();
+//        thenCurrentEqualsBeforePatient();
+//
+//        reset();
+//        givenNewPatient();
+//        whenActionCreated();
+//        whenActionUnexecuted();
+//        whenActionUnexecuted();
+//        thenAfterPatientNotIndatabase();
+//
+//        reset();
+//        givenDeletedPatient();
+//        whenActionCreated();
+//        whenActionUnexecuted();
+//        whenActionUnexecuted();
+//        thenBeforePatientIndatabase();
+//    }
 
-        reset();
-        givenNewPatient();
-        whenActionCreated();
-        whenActionUnexecuted();
-        whenActionUnexecuted();
-        thenAfterPatientNotIndatabase();
-
-        reset();
-        givenDeletedPatient();
-        whenActionCreated();
-        whenActionUnexecuted();
-        whenActionUnexecuted();
-        thenBeforePatientIndatabase();
-    }
-
-    /**
-     * tests the action unexecute method does nothing gracefully using clinicians
-     */
-    @Test
-    public void testUselessUnexecuteClinician() throws InvalidObjectException{
-        givenEditedClinician();
-        whenActionCreated();
-        whenActionUnexecuted();
-        whenActionUnexecuted();
-        thenCurrentEqualsBeforeClinician();
-
-        reset();
-        givenNewClinician();
-        whenActionCreated();
-        whenActionUnexecuted();
-        whenActionUnexecuted();
-        thenAfterClinicianNotIndatabase();
-
-        reset();
-        givenDeletedClinician();
-        whenActionCreated();
-        whenActionUnexecuted();
-        whenActionUnexecuted();
-        thenBeforeClinicianIndatabase();
-    }
+//    /**
+//     * tests the action unexecute method does nothing gracefully using clinicians
+//     */
+//    @Test
+//    public void testUselessUnexecuteClinician() throws InvalidObjectException{
+//        givenEditedClinician();
+//        whenActionCreated();
+//        whenActionUnexecuted();
+//        whenActionUnexecuted();
+//        thenCurrentEqualsBeforeClinician();
+//
+//        reset();
+//        givenNewClinician();
+//        whenActionCreated();
+//        whenActionUnexecuted();
+//        whenActionUnexecuted();
+//        thenAfterClinicianNotIndatabase();
+//
+//        reset();
+//        givenDeletedClinician();
+//        whenActionCreated();
+//        whenActionUnexecuted();
+//        whenActionUnexecuted();
+//        thenBeforeClinicianIndatabase();
+//    }
 
     /**
      * Reset the logging level
