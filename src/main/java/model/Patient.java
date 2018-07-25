@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
+import java.util.zip.DataFormatException;
 
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
@@ -235,7 +236,7 @@ public class Patient extends User {
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
                                  LocalDate birth, LocalDate death, String street1, String street2, String suburb,
                                  String region, String birthGender, String preferredGender, String bloodGroup,
-                                 double height, double weight, String nhi) throws IllegalArgumentException {
+                                 double height, double weight, String nhi) throws IllegalArgumentException, DataFormatException {
         Enum globalEnum;
         Searcher.getSearcher().removeIndex(this);
         if (firstName != null) {
@@ -625,8 +626,13 @@ public class Patient extends User {
         return suburb;
     }
 
-    public void setSuburb(String suburb) {
-        if (this.suburb == null || !suburb.equals(this.suburb)) {
+    public void setSuburb(String suburb) throws DataFormatException {
+        if (this.suburb == null || (!suburb.equals(this.suburb))) {
+            for (char c : suburb.toCharArray()) {
+                if (c > 127) {
+                    throw new DataFormatException("");
+                }
+            }
             this.suburb = suburb;
             userModified();
         }

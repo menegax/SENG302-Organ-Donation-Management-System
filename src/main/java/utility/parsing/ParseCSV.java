@@ -26,7 +26,6 @@ public class ParseCSV {
         CsvParserSettings settings = new CsvParserSettings();
         settings.getFormat().setLineSeparator("\n");
         settings.setProcessor(rowProcessor);
-        settings.setSkipBitsAsWhitespace(false);
         settings.setHeaderExtractionEnabled(true);
         List<List<String>> errors = new ArrayList<>();
         settings.setProcessorErrorHandler((e , objects, context) ->{
@@ -48,7 +47,7 @@ public class ParseCSV {
         results.put(Result.FAIL, errors);
 
 
-       Database.getDatabase().importToDb(results.get(Result.SUCCESS));
+//       Database.getDatabase().importToDb(results.get(Result.SUCCESS));
 
         return results;
     }

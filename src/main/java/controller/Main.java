@@ -41,7 +41,7 @@ public class Main extends Application {
 
 
         ParseCSV parseCSV = new ParseCSV();
-        parseCSV.parse(new FileReader("test.csv"));
+        parseCSV.parse(new FileReader("C:\\Users\\Hayden Taylor\\Downloads\\testCSV.csv"));
         // setup GUI
         ScreenControl screenControl = ScreenControl.getScreenControl();
         primaryStage.setTitle("Login");

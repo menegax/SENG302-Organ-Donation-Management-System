@@ -173,7 +173,7 @@ public class GlobalEnums {
      */
     public enum Region {
         NORTHLAND("Northland"), AUCKLAND("Auckland"), WAIKATO("Waikato"), BAYOFPLENTY("Bay of Plenty"), GISBORNE("Gisborne"), HAWKESBAY("Hawke's Bay"), TARANAKI(
-                "Taranaki"), MANAWATU("Manawatu-Wanganui"), WELLINGTON("Wellington"), TASMAN("Tasman"), NELSON("Nelson"), MARLBOROUGH("Marlborough"), WESTCOAST(
+                "Taranaki"), MANAWATU("Manawatu"), WELLINGTON("Wellington"), TASMAN("Tasman"), NELSON("Nelson"), MARLBOROUGH("Marlborough"), WESTCOAST(
                 "West Coast"), CANTERBURY("Canterbury"), OTAGO("Otago"), SOUTHLAND("Southland");
 
         public String value;
@@ -197,8 +197,10 @@ public class GlobalEnums {
 
         public static Region getEnumFromString(String value) {
             try {
-                return Region.valueOf(value.toUpperCase()
-                        .replaceAll("\\s+", ""));
+                if (value.toLowerCase().substring(0,7).equals("manawatu")){
+                    return Region.MANAWATU;
+                }
+                return Region.valueOf(value.toUpperCase().replaceAll("\\s+", ""));
             }
             catch (IllegalArgumentException e) {
                 return null;

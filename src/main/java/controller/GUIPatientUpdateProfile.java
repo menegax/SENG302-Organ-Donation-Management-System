@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
+import java.util.zip.DataFormatException;
 
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
@@ -460,7 +461,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
             }
             target.setStreet1(street1Txt.getText());
             target.setStreet2(street2Txt.getText());
-            target.setSuburb(suburbTxt.getText());
+            try {
+                target.setSuburb(suburbTxt.getText());
+            } catch (DataFormatException e) {
+                userActions.log(Level.SEVERE, "Unable to set suburb", "attempted to update patient attributes");
+            }
             if (regionDD.getValue() != null) {
                 target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
                         .getSelectedItem()));
