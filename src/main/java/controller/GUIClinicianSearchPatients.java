@@ -65,7 +65,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     @FXML
     private Label displayY;
 
-
     @FXML
     private Text ageLabel;
 
