@@ -51,7 +51,7 @@
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <TextField fx:id="staffId" focusTraversable="false" prefWidth="320.0" promptText="Staff ID" GridPane.columnIndex="1" />
+            <TextField fx:id="staffId" editable="false" GridPane.columnIndex="1" />
             <Label text="First Name:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="5.0" />

@@ -67,12 +67,6 @@ public class Clinician extends User {
         return staffID;
     }
 
-    public void setStaffID(int staffID) {
-        this.staffID = staffID;
-        userModified();
-    }
-
-
     public String getStreet1() {
         return street1;
     }

@@ -97,6 +97,7 @@ public class GUIHome implements Observer {
                 }
                 // Clinician viewing themself
                 else {
+                    systemLogger.log(INFO, "Clinician is viewing themself");
                     homeTarget = userControl.getLoggedInUser();
                     addTabsClinician();
                     setUpColouredBar(userControl.getLoggedInUser());
@@ -132,8 +133,10 @@ public class GUIHome implements Observer {
                             .addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
         }
         catch (IOException e) {
-            new Alert(ERROR, "Unable to load home").show();
+            e.printStackTrace(); //todo rm
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());
+            new Alert(ERROR, "Unable to load home").show();
+            System.out.println("hey"); //todo rm
         }
     }
 

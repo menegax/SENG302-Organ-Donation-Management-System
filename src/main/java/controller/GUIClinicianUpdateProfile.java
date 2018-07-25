@@ -110,7 +110,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             populateForm(clinician);
         }
         catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
+            userActions.log(Level.SEVERE, "Error loading logged in user", "Attempted to edit the logged in user");
         }
     }
 
@@ -177,13 +177,8 @@ public class GUIClinicianUpdateProfile extends UndoableController {
      */
     public void saveProfile() {
         Boolean valid = true;
-        if (!Pattern.matches("[0-9]{1,3}", staffId.getText())) {
-            valid = false;
-            setInvalid(staffId);
-        }
-        String newName = firstnameUpdateTxt.getText();
         if (firstnameUpdateTxt.getText()
-                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", newName)) {
+                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", firstnameUpdateTxt.getText())) {
             valid = false;
             setInvalid(firstnameUpdateTxt);
         }
@@ -236,7 +231,6 @@ public class GUIClinicianUpdateProfile extends UndoableController {
         }
         // If all the fields are entered correctly
         if (valid) {
-            target.setStaffID(Integer.parseInt(staffId.getText()));
             target.setFirstName(firstnameUpdateTxt.getText());
             target.setLastName(lastnameTxt.getText());
             List<String> middlenames = Arrays.asList(middlenameTxt.getText()
