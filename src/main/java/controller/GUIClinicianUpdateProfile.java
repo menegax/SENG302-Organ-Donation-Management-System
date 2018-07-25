@@ -13,6 +13,7 @@ import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.StatusObservable;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -236,25 +237,28 @@ public class GUIClinicianUpdateProfile extends UndoableController {
         }
         // If all the fields are entered correctly
         if (valid) {
-            target.setStaffID(Integer.parseInt(staffId.getText()));
-            target.setFirstName(firstnameUpdateTxt.getText());
-            target.setLastName(lastnameTxt.getText());
+            Clinician after = (Clinician) target.deepClone();
+            after.setStaffID(Integer.parseInt(staffId.getText()));
+            after.setFirstName(firstnameUpdateTxt.getText());
+            after.setLastName(lastnameTxt.getText());
             List<String> middlenames = Arrays.asList(middlenameTxt.getText()
                     .split(" "));
             ArrayList<String> middles = new ArrayList<>(middlenames);
-            target.setMiddleNames(middles);
+            after.setMiddleNames(middles);
 
-            target.setStreet1(street1Txt.getText());
-            target.setStreet2(street2Txt.getText());
-            target.setSuburb(suburbTxt.getText());
-            target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
+            after.setStreet1(street1Txt.getText());
+            after.setStreet2(street2Txt.getText());
+            after.setSuburb(suburbTxt.getText());
+            after.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
                     .getSelectedItem()
                     .toString()));
             userActions.log(Level.INFO,
                     "Successfully updated clinician profile",
-                    new String[] { "Attempted to update clinician profile", String.valueOf(target.getStaffID()) });
-            target.userModified();
-            screenControl.setIsSaved(false);
+                    new String[] { "Attempted to update clinician profile", String.valueOf(after.getStaffID()) });
+            after.userModified();
+
+            Action action = new Action(target, after);
+            statesHistoryScreen.addAction(action);
         }
         else {
             userActions.log(Level.WARNING, "Invalid fields", "Attempted to update clinician profile with invalid fields");
