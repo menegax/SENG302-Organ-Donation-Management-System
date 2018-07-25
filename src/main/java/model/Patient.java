@@ -203,6 +203,12 @@ public class Patient extends User {
         this.currentMedications = currentMedications;
         this.medicationHistory = medicationHistory;
         this.procedures = procedures;
+        if (this.CREATED == null) {
+            this.CREATED = new Timestamp(System.currentTimeMillis());
+            if (this.modified == null) {
+            	this.modified = CREATED;
+            }  
+        }
     }
 
 

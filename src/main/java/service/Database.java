@@ -280,6 +280,7 @@ public class Database {
         try {
             stmt.executeUpdate();
         } catch (SQLException e) {
+        	System.out.println(stmt.toString());
             System.out.println(e.getMessage() + "\n" + e.getSQLState() + "\n" + e.getErrorCode());
         }
     }
@@ -302,7 +303,11 @@ public class Database {
         attr[3] = patient.getLastName();
         attr[4] = patient.getBirth().toString();
         attr[5] = patient.getCREATED().toString();
-        attr[6] = patient.getModified() == null ? "" :String.join(" ", patient.getModified().toString());
+        if (patient.getModified() == null) {
+        	attr[6] = patient.getCREATED().toString();
+        } else {
+        	attr[6] = patient.getModified().toString();
+        }
         if (patient.getDeath() != null) {
             attr[7] = patient.getDeath().toString();
         }
@@ -313,7 +318,7 @@ public class Database {
         	attr[9] = patient.getPreferredGender().toString().substring(0, 1);
         }
         attr[10] = patient.getPreferredName();
-        attr[11] = String.valueOf(patient.getHeight() * 100);
+        attr[11] = String.valueOf(patient.getHeight() / 1000);
         attr[12] = String.valueOf(patient.getWeight());
         if(patient.getBloodGroup() != null) {
             attr[13] = patient.getBloodGroup().toString();
@@ -338,18 +343,46 @@ public class Database {
         contactAttr[2] = patient.getStreet2();
         contactAttr[3] = patient.getSuburb();
         if(patient.getRegion() != null) {
-            contactAttr[4] = patient.getRegion().toString();
+        	if (patient.getRegion() == GlobalEnums.Region.HAWKESBAY) {
+        		contactAttr[4] = "Hawkes Bay";
+        	} else {
+        		contactAttr[4] = patient.getRegion().getValue();
+        	}
         }
         contactAttr[5] = String.valueOf(patient.getZip());
-        contactAttr[6] = patient.getHomePhone();
-        contactAttr[7] = patient.getWorkPhone();
-        contactAttr[8] = patient.getMobilePhone();
+        if (patient.getHomePhone() == null || patient.getHomePhone().length() > 9) {
+        	contactAttr[6] = "";
+        } else {
+        	contactAttr[6] = patient.getHomePhone();
+        }
+        if (patient.getWorkPhone() == null || patient.getWorkPhone().length() > 9) {
+        	contactAttr[7] = "";
+        } else {
+        	contactAttr[7] = patient.getWorkPhone();
+        }
+        if (patient.getMobilePhone() == null || patient.getMobilePhone().length() > 11) {
+        	contactAttr[8] = "";
+        } else {
+        	contactAttr[8] = patient.getMobilePhone();
+        }
         contactAttr[9] = patient.getEmailAddress();
         contactAttr[10] = patient.getContactName();
         contactAttr[11] = patient.getContactRelationship();
-        contactAttr[12] = patient.getContactHomePhone();
-        contactAttr[13] = patient.getContactWorkPhone();
-        contactAttr[14] = patient.getContactMobilePhone();
+        if (patient.getContactHomePhone() == null || patient.getContactHomePhone().length() > 9) {
+        	contactAttr[12] = "";
+        } else {
+        	contactAttr[12] = patient.getContactHomePhone();
+        }
+        if (patient.getContactWorkPhone() == null || patient.getContactWorkPhone().length() > 9) {
+        	contactAttr[13] = "";
+        } else {
+        	contactAttr[13] = patient.getContactWorkPhone();
+        }
+        if (patient.getContactMobilePhone() == null || patient.getContactMobilePhone().length() > 11) {
+        	contactAttr[14] = "";
+        } else {
+        	contactAttr[14] = patient.getContactMobilePhone();
+        }
         contactAttr[15] = patient.getContactEmailAddress();
         return contactAttr;
     }
@@ -1162,7 +1195,7 @@ public class Database {
             for (String[] attr : waitlistRaw) {
                 String nhi = attr[0];
                 LocalDate date = LocalDate.parse(attr[1]);
-                GlobalEnums.Organ organ = GlobalEnums.Organ.valueOf(attr[2].toUpperCase());
+                GlobalEnums.Organ organ = GlobalEnums.Organ.valueOf(attr[2].toUpperCase().replace(" ", ""));
                 GlobalEnums.Region region = null;
                 if(attr[3] != null) {
                     region = GlobalEnums.Region.valueOf(attr[3].toUpperCase());
@@ -1392,6 +1425,59 @@ public class Database {
     	return new String[][][] {packagedQueries, params};
     }
     
+    private String addQueryEnd(String query, int queryNum) {
+    	switch(queryNum) {
+    	case 0:
+    		return query + " ON DUPLICATE KEY UPDATE "
+    	            + "FName = VALUES (FName), "
+    	            + "MName = VALUES (MName), "
+    	            + "LName = VALUES (LName), "
+    	            + "Birth = VALUES (Birth), "
+    	            + "Created = VALUES (Created), "
+    	            + "Modified = VALUES (Modified), "
+    	            + "Death = VALUES (Death), "
+    	            + "BirthGender = VALUES (BirthGender), "
+    	            + "PrefGender = VALUES (PrefGender), "
+    	            + "PrefName = VALUES (PrefName), "
+    	            + "Height = VALUES (Height), "
+    	            + "Weight = VALUES (Weight), "
+    	            + "BloodType = VALUES (BloodType), "
+    	            + "DonatingOrgans = VALUES (DonatingOrgans), "
+    	            + "ReceivingOrgans = VALUES (ReceivingOrgans)";
+    	case 1:
+    		return query + " ON DUPLICATE KEY UPDATE "
+    		+ "Street1 = VALUES (Street1), "
+    		+ "Street2 = VALUES (Street2), "
+    		+ "Suburb = VALUES (Suburb), "
+    		+ "Region = VALUES (Region), "
+    		+ "Zip = VALUES (Zip), "
+    		+ "HomePhone = VALUES (HomePhone), "
+    		+ "WorkPhone = VALUES (WorkPhone), "
+    		+ "MobilePhone = VALUES (MobilePhone), "
+    		+ "Email = VALUES (Email), "
+    		+ "ECName = VALUES (ECName), "
+    		+ "ECRelationship = VALUES (ECRelationship), "
+    		+ "ECHomePhone = VALUES (ECHomePhone), "
+    		+ "ECWorkPhone = VALUES (ECWorkPhone), "
+    		+ "ECMobilePhone = VALUES (ECMobilePhone), "
+    		+ "ECEmail = VALUES (ECEmail)";
+    	case 2:
+    		return query + " ON DUPLICATE KEY UPDATE "
+            + "State = VALUES (State)";
+    	case 3:
+    		return query + " ON DUPLICATE KEY UPDATE "
+            + "Name = VALUES (Name)";
+    	case 4:
+    		return query + " ON DUPLICATE KEY UPDATE "
+            + "Description = VALUES (Description), "
+            + "AffectedOrgans = VALUES (AffectedOrgans)";
+    	case 5:
+    		return query + " ON DUPLICATE KEY UPDATE "
+            + "Time = VALUES (Time)";
+    	}
+    	return "";
+    }
+    
     /**
      * Pushes all local changes to patients to the database.
      * @return True if successfully updated all patients, otherwise false.
@@ -1399,7 +1485,9 @@ public class Database {
     private boolean updateAllPatients() {
     	String[][][] info;
     	String[][] params = new String[6][0];
-
+    	String query;
+    	String finalQuery;
+    	String[] finalParams;
     	String[] queries = getInitialUpdateQueries();
     	int queryCount = 0;
     	int insertCount = 1;
@@ -1407,17 +1495,28 @@ public class Database {
     		if (patient.getChanged()) {
     			info = getUpdatePatientQueryArray(patient);
     			queryCount = 0;
-    			while (queryCount < info[0].length) {
+    			while (queryCount < info[0][0].length) {
     				queries[queryCount] += info[0][0][queryCount];
     				params[queryCount] = ArrayUtils.addAll(params[queryCount], info[1][queryCount]);
     				queryCount += 1;
-    			}
-    			
+    			}		
     			insertCount += 1;
     		}
     		if (insertCount == 4000) {
+    			finalQuery = "";
+    			finalParams = new String[0];
+    			queryCount = 0;
+    			while (queryCount < queries.length) {
+    				query = queries[queryCount];
+    				if (!query.equals("")) {	
+    					query = query.substring(0, query.length() - 2);
+    					finalQuery += addQueryEnd(query, queryCount) + ";";
+    					finalParams = ArrayUtils.addAll(finalParams, params[queryCount]);
+    				}
+    				queryCount += 1;
+    			}
     			try {
-					runQuery(query, params);
+					runQuery(finalQuery, finalParams);
 					queries = getInitialUpdateQueries();
 					params = new String[6][0];
 					insertCount = 1;
@@ -1429,7 +1528,19 @@ public class Database {
     	}
     	try {
     		if (insertCount > 0) {
-    			runQuery(query, params);
+    			finalQuery = "";
+    			finalParams = new String[0];
+    			queryCount = 0;
+    			while (queryCount < queries.length) {
+    				query = queries[queryCount];
+    				if (!query.equals("")) {	
+    					query = query.substring(0, query.length() - 2);
+    					finalQuery += addQueryEnd(query, queryCount) + ";";
+    					finalParams = ArrayUtils.addAll(finalParams, params[queryCount]);
+    				}
+    				queryCount += 1;
+    			}
+    			runQuery(finalQuery, finalParams);
     		}
 			userActions.log(Level.INFO, "Successfully updated all patients in database.", "Attempted to update all patients in database.");
 			return true;
