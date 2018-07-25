@@ -133,7 +133,7 @@ public class SearcherTest {
     	int count = 0;
     	for (String lName : lastNames) {
     		for (String fName : firstNames) {
-    			database.update((new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3))));
+    			database.update((new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.now())));
     			count += 1;
     		}
     	}
@@ -170,7 +170,7 @@ public class SearcherTest {
     	int count = 0;
     	for (String lName : lastNames) {
     		for (String fName : firstNames) {
-    			database.update(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
+    			database.update(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.now()));
     			count += 1;
     		}
     	}
@@ -187,10 +187,9 @@ public class SearcherTest {
 
     /**
      * Tests a simple name search case.
-     * @throws IOException -
      */
     @Test
-    public void testSearchByName() throws IOException {
+    public void testSearchByName() {
     	beforeTest();
 
     	refreshIndex();
@@ -213,7 +212,7 @@ public class SearcherTest {
      * Tests a name search for after a patient's name has been updated.
      */
     @Test
-    public void testSearchAfterNameUpdate() throws IOException {
+    public void testSearchAfterNameUpdate() {
 
         // When first name of patient changed
         database.getPatientByNhi("ABC1234").setFirstName("Andrew");
@@ -229,7 +228,7 @@ public class SearcherTest {
      * @throws IOException -
      */
     @Test
-    public void testSearchAfterNhiUpdate() throws IOException {
+    public void testSearchAfterNhiUpdate() {
     	//Bug with setup() means it has to be copied here or wont work
         searcher.clearIndex();
 
@@ -444,8 +443,8 @@ public class SearcherTest {
         filter.put(FilterOption.AGELOWER, "10");
         filter.put(FilterOption.AGEUPPER, "100");
         List<User> results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(4, results.size());
         hasAge(results, 10, 100);
+        Assert.assertEquals(8, results.size());
 
         //from 11 - 100
         filter.put(FilterOption.AGELOWER, "11");
