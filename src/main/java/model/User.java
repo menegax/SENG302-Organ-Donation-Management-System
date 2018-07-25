@@ -1,7 +1,10 @@
 package model;
 
+import com.univocity.parsers.annotations.Convert;
 import com.univocity.parsers.annotations.Parsed;
 import utility.Searcher;
+import utility.parsing.AsciiConverterCSV;
+import utility.parsing.DateConverterCSV;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -16,11 +19,13 @@ public abstract class User {
     private final UUID uuid = UUID.randomUUID();
 
     @Parsed(field = "first_names")
+    @Convert(conversionClass =AsciiConverterCSV.class)
     protected String firstName;
 
     protected List<String> middleNames;
 
     @Parsed(field = "last_names")
+    @Convert(conversionClass = AsciiConverterCSV.class)
     protected String lastName;
 
     private boolean changed = true;
