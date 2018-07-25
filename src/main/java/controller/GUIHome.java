@@ -133,10 +133,8 @@ public class GUIHome implements Observer {
                             .addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
         }
         catch (IOException e) {
-            e.printStackTrace(); //todo rm
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());
             new Alert(ERROR, "Unable to load home").show();
-            System.out.println("hey"); //todo rm
         }
     }
 
