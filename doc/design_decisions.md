@@ -202,8 +202,13 @@ This means there should not be other action listeners for global or stage-level 
  
  ####Multiple User touch interface
  We decided we would use the external library TUIOFX to implement a multi-user touch interface. This will require the application to be reworked so only one stage is present in the application, with multiple panes as scenes.
+ 
+ ####Base Touchscreen ACs
+ In the original acceptance criteria for base touchscreen functionality, there was a condition that the on-screen keyboard would be rotatable. In this sprint, we found that creating a rotatable keyboard is a story by itself, and so with permission from the PO, we kept the default keyboard that is not rotatable.
+ 
+ In addition, the AC about multiple window touch functionality was not met in this sprint due to the amount of time it would take to implement simultaneous interactions. This would involve changing the setup of our application to be a single stage with multiple panes acting as "windows" to allow for the TUIOFX library to function for multi-user touch interfaces.
 
- ### Status bar updates
+ #### Status bar updates
  We decided to use the built in logger we are using to set the status bar text when a log is added. This means that we can rely
  on our existing log additions instead of having to set the status bar text in each controller class. The status bar is updated by 
  using setStatus within the observable StatusObservable, which notifies each of its observers.

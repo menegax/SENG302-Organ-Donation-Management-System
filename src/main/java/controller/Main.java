@@ -135,7 +135,11 @@ public class Main extends Application {
         return uuid;
     }
 
-    public void openKeyboard() {
+    /**
+     * Opens the Windows system on-screen keyboard.
+     * This is only called on a Windows setup because touch controls are only available for a Windows system.
+     */
+    private void openKeyboard() {
         if(System.getProperty("os.name")
                 .startsWith("Windows")) {
             try {

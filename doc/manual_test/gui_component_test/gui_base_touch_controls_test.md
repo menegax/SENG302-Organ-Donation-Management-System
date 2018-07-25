@@ -25,5 +25,11 @@
 ###Scroll across a scene
 
 1. A stage is open in the application
-2. The user performs a one-finger gesture of slowly moving across the screen, without beginning on a node such as a button or text field
-3. The scene is moved in the direction of the gesture
+2. The user performs a one-finger scrolling gesture in an upwards direction
+3. The scene is moved upwards
+4. The user performs a one-finger scrolling gesture in a downwards direction
+5. The scene is moved downwards
+6. The user performs a one-finger scrolling gesture moving to the left
+7. The scene is moved to the left
+8. The user performs a one-finger scrolling gesture moving to the right
+9. The scene is moved to the right

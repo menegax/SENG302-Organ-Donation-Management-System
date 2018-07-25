@@ -58,6 +58,10 @@ public class TouchPaneController {
         }
     }
 
+    /**
+     * Resizes the pane to be the same size as the window it is displayed in. The pane is translated to
+     * (0, 0) to re-center it.
+     */
     private void resizePane() {
         Window currentWindow = pane.getScene().getWindow();
         double stageWidth = currentWindow.getWidth();
