@@ -17,6 +17,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Junit test class for the StateHistoryChoiceBox
  */
+@Ignore
 public class StateHistoryChoiceBoxTest {
 
     private static ChoiceBox choiceBox;

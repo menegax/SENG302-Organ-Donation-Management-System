@@ -16,6 +16,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Junit test class for the StateHistoryTextEntry
  */
+@Ignore
 public class StateHistoryTextEntryTest {
 
     private static TextField textField;
