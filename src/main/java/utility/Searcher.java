@@ -88,9 +88,6 @@ public class Searcher {
             }
         }
         patientDoc.add(new StringField("lName", patient.getLastName().toUpperCase(), Field.Store.NO));
-        if (patient.getBirthGender() != null) {
-            patientDoc.add(new StringField("birthGender", patient.getBirthGender().toString().toUpperCase(), Field.Store.NO));
-        }
         patientDoc.add(new StringField("type", UserTypes.PATIENT.getValue(), Field.Store.YES));
         return patientDoc;
     }
@@ -450,7 +447,6 @@ public class Searcher {
         queries.addAll(createQueries("fName", params, 2));
         queries.addAll(createQueries("mName", params, 2));
         queries.addAll(createQueries("lName", params, 2));
-        queries.addAll(createQueries("birthGender", params, 2));
         queries.addAll(createQueries("nhi", params, 0));
         queries.addAll(createQueries("staffid", params, 0));
         queries.addAll(createQueries("username", params, 0));
