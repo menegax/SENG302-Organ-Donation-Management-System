@@ -16,6 +16,7 @@ import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -413,27 +414,24 @@ public class GUIAdministratorUserRegister extends UndoableController {
         }
         if (patientButton.isSelected()) {
             LocalDate birth = birthRegister.getValue();
-            Database.addPatient(new Patient(id, firstName, middles, lastName, birth));
+            statesHistoryScreen.addAction(new Action(null, new Patient(id, firstName, middles, lastName, birth)));
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
-            alertMsg = "Successfully registered patient with NHI " + id;
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
             int staffID = Database.getNextStaffID();
-            Database.addClinician(new Clinician(staffID, firstName, middles, lastName, (Region) Region.getEnumFromString(region)));
+            statesHistoryScreen.addAction(new Action(null, new Clinician(staffID, firstName, middles, lastName, Region.getEnumFromString(region))));
             userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
-            alertMsg = "Successfully registered clinician with staff ID " + staffID;
         } else {
             try {
-                Database.addAdministrator(new Administrator(id, firstName, middles, lastName, password));
+                statesHistoryScreen.addAction(new Action(null, new Administrator(id, firstName, middles, lastName, password)));
                 userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
-                alertMsg = "Successfully registered administrator with username " + id;
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");
-                alertMsg = "Couldn't register administrator, this username is already in use";
             }
         }
+        statesHistoryScreen.getUndoableStage().setChangingStates(true);
         clearFields();
-        new Alert(Alert.AlertType.INFORMATION, alertMsg).showAndWait();
+        statesHistoryScreen.getUndoableStage().setChangingStates(false);
         if (userControl.getLoggedInUser() == null) {
             returnToPreviousPage();
         }

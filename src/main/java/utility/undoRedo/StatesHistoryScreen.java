@@ -262,6 +262,11 @@ public class StatesHistoryScreen {
     public void store() {
         if (!undone && !redone && !undoableStage.isChangingStates()) {
             index += 1;
+            for (Integer key : actions.keySet()) {
+                if (key >= index) {
+                    actions.remove(key);
+                }
+            }
             for (StateHistoryControl stateHistory : stateHistories) {
                 stateHistory.store();
             }
