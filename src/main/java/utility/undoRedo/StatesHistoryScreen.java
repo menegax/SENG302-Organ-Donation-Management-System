@@ -147,8 +147,7 @@ public class StatesHistoryScreen {
         ((ComboBox<String>) comboBox).getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if ((oldValue == null && newValue != null)
-                            || !newValue.equals(oldValue)) {
+                    if ((oldValue == null && newValue != null) || (oldValue != null && newValue == null) || !newValue.equals(oldValue)) {
                         store();
                     }
                 });
