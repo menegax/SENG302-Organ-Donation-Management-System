@@ -43,7 +43,7 @@ public class SearcherTest {
     @BeforeClass
     public static void setUp() {
         Database.resetDatabase();
-        userActions.setLevel(Level.ALL);
+        userActions.setLevel(Level.OFF);
 
         // Given patients in a db
         d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
@@ -153,9 +153,6 @@ public class SearcherTest {
 
         // Search to match all 36 added patients.
         List<User> results = searcher.search("A B C D E F Z Y X W V U", new UserTypes[] {UserTypes.PATIENT}, 30, null);
-        for (User result: results) {
-        	System.out.println(result);
-        }
         
         // The returned result should be exactly 30
         assertEquals(30, results.size());
