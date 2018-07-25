@@ -49,26 +49,26 @@
 
 1. The clinician changes a current chronic diagnosis to be cured
 2. The clinician selects the done button
-3. An alert is shown stating a chronic disease can not be directly cured, and the tags choicebox is highlighted in red
+3. A message is shown stating a chronic disease can not be directly cured, and the tags choicebox is highlighted in red
 
 ###Invalid diagnosis date entered
 
 1. The clinician enters an invalid date for the diagnosis date
 2. The clinician selects the done button
-3. An alert is shown stating dates must be valid. The date picker is highlighted in red.
+3. A message is shown stating dates must be valid. The date picker is highlighted in red.
 
 ###Invalid diagnosis name entered
 
 1. The clinician enters an invalid name for the diagnosis date
 2. The clinician selects the done button
-3. An alert is shown stating the diagnosis name must be valid. The diagnosis name field is highlighted in red.
+3. A message is shown stating the diagnosis name must be valid. The diagnosis name field is highlighted in red.
 
 ###Update a diagnosis to be equal to another diagnosis
 
 1. The clinician double clicks an existing diagnosis from the viewing screen
 2. The clinician enters a disease name and diagnosis date that are both the same as another of the patient's diagnoses
 3. The clinician selects the done button
-4. An alert is shown stating diseases must be unique
+4. A message is shown stating diseases must be unique
 
 ##Test History
 

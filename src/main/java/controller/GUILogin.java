@@ -2,6 +2,7 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,8 +12,6 @@ import javafx.scene.input.*;
 
 import javafx.scene.control.TextField;
 
-import org.tuiofx.Configuration;
-import org.tuiofx.TuioFX;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
@@ -68,9 +67,10 @@ public class GUILogin implements TouchscreenCapable {
                 logIn();
             }
         });
-//        loginPane.setOnZoom(this::zoomWindow);
-//        loginPane.setOnRotate(this::rotateWindow);
-//        loginPane.setOnScroll(this::scrollWindow);
+        loginPane.setOnZoom(this::zoomWindow);
+        loginPane.setOnRotate(this::rotateWindow);
+        loginPane.setOnScroll(this::scrollWindow);
+
     }
 
     /**
@@ -107,8 +107,6 @@ public class GUILogin implements TouchscreenCapable {
             Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
             UndoableStage stage = new UndoableStage();
             screenControl.addStage(stage.getUUID(), stage);
-            screenControl.setTUIOFX(stage);
-            System.out.println("tuiofx");
             screenControl.show(stage.getUUID(), home);
             screenControl.closeStage(Main.getUuid()); // close login scene after login
         } catch (InvalidObjectException e) {
@@ -169,7 +167,10 @@ public class GUILogin implements TouchscreenCapable {
 
     @Override
     public void scrollWindow(ScrollEvent scrollEvent) {
-        loginTouchPane.scrollPane(scrollEvent);
+        if(scrollEvent.isDirect()) {
+            loginTouchPane.scrollPane(scrollEvent);
+        }
     }
+
 
 }

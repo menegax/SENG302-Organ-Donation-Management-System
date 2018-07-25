@@ -15,8 +15,6 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.User;
-import org.tuiofx.Configuration;
-import org.tuiofx.TuioFX;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
@@ -42,12 +40,12 @@ public class ScreenControl {
     @Deprecated
     public static Map<String, Parent> scenes = new HashMap<>();
 
-    private static Map<User, Set<Stage>> userStages = new HashMap<>();
+    private Map<User, Set<Stage>> userStages = new HashMap<>();
 
     @Deprecated
     private static Scene main;
 
-    private static Map<UUID, Stage> applicationStages;
+    private Map<UUID, Stage> applicationStages;
 
     private boolean macOs = System.getProperty("os.name")
             .startsWith("Mac");
@@ -64,8 +62,7 @@ public class ScreenControl {
 
     private String appName = "Big Pharma";
 
-    private TuioFX tuiofxInstance;
-
+    private Boolean isSaved = true;
 
     private ScreenControl() {
         applicationStages = new HashMap<>();
@@ -89,7 +86,7 @@ public class ScreenControl {
      * @param key the uuid of the stage to add
      * @param stage the stage object to add to the hashmap
      */
-    void addStage(UUID key, Stage stage){
+    public void addStage(UUID key, Stage stage){
         applicationStages.put(key, stage);
         if (new UserControl().isUserLoggedIn()) { // if scene belongs to a user
             systemLogger.log(FINE, "User is logged in and a stage is being added");
@@ -312,7 +309,7 @@ public class ScreenControl {
      * @param user the user responsible for the stage
      * @param newStage the new stage to be tied to the user
      */
-    private static void addUserStage(User user, Stage newStage) {
+    private void addUserStage(User user, Stage newStage) {
 
         systemLogger.log(FINE, "Added user and stage");
 
@@ -332,7 +329,7 @@ public class ScreenControl {
      * Closes all the stages related to a given user
      * @param user the user whose stages will be closed
      */
-    static void closeAllUserStages(User user) {
+    void closeAllUserStages(User user) {
         systemLogger.log(FINER, "Attempting to close all user stages...");
         Set<Stage> stages = userStages.get(user);
         try {
@@ -366,15 +363,45 @@ public class ScreenControl {
         }
     }
 
-    public void setTUIOFX(Stage stage) {
-        tuiofxInstance = new TuioFX(stage, Configuration.debug());
-        tuiofxInstance.start();
+    /**
+     * Sets the isSaved boolean and adjusts screens accordingly
+     * @param isSaved whether local changes have been saved or not
+     */
+    public void setIsSaved(Boolean isSaved) {
+        this.isSaved = isSaved;
+        if (isSaved) {
+            removeUnsavedAsterisks();
+        } else {
+            addUnsavedAsterisks();
+        }
     }
 
-    public void removeTUIOFX() {
-        tuiofxInstance.stop();
-        tuiofxInstance = null;
+    /**
+     * Removes asterisks from all stages when local changes are saved to disk
+     */
+    private void removeUnsavedAsterisks() {
+        for (Stage stage : applicationStages.values()) {
+            if (stage instanceof UndoableStage) {
+                ((UndoableStage) stage).getGuiHome().removeAsterisk();
+            }
+        }
     }
 
+    /**
+     * Adds asterisks to all stages when local changes have been made
+     */
+    private void addUnsavedAsterisks() {
+        for (Stage stage : applicationStages.values()) {
+            if (stage instanceof UndoableStage) {
+                if (((UndoableStage) stage).getGuiHome() != null) {
+                    ((UndoableStage) stage).getGuiHome().addAsterisk();
+                }
+            }
+        }
+    }
+
+    public boolean getIsSaved() {
+        return isSaved;
+    }
 }
 

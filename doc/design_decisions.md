@@ -199,4 +199,11 @@ This means there should not be other action listeners for global or stage-level 
  ####Touch Screen Controls
  We decided to use the built in touch commands for zooming and rotating functions, as they are built in events and handlers
  that are simple to grasp and intuitive control schemes.
+ 
+ ####Multiple User touch interface
+ We decided we would use the external library TUIOFX to implement a multi-user touch interface. This will require the application to be reworked so only one stage is present in the application, with multiple panes as scenes.
 
+ ### Status bar updates
+ We decided to use the built in logger we are using to set the status bar text when a log is added. This means that we can rely
+ on our existing log additions instead of having to set the status bar text in each controller class. The status bar is updated by 
+ using setStatus within the observable StatusObservable, which notifies each of its observers.

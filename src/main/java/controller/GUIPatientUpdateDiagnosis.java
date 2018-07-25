@@ -5,12 +5,18 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.RotateEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import utility.GlobalEnums;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
+import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
 
@@ -25,7 +31,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller for diagnosis update popup window.
  */
-public class GUIPatientUpdateDiagnosis extends UndoableController{
+public class GUIPatientUpdateDiagnosis extends UndoableController implements TouchscreenCapable{
 
     @FXML
     private GridPane diagnosisUpdatePane;
@@ -62,6 +68,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private TouchPaneController diagnosisTouchPane;
 
     /**
      * Sets the diagnosis that is being updated
@@ -98,6 +105,10 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             add(tagsDD);
         }};
         statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDIAGNOSIS);
+        diagnosisTouchPane = new TouchPaneController(diagnosisUpdatePane);
+        diagnosisUpdatePane.setOnZoom(this::zoomWindow);
+        diagnosisUpdatePane.setOnRotate(this::rotateWindow);
+        diagnosisUpdatePane.setOnScroll(this::scrollWindow);
     }
 
     /**
@@ -259,10 +270,10 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
      * (but not saved) to the current updated diagnosis information and the diagnoses view screen is returned to.
      *
      * If the operation is adding a diagnosis, the operation is checked for validity for adding. If the add is
-     * valid, the new diagnosis is added to the patient's current diagnoses. Otherwise an alert is shown and no new
+     * valid, the new diagnosis is added to the patient's current diagnoses. Otherwise a message is shown and no new
      * dignosis
      *
-     * If the update is invalid, an alert is shown with the errors in question explained in the alert information.
+     * If the update is invalid, a message is shown with the errors in question explained in the message information.
      * The stage is not closed in this case.
      */
     public void completeUpdate() {
@@ -293,6 +304,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             if(isAdd) {
                 currentPatient.getCurrentDiseases().add(target);
             }
+            screenControl.setIsSaved(false);
             screenControl.closeStage(((UndoableStage)doneButton.getScene().getWindow()).getUUID());
         } else {
             String errorString = "Diseases must not have the same disease name and diagnosis date as another disease\n\n";
@@ -310,13 +322,9 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
                 errorString += "A chronic disease can not be cured. Please remove the chronic tag and save the diagnosis" +
                         " before marking this disease as cured.\n\n";
             }
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Could not update diagnosis");
-            alert.setContentText(errorString);
-            alert.showAndWait();
+            userActions.log(Level.WARNING, errorString, "Attempted to update diagnosis with invalid fields");
         }
     }
-
 
     /**
      * Redoes an action
@@ -332,4 +340,20 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
         statesHistoryScreen.undo();
     }
 
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        diagnosisTouchPane.zoomPane(zoomEvent);
+    }
+
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        diagnosisTouchPane.rotatePane(rotateEvent);
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        if(scrollEvent.isDirect()) {
+            diagnosisTouchPane.scrollPane(scrollEvent);
+        }
+    }
 }

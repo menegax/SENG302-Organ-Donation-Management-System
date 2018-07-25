@@ -14,6 +14,7 @@ import model.DrugInteraction;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import service.OrganWaitlist;
+import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -44,14 +45,12 @@ public class GUIClinicianWaitingList {
     private ObservableList<OrganWaitlist.OrganRequest> masterData = FXCollections.observableArrayList();
 
     @FXML
-    private ChoiceBox<String> organSelection;
+    private ComboBox<String> organSelection;
 
     @FXML
-    private ChoiceBox<String> regionSelection;
+    private ComboBox<String> regionSelection;
 
     private UserControl userControl = new UserControl();
-
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initializes waiting list screen by populating table and initializing a double click action
@@ -72,15 +71,14 @@ public class GUIClinicianWaitingList {
      * Populates the choice boxes for filter
      */
     private void populateFilterChoiceBoxes() {
-        regionSelection.getItems().add(""); //for empty selection
+        regionSelection.getItems().add(GlobalEnums.NONE_ID); //for empty selection
         for (Region region : Region.values()) { //add values to region choice box
             regionSelection.getItems().add(StringUtils.capitalize(region.getValue()));
         }
-        organSelection.getItems().add("");
+        organSelection.getItems().add(GlobalEnums.NONE_ID);
         for (Organ organ : Organ.values()) {
             organSelection.getItems().add(StringUtils.capitalize(organ.getValue()));
         }
-
     }
 
     /**
@@ -111,13 +109,13 @@ public class GUIClinicianWaitingList {
                     Parent root = fxmlLoader.load();
                     UndoableStage popUpStage = new UndoableStage();
                     screenControl.addStage(popUpStage.getUUID(), popUpStage);
-                    screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
+                    screenControl.show(popUpStage.getUUID(), root);
                     openProfiles.add(request);
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request )));
 
                     }
-                catch (IOException e) {
+                catch (Exception e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");

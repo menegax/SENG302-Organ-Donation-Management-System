@@ -1,6 +1,7 @@
 package utility;
 
 import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
 
 import controller.UserControl;
 import model.Administrator;
@@ -31,44 +32,76 @@ public class UserActionHistory {
 
         userActions.setUseParentHandlers(false); // disables default console userActions in parent
 
-        Handler patientHandler = new Handler() {
+        Handler userHandler = new Handler() {
             public void publish(LogRecord logRecord) {
                 Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
 
                 // get logged in patient if it exists
                 Object loggedInUser = new UserControl().getLoggedInUser();
 
-                if (loggedInUser instanceof Patient) { //Add a patient record if a patient is logged in
+                // Ensure all params (resulted, attempted actions) are there
+                if (logRecord.getParameters() == null) {
+                    SystemLogger.systemLogger.log(SEVERE, "Failed to log user action to user object. Ensure both resulted and attempted actions are logged");
+                }
+
+                // PATIENT RECORDS
+                else if (loggedInUser instanceof Patient) {
+
+                    // Add a patient record if a patient is logged in
                     ((Patient) loggedInUser).getUserActionsList()
                             .add(new PatientActionRecord(currentTimeStamp,
                                     logRecord.getLevel(),
                                     StringUtils.capitalize(logRecord.getParameters()[0].toString()),
                                     StringUtils.capitalize(logRecord.getMessage())));
-                } else if (loggedInUser instanceof Clinician) { //Add a clinician record if a clinician is logged in
+
+                }
+
+                // CLINICIAN RECORDS
+                else if (loggedInUser instanceof Clinician) {
+
+                    //Add a clinician record if a clinician is logged in
                     String nhiParam = null;
+                    // Ensure all params (resulted, attempted actions) are there
+                    if (logRecord.getParameters() == null) {
+                        SystemLogger.systemLogger.log(SEVERE, "Failed to log user action to admin object. Ensure both resulted and attempted actions are logged");
+                    }
+
                     //If there are more than 1 parameter, in which case the target nhi is provided as the second parameter
                     if (logRecord.getParameters().length >= 2) {
-                        nhiParam = logRecord.getParameters()[1].toString().toUpperCase();
+                        nhiParam = logRecord.getParameters()[1].toString()
+                                .toUpperCase();
+
+                        ((Clinician) loggedInUser).getClinicianActionsList()
+                                .add(new ClinicianActionRecord(currentTimeStamp,
+                                        logRecord.getLevel(),
+                                        StringUtils.capitalize(logRecord.getParameters()[0].toString()),
+                                        StringUtils.capitalize(logRecord.getMessage()),
+                                        nhiParam));
                     }
-                    ((Clinician) loggedInUser).getClinicianActionsList()
-                            .add(new ClinicianActionRecord(currentTimeStamp,
-                                    logRecord.getLevel(),
-                                    StringUtils.capitalize(logRecord.getParameters()[0].toString()),
-                                    StringUtils.capitalize(logRecord.getMessage()),
-                                    nhiParam));
-                } else if (loggedInUser instanceof Administrator) { //Add a administrator record if a administrator is logged in
-                    String targetParam = null;
+                }
+
+                // ADMINISTRATOR RECORDS
+                else if (loggedInUser instanceof Administrator) {
+
+                    //Add an administrator record if a administrator is logged in
+                    String targetParam;
+
                     //If there are more than 1 parameter, in which case the target ID is provided as the second parameter
                     if (logRecord.getParameters().length >= 2) {
-                        targetParam = logRecord.getParameters()[1].toString().toUpperCase();
+                        targetParam = logRecord.getParameters()[1].toString()
+                                .toUpperCase();
+
+                        ((Administrator) loggedInUser).getAdminActionsList()
+                                .add(new AdministratorActionRecord(currentTimeStamp,
+                                        logRecord.getLevel(),
+                                        StringUtils.capitalize(logRecord.getParameters()[0].toString()),
+                                        StringUtils.capitalize(logRecord.getMessage()),
+                                        targetParam));
                     }
-                    ((Administrator) loggedInUser).getAdminActionsList()
-                            .add(new AdministratorActionRecord(currentTimeStamp,
-                                    logRecord.getLevel(),
-                                    StringUtils.capitalize(logRecord.getParameters()[0].toString()),
-                                    StringUtils.capitalize(logRecord.getMessage()),
-                                    targetParam));
                 }
+
+                // Show resulting action in GUI status bar
+                StatusObservable.getInstance().setStatus(logRecord.getMessage());
             }
 
             @Override
@@ -80,7 +113,7 @@ public class UserActionHistory {
             public void close() throws SecurityException {
             }
         };
-        userActions.addHandler(patientHandler);
+        userActions.addHandler(userHandler);
 
         // Console handler
         Handler console = new ConsoleHandler();
