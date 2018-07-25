@@ -1689,7 +1689,6 @@ public class Database {
      *
      * @param fileName file to import from
      */
-    @Deprecated
     public void importFromDiskPatients(String fileName) {
         Gson gson = new Gson();
         BufferedReader br;
@@ -1704,7 +1703,7 @@ public class Database {
                 }
             }
         } catch (FileNotFoundException e) {
-            systemLogger.log(Level.INFO, "Successfully imported patients from file");
+            systemLogger.log(Level.SEVERE, "File doesn't exist");
         }
     }
 
