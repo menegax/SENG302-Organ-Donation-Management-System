@@ -7,6 +7,7 @@ import javafx.scene.layout.GridPane;
 import model.Administrator;
 import service.Database;
 import utility.GlobalEnums;
+import utility.GlobalEnums.UIRegex;
 import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -128,23 +129,21 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
      */
     public void saveProfile() {
         Boolean valid = true;
-        if (firstnameTxt.getText()
-                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", firstnameTxt.getText())) {
+        if (!Pattern.matches(UIRegex.FNAME.getValue(), firstnameTxt.getText())) {
             valid = false;
             setInvalid(firstnameTxt);
         }
         else {
             setValid(firstnameTxt);
         }
-        if (lastnameTxt.getText()
-                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", lastnameTxt.getText())) {
+        if (!Pattern.matches(UIRegex.LNAME.getValue(), lastnameTxt.getText())) {
             valid = false;
             setInvalid(lastnameTxt);
         }
         else {
             setValid(lastnameTxt);
         }
-        if (!Pattern.matches("[a-z|A-Z ]{0,50}", middlenameTxt.getText())) {
+        if (!Pattern.matches(UIRegex.MNAME.getValue(), middlenameTxt.getText())) {
             valid = false;
             setInvalid(middlenameTxt);
         }

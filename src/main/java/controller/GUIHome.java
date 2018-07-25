@@ -120,7 +120,7 @@ public class GUIHome implements Observer {
                 // admin viewing admin
                 else if (userControl.getTargetUser() instanceof Administrator) {
                     homeTarget = userControl.getTargetUser();
-                    addTabsAdministrator();
+                    addTabsAdministratorAdministrator();
                     setUpColouredBar(userControl.getTargetUser());
                 }
                 else {
@@ -316,6 +316,15 @@ public class GUIHome implements Observer {
         createTab(TabName.UPDATE, "/scene/clinicianProfileUpdate.fxml");
     }
 
+    /**
+     * Adds tabs for an administrator viewing a administrator
+     * @throws IOException if fxml cannot be loaded
+     */
+    private void addTabsAdministratorAdministrator() throws IOException {
+        createTab(TabName.PROFILE, "/scene/administratorProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/administratorProfileUpdate.fxml");
+    }
+    
     /**
      * Called when logout button is pressed by user
      * Checks for unsaved changes before logging out
