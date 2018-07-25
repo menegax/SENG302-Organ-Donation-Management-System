@@ -12,6 +12,7 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.Searcher;
+import utility.UserActionRecord;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
@@ -29,7 +30,7 @@ import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
 
-    private final Timestamp CREATED;
+    private Timestamp CREATED;
 
     private String preferredName;
 
@@ -155,6 +156,53 @@ public class Patient extends User {
         propertyChangeSupport.addPropertyChangeListener(evt -> {
             refreshStatus();
         });
+    }
+
+    public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
+                   Timestamp created, Timestamp modified, LocalDate death, GlobalEnums.BirthGender gender,
+                   GlobalEnums.PreferredGender prefGender, String preferredName, double height, double weight,
+                   BloodGroup bloodType, ArrayList<Organ> donations, ArrayList<Organ> receiving, String street1,
+                   String street2, String suburb, Region region, int zip, String homePhone, String workPhone,
+                   String mobilePhone, String emailAddress, String contactName, String contactRelationship,
+                   String contactHomePhone, String contactWorkPhone, String contactMobilePhone, String contactEmailAddress,
+                   ArrayList<PatientActionRecord> userActionsList, ArrayList<Disease> currentDiseases,
+                   ArrayList<Disease> pastDiseases, ArrayList<Medication> currentMedications,
+                   ArrayList<Medication> medicationHistory, List<Procedure> procedures) {
+        super(firstName, middleNames, lastName);
+    	this.nhiNumber = nhiNumber;
+        this.birth = birth;
+        this.CREATED = created;
+        this.modified = modified;
+        this.death = death;
+        this.birthGender = gender;
+        this.preferredGender = prefGender;
+        this.preferredName = preferredName;
+        this.height = height;
+        this.weight = weight;
+        this.bloodGroup = bloodType;
+        this.donations = donations;
+        this.requiredOrgans = receiving;
+        this.street1 = street1;
+        this.street2 = street2;
+        this.suburb = suburb;
+        this.region = region;
+        this.zip = zip;
+        this.homePhone = homePhone;
+        this.workPhone = workPhone;
+        this.mobilePhone = mobilePhone;
+        this.emailAddress = emailAddress;
+        this.contactName = contactName;
+        this.contactRelationship = contactRelationship;
+        this.contactHomePhone = contactHomePhone;
+        this.contactWorkPhone = contactWorkPhone;
+        this.contactMobilePhone = contactMobilePhone;
+        this.contactEmailAddress = contactEmailAddress;
+        this.userActionsList = userActionsList;
+        this.currentDiseases = currentDiseases;
+        this.pastDiseases = pastDiseases;
+        this.currentMedications = currentMedications;
+        this.medicationHistory = medicationHistory;
+        this.procedures = procedures;
     }
 
 
@@ -304,18 +352,18 @@ public class Patient extends User {
         }
     }
 
-    /**
-     * Checks the uniqueness of the nhi number
-     *
-     * @throws IllegalArgumentException when the nhi number given is already in use
-     */
-    public void ensureUniqueNhi() throws IllegalArgumentException {
-        for (Patient p : Database.getPatients()) {
-            if (p.nhiNumber.equals(nhiNumber.toUpperCase())) {
-                throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
-            }
-        }
-    }
+//    /**
+//     * Checks the uniqueness of the nhi number
+//     *
+//     * @throws IllegalArgumentException when the nhi number given is already in use
+//     */
+//    public void ensureUniqueNhi() throws IllegalArgumentException {
+//        for (Patient p : database.getPatients()) {
+//            if (p.nhiNumber.equals(nhiNumber.toUpperCase())) {
+//                throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
+//            }
+//        }
+//    }
 
     /**
      * Returns the name of the patient as a formatted concatenated string
@@ -615,6 +663,7 @@ public class Patient extends User {
      */
     public void setCurrentMedications(ArrayList<Medication> currentMedications) {
         this.currentMedications = currentMedications;
+        userModified();
     }
 
     /**
@@ -623,6 +672,7 @@ public class Patient extends User {
      */
     public void setMedicationHistory(ArrayList<Medication> medicationHistory) {
         this.medicationHistory = medicationHistory;
+        userModified();
     }
 
     public void setZip(int zip) {
@@ -644,8 +694,9 @@ public class Patient extends User {
      * sets the required organs of the patient to the list parsed through
      * @param requiredOrgans organs the patient is to receive
      */
-    public void setRequiredOrgans(ArrayList requiredOrgans) {
+    public void setRequiredOrgans(ArrayList<Organ> requiredOrgans) {
         this.requiredOrgans = requiredOrgans;
+        userModified();
     }
 
     public String getFormattedAddress() {
@@ -731,6 +782,7 @@ public class Patient extends User {
 
     public void setRemovedOrgan(GlobalEnums.Organ organ) {
         removedOrgan = organ;
+        userModified();
     }
 
     public String getNhiNumber() {
@@ -745,8 +797,8 @@ public class Patient extends User {
         }
         if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
             Searcher.getSearcher().removeIndex(this);
-            this.nhiNumber = nhiNumber.toUpperCase();
-            Searcher.getSearcher().addIndex(this);
+        	this.nhiNumber = nhiNumber.toUpperCase();
+        	userModified();
         }
     }
 
@@ -757,6 +809,7 @@ public class Patient extends User {
 
     public void setHomePhone(String homePhone) {
         this.homePhone = homePhone;
+    	userModified();
     }
 
     public String getMobilePhone() {
@@ -765,6 +818,7 @@ public class Patient extends User {
 
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
+    	userModified();
     }
 
     public String getWorkPhone() {
@@ -773,6 +827,7 @@ public class Patient extends User {
 
     public void setWorkPhone(String workPhone) {
         this.workPhone = workPhone;
+    	userModified();
     }
 
     public String getEmailAddress() {
@@ -781,6 +836,7 @@ public class Patient extends User {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+    	userModified();
     }
 
     public String getContactName() {
@@ -789,6 +845,7 @@ public class Patient extends User {
 
     public void setContactName(String contactName) {
         this.contactName = contactName;
+    	userModified();
     }
 
     public String getContactRelationship() {
@@ -797,6 +854,7 @@ public class Patient extends User {
 
     public void setContactRelationship(String contactRelationship) {
         this.contactRelationship = contactRelationship;
+    	userModified();
     }
 
     public String getContactHomePhone() {
@@ -805,6 +863,7 @@ public class Patient extends User {
 
     public void setContactHomePhone(String contactHomePhone) {
         this.contactHomePhone = contactHomePhone;
+    	userModified();
     }
 
     public String getContactMobilePhone() {
@@ -813,6 +872,7 @@ public class Patient extends User {
 
     public void setContactMobilePhone(String contactMobilePhone) {
         this.contactMobilePhone = contactMobilePhone;
+    	userModified();
     }
 
     public String getContactWorkPhone() {
@@ -821,6 +881,7 @@ public class Patient extends User {
 
     public void setContactWorkPhone(String contactWorkPhone) {
         this.contactWorkPhone = contactWorkPhone;
+    	userModified();
     }
 
     public String getContactEmailAddress() {
@@ -829,6 +890,7 @@ public class Patient extends User {
 
     public void setContactEmailAddress(String contactEmailAddress) {
         this.contactEmailAddress = contactEmailAddress;
+    	userModified();
     }
 
     public List<Procedure> getProcedures() {
@@ -836,6 +898,11 @@ public class Patient extends User {
             procedures = new ArrayList<>();
         }
         return procedures;
+    }
+
+    public void setProcedures(List<Procedure> procedures) {
+        this.procedures = procedures;
+    	userModified();
     }
 
 
@@ -861,7 +928,10 @@ public class Patient extends User {
      * Sets the donor's current diseases to the given list
      * @param currentDiseases list of diseases currently infecting a donor
      */
-    public void setCurrentDiseases(ArrayList<Disease> currentDiseases) { this.currentDiseases = currentDiseases; }
+    public void setCurrentDiseases(ArrayList<Disease> currentDiseases) {
+        this.currentDiseases = currentDiseases;
+    	userModified();
+    }
 
     /**
      * Gets the diseases the donor used to be infected with
@@ -899,9 +969,13 @@ public class Patient extends User {
 
     public void addProcedure(Procedure procedure) {
         procedures.add(procedure);
+    	userModified();
     }
 
-    public void removeProcedure(Procedure procedure) { procedures.remove(procedure); }
+    public void removeProcedure(Procedure procedure) {
+        procedures.remove(procedure);
+    	userModified();
+    }
 
     //!!??
     public String toString() {

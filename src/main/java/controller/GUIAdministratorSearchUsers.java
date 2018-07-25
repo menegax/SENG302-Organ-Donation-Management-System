@@ -102,6 +102,9 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> {
                         Platform.runLater(this::tableRefresh);
+                        masterData.clear();
+                        masterData.addAll(Searcher.getSearcher().search(searchEntry.getText(),
+                                new UserTypes[]{UserTypes.PATIENT}, NUMRESULTS, null));
                         userControl.clearTargetUser();
                     });
                 } catch (IOException e) {

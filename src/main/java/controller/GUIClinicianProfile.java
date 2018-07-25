@@ -40,6 +40,8 @@ public class GUIClinicianProfile {
     private Button deleteButton;
 
     private UserControl userControl = new UserControl();
+    
+    private Database database = Database.getDatabase();
 
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
@@ -91,7 +93,7 @@ public class GUIClinicianProfile {
         Clinician clinician = (Clinician) userControl.getTargetUser();
         if (clinician.getStaffID() != 0) {
             userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(clinician.getStaffID())});
-            Database.deleteClinician(clinician);
+            database.delete(clinician);
             ((Stage) clinicianProfilePane.getScene().getWindow()).close();
         }
     }

@@ -46,10 +46,12 @@ public class Searcher {
 
     private static Searcher instance = null;
 
+    private Database database;
+
     public Searcher() {
         try {
             indexWriter = initializeWriter();
-            createFullIndex();
+            database = Database.getDatabase();
             systemLogger.log(Level.INFO, "Successfully initialized index writer.");
         } catch (IOException e) {
             systemLogger.log(Level.SEVERE, "Failed to initialize index writer.");
@@ -86,9 +88,6 @@ public class Searcher {
             }
         }
         patientDoc.add(new StringField("lName", patient.getLastName().toUpperCase(), Field.Store.NO));
-        if (patient.getBirthGender() != null) {
-            patientDoc.add(new StringField("birthGender", patient.getBirthGender().toString().toUpperCase(), Field.Store.NO));
-        }
         patientDoc.add(new StringField("type", UserTypes.PATIENT.getValue(), Field.Store.YES));
         return patientDoc;
     }
@@ -125,15 +124,15 @@ public class Searcher {
      * Creates a full index of all patients currently loaded into the app.
      */
     public void createFullIndex() {
-        Set<Patient> patients = Database.getPatients();
+        Set<Patient> patients = database.getPatients();
         for (Patient patient : patients) {
             addPatientIndex(patient);
         }
-        Set<Clinician> clinicians = Database.getClinicians();
+        Set<Clinician> clinicians = database.getClinicians();
         for (Clinician clinician : clinicians) {
             addClinicianIndex(clinician);
         }
-        Set<Administrator> admins = Database.getAdministrators();
+        Set<Administrator> admins = database.getAdministrators();
         for (Administrator admin : admins) {
             addAdminIndex(admin);
         }
@@ -181,6 +180,10 @@ public class Searcher {
         }
     }
 
+    public void updateIndex(User user) {
+    	removeIndex(user);
+    	addIndex(user);
+    }
 
     public void removeIndex(User user) {
         Term toDel = null;
@@ -246,7 +249,7 @@ public class Searcher {
         List<UserTypes> typesList = Arrays.asList(types);
         List<User> defaultResults = new ArrayList<>();
         if (typesList.contains(UserTypes.PATIENT)) {
-            for (Patient patient : Database.getPatients()) {
+            for (Patient patient : database.getPatients()) {
                 if (filter == null) defaultResults.add(patient);
                 else if (matchesFilter(patient, filter)) {
                     defaultResults.add(patient);
@@ -254,10 +257,10 @@ public class Searcher {
             }
         }
         if (typesList.contains(UserTypes.CLINICIAN)) {
-            defaultResults.addAll(Database.getClinicians());
+            defaultResults.addAll(database.getClinicians());
         }
         if (typesList.contains(UserTypes.ADMIN)) {
-            defaultResults.addAll(Database.getAdministrators());
+            defaultResults.addAll(database.getAdministrators());
         }
         defaultResults.sort((o1, o2) -> { // sort by concatenated name
             int comparison;
@@ -280,7 +283,7 @@ public class Searcher {
      */
     private Patient fetchPatient(Document doc) throws InvalidObjectException {
         String nhi = doc.get("nhi");
-        return Database.getPatientByNhi(nhi);
+        return database.getPatientByNhi(nhi);
     }
 
     /**
@@ -291,8 +294,8 @@ public class Searcher {
      * @throws InvalidObjectException
      */
     private Clinician fetchClinician(Document doc) throws InvalidObjectException {
-        int staffID = Integer.valueOf(doc.get("staffid"));
-        return Database.getClinicianByID(staffID);
+    	int staffID = Integer.valueOf(doc.get("staffid"));
+    	return database.getClinicianByID(staffID);
     }
 
     /**
@@ -303,8 +306,8 @@ public class Searcher {
      * @throws InvalidObjectException This does not occur.
      */
     private Administrator fetchAdmin(Document doc) throws InvalidObjectException {
-        String username = doc.get("username");
-        return Database.getAdministratorByUsername(username);
+    	String username = doc.get("username");
+    	return database.getAdministratorByUsername(username);
     }
 
     /**
@@ -444,7 +447,6 @@ public class Searcher {
         queries.addAll(createQueries("fName", params, 2));
         queries.addAll(createQueries("mName", params, 2));
         queries.addAll(createQueries("lName", params, 2));
-        queries.addAll(createQueries("birthGender", params, 2));
         queries.addAll(createQueries("nhi", params, 0));
         queries.addAll(createQueries("staffid", params, 0));
         queries.addAll(createQueries("username", params, 0));
@@ -479,37 +481,44 @@ public class Searcher {
         if (filter == null) {
             return false;
         }
-        if (filter.get(GlobalEnums.FilterOption.REGION) != null && !filter.get(GlobalEnums.FilterOption.REGION).equals(NONE_ID)) {
-            GlobalEnums.Region region = GlobalEnums.Region.getEnumFromString(filter.get(GlobalEnums.FilterOption.REGION));
-            if (patient.getRegion() == null || !patient.getRegion().equals(region)) {
-                return false;
-            }
-        }
-        if (filter.get(GlobalEnums.FilterOption.DONATIONS) != null && !filter.get(GlobalEnums.FilterOption.DONATIONS).equals(NONE_ID)) {
-            GlobalEnums.Organ donatingOrgan = GlobalEnums.Organ.getEnumFromString(filter.get(GlobalEnums.FilterOption.DONATIONS));
-            if (patient.getDonations() == null || !patient.getDonations().contains(donatingOrgan)) return false;
-        }
-        if (filter.get(GlobalEnums.FilterOption.REQUESTEDDONATIONS) != null && !filter.get(GlobalEnums.FilterOption.REQUESTEDDONATIONS).equals(NONE_ID)) {
-            GlobalEnums.Organ requestedOrgans = GlobalEnums.Organ.getEnumFromString(filter.get(GlobalEnums.FilterOption.REQUESTEDDONATIONS));
-            if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().contains(requestedOrgans))
-                return false;
-        }
-        if (filter.get(GlobalEnums.FilterOption.BIRTHGENDER) != null && !filter.get(GlobalEnums.FilterOption.BIRTHGENDER).equals(NONE_ID)) {
-            GlobalEnums.BirthGender birthGender = GlobalEnums.BirthGender.getEnumFromString(filter.get(GlobalEnums.FilterOption.BIRTHGENDER));
-            if (patient.getBirthGender() == null || !patient.getBirthGender().equals(birthGender)) return false;
-        }
-        if (filter.get(GlobalEnums.FilterOption.RECIEVER) != null && Boolean.valueOf(filter.get(GlobalEnums.FilterOption.RECIEVER)).equals(true)
-                && patient.getRequiredOrgans().size() == 0) {
-            return false;
-        }
-        if (filter.get(GlobalEnums.FilterOption.DONOR) != null && Boolean.valueOf(filter.get(GlobalEnums.FilterOption.DONOR)).equals(true)
-                && patient.getDonations().size() == 0) {
-            return false;
-        }
-        if (filter.get(GlobalEnums.FilterOption.AGEUPPER) != null && filter.get(GlobalEnums.FilterOption.AGELOWER) != null) {
-            if (patient.getAge() > Integer.parseInt(filter.get(GlobalEnums.FilterOption.AGEUPPER))
-                    || patient.getAge() < Integer.parseInt(filter.get(GlobalEnums.FilterOption.AGELOWER))) {
-                return false;
+        for(FilterOption option : filter.keySet()) {
+            if (!filter.get(option).equals(NONE_ID)) { //check each fiter entry to see if its been selected
+                switch (option) {
+                    case REGION: {
+                        Region region = Region.getEnumFromString(filter.get(option));
+                        if (patient.getRegion() == null || !patient.getRegion().equals(region)) { return false; }
+                        break;
+                    }
+                    case DONATIONS: {
+                        Organ donations = Organ.getEnumFromString(filter.get(option));
+                        if (patient.getDonations() == null || !patient.getDonations().contains(donations)) { return false; }
+                        break;
+                    }
+                    case REQUESTEDDONATIONS: {
+                        Organ requestedOrgans = Organ.getEnumFromString(filter.get(option));
+                        if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().contains(requestedOrgans)){ return false; }
+                        break;
+                    }
+                    case BIRTHGENDER: {
+                        BirthGender birthGender = BirthGender.getEnumFromString(filter.get(option));
+                        if (patient.getBirthGender() == null || !patient.getBirthGender().equals(birthGender)){ return false; }
+                        break;
+                    }
+                    case DONOR: {
+                        if (Boolean.valueOf(filter.get(option)).equals(true) && patient.getDonations().size() == 0) { return false; }
+                        break;
+                    }
+                    case RECIEVER: {
+                        if (Boolean.valueOf(filter.get(option)).equals(true) && patient.getRequiredOrgans().size() == 0) { return false; }
+                        break;
+                    }
+                    case AGEUPPER:
+                    case AGELOWER: {
+                        if (patient.getAge() > Integer.parseInt(filter.get(FilterOption.AGEUPPER))
+                                || patient.getAge() < Integer.parseInt(filter.get(FilterOption.AGELOWER))) { return false; }
+                        break;
+                    }
+                }
             }
         }
         return true;

@@ -50,6 +50,8 @@ public class GUIHome implements Observer {
 
     private UserControl userControl = new UserControl();
 
+    private Database database = Database.getDatabase();
+
     private  enum TabName {
         PROFILE("Profile"), UPDATE("Update"), DONATIONS("Donations"), CONTACTDETAILS("Contact Details"),
         DISEASEHISTORY("View Disease History"), HISTORY("History"), PROCEDURES("Procedures"),
@@ -118,7 +120,7 @@ public class GUIHome implements Observer {
                 // admin viewing admin
                 else if (userControl.getTargetUser() instanceof Administrator) {
                     homeTarget = userControl.getTargetUser();
-                    addTabsAdministrator();
+                    addTabsAdministratorAdministrator();
                     setUpColouredBar(userControl.getTargetUser());
                 }
                 else {
@@ -315,6 +317,15 @@ public class GUIHome implements Observer {
     }
 
     /**
+     * Adds tabs for an administrator viewing a administrator
+     * @throws IOException if fxml cannot be loaded
+     */
+    private void addTabsAdministratorAdministrator() throws IOException {
+        createTab(TabName.PROFILE, "/scene/administratorProfile.fxml");
+        createTab(TabName.UPDATE, "/scene/administratorProfileUpdate.fxml");
+    }
+    
+    /**
      * Called when logout button is pressed by user
      * Checks for unsaved changes before logging out
      */
@@ -324,7 +335,6 @@ public class GUIHome implements Observer {
             alert.setTitle("Unsaved changes");
             alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
                 systemLogger.log(FINE, "User trying to log out");
-                Database.saveToDisk();
                 logOut();
             });
             alert.getDialogPane().lookupButton(ButtonType.NO).addEventFilter(ActionEvent.ACTION, event -> {
@@ -349,13 +359,6 @@ public class GUIHome implements Observer {
         screenControl.setUpNewLogin(); // ONLY FOR SINGLE USER SUPPORT. REMOVE WHEN MULTI USER SUPPORT
         screenControl.setIsSaved(true);
         userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
-
-        // Resets all local changes
-        Database.resetDatabase();
-        Database.importFromDiskPatients("./patient.json");
-        Database.importFromDiskClinicians("./clinician.json");
-        Database.importFromDiskWaitlist("./waitlist.json");
-        Database.importFromDiskAdministrators("./administrator.json");
     }
 
 
@@ -384,7 +387,8 @@ public class GUIHome implements Observer {
         MenuItem menu2Item1 = new MenuItem("Save");
         menu2Item1.setAccelerator(screenControl.getSave());
         menu2Item1.setOnAction(event -> {
-            Database.saveToDisk();
+            screenControl.setIsSaved(true);
+            database.updateDatabase();
             userActions.log(INFO, "Successfully saved to disk", "Attempted to save to disk");
         });
         if (userControl.getLoggedInUser() instanceof Administrator) {
@@ -394,7 +398,7 @@ public class GUIHome implements Observer {
             menu2Item2.setOnAction(event -> {
                 File file = new FileChooser().showOpenDialog(stage);
                 if (file != null) {
-                    Database.importFromDiskPatients(file.getAbsolutePath());
+                    database.importFromDiskPatients(file.getAbsolutePath());
                     userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
                 }
             });
@@ -402,7 +406,7 @@ public class GUIHome implements Observer {
             menu2Item3.setOnAction(event -> {
                 File file = new FileChooser().showOpenDialog(stage);
                 if (file != null) {
-                    Database.importFromDiskPatients(file.getAbsolutePath());
+                    database.importFromDiskPatients(file.getAbsolutePath());
                     userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
                 }
             });

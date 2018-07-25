@@ -82,13 +82,16 @@ public class CLIPatientUpdate implements Runnable {
             "AB_POSITIVE, AB_NEGATIVE, O_POSITIVE, O_NEGATIVE")
     private String bloodGroup;
 
+    Database database = Database.getDatabase();
+
+
     public void run() {
-        try {
-            Patient patient = Database.getPatientByNhi(searchNhi);
+        Patient patient = database.getPatientByNhi(searchNhi);
+        if (patient != null) {
             patient.updateAttributes(firstName, lastName, middleNames, preferredName, birth, death, street1,
                     street2, suburb, region, birthGender, preferredGender, bloodGroup, height, weight, nhi);
-        } catch (InvalidObjectException | IllegalArgumentException e) {
-            userActions.log(Level.SEVERE, e.getMessage(), "attempted to update patient attributes");
+        } else {
+            userActions.log(Level.SEVERE, "Patient " + searchNhi + " not found.", "attempted to update patient attributes");
         }
     }
 

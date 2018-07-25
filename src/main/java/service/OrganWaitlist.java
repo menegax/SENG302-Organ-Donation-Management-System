@@ -12,10 +12,17 @@ import utility.GlobalEnums.Region;
 public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 
 	private SortedSet<OrganRequest> requests;
+	private Database database;
 
 	
-	OrganWaitlist() {
-		requests = new TreeSet<>();
+	public OrganWaitlist() {
+	    requests = new TreeSet<OrganRequest>();
+	}
+
+	private void checkDatabase() {
+		if(database == null) {
+			database = Database.getDatabase();
+		}
 	}
 	
 	/**
@@ -25,9 +32,22 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	 * @return			- Returns true if Collection changed otherwise false.
 	 */
 	public boolean add(Patient receiver, Organ organ) {
-		return requests.add(new OrganRequest(receiver, organ));
+		checkDatabase();
+		OrganRequest request = new OrganRequest(receiver, organ);
+		database.saveTransplantRequest(request);
+	    return requests.add(request);
 	}
-	
+
+    /**
+     * Adds a request for a organ to the waiting list.
+     * ONLY FOR USE BY THE DATABASE.
+     * @param name      - The name of the patient requesting a organ.
+     * @param organ     - The organ requested.
+     * @param date      - The date of the request.
+     * @param region    - The region of the organ request.
+     * @param nhi       - The NHI of the patient requesting a organ.
+     * @return          - Returns true if Collection changed, otherwise false.
+     */
 	public boolean add(String name, Organ organ, LocalDate date, Region region, String nhi) {
 		return requests.add(new OrganRequest(name, organ, date, region, nhi));
 	}

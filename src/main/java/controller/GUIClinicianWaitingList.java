@@ -52,15 +52,18 @@ public class GUIClinicianWaitingList {
 
     private UserControl userControl = new UserControl();
 
+    Database database = Database.getDatabase();
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
     /**
      * Initializes waiting list screen by populating table and initializing a double click action
      * to view a patient's profile.
      */
     public void initialize() {
-        OrganWaitlist waitingList = Database.getWaitingList();
-        for (OrganWaitlist.OrganRequest request : waitingList) {
-            masterData.add(request);
-        }
+    	OrganWaitlist waitingList = database.getWaitingList();
+        for (OrganWaitlist.OrganRequest request: waitingList) {
+    		masterData.add(request);
+    	}
         populateTable();
         setupDoubleClickToPatientEdit();
         populateFilterChoiceBoxes();
@@ -103,8 +106,8 @@ public class GUIClinicianWaitingList {
                 try {
                     userControl = new UserControl();
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
-                    DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
-                    userControl.setTargetUser(Database.getPatientByNhi(request.getReceiverNhi()));
+                    DrugInteraction.setViewedPatient(database.getPatientByNhi(request.getReceiverNhi()));
+                    userControl.setTargetUser(database.getPatientByNhi(request.getReceiverNhi()));
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     Parent root = fxmlLoader.load();
                     UndoableStage popUpStage = new UndoableStage();
@@ -168,8 +171,9 @@ public class GUIClinicianWaitingList {
 
         //add listener to organ choice box and add predicate
         organSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
-            if (newValue.equals("")) {
-                if (regionSelection.getValue() == null || regionSelection.getValue().equals("")) { //check if region selection is null or ""
+
+            if (newValue.equals(GlobalEnums.NONE_ID)) {
+                if (regionSelection.getValue() == null || regionSelection.getValue().equals(GlobalEnums.NONE_ID)) { //check if region selection is null or ""
                     return true;
                 } else if (OrganRequest.getRequestRegion() == null) { //if region is not given in donor
                     return false;
@@ -178,10 +182,10 @@ public class GUIClinicianWaitingList {
                 }
             }
             if (OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(newValue.toLowerCase())) {
-                if (regionSelection.getValue() == null || regionSelection.getValue().equals("")) {
+                if (regionSelection.getValue() == null || regionSelection.getValue().equals(GlobalEnums.NONE_ID)) {
                     return true;
                 } else if (OrganRequest.getRequestRegion() != null) {
-                    return OrganRequest.getRequestRegion().getValue().toLowerCase().equals(regionSelection.getValue().toString().toLowerCase());
+                    return OrganRequest.getRequestRegion().getValue().toLowerCase().equals(regionSelection.getValue().toLowerCase());
                 }
             }
             return false;
@@ -189,17 +193,17 @@ public class GUIClinicianWaitingList {
 
         //add listener to organ choice box and add predicate
         regionSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
-            if (newValue.equals("")) {
+            if (newValue.equals(GlobalEnums.NONE_ID)) {
                 if (organSelection.getValue() == null ||
                         OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()) ||
-                        organSelection.getValue().equals("")) {
+                        organSelection.getValue().equals(GlobalEnums.NONE_ID)) {
                     return true;
                 }
             }
             Region requestedRegion = OrganRequest.getRequestRegion();
             if (requestedRegion != null) {
                 return requestedRegion.getValue().toLowerCase().equals(newValue.toLowerCase()) &&
-                        (organSelection.getValue() == null || organSelection.getValue().equals("") ||
+                        (organSelection.getValue() == null || organSelection.getValue().equals(GlobalEnums.NONE_ID) ||
                                 OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()));
             }
             return false;

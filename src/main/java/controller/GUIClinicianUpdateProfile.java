@@ -12,6 +12,7 @@ import model.User;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
+import utility.GlobalEnums.UIRegex;
 import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -41,7 +42,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
     private TextField staffId;
 
     @FXML
-    private TextField firstnameUpdateTxt;
+    private TextField firstnameTxt;
 
     @FXML
     private TextField lastnameTxt;
@@ -63,6 +64,25 @@ public class GUIClinicianUpdateProfile extends UndoableController {
 
     private Clinician target;
 
+    private StatesHistoryScreen screenHistory;
+
+    Database database = Database.getDatabase();
+
+    /**
+     * Undoes an action taken when editing a clinician
+     */
+    @FXML
+    public void undo(){
+        screenHistory.undo();
+    }
+
+    /**
+     * Redoes an action taken when editing a clinician
+     */
+    @FXML
+    public void redo(){
+        screenHistory.redo();
+    }
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
 
@@ -104,12 +124,11 @@ public class GUIClinicianUpdateProfile extends UndoableController {
      * @param staffId ID of clinician to load
      */
     private void loadProfile(int staffId) {
-        try {
-            Clinician clinician = Database.getClinicianByID(staffId);
+        Clinician clinician = database.getClinicianByID(staffId);
+        if (clinician != null) {
             target = clinician;
             populateForm(clinician);
-        }
-        catch (InvalidObjectException e) {
+        } else {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }
@@ -122,7 +141,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
     private void setUpStateHistory() {
         controls = new ArrayList<Control>() {{
             add(staffId);
-            add(firstnameUpdateTxt);
+            add(firstnameTxt);
             add(lastnameTxt);
             add(middlenameTxt);
             add(street1Txt);
@@ -149,7 +168,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             lastModifiedLbl.setText("Last Updated: n/a");
         }
         staffId.setText(Integer.toString(clinician.getStaffID()));
-        firstnameUpdateTxt.setText(clinician.getFirstName());
+        firstnameTxt.setText(clinician.getFirstName());
         lastnameTxt.setText(clinician.getLastName());
         for (String name : clinician.getMiddleNames()) {
             middlenameTxt.setText(middlenameTxt.getText() + name + " ");
@@ -177,49 +196,40 @@ public class GUIClinicianUpdateProfile extends UndoableController {
      */
     public void saveProfile() {
         Boolean valid = true;
-        if (!Pattern.matches("[0-9]{1,3}", staffId.getText())) {
+        if (!Pattern.matches(UIRegex.STAFFID.getValue(), staffId.getText())) {
             valid = false;
             setInvalid(staffId);
         }
-        String newName = firstnameUpdateTxt.getText();
-        if (firstnameUpdateTxt.getText()
-                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", newName)) {
+        if (!Pattern.matches(UIRegex.FNAME.getValue(), firstnameTxt.getText())) {
             valid = false;
-            setInvalid(firstnameUpdateTxt);
+            setInvalid(firstnameTxt);
         }
-        else {
-            setValid(firstnameUpdateTxt);
-        }
-        if (lastnameTxt.getText()
-                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", lastnameTxt.getText())) {
+        if (!Pattern.matches(UIRegex.LNAME.getValue(), lastnameTxt.getText())) {
             valid = false;
             setInvalid(lastnameTxt);
-        }
-        else {
+        } else {
             setValid(lastnameTxt);
         }
-        if (!Pattern.matches("[a-z|A-Z ]{0,50}", middlenameTxt.getText())) {
+        if (!Pattern.matches(UIRegex.MNAME.getValue(), middlenameTxt.getText())) {
             valid = false;
             setInvalid(middlenameTxt);
-        }
-        else {
+        } else {
             setValid(middlenameTxt);
         }
-        if (!Pattern.matches("[0-9|a-z|A-Z ]{0,50}", street1Txt.getText())) {
+        if (!Pattern.matches(UIRegex.STREET.getValue(), street1Txt.getText())) {
             valid = false;
             setInvalid(street1Txt);
         }
         else {
             setValid(street1Txt);
         }
-        if (!Pattern.matches("[0-9|a-z|A-Z ]{0,50}", street2Txt.getText())) {
+        if (!Pattern.matches(UIRegex.STREET.getValue(), street2Txt.getText())) {
             valid = false;
             setInvalid(street2Txt);
-        }
-        else {
+        } else {
             setValid(street2Txt);
         }
-        if (!Pattern.matches("[a-z|A-Z ]{0,50}", suburbTxt.getText())) {
+        if (!Pattern.matches(UIRegex.SUBURB.getValue(), suburbTxt.getText())) {
             valid = false;
             setInvalid(suburbTxt);
         }
@@ -237,7 +247,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
         // If all the fields are entered correctly
         if (valid) {
             target.setStaffID(Integer.parseInt(staffId.getText()));
-            target.setFirstName(firstnameUpdateTxt.getText());
+            target.setFirstName(firstnameTxt.getText());
             target.setLastName(lastnameTxt.getText());
             List<String> middlenames = Arrays.asList(middlenameTxt.getText()
                     .split(" "));

@@ -71,6 +71,13 @@ public class GUIPatientUpdateRequirements extends UndoableController{
     @FXML
     private GridPane patientRequirementsPane;
 
+    Database database = Database.getDatabase();
+
+    @FXML
+    private void redo() {
+        statesHistoryScreen.redo();
+    }
+
     private Patient target;
 
     private UserControl userControl;
@@ -109,11 +116,11 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * @param nhi of the current patient being viewed
      */
     private void loadProfile(String nhi) {
-        try {
-            Patient patient = Database.getPatientByNhi(nhi);
+        Patient patient = database.getPatientByNhi(nhi);
+        if (patient != null) {
             target = patient;
             populateForm(patient);
-        } catch (InvalidObjectException e) {
+        } else {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
         }
         controls = new ArrayList<Control>() {{
@@ -313,7 +320,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * waiting list.
      */
     private void createOrganRequests() {
-        OrganWaitlist waitlist = Database.getWaitingList();
+        OrganWaitlist waitlist = database.getWaitingList();
         Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();
         while (iter.hasNext()) {
             OrganWaitlist.OrganRequest next = iter.next();

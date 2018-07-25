@@ -16,6 +16,7 @@ import model.Patient;
 import model.User;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,11 +29,9 @@ import utility.Searcher;
 
 public class SearcherTest {
 
-	private static Patient d1;
-	private static Patient d2;
-	private static Patient d3;
-	private static Patient d4;
 	private static Searcher searcher;
+	private static Database database;
+
 
 
     private Map<FilterOption, String> filter = new HashMap<>();
@@ -42,25 +41,25 @@ public class SearcherTest {
      */
     @BeforeClass
     public static void setUp() {
-        Database.resetDatabase();
-        userActions.setLevel(Level.ALL);
-
-        // Given patients in a db
-        d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
-        d2 = new Patient("def1234", "Patik", new ArrayList<String>(), "Laffey", LocalDate.now());
-        d3 = new Patient("ghi1234", "George", new ArrayList<String>(), "Romera", LocalDate.now());
-        d4 = new Patient("jkl1234", "George", new ArrayList<String>(), "Bobington", LocalDate.now());
-        Database.addPatient(d4);
-        Database.addPatient(d3);
-        Database.addPatient(d2);
-        Database.addPatient(d1);
+    	database = Database.getDatabase();
+        userActions.setLevel(Level.OFF);
 
         searcher = Searcher.getSearcher();
+    }
 
-        searcher.clearIndex();
-
-        // Given an index
-        searcher.createFullIndex();
+    @Before
+    public void beforeTest() {
+        // Given patients in a db
+        Patient d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
+        Patient d2 = new Patient("def1234", "Patik", new ArrayList<String>(), "Laffey", LocalDate.now());
+        Patient d3 = new Patient("ghi1234", "George", new ArrayList<String>(), "Romera", LocalDate.now());
+        Patient d4 = new Patient("jkl1234", "George", new ArrayList<String>(), "Bobington", LocalDate.now());
+        database.update(d4);
+        database.update(d3);
+        database.update(d2);
+        database.update(d1);
+        refreshDatabase();
+        refreshIndex();
     }
 
 	/**
@@ -69,33 +68,24 @@ public class SearcherTest {
 	@Test
 	public void testEqualSearchOrderingAfterNameUpdate() {
 
-	    Database.resetDatabase();
-
-        d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
-        d2 = new Patient("def1234", "Patik", new ArrayList<String>(), "Laffey", LocalDate.now());
-        d3 = new Patient("ghi1234", "George", new ArrayList<String>(), "Romera", LocalDate.now());
-        d4 = new Patient("jkl1234", "George", new ArrayList<String>(), "Bobington", LocalDate.now());
-
-        Database.addPatient(d4);
-        Database.addPatient(d3);
-        Database.addPatient(d2);
-        Database.addPatient(d1);
-
 		// Change last name of George Romero to come before George Bobington
-		d3.setLastName("Addington");
+		database.getPatientByNhi("GHI1234").setLastName("Addington");
+
+		refreshIndex();
 
 		// For a name search of George
     	List<User> results = searcher.search("George", new UserTypes[] {UserTypes.PATIENT}, 30, null);
 
     	// Get indices of the two Georges
-    	int d3index = results.indexOf(d3);
-    	int d4index = results.indexOf(d4);
+    	int d3index = results.indexOf(database.getPatientByNhi("GHI1234"));
+    	int d4index = results.indexOf(database.getPatientByNhi("JKL1234"));
 
     	// Ensure both Georges are in the results
     	assertTrue(d3index != -1);
     	assertTrue(d4index != -1);
 
     	// Ensure George Addington comes before George Bobington
+
     	assertTrue(d4index > d3index);
 
 	}
@@ -105,13 +95,16 @@ public class SearcherTest {
      */
     @Test
     public void testEqualSearchOrdering(){
+    	beforeTest();
+
+    	refreshIndex();
 
     	// For a name search of George
     	List<User> results = searcher.search("George", new UserTypes[] {UserTypes.PATIENT}, 30, null);
 
     	// Get indices of the two Georges
-    	int d3index = results.indexOf(d3);
-    	int d4index = results.indexOf(d4);
+    	int d3index = results.indexOf(database.getPatientByNhi("GHI1234"));
+    	int d4index = results.indexOf(database.getPatientByNhi("JKL1234"));
 
     	// Ensure both Georges are in the results
     	assertTrue(d3index != -1);
@@ -126,10 +119,8 @@ public class SearcherTest {
      */
     @Test
     public void testNumberOfResults(){
-
-    	Database.resetDatabase();
     	searcher.clearIndex();
-    	
+
     	// Create more than 36 patients
     	String[] firstNames = {"A", "B", "C", "D", "E", "F"};
     	String[] lastNames = {"Z", "Y", "X", "W", "V", "U"};
@@ -142,21 +133,21 @@ public class SearcherTest {
     	int count = 0;
     	for (String lName : lastNames) {
     		for (String fName : firstNames) {
-    			Database.addPatient(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
+    			database.update((new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.now())));
     			count += 1;
     		}
     	}
     	searcher.createFullIndex();
-    	
+
     	// For a number of patients more than 30
-    	assertTrue(Database.getPatients().size() > 30);
+    	assertTrue(database.getPatients().size() > 30);
 
         // Search to match all 36 added patients.
         List<User> results = searcher.search("A B C D E F Z Y X W V U", new UserTypes[] {UserTypes.PATIENT}, 30, null);
         for (User result: results) {
         	System.out.println(result);
         }
-        
+
         // The returned result should be exactly 30
         assertEquals(30, results.size());
     }
@@ -179,13 +170,13 @@ public class SearcherTest {
     	int count = 0;
     	for (String lName : lastNames) {
     		for (String fName : firstNames) {
-    			Database.addPatient(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.of(1990, 2, 3)));
+    			database.update(new Patient(nhi[count], fName, new ArrayList<String>(), lName, LocalDate.now()));
     			count += 1;
     		}
     	}
 
     	// For a number of patients more than 30
-    	assertTrue(Database.getPatients().size() > 30);
+    	assertTrue(database.getPatients().size() > 30);
 
         // Blank search to return maximum number of results. EG every patient.
         List<User> results = searcher.search("", new UserTypes[] {UserTypes.PATIENT}, 30, null);
@@ -196,39 +187,24 @@ public class SearcherTest {
 
     /**
      * Tests a simple name search case.
-     * @throws IOException -
      */
     @Test
-    public void testSearchByName() throws IOException {
-    	//Bug with setup() means it has to be copied here or wont work
-        Database.resetDatabase();
+    public void testSearchByName() {
+    	beforeTest();
 
-        // Given patients in a db
-        d1 = new Patient("abc1234", "Pat", null, "Laff", LocalDate.now());
-        d2 = new Patient("def1234", "Patik", null, "Laffey", LocalDate.now());
-        d3 = new Patient("ghi1234", "George", null, "Romera", LocalDate.now());
-        d4 = new Patient("jkl1234", "George", null, "Bobington", LocalDate.now());
-        Database.addPatient(d4);
-        Database.addPatient(d3);
-        Database.addPatient(d2);
-        Database.addPatient(d1);
-
-        searcher.clearIndex();
-
-        // Given an index
-        searcher.createFullIndex();
+    	refreshIndex();
 
         // When index searched for a single specific patient
         List<User> results = searcher.search("Pat Bobinton", new UserTypes[] {UserTypes.PATIENT}, 30, null);
 
         // Should contain Pat Laff
-        assertTrue(results.contains(Database.getPatientByNhi("abc1234")));
+        assertTrue(results.contains(database.getPatientByNhi("ABC1234")));
         // Should contain Patik Laffey
-        assertTrue(results.contains(Database.getPatientByNhi("def1234")));
+        assertTrue(results.contains(database.getPatientByNhi("def1234")));
         // Shouldn't contain George Romera
-        assertFalse(results.contains(Database.getPatientByNhi("ghi1234")));
+        assertFalse(results.contains(database.getPatientByNhi("ghi1234")));
         // Should contain George Bobington
-        assertTrue(results.contains(Database.getPatientByNhi("jkl1234")));
+        assertTrue(results.contains(database.getPatientByNhi("jkl1234")));
     }
 
 
@@ -236,48 +212,33 @@ public class SearcherTest {
      * Tests a name search for after a patient's name has been updated.
      */
     @Test
-    public void testSearchAfterNameUpdate() throws IOException {
-        Database.resetDatabase();
-        d1 = new Patient("abc1234", "Pat", null, "Lafey", LocalDate.now());
-        Database.addPatient(d1);
+    public void testSearchAfterNameUpdate() {
+
         // When first name of patient changed
-        Database.getPatientByNhi("abc1234").setFirstName("Andrew");
+        database.getPatientByNhi("ABC1234").setFirstName("Andrew");
 
         // Then searching by new first name returns correct results
         List<User> results = searcher.search("Ande Lafey", new UserTypes[] {UserTypes.PATIENT}, 30, null);
 
-        assertTrue(results.contains(Database.getPatientByNhi("abc1234")));
+        assertTrue(results.contains(database.getPatientByNhi("ABC1234")));
     }
 
     /**
      * Tests a name search for after a patient's NHI has been updated.
-     * @throws IOException -
      */
     @Test
-    public void testSearchAfterNhiUpdate() throws IOException {
+    public void testSearchAfterNhiUpdate() {
     	//Bug with setup() means it has to be copied here or wont work
-        Database.resetDatabase();
-
-        // Given patients in a db
-        d1 = new Patient("abc1234", "Pat", null, "Laff", LocalDate.now());
-        d2 = new Patient("def1234", "Patik", null, "Laffey", LocalDate.now());
-        d3 = new Patient("ghi1234", "George", null, "Romera", LocalDate.now());
-        d4 = new Patient("jkl1234", "George", null, "Bobington", LocalDate.now());
-        Database.addPatient(d4);
-        Database.addPatient(d3);
-        Database.addPatient(d2);
-        Database.addPatient(d1);
-
         searcher.clearIndex();
 
         // Given an index
-        searcher.createFullIndex();
-    	String name = Database.getPatientByNhi("def1234").getFirstName();
-    	Database.getPatientByNhi("def1234").setNhiNumber("def5678");
 
+    	String name = database.getPatientByNhi("def1234").getFirstName();
+    	database.getPatientByNhi("def1234").setNhiNumber("def5678");
+    	searcher.createFullIndex();
     	List<User> results = searcher.search(name, new UserTypes[] {UserTypes.PATIENT}, 30, null);
 
-    	assertTrue(results.contains(Database.getPatientByNhi("def5678")));
+    	assertTrue(results.contains(database.getPatientByNhi("def5678")));
     }
 
     /**
@@ -285,22 +246,18 @@ public class SearcherTest {
      */
     @Test
     public void testSearchUnusualNameResults() {
-        Database.resetDatabase();
 
         // Given patients in a db
-        d1 = new Patient("abc9876", "Joe", null, "Plaffer", LocalDate.now());
-        d2 = new Patient("def9876", "Johnothan", null, "zzne", LocalDate.now());
-        d3 = new Patient("ghi9876", "John", null, "Romera", LocalDate.now());
-        d4 = new Patient("jkl9876", "Samantha", null, "Fon", LocalDate.now());
-        Database.addPatient(d4);
-        Database.addPatient(d3);
-        Database.addPatient(d2);
-        Database.addPatient(d1);
-
-        searcher.clearIndex();
-
-        // Given an index
-        searcher.createFullIndex();
+    	Patient d1 = new Patient("abc9876", "Joe", new ArrayList<String>(), "Plaffer", LocalDate.now());
+    	Patient d2 = new Patient("def9876", "Johnothan", new ArrayList<String>(), "zzne", LocalDate.now());
+    	Patient d3 = new Patient("ghi9876", "John", new ArrayList<String>(), "Romera", LocalDate.now());
+    	Patient d4 = new Patient("jkl9876", "Samantha", new ArrayList<String>(), "Fon", LocalDate.now());
+        database.update(d4);
+        database.update(d3);
+        database.update(d2);
+        database.update(d1);
+        refreshDatabase();
+        refreshIndex();
 
         // When searching patients
     	List<User> results = searcher.search("Jone", new UserTypes[] {UserTypes.PATIENT}, 30, null);
@@ -318,31 +275,30 @@ public class SearcherTest {
     	assertTrue(results.contains(d4));
     }
 
+    private void refreshIndex() {
+        searcher.clearIndex();
+        searcher.createFullIndex();
+    }
+
+    private void refreshDatabase() {
+    	database.resetLocalDatabase();
+    	database.loadAll();
+    }
+
 
     /**
      * Check region filter works as intended
-     * @throws InvalidObjectException - patient not in db
      */
     @Test
-    public void testFilterRegionWithNameSearch() throws InvalidObjectException {
-        Database.resetDatabase();
-        searcher.clearIndex();
-        filter.clear();
+    public void testFilterRegionWithNameSearch(){
+        addPatientsToDB();
+
+        Patient patient = database.getPatientByNhi("abc1230");
+        patient.setRegion(Region.CANTERBURY);
+        database.update(patient);
 
         //filter region
         filter.put(FilterOption.REGION,  Region.CANTERBURY.toString());
-
-        //setup with region of null
-        d1 = new Patient("abc1230", "Bob", null, "Bobby", LocalDate.of(1997, 8, 19));
-        d2 = new Patient("abc1231", "aoc", null, "Bobby", LocalDate.of(2001, 9, 20));
-        d3 = new Patient("abc1232", "aoc", null, "Bobby", LocalDate.of(2001, 9, 20));
-        d1.setRegion(Region.CANTERBURY);
-
-        Database.addPatient(d1);
-        Database.addPatient(d2);
-        Database.addPatient(d3);
-
-        searcher.createFullIndex();
 
         //search with no name
         List<User> results = Searcher.getSearcher().search("",new UserTypes[] {UserTypes.PATIENT}, 30, filter);
@@ -351,14 +307,13 @@ public class SearcherTest {
         Assert.assertEquals(1, results.size());
 
         //check that all have correct region
-        for (User patient : results) {
-            Assert.assertEquals(Region.CANTERBURY, ((Patient)patient).getRegion());
+        for (User p : results) {
+            Assert.assertEquals(Region.CANTERBURY, (((Patient)p).getRegion()));
         }
 
-        //update region
-        Database.getPatientByNhi("abc1231").setRegion(Region.CANTERBURY);
-        
-        
+        Patient patient2 = database.getPatientByNhi("abc1231");
+        patient2.setRegion(Region.CANTERBURY);
+        database.update(patient2);
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 
         //2 results with region CANTERBURY
@@ -366,41 +321,43 @@ public class SearcherTest {
 
         hasRegions(results);
 
-        results = Searcher.getSearcher().search("aoc", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
+        results = Searcher.getSearcher().search("a", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 
         //1 results with region CANTERBURY and search
-        Assert.assertEquals(2, results.size());
+        Assert.assertEquals(1, results.size());
 
         hasRegions(results);
 
         //reset filter
         filter.replace(FilterOption.REGION,  filter.get(FilterOption.REGION), GlobalEnums.NONE_ID);
-        results = Searcher.getSearcher().search("aoc", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 
-        Assert.assertEquals(3, results.size());
+        Assert.assertEquals(30, results.size());
 
     }
 
 
     /**
      * Check organ filtering
-     * @throws InvalidObjectException - patient not in db
      */
     @Test
-    public void testFilterOrganWithNameSearch() throws InvalidObjectException {
+    public void testFilterOrganWithNameSearch() {
         addPatientsToDB();
-
         //filter region
         filter.put(FilterOption.DONATIONS, Organ.BONEMARROW.toString());
 
-        Database.getPatientByNhi("abc1230").setDonations(new ArrayList<Organ>(){{add(Organ.BONEMARROW);}});
+        Patient p = database.getPatientByNhi("abc1230");
+        p.setDonations(new ArrayList<Organ>(){{add(Organ.BONEMARROW);}});
+        database.update(p);
+
         List<User>  results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(1, results.size());
-
         hasOrgans(results, Organ.BONEMARROW);
 
         //d2 - bone marrow
-        Database.getPatientByNhi("abc1231").setDonations(new ArrayList<Organ>(){{add(Organ.BONEMARROW);}});
+        Patient p2 = database.getPatientByNhi("abc1231");
+        p2.setDonations(new ArrayList<Organ>(){{add(Organ.BONEMARROW);}});
+        database.update(p2);
 
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(2, results.size());
@@ -408,7 +365,10 @@ public class SearcherTest {
         hasOrgans(results, Organ.BONEMARROW);
 
         //d3 - kidney
-        Database.getPatientByNhi("abc1232").setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        Patient p3 = database.getPatientByNhi("abc1232");
+        p3.setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        database.update(p3);
+
 
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(2, results.size());
@@ -416,7 +376,9 @@ public class SearcherTest {
         hasOrgans(results, Organ.BONEMARROW);
 
         //d3 - heart
-        Database.getPatientByNhi("abc1232").setDonations(new ArrayList<Organ>(){{add(Organ.HEART);}});
+        Patient p4 = database.getPatientByNhi("abc1232");
+        p4.setDonations(new ArrayList<Organ>(){{add(Organ.HEART);}});
+        database.update(p4);
 
         // update filter
         filter.put(FilterOption.DONATIONS, Organ.HEART.toString());
@@ -429,33 +391,41 @@ public class SearcherTest {
 
     /**
      * Check birth gender filtering
-     @throws InvalidObjectException - patient not in db
      */
     @Test
-    public void testFilterBirthGender() throws InvalidObjectException {
+    public void testFilterBirthGender() {
         addPatientsToDB();
 
         //filter region
         filter.put(FilterOption.BIRTHGENDER, BirthGender.FEMALE.toString());
 
-        //d1 - only one female
-        Database.getPatientByNhi("abc1230").setBirthGender(BirthGender.FEMALE);
+        //d1 - female
+        Patient p = database.getPatientByNhi("abc1230");
+        p.setBirthGender(BirthGender.FEMALE);
+        database.update(p);
+
         List<User>  results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(1, results.size());
         hasBirthGender(results, BirthGender.FEMALE);
+        Assert.assertEquals(30, results.size());
 
-        //d2 - 2 females
-        Database.getPatientByNhi("abc1231").setBirthGender(BirthGender.FEMALE);
-        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(2, results.size());
-        hasBirthGender(results, BirthGender.FEMALE);
+        //d2 - add 1 male
+        filter.put(FilterOption.BIRTHGENDER, BirthGender.MALE.toString());
+        Patient p1 = database.getPatientByNhi("abc1231");
+        p1.setBirthGender(BirthGender.MALE);
+        database.update(p);
 
-        //d2 - 1 male
-        filter.replace(FilterOption.BIRTHGENDER, filter.get(FilterOption.BIRTHGENDER), BirthGender.MALE.toString());
-        Database.getPatientByNhi("abc1232").setBirthGender(BirthGender.MALE);
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(1, results.size());
         hasBirthGender(results, BirthGender.MALE);
+        Assert.assertEquals(1, results.size());
+
+        //d2 - 2 male
+        Patient p3 = database.getPatientByNhi("abc1232");
+        p3.setBirthGender(BirthGender.MALE);
+        database.update(p3);
+
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
+        hasBirthGender(results, BirthGender.MALE);
+        Assert.assertEquals(2, results.size());
     }
 
 
@@ -464,14 +434,15 @@ public class SearcherTest {
      */
     @Test
     public void testFilterAge(){
+        database.resetLocalDatabase();
         addPatientsToDB();
 
         //from 10 -100
         filter.put(FilterOption.AGELOWER, "10");
         filter.put(FilterOption.AGEUPPER, "100");
         List<User> results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(4, results.size());
         hasAge(results, 10, 100);
+        Assert.assertEquals(8, results.size());
 
         //from 11 - 100
         filter.put(FilterOption.AGELOWER, "11");
@@ -502,60 +473,81 @@ public class SearcherTest {
 
     /**
      * Check the status filtering
-     * @throws InvalidObjectException -
      */
     @Test
-    public void testIsDonorReceiver() throws InvalidObjectException {
+    public void testIsDonorReceiver() {
         addPatientsToDB();
-        filter.put(FilterOption.DONOR, "true");
+        filter.put(FilterOption.RECIEVER, "true");
 
         List<User>  results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(0, results.size());
-        areDonors(results);
+        areRecievers(results);
 
-        //one donor
-        Database.getPatientByNhi("abc1230").setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        //1 donor
+        filter.put(FilterOption.DONOR, "true");
+
+        Patient p = database.getPatientByNhi("abc1230");
+        p.setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        database.update(p);
+
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(1, results.size());
         areDonors(results);
 
-        //one reciever
+        //two reciever
         filter.clear();
         filter.put(FilterOption.RECIEVER, "true");
-        Database.getPatientByNhi("abc1231").setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        Patient p1 = database.getPatientByNhi("abc1231");
+        p1.setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        database.update(p1);
+
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(1, results.size());
+        Assert.assertEquals(2, results.size());
         areRecievers(results);
 
 
         //both donor and reciever
         filter.put(FilterOption.DONOR, "true");
-        Database.getPatientByNhi("abc1230").setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        Patient p2 = database.getPatientByNhi("abc1230");
+        p2.setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        database.update(p2);
+
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(1, results.size());
+        Assert.assertEquals(2, results.size());
         areDonorsAndRecievers(results);
     }
 
 
     @Test
-    public void testAllFilterCombo() throws InvalidObjectException {
+    public void testAllFilterCombo() {
         addPatientsToDB();
-
         //set regions
-        Database.getPatientByNhi("abc1230").setRegion(Region.CANTERBURY);
-        Database.getPatientByNhi("abc1231").setRegion(Region.CANTERBURY);
-        Database.getPatientByNhi("abc1232").setRegion(Region.AUCKLAND);
-        Database.getPatientByNhi("abc1233").setRegion(Region.MANAWATU);
+        Patient p = database.getPatientByNhi("abc1230");
+        p.setRegion(Region.CANTERBURY);
+
+        Patient p1 = database.getPatientByNhi("abc1231");
+        p1.setRegion(Region.CANTERBURY);
+
+        Patient p2 = database.getPatientByNhi("abc1232");
+        p2.setRegion(Region.AUCKLAND);
+
+        Patient p3 = database.getPatientByNhi("abc1233");
+        p3.setRegion(Region.MANAWATU);
 
         //set donations, set requireds
-        Database.getPatientByNhi("abc1230").setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
-        Database.getPatientByNhi("abc1231").setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.LIVER);}});
+        p.setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        p1.setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.LIVER);}});
 
         //set genders
-        Database.getPatientByNhi("abc1230").setBirthGender(BirthGender.FEMALE);
-        Database.getPatientByNhi("abc1231").setBirthGender(BirthGender.MALE);
-        Database.getPatientByNhi("abc1232").setBirthGender(BirthGender.MALE);
-        Database.getPatientByNhi("abc1233").setBirthGender(BirthGender.FEMALE);
+        p.setBirthGender(BirthGender.FEMALE);
+        p1.setBirthGender(BirthGender.MALE);
+        p2.setBirthGender(BirthGender.MALE);
+        p3.setBirthGender(BirthGender.FEMALE);
+
+        database.update(p);
+        database.update(p1);
+        database.update(p2);
+        database.update(p3);
 
         filter.put(FilterOption.REGION, Region.CANTERBURY.getValue());
         filter.put(FilterOption.DONATIONS, Organ.KIDNEY.toString());
@@ -571,21 +563,21 @@ public class SearcherTest {
      */
     private void addPatientsToDB() {
     	searcher.clearIndex();
-        Database.resetDatabase();
         filter.clear();
-        d1 = new Patient("abc1230", "a", null, "Bobby", LocalDate.of(LocalDate.now().getYear() - 10,
+        Patient d1 = new Patient("abc1230", "a", null, "Bobby", LocalDate.of(LocalDate.now().getYear() - 10,
                 1, 1));
-        d2 = new Patient("abc1231", "b", null, "Bobby", LocalDate.of(LocalDate.now().getYear() - 100,
+        Patient d2 = new Patient("abc1231", "b", null, "Bobby", LocalDate.of(LocalDate.now().getYear() - 100,
                 1, 1));
-        d3 = new Patient("abc1232", "c", null, "Bobby", LocalDate.of(LocalDate.now().getYear() - 60,
+        Patient d3 = new Patient("abc1232", "c", null, "Bobby", LocalDate.of(LocalDate.now().getYear() - 60,
                 1, 1));
-        d4 = new Patient("abc1233", "d", null, "Bobby", LocalDate.of(LocalDate.now().getYear() - 19,
+        Patient d4 = new Patient("abc1233", "d", null, "Bobby", LocalDate.of(LocalDate.now().getYear() - 19,
                 1, 1));
 
-        Database.addPatient(d1);
-        Database.addPatient(d2);
-        Database.addPatient(d3);
-        Database.addPatient(d4);
+        database.update(d1);
+        database.update(d2);
+        database.update(d3);
+        database.update(d4);
+        refreshDatabase();
         searcher.createFullIndex();
     }
 

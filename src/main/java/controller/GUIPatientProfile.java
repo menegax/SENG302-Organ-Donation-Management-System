@@ -150,8 +150,8 @@ public class GUIPatientProfile {
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
-
-
+    Database database = Database.getDatabase();
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
@@ -162,7 +162,9 @@ public class GUIPatientProfile {
         userControl = new UserControl();
         Object user = null;
         if (userControl.getLoggedInUser() instanceof Patient) {
-            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
+            if (database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber())
+                    .getRequiredOrgans()
+                    .size() == 0) {
                 receivingList.setDisable(true);
                 receivingList.setVisible(false);
                 receivingTitle.setDisable(true);
@@ -210,7 +212,7 @@ public class GUIPatientProfile {
      * @exception InvalidObjectException if the nhi of the patient does not exist in the database
      */
     private void loadProfile(String nhi) throws InvalidObjectException {
-        Patient patient = Database.getPatientByNhi(nhi);
+        Patient patient = database.getPatientByNhi(nhi);
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
         firstNameValue.setText(patient.getFirstName());
@@ -325,7 +327,7 @@ public class GUIPatientProfile {
     public void deleteProfile() {
         Patient patient = (Patient) userControl.getTargetUser();
         userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", patient.getNhiNumber()});
-        Database.deletePatient( patient );
+        database.delete( patient );
         ((Stage) patientProfilePane.getScene().getWindow()).close();
     }
 

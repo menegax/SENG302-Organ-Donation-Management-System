@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
 
 public class PatientTest {
 
+    private static Database database = Database.getDatabase();
     private static Patient testPatient; //Patient obj not within the database
 
     private static Patient testPatient1; //Patient obj not within the database
@@ -35,18 +36,18 @@ public class PatientTest {
 
         userActions.setLevel(Level.OFF);
 
-        testPatient = new Patient("ABC1234", "James", null, "Wallace",
+        testPatient = new Patient("ABC1234", "James", new ArrayList<String>(), "Wallace",
                 LocalDate.of(1970, 2, 12));
 
-        Database.addPatient(new Patient("XYZ9876", "Joe", new ArrayList<String>() {{
+        database.add(new Patient("XYZ9876", "Joe", new ArrayList<String>() {{
             add("Jane");
         }},
                 "Bloggs", LocalDate.of(1994, 12, 12)));
 
-        Database.addPatient(new Patient("DEF4567", "Bob", null, "Bobby",
+        database.add(new Patient("DEF4567", "Bob", new ArrayList<String>(), "Bobby",
                 LocalDate.of(1994, 12, 12)));
 
-        testPatient1 = new Patient("JJJ1234", "Rex", null, "Petsberg",
+        testPatient1 = new Patient("JJJ1234", "Rex", new ArrayList<String>(), "Petsberg",
                 LocalDate.of(1977, 6, 16));
     }
 

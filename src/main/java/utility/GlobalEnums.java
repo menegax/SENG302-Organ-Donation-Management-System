@@ -1,9 +1,77 @@
 package utility;
 
+import java.util.Arrays;
+
 /**
  * Enumerations for the entire app to use
  */
 public class GlobalEnums {
+
+//	public enum dbFields {
+//		FNAME("FName"), MNAMES("MName"), LNAME("LName"), STREET1("Street1"), STREET2("Street2"),
+//		SUBURB("Suburb"), REGION("Region"), ZIP("Zip"), MODIFIED("Modified"), BIRTHDATE("Birth"),
+//        CREATED("Created"), DEATHDATE("Death"), BIRTHGENDER("BirthGender"), PREFGENDER("PrefGender"),
+//        PREFNAME("PrefName"), HEIGHT("Height"), WEIGHT("Weight"), BLOODGROUP("BloodType"),
+//        DONATINGORGANS("DonatingOrgans"), RECEIVINGORGANS("ReceivingOrgans"), HOMEPHONE("HomePhone"),
+//        WORKPHONE("WorkPhone"), MOBILEPHONE("MobilePhone"), EMAIL("Email"), ECNAME("ECName"),
+//        ECRELATIONSHIP("ECRelationship"), ECHOMEPHONE("ECHomePhone"), ECWORKPHONE("ECWorkPhone"),
+//        ECMOBILEPHONE("ECMobilePhone"), ECEMAIL("ECEmail"), TIME("Time"), LEVEL("Level"),
+//        MESSAGE("Message"), ACTION("Action"), NAME("Name"), DATEDIAGNOSED("DateDiagnosed"),
+//        STATE("State"), SUMMARY("Summary"), DESCRIPTION("Description"), PROCEDUREDATE("ProDate"),
+//        AFFECTEDORGANS("AffectedOrgans"), WAITLISTORGAN("Organ");
+//
+//        private String value;
+//
+//        dbFields(final String value) {
+//            this.value = value;
+//        }
+//
+//
+//        public String getValue() {
+//            return value != null ? value : "Not set";
+//        }
+//
+//
+//        @Override
+//        public String toString() {
+//            return this.getValue() != null ? this.getValue() : "Not set";
+//        }
+//
+//
+//        public static dbFields getEnumFromString(String value) {
+//            try {
+//                return dbFields.valueOf(value.toUpperCase());
+//            }
+//            catch (IllegalArgumentException e) {
+//                return null;
+//            }
+//        }
+//	}
+
+	public enum UIRegex {
+
+		FNAME("[a-z|A-Z|-]{1,35}"),              MNAME("[a-z|A-Z| |-]{0,70}"),     LNAME("[a-z|A-Z|-]{1,35}"),
+		STREET("[a-z|A-Z| |-|,]{0,100}"),        SUBURB("[a-z|A-Z |-]{0,100}"),    STAFFID("[0-9]{1,7}"),
+		NHI("[A-Z]{3}[0-9]{4}"),                 HOMEPHONE("0[0-9]{8}"),           WORKPHONE("0[0-9]{8}"),
+		MOBILEPHONE("(\\+[0-9]{11}|0[0-9]{9})"), EMAIL("([0-9|a-z|A-Z|.|_|-]+[@][a-z]+([.][a-z])+){0,254}"),
+		RELATIONSHIP("[a-z|-|A-Z]{0,30}"),        DISEASENAME("[a-z|-|A-Z]{1,50}"), ZIP("[0-9]{4}"),
+		WEIGHT("[0-9]+([.][0-9])?"),             HEIGHT("[0-9]+([.][0-9])?"),      USERNAME("[A-Z|0-9|_|-]{0,30}");
+
+		private String value;
+
+		UIRegex(final String value) {
+			this.value = value;
+		}
+
+        public String getValue() {
+            return value != null ? value : "Not set";
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue() != null ? this.getValue() : "Not set";
+        }
+	}
 
     public final static String NONE_ID = "None";
 
@@ -46,7 +114,7 @@ public class GlobalEnums {
 
     public enum UserTypes {
     	PATIENT("PATIENT"), CLINICIAN("CLINICIAN"), ADMIN("ADMIN");
-    	
+
         private String value;
 
         UserTypes(final String value) { this.value = value; }
@@ -54,7 +122,7 @@ public class GlobalEnums {
         public String getValue() {
             return value != null ? value : "Not set";
         }
-        
+
         public static UserTypes getEnumFromString(String value) {
             try {
                 return UserTypes.valueOf(value.toUpperCase());
@@ -64,7 +132,7 @@ public class GlobalEnums {
             }
         }
     }
-    
+
     /**
      * Enumerates all options for birth gender
      */
@@ -205,13 +273,9 @@ public class GlobalEnums {
 
 
         public static BloodGroup getEnumFromString(String value) {
-            try {
-                return BloodGroup.valueOf(value.toUpperCase()
-                        .replaceAll("\\s+", "_"));
-            }
-            catch (IllegalArgumentException e) {
-                return null;
-            }
+            return Arrays.stream(BloodGroup.values())
+                    .filter(v -> v.value.equals(value))
+                    .findFirst().orElseThrow(() -> new IllegalArgumentException(""));
         }
     }
 

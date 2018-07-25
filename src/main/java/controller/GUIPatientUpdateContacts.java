@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
+
+import utility.GlobalEnums.UIRegex;
 
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -73,6 +76,21 @@ public class GUIPatientUpdateContacts extends UndoableController {
 
     private UserControl userControl;
 
+    private StatesHistoryScreen statesHistoryScreen;
+
+    Database database = Database.getDatabase();
+
+    @FXML
+    private void redo() {
+        statesHistoryScreen.redo();
+    }
+
+
+    @FXML
+    private void undo() {
+        statesHistoryScreen.undo();
+    }
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
@@ -82,6 +100,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
     public void saveContactDetails() {
         boolean valid = setPatientContactDetails();
         if (valid) {
+            database.updateDatabase();
             screenControl.setIsSaved(false);
             userActions.log(INFO, "Successfully saved contact details", "Attempted to set invalid contact details");
         } else {
@@ -179,26 +198,25 @@ public class GUIPatientUpdateContacts extends UndoableController {
      * @param nhi The nhi of the patient to load
      */
     private void loadProfile(String nhi) {
-        try {
-            target = Database.getPatientByNhi(nhi);
+    	Patient patient = database.getPatientByNhi(nhi);
+    	if (patient != null) {
+            target = patient;
+        } else {
+        target = database.getPatientByNhi(nhi);
 
-            ArrayList<Control> controls = new ArrayList<Control>() {{
-                add(homePhoneField);
-                add(mobilePhoneField);
-                add(workPhoneField);
-                add(emailAddressField);
-                add(contactNameField);
-                add(contactRelationshipField);
-                add(contactHomePhoneField);
-                add(contactMobilePhoneField);
-                add(contactWorkPhoneField);
-                add(contactEmailAddressField);
-            }};
-            statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATECONTACTS);
-        }
-        catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
-        }
+		ArrayList<Control> controls = new ArrayList<Control>() {{
+		    add(homePhoneField);
+		    add(mobilePhoneField);
+		    add(workPhoneField);
+		    add(emailAddressField);
+		    add(contactNameField);
+		    add(contactRelationshipField);
+		    add(contactHomePhoneField);
+		    add(contactMobilePhoneField);
+		    add(contactWorkPhoneField);
+		    add(contactEmailAddressField);
+		}};
+		statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATECONTACTS);}
     }
 
 
@@ -208,7 +226,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
      */
     private boolean setPatientContactDetails() {
         boolean valid = true;
-        if (!(homePhoneField.getText().equals("")) && homePhoneField.getText().matches("[0-9]+")) {
+        if (Pattern.matches(UIRegex.HOMEPHONE.getValue(), homePhoneField.getText())) {
             target.setHomePhone(homePhoneField.getText());
             setValid(homePhoneField);
         } else if (homePhoneField.getText().equals("")) {
@@ -217,7 +235,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
         } else {
             valid = setInvalid(homePhoneField);
         }
-        if (!(mobilePhoneField.getText().equals("")) && mobilePhoneField.getText().matches("[0-9]+")) {
+        if (Pattern.matches(UIRegex.MOBILEPHONE.getValue(), mobilePhoneField.getText())) {
             target.setMobilePhone(mobilePhoneField.getText());
             setValid(mobilePhoneField);
         } else if (mobilePhoneField.getText().equals("")) {
@@ -226,7 +244,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
         } else {
             valid = setInvalid(mobilePhoneField);
         }
-        if (!(workPhoneField.getText().equals("")) && workPhoneField.getText().matches("[0-9]+")) {
+        if (Pattern.matches(UIRegex.WORKPHONE.getValue(), workPhoneField.getText())) {
             target.setWorkPhone(workPhoneField.getText());
             setValid(workPhoneField);
         } else if (workPhoneField.getText().equals("")) {
@@ -235,7 +253,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
         } else {
             valid = setInvalid(workPhoneField);
         }
-        if (emailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
+        if (Pattern.matches(UIRegex.EMAIL.getValue(), emailAddressField.getText())) {
             target.setEmailAddress(emailAddressField.getText());
             setValid(emailAddressField);
         } else if (emailAddressField.getText().equals("")) {
@@ -244,7 +262,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
         } else {
             valid = setInvalid(emailAddressField);
         }
-        if (contactRelationshipField.getText().matches("([A-Za-z]+[\\s]*)*")) {
+        if (Pattern.matches(UIRegex.RELATIONSHIP.getValue(), contactRelationshipField.getText())) {
             target.setContactRelationship(contactRelationshipField.getText());
             setValid(contactRelationshipField);
         } else if (contactRelationshipField.getText().equals("")) {
@@ -253,7 +271,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
         } else {
             valid = setInvalid(contactRelationshipField);
         }
-        if (contactNameField.getText().matches("([A-Za-z]+[.]*[-]*[\\s]*)*")) {
+        if (Pattern.matches(UIRegex.MNAME.getValue(), contactNameField.getText())) {
             target.setContactName(contactNameField.getText());
             setValid(contactNameField);
         } else if (contactNameField.getText().equals("")) {
@@ -262,7 +280,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
         } else {
             valid = setInvalid(contactNameField);
         }
-        if (!(contactHomePhoneField.getText().equals("")) && contactHomePhoneField.getText().matches("[0-9]+")) {
+        if (Pattern.matches(UIRegex.HOMEPHONE.getValue(), contactHomePhoneField.getText())) {
             target.setContactHomePhone(contactHomePhoneField.getText());
             setValid(contactHomePhoneField);
         } else if (contactHomePhoneField.getText().equals("")) {
@@ -271,7 +289,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
         } else {
             valid = setInvalid(contactHomePhoneField);
         }
-        if (!(contactMobilePhoneField.getText().equals("")) && contactMobilePhoneField.getText().matches("[0-9]+")) {
+        if (Pattern.matches(UIRegex.MOBILEPHONE.getValue(), contactMobilePhoneField.getText())) {
             target.setContactMobilePhone(contactMobilePhoneField.getText());
             setValid(contactMobilePhoneField);
         } else if (contactMobilePhoneField.getText().equals("")) {
@@ -280,7 +298,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
         } else {
             valid = setInvalid(contactMobilePhoneField);
         }
-        if (!(contactWorkPhoneField.getText().equals("")) && contactWorkPhoneField.getText().matches("[0-9]+")) {
+        if (Pattern.matches(UIRegex.WORKPHONE.getValue(), contactWorkPhoneField.getText())) {
             target.setContactWorkPhone(contactWorkPhoneField.getText());
             setValid(contactWorkPhoneField);
         } else if (contactWorkPhoneField.getText().equals("")) {
@@ -289,7 +307,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
         } else {
             valid = setInvalid(contactWorkPhoneField);
         }
-        if (contactEmailAddressField.getText().matches("[0-9a-zA-Z.]+[@][a-z]+[.][a-z][a-z|.]+")) {
+        if (Pattern.matches(UIRegex.EMAIL.getValue(), contactEmailAddressField.getText())) {
             target.setContactEmailAddress(contactEmailAddressField.getText());
             setValid(contactEmailAddressField);
         } else if (contactEmailAddressField.getText().equals("")) {

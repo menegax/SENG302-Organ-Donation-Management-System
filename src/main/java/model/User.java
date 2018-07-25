@@ -23,6 +23,8 @@ public abstract class User {
     @Parsed(field = "last_names")
     protected String lastName;
 
+    private boolean changed = true;
+
     protected Timestamp modified;
 
     public User(){}
@@ -104,10 +106,13 @@ public abstract class User {
     */
    public void userModified() {
        this.modified = new Timestamp(System.currentTimeMillis());
-       if (propertyChangeSupport != null) {
-           propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "User Modified", null, null));
-       }
+       changed = true;
+       propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "User Modified", null, null));
    }
+
+    public boolean getChanged() {
+        return changed;
+    }
 
     public UUID getUuid() {
         return uuid;

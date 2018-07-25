@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import utility.GlobalEnums;
-import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
 
@@ -20,6 +19,7 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import static utility.UserActionHistory.userActions;
 
@@ -183,7 +183,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
      */
     private boolean isValidUpdate() {
         boolean valid = true;
-        if(!diseaseNameTextField.getText().matches("[A-Z|a-z0-9.]{3,50}")) {
+        if(!Pattern.matches(GlobalEnums.UIRegex.DISEASENAME.getValue(), diseaseNameTextField.getText())) {
             valid = false;
             setInvalid(diseaseNameTextField);
         } else {
@@ -191,7 +191,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             diseaseNameTextField.setText(diseaseNameTextField.getText());
         }
         try {
-            if (target.isInvalidDiagnosisDate(diagnosisDate.getValue(), currentPatient)) {
+            if (target.isInvalidDiagnosisDate(diagnosisDate.getValue(), currentPatient.getBirth())) {
                 valid = false;
                 setInvalid(diagnosisDate);
             } else {
@@ -236,7 +236,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             }
         }
         try {
-            d.setDateDiagnosed(diagnosisDate.getValue(), currentPatient);
+            d.setDateDiagnosed(diagnosisDate.getValue(), currentPatient.getBirth());
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "The diagnosis date is not valid.", "Attempted to add an invalid diagnosis date");
         }
@@ -271,7 +271,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             GUIClinicianDiagnosis.setChanged(true);
             target.setDiseaseName(diseaseNameTextField.getText());
             try {
-                target.setDateDiagnosed(diagnosisDate.getValue(), currentPatient);
+                target.setDateDiagnosed(diagnosisDate.getValue(), currentPatient.getBirth());
             } catch (InvalidObjectException e) {
                 userActions.log(Level.SEVERE, "The date is not valid. This should never be called.");
             }

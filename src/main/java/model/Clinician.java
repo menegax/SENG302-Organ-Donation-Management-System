@@ -2,10 +2,14 @@ package model;
 
 import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
+import utility.GlobalEnums.Region;
 
+import java.sql.Time;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +25,7 @@ public class Clinician extends User {
     private String street1;
     private String street2;
     private String suburb;
-    private GlobalEnums.Region region;
+    private Region region;
 
     private List<ClinicianActionRecord> clinicianActionsList = new ArrayList<>();
 
@@ -61,6 +65,29 @@ public class Clinician extends User {
         this.suburb = suburb;
         this.region = region;
         super.modified = new Timestamp(System.currentTimeMillis());
+    }
+
+    /**
+     * Constructor for importing existing clinicians.
+     * @param staffID StaffID of the clinician.
+     * @param firstName First name of the clinician.
+     * @param middleNames Middle names of the clinicians.
+     * @param lastName Last name of the clinician.
+     * @param street1 Street 1 address of the clinician's workplace.
+     * @param street2 Street 2 address of the clinician's workplace.
+     * @param suburb Suburb of the clinician's workplace.
+     * @param region Region of the clinician's workplace.
+     * @param modified Timestamp of the last time the clinician was modified.
+     */
+    public Clinician(int staffID, String firstName, ArrayList<String> middleNames, String lastName, String street1,
+    		String street2, String suburb, Region region, Timestamp modified) {
+    	super(firstName, middleNames, lastName);
+        this.staffID = staffID;
+    	this.street1 = street1;
+    	this.street2 = street2;
+    	this.suburb = suburb;
+    	this.region = region;
+    	this.modified = modified;
     }
 
     public int getStaffID() {

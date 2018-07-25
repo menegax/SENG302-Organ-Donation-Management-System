@@ -61,6 +61,21 @@ public class GUIPatientUpdateDonations extends UndoableController {
     @FXML
     private GridPane patientDonationsAnchorPane;
 
+    Database database = Database.getDatabase();
+
+
+    @FXML
+    private void redo() {
+        statesHistoryScreen.redo();
+    }
+
+
+    @FXML
+    private void undo() {
+        statesHistoryScreen.undo();
+    }
+
+
     private Patient target;
 
     private UserControl userControl;
@@ -94,11 +109,11 @@ public class GUIPatientUpdateDonations extends UndoableController {
      * @param nhi patient NHI
      */
     private void loadProfile(String nhi) {
-        try {
-            Patient patient = Database.getPatientByNhi(nhi);
+        Patient patient = database.getPatientByNhi(nhi);
+        if (patient != null) {
             target = patient;
             populateForm(patient);
-        } catch (InvalidObjectException e) {
+        } else {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
         }
         controls = new ArrayList<Control>() {{

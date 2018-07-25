@@ -23,7 +23,7 @@ public class PatientActionRecord {
      * @param action - action completed/attempted by the patients
      * @param message - message to display in log
      */
-    PatientActionRecord(Timestamp timestamp, Level level, String action, String message){
+    public PatientActionRecord(Timestamp timestamp, Level level, String action, String message){
         this.timestamp = timestamp;
         this.level = level;
         this.action = action;

@@ -1,5 +1,6 @@
 package controller;
 
+import model.*;
 import service.APIHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -14,10 +15,6 @@ import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import model.Clinician;
-import model.DrugInteraction;
-import model.Medication;
-import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
 import service.TextWatcher;
@@ -73,6 +70,8 @@ public class GUIPatientMedications extends UndoableController {
     private JsonObject suggestions;
 
     private boolean itemSelected = false;
+
+    Database database = Database.getDatabase();
 
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
@@ -181,6 +180,9 @@ public class GUIPatientMedications extends UndoableController {
         } else if (user instanceof Clinician) {
             viewedPatient = (Patient) userControl.getTargetUser();
             loadProfile(viewedPatient.getNhiNumber());
+        } else if (user instanceof Administrator) {
+            viewedPatient = (Patient) userControl.getTargetUser();
+            loadProfile(viewedPatient.getNhiNumber());
         }
         controls = new ArrayList<Control>() {{
             add(pastMedications);
@@ -196,8 +198,9 @@ public class GUIPatientMedications extends UndoableController {
      * @param nhi The NHI number of the logged-in patient
      */
     private void loadProfile(String nhi) {
-        try {
-            target = Database.getPatientByNhi(nhi);
+    	Patient patient = database.getPatientByNhi(nhi);
+        if (patient != null) {
+            target = patient;
 
             if (target.getCurrentMedications() == null) {
                 target.setCurrentMedications(new ArrayList<>());
@@ -211,11 +214,8 @@ public class GUIPatientMedications extends UndoableController {
             refreshReview();
             addActionListeners();
             refreshReview();
-        }
-        catch (InvalidObjectException e) {
-            userActions.log(SEVERE,
-                    "Error loading logged in user",
-                    new String[] { "Attempted to load patient profile", target.getNhiNumber() });
+        } else {
+            userActions.log(Level.SEVERE, "Error loading logged in user", new String[]{"Attempted to load patient profile", target.getNhiNumber()});
         }
     }
 
@@ -373,11 +373,8 @@ public class GUIPatientMedications extends UndoableController {
                     .toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
-                target.getCurrentMedications()
-                        .add(new Medication(medication));
-                userActions.log(Level.INFO,
-                        "Added medication: " + medication,
-                        new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
+                target.getCurrentMedications().add(new Medication(medication));
+                userActions.log(Level.INFO, "Added medication: " + medication, new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
                 viewCurrentMedications();
                 newMedication.clear();
                 screenControl.setIsSaved(false);

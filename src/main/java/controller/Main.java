@@ -30,6 +30,8 @@ import java.util.logging.Level;
 public class Main extends Application {
 
     private static final UUID uuid = UUID.randomUUID();
+    
+    private static Database database = Database.getDatabase();
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -41,12 +43,6 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
         screenControl.show(uuid, loginScreen);
-
-        // add objects
-        Database.importFromDiskPatients("./patient.json");
-        Database.importFromDiskClinicians("./clinician.json");
-        Database.importFromDiskWaitlist("./waitlist.json");
-        Database.importFromDiskAdministrators("./administrator.json");
 
         addDummyTestObjects();
         ensureDefaultClinician();
@@ -74,24 +70,24 @@ public class Main extends Application {
             ArrayList<String> middles = new ArrayList<>();
             middles.add("Middle");
             middles.add("Xavier");
-            Database.addPatient(new Patient("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
-            Database.getPatientByNhi("ABC1238")
+            database.add(new Patient("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
+            database.getPatientByNhi("ABC1238")
                     .addDonation(GlobalEnums.Organ.LIVER);
-            Database.getPatientByNhi("ABC1238")
+            database.getPatientByNhi("ABC1238")
                     .addDonation(GlobalEnums.Organ.CORNEA);
-            Database.getPatientByNhi("ABC1238")
+            database.getPatientByNhi("ABC1238")
                     .setRegion(GlobalEnums.Region.AUCKLAND);
-            Database.getPatientByNhi("ABC1238")
+            database.getPatientByNhi("ABC1238")
                     .setBirthGender(GlobalEnums.BirthGender.MALE);
 
-            Database.addPatient(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
-            Database.getPatientByNhi("ABC1234")
+            database.add(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
+            database.getPatientByNhi("ABC1234")
                     .addDonation(GlobalEnums.Organ.LIVER);
-            Database.getPatientByNhi("ABC1234")
+            database.getPatientByNhi("ABC1234")
                     .addDonation(GlobalEnums.Organ.CORNEA);
-            Database.getPatientByNhi("ABC1234")
+            database.getPatientByNhi("ABC1234")
                     .setRegion(GlobalEnums.Region.CANTERBURY);
-            Database.getPatientByNhi("ABC1234")
+            database.getPatientByNhi("ABC1234")
                     .setBirthGender(GlobalEnums.BirthGender.FEMALE);
         }
         catch (Exception e) {
@@ -106,9 +102,9 @@ public class Main extends Application {
      */
     private void ensureDefaultClinician() {
         // if default clinician 0 not in db, add it
-        if (!Database.isClinicianInDb(0)) {
+        if (!database.staffIDInDatabase(0)) {
             systemLogger.log(INFO, "Default clinician not in database. Adding default clinician to database.");
-            Database.addClinician(new Clinician(0, "Phil", new ArrayList<String>() {{
+            database.add(new Clinician(0, "Phil", new ArrayList<String>() {{
                 add("");
             }}, "McGraw", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
         }
@@ -120,9 +116,9 @@ public class Main extends Application {
      */
     private void ensureDefaultAdministrator() {
         // if default administrator 'admin' not in db, add it
-        if (!Database.isAdministratorInDb("admin")) {
+        if (!database.administratorInDb("ADMIN")) {
             systemLogger.log(INFO, "Default admin not in database. Adding default admin to database.");
-            Database.addAdministrator(new Administrator("admin", "John", new ArrayList<>(), "Smith", "password"));
+            database.add(new Administrator("ADMIN", "John", new ArrayList<>(), "Smith", "password"));
         }
     }
 

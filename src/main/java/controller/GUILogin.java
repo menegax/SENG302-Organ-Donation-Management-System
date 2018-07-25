@@ -9,6 +9,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Administrator;
+import model.Patient;
 import model.User;
 import service.Database;
 import utility.undoRedo.UndoableStage;
@@ -43,6 +44,7 @@ public class GUILogin {
     @FXML
     private RadioButton administrator;
 
+    Database database = Database.getDatabase();
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
@@ -82,12 +84,13 @@ public class GUILogin {
         ScreenControl screenControl = ScreenControl.getScreenControl();
         try {
             if (patient.isSelected()) {
-                login.addLoggedInUserToCache(Database.getPatientByNhi(nhiLogin.getText()));
+                Patient patient = database.getPatientByNhi(nhiLogin.getText()); //TODO: db throws null now
+                login.addLoggedInUserToCache(patient);
             } else if (clinician.isSelected()) {
-                login.addLoggedInUserToCache(Database.getClinicianByID(Integer.parseInt(nhiLogin.getText())));
+                login.addLoggedInUserToCache(database.getClinicianByID(Integer.parseInt(nhiLogin.getText())));
             } else {
                 checkAdminCredentials();
-                login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
+                login.addLoggedInUserToCache(database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
             Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
             UndoableStage stage = new UndoableStage();
@@ -112,7 +115,7 @@ public class GUILogin {
     }
 
     private void checkAdminCredentials() throws InvalidObjectException {
-        Administrator admin = Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
+        Administrator admin = database.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
         String hashedInput = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password.getText() + admin.getSalt());
         if (!hashedInput.equals(admin.getHashedPassword())) {
             throw new InvalidObjectException("Invalid username/password combination");
