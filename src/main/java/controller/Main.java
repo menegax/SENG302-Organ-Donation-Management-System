@@ -48,7 +48,7 @@ public class Main extends Application {
         screenControl.show(uuid, loginScreen);
 
         ParseCSV parseCSV = new ParseCSV();
-        parseCSV.parse(new FileReader("C:\\Users\\plaff\\Downloads\\test.csv"));
+        parseCSV.parse(new FileReader("C:\\Users\\Hayden Taylor\\Downloads\\testCSV.csv"));
         addDummyTestObjects();
         ensureDefaultClinician();
         ensureDefaultAdministrator();

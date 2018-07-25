@@ -854,7 +854,7 @@ public class Database {
     	String[] param = {nhi};
         String[] contactsRaw;
 		try {
-			contactsRaw = runQuery(query, param).get(0);
+    			contactsRaw = runQuery(query, param).get(0);
 			return Arrays.copyOfRange(contactsRaw, 1, contactsRaw.length);
 		} catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to read patient contact attributes.");

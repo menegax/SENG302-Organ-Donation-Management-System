@@ -25,8 +25,8 @@ public class ParseCSV {
         CsvParserSettings settings = new CsvParserSettings();
         settings.getFormat().setLineSeparator("\n");
         settings.setProcessor(rowProcessor);
+        settings.trimValues(false);
         settings.setHeaderExtractionEnabled(true);
-
         List<List<String>> errors = new ArrayList<>();
         settings.setProcessorErrorHandler((e , objects, context) ->{
             List<String> rowError = new ArrayList<>();
