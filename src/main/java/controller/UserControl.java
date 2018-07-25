@@ -1,14 +1,15 @@
 package controller;
 
-import static java.util.logging.Level.INFO;
-import static utility.SystemLogger.systemLogger;
-
+import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.logging.Level.INFO;
+import static utility.SystemLogger.systemLogger;
 
 public class UserControl {
 
@@ -68,23 +69,34 @@ public class UserControl {
     }
 
     /**
-     *  Gets the target patient that is currently being viewed
-     * @return - Patient that is being viewed
+     *  Gets the target user that is currently being viewed
+     * @return - User that is being viewed
      */
-    Patient getTargetPatient() {
-        Object value = get("target_patient");
+    public User getTargetUser() {
+        Object value = get("target_user");
         if (value instanceof Patient) {
             return (Patient) value;
+        } else if (value instanceof Clinician) {
+            return (Clinician) value;
+        } else if (value instanceof Administrator) {
+            return (Administrator) value;
         }
         return null;
     }
 
     /**
-     * Sets the patient to be viewed
-     * @param patient - Patient object to view
+     * Sets the user to be viewed
+     * @param user - Patient object to view
      */
-    void setTargetPatient(Patient patient) {
-        add("target_patient", patient);
+    void setTargetUser(User user) {
+        add("target_user", user);
+    }
+
+    /**
+     * Clears the target user record
+     */
+    void clearTargetUser() {
+        remove("target_user");
     }
 
     /**

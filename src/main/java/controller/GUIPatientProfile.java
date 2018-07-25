@@ -6,15 +6,17 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import model.Clinician;
+import model.Medication;
+import javafx.stage.Stage;
 import model.Clinician;
 import model.Medication;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import utility.GlobalEnums;
+import utility.StatusObservable;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -49,6 +51,9 @@ public class GUIPatientProfile {
 
     @FXML
     public Button requirementsButton;
+
+    @FXML
+    private Button deleteButton;
 
     @FXML
     private Label nhiLbl;
@@ -108,7 +113,25 @@ public class GUIPatientProfile {
     private Label receivingTitle;
 
     @FXML
+    private Label prefGenderLbl;
+
+    @FXML
     private Label donatingTitle;
+
+    @FXML
+    private Label firstNameLbl;
+
+    @FXML
+    private Label firstNameValue;
+
+    @FXML
+    private GridPane details;
+
+    @FXML
+    private RowConstraints genderRow;
+
+    @FXML
+    private RowConstraints firstNameRow;
 
     private ListProperty<String> donatingListProperty = new SimpleListProperty<>();
 
@@ -128,19 +151,18 @@ public class GUIPatientProfile {
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
 
+
+
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
      *
      * @exception InvalidObjectException -
      */
-
     public void initialize() throws InvalidObjectException {
         userControl = new UserControl();
         Object user = null;
         if (userControl.getLoggedInUser() instanceof Patient) {
-            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber())
-                    .getRequiredOrgans()
-                    .size() == 0) {
+            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
                 receivingList.setDisable(true);
                 receivingList.setVisible(false);
                 receivingTitle.setDisable(true);
@@ -153,12 +175,24 @@ public class GUIPatientProfile {
                             .setMaxWidth(0);
                 }
             }
-            user = userControl.getLoggedInUser();
-        }
-        if (userControl.getLoggedInUser() instanceof Clinician) {
-            user = userControl.getTargetPatient();
-        }
 
+            genderDeclaration.setVisible(false);
+            genderStatus.setVisible(false);
+            genderRow.setMaxHeight(0);
+            firstNameLbl.setVisible(false);
+            firstNameValue.setVisible(false);
+            firstNameRow.setMaxHeight(0);
+
+            user = userControl.getLoggedInUser();
+            deleteButton.setVisible( false );
+            deleteButton.setDisable( true );
+        } else if (userControl.getLoggedInUser() instanceof Clinician) {
+            deleteButton.setVisible( false );
+            deleteButton.setDisable( true );
+            user = userControl.getTargetUser();
+        } else {
+            user = userControl.getTargetUser();
+        }
         try {
             assert user != null;
             loadProfile(((Patient) user).getNhiNumber());
@@ -179,16 +213,10 @@ public class GUIPatientProfile {
         Patient patient = Database.getPatientByNhi(nhi);
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
-        if (userControl.getLoggedInUser() instanceof Clinician) {
-            genderDeclaration.setText("Birth Gender: ");
-            genderStatus.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender()
-                    .getValue());
-        }
-        else {
-            genderDeclaration.setText("Gender identity: ");
-            genderStatus.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender()
-                    .getValue());
-        }
+        firstNameValue.setText(patient.getFirstName());
+        genderDeclaration.setText("Birth Gender: ");
+        genderStatus.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue());
+        prefGenderLbl.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender().getValue());
         vitalLbl1.setText(patient.getDeath() == null ? "Alive" : "Deceased");
         dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
@@ -289,6 +317,16 @@ public class GUIPatientProfile {
                 }
             }
         });
+    }
+
+    /**
+     * Deletes the current profile from the HashSet in Database, not from disk, not until saved
+     */
+    public void deleteProfile() {
+        Patient patient = (Patient) userControl.getTargetUser();
+        userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", patient.getNhiNumber()});
+        Database.deletePatient( patient );
+        ((Stage) patientProfilePane.getScene().getWindow()).close();
     }
 
 }

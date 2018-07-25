@@ -1,23 +1,20 @@
 package controller;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import model.Administrator;
+import model.Clinician;
 import model.DrugInteraction;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import service.OrganWaitlist;
+import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -27,7 +24,6 @@ import javafx.collections.transformation.SortedList;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
@@ -49,14 +45,12 @@ public class GUIClinicianWaitingList {
     private ObservableList<OrganWaitlist.OrganRequest> masterData = FXCollections.observableArrayList();
 
     @FXML
-    private ChoiceBox<String> organSelection;
+    private ComboBox<String> organSelection;
 
     @FXML
-    private ChoiceBox<String> regionSelection;
+    private ComboBox<String> regionSelection;
 
-    private UserControl userControl;
-
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    private UserControl userControl = new UserControl();
 
     /**
      * Initializes waiting list screen by populating table and initializing a double click action
@@ -77,15 +71,14 @@ public class GUIClinicianWaitingList {
      * Populates the choice boxes for filter
      */
     private void populateFilterChoiceBoxes() {
-        regionSelection.getItems().add(""); //for empty selection
+        regionSelection.getItems().add(GlobalEnums.NONE_ID); //for empty selection
         for (Region region : Region.values()) { //add values to region choice box
             regionSelection.getItems().add(StringUtils.capitalize(region.getValue()));
         }
-        organSelection.getItems().add("");
+        organSelection.getItems().add(GlobalEnums.NONE_ID);
         for (Organ organ : Organ.values()) {
             organSelection.getItems().add(StringUtils.capitalize(organ.getValue()));
         }
-
     }
 
     /**
@@ -110,11 +103,13 @@ public class GUIClinicianWaitingList {
                 try {
                     userControl = new UserControl();
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
-                    userControl.setTargetPatient(Database.getPatientByNhi(request.getReceiverNhi()));
+                    DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
+                    userControl.setTargetUser(Database.getPatientByNhi(request.getReceiverNhi()));
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
+                    Parent root = fxmlLoader.load();
                     UndoableStage popUpStage = new UndoableStage();
                     screenControl.addStage(popUpStage.getUUID(), popUpStage);
-                    screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
+                    screenControl.show(popUpStage.getUUID(), root);
                     openProfiles.add(request);
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request )));
@@ -212,7 +207,6 @@ public class GUIClinicianWaitingList {
 
         return filteredData;
     }
-
 
     /**
      * Refreshes the table data

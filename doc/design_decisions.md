@@ -169,6 +169,12 @@ When you deregister an organ due to a disease or collection of diseases being cu
 the program should handle chronic diseases. We decided that it makes most sense to be able to set chronic diseases to cured in this scenario as it is not
 very user friendly to have to go back to the disease screen to 'complete' the cure of the disease
 
+#### Storing (hashed) passwords and salt in the Administrator object
+Due to the database story being currently worked on, we have decided to store the hashed password and salt for the administrator accounts
+stored within the administrator object rather than only storing it in the database. This is so we can test and progress the administrator story without
+waiting for the database story to get fully implemented. When the database story is complete, we easily switch it so the password and salt are no longer
+stored within the objects if required/decided.
+
 #### Keyboard Shortcuts
 MenuBar has the ability to set and bind keyboard shortcuts to a stage. Therefore we will use MenuBars to set the keyboard shortcuts. 
 This means there should not be other action listeners for global or stage-level shortcuts. If it has a keyboard shortcut, it belongs as an item in the menubar.
@@ -190,3 +196,8 @@ This means there should not be other action listeners for global or stage-level 
  human-intensive manual testing method. In truth, we seem to believe manual testing will take less time and effort than TestFX at this point. This 
  will and has led to 0% test coverage on the `controller` package. We expect that. With comprehensive manual testing in addition to smoke testing we 
  will effectively have 100% test coverage through manual testing.
+ 
+ ### Status bar updates
+ We decided to use the built in logger we are using to set the status bar text when a log is added. This means that we can rely
+ on our existing log additions instead of having to set the status bar text in each controller class. The status bar is updated by 
+ using setStatus within the observable StatusObservable, which notifies each of its observers.

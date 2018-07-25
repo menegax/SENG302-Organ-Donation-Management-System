@@ -5,6 +5,13 @@ package utility;
  */
 public class GlobalEnums {
 
+    public final static String NONE_ID = "None";
+
+    public enum FilterOption {
+        REQUESTEDDONATIONS, DONATIONS, REGION, AGEUPPER, AGELOWER, BIRTHGENDER, DONOR, RECIEVER
+    }
+
+
     /**
      * Enumerates all options for preferred gender
      */
@@ -27,7 +34,7 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static PreferredGender getEnumFromString(String value) {
             try {
                 return PreferredGender.valueOf(value.toUpperCase());
             }
@@ -37,6 +44,27 @@ public class GlobalEnums {
         }
     }
 
+    public enum UserTypes {
+    	PATIENT("PATIENT"), CLINICIAN("CLINICIAN"), ADMIN("ADMIN");
+    	
+        private String value;
+
+        UserTypes(final String value) { this.value = value; }
+
+        public String getValue() {
+            return value != null ? value : "Not set";
+        }
+        
+        public static UserTypes getEnumFromString(String value) {
+            try {
+                return UserTypes.valueOf(value.toUpperCase());
+            }
+            catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
+    }
+    
     /**
      * Enumerates all options for birth gender
      */
@@ -62,7 +90,7 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static BirthGender getEnumFromString(String value) {
             try {
                 return BirthGender.valueOf(value.toUpperCase());
             }
@@ -99,7 +127,7 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static Region getEnumFromString(String value) {
             try {
                 return Region.valueOf(value.toUpperCase()
                         .replaceAll("\\s+", ""));
@@ -113,9 +141,13 @@ public class GlobalEnums {
     /**
      * Enumerates all options for organs
      */
+
+    /**
+     *
+     */
     public enum Organ {
         LIVER("liver"), KIDNEY("kidney"), PANCREAS("pancreas"), HEART("heart"), LUNG("lung"), INTESTINE("intestine"), CORNEA("cornea"), MIDDLEEAR(
-                "middle ear"), SKIN("skin"), BONE("bone"), BONE_MARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
+                "middle ear"), SKIN("skin"), BONE("bone"), BONEMARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
 
         private String value;
 
@@ -136,9 +168,9 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static Organ getEnumFromString(String value) {
             try {
-                return Organ.valueOf(value.toUpperCase());
+                return Organ.valueOf(value.replaceAll(" ", "").toUpperCase());
             }
             catch (IllegalArgumentException e) {
                 return null;
@@ -172,7 +204,7 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static BloodGroup getEnumFromString(String value) {
             try {
                 return BloodGroup.valueOf(value.toUpperCase()
                         .replaceAll("\\s+", "_"));
@@ -224,7 +256,7 @@ public class GlobalEnums {
         }
 
 
-        public static Enum getEnumFromString(String value) {
+        public static DiseaseState getEnumFromString(String value) {
             try {
                 return DiseaseState.valueOf(value.toUpperCase());
             }
