@@ -1298,10 +1298,10 @@ public class Database implements Serializable {
     	return false;
     }
 
-    /** //todo
+    /**
      * Deletes a patient from the database and application.
-     * @param patient
-     * @param searcher
+     * @param patient -
+     * @param searcher -
      * @return True if the patient was removed, false otherwise.
      */
     private boolean deletePatient(Patient patient, Searcher searcher) {
