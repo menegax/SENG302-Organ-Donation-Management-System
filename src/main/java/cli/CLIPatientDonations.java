@@ -19,7 +19,7 @@ public class CLIPatientDonations implements Runnable {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
     private boolean helpRequested = false;
 
-    @Option(names = {"-n", "--nhi"}, required = true, description = "SearchPatients patient by the NHI number.")
+    @Option(names = {"-n", "--nhi"}, required = true, description = "Searcher patient by the NHI number.")
     private String searchNhi;
 
     @Option(names = {"-l", "--list"}, description = "Lists current organ donations.")
@@ -36,7 +36,7 @@ public class CLIPatientDonations implements Runnable {
             "MIDDLEEAR\n" +
             "SKIN\n" +
             "BONE\n" +
-            "BONE_MARROW\n" +
+            "BONEMARROW\n" +
             "CONNECTIVETISSUE")
     private ArrayList<String> newDonations;
 

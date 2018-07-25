@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.Database;
 import utility.GlobalEnums;
+import utility.StatusObservable;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
@@ -80,9 +82,10 @@ public class GUIPatientUpdateContacts extends UndoableController {
     public void saveContactDetails() {
         boolean valid = setPatientContactDetails();
         if (valid) {
-            new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
+            screenControl.setIsSaved(false);
+            userActions.log(INFO, "Successfully saved contact details", "Attempted to set invalid contact details");
         } else {
-            new Alert(Alert.AlertType.WARNING, "Invalid fields", ButtonType.OK).show();
+            userActions.log(Level.WARNING,"Failed to save contact details due to invalid fields", "Attempted to set invalid contact details");
         }
     }
 
@@ -98,8 +101,8 @@ public class GUIPatientUpdateContacts extends UndoableController {
             loadProfile(((Patient) user).getNhiNumber());
             setContactFields();
         }
-        if (userControl.getTargetPatient() != null) {
-            loadProfile((userControl.getTargetPatient()).getNhiNumber());
+        if (userControl.getTargetUser() != null) {
+            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
             setContactFields();
         }
         setupUndoRedo();

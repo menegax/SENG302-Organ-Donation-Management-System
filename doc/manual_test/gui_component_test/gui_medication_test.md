@@ -21,9 +21,8 @@
 1. Navigate to the medication page using the steps listed under `Navigate to the medications page`
 2. Once on the medication page, set the new medication textbox to be empty if it is not already
 3. Add it using the `Register` button
-4. Verify that an alert appears stating that the input is invalid
-5. Close the alert
-6. Verify that the current and past medication lists have remained unchanged
+4. Verify that a message appears stating that the input is invalid
+5. Verify that the current and past medication lists have remained unchanged
 
 ### GUI Medication delete test
 
@@ -32,8 +31,7 @@
 3. Click on the added medication within the current medications list to select it
 4. Verify that it is selected
 5. Click the `Delete` button to remove it
-6. Click `OK` when queried by the confirmation alert
-7. Verify that the medication is no longer in the current (or past) medications list
+6. Verify that the medication is no longer in the current (or past) medications list
 
 ### GUI Medication moving test
 
@@ -55,9 +53,8 @@
 2. Add `Codeine` by following the steps under the `GUI Medication adding with valid input test`
 3. Enter `Codeine` into the new medication textbox
 4. Click the `Register` button to attempt to add Codeine
-5. Verify that an alert appears stating that Codeine is already registered
-6. Close the alert
-7. Verify that there is only one entry for `Codeine` in the current medications list
+5. Verify that a message appears stating that Codeine is already registered
+6. Verify that there is only one entry for `Codeine` in the current medications list
 
 ### GUI Medication adding medication that is in history test
 
@@ -78,8 +75,7 @@
 4. Verify that the current medications list contains `Codeine` and `Morphine`
 5. Select Codeine and Morphine by clicking on both while holding `Shift`
 6. Click the `Delete` button to remove them both
-7. Click `OK` when queried by the confirmation alert for each medication
-8. Verify that neither `Codeine` nor `Morphine` appear in the current or past medications list
+7. Verify that neither `Codeine` nor `Morphine` appear in the current or past medications list
 
 ##Test History
 
