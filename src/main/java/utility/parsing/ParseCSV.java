@@ -6,9 +6,11 @@ import com.univocity.parsers.csv.CsvParserSettings;
 import model.Patient;
 import service.Database;
 
+import javax.xml.crypto.Data;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
+import java.sql.PreparedStatement;
 import java.util.*;
 
 public class ParseCSV {
@@ -43,7 +45,10 @@ public class ParseCSV {
         Map<Result, List> results = new HashMap<>();
         results.put(Result.SUCCESS, pats);
         results.put(Result.FAIL, errors);
-      //  results.get(Result.SUCCESS).forEach(x -> Database.addPatient((Patient) x));
+
+
+       Database.getDatabase().importToDb(results.get(Result.SUCCESS));
+
         return results;
     }
 }

@@ -107,9 +107,9 @@ public class Patient extends User {
 
     private Status status; // Whether patient is receiving/donating/both/neither
 
-    private ArrayList<Organ> donations;
+    private ArrayList<Organ> donations = new ArrayList<>();
 
-    private ArrayList<Organ> requiredOrgans;
+    private ArrayList<Organ> requiredOrgans = new ArrayList<>();
 
     private Timestamp modified;
 
@@ -119,7 +119,7 @@ public class Patient extends User {
 
     private List<Procedure> procedures = new ArrayList<>();
 
-    private ArrayList<PatientActionRecord> userActionsList;
+    private ArrayList<PatientActionRecord> userActionsList = new ArrayList<>();
 
     private ArrayList<Disease> currentDiseases = new ArrayList<>();
 

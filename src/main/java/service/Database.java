@@ -302,7 +302,7 @@ public class Database {
         attr[3] = patient.getLastName();
         attr[4] = patient.getBirth().toString();
         attr[5] = patient.getCREATED().toString();
-        attr[6] = patient.getModified().toString();
+        attr[6] = patient.getModified() == null ? "" :String.join(" ", patient.getModified().toString());
         if (patient.getDeath() != null) {
             attr[7] = patient.getDeath().toString();
         }
@@ -318,9 +318,9 @@ public class Database {
         if(patient.getBloodGroup() != null) {
             attr[13] = patient.getBloodGroup().toString();
         }
-        attr[14] = String.join(",", patient.getDonations().toString())
+        attr[14] = patient.getDonations() == null? "" :String.join(",", patient.getDonations().toString())
                 .replaceAll("\\[", "").replaceAll("\\]", "");
-        attr[15] = String.join(",", patient.getRequiredOrgans().toString())
+        attr[15] = patient.getRequiredOrgans() == null? "" :String.join(",", patient.getRequiredOrgans().toString())
                 .replaceAll("\\[", "").replaceAll("\\]", "");
         return attr;
     }
@@ -1659,4 +1659,10 @@ public class Database {
     public  Set<Administrator> getAdministrators() {
     	return administrators;
     }
+
+    public void importToDb(List records) {
+        patients.addAll(records);
+        updateDatabase();
+    }
 }
+

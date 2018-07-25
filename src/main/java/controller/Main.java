@@ -21,6 +21,9 @@ import utility.GlobalEnums;
 import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
+import utility.parsing.ParseCSV;
+
+import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -44,6 +47,8 @@ public class Main extends Application {
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
         screenControl.show(uuid, loginScreen);
 
+        ParseCSV parseCSV = new ParseCSV();
+        parseCSV.parse(new FileReader("C:\\Users\\Hayden Taylor\\Downloads\\testCSV.csv"));
         addDummyTestObjects();
         ensureDefaultClinician();
         ensureDefaultAdministrator();
