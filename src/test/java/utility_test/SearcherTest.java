@@ -225,7 +225,6 @@ public class SearcherTest {
 
     /**
      * Tests a name search for after a patient's NHI has been updated.
-     * @throws IOException -
      */
     @Test
     public void testSearchAfterNhiUpdate() {
@@ -392,10 +391,9 @@ public class SearcherTest {
 
     /**
      * Check birth gender filtering
-     @throws InvalidObjectException - patient not in db
      */
     @Test
-    public void testFilterBirthGender() throws InvalidObjectException {
+    public void testFilterBirthGender() {
         addPatientsToDB();
 
         //filter region
