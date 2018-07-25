@@ -197,7 +197,7 @@ public class GlobalEnums {
 
         public static Region getEnumFromString(String value) {
             try {
-                if (value.toLowerCase().substring(0,7).equals("manawatu")){
+                if (value.length() >= 8 && value.toLowerCase().substring(0,7).equals("manawatu")){
                     return Region.MANAWATU;
                 }
                 return Region.valueOf(value.toUpperCase().replaceAll("\\s+", ""));
