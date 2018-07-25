@@ -290,17 +290,17 @@ public class SearcherTest {
 
     /**
      * Check region filter works as intended
-     * @throws InvalidObjectException - patient not in db
      */
     @Test
-    public void testFilterRegionWithNameSearch() throws InvalidObjectException {
-        searcher.clearIndex();
-        filter.clear();
+    public void testFilterRegionWithNameSearch(){
+        addPatientsToDB();
+
+        Patient patient = database.getPatientByNhi("abc1230");
+        patient.setRegion(Region.CANTERBURY);
+        database.update(patient);
 
         //filter region
         filter.put(FilterOption.REGION,  Region.CANTERBURY.toString());
-
-        searcher.createFullIndex();
 
         //search with no name
         List<User> results = Searcher.getSearcher().search("",new UserTypes[] {UserTypes.PATIENT}, 30, filter);
@@ -309,16 +309,13 @@ public class SearcherTest {
         Assert.assertEquals(1, results.size());
 
         //check that all have correct region
-        for (User patient : results) {
-            Assert.assertEquals(Region.CANTERBURY, ((Patient)patient).getRegion());
+        for (User p : results) {
+            Assert.assertEquals(Region.CANTERBURY, (((Patient)p).getRegion()));
         }
 
-        //update region
-        Patient patient = database.getPatientByNhi("def1234");
-        patient.setRegion(Region.CANTERBURY);
-        database.update(patient);
-
-
+        Patient patient2 = database.getPatientByNhi("abc1231");
+        patient2.setRegion(Region.CANTERBURY);
+        database.update(patient2);
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 
         //2 results with region CANTERBURY
@@ -326,18 +323,18 @@ public class SearcherTest {
 
         hasRegions(results);
 
-        results = Searcher.getSearcher().search("aoc", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
+        results = Searcher.getSearcher().search("a", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 
         //1 results with region CANTERBURY and search
-        Assert.assertEquals(2, results.size());
+        Assert.assertEquals(1, results.size());
 
         hasRegions(results);
 
         //reset filter
         filter.replace(FilterOption.REGION,  filter.get(FilterOption.REGION), GlobalEnums.NONE_ID);
-        results = Searcher.getSearcher().search("aoc", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
+        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 
-        Assert.assertEquals(3, results.size());
+        Assert.assertEquals(30, results.size());
 
     }
 
@@ -440,6 +437,7 @@ public class SearcherTest {
      */
     @Test
     public void testFilterAge(){
+        database.resetLocalDatabase();
         addPatientsToDB();
 
         //from 10 -100
@@ -481,23 +479,31 @@ public class SearcherTest {
      */
     @Test
     public void testIsDonorReceiver() {
+        addPatientsToDB();
         filter.put(FilterOption.RECIEVER, "true");
 
         List<User>  results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(0, results.size());
         areRecievers(results);
 
-        //3 donor
+        //1 donor
         filter.put(FilterOption.DONOR, "true");
-        database.getPatientByNhi("abc1230").setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+
+        Patient p = database.getPatientByNhi("abc1230");
+        p.setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        database.update(p);
+
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
-        Assert.assertEquals(3, results.size());
+        Assert.assertEquals(1, results.size());
         areDonors(results);
 
         //two reciever
         filter.clear();
         filter.put(FilterOption.RECIEVER, "true");
-        database.getPatientByNhi("abc1231").setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        Patient p1 = database.getPatientByNhi("abc1231");
+        p1.setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        database.update(p1);
+
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(2, results.size());
         areRecievers(results);
@@ -505,7 +511,10 @@ public class SearcherTest {
 
         //both donor and reciever
         filter.put(FilterOption.DONOR, "true");
-        database.getPatientByNhi("abc1230").setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        Patient p2 = database.getPatientByNhi("abc1230");
+        p2.setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
+        database.update(p2);
+
         results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
         Assert.assertEquals(2, results.size());
         areDonorsAndRecievers(results);
