@@ -2,6 +2,7 @@ package utility_test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.*;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 import java.io.IOException;
@@ -155,7 +156,7 @@ public class SearcherTest {
         // Search to match all 36 added patients.
         List<User> results = searcher.search("A B C D E F Z Y X W V U", new UserTypes[] {UserTypes.PATIENT}, 30, null);
         for (User result: results) {
-        	System.out.println(result);
+        	systemLogger.log(Level.INFO, result.toString());
         }
 
         // The returned result should be exactly 30
