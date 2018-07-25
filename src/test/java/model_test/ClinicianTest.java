@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -33,6 +34,7 @@ public class ClinicianTest implements Serializable{
     @Before
     public void setUp() {
         userActions.setLevel(Level.OFF);
+        systemLogger.setLevel(Level.OFF);
         clinician = new Clinician(0, "Joe", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND);
     }
 

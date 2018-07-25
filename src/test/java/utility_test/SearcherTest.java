@@ -45,7 +45,7 @@ public class SearcherTest {
     @BeforeClass
     public static void setUp() {
         Database.resetDatabase();
-        userActions.setLevel(Level.ALL);
+        userActions.setLevel(Level.OFF);
 
         // Given patients in a db
         d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
@@ -83,7 +83,7 @@ public class SearcherTest {
         Database.addPatient(d3);
         Database.addPatient(d2);
         Database.addPatient(d1);
-        
+
         searcher.createFullIndex();
 
 		// Change last name of George Romero to come before George Bobington

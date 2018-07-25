@@ -5,6 +5,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.RotateEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -12,6 +15,8 @@ import model.Disease;
 import model.Patient;
 import model.User;
 import utility.GlobalEnums;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
 import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
@@ -29,7 +34,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller for diagnosis update popup window.
  */
-public class GUIPatientUpdateDiagnosis extends UndoableController{
+public class GUIPatientUpdateDiagnosis extends UndoableController implements TouchscreenCapable{
 
     @FXML
     private GridPane diagnosisUpdatePane;
@@ -68,6 +73,8 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
+
+    private TouchPaneController diagnosisTouchPane;
 
     /**
      * Sets the diagnosis that is being updated
@@ -120,6 +127,10 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
             add(tagsDD);
         }};
         //statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDIAGNOSIS);
+        diagnosisTouchPane = new TouchPaneController(diagnosisUpdatePane);
+        diagnosisUpdatePane.setOnZoom(this::zoomWindow);
+        diagnosisUpdatePane.setOnRotate(this::rotateWindow);
+        diagnosisUpdatePane.setOnScroll(this::scrollWindow);
     }
 
     /**
@@ -336,6 +347,37 @@ public class GUIPatientUpdateDiagnosis extends UndoableController{
                         " before marking this disease as cured.\n\n";
             }
             userActions.log(Level.WARNING, errorString, "Attempted to update diagnosis with invalid fields");
+        }
+    }
+
+    /**
+     * Redoes an action
+     */
+    public void redo() {
+        statesHistoryScreen.redo();
+    }
+
+    /**
+     * Undoes the last action
+     */
+    public void undo() {
+        statesHistoryScreen.undo();
+    }
+
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        diagnosisTouchPane.zoomPane(zoomEvent);
+    }
+
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        diagnosisTouchPane.rotatePane(rotateEvent);
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        if(scrollEvent.isDirect()) {
+            diagnosisTouchPane.scrollPane(scrollEvent);
         }
     }
 }

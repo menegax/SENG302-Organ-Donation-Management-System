@@ -9,10 +9,12 @@ import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 import de.codecentric.centerdevice.MenuToolkit;
+import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -20,7 +22,10 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
+import org.tuiofx.TuioFX;
 import service.Database;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
 import utility.undoRedo.UndoableStage;
 import utility.StatusObservable;
 import utility.undoRedo.UndoableStage;
@@ -30,7 +35,7 @@ import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
-public class GUIHome implements Observer {
+public class GUIHome implements Observer, TouchscreenCapable {
 
     @FXML
     public BorderPane homePane;
@@ -46,6 +51,8 @@ public class GUIHome implements Observer {
 
     @FXML
     private Label statusLbl;
+
+    private TouchPaneController homeTouchPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -102,8 +109,7 @@ public class GUIHome implements Observer {
                 homeTarget = userControl.getLoggedInUser();
                 addTabsPatient();
                 setUpColouredBar(userControl.getLoggedInUser());
-            }
-            else if (userControl.getLoggedInUser() instanceof Clinician) {
+            } else if (userControl.getLoggedInUser() instanceof Clinician) {
                 // Clinician viewing a patient
                 if (userControl.getTargetUser() != null) {
                     homeTarget = userControl.getTargetUser();
@@ -116,8 +122,7 @@ public class GUIHome implements Observer {
                     addTabsClinician();
                     setUpColouredBar(userControl.getLoggedInUser());
                 }
-            }
-            else if (userControl.getLoggedInUser() instanceof Administrator) {
+            } else if (userControl.getLoggedInUser() instanceof Administrator) {
                 // admin viewing patient
                 if (userControl.getTargetUser() instanceof Patient) {
                     homeTarget = userControl.getTargetUser();
@@ -135,18 +140,21 @@ public class GUIHome implements Observer {
                     homeTarget = userControl.getTargetUser();
                     addTabsAdministrator();
                     setUpColouredBar(userControl.getTargetUser());
-                }
-                else {
+                } else {
                     addTabsAdministrator();
                     setUpColouredBar(userControl.getLoggedInUser());
                 }
             }
+            homeTouchPane = new TouchPaneController(homePane);
+            horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty().addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
+            homePane.setOnZoom(this::zoomWindow);
+            homePane.setOnRotate(this::rotateWindow);
+            homePane.setOnScroll(this::scrollWindow);
             addStageListener();
             horizontalTabPane.sceneProperty()
                     .addListener((observable, oldScene, newScene) -> newScene.windowProperty()
                             .addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());
         }
@@ -170,16 +178,14 @@ public class GUIHome implements Observer {
                                                 setStageTitle();
                                             }
                                         });
-                            }
-                            else {
+                            } else {
                                 homeStage = (Stage) newScene.getWindow();
                                 // Methods to call after initialize
                                 setStageTitle();
                             }
                         }
                     });
-        }
-        else if (homePane.getScene()
+        } else if (homePane.getScene()
                 .getWindow() == null) {
             homePane.getScene()
                     .windowProperty()
@@ -190,8 +196,7 @@ public class GUIHome implements Observer {
                             setStageTitle();
                         }
                     });
-        }
-        else {
+        } else {
             homeStage = (Stage) homePane.getScene()
                     .getWindow();
             // Methods to call after initialize
@@ -254,7 +259,7 @@ public class GUIHome implements Observer {
     /**
      * Adds tabs to the home tab pane for a patient logged in
      *
-     * @exception IOException - if fxml cannot be located
+     * @throws IOException - if fxml cannot be located
      */
     private void addTabsPatient() throws IOException {
         createTab(TabName.PROFILE, "/scene/patientProfile.fxml");
@@ -270,7 +275,7 @@ public class GUIHome implements Observer {
     /**
      * Adds tabs for a clinician viewing a patient
      *
-     * @exception IOException- if fxml cannot be located
+     * @throws IOException- if fxml cannot be located
      */
     private void addTabsForPatientClinician() throws IOException{
         createTab(TabName.PROFILE, "/scene/patientProfile.fxml");
@@ -287,7 +292,7 @@ public class GUIHome implements Observer {
     /**
      * Adds tabs for a logged in clinician
      *
-     * @exception IOException- if fxml cannot be located
+     * @throws IOException- if fxml cannot be located
      */
     private void addTabsClinician() throws IOException {
         createTab(TabName.PROFILE, "/scene/clinicianProfile.fxml");
@@ -300,7 +305,7 @@ public class GUIHome implements Observer {
     /**
      * Adds tabs for a logged in administrator
      *
-     * @exception IOException- if fxml cannot be located
+     * @throws IOException- if fxml cannot be located
      */
     private void addTabsAdministrator() throws IOException {
         createTab(TabName.PROFILE, "/scene/administratorProfile.fxml");
@@ -314,7 +319,7 @@ public class GUIHome implements Observer {
     /**
      * Adds tabs for an administrator viewing a clinician
      *
-     * @exception IOException- if fxml cannot be located
+     * @throws IOException- if fxml cannot be located
      */
     private void addTabsClinicianAdministrator() throws IOException {
         createTab(TabName.PROFILE, "/scene/clinicianProfile.fxml");
@@ -338,7 +343,9 @@ public class GUIHome implements Observer {
                 systemLogger.log(FINE, "User trying to log out");
                 logOut();
             });
-            alert.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, event -> {});
+            alert.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, event -> {
+
+            });
             alert.showAndWait();
         } else {
             logOut();
@@ -442,8 +449,7 @@ public class GUIHome implements Observer {
                         .add(0, tk.createDefaultApplicationMenu(screenControl.getAppName())); // set leftmost MacOS system menu
                 tk.setMenuBar(stage, bar);
                 systemLogger.log(FINER, "Set MacOS menu bar");
-            }
-            else {// if windows
+            } else {// if windows
                 menuBar.getMenus()
                         .clear();
                 menuBar.getMenus()
@@ -485,10 +491,28 @@ public class GUIHome implements Observer {
         }
     }
 
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        homeTouchPane.zoomPane(zoomEvent);
+    }
+
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        homeTouchPane.rotatePane(rotateEvent);
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        if (scrollEvent.isDirect()) {
+            homeTouchPane.scrollPane(scrollEvent);
+        }
+    }
+
     /**
      * Removes the asterisk from the username display
      */
     void removeAsterisk() {
         userNameDisplay.setText(userNameDisplay.getText().replace("*", ""));
     }
+
 }
