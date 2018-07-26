@@ -1,15 +1,21 @@
 package model_test;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 
+import model.Clinician;
 import model.Disease;
 import model.Patient;
 import org.junit.AfterClass;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import service.Database;
@@ -18,23 +24,44 @@ import utility.GlobalEnums.Organ;
 
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
-
-
+import static java.util.logging.Level.OFF;
 import static org.junit.Assert.*;
 
 public class PatientTest implements Serializable{
 
-    private static Database database = Database.getDatabase();
+    private static Database database;
     private static Patient testPatient; //Patient obj not within the database
 
     private static Patient testPatient1; //Patient obj not within the database
 
-    /**
-     * Populate database with test patients and disables logging
-     */
-    @BeforeClass
-    public static void setUp() {
-
+    private static boolean validConnection = false;
+    
+	@BeforeClass
+	public static void setUpBeforeClass() {
+		userActions.setLevel(OFF);
+		validConnection = validateConnection();
+	}
+	
+	
+	private static boolean validateConnection() {
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+		} catch (SQLException e1) {
+			System.err.println("Failed to connect to UC database server.");
+		}
+		if (conn == null) {
+			return false;
+		}
+		return true;
+	}
+    
+    @Before
+    public void setUp() {
+    	Assume.assumeTrue(validConnection);
+    	database  = Database.getDatabase();
+        userActions.setLevel(Level.OFF);
+        systemLogger.setLevel(Level.OFF);
         userActions.setLevel(Level.OFF);
 
         testPatient = new Patient("ABC1234", "James", new ArrayList<String>(), "Wallace",
@@ -49,8 +76,8 @@ public class PatientTest implements Serializable{
                 LocalDate.of(1994, 12, 12)));
 
         testPatient1 = new Patient("JJJ1234", "Rex", new ArrayList<String>(), "Petsberg",
-                LocalDate.of(1977, 6, 16));
-    }
+                LocalDate.of(1977, 6, 16));    }
+    
 
     /**
      * Test patient constructor

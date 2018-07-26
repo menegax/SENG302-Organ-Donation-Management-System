@@ -4,6 +4,7 @@ import model.Clinician;
 import model.Patient;
 import model.User;
 import org.junit.AfterClass;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,6 +16,9 @@ import utility.GlobalEnums;
 import utility.undoRedo.Action;
 
 import java.io.InvalidObjectException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -36,6 +40,8 @@ public class ActionTest {
     private int staffId = 1;
 
     Database database = Database.getDatabase();
+    
+    private static boolean validConnection = false;
 
     /**
      * Turns of logging before the test starts
@@ -43,13 +49,28 @@ public class ActionTest {
     @BeforeClass
     public static void setup() {
         userActions.setLevel(Level.OFF);
+        validConnection = validateConnection();
     }
+
+	private static boolean validateConnection() {
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+		} catch (SQLException e1) {
+			System.err.println("Failed to connect to UC database server.");
+		}
+		if (conn == null) {
+			return false;
+		}
+		return true;
+	}
 
     /**
      * Resets the users and action attributes before each test
      */
     @Before
     public void reset() {
+    	Assume.assumeTrue(validConnection);
         current = null;
         after = null;
         action = null;
