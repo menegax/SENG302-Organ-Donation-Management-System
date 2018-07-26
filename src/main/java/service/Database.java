@@ -313,6 +313,23 @@ public class Database implements Serializable {
     }
 
     /**
+     * Adds a object to the database.
+     * @param object Object to add to the database.
+     * @return True if added object to database, false otherwise.
+     */
+    public boolean addLocal(Object object) {
+    	Searcher searcher = Searcher.getSearcher();
+        if (object instanceof Patient) {
+            return addLocalPatient((Patient) object, searcher);
+        } else if (object instanceof Clinician) {
+            return addLocalClinician((Clinician) object, searcher);
+        } else if (object instanceof Administrator) {
+        	return addLocalAdministrator((Administrator) object, searcher);
+        }
+        return false;
+    }
+
+    /**
      * Sets a query up as a Prepared Statement from the query string and a string array of the parameters.
      * @param query String representation of a MySQL query.
      * @param params String array of the parameters of the query.
@@ -696,16 +713,31 @@ public class Database implements Serializable {
         } else {
         	//Adds Patient to the database
             if (update(newPatient)) {
-                //Add Patient to application
-                patients.add(newPatient);
-                //Add Patient to search index
-                searcher.addIndex(newPatient);
-            	userActions.log(INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
-            	return true;
+                return addLocalPatient(newPatient, searcher);
             }
             userActions.log(Level.WARNING, "Failed to add patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
             return false;
         }
+    }
+
+    /**
+     * Adds a patient to the database
+     *
+     * @param newPatient the new patient to add
+     * @return True if added patient to database, false otherwise.
+     * @throws IllegalArgumentException Throws if NHI already in use.
+     */
+    private boolean addLocalPatient(Patient newPatient, Searcher searcher) throws IllegalArgumentException {
+        if (nhiInDatabase(newPatient.getNhiNumber())) {
+            userActions.log(Level.SEVERE, "Failed to add patient to database, NHI already exisits.", "Attempted to add new patient to database.");
+            return false;
+        }
+       //Add Patient to application
+        patients.add(newPatient);
+        //Add Patient to search index
+        searcher.addIndex(newPatient);
+    	userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
+    	return true;
     }
 
     /**
@@ -720,13 +752,27 @@ public class Database implements Serializable {
             return false;
     	}
 		if (update(newClinician)) {
-			clinicians.add(newClinician);
-			searcher.addIndex(newClinician);
-			userActions.log(INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
-			return true;
+			return addLocalClinician(newClinician, searcher);
 		}
-		userActions.log(Level.SEVERE, "Failed added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
+		userActions.log(Level.WARNING, "Failed added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
 		return false;
+    }
+
+    /**
+     * Adds a clinician to the database.
+     * @param newClinician the new clinician to add.
+     * @return True if the clinician was added, false otherwise.
+	 * @throws IllegalArgumentException Throws if Staff ID already in use.
+     */
+    private boolean addLocalClinician(Clinician newClinician, Searcher searcher) throws IllegalArgumentException {
+    	if (staffIDInDatabase(newClinician.getStaffID())) {
+            userActions.log(Level.SEVERE, "Failed to add clinician to database, staff ID " + newClinician.getStaffID() + " already exisits.", "Attempted to add new clinician to database.");
+            return false;
+    	}
+		clinicians.add(newClinician);
+		searcher.addIndex(newClinician);
+		userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
+		return true;
     }
     
     private boolean addAdministrator(Administrator admin, Searcher searcher) {
@@ -735,13 +781,17 @@ public class Database implements Serializable {
             return false;
     	}
     	if (update(admin)) {
-            administrators.add(admin);
-            searcher.addIndex(admin);
-            userActions.log(INFO, "Successfully added administrator " + admin.getUsername(), "Attempted to add an administrator");
-            return true;
+            return addLocalAdministrator(admin, searcher);
 		}
 		userActions.log(Level.SEVERE, "Failed added clinician " + admin.getUsername(), "Attempted to add a Administrator.");
 		return false;
+    }
+
+    private boolean addLocalAdministrator(Administrator admin, Searcher searcher) {
+        administrators.add(admin);
+        searcher.addIndex(admin);
+        userActions.log(Level.INFO, "Successfully added administrator " + admin.getUsername(), "Attempted to add an administrator");
+        return true;
     }
 
     /**
@@ -1362,7 +1412,7 @@ public class Database implements Serializable {
      */
     public Patient getPatientByNhi(String nhi) {
         for (Patient p : getPatients()) {
-            if (p.getNhiNumber().equals(nhi.toUpperCase())) {
+            if (p.getNhiNumber().toUpperCase().equals(nhi.toUpperCase())) {
                 return p;
             }
         }
