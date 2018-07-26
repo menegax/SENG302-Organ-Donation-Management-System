@@ -1,6 +1,8 @@
 package controller;
 
+import static java.util.logging.Level.ALL;
 import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.OFF;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
@@ -32,7 +34,7 @@ public class Main extends Application {
 
     private static final UUID uuid = UUID.randomUUID();
     
-    private static Database database = Database.getDatabase();
+    private static Database database;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -45,6 +47,7 @@ public class Main extends Application {
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
         screenControl.show(uuid, loginScreen);
 
+        database = Database.getDatabase();
         addDummyTestObjects();
         ensureDefaultClinician();
         ensureDefaultAdministrator();
@@ -64,7 +67,8 @@ public class Main extends Application {
      * Adds dummy test objects for testing purposes
      */
     private void addDummyTestObjects() {
-
+        systemLogger.log(INFO, "Adding default dummy test objects");
+        userActions.setLevel(OFF);
         try {
 
             // Add dummy patients for testing
@@ -95,6 +99,7 @@ public class Main extends Application {
             userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
             systemLogger.log(INFO, "Unable to add dummy patients");
         }
+        userActions.setLevel(ALL);
     }
 
 

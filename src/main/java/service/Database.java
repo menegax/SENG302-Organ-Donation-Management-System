@@ -22,7 +22,9 @@ import java.util.logging.Level;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import static java.util.logging.Level.ALL;
 import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.OFF;
 import static java.util.logging.Level.WARNING;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
@@ -813,10 +815,14 @@ public class Database implements Serializable {
      * loads all data from database into application.
      */
     public void loadAll() {
+        systemLogger.log(INFO, "Loading all data from db...");
+        userActions.setLevel(OFF);
         loadAllPatients();
         loadAllClinicians();
         loadAllAdministrators();
         loadTransplantWaitingList();
+        userActions.setLevel(ALL);
+
     }
     
     /**
