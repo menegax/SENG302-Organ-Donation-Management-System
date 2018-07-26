@@ -60,17 +60,6 @@ public class DatabaseTest {
 			conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
 		} catch (SQLException e1) {
 			System.err.println("Failed to connect to UC database server.");
-			try {
-				conn = DriverManager.getConnection("jdbc:mysql://122.62.50.128:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
-			} catch (SQLException e2) {
-				System.err.println("Failed to connect to database mimic from external source.");
-				try {
-					conn = DriverManager.getConnection("jdbc:mysql://192.168.1.70:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");					
-				} catch (SQLException e3) {
-					System.err.println("Failed to connect to database mimic from internal source.");
-					System.err.println("All database connections failed, skipping tests.");
-				}
-			}
 		}
 		if (conn == null) {
 			return false;
