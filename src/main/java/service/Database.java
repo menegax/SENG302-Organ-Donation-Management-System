@@ -1799,7 +1799,8 @@ public class Database implements Serializable {
      * Adds dummy test objects for testing purposes
      */
     private void addDummyTestObjects() {
-
+        systemLogger.log(INFO, "Adding default dummy test objects");
+        userActions.setLevel(OFF);
         try {
 
             // Add dummy patients for testing
@@ -1830,5 +1831,6 @@ public class Database implements Serializable {
             userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
             systemLogger.log(INFO, "Unable to add dummy patients");
         }
+        userActions.setLevel(ALL);
     }
 }
