@@ -11,10 +11,13 @@ import controller.ScreenControl;
 import model.Clinician;
 import model.Patient;
 import model.User;
+import utility.GlobalEnums;
 import utility.Searcher;
 import utility.StatusObservable;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.*;
@@ -22,6 +25,7 @@ import java.util.logging.Level;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
@@ -179,8 +183,8 @@ public class Database implements Serializable {
     		+ "Salt = VALUES (Salt), "
     		+ "Password = VALUES (Password), "
     		+ "Modified = VALUES (Modified)";
-    
-    private final String UPDATETRANSPLANTREQUESTQUERYSTRING = "INSERT INTO tblTransplantWaitList " 
+
+    private final String UPDATETRANSPLANTREQUESTQUERYSTRING = "INSERT INTO tblTransplantWaitList "
     		+ "VALUES (?, ?, ?, ?) "
     		+ "ON DUPLICATE KEY UPDATE "
     		+ "Patient = Patient";
@@ -723,7 +727,7 @@ public class Database implements Serializable {
 		userActions.log(Level.SEVERE, "Failed added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
 		return false;
     }
-    
+
     private boolean addAdministrator(Administrator admin, Searcher searcher) {
     	if (inDatabase(admin)) {
             userActions.log(Level.SEVERE, "Failed to add administrator to database, username " + admin.getUsername() + " already exisits.", "Attempted to add new administrator to database.");
@@ -815,7 +819,7 @@ public class Database implements Serializable {
         loadAllAdministrators();
         loadTransplantWaitingList();
     }
-    
+
     /**
      * Loads all organs for a patient and stores them in an ArrayList.
      * @param organs String of the patients organs.
@@ -1482,8 +1486,8 @@ public class Database implements Serializable {
         }
         return false;
     }
-    
-    
+
+
     /**
      * Calls all sub-methods to save data to disk
      */
@@ -1585,7 +1589,10 @@ public class Database implements Serializable {
             }
         } catch (FileNotFoundException e) {
             systemLogger.log(Level.INFO, "Successfully imported patients from file");
+        } finally {
+            addDummyTestObjects();
         }
+
     }
 
     /**
@@ -1613,6 +1620,8 @@ public class Database implements Serializable {
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Failed to import clinicians from file", "Attempted to read clinician file");
+        } finally {
+            ensureDefaultClinician();
         }
 
     }
@@ -1641,6 +1650,8 @@ public class Database implements Serializable {
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Failed to import administrators from file", "Attempted to read administrator file");
+        } finally {
+            ensureDefaultAdministrator();
         }
     }
 
@@ -1739,5 +1750,67 @@ public class Database implements Serializable {
 
     public  Set<Administrator> getAdministrators() {
     	return administrators;
+    }
+
+    /**
+     * Adds the default clinician if there isn't one already
+     */
+    private static void ensureDefaultClinician() {
+        // if default clinician 0 not in db, add it
+        if (!Database.isClinicianInDb(0)) {
+            systemLogger.log(INFO, "Default clinician not in database. Adding default clinician to database.");
+            Database.addClinician(new Clinician(0, "Phil", new ArrayList<String>() {{
+                add("");
+            }}, "McGraw", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
+        }
+
+    }
+
+    /**
+     * Adds the default administrator if there isn't one already
+     */
+    private static void ensureDefaultAdministrator() {
+        // if default administrator 'admin' not in db, add it
+        if (!Database.isAdministratorInDb("admin")) {
+            systemLogger.log(INFO, "Default admin not in database. Adding default admin to database.");
+            Database.addAdministrator(new Administrator("admin", "John", new ArrayList<>(), "Smith", "password"));
+        }
+    }
+
+    /**
+     * Adds dummy test objects for testing purposes
+     */
+    private static void addDummyTestObjects() {
+
+        try {
+
+            // Add dummy patients for testing
+            ArrayList<String> middles = new ArrayList<>();
+            middles.add("Middle");
+            middles.add("Xavier");
+            Database.addPatient(new Patient("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
+            Database.getPatientByNhi("ABC1238")
+                    .addDonation(GlobalEnums.Organ.LIVER);
+            Database.getPatientByNhi("ABC1238")
+                    .addDonation(GlobalEnums.Organ.CORNEA);
+            Database.getPatientByNhi("ABC1238")
+                    .setRegion(GlobalEnums.Region.AUCKLAND);
+            Database.getPatientByNhi("ABC1238")
+                    .setBirthGender(GlobalEnums.BirthGender.MALE);
+
+            Database.addPatient(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
+            Database.getPatientByNhi("ABC1234")
+                    .addDonation(GlobalEnums.Organ.LIVER);
+            Database.getPatientByNhi("ABC1234")
+                    .addDonation(GlobalEnums.Organ.CORNEA);
+            Database.getPatientByNhi("ABC1234")
+                    .setRegion(GlobalEnums.Region.CANTERBURY);
+            Database.getPatientByNhi("ABC1234")
+                    .setBirthGender(GlobalEnums.BirthGender.FEMALE);
+        }
+        catch (Exception e) {
+            userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
+            systemLogger.log(INFO, "Unable to add dummy patients");
+        }
     }
 }

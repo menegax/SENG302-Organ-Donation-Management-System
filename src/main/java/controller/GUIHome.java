@@ -24,6 +24,7 @@ import model.Patient;
 import model.User;
 import org.tuiofx.TuioFX;
 import service.Database;
+import utility.Searcher;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 import utility.undoRedo.UndoableStage;
@@ -336,7 +337,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         createTab(TabName.PROFILE, "/scene/administratorProfile.fxml");
         createTab(TabName.UPDATE, "/scene/administratorProfileUpdate.fxml");
     }
-    
+
     /**
      * Called when logout button is pressed by user
      * Checks for unsaved changes before logging out
@@ -371,6 +372,15 @@ public class GUIHome implements Observer, TouchscreenCapable {
         screenControl.setUpNewLogin(); // ONLY FOR SINGLE USER SUPPORT. REMOVE WHEN MULTI USER SUPPORT
         screenControl.setIsSaved(true);
         userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
+
+        // Resets all local changes
+        Database.resetDatabase();
+        Database.importFromDiskPatients("./patient.json");
+        Database.importFromDiskClinicians("./clinician.json");
+        Database.importFromDiskWaitlist("./waitlist.json");
+        Database.importFromDiskAdministrators("./administrator.json");
+
+        Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
     }
 
     /**
