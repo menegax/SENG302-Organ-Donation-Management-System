@@ -46,8 +46,7 @@ public class ParseCSV {
         results.put(Result.SUCCESS, pats);
         results.put(Result.FAIL, errors);
 
-
-       Database.getDatabase().importToDb(results.get(Result.SUCCESS));
+        Database.getDatabase().importToDb(results.get(Result.SUCCESS));
 
         return results;
     }
