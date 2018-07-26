@@ -51,6 +51,7 @@ public class SearcherTest {
 
     @Before
     public void beforeTest() {
+        userActions.setLevel(Level.OFF);
         // Given patients in a db
         Patient d1 = new Patient("abc1234", "Pat", new ArrayList<String>(), "Laff", LocalDate.now());
         Patient d2 = new Patient("def1234", "Patik", new ArrayList<String>(), "Laffey", LocalDate.now());

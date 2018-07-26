@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -38,13 +39,14 @@ public class DatabaseTest {
 	private static Clinician clinician = new Clinician(1234, "Test", new ArrayList<String>(), "Tester", Region.CANTERBURY);
 	
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	public static void setUpBeforeClass() {
 		userActions.setLevel(OFF);
 		validConnection = validateConnection();
 		testDb = Database.getDatabase();
 	}
 	
 	private static void resetTestData() {
+		userActions.setLevel(Level.OFF);
 		patient = new Patient("TST1234", "Test", new ArrayList<String>(), "Tester", LocalDate.of(1998, 1, 8), new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), null, GlobalEnums.BirthGender.MALE, GlobalEnums.PreferredGender.MAN, "Pat", 1.7, 56.0, GlobalEnums.BloodGroup.O_POSITIVE, new ArrayList<Organ>(), new ArrayList<Organ>(), "Street 1", "Street 2", "Suburb", GlobalEnums.Region.CANTERBURY, 7020, "035441143", "0", "0220918384", "plaffey@mail.com", "EC", "Relationship", "0", "0", "0", "Email@email.com", new ArrayList<PatientActionRecord>(), new ArrayList<Disease>(), new ArrayList<Disease>(), new ArrayList<Medication>(), new ArrayList<Medication>(), new ArrayList<Procedure>());
 		clinician = new Clinician(1234, "Test", new ArrayList<String>(), "Tester", Region.CANTERBURY);
 		testDb.update(clinician);
@@ -77,17 +79,17 @@ public class DatabaseTest {
 	}
 	
 	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
+	public static void tearDownAfterClass() {
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		Assume.assumeTrue(validConnection);
 		resetTestData();
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 	}
 
 	@Test
@@ -117,7 +119,7 @@ public class DatabaseTest {
 		String query = "UPDATE tblPatients SET LName = 'Bober' WHERE StaffID = 1234";
 		try {
 			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
-			assertTrue(results == null);
+            assertNull(results);
 		} catch (SQLException e) {
 			fail("Error communicating with database: " + e.getMessage());
 		}
@@ -128,7 +130,7 @@ public class DatabaseTest {
 		String query = "UPDATE tblPatients SET LName = 'Bober' WHERE Nhi = 'TST1234'";
 		try {
 			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
-			assertTrue(results == null);
+            assertNull(results);
 		} catch (SQLException e) {
 			fail("Error communicating with database: " + e.getMessage());
 		}
@@ -145,7 +147,7 @@ public class DatabaseTest {
 		String query = "SELECT * FROM tblClinicians WHERE StaffID = 1234";
 		try {
 			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
-			assertTrue(results.size() == 1);
+            assertEquals(1, results.size());
 		} catch (SQLException e2) {
 			fail("Error communicating with database: " + e2.getMessage());
 		}
@@ -159,7 +161,7 @@ public class DatabaseTest {
 			String query = "SELECT * FROM tblClinicians WHERE StaffID = 1234";
 			try {
 				ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
-				assertTrue(results.size() == 1);
+                assertEquals(1, results.size());
 			} catch (SQLException e2) {
 				fail("Error communicating with database: " + e2.getMessage());
 			}
@@ -174,7 +176,7 @@ public class DatabaseTest {
 		ArrayList<String[]> results = new ArrayList<String[]>();
 		try {
 			 results = testDb.runQuery(query, new String[0]);
-			assertTrue(results.get(0)[0].equals("Testing"));
+            assertEquals("Testing", results.get(0)[0]);
 		} catch (SQLException e1) {
 			fail("Error communicating with database: " + e1.getMessage());
 		} catch (AssertionError e2) {
@@ -189,7 +191,7 @@ public class DatabaseTest {
 		try {
 			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
 			boolean manualTest = results.size() > 0;
-			assertTrue(manualTest == testResult);
+            assertEquals(manualTest, testResult);
 		} catch (SQLException e) {
 			fail("Error communicating with database: " + e.getMessage());
 		}
@@ -202,7 +204,7 @@ public class DatabaseTest {
 		try {
 			ArrayList<String[]> results = testDb.runQuery(query, new String[0]);
 			boolean manualTest = results.size() > 0;
-			assertTrue(manualTest == testResult);
+            assertEquals(manualTest, testResult);
 		} catch (SQLException e) {
 			fail("Error communicating with database: " + e.getMessage());
 		}

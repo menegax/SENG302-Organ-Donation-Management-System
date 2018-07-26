@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import org.apache.commons.lang3.ArrayUtils;
 
 import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
@@ -60,17 +61,17 @@ public class Database implements Serializable {
                 try {
                     database.addPatient((Patient) user, searcher);
                 } catch (IllegalArgumentException e) {
-                    userActions.log(Level.WARNING, "Failed to add user " + ((Patient) user).getNhiNumber() + ". NHI not unique", "Attempted to add existing patient");
+                    userActions.log(WARNING, "Failed to add user " + ((Patient) user).getNhiNumber() + ". NHI not unique", "Attempted to add existing patient");
                 }
             } else if (user instanceof Clinician) {
                 try {
                     database.addClinician((Clinician) user, searcher);
                 } catch (IllegalArgumentException e) {
-                    userActions.log(Level.WARNING, "Failed to add user " + ((Clinician) user).getStaffID() + ". Staff ID not unique", "Attempted to add existing clinician");
+                    userActions.log(WARNING, "Failed to add user " + ((Clinician) user).getStaffID() + ". Staff ID not unique", "Attempted to add existing clinician");
                 }
             }
         } else {
-            userActions.log(Level.WARNING, "New user not added", "Attempted to add null user");
+            userActions.log(WARNING, "New user not added", "Attempted to add null user");
         }
     }
 
@@ -88,7 +89,7 @@ public class Database implements Serializable {
                 clinicians.remove(user);
             }
         } else {
-            userActions.log(Level.WARNING, "User not removed", "Attempted to remove null user");
+            userActions.log(WARNING, "User not removed", "Attempted to remove null user");
         }
     }
 
@@ -217,8 +218,6 @@ public class Database implements Serializable {
     }
 
 
-    //TODO change to real database before submission
-
     /**
      * Initialize the connection to the remote database.
      */
@@ -332,7 +331,7 @@ public class Database implements Serializable {
         try {
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage() + "\n" + e.getSQLState() + "\n" + e.getErrorCode());
+            systemLogger.log(WARNING, e.getMessage() + "\n" + e.getSQLState() + "\n" + e.getErrorCode());
         }
     }
 
@@ -786,7 +785,7 @@ public class Database implements Serializable {
     			return clinicianInDatabase((Clinician) object);
     		}
 		} catch (SQLException e) {
-			userActions.log(Level.WARNING, "Couldn't query database", "Attempted to check if object existed in database");
+			userActions.log(WARNING, "Couldn't query database", "Attempted to check if object existed in database");
 		}
     	return false;
     }
@@ -1593,7 +1592,7 @@ public class Database implements Serializable {
                 try {
                     add(d);
                 } catch (IllegalArgumentException e) {
-                    userActions.log(Level.WARNING, "Error importing donor from file", "Attempted to import donor from file");
+                    userActions.log(WARNING, "Error importing donor from file", "Attempted to import donor from file");
                 }
             }
         } catch (FileNotFoundException e) {
@@ -1620,15 +1619,15 @@ public class Database implements Serializable {
                 try {
                     add(c);
                 } catch (IllegalArgumentException e) {
-                    userActions.log(Level.WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
+                    userActions.log(WARNING, "Error importing clinician from file", "Attempted to import clinician from file");
                 }
             }
         } catch (FileNotFoundException e) {
-            userActions.log(Level.WARNING, "Failed to import clinicians", "Attempted to import clinicians");
+            userActions.log(WARNING, "Failed to import clinicians", "Attempted to import clinicians");
             systemLogger.log(Level.INFO, "Successfully imported clinician from file");
         }
         catch (Exception e) {
-            userActions.log(Level.WARNING, "Failed to import clinicians from file", "Attempted to read clinician file");
+            userActions.log(WARNING, "Failed to import clinicians from file", "Attempted to read clinician file");
         } finally {
             ensureDefaultClinician();
         }
@@ -1650,15 +1649,15 @@ public class Database implements Serializable {
                 try {
                     database.add(a);
                 } catch (IllegalArgumentException e) {
-                    userActions.log(Level.WARNING, "Error importing administrator from file", "Attempted to import administrator from file");
+                    userActions.log(WARNING, "Error importing administrator from file", "Attempted to import administrator from file");
                 }
             }
         }
         catch (FileNotFoundException e) {
-            userActions.log(Level.WARNING, "Administrator import file not found", "Attempted to read administrator file");
+            userActions.log(WARNING, "Administrator import file not found", "Attempted to read administrator file");
         }
         catch (Exception e) {
-            userActions.log(Level.WARNING, "Failed to import administrators from file", "Attempted to read administrator file");
+            userActions.log(WARNING, "Failed to import administrators from file", "Attempted to read administrator file");
         } finally {
             ensureDefaultAdministrator();
         }
@@ -1677,10 +1676,10 @@ public class Database implements Serializable {
             systemLogger.log(Level.INFO, "Successfully imported organ waiting list from file");
         }
         catch (FileNotFoundException e) {
-            userActions.log(Level.WARNING, "Waitlist import file not found", "Attempted to read waitlist file");
+            userActions.log(WARNING, "Waitlist import file not found", "Attempted to read waitlist file");
         }
         catch (Exception e) {
-            userActions.log(Level.WARNING, "Failed to import from waitlist file", "Attempted to read watilist file");
+            userActions.log(WARNING, "Failed to import from waitlist file", "Attempted to read watilist file");
         }
 
     }
