@@ -39,9 +39,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
-
-        ParseCSV parseCSV = new ParseCSV();
-        parseCSV.parse(new FileReader("C:\\Users\\Hayden Taylor\\Downloads\\testCSV.csv"));
         // setup GUI
         ScreenControl screenControl = ScreenControl.getScreenControl();
         primaryStage.setTitle("Login");
@@ -49,7 +46,6 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
         screenControl.show(uuid, loginScreen);
-
 
         addDummyTestObjects();
         ensureDefaultClinician();
