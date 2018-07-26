@@ -1657,9 +1657,7 @@ public class Database implements Serializable {
     		}
     	}
     	try {
-			runQuery(query, params);
-			userActions.log(INFO, "Successfully updated all patients in database.", "Attempted to update all patients in database.");
-    		if (insertCount > 0) {
+       		if (insertCount > 0) {
     			finalQuery = "";
     			finalParams = new String[0];
     			queryCount = 0;

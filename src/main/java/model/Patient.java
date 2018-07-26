@@ -333,7 +333,11 @@ public class Patient extends User {
         setDeath(newPatientAttributes.getDeath());
         setStreet1(newPatientAttributes.getStreet1());
         setStreet2(newPatientAttributes.getStreet2());
-        setSuburb(newPatientAttributes.getSuburb());
+        try {
+            setSuburb(newPatientAttributes.getSuburb());
+        } catch (DataFormatException e) {
+            userActions.log(Level.SEVERE, "","" );
+        }
         setRegion(newPatientAttributes.getRegion());
         setBirthGender(newPatientAttributes.getBirthGender());
         setPreferredGender(newPatientAttributes.getPreferredGender());
@@ -466,10 +470,11 @@ public class Patient extends User {
             Searcher.getSearcher().removeIndex(this);
             this.firstName = firstName;
             if (getPreferredName() == null) {
-                setPreferredName( firstName );
+                setPreferredName(firstName);
             }
             Searcher.getSearcher().addIndex(this);
             userModified();
+        }
     }
 
     public void setLastName(String lastName) {
@@ -657,6 +662,7 @@ public class Patient extends User {
             }
             this.suburb = suburb;
             userModified();
+        }
     }
 
     public Region getRegion() {
@@ -819,16 +825,18 @@ public class Patient extends User {
     }
 
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
-        ensureValidNhi(nhiNumber);
-        //added for when csv parsing creates obj from default constructor
-        if (this.nhiNumber == null) {
-            this.nhiNumber = nhiNumber;
+            ensureValidNhi(nhiNumber);
+            //added for when csv parsing creates obj from default constructor
+            if (this.nhiNumber == null) {
+                this.nhiNumber = nhiNumber;
+            }
+            if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
+                Searcher.getSearcher().removeIndex(this);
+                this.nhiNumber = nhiNumber.toUpperCase();
+                userModified();
+            }
         }
-        if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
-            Searcher.getSearcher().removeIndex(this);
-        	this.nhiNumber = nhiNumber.toUpperCase();
-        	userModified();
-    }
+
 
 
     public String getHomePhone() {
