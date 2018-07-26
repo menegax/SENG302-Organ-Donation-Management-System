@@ -42,7 +42,6 @@ public class DatabaseTest {
 	public static void setUpBeforeClass() {
 		userActions.setLevel(OFF);
 		validConnection = validateConnection();
-		testDb = Database.getDatabase();
 	}
 	
 	private static void resetTestData() {
@@ -74,6 +73,7 @@ public class DatabaseTest {
 	@Before
 	public void setUp() {
 		Assume.assumeTrue(validConnection);
+		testDb = Database.getDatabase();
 		resetTestData();
 	}
 
