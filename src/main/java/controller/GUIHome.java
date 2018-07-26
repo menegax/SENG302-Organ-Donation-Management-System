@@ -24,6 +24,7 @@ import model.Patient;
 import model.User;
 import org.tuiofx.TuioFX;
 import service.Database;
+import utility.Searcher;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 import utility.undoRedo.UndoableStage;
@@ -368,6 +369,8 @@ public class GUIHome implements Observer, TouchscreenCapable {
         Database.importFromDiskClinicians("./clinician.json");
         Database.importFromDiskWaitlist("./waitlist.json");
         Database.importFromDiskAdministrators("./administrator.json");
+
+        Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
     }
 
     /**
