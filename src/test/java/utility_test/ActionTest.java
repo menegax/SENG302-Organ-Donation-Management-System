@@ -39,7 +39,7 @@ public class ActionTest {
 
     private int staffId = 1;
 
-    Database database = Database.getDatabase();
+    Database database;
     
     private static boolean validConnection = false;
 
@@ -71,6 +71,7 @@ public class ActionTest {
     @Before
     public void reset() {
     	Assume.assumeTrue(validConnection);
+    	database  = Database.getDatabase();
         current = null;
         after = null;
         action = null;
