@@ -400,7 +400,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         menu2Item1.setOnAction(event -> {
             screenControl.setIsSaved(true);
             database.updateDatabase();
-            userActions.log(INFO, "Successfully saved to disk", "Attempted to save to disk");
+            userActions.log(INFO, "Successfully saved", "Attempted to save");
         });
         if (userControl.getLoggedInUser() instanceof Administrator) {
             Menu subMenuImport = new Menu("Import"); // import submenu
