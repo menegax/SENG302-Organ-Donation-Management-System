@@ -1779,7 +1779,7 @@ public class Database implements Serializable {
      */
     private void ensureDefaultAdministrator() {
         // if default administrator 'admin' not in db, add it
-        if (administratorInDb("admin")) {
+        if (!administratorInDb("admin")) {
             systemLogger.log(INFO, "Default admin not in database. Adding default admin to database.");
             addAdministrator(new Administrator("admin", "John", new ArrayList<>(), "Smith", "password"), searcher);
         }
