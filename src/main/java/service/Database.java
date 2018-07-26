@@ -1689,6 +1689,7 @@ public class Database {
      *
      * @param fileName file to import from
      */
+    @Deprecated
     public void importFromDiskPatients(String fileName) {
         Gson gson = new Gson();
         BufferedReader br;

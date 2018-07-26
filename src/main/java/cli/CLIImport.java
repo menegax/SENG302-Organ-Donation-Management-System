@@ -27,17 +27,15 @@ public class CLIImport implements Runnable {
     public void run() {
         if (fileName.endsWith(".csv")) {
             try {
-            Reader reader = new FileReader(fileName);
-            ParseCSV parseCSV = new ParseCSV();
-            parseCSV.parse(reader);
+                Reader reader = new FileReader(fileName);
+                ParseCSV parseCSV = new ParseCSV();
+                parseCSV.parse(reader);
+                userActions.log(Level.INFO, "Successfully imported", "Attempted to import patients");
             } catch (FileNotFoundException e) {
                 userActions.log(Level.SEVERE, "File doesn't exist", "Attempted to import patients");
             }
-            userActions.log(Level.INFO, "Successfully imported", "Attempted to import patients");
-        } else if (fileName.endsWith(".json")) {
-            Database.getDatabase().importFromDiskPatients(fileName);
         } else {
-            userActions.log(Level.SEVERE, "Unsupported file typeim", "Attempted to import patients");
+            userActions.log(Level.SEVERE, "Unsupported file type", "Attempted to import patients");
         }
     }
 
