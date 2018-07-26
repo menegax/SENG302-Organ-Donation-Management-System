@@ -1161,6 +1161,7 @@ public class Database implements Serializable {
      * @return True if all patients load successfully, false otherwise.
      */
     private boolean loadAllPatients() {
+        Boolean success = false;
         try {
         	String query = "SELECT * FROM tblPatients";
             ArrayList<String[]> patientsRaw = runQuery(query, new String[0]);
@@ -1168,11 +1169,13 @@ public class Database implements Serializable {
                 patients.add(parsePatient(attr));
             }
 			userActions.log(Level.INFO, "Successfully imported all patients from the database.", "Attempted to read all patients from database.");
-            return true;
+            success = true;
         } catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to read all patients from the database.", "Attempted to read all patients from database.");
+        } finally {
+            addDummyTestObjects();
         }
-        return false;
+        return success;
     }
 
     /**
@@ -1180,6 +1183,7 @@ public class Database implements Serializable {
      * @return True if successfully loads all administrators, false otherwise.
      */
     private boolean loadAllAdministrators() {
+        Boolean success = false;
         try {
         	String query = "SELECT * FROM tblAdmins";
             ArrayList<String[]> adminsRaw = runQuery(query, new String[0]);
@@ -1187,11 +1191,13 @@ public class Database implements Serializable {
                 administrators.add(parseAdministrator(attr));
             }
 			userActions.log(Level.INFO, "Successfully imported all administrators from the database.", "Attempted to read all administrators from database.");
-            return true;
+            success = true;
         } catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to read all administrators from the database.", "Attempted to read all administrators from database.");
+        } finally {
+            ensureDefaultAdministrator();
         }
-        return false;
+        return success;
     }
 
     /**
@@ -1199,6 +1205,7 @@ public class Database implements Serializable {
      * @return True if successfully loads all clinicians, false otherwise.
      */
     private boolean loadAllClinicians() {
+        Boolean success = false;
         try {
         	String query = "SELECT * FROM tblClinicians";
             ArrayList<String[]> clinicianRaw = runQuery(query, new String[0]);
@@ -1206,11 +1213,13 @@ public class Database implements Serializable {
                 clinicians.add(parseClinician(attr));
             }
 			userActions.log(Level.INFO, "Successfully imported all clinicians from the database.", "Attempted to read all clinicians from database.");
-            return true;
+            success =  true;
         } catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to read all clinicians from the database." + e.getMessage(), "Attempted to read all clinicians from the database.");
+        } finally {
+            ensureDefaultClinician();
         }
-        return false;
+        return success;
     }
 
 
@@ -1755,13 +1764,13 @@ public class Database implements Serializable {
     /**
      * Adds the default clinician if there isn't one already
      */
-    private static void ensureDefaultClinician() {
+    private void ensureDefaultClinician() {
         // if default clinician 0 not in db, add it
-        if (!Database.isClinicianInDb(0)) {
+        if (!staffIDInDatabase(0)) {
             systemLogger.log(INFO, "Default clinician not in database. Adding default clinician to database.");
-            Database.addClinician(new Clinician(0, "Phil", new ArrayList<String>() {{
+            addClinician(new Clinician(0, "Phil", new ArrayList<String>() {{
                 add("");
-            }}, "McGraw", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
+            }}, "McGraw", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY), searcher);
         }
 
     }
@@ -1769,18 +1778,18 @@ public class Database implements Serializable {
     /**
      * Adds the default administrator if there isn't one already
      */
-    private static void ensureDefaultAdministrator() {
+    private void ensureDefaultAdministrator() {
         // if default administrator 'admin' not in db, add it
-        if (!Database.isAdministratorInDb("admin")) {
+        if (administratorInDb("admin")) {
             systemLogger.log(INFO, "Default admin not in database. Adding default admin to database.");
-            Database.addAdministrator(new Administrator("admin", "John", new ArrayList<>(), "Smith", "password"));
+            addAdministrator(new Administrator("admin", "John", new ArrayList<>(), "Smith", "password"), searcher);
         }
     }
 
     /**
      * Adds dummy test objects for testing purposes
      */
-    private static void addDummyTestObjects() {
+    private void addDummyTestObjects() {
 
         try {
 
@@ -1788,24 +1797,24 @@ public class Database implements Serializable {
             ArrayList<String> middles = new ArrayList<>();
             middles.add("Middle");
             middles.add("Xavier");
-            Database.addPatient(new Patient("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
-            Database.getPatientByNhi("ABC1238")
+            addPatient(new Patient("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)), searcher);
+            getPatientByNhi("ABC1238")
                     .addDonation(GlobalEnums.Organ.LIVER);
-            Database.getPatientByNhi("ABC1238")
+            getPatientByNhi("ABC1238")
                     .addDonation(GlobalEnums.Organ.CORNEA);
-            Database.getPatientByNhi("ABC1238")
+            getPatientByNhi("ABC1238")
                     .setRegion(GlobalEnums.Region.AUCKLAND);
-            Database.getPatientByNhi("ABC1238")
+            getPatientByNhi("ABC1238")
                     .setBirthGender(GlobalEnums.BirthGender.MALE);
 
-            Database.addPatient(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
-            Database.getPatientByNhi("ABC1234")
+            addPatient(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)), searcher);
+            getPatientByNhi("ABC1234")
                     .addDonation(GlobalEnums.Organ.LIVER);
-            Database.getPatientByNhi("ABC1234")
+            getPatientByNhi("ABC1234")
                     .addDonation(GlobalEnums.Organ.CORNEA);
-            Database.getPatientByNhi("ABC1234")
+            getPatientByNhi("ABC1234")
                     .setRegion(GlobalEnums.Region.CANTERBURY);
-            Database.getPatientByNhi("ABC1234")
+            getPatientByNhi("ABC1234")
                     .setBirthGender(GlobalEnums.BirthGender.FEMALE);
         }
         catch (Exception e) {

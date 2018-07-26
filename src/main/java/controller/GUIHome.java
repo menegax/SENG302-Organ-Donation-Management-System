@@ -374,11 +374,8 @@ public class GUIHome implements Observer, TouchscreenCapable {
         userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
 
         // Resets all local changes
-        Database.resetDatabase();
-        Database.importFromDiskPatients("./patient.json");
-        Database.importFromDiskClinicians("./clinician.json");
-        Database.importFromDiskWaitlist("./waitlist.json");
-        Database.importFromDiskAdministrators("./administrator.json");
+        database.resetLocalDatabase();
+        database.loadAll();
 
         Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
     }
