@@ -65,6 +65,7 @@ public class Administrator extends User {
 		this.salt = salt;
 		this.password = password;
 		this.modified = modified;
+		databaseImport();
 	}
 
 	public String getUsername() {
@@ -103,5 +104,18 @@ public class Administrator extends User {
      */
     public List<AdministratorActionRecord> getAdminActionsList() {
         return adminActionsList;
+    }
+
+    /**
+     * Sets the attributes of the administrator to the attributes of the provided administrator
+     * @param newUserAttributes a user whose attributes this function copies
+     */
+    public void setAttributes(User newUserAttributes) {
+        Administrator newAdministratorAttributes = (Administrator) newUserAttributes.deepClone();
+
+        setFirstName(newAdministratorAttributes.getFirstName());
+        setLastName(newAdministratorAttributes.getLastName());
+        setMiddleNames(newAdministratorAttributes.getMiddleNames());
+        setPassword(newAdministratorAttributes.getHashedPassword());
     }
 }

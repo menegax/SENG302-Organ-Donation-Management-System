@@ -34,7 +34,6 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	public boolean add(Patient receiver, Organ organ) {
 		checkDatabase();
 		OrganRequest request = new OrganRequest(receiver, organ);
-		database.saveTransplantRequest(request);
 	    return requests.add(request);
 	}
 

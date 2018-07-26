@@ -288,12 +288,22 @@ public class GlobalEnums {
         CLINICIANSEARCHPATIENTS("clinicianSearchPatients"), CLINICIANPROFILEUPDATE("clinicianProfileUpdate"), PATIENTMEDICATIONS("patientMedications"), PATIENTREGISTER(
                 "patientRegister"), PATIENTUPDATECONTACTS("patientUpdateContacts"), PATIENTUPDATEDONATIONS("patientUpdateDonations"), PATIENTUPDATEPROFILE(
                 "patientUpdateProfile"), PATIENTUPDATEDIAGNOSIS("patientUpdateDiagnosis"), PATIENTUPDATEREQUIREMENTS("patientUpdateRequirements"), CLINICIANDIAGNOSIS(
-                "clinicianDiagnosis"), PATIENTPROCEDUREFORM("patientProcedureForm"), PATIENTPROCEDURES("patientProcedures");
+                "clinicianDiagnosis"), PATIENTPROCEDUREFORM("patientProcedureForm"), PATIENTPROCEDURES("patientProcedures"), ADMINISTRATORUSERREGISTER("administratorUserRegister"),
+        ADMINISTRATORSEARCHUSERS("administratorSearchUsers"), ADMINISTRATORPROFILEUPDATE("administratorProfileUpdate");
 
         private String value;
 
         UndoableScreen(final String value) {
             this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue();
         }
     }
 
@@ -346,18 +356,6 @@ public class GlobalEnums {
         DeregistrationReason(final String value) {
             this.value = value;
         }
-
-
-        @Override
-        public String toString() {
-            return this.getValue();
-        }
-
-
-        public String getValue() {
-            return value;
-        }
-
     }
 
     /**
@@ -384,12 +382,10 @@ public class GlobalEnums {
             return this.getValue();
         }
 
-
         public static Enum getEnumFromString(String value) {
             try {
                 return Status.valueOf(value.toUpperCase());
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 return null;
             }
         }

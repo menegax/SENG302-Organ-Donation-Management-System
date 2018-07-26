@@ -1,11 +1,16 @@
 package controller;
 
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+import utility.GlobalEnums;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Includes methods to assist with undo and redo functionality across the whole application
@@ -16,6 +21,9 @@ public class UndoRedoControl {
 //    public String redoShortcut = "Ctrl+Y";
 
     private static UndoRedoControl undoRedoControl;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    private UserControl userControl = new UserControl();
 
     private UndoRedoControl() {
 
@@ -39,6 +47,7 @@ public class UndoRedoControl {
      * @param statesHistoryScreen the statesHistoryScreen to get the states from
      */
     public void setStatesHistoryScreen (UndoableController controller, StatesHistoryScreen statesHistoryScreen) {
+        controller.getStatesHistory().setIndex(statesHistoryScreen.getIndex());
         for (int i = 0; i < statesHistoryScreen.getStateHistories().size(); i++) {
             controller.setStateHistory(i, statesHistoryScreen.getStateHistories().get(i));
         }
@@ -78,11 +87,37 @@ public class UndoRedoControl {
         }
         if (control instanceof TableView) {
             // Unchecked type call will always be safe
-            ((TableView) control).getItems().setAll((ArrayList) state);
+            //((TableView) control).getItems().setAll((ArrayList) state);
         }
         if (control instanceof ListView) {
             // Unchecked type call will always be safe
-            ((ListView) control).getItems().setAll((ArrayList) state);
+            //((ListView) control).getItems().setAll((ArrayList) state);
+        }
+    }
+
+    /**
+     * Sets the actions of a stateHistoryScreen to the provided actions
+     * @param actions the actions to set to
+     * @param statesHistoryScreen the statesHistoryScreen whose actions need to be set
+     */
+    public void setActions(Map<Integer, List<Action>> actions, StatesHistoryScreen statesHistoryScreen) {
+        statesHistoryScreen.setActions(actions);
+    }
+
+    /**
+     * Adds an action to the stateHistoryScreen of the undoableScreen provided
+     * @param action the action to have
+     * @param undoableScreen the undoable screen of the statesHistoryScreen to add it to
+     */
+    public void addAction(Action action, GlobalEnums.UndoableScreen undoableScreen) {
+        for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
+            if (stage instanceof UndoableStage) {
+                for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
+                    if (statesHistoryScreen.getUndoableScreen().equals(undoableScreen)) {
+                        statesHistoryScreen.addAction(action);
+                    }
+                }
+            }
         }
     }
 

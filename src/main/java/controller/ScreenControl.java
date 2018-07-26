@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -46,6 +47,8 @@ public class ScreenControl {
     private static Scene main;
 
     private Map<UUID, Stage> applicationStages;
+
+    private Map<Stage, TabPane> stageTabs = new HashMap<>();
 
     private boolean macOs = System.getProperty("os.name")
             .startsWith("Mac");
@@ -363,6 +366,24 @@ public class ScreenControl {
     }
 
     /**
+     * Adds a tabpane to a map of stages to tabpanes
+     * @param stage the stage of the tadpane
+     * @param tabPane the tabpane associated with that stage
+     */
+    public void addStageTab(Stage stage, TabPane tabPane) {
+        stageTabs.put(stage, tabPane);
+    }
+
+    /**
+     * Gets the tab pane of the given stage
+     * @param stage the required stage
+     * @return the TabPane of that stage
+     */
+    public TabPane getTabPane(Stage stage) {
+        return stageTabs.get(stage);
+    }
+
+    /**
      * Sets the isSaved boolean and adjusts screens accordingly
      * @param isSaved whether local changes have been saved or not
      */
@@ -401,6 +422,10 @@ public class ScreenControl {
 
     public boolean getIsSaved() {
         return isSaved;
+    }
+
+    public Set<Stage> getUsersStages(User user) {
+        return userStages.get(user);
     }
 }
 

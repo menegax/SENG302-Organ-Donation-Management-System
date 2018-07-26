@@ -1,17 +1,28 @@
 package controller;
 
+import static utility.UserActionHistory.userActions;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.input.*;
+
+import javafx.scene.control.TextField;
+
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Administrator;
+import model.Clinician;
 import model.Patient;
 import model.User;
 import service.Database;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
@@ -20,9 +31,8 @@ import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
 
-public class GUILogin {
+public class GUILogin implements TouchscreenCapable {
 
     @FXML
     public GridPane loginPane;
@@ -45,6 +55,9 @@ public class GUILogin {
     private RadioButton administrator;
 
     Database database = Database.getDatabase();
+
+    private TouchPaneController loginTouchPane;
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
@@ -52,12 +65,17 @@ public class GUILogin {
      */
     public void initialize() {
         // Enter key triggers log in
+        loginTouchPane = new TouchPaneController(loginPane);
         nhiLogin.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         loginPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 logIn();
             }
         });
+        loginPane.setOnZoom(this::zoomWindow);
+        loginPane.setOnRotate(this::rotateWindow);
+        loginPane.setOnScroll(this::scrollWindow);
+
     }
 
     /**
@@ -84,10 +102,17 @@ public class GUILogin {
         ScreenControl screenControl = ScreenControl.getScreenControl();
         try {
             if (patient.isSelected()) {
-                Patient patient = database.getPatientByNhi(nhiLogin.getText()); //TODO: db throws null now
+                Patient patient = database.getPatientByNhi(nhiLogin.getText());
+                if (patient == null) {
+                    throw new InvalidObjectException("User doesn't exist");
+                }
                 login.addLoggedInUserToCache(patient);
             } else if (clinician.isSelected()) {
-                login.addLoggedInUserToCache(database.getClinicianByID(Integer.parseInt(nhiLogin.getText())));
+                Clinician clinician = database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
+                if (clinician == null) {
+                    throw new InvalidObjectException("User doesn't exist");
+                }
+                login.addLoggedInUserToCache(clinician);
             } else {
                 checkAdminCredentials();
                 login.addLoggedInUserToCache(database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
@@ -112,10 +137,14 @@ public class GUILogin {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Non-numeric staff ID are not permitted");
             alert.show();
         }
+
     }
 
     private void checkAdminCredentials() throws InvalidObjectException {
         Administrator admin = database.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
+        if (admin == null) {
+            throw new InvalidObjectException("User doesn't exist");
+        }
         String hashedInput = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password.getText() + admin.getSalt());
         if (!hashedInput.equals(admin.getHashedPassword())) {
             throw new InvalidObjectException("Invalid username/password combination");
@@ -141,4 +170,23 @@ public class GUILogin {
             password.setDisable(false);
         }
     }
+
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        loginTouchPane.zoomPane(zoomEvent);
+    }
+
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        loginTouchPane.rotatePane(rotateEvent);
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        if(scrollEvent.isDirect()) {
+            loginTouchPane.scrollPane(scrollEvent);
+        }
+    }
+
+
 }
