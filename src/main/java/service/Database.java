@@ -22,6 +22,7 @@ import java.util.logging.Level;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
@@ -220,14 +221,17 @@ public class Database implements Serializable {
     private void initializeConnection() {
 		try {
 			conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+			systemLogger.log(INFO, "Connected to UC database");
 		} catch (SQLException e1) {
 			System.err.println("Failed to connect to UC database server.");
 			try {
 				conn = DriverManager.getConnection("jdbc:mysql://222.154.74.253:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
-			} catch (SQLException e2) {
+                systemLogger.log(INFO, "Connected to Patrick's database remotely");
+            } catch (SQLException e2) {
 				System.err.println("Failed to connect to database mimic from external source.");
 				try {
-					conn = DriverManager.getConnection("jdbc:mysql://192.168.1.70:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+                    systemLogger.log(INFO, "Connected to Patrick's database locally");
+                    conn = DriverManager.getConnection("jdbc:mysql://192.168.1.70:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
 				} catch (SQLException e3) {
 					System.err.println("Failed to connect to database mimic from internal source.");
 					System.err.println("All database connections failed.");
@@ -568,7 +572,7 @@ public class Database implements Serializable {
         try {
 			runQuery(query, attr);
 			searcher.updateIndex(patient);
-			userActions.log(Level.INFO, "Updated patient attributes in database.", "Attempted to update patient attributes in database.");
+			userActions.log(INFO, "Updated patient attributes in database.", "Attempted to update patient attributes in database.");
 			return true;
 		} catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to update patient in database.");
@@ -630,7 +634,7 @@ public class Database implements Serializable {
     	String[] attr = getClinicianAttributes(clinician);
     	try {
 			runQuery(UPDATECLINICIANQUERYSTRING, attr);
-			userActions.log(Level.INFO, "Updated clinician attributes in database.", "Attempted to update clinician attributes in database.");
+			userActions.log(INFO, "Updated clinician attributes in database.", "Attempted to update clinician attributes in database.");
 			searcher.updateIndex(clinician);
 			return true;
 		} catch (SQLException e) {
@@ -648,7 +652,7 @@ public class Database implements Serializable {
     	String[] attr = getAdministratorAttributes(admin);
     	try {
 			runQuery(UPDATEADMINQUERYSTRING, attr);
-			userActions.log(Level.INFO, "Updated administrator attributes in database.", "Attempted to update administrator attributes in database.");
+			userActions.log(INFO, "Updated administrator attributes in database.", "Attempted to update administrator attributes in database.");
 			searcher.updateIndex(admin);
 			return true;
 		} catch (SQLException e) {
@@ -685,7 +689,7 @@ public class Database implements Serializable {
      */
     private boolean addPatient(Patient newPatient, Searcher searcher) throws IllegalArgumentException {
         if (inDatabase(newPatient)) {
-            userActions.log(Level.SEVERE, "Failed to add patient to database, NHI already exisits.", "Attempted to add new patient to database.");
+            userActions.log(Level.WARNING, "Failed to add patient to database, NHI already exisits.", "Attempted to add new patient to database.");
             return false;
         } else {
         	//Adds Patient to the database
@@ -694,10 +698,10 @@ public class Database implements Serializable {
                 patients.add(newPatient);
                 //Add Patient to search index
                 searcher.addIndex(newPatient);
-            	userActions.log(Level.INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
+            	userActions.log(INFO, "Successfully added patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
             	return true;
             }
-            userActions.log(Level.SEVERE, "Failed to add patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
+            userActions.log(Level.WARNING, "Failed to add patient " + newPatient.getNhiNumber(), "Attempted to add a patient");
             return false;
         }
     }
@@ -716,7 +720,7 @@ public class Database implements Serializable {
 		if (update(newClinician)) {
 			clinicians.add(newClinician);
 			searcher.addIndex(newClinician);
-			userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
+			userActions.log(INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
 			return true;
 		}
 		userActions.log(Level.SEVERE, "Failed added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
@@ -731,7 +735,7 @@ public class Database implements Serializable {
     	if (update(admin)) {
             administrators.add(admin);
             searcher.addIndex(admin);
-            userActions.log(Level.INFO, "Successfully added administrator " + admin.getUsername(), "Attempted to add an administrator");
+            userActions.log(INFO, "Successfully added administrator " + admin.getUsername(), "Attempted to add an administrator");
             return true;
 		}
 		userActions.log(Level.SEVERE, "Failed added clinician " + admin.getUsername(), "Attempted to add a Administrator.");
@@ -797,7 +801,7 @@ public class Database implements Serializable {
                 "VALUES (?, ?, ?, ?)";
         try {
             runQuery(query, attr);
-			userActions.log(Level.INFO, "Successfully added transplant request to database.", "Attempted to add a transplant request to database.");
+			userActions.log(INFO, "Successfully added transplant request to database.", "Attempted to add a transplant request to database.");
             return true;
         } catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failure to add transplant request to database " + e.getMessage(), "Attempted to add a transplant request.");
@@ -823,14 +827,14 @@ public class Database implements Serializable {
     private ArrayList<GlobalEnums.Organ> loadOrgans(String organs) {
         ArrayList<GlobalEnums.Organ> organArrayList = new ArrayList<>();
         if (organs.equals("")) {
-    		userActions.log(Level.INFO, "Patient had no organs to load.", "Attempted load all organs for patient.");
+    		userActions.log(INFO, "Patient had no organs to load.", "Attempted load all organs for patient.");
     		return organArrayList;
         }
         String[] organArray = organs.split(",");
         for (String organ : organArray) {
             organArrayList.add(GlobalEnums.Organ.getEnumFromString(organ.toUpperCase()));
         }
-		userActions.log(Level.INFO, "Successfully loaded all organs for patient.", "Attempted load all organs for patient.");
+		userActions.log(INFO, "Successfully loaded all organs for patient.", "Attempted load all organs for patient.");
         return organArrayList;
     }
 
@@ -847,7 +851,7 @@ public class Database implements Serializable {
             for (String[] attr : logsRaw) {
                 patientLogs.add(parseLog(attr));
             }
-			userActions.log(Level.INFO, "Successfully loaded all logs for patient " + nhi, "Attempted to load all logs for patient " + nhi);
+			userActions.log(INFO, "Successfully loaded all logs for patient " + nhi, "Attempted to load all logs for patient " + nhi);
         } catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to load all logs for patient " + nhi, "Attempted to load all logs for patient " + nhi);
         }
@@ -951,7 +955,7 @@ public class Database implements Serializable {
         ArrayList<Disease> currentDiseases = diseases[0];
         ArrayList<Disease> pastDiseases = diseases[1];
         List<Procedure> procedures = loadProcedures(nhi);
-		userActions.log(Level.INFO, "Successfully loaded patient " + nhi + " from the database.", "Attempted to load a patient from the database.");
+		userActions.log(INFO, "Successfully loaded patient " + nhi + " from the database.", "Attempted to load a patient from the database.");
         return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName, height, weight,
                 bloodType, donations, requested, contactAttr[0], contactAttr[1], contactAttr[2], region, zip,
                 contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
@@ -1162,7 +1166,7 @@ public class Database implements Serializable {
             for (String[] attr : patientsRaw) {
                 patients.add(parsePatient(attr));
             }
-			userActions.log(Level.INFO, "Successfully imported all patients from the database.", "Attempted to read all patients from database.");
+			userActions.log(INFO, "Successfully imported all patients from the database.", "Attempted to read all patients from database.");
             return true;
         } catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to read all patients from the database.", "Attempted to read all patients from database.");
@@ -1181,7 +1185,7 @@ public class Database implements Serializable {
             for (String[] attr : adminsRaw) {
                 administrators.add(parseAdministrator(attr));
             }
-			userActions.log(Level.INFO, "Successfully imported all administrators from the database.", "Attempted to read all administrators from database.");
+			userActions.log(INFO, "Successfully imported all administrators from the database.", "Attempted to read all administrators from database.");
             return true;
         } catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to read all administrators from the database.", "Attempted to read all administrators from database.");
@@ -1200,7 +1204,7 @@ public class Database implements Serializable {
             for (String[] attr : clinicianRaw) {
                 clinicians.add(parseClinician(attr));
             }
-			userActions.log(Level.INFO, "Successfully imported all clinicians from the database.", "Attempted to read all clinicians from database.");
+			userActions.log(INFO, "Successfully imported all clinicians from the database.", "Attempted to read all clinicians from database.");
             return true;
         } catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to read all clinicians from the database." + e.getMessage(), "Attempted to read all clinicians from the database.");
@@ -1321,7 +1325,7 @@ public class Database implements Serializable {
 			runQuery(query, params);
 			searcher.removeIndex(patient);
 			patients.remove(patient);
-			userActions.log(Level.INFO, "Deleted patient " + nhi, "Attempted to delete patient " + nhi);
+			userActions.log(INFO, "Deleted patient " + nhi, "Attempted to delete patient " + nhi);
 			return true;
 		} catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Couldn't delete patient " + nhi + " from the database." + e.getMessage(), "Attempted delete patient " + nhi + " from the database.");
@@ -1399,7 +1403,7 @@ public class Database implements Serializable {
     	}
     	try {
 			runQuery(query, params);
-			userActions.log(Level.INFO, "Successfully updated all patients in database.", "Attempted to update all patients in database.");
+			userActions.log(INFO, "Successfully updated all patients in database.", "Attempted to update all patients in database.");
 			return true;
 		} catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to update all patients in database." + e.getMessage(), "Attempted to update all patients in database.");
@@ -1422,7 +1426,7 @@ public class Database implements Serializable {
     	}
     	try {
 			runQuery(query, params);
-			userActions.log(Level.INFO, "Successfully updated all clinicians in database.", "Attempted to update all clinicians in database.");
+			userActions.log(INFO, "Successfully updated all clinicians in database.", "Attempted to update all clinicians in database.");
 			return true;
 		} catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to update all clinicians in database." + e.getMessage(), "Attempted to update all clinicians in database.");
@@ -1441,7 +1445,7 @@ public class Database implements Serializable {
     	}
     	try {
 			runQuery(query, params);
-			userActions.log(Level.INFO, "Successfully updated all administrators in database.", "Attempted to update all administrators in database.");
+			userActions.log(INFO, "Successfully updated all administrators in database.", "Attempted to update all administrators in database.");
 			return true;
 		} catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to update all administrator in database." + e.getMessage(), "Attempted to update all administrators in database.");
@@ -1474,7 +1478,7 @@ public class Database implements Serializable {
     	}
         try {
             runQuery(query, attrs);
-			userActions.log(Level.INFO, "Successfully updated all transplant request to database.", "Attempted to update all transplant request to database.");
+			userActions.log(INFO, "Successfully updated all transplant request to database.", "Attempted to update all transplant request to database.");
             return true;
         } catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failure to update all request to database " + e.getMessage(), "Attempted to update all transplant request.");
@@ -1583,7 +1587,7 @@ public class Database implements Serializable {
                 }
             }
         } catch (FileNotFoundException e) {
-            systemLogger.log(Level.INFO, "Successfully imported patients from file");
+            systemLogger.log(INFO, "Successfully imported patients from file");
         }
     }
 
@@ -1608,7 +1612,7 @@ public class Database implements Serializable {
             }
         } catch (FileNotFoundException e) {
             userActions.log(WARNING, "Failed to import clinicians", "Attempted to import clinicians");
-            systemLogger.log(Level.INFO, "Successfully imported clinician from file");
+            systemLogger.log(INFO, "Successfully imported clinician from file");
         }
         catch (Exception e) {
             userActions.log(WARNING, "Failed to import clinicians from file", "Attempted to read clinician file");
@@ -1653,7 +1657,7 @@ public class Database implements Serializable {
         try {
             br = new BufferedReader(new FileReader(filename));
             organWaitingList = gson.fromJson(br, OrganWaitlist.class);
-            systemLogger.log(Level.INFO, "Successfully imported organ waiting list from file");
+            systemLogger.log(INFO, "Successfully imported organ waiting list from file");
         }
         catch (FileNotFoundException e) {
             userActions.log(WARNING, "Waitlist import file not found", "Attempted to read waitlist file");
