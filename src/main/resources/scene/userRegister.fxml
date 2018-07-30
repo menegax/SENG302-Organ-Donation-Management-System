@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="userRegisterPane" prefHeight="400.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIUserRegister">
+<GridPane fx:id="userRegisterPane" prefHeight="400.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIUserRegister" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
    <children>
       <Label fx:id="backButton" onMouseClicked="#goBackToLogin" styleClass="back" stylesheets="@../css/guiStyle.css" text="〱back">
          <GridPane.margin>

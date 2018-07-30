@@ -31,12 +31,12 @@ public class TouchPaneController {
      * @param zoomEvent zoom event
      */
     public void zoomPane(ZoomEvent zoomEvent) {
-        Window currentWindow = ((Node)zoomEvent.getTarget()).getScene().getWindow();
+//        Window currentWindow = ((Node)zoomEvent.getTarget()).getScene().getWindow();
         pane.setScaleX(pane.getScaleX() * zoomEvent.getZoomFactor());
-        currentWindow.setWidth(currentWindow.getWidth() * zoomEvent.getZoomFactor());
+//        currentWindow.setWidth(currentWindow.getWidth() * zoomEvent.getZoomFactor());
         pane.setScaleY(pane.getScaleY() * zoomEvent.getZoomFactor());
-        currentWindow.setHeight(currentWindow.getHeight() * zoomEvent.getZoomFactor());
-        resizePane();
+//        currentWindow.setHeight(currentWindow.getHeight() * zoomEvent.getZoomFactor());
+//        resizePane();
     }
 
     /**
@@ -58,17 +58,17 @@ public class TouchPaneController {
         }
     }
 
-    /**
-     * Resizes the pane to be the same size as the window it is displayed in. The pane is translated to
-     * (0, 0) to re-center it.
-     */
-    private void resizePane() {
-        Window currentWindow = pane.getScene().getWindow();
-        double stageWidth = currentWindow.getWidth();
-        double stageHeight = currentWindow.getHeight();
-        pane.resize(stageWidth, stageHeight);
-        pane.setTranslateX(0);
-        pane.setTranslateY(0);
-    }
+//    /**
+//     * Resizes the pane to be the same size as the window it is displayed in. The pane is translated to
+//     * (0, 0) to re-center it.
+//     */
+//    private void resizePane() {
+//        Window currentWindow = pane.getScene().getWindow();
+//        double stageWidth = currentWindow.getWidth();
+//        double stageHeight = currentWindow.getHeight();
+//        pane.resize(stageWidth, stageHeight);
+//        pane.setTranslateX(0);
+//        pane.setTranslateY(0);
+//    }
 
 }

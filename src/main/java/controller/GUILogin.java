@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.*;
@@ -16,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import model.Administrator;
 import service.Database;
 import utility.TouchPaneController;
@@ -79,7 +81,11 @@ public class GUILogin implements TouchscreenCapable {
     @FXML
     public void goToRegister() {
         try {
-            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml")));
+            Parent registerRoot = FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml"));
+            Stage stage = (Stage) loginPane.getScene().getWindow();
+            stage.setScene(new Scene(registerRoot));
+            stage.show();
+//            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml")));
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load patient register").show();
             userActions.log(SEVERE, "Failed to load patient register", "Attempted to load patient register");
@@ -105,10 +111,10 @@ public class GUILogin implements TouchscreenCapable {
                 login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
             Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
-            UndoableStage stage = new UndoableStage();
-            screenControl.addStage(stage.getUUID(), stage);
-            screenControl.show(stage.getUUID(), home);
-            screenControl.closeStage(Main.getUuid()); // close login scene after login
+            Stage stage = (Stage) loginPane.getScene().getWindow();
+//            screenControl.addStage(stage.getUUID(), stage);
+            stage.setScene(new Scene(home));
+//            screenControl.closeStage(Main.getUuid()); // close login scene after login
         } catch (InvalidObjectException e) {
             password.setText(""); //Reset password field on invalid login
             userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");

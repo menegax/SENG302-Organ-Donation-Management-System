@@ -1,8 +1,6 @@
 package controller;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.*;
 import static utility.SystemLogger.systemLogger;
 
 import javafx.fxml.FXMLLoader;
@@ -67,6 +65,8 @@ public class ScreenControl {
 
     private Boolean isSaved = true;
 
+    private Stage touchStage = null;
+
     private ScreenControl() {
         applicationStages = new HashMap<>();
         setUpKeyCodeCombinations();
@@ -103,9 +103,17 @@ public class ScreenControl {
      * @param root the screen to display on the stage
      */
     public void show(UUID stageName, Parent root) {
-        Stage stage = applicationStages.get(stageName);
-        stage.setScene(new Scene(root));
-        stage.show();
+        if (touchStage != null) {
+            // if touch
+            systemLogger.log(INFO, "Showing new touch stage scene"); //todo rm?
+
+        } else {
+            // if not touch
+            Stage stage = applicationStages.get(stageName);
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+
     }
 
     /**
@@ -164,6 +172,10 @@ public class ScreenControl {
         main = mainScene;
     }
 
+
+    public void setTouchStage(Stage touchStage) {
+        this.touchStage = touchStage;
+    }
 
     /**
      * Add screen to the hash map of screens
