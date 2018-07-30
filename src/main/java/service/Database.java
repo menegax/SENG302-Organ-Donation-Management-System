@@ -221,31 +221,31 @@ public class Database implements Serializable {
     }
 
 
-    /**
-     * Initialize the connection to the remote database.
-     */
-    private void initializeConnection() {
-		try {
-			conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
-			systemLogger.log(INFO, "Connected to UC database");
-		} catch (SQLException e1) {
-			System.err.println("Failed to connect to UC database server.");
-			try {
-				conn = DriverManager.getConnection("jdbc:mysql://222.154.74.253:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
-                systemLogger.log(INFO, "Connected to Patrick's database remotely");
-            } catch (SQLException e2) {
-				System.err.println("Failed to connect to database mimic from external source.");
-				try {
-                    systemLogger.log(INFO, "Connected to Patrick's database locally");
-                    conn = DriverManager.getConnection("jdbc:mysql://192.168.1.70:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
-				} catch (SQLException e3) {
-					System.err.println("Failed to connect to database mimic from internal source.");
-					System.err.println("All database connections failed.");
-					conn = null;
-				}
-			}
-		}
-    }
+//    /**
+//     * Initialize the connection to the remote database.
+//     */
+//    private void initializeConnection() {
+//		try {
+//			conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+//			systemLogger.log(INFO, "Connected to UC database");
+//		} catch (SQLException e1) {
+//			System.err.println("Failed to connect to UC database server.");
+//			try {
+//				conn = DriverManager.getConnection("jdbc:mysql://222.154.74.253:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+//                systemLogger.log(INFO, "Connected to Patrick's database remotely");
+//            } catch (SQLException e2) {
+//				System.err.println("Failed to connect to database mimic from external source.");
+//				try {
+//                    systemLogger.log(INFO, "Connected to Patrick's database locally");
+//                    conn = DriverManager.getConnection("jdbc:mysql://192.168.1.70:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+//				} catch (SQLException e3) {
+//					System.err.println("Failed to connect to database mimic from internal source.");
+//					System.err.println("All database connections failed.");
+//					conn = null;
+//				}
+//			}
+//		}
+//    }
 
     public int nextStaffID() {
     	while (staffIDInDatabase(curStaffID)) {
