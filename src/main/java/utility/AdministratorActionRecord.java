@@ -1,9 +1,10 @@
 package utility;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.logging.Level;
 
-public class AdministratorActionRecord {
+public class AdministratorActionRecord implements Serializable {
 
     private Timestamp timestamp;
 
