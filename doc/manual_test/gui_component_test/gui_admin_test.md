@@ -95,6 +95,9 @@
     - Change any fields
     - Click "Save" button
     - Ensure changes are reflected on the profile screen
+    - Log out
+    - Log back in
+    - Ensure changes are persisted
 
 ## Test History
 
