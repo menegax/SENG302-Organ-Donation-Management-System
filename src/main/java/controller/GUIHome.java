@@ -391,6 +391,13 @@ public class GUIHome implements Observer, TouchscreenCapable {
             Database.saveToDisk();
             userActions.log(INFO, "Successfully saved to disk", "Attempted to save to disk");
         });
+
+        //WINDOW
+        Menu menu3 = new Menu("Window");
+        MenuItem menu3Item1 = new MenuItem("Open Keyboard");
+        menu3Item1.setOnAction(event -> openKeyboard());
+
+
         if (userControl.getLoggedInUser() instanceof Administrator) {
             Menu subMenuImport = new Menu("Import"); // import submenu
             MenuItem menu2Item2 = new MenuItem("Import patients...");
@@ -417,6 +424,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         }
         menu2.getItems()
                 .addAll(menu2Item1);
+        menu3.getItems().addAll(menu3Item1);
 
         // EDIT
         //        Menu menu3 = new Menu("Edit");
@@ -430,7 +438,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         //                .addAll(menu3Item1, menu3Item2);
 
         bar.getMenus()
-                .addAll(menu1, menu2);
+                .addAll(menu1, menu2, menu3);
 
         boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless")
                 .equals("true");
@@ -452,11 +460,25 @@ public class GUIHome implements Observer, TouchscreenCapable {
                 menuBar.getMenus()
                         .clear();
                 menuBar.getMenus()
-                        .addAll(menu1, menu2);
+                        .addAll(menu1, menu2, menu3);
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
             }
         }
 
+    }
+
+    private void openKeyboard() {
+        if(System.getProperty("os.name")
+                .startsWith("Windows")) {
+            try {
+                Runtime.getRuntime().exec("cmd /c osk");
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("Error");
+                alert.setContentText("System keyboard could not be opened");
+                alert.show();
+            }
+        }
     }
 
 
