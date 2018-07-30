@@ -161,3 +161,25 @@ Test 8: Pass
 Test 9: Pass
 
 Test 10: Pass
+
+### 31/07/2018 - Andrew
+
+Test 1: Pass
+
+Test 2: Pass
+
+Test 3: Pass
+
+Test 4: Pass
+
+Test 5: Pass
+
+Test 6: Pass
+
+Test 7: Pass
+
+Test 8: Pass
+
+Test 9: Pass
+
+Test 10: Pass / Fail. Once logged out can't log back in as an admin.
