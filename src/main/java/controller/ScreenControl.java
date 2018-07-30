@@ -3,6 +3,7 @@ package controller;
 import static java.util.logging.Level.*;
 import static utility.SystemLogger.systemLogger;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -11,17 +12,14 @@ import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.User;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Maintains a collection of screens for the application
@@ -65,7 +63,9 @@ public class ScreenControl {
 
     private Boolean isSaved = true;
 
-    private Stage touchStage = null;
+    private UndoableStage touchStage = null;
+
+    private Pane touchPane;
 
     private ScreenControl() {
         applicationStages = new HashMap<>();
@@ -105,6 +105,9 @@ public class ScreenControl {
     public void show(UUID stageName, Parent root) {
         if (touchStage != null) {
             // if touch
+            Pane newPane = new Pane(root);
+            touchPane.getChildren().addAll(newPane);
+//            touchStage.show();
             systemLogger.log(INFO, "Showing new touch stage scene"); //todo rm?
 
         } else {
@@ -173,8 +176,10 @@ public class ScreenControl {
     }
 
 
-    public void setTouchStage(Stage touchStage) {
+    public void setTouchStage(UndoableStage touchStage) {
         this.touchStage = touchStage;
+        touchPane = new AnchorPane();
+        this.touchStage.setScene(new Scene(touchPane));
     }
 
     /**
@@ -368,10 +373,22 @@ public class ScreenControl {
     void setUpNewLogin() {
         // UNTIL WE SUPPORT MULTI USER LOGIN
         try {
-            ScreenControl screenControl = ScreenControl.getScreenControl();
-            Pane loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-            screenControl.addStage(Main.getUuid(), new Stage());
-            screenControl.show(Main.getUuid(), loginScreen);
+            if(touchStage != null) {
+//                ScreenControl screenControl = ScreenControl.getScreenControl();
+//                touchPane.getChildren().clear();
+//                System.out.println(touchPane.getChildren().size());
+//                Pane loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+//                screenControl.show(touchStage.getUUID(), loginScreen);
+//                System.out.println(touchPane.getChildren().size());
+                Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+                touchStage.setScene(new Scene(root));
+                touchStage.show();
+            } else {
+                ScreenControl screenControl = ScreenControl.getScreenControl();
+                Pane loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+                screenControl.addStage(Main.getUuid(), new Stage());
+                screenControl.show(Main.getUuid(), loginScreen);
+            }
         }
         catch (IOException e) {
             systemLogger.log(SEVERE, "Failed to recreate login scene");

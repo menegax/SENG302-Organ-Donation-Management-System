@@ -14,6 +14,7 @@ import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
 import org.tuiofx.TuioFX;
+import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -28,40 +29,46 @@ public class TUIOFXMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //        // set up GUI
-        //        ScreenControl screenControl = ScreenControl.getScreenControl();
-        //        screenControl.addStage(uuid, primaryStage);
-        //        Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-        //        screenControl.show(uuid, loginScreen);
+       // set up GUI
+       UndoableStage stage = new UndoableStage();
+       ScreenControl screenControl = ScreenControl.getScreenControl();
+       screenControl.setTouchStage(stage);
+       screenControl.addStage(uuid, stage);
+       Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+       screenControl.show(uuid, loginScreen);
+
+        Database.importFromDiskPatients("./patient.json");
+        Database.importFromDiskClinicians("./clinician.json");
+        Database.importFromDiskWaitlist("./waitlist.json");
+        Database.importFromDiskAdministrators("./administrator.json");
 
         Searcher.getSearcher()
                 .createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         openKeyboard();
-        TuioFX tuioFX = new TuioFX(primaryStage, Configuration.debug());
+        TuioFX tuioFX = new TuioFX(stage, Configuration.debug());
         tuioFX.start();
-        primaryStage.setResizable(true);
-        primaryStage.setFullScreen(true);
+        stage.setResizable(true);
+        stage.setFullScreen(true);
+        stage.show();
 
-        Pane mainPane = new Pane();
-
-        Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-        Pane loginPane = (Pane) loginScreen;
-
-        Parent userRegister = FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml"));
-        Pane userRegisterPane = (Pane) userRegister;
-
-        Scene mainScene = new Scene(mainPane);
-
-        primaryStage.setScene(mainScene);
-        
-        mainPane.getChildren().addAll(loginPane);
-        mainPane.getChildren().addAll(userRegisterPane);
+//        Pane mainPane = new Pane();
+//
+//        Pane loginPane = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+//
+////        Pane userRegisterPane = FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml"));
+//
+//        Scene mainScene = new Scene(mainPane);
+//
+//        stage.show(stage.getUUID(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+//
+//        mainPane.getChildren().addAll(loginPane);
+//        mainPane.getChildren().addAll(userRegisterPane);
 
 
-        //        screenControl.setTouchStage(primaryStage); //todo...
+        //        screenControl.setTouchStage(stage); //todo...
 
         systemLogger.log(INFO, "Finished the start method for the touch screen app. Beginning app");
-        primaryStage.show();
+        stage.show();
     }
 
 
