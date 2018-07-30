@@ -6,15 +6,17 @@ import org.junit.Test;
 import service.Database;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import static org.junit.Assert.assertEquals;
 import static utility.UserActionHistory.userActions;
 
 /**
  * Tests valid and invalid actions performed on/by administrators
  */
-public class AdministratorTest {
+public class AdministratorTest implements Serializable {
 
     private Administrator defaultAdmin;
 
@@ -58,6 +60,22 @@ public class AdministratorTest {
         givenDefaultAdmin();
         whenUpdatingAdminsFirstName(defaultAdmin, "bil%y");
         thenAdminFirstNameShouldntBeUpdated(defaultAdmin, "bil%y");
+    }
+
+    /**
+     * Tests the setAttributes method
+     */
+    @Test
+    public void testSetAttributes() {
+        Administrator beforeAdmin = new Administrator("Username", "First", new ArrayList<>(), "Last", "password");
+        Administrator afterAdmin = new Administrator("Username", "Second", new ArrayList<String>(){{add("Middle"); add("Name");}}, "Last", "password");
+        beforeAdmin.setAttributes(afterAdmin);
+        assertEquals("Second", beforeAdmin.getFirstName());
+        assertEquals("Name", beforeAdmin.getMiddleNames().get(1));
+
+        // checks deep copy has occurred
+        beforeAdmin.getMiddleNames().remove(0);
+        assertEquals("Middle", afterAdmin.getMiddleNames().get(0));
     }
 
 

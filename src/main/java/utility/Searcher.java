@@ -195,9 +195,9 @@ public class Searcher {
         try {
             indexWriter.deleteDocuments(toDel);
             indexWriter.commit();
-            UserActionHistory.userActions.log(Level.INFO, "Successfully removed user from the search index", "Attempted to remove user from the search index");
+            systemLogger.log(Level.INFO, "Successfully removed user from the search index", "Attempted to remove user from the search index");
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Unable to remove user index", "Attempted to remove user index");
+        	systemLogger.log(Level.SEVERE, "Unable to remove user index", "Attempted to remove user index");
         }
     }
 
@@ -207,9 +207,9 @@ public class Searcher {
     public void clearIndex() {
         try {
             indexWriter.deleteAll();
-            UserActionHistory.userActions.log(Level.INFO, "Successfully cleared patient search index", "Attempted to delete all patients search indices");
+            systemLogger.log(Level.INFO, "Successfully cleared patient search index", "Attempted to delete all patients search indices");
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Unable to clear patient index", "Attempted to clear patient index");
+        	systemLogger.log(Level.SEVERE, "Unable to clear patient index", "Attempted to clear patient index");
         }
     }
 
@@ -433,7 +433,11 @@ public class Searcher {
         List<User> results = new ArrayList<>();
         if (input.isEmpty()) {
             if (filter != null) {
-                return getDefaultResults(types, filter);
+                if (numResults < getDefaultResults(types, filter).size()) {
+                    return getDefaultResults(types, filter).subList(0, numResults);
+                } else {
+                    return getDefaultResults(types, filter);
+                }
             }
             return results;
         }
@@ -474,7 +478,6 @@ public class Searcher {
      * @param filter  - filter to use
      * @return - bool if a match
      */
-    //do not git annotate :(
     private static boolean matchesFilter(Patient patient, Map<GlobalEnums.FilterOption, String> filter) {
         if (filter == null) {
             return false;

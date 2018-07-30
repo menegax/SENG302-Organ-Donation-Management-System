@@ -49,9 +49,6 @@ public class Main extends Application {
         Database.importFromDiskWaitlist("./waitlist.json");
         Database.importFromDiskAdministrators("./administrator.json");
 
-        addDummyTestObjects();
-        ensureDefaultClinician();
-        ensureDefaultAdministrator();
         Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
         openKeyboard();
@@ -62,69 +59,6 @@ public class Main extends Application {
         UserActionHistory.setup(); // start user action logs
         SystemLogger.setup();
         launch(args);
-    }
-
-    /**
-     * Adds dummy test objects for testing purposes
-     */
-    private void addDummyTestObjects() {
-
-        try {
-
-            // Add dummy patients for testing
-            ArrayList<String> middles = new ArrayList<>();
-            middles.add("Middle");
-            middles.add("Xavier");
-            Database.addPatient(new Patient("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
-            Database.getPatientByNhi("ABC1238")
-                    .addDonation(GlobalEnums.Organ.LIVER);
-            Database.getPatientByNhi("ABC1238")
-                    .addDonation(GlobalEnums.Organ.CORNEA);
-            Database.getPatientByNhi("ABC1238")
-                    .setRegion(GlobalEnums.Region.AUCKLAND);
-            Database.getPatientByNhi("ABC1238")
-                    .setBirthGender(GlobalEnums.BirthGender.MALE);
-
-            Database.addPatient(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
-            Database.getPatientByNhi("ABC1234")
-                    .addDonation(GlobalEnums.Organ.LIVER);
-            Database.getPatientByNhi("ABC1234")
-                    .addDonation(GlobalEnums.Organ.CORNEA);
-            Database.getPatientByNhi("ABC1234")
-                    .setRegion(GlobalEnums.Region.CANTERBURY);
-            Database.getPatientByNhi("ABC1234")
-                    .setBirthGender(GlobalEnums.BirthGender.FEMALE);
-        }
-        catch (Exception e) {
-            userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
-            systemLogger.log(INFO, "Unable to add dummy patients");
-        }
-    }
-
-
-    /**
-     * Adds the default clinician if there isn't one already
-     */
-    private void ensureDefaultClinician() {
-        // if default clinician 0 not in db, add it
-        if (!Database.isClinicianInDb(0)) {
-            systemLogger.log(INFO, "Default clinician not in database. Adding default clinician to database.");
-            Database.addClinician(new Clinician(0, "Phil", new ArrayList<String>() {{
-                add("");
-            }}, "McGraw", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
-        }
-
-    }
-
-    /**
-     * Adds the default administrator if there isn't one already
-     */
-    private void ensureDefaultAdministrator() {
-        // if default administrator 'admin' not in db, add it
-        if (!Database.isAdministratorInDb("admin")) {
-            systemLogger.log(INFO, "Default admin not in database. Adding default admin to database.");
-            Database.addAdministrator(new Administrator("admin", "John", new ArrayList<>(), "Smith", "password"));
-        }
     }
 
     /**

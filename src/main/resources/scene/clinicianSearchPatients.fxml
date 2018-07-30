@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -21,15 +22,16 @@
    </columnConstraints>
    <rowConstraints>
       <RowConstraints />
-      <RowConstraints minHeight="35.0" prefHeight="25.0" vgrow="NEVER" />
-      <RowConstraints minHeight="60.0" prefHeight="103.00001068115233" vgrow="NEVER" />
-      <RowConstraints maxHeight="78.00001220703126" minHeight="42.999983215332065" prefHeight="78.00001220703126" vgrow="NEVER" />
+      <RowConstraints maxHeight="30.40001220703125" minHeight="16.800006103515624" prefHeight="28.000003051757812" vgrow="NEVER" />
+      <RowConstraints maxHeight="161.59999389648436" minHeight="60.0" prefHeight="150.39999694824218" vgrow="NEVER" />
+      <RowConstraints maxHeight="78.00001220703126" minHeight="37.399993896484375" prefHeight="37.399993896484375" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="362.79998779296875" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
        <TableView fx:id="patientDataTable" GridPane.columnSpan="3" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS">
          <columns>
              <TableColumn fx:id="columnName" editable="false" minWidth="140.79998779296875" prefWidth="176.0" text="Name" />
+            <TableColumn fx:id="columnStatus" prefWidth="75.0" text="Status" />
              <TableColumn fx:id="columnAge" editable="false" minWidth="0.0" prefWidth="124.79998779296875" text="Age" />
              <TableColumn fx:id="columnBirthGender" editable="false" minWidth="100.0" prefWidth="100.0" text="Birth Gender" />
             <TableColumn fx:id="columnRegion" editable="false" prefWidth="180.0" text="Region" />
@@ -70,8 +72,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints />
                   <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
+                  <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
+                  <RowConstraints maxHeight="27.199999999999996" minHeight="27.199999999999996" prefHeight="27.199999999999996" />
               </rowConstraints>
                <children>
                   <Text fx:id="ageLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0 - 100" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP">
@@ -100,14 +102,15 @@
                </GridPane.margin>
             </ComboBox>
             <ComboBox fx:id="regionFilter" prefHeight="40.0" prefWidth="210.0" promptText="None" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
-            <CheckBox fx:id="isDonorCheckbox" mnemonicParsing="false" text="Donor" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+            <CheckBox fx:id="isDonorCheckbox" mnemonicParsing="false" text="Donor" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets top="15.0" />
                </GridPane.margin>
                <font>
                   <Font size="36.0" />
-               </font></CheckBox>
-            <CheckBox fx:id="isRecieverCheckbox" mnemonicParsing="false" text="Reciever" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="isRecieverCheckbox" mnemonicParsing="false" text="Reciever" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets top="15.0" />
                </GridPane.margin></CheckBox>
@@ -120,26 +123,42 @@
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></ComboBox>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Birth Gender" GridPane.valignment="TOP">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Birth Gender" GridPane.valignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Donating Organ" GridPane.columnIndex="1" GridPane.valignment="TOP">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Donating Organ" GridPane.columnIndex="1" GridPane.valignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recieving Organ" GridPane.columnIndex="2" GridPane.valignment="TOP">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recieving Organ" GridPane.columnIndex="2" GridPane.valignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Region" GridPane.columnIndex="3" GridPane.valignment="TOP">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Region" GridPane.columnIndex="3" GridPane.valignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
+             <Label fx:id="displayX" prefHeight="15.0" text="Display top:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets right="5.0" top="15.0" />
+               </GridPane.margin></Label>
+             <TextField fx:id="valueX" minHeight="15.0" onKeyReleased="#updateSearch" onMouseClicked="#updateSearch" prefHeight="15.0" prefWidth="134.0" styleClass="back" stylesheets="@../css/guiStyle.css" text="30" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets right="5.0" top="15.0" />
+               </GridPane.margin></TextField>
+             <Label fx:id="displayY" maxWidth="1000.0" onMouseClicked="#displayAllResults" prefWidth="245.0" styleClass="back" stylesheets="@../css/guiStyle.css" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+               <GridPane.margin>
+                  <Insets top="15.0" />
+               </GridPane.margin>
+            </Label>
          </children>
          <GridPane.margin>
             <Insets left="60.0" right="60.0" />

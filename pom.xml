@@ -3,7 +3,7 @@
     <groupId>seng302</groupId>
     <artifactId>Main</artifactId>
     <packaging>jar</packaging>
-    <version>5.0</version>
+    <version>5.2</version>
     <name>Big Pharma</name>
     <url>https://eng-git.canterbury.ac.nz/SENG302-2016/team-800</url>
 
@@ -162,7 +162,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <sonar.host.url>http://localhost:9000/</sonar.host.url>
+                <sonar.host.url>http://csse-s302g8.canterbury.ac.nz:9000</sonar.host.url>
             </properties>
         </profile>
     </profiles>

@@ -5,16 +5,21 @@ import model.Administrator;
 import controller.ScreenControl;
 import model.Clinician;
 import model.Patient;
+import model.User;
+import utility.GlobalEnums;
 import utility.Searcher;
 import utility.StatusObservable;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
@@ -34,6 +39,49 @@ public class Database {
     private static Set<Administrator> administrators = new HashSet<>();
 
     private static Searcher searcher = Searcher.getSearcher();
+    /**
+     * Attempts to add a user to the database
+     * Catches exceptions thrown as they may be called by undo/redo and are created by tests
+     * Will instead log user warnings
+     * @param user the user to be added to the database
+     */
+    public static void addUser(User user) {
+        if (user != null) {
+            if (user instanceof Patient) {
+                try {
+                    addPatient((Patient) user);
+                } catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Failed to add user " + ((Patient) user).getNhiNumber() + ". NHI not unique", "Attempted to add existing patient");
+                }
+            } else if (user instanceof Clinician) {
+                try {
+                    addClinician((Clinician) user);
+                } catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Failed to add user " + ((Clinician) user).getStaffID() + ". Staff ID not unique", "Attempted to add existing clinician");
+                }
+            }
+        } else {
+            userActions.log(Level.WARNING, "New user not added", "Attempted to add null user");
+        }
+    }
+
+    /**
+     * Attempts to remove a user from the database
+     * Catches exceptions thrown as they may be called by undo/redo and are created by tests
+     * Will instead log user warnings
+     * @param user the user to be removed from the database
+     */
+    public static void removeUser(User user) {
+        if (user != null) {
+            if (user instanceof Patient) {
+                patients.remove(user);
+            } else if (user instanceof Clinician) {
+                clinicians.remove(user);
+            }
+        } else {
+            userActions.log(Level.WARNING, "User not removed", "Attempted to remove null user");
+        }
+    }
 
     /**
      * Adds a patient to the database
@@ -183,6 +231,11 @@ public class Database {
             clinicians.add(newClinician);
             searcher.addIndex(newClinician);
             userActions.log(Level.INFO, "Successfully added clinician " + newClinician.getStaffID(), "Attempted to add a clinician");
+        }
+
+        else if (!isClinicianInDb(newClinician.getStaffID())) {
+            clinicians.add(newClinician);
+            userActions.log(Level.FINE, "Unique clinician added out of order", "Added a clinician out of order (likely through an undo)");
         }
 
         else {
@@ -339,6 +392,8 @@ public class Database {
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Failed to import patients from file", "Attempted to read patient file");
+        } finally {
+            addDummyTestObjects();
         }
 
     }
@@ -367,6 +422,8 @@ public class Database {
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Failed to import clinicians from file", "Attempted to read clinician file");
+        } finally {
+            ensureDefaultClinician();
         }
 
     }
@@ -394,6 +451,8 @@ public class Database {
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Failed to import administrators from file", "Attempted to read administrator file");
+        } finally {
+            ensureDefaultAdministrator();
         }
     }
 
@@ -458,6 +517,7 @@ public class Database {
     public static void resetDatabase() {
         patients = new HashSet<>();
         clinicians = new HashSet<>();
+        administrators = new HashSet<>();
     }
 
 
@@ -471,4 +531,66 @@ public class Database {
     }
 
     public static Set<Administrator> getAdministrators() { return administrators; }
+
+    /**
+     * Adds the default clinician if there isn't one already
+     */
+    private static void ensureDefaultClinician() {
+        // if default clinician 0 not in db, add it
+        if (!Database.isClinicianInDb(0)) {
+            systemLogger.log(INFO, "Default clinician not in database. Adding default clinician to database.");
+            Database.addClinician(new Clinician(0, "Phil", new ArrayList<String>() {{
+                add("");
+            }}, "McGraw", "Creyke RD", "Ilam RD", "ILAM", GlobalEnums.Region.CANTERBURY));
+        }
+
+    }
+
+    /**
+     * Adds the default administrator if there isn't one already
+     */
+    private static void ensureDefaultAdministrator() {
+        // if default administrator 'admin' not in db, add it
+        if (!Database.isAdministratorInDb("admin")) {
+            systemLogger.log(INFO, "Default admin not in database. Adding default admin to database.");
+            Database.addAdministrator(new Administrator("admin", "John", new ArrayList<>(), "Smith", "password"));
+        }
+    }
+
+    /**
+     * Adds dummy test objects for testing purposes
+     */
+    private static void addDummyTestObjects() {
+
+        try {
+
+            // Add dummy patients for testing
+            ArrayList<String> middles = new ArrayList<>();
+            middles.add("Middle");
+            middles.add("Xavier");
+            Database.addPatient(new Patient("ABC1238", "Joe", middles, "Bloggs", LocalDate.of(1990, 2, 9)));
+            Database.getPatientByNhi("ABC1238")
+                    .addDonation(GlobalEnums.Organ.LIVER);
+            Database.getPatientByNhi("ABC1238")
+                    .addDonation(GlobalEnums.Organ.CORNEA);
+            Database.getPatientByNhi("ABC1238")
+                    .setRegion(GlobalEnums.Region.AUCKLAND);
+            Database.getPatientByNhi("ABC1238")
+                    .setBirthGender(GlobalEnums.BirthGender.MALE);
+
+            Database.addPatient(new Patient("ABC1234", "Jane", middles, "Doe", LocalDate.of(1990, 2, 9)));
+            Database.getPatientByNhi("ABC1234")
+                    .addDonation(GlobalEnums.Organ.LIVER);
+            Database.getPatientByNhi("ABC1234")
+                    .addDonation(GlobalEnums.Organ.CORNEA);
+            Database.getPatientByNhi("ABC1234")
+                    .setRegion(GlobalEnums.Region.CANTERBURY);
+            Database.getPatientByNhi("ABC1234")
+                    .setBirthGender(GlobalEnums.BirthGender.FEMALE);
+        }
+        catch (Exception e) {
+            userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
+            systemLogger.log(INFO, "Unable to add dummy patients");
+        }
+    }
 }
