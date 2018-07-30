@@ -483,7 +483,6 @@ public class GUIAdministratorUserRegister extends UndoableController {
         }
         else {
             statesHistoryScreen.addAction(new Action(null, new Administrator(id, firstName, middles, lastName, password)));
-            Database.addAdministrator(new Administrator(id, firstName, middles, lastName, password)); //todo rm after fixing undo/redo ability to add admin
             userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
         }
         statesHistoryScreen.getUndoableStage()
