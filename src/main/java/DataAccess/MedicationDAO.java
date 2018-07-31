@@ -15,8 +15,8 @@ public class MedicationDAO extends DataAccessBase implements IMedicationDataAcce
 
     @Override
     public int update(String nhi, Medication medication, GlobalEnums.MedicationStatus state) {
-        deleteAll(nhi);
         try (Connection connection = getConnectionInstance()) {
+            deleteAll(connection, nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_MEDICATION_QUERY"));
             connection.setAutoCommit(false);
             statement.setString(1, nhi);
@@ -45,13 +45,10 @@ public class MedicationDAO extends DataAccessBase implements IMedicationDataAcce
         }
     }
 
-    private void deleteAll(String nhi) {
-        try (Connection connection = getConnectionInstance()) {
-            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_MEDICATIONS"));
-            connection.setAutoCommit(false);
-            statement.setString(1, nhi);
-            statement.executeUpdate();
-        } catch (SQLException ignored) {
-        }
+    private void deleteAll(Connection connection, String nhi) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_MEDICATIONS"));
+        connection.setAutoCommit(false);
+        statement.setString(1, nhi);
+        statement.executeUpdate();
     }
 }
