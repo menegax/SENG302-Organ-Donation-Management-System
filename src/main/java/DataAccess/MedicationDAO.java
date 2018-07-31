@@ -1,7 +1,7 @@
 package DataAccess;
 
 import model.Medication;
-import utility.GlobalEnums;
+import utility.GlobalEnums.*;
 import utility.ResourceManager;
 
 import java.sql.Connection;
@@ -14,7 +14,7 @@ import java.util.List;
 public class MedicationDAO extends DataAccessBase implements IMedicationDataAccess {
 
     @Override
-    public int update(String nhi, Medication medication, GlobalEnums.MedicationStatus state) {
+    public int update(String nhi, Medication medication, MedicationStatus state) {
         try (Connection connection = getConnectionInstance()) {
             deleteAll(connection, nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_MEDICATION_QUERY"));
@@ -37,7 +37,10 @@ public class MedicationDAO extends DataAccessBase implements IMedicationDataAcce
             statement.setString(1, nhi);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                medications.add(new Medication(resultSet.getString("Name")));
+                Medication medication = new Medication(resultSet.getString("Name"));
+                MedicationStatus status = resultSet.getString("State").equals(MedicationStatus.CURRENT.toString()) ? MedicationStatus.CURRENT : MedicationStatus.HISTORY;
+                medication.setMedicationStatus(status);
+                medications.add(medication);
             }
             return medications;
         } catch (SQLException e) {
