@@ -99,7 +99,7 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
             statement.setString(1, nhi);
             ResultSet patientAttributes = statement.executeQuery();
             List<PatientActionRecord> patientLogs = logDataAccess.selectAll(nhi);
-            List<Disease> diseases = diseaseDataAccess.select();
+            List<Disease> diseases = diseaseDataAccess.select(nhi);
             List<Medication> medications = medicationDataAccess.select(nhi);
             List<String> contacts = contactDataAccess.select(nhi);
             List<Procedure> procedures = procedureDataAccess.select(nhi);

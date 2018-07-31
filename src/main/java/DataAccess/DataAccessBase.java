@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 
-abstract class  DataAccessBase {
+public abstract class  DataAccessBase {
 
 
     private Connection connectionInstance;
@@ -17,7 +17,7 @@ abstract class  DataAccessBase {
      */
     private Connection initializeConnection() {
         try {
-            connectionInstance = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+            connectionInstance = DriverManager.getConnection("jdbc:mysql://132.181.16.98:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
             systemLogger.log(INFO, "Connected to UC database");
         } catch (SQLException e1) {
             System.err.println("Failed to connect to UC database server.");
@@ -54,33 +54,74 @@ abstract class  DataAccessBase {
         return connectionInstance = closedConnection ? initializeConnection() : connectionInstance;
     }
 
+    /**
+     *
+     * @return
+     */
     public static IMedicationDataAccess getMedicationDataAccess() {
         return new MedicationDAO();
     }
 
+
+    /**
+     *
+     * @return
+     */
     public static IDiseaseDataAccess getDiseaseDataAccess() {
         return new DiseaseDAO();
     }
 
-    public static IPatientDataAccess getPatientDataAccess() { return new PatientDAO(); }
 
+    /**
+     *
+     * @return
+     */
+    public static IPatientDataAccess getPatientDataAccess() {
+        return new PatientDAO(); }
+
+
+    /**
+     *
+     * @return
+     */
     public static IContactDataAccess getContactDataAccess() {
         return new ContactDataAccessDAO();
     }
 
+    /**
+     *
+     * @return
+     */
     public static ILogDataAccess getAdministratorDataAccess() {
         return new AdministratorLogDAO();
     }
 
+
+    /**
+     *
+     * @return
+     */
     public static ILogDataAccess getPatientLogDataAccess() {
         return new PatientLogDAO();
     }
 
+
+    /**
+     *
+     * @return
+     */
     public static ILogDataAccess getClinicianLogDataAccess() {
         return new ClinicianLogDAO();
     }
 
-    public static IProcedureDataAccess getProcedureDataAccess() {return new ProcedureDAO();}
+
+    /**
+     *
+     * @return
+     */
+    public static IProcedureDataAccess getProcedureDataAccess() {
+        return new ProcedureDAO();
+    }
 
 
 }
