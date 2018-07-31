@@ -6,10 +6,7 @@ import java.util.List;
 
 public interface IDiseaseDataAccess {
 
-    boolean update();
+    int update(String nhi, Disease disease);
 
     List<Disease> select(String nhi);
-
-    boolean delete();
-
 }
