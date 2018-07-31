@@ -11,6 +11,4 @@ public interface IMedicationDataAccess {
 
     List<Medication> select(String nhi);
 
-    boolean delete();
-
 }
