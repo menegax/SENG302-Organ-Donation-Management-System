@@ -1,17 +1,15 @@
 package DataAccess;
 
 import model.Medication;
-import model.Patient;
+import utility.GlobalEnums;
 
 import java.util.List;
 
 public interface IMedicationDataAccess {
 
-    boolean update(Patient patient);
+    int update(String nhi, Medication medication, GlobalEnums.MedicationStatus state);
 
-    boolean insert();
-
-    List<Medication> select();
+    List<Medication> select(String nhi);
 
     boolean delete();
 

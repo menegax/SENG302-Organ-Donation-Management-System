@@ -1,6 +1,8 @@
 package DataAccess;
 
+import model.Medication;
 import model.Patient;
+import utility.GlobalEnums;
 import utility.ResourceManager;
 
 import java.sql.Connection;
@@ -33,9 +35,13 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
                 statement.setString(1, patient.getNhiNumber());
                 statement.setString(1, patient.getNhiNumber());
                 statement.executeUpdate();
-
+                for (Medication medication : patient.getMedicationHistory()) {
+                    medicationDataAccess.update(patient.getNhiNumber(), medication, GlobalEnums.MedicationStatus.HISTORY);
+                }
+                for (Medication medication : patient.getCurrentMedications()) {
+                    medicationDataAccess.update(patient.getNhiNumber(), medication, GlobalEnums.MedicationStatus.CURRENT);
+                }
                 diseaseDataAccess.update();
-                medicationDataAccess.update(patient);
                 connection.commit(); //commit if no errors
             }
         } catch (SQLException e) {
@@ -69,5 +75,6 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
         } catch (SQLException e) {
 
         }
+        return null;
     }
 }

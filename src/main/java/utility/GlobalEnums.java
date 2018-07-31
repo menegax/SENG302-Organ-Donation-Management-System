@@ -388,4 +388,17 @@ public class GlobalEnums {
             }
         }
     }
+
+    public enum MedicationStatus {
+        CURRENT(0), HISTORY(1);
+
+        private int value;
+
+        MedicationStatus(int value) { this.value = value; }
+
+        public int getValue() {
+            return value;
+        }
+
+    }
 }
