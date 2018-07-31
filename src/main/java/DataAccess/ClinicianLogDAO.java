@@ -1,8 +1,9 @@
 package DataAccess;
 
+import java.sql.Connection;
 import java.util.List;
 
-public class ClinicianLogDAO extends DataAccessBase implements ILogDataAccess<ClinicianLogDAO>{
+public class ClinicianLogDAO extends DataAccessBase implements ILogDataAccess<ClinicianLogDAO> {
 
     @Override
     public int update(List<ClinicianLogDAO> records, String id) {
@@ -11,6 +12,11 @@ public class ClinicianLogDAO extends DataAccessBase implements ILogDataAccess<Cl
 
     @Override
     public List<ClinicianLogDAO> selectAll(String id) {
+        return null;
+    }
+
+    @Override
+    public List<ClinicianLogDAO> selectAll(Connection connection, String id) {
         return null;
     }
 }

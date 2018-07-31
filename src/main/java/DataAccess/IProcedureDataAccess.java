@@ -1,15 +1,14 @@
 package DataAccess;
 
-import model.Medication;
 import model.Procedure;
 
+import java.sql.Connection;
 import java.util.List;
 
 public interface IProcedureDataAccess {
 
     /**
-     *
-     * @param nhi -
+     * @param nhi       -
      * @param procedure -
      * @return -
      */
@@ -17,9 +16,10 @@ public interface IProcedureDataAccess {
 
 
     /**
-     *
      * @param nhi -
      * @return -
      */
     List<Procedure> select(String nhi);
+
+    List<Procedure> select(Connection connection, String nhi);
 }

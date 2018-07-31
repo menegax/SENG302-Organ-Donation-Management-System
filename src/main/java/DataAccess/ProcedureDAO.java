@@ -37,8 +37,17 @@ public class ProcedureDAO extends DataAccessBase implements IProcedureDataAccess
 
     @Override
     public List<Procedure> select(String nhi) {
-        List<Procedure> procedures = new ArrayList<>();
         try (Connection connection = getConnectionInstance()) {
+            return select(connection, nhi);
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Procedure> select(Connection connection, String nhi) {
+        try {
+            List<Procedure> procedures = new ArrayList<>();
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_PROCEDURES_QUERY"));
             connection.setAutoCommit(false);
             statement.setString(1, nhi);

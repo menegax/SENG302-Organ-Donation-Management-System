@@ -34,8 +34,17 @@ public class DiseaseDAO extends DataAccessBase implements IDiseaseDataAccess {
 
     @Override
     public List<Disease> select(String nhi) {
-        List<Disease> diseases = new ArrayList<>();
         try (Connection connection = getConnectionInstance()) {
+            return select(connection, nhi);
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Disease> select(Connection connection, String nhi) {
+        try {
+            List<Disease> diseases = new ArrayList<>();
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_DISEASES_QUERY"));
             connection.setAutoCommit(false);
             statement.setString(1, nhi);

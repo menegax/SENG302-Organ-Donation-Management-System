@@ -1,26 +1,26 @@
 package DataAccess;
 
+import java.sql.Connection;
 import java.util.List;
 
 /**
- *
  * @param <T>
  */
 public interface ILogDataAccess<T> {
 
 
     /**
-     *
      * @param records -
-     * @param id -
+     * @param id      -
      * @return -
      */
-    public  int update(List<T> records, String id);
+    int update(List<T> records, String id);
 
 
     /**
-     *
      * @return -
      */
-    public List<T> selectAll(String id);
+    List<T> selectAll(String id);
+
+    List<T> selectAll(Connection connection, String id);
 }

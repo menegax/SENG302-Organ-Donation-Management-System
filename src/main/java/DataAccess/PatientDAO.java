@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class PatientDAO extends DataAccessBase implements IPatientDataAccess{
+class PatientDAO extends DataAccessBase implements IPatientDataAccess {
 
     private IMedicationDataAccess medicationDataAccess;
     private IDiseaseDataAccess diseaseDataAccess;
@@ -45,7 +45,7 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
                 for (Medication medication : patient.getCurrentMedications()) {
                     medicationDataAccess.update(patient.getNhiNumber(), medication, MedicationStatus.CURRENT);
                 }
-                diseaseDataAccess.update();
+                //diseaseDataAccess.update();
                 logDataAccess.update(patient.getUserActionsList(), patient.getNhiNumber());
                 contactDataAccess.update(patient);
                 connection.commit(); //commit if no errors
@@ -57,7 +57,6 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
     }
 
     /**
-     *
      * @param patient -
      * @return
      */
@@ -68,7 +67,6 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
 
 
     /**
-     *
      * @param patient -
      * @return
      */
@@ -78,7 +76,6 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -88,7 +85,6 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
 
 
     /**
-     *
      * @param nhi -
      * @return -
      */
@@ -99,11 +95,11 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_BY_NHI"));
             statement.setString(1, nhi);
             ResultSet patientAttributes = statement.executeQuery();
-            List<PatientActionRecord> patientLogs = logDataAccess.selectAll(nhi);
-            List<Disease> diseases = diseaseDataAccess.select(nhi);
-            List<Medication> medications = medicationDataAccess.select(nhi);
-            List<String> contacts = contactDataAccess.select(nhi);
-            List<Procedure> procedures = procedureDataAccess.select(nhi);
+            List<PatientActionRecord> patientLogs = logDataAccess.selectAll(connection, nhi);
+            List<Disease> diseases = diseaseDataAccess.select(connection, nhi);
+            List<Medication> medications = medicationDataAccess.select(connection, nhi);
+            List<String> contacts = contactDataAccess.select(connection, nhi);
+            List<Procedure> procedures = procedureDataAccess.select(connection, nhi);
             return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, procedures, medications);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -112,22 +108,21 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
     }
 
     /**
-     *
      * @param statement -
-     * @param patient -
+     * @param patient   -
      * @throws SQLException -
      */
     private void addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException {
         statement.setString(1, patient.getNhiNumber());
         statement.setString(2, patient.getFirstName());
-        statement.setString(3, patient.getMiddleNames() == null ? "" :String.join(" ", patient.getMiddleNames()));
+        statement.setString(3, patient.getMiddleNames() == null ? "" : String.join(" ", patient.getMiddleNames()));
         statement.setString(4, patient.getLastName());
         statement.setString(5, patient.getBirth().toString());
         statement.setString(6, patient.getCREATED().toString());
         statement.setString(7, patient.getModified().toString());
         statement.setString(8, patient.getDeath() == null ? null : patient.getDeath().toString());
-        statement.setString(9, patient.getBirthGender() == null ? null : patient.getBirthGender().toString().substring(0,1));
-        statement.setString(10, patient.getPreferredGender() == null ? null : patient.getPreferredGender().toString().substring(0,1));
+        statement.setString(9, patient.getBirthGender() == null ? null : patient.getBirthGender().toString().substring(0, 1));
+        statement.setString(10, patient.getPreferredGender() == null ? null : patient.getPreferredGender().toString().substring(0, 1));
         statement.setString(11, patient.getPreferredName());
         statement.setString(12, String.valueOf(patient.getHeight()));
         statement.setString(13, String.valueOf(patient.getWeight()));
@@ -142,7 +137,6 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
     }
 
     /**
-     *
      * @param attributes
      * @param contacts
      * @param logs
@@ -173,7 +167,7 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
             //map enum and organ groups
             BirthGender gender = null;
             if (attributes.getString("BirthGender") != null) {
-              gender = attributes.getString("BirthGender").equals("M") ? BirthGender.MALE : BirthGender.FEMALE;
+                gender = attributes.getString("BirthGender").equals("M") ? BirthGender.MALE : BirthGender.FEMALE;
             }
 
             PreferredGender preferredGender = null;
@@ -183,7 +177,7 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
             }
 
             BloodGroup bloodType = attributes.getString("BloodType") != null ?
-                    BloodGroup.getEnumFromString(attributes.getString("BloodType")): null;
+                    BloodGroup.getEnumFromString(attributes.getString("BloodType")) : null;
             List<Organ> donations = Arrays.stream(attributes.getString("DonatingOrgans")
                     .split("\\s*,\\s*")).map(Organ::getEnumFromString).collect(Collectors.toList());
             List<Organ> requested = Arrays.stream(attributes.getString("ReceivingOrgans")
@@ -193,7 +187,7 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
 
             //map medications
             List<Medication> currentMedication = new ArrayList<>();
-            List<Medication> pastMedication= new ArrayList<>();
+            List<Medication> pastMedication = new ArrayList<>();
             medications = medications == null ? new ArrayList<>() : medications; //must instantiate if null
             medications.forEach((x) -> {
                 if (x.getMedicationStatus().equals(MedicationStatus.CURRENT)) {

@@ -44,14 +44,17 @@ public abstract class  DataAccessBase {
      *
      * @return -
      */
-    public Connection getConnectionInstance(){
+    Connection getConnectionInstance(){
         boolean closedConnection;
         try {
             closedConnection = connectionInstance == null || connectionInstance.isClosed();
         } catch (SQLException e) {
             closedConnection = true;
         }
-        return connectionInstance = closedConnection ? initializeConnection() : connectionInstance;
+        if (closedConnection) {
+            connectionInstance = initializeConnection();
+        }
+        return connectionInstance;
     }
 
     /**
@@ -85,7 +88,7 @@ public abstract class  DataAccessBase {
      * @return
      */
     public static IContactDataAccess getContactDataAccess() {
-        return new ContactDataAccessDAO();
+        return new ContactDAO();
     }
 
     /**

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class PatientLogDAO extends DataAccessBase implements ILogDataAccess<PatientActionRecord>{
+public class PatientLogDAO extends DataAccessBase implements ILogDataAccess<PatientActionRecord> {
 
     @Override
     public int update(List<PatientActionRecord> records, String id) {
@@ -19,8 +19,17 @@ public class PatientLogDAO extends DataAccessBase implements ILogDataAccess<Pati
     }
 
     @Override
-    public  List<PatientActionRecord> selectAll(String nhi) {
+    public List<PatientActionRecord> selectAll(String nhi) {
         try (Connection connection = getConnectionInstance()) {
+            return selectAll(connection, nhi);
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<PatientActionRecord> selectAll(Connection connection, String id) {
+        try {
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_LOGS"));
             ResultSet results = statement.executeQuery();
@@ -31,8 +40,8 @@ public class PatientLogDAO extends DataAccessBase implements ILogDataAccess<Pati
                         results.getString("Message")));
             }
             return logs;
-        } catch (SQLException ignore) {
+        } catch (SQLException e) {
+            return null;
         }
-        return null;
     }
 }
