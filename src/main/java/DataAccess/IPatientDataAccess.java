@@ -34,4 +34,12 @@ public interface IPatientDataAccess {
      */
     public List<Patient> select ();
 
+
+    /**
+     *
+     * @param nhi
+     * @return
+     */
+    public Patient selectOne(String nhi);
+
 }

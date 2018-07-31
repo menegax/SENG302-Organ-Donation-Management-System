@@ -1,24 +1,42 @@
 package DataAccess;
 
 import model.Patient;
+import utility.ResourceManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class PatientDAO extends DataAccessBase implements IPatientDataAccess{
+class PatientDAO extends DataAccessBase implements IPatientDataAccess{
 
 
     @Override
     public int update(List<Patient> patients) {
-        try (Connection connection = getConnectionInstance()) {
-            for (Patient patient : patients) {
-                connection.setAutoCommit(false);
-                PreparedStatement command = connection.prepareStatement("");
-                command.executeUpdate();
-                connection.commit();
+        IMedicationDataAccess medicationDataAccess = DataAccessBase.getMedicationDataAccess();
+        IDiseaseDataAccess diseaseDataAccess = DataAccessBase.getDiseaseDataAccess();
 
+        try (Connection connection = getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_QUERY"));
+            connection.setAutoCommit(false);
+            for (Patient patient : patients) {
+                statement.setString(1, patient.getNhiNumber()); //todo:
+                statement.setString(1, patient.getNhiNumber());
+                statement.setString(1, patient.getNhiNumber());
+                statement.setString(1, patient.getNhiNumber());
+                statement.setString(1, patient.getNhiNumber());
+                statement.setString(1, patient.getNhiNumber());
+                statement.setString(1, patient.getNhiNumber());
+                statement.setString(1, patient.getNhiNumber());
+                statement.setString(1, patient.getNhiNumber());
+                statement.setString(1, patient.getNhiNumber());
+                statement.setString(1, patient.getNhiNumber());
+                statement.setString(1, patient.getNhiNumber());
+                statement.executeUpdate();
+
+                diseaseDataAccess.update();
+                medicationDataAccess.update(patient);
+                connection.commit(); //commit if no errors
             }
         } catch (SQLException e) {
 
@@ -39,5 +57,17 @@ public class PatientDAO extends DataAccessBase implements IPatientDataAccess{
     @Override
     public List<Patient> select() {
         return null;
+    }
+
+    @Override
+    public Patient selectOne(String nhi) {
+        IMedicationDataAccess medicationDataAccess = DataAccessBase.getMedicationDataAccess();
+        IDiseaseDataAccess diseaseDataAccess = DataAccessBase.getDiseaseDataAccess();
+        try (Connection connection = getConnectionInstance()) {
+
+
+        } catch (SQLException e) {
+
+        }
     }
 }

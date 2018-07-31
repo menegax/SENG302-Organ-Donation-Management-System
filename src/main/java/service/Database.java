@@ -200,7 +200,7 @@ public class Database implements Serializable {
         patients = new HashSet<>();
         clinicians = new HashSet<>();
         organWaitingList = new OrganWaitlist();
-        initializeConnection();
+        //initializeConnection();
         if (conn != null) {
         	loadAll();
         }

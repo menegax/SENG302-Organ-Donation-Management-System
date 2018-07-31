@@ -36,6 +36,7 @@ abstract class  DataAccessBase {
                 }
             }
         }
+        return connectionInstance;
     }
 
 
@@ -50,19 +51,21 @@ abstract class  DataAccessBase {
         } catch (SQLException e) {
             closedConnection = true;
         }
-        if (closedConnection) {
-            connectionInstance = initializeConnection();
-        }
-        return connectionInstance;
+        return connectionInstance = closedConnection ? initializeConnection() : connectionInstance;
     }
 
-    public IMedicationDataAccess getMedicationDataAccess() {
+    public static IMedicationDataAccess getMedicationDataAccess() {
         return new MedicationDAO();
     }
 
-    public IDiseaseDataAccess getDiseaseDataAccess() {
+    public static IDiseaseDataAccess getDiseaseDataAccess() {
         return new DiseaseDAO();
     }
+
+    public static IPatientDataAccess getPatientDataAccess() {
+        return new PatientDAO();
+    }
+
 
 
 }
