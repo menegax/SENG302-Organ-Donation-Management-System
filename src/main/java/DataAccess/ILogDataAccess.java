@@ -16,7 +16,7 @@ public interface ILogDataAccess<T> {
      * @param id -
      * @return -
      */
-    public  int update(ArrayList<T> records, String id);
+    public  int update(List<T> records, String id);
 
 
     /**

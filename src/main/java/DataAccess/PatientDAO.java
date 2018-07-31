@@ -17,13 +17,20 @@ import java.util.stream.Collectors;
 
 class PatientDAO extends DataAccessBase implements IPatientDataAccess{
 
+    private IMedicationDataAccess medicationDataAccess;
+    private IDiseaseDataAccess diseaseDataAccess;
+    private IContactDataAccess contactDataAccess;
+    private ILogDataAccess logDataAccess;
+
+    PatientDAO() {
+        medicationDataAccess = DataAccessBase.getMedicationDataAccess();
+        diseaseDataAccess = DataAccessBase.getDiseaseDataAccess();
+        contactDataAccess = DataAccessBase.getContactDataAccess();
+        logDataAccess = DataAccessBase.getPatientLogDataAccess();
+    }
 
     @Override
     public int update(List<Patient> patients) {
-        IMedicationDataAccess medicationDataAccess = DataAccessBase.getMedicationDataAccess();
-        IDiseaseDataAccess diseaseDataAccess = DataAccessBase.getDiseaseDataAccess();
-        IContactDataAccess contactDataAccess = DataAccessBase.getContactDataAccess();
-        ILogDataAccess logDataAccess = DataAccessBase.getPatientLogDataAccess();
         try (Connection connection = getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_QUERY"));
             connection.setAutoCommit(false);
@@ -64,9 +71,6 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
 
     @Override
     public Patient selectOne(String nhi) {
-        IMedicationDataAccess medicationDataAccess = DataAccessBase.getMedicationDataAccess();
-        IDiseaseDataAccess diseaseDataAccess = DataAccessBase.getDiseaseDataAccess();
-        ILogDataAccess logDataAccess = DataAccessBase.getClinicianLogDataAccess();
         try (Connection connection = getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_BY_NHI"));
             statement.setString(1, nhi);
@@ -74,7 +78,8 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
             List<PatientActionRecord> patientLogs = logDataAccess.selectAll(nhi);
             List<Disease> diseases = diseaseDataAccess.select();
             List<Medication> medications = medicationDataAccess.select(nhi);
-            return constructPatientObject(patientAttributes, , patientLogs, diseases , medications);
+            List<String> contacts = contactDataAccess.select(nhi);
+            return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, medications);
 
         } catch (SQLException e) {
 
