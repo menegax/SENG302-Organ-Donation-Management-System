@@ -62,10 +62,11 @@ abstract class  DataAccessBase {
         return new DiseaseDAO();
     }
 
-    public static IPatientDataAccess getPatientDataAccess() {
-        return new PatientDAO();
-    }
+    public static IPatientDataAccess getPatientDataAccess() { return new PatientDAO(); }
 
+    public static IContactDataAccess getContactDataAccess() {
+        return new ContactDataAccessDAO();
+    }
 
 
 }

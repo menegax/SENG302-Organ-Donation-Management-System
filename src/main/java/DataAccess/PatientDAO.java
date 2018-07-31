@@ -17,7 +17,7 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
     public int update(List<Patient> patients) {
         IMedicationDataAccess medicationDataAccess = DataAccessBase.getMedicationDataAccess();
         IDiseaseDataAccess diseaseDataAccess = DataAccessBase.getDiseaseDataAccess();
-
+        IContactDataAccess contactDataAccess = DataAccessBase.getContactDataAccess();
         try (Connection connection = getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_QUERY"));
             connection.setAutoCommit(false);
@@ -42,6 +42,7 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
                     medicationDataAccess.update(patient.getNhiNumber(), medication, GlobalEnums.MedicationStatus.CURRENT);
                 }
                 diseaseDataAccess.update();
+                contactDataAccess.update(patient);
                 connection.commit(); //commit if no errors
             }
         } catch (SQLException e) {
