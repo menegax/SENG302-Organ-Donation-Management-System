@@ -53,15 +53,15 @@ public class Patient extends User {
 
     private int zip;
 
-    private ArrayList<Organ> donations;
+    private List<Organ> donations;
 
-    private ArrayList<Organ> requiredOrgans;
+    private List<Organ> requiredOrgans;
 
     private String nhiNumber;
 
-    private ArrayList<Medication> currentMedications = new ArrayList<>();
+    private List<Medication> currentMedications = new ArrayList<>();
 
-    private ArrayList<Medication> medicationHistory = new ArrayList<>();
+    private List<Medication> medicationHistory = new ArrayList<>();
 
     private List<Procedure> procedures = new ArrayList<>();
 
@@ -87,11 +87,11 @@ public class Patient extends User {
 
     private Status status; // Whether patient is receiving/donating/both/neither
 
-    private ArrayList<PatientActionRecord> userActionsList;
+    private List<PatientActionRecord> userActionsList;
 
-    private ArrayList<Disease> currentDiseases = new ArrayList<>();
+    private List<Disease> currentDiseases = new ArrayList<>();
 
-    private ArrayList<Disease> pastDiseases = new ArrayList<>();
+    private List<Disease> pastDiseases = new ArrayList<>();
 
     private GlobalEnums.Organ removedOrgan;
 
@@ -398,7 +398,7 @@ public class Patient extends User {
         return concatName.toString();
     }
 
-    public ArrayList<Organ> getDonations() {
+    public List<Organ> getDonations() {
         return donations == null ? new ArrayList<>() : donations;
     }
 
@@ -406,7 +406,7 @@ public class Patient extends User {
      * Sets the donation organs of the patient to the list parsed through
      * @param donations The donations being set to the patient donations array list
      */
-    public void setDonations(ArrayList<Organ> donations) {
+    public void setDonations(List<Organ> donations) {
             this.donations = donations;
             userModified();
     }
@@ -611,7 +611,7 @@ public class Patient extends User {
      * Gets the current medication list for a Patient
      * @return ArrayList medications the Patient currently uses
      */
-    public ArrayList<Medication> getCurrentMedications() {
+    public List<Medication> getCurrentMedications() {
         return currentMedications;
     }
 
@@ -619,7 +619,7 @@ public class Patient extends User {
      * Gets the medication history for a Patient
      * @return ArrayList medications the Patient used to use
      */
-    public ArrayList<Medication> getMedicationHistory() {
+    public List<Medication> getMedicationHistory() {
         return medicationHistory;
     }
 
@@ -627,8 +627,9 @@ public class Patient extends User {
      * Sets the current medication list for a Patient
      * @param currentMedications medications to set as current for the Patient
      */
-    public void setCurrentMedications(ArrayList<Medication> currentMedications) {
+    public void setCurrentMedications(List<Medication> currentMedications) {
         this.currentMedications = currentMedications;
+        medicationHistory.forEach(x -> x.setMedicationStatus(MedicationStatus.CURRENT));
         userModified();
     }
 
@@ -636,8 +637,9 @@ public class Patient extends User {
      * Sets the medication history for a Patient
      * @param medicationHistory medication list to set as history for a Patient
      */
-    public void setMedicationHistory(ArrayList<Medication> medicationHistory) {
+    public void setMedicationHistory(List<Medication> medicationHistory) {
         this.medicationHistory = medicationHistory;
+        medicationHistory.forEach(x -> x.setMedicationStatus(MedicationStatus.HISTORY));
         userModified();
     }
 
@@ -650,7 +652,7 @@ public class Patient extends User {
      * gets the current requred organs of the patient
      * @return required organs of the patient
      */
-    public ArrayList<Organ> getRequiredOrgans() {
+    public List<Organ> getRequiredOrgans() {
         return this.requiredOrgans;
     }
 
@@ -658,7 +660,7 @@ public class Patient extends User {
      * sets the required organs of the patient to the list parsed through
      * @param requiredOrgans organs the patient is to receive
      */
-    public void setRequiredOrgans(ArrayList<GlobalEnums.Organ> requiredOrgans) {
+    public void setRequiredOrgans(List<GlobalEnums.Organ> requiredOrgans) {
         this.requiredOrgans = requiredOrgans;
         userModified();
     }
@@ -877,7 +879,7 @@ public class Patient extends User {
      * DO NOT USE UNLESS FROM LOGGER CLASS
      * @return the list of user records
      */
-    public ArrayList<PatientActionRecord> getUserActionsList() {
+    public List<PatientActionRecord> getUserActionsList() {
         return userActionsList; //this is modifiable on purpose!
     }
 
@@ -886,7 +888,7 @@ public class Patient extends User {
      * Gets the current diseases infecting a donor
      * @return ArrayList current diseases
      */
-    public ArrayList<Disease> getCurrentDiseases() {
+    public List<Disease> getCurrentDiseases() {
         return this.currentDiseases;
     }
 
@@ -894,7 +896,7 @@ public class Patient extends User {
      * Sets the donor's current diseases to the given list
      * @param currentDiseases list of diseases currently infecting a donor
      */
-    public void setCurrentDiseases(ArrayList<Disease> currentDiseases) {
+    public void setCurrentDiseases(List<Disease> currentDiseases) {
         this.currentDiseases = currentDiseases;
         userModified();
     }
@@ -903,7 +905,7 @@ public class Patient extends User {
      * Gets the diseases the donor used to be infected with
      * @return ArrayList past diseases
      */
-    public ArrayList<Disease> getPastDiseases() {
+    public List<Disease> getPastDiseases() {
         return this.pastDiseases;
     }
 
@@ -911,7 +913,7 @@ public class Patient extends User {
      * Set the donor's past diseases to the given list
      * @param pastDiseases list of diseases that used to infect a donor
      */
-    public void setPastDiseases(ArrayList<Disease> pastDiseases) { this.pastDiseases = pastDiseases;
+    public void setPastDiseases(List<Disease> pastDiseases) { this.pastDiseases = pastDiseases;
         userModified();
     }
 

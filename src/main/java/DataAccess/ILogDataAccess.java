@@ -1,24 +1,27 @@
 package DataAccess;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public interface ILogDataAccess {
+/**
+ *
+ * @param <T>
+ */
+public interface ILogDataAccess<T> {
 
 
     /**
      *
      * @param records -
      * @param id -
-     * @param <T> -
      * @return -
      */
-    public <T> int update(ArrayList<T> records, String id);
+    public  int update(ArrayList<T> records, String id);
 
 
     /**
      *
-     * @param <T> -
      * @return -
      */
-    public <T> ArrayList<T> selectAll();
+    public List<T> selectAll(String id);
 }

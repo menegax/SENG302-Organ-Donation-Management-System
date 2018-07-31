@@ -31,10 +31,10 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
                 addUpdateParameters(statement, patient);
                 statement.executeUpdate();
                 for (Medication medication : patient.getMedicationHistory()) {
-                    medicationDataAccess.update(patient.getNhiNumber(), medication, GlobalEnums.MedicationStatus.HISTORY);
+                    medicationDataAccess.update(patient.getNhiNumber(), medication, MedicationStatus.HISTORY);
                 }
                 for (Medication medication : patient.getCurrentMedications()) {
-                    medicationDataAccess.update(patient.getNhiNumber(), medication, GlobalEnums.MedicationStatus.CURRENT);
+                    medicationDataAccess.update(patient.getNhiNumber(), medication, MedicationStatus.CURRENT);
                 }
                 diseaseDataAccess.update();
                 logDataAccess.update(patient.getUserActionsList(), patient.getNhiNumber());
@@ -66,11 +66,15 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
     public Patient selectOne(String nhi) {
         IMedicationDataAccess medicationDataAccess = DataAccessBase.getMedicationDataAccess();
         IDiseaseDataAccess diseaseDataAccess = DataAccessBase.getDiseaseDataAccess();
+        ILogDataAccess logDataAccess = DataAccessBase.getClinicianLogDataAccess();
         try (Connection connection = getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_BY_NHI"));
             statement.setString(1, nhi);
-            ResultSet resultsBasic = statement.executeQuery();
-            medicationDataAccess.select(nhi);
+            ResultSet patientAttributes = statement.executeQuery();
+            List<PatientActionRecord> patientLogs = logDataAccess.selectAll(nhi);
+            List<Disease> diseases = diseaseDataAccess.select();
+            List<Medication> medications = medicationDataAccess.select(nhi);
+            return constructPatientObject(patientAttributes, , patientLogs, diseases , medications);
 
         } catch (SQLException e) {
 
@@ -94,10 +98,10 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
         statement.setString(13, String.valueOf(patient.getWeight()));
         statement.setString(14, patient.getDeath() == null ? null : patient.getDeath().toString());
         statement.setString(15, patient.getBloodGroup() == null ? null : patient.getBloodGroup().toString());
-        List<String> donationList = patient.getDonations().stream().map(GlobalEnums.Organ::toString).collect(Collectors.toList());
+        List<String> donationList = patient.getDonations().stream().map(Organ::toString).collect(Collectors.toList());
         String donations = String.join(",", donationList).toLowerCase();
         statement.setString(16, donations);
-        List<String> organsList = patient.getRequiredOrgans().stream().map(GlobalEnums.Organ::toString).collect(Collectors.toList());
+        List<String> organsList = patient.getRequiredOrgans().stream().map(Organ::toString).collect(Collectors.toList());
         String organs = String.join(",", organsList).toLowerCase();
         statement.setString(17, organs);
     }
@@ -106,46 +110,53 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
      * Creates a patient object from a string array of attributes retrieved from the server
      * @return Patient parsed patient
      */
-    private Patient parsePatient(ResultSet patientAttributes) throws SQLException {
-        String nhi = patientAttributes.getString("Nhi");
-        String fName = patientAttributes.getString("FName");
-        ArrayList<String> mNames = new ArrayList<>(Arrays.asList(patientAttributes.getString("MName").split(" ")));
-        String lName = patientAttributes.getString("LName");
-        LocalDate birth = LocalDate.parse(patientAttributes.getString("Birth"));
-        Timestamp created = Timestamp.valueOf(patientAttributes.getString("Created"));
-        Timestamp modified = Timestamp.valueOf(patientAttributes.getString("Modified"));
-        LocalDate death = patientAttributes.getString("Death") != null ?
-                LocalDate.parse(patientAttributes.getString("Death")) : null;
+    private Patient constructPatientObject(ResultSet attributes, List<String> contacts, List<PatientActionRecord> logs,
+                                           List<Disease> diseases, List<Procedure> procedures, List<Medication> medications) throws SQLException {
 
-        BirthGender gender = patientAttributes.getString("BirthGender").equals("M") ? BirthGender.MALE : BirthGender.FEMALE;
-        PreferredGender preferredGender = patientAttributes.getString("PrefGender").equals("F") ? PreferredGender.WOMAN :
-                (patientAttributes.getString("PrefGender").equals("M") ? PreferredGender.MAN : PreferredGender.NONBINARY);
+        String nhi = attributes.getString("Nhi");
+        String fName = attributes.getString("FName");
+        ArrayList<String> mNames = new ArrayList<>(Arrays.asList(attributes.getString("MName").split(" ")));
+        String lName = attributes.getString("LName");
+        LocalDate birth = LocalDate.parse(attributes.getString("Birth"));
+        Timestamp created = Timestamp.valueOf(attributes.getString("Created"));
+        Timestamp modified = Timestamp.valueOf(attributes.getString("Modified"));
+        LocalDate death = attributes.getString("Death") != null ? LocalDate.parse(attributes.getString("Death")) : null;
+        String prefName = attributes.getString("PrefName");
 
-        String prefName = attr[10];
-        double height = Double.parseDouble(attr[11]) / 100;
-        double weight = Double.parseDouble(attr[12]);
-        BloodGroup bloodType = attr[13] != null ? BloodGroup.getEnumFromString(attr[13]): null;
+        // add physical attributes
+        double height = Double.parseDouble(attributes.getString("Height")) / 100;
+        double weight = Double.parseDouble(attributes.getString("Weight"));
 
-        List<Organ> donations = loadOrgans(attr[14]);
-        List<Organ> requested = loadOrgans(attr[15]);
-        List<PatientActionRecord> records = loadPatientLogs(nhi);
+        //map enum and organ groups
+        BirthGender gender = attributes.getString("BirthGender").equals("M") ? BirthGender.MALE : BirthGender.FEMALE;
+        PreferredGender preferredGender = attributes.getString("PrefGender").equals("F") ? PreferredGender.WOMAN :
+                (attributes.getString("PrefGender").equals("M") ? PreferredGender.MAN : PreferredGender.NONBINARY);
+        BloodGroup bloodType = attributes.getString("BloodType") != null ?
+                BloodGroup.getEnumFromString(attributes.getString("BloodType")): null;
+        List<Organ> donations = Arrays.stream(attributes.getString("DonatingOrgans")
+                .split("\\s*,\\s*")).map(Organ::getEnumFromString).collect(Collectors.toList());
+        List<Organ> requested = Arrays.stream(attributes.getString("ReceivingOrgans")
+                .split("\\s*,\\s*")).map(Organ::getEnumFromString).collect(Collectors.toList());
+        Region region = contacts.get(3) != null ? Region.getEnumFromString(contacts.get(3)) : null;
+        int zip = Integer.parseInt(contacts.get(4));
 
-        String[]contactAttr = parsePatientContacts(nhi);
-        Region region = contactAttr[3] != null ? Region.getEnumFromString(contactAttr[3]) : null;
+        //map medications
+        List<Medication> currentMedication = new ArrayList<>();
+        List<Medication> pastMedication= new ArrayList<>();
+        medications.forEach((x) -> {
+            if (x.getMedicationStatus().equals(MedicationStatus.CURRENT)) { currentMedication.add(x); }
+            else { pastMedication.add(x); }
+        });
 
-        int zip = Integer.parseInt(contactAttr[4]);
-        List<Medication>[] meds = loadMedications(nhi);
-        List<Medication> currentMeds = meds[0];
-        List<Medication> medHistory = meds[1];
+        //map diseases
         List<Disease>[] diseases = loadDiseases(birth, nhi);
         List<Disease> currentDiseases = diseases[0];
         List<Disease> pastDiseases = diseases[1];
-        List<Procedure> procedures = loadProcedures(nhi);
 
         return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName, height, weight,
-                bloodType, donations, requested, contactAttr[0], contactAttr[1], contactAttr[2], region, zip,
-                contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
-                contactAttr[11], contactAttr[12], contactAttr[13], contactAttr[14], records, currentDiseases,
-                pastDiseases, currentMeds, medHistory, procedures);
+                bloodType, donations, requested, contacts.get(0), contacts.get(1), contacts.get(2), region, zip,
+                contacts.get(5), contacts.get(6), contacts.get(7), contacts.get(8), contacts.get(9), contacts.get(10),
+                contacts.get(11), contacts.get(12), contacts.get(13), contacts.get(14), logs, currentDiseases,
+                pastDiseases, currentMedication, pastMedication, procedures);
     }
 }

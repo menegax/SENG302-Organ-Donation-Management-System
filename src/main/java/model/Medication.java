@@ -1,10 +1,14 @@
 package model;
 
+import utility.GlobalEnums.*;
+
 import java.io.Serializable;
 
 public class Medication implements Serializable {
 
     private String medicationName;
+
+    private MedicationStatus medicationStatus;
 
     public Medication(String name) {
         medicationName = name;
@@ -12,6 +16,14 @@ public class Medication implements Serializable {
 
     public String getMedicationName() {
         return medicationName;
+    }
+
+    public MedicationStatus getMedicationStatus() {
+        return medicationStatus;
+    }
+
+    public void setMedicationStatus(MedicationStatus medicationStatus) {
+        this.medicationStatus = medicationStatus;
     }
 
     /**
