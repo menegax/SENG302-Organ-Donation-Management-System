@@ -10,37 +10,12 @@ import static utility.SystemLogger.systemLogger;
 abstract class  DataAccessBase {
 
 
-
     private Connection connectionInstance;
-
-    /**
-     *
-     * @param object -
-     * @param <T> -
-     * @return -
-     */
-    protected abstract  <T> int update (T object);
-
-    /**
-     *
-     * @param object -
-     * @param <T> -
-     * @return -
-     */
-    protected abstract <T> boolean insert (T object);
-
-    /**
-     *
-     * @param <T> -
-     * @return -
-     */
-    protected abstract <T> T select ();
-
 
     /**
      * Initialize the connection to the remote database.
      */
-    private void initializeConnection() {
+    private Connection initializeConnection() {
         try {
             connectionInstance = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
             systemLogger.log(INFO, "Connected to UC database");
@@ -61,15 +36,24 @@ abstract class  DataAccessBase {
                 }
             }
         }
+        return connectionInstance;
     }
 
 
     /**
-     * Gets the connection instance of the session
+     *
      * @return -
      */
-    public Connection getConnectionInstance() {
+    public Connection getConnectionInstance(){
+        boolean closedConnection;
+        try {
+            closedConnection = connectionInstance == null || connectionInstance.isClosed();
+        } catch (SQLException e) {
+            closedConnection = true;
+        }
+        if (closedConnection) {
+            connectionInstance = initializeConnection();
+        }
         return connectionInstance;
     }
-
 }
