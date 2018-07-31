@@ -155,59 +155,74 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts, List<PatientActionRecord> logs,
                                            List<Disease> diseases, List<Procedure> procedures, List<Medication> medications) throws SQLException {
 
-        String nhi = attributes.getString("Nhi");
-        String fName = attributes.getString("FName");
-        ArrayList<String> mNames = new ArrayList<>(Arrays.asList(attributes.getString("MName").split(" ")));
-        String lName = attributes.getString("LName");
-        LocalDate birth = LocalDate.parse(attributes.getString("Birth"));
-        Timestamp created = Timestamp.valueOf(attributes.getString("Created"));
-        Timestamp modified = Timestamp.valueOf(attributes.getString("Modified"));
-        LocalDate death = attributes.getString("Death") != null ? LocalDate.parse(attributes.getString("Death")) : null;
-        String prefName = attributes.getString("PrefName");
+        if (attributes.next()) {
+            String nhi = attributes.getString("Nhi");
+            String fName = attributes.getString("FName");
+            ArrayList<String> mNames = new ArrayList<>(Arrays.asList(attributes.getString("MName").split(" ")));
+            String lName = attributes.getString("LName");
+            LocalDate birth = LocalDate.parse(attributes.getString("Birth"));
+            Timestamp created = Timestamp.valueOf(attributes.getString("Created"));
+            Timestamp modified = Timestamp.valueOf(attributes.getString("Modified"));
+            LocalDate death = attributes.getString("Death") != null ? LocalDate.parse(attributes.getString("Death")) : null;
+            String prefName = attributes.getString("PrefName");
 
-        // add physical attributes
-        double height = Double.parseDouble(attributes.getString("Height")) / 100;
-        double weight = Double.parseDouble(attributes.getString("Weight"));
+            // add physical attributes
+            double height = Double.parseDouble(attributes.getString("Height")) / 100;
+            double weight = Double.parseDouble(attributes.getString("Weight"));
 
-        //map enum and organ groups
-        BirthGender gender = attributes.getString("BirthGender").equals("M") ? BirthGender.MALE : BirthGender.FEMALE;
-        PreferredGender preferredGender = attributes.getString("PrefGender").equals("F") ? PreferredGender.WOMAN :
-                (attributes.getString("PrefGender").equals("M") ? PreferredGender.MAN : PreferredGender.NONBINARY);
-        BloodGroup bloodType = attributes.getString("BloodType") != null ?
-                BloodGroup.getEnumFromString(attributes.getString("BloodType")): null;
-        List<Organ> donations = Arrays.stream(attributes.getString("DonatingOrgans")
-                .split("\\s*,\\s*")).map(Organ::getEnumFromString).collect(Collectors.toList());
-        List<Organ> requested = Arrays.stream(attributes.getString("ReceivingOrgans")
-                .split("\\s*,\\s*")).map(Organ::getEnumFromString).collect(Collectors.toList());
-        Region region = contacts.get(3) != null ? Region.getEnumFromString(contacts.get(3)) : null;
-        int zip = Integer.parseInt(contacts.get(4));
-
-        //map medications
-        List<Medication> currentMedication = new ArrayList<>();
-        List<Medication> pastMedication= new ArrayList<>();
-        medications.forEach((x) -> {
-            if (x.getMedicationStatus().equals(MedicationStatus.CURRENT)) {
-                currentMedication.add(x);
-            } else {
-                pastMedication.add(x);
+            //map enum and organ groups
+            BirthGender gender = null;
+            if (attributes.getString("BirthGender") != null) {
+              gender = attributes.getString("BirthGender").equals("M") ? BirthGender.MALE : BirthGender.FEMALE;
             }
-        });
 
-        //map diseases
-        List<Disease> currentDiseases = new ArrayList<>();
-        List<Disease> pastDiseases = new ArrayList<>();
-        diseases.forEach((x) -> {
-            if (x.getDiseaseState().equals(DiseaseState.CURED)) {
-                currentDiseases.add(x);
-            } else {
-                pastDiseases.add(x);
+            PreferredGender preferredGender = null;
+            if (attributes.getString("PrefGender") != null) {
+                preferredGender = attributes.getString("PrefGender").equals("F") ? PreferredGender.WOMAN :
+                        (attributes.getString("PrefGender").equals("M") ? PreferredGender.MAN : PreferredGender.NONBINARY);
             }
-        });
 
-        return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName, height, weight,
-                bloodType, donations, requested, contacts.get(0), contacts.get(1), contacts.get(2), region, zip,
-                contacts.get(5), contacts.get(6), contacts.get(7), contacts.get(8), contacts.get(9), contacts.get(10),
-                contacts.get(11), contacts.get(12), contacts.get(13), contacts.get(14), logs, currentDiseases,
-                pastDiseases, currentMedication, pastMedication, procedures);
+            BloodGroup bloodType = attributes.getString("BloodType") != null ?
+                    BloodGroup.getEnumFromString(attributes.getString("BloodType")): null;
+            List<Organ> donations = Arrays.stream(attributes.getString("DonatingOrgans")
+                    .split("\\s*,\\s*")).map(Organ::getEnumFromString).collect(Collectors.toList());
+            List<Organ> requested = Arrays.stream(attributes.getString("ReceivingOrgans")
+                    .split("\\s*,\\s*")).map(Organ::getEnumFromString).collect(Collectors.toList());
+            Region region = contacts.get(3) != null ? Region.getEnumFromString(contacts.get(3)) : null;
+            int zip = contacts.get(4) == null ? 0 : Integer.parseInt(contacts.get(4));
+
+            //map medications
+            List<Medication> currentMedication = new ArrayList<>();
+            List<Medication> pastMedication= new ArrayList<>();
+            medications = medications == null ? new ArrayList<>() : medications; //must instantiate if null
+            medications.forEach((x) -> {
+                if (x.getMedicationStatus().equals(MedicationStatus.CURRENT)) {
+                    currentMedication.add(x);
+                } else {
+                    pastMedication.add(x);
+                }
+            });
+
+            //map diseases
+            List<Disease> currentDiseases = new ArrayList<>();
+            List<Disease> pastDiseases = new ArrayList<>();
+            diseases = diseases == null ? new ArrayList<>() : diseases; //must instantiate if null
+            diseases.forEach((x) -> {
+                if (x.getDiseaseState().equals(DiseaseState.CURED)) {
+                    currentDiseases.add(x);
+                } else {
+                    pastDiseases.add(x);
+                }
+            });
+
+            return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName, height, weight,
+                    bloodType, donations, requested, contacts.get(0), contacts.get(1), contacts.get(2), region, zip,
+                    contacts.get(5), contacts.get(6), contacts.get(7), contacts.get(8), contacts.get(9), contacts.get(10),
+                    contacts.get(11), contacts.get(12), contacts.get(13), contacts.get(14), logs, currentDiseases,
+                    pastDiseases, currentMedication, pastMedication, procedures);
+        }
+
+        return null;
+
     }
 }

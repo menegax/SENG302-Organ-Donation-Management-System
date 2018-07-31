@@ -137,6 +137,7 @@ public class GUILogin implements TouchscreenCapable {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
             alert.show();
         } catch (NumberFormatException e) {
+            e.printStackTrace();
             userActions.log(Level.WARNING, "Non-numeric staff IDs are not permitted", "Attempted to log in");
             Alert alert = new Alert(Alert.AlertType.WARNING, "Non-numeric staff ID are not permitted");
             alert.show();
