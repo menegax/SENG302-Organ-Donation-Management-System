@@ -39,18 +39,13 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
                 statement.setString(13, String.valueOf(patient.getWeight()));
                 statement.setString(14, patient.getDeath() == null ? null : patient.getDeath().toString());
                 statement.setString(15, patient.getBloodGroup() == null ? null : patient.getBloodGroup().toString());
+
                 List<String> donationList = patient.getDonations().stream().map(GlobalEnums.Organ::toString).collect(Collectors.toList());
                 String donations = String.join(",", donationList).toLowerCase();
-
-                int lastComma = donations.lastIndexOf(',');
-                donations = lastComma > 0 ? donations.substring(0, lastComma - 1) : "";
                 statement.setString(16, donations);
 
                 List<String> organsList = patient.getRequiredOrgans().stream().map(GlobalEnums.Organ::toString).collect(Collectors.toList());
                 String organs = String.join(",", organsList).toLowerCase();
-
-                lastComma = organs.lastIndexOf(',');
-                organs = lastComma > 0 ? organs.substring(0, lastComma - 1) : "";
                 statement.setString(17, organs);
 
                 statement.executeUpdate();
