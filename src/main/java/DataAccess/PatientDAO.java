@@ -15,9 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
-
 class PatientDAO extends DataAccessBase implements IPatientDataAccess{
 
 
@@ -31,27 +28,7 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_QUERY"));
             connection.setAutoCommit(false);
             for (Patient patient : patients) {
-                statement.setString(1, patient.getNhiNumber());
-                statement.setString(2, patient.getFirstName());
-                statement.setString(3, patient.getMiddleNames() == null ? "" :String.join(" ", patient.getMiddleNames()));
-                statement.setString(4, patient.getLastName());
-                statement.setString(5, patient.getBirth().toString());
-                statement.setString(6, patient.getCREATED().toString());
-                statement.setString(7, patient.getModified().toString());
-                statement.setString(8, patient.getDeath() == null ? null : patient.getDeath().toString());
-                statement.setString(9, patient.getBirthGender() == null ? null : patient.getBirthGender().toString().substring(0,1));
-                statement.setString(10, patient.getPreferredGender() == null ? null : patient.getPreferredGender().toString().substring(0,1));
-                statement.setString(11, patient.getPreferredName());
-                statement.setString(12, String.valueOf(patient.getHeight()));
-                statement.setString(13, String.valueOf(patient.getWeight()));
-                statement.setString(14, patient.getDeath() == null ? null : patient.getDeath().toString());
-                statement.setString(15, patient.getBloodGroup() == null ? null : patient.getBloodGroup().toString());
-                List<String> donationList = patient.getDonations().stream().map(GlobalEnums.Organ::toString).collect(Collectors.toList());
-                String donations = String.join(",", donationList).toLowerCase();
-                statement.setString(16, donations);
-                List<String> organsList = patient.getRequiredOrgans().stream().map(GlobalEnums.Organ::toString).collect(Collectors.toList());
-                String organs = String.join(",", organsList).toLowerCase();
-                statement.setString(17, organs);
+                addUpdateParameters(statement, patient);
                 statement.executeUpdate();
                 for (Medication medication : patient.getMedicationHistory()) {
                     medicationDataAccess.update(patient.getNhiNumber(), medication, GlobalEnums.MedicationStatus.HISTORY);
@@ -99,6 +76,30 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
 
         }
         return null;
+    }
+
+    private void addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException {
+        statement.setString(1, patient.getNhiNumber());
+        statement.setString(2, patient.getFirstName());
+        statement.setString(3, patient.getMiddleNames() == null ? "" :String.join(" ", patient.getMiddleNames()));
+        statement.setString(4, patient.getLastName());
+        statement.setString(5, patient.getBirth().toString());
+        statement.setString(6, patient.getCREATED().toString());
+        statement.setString(7, patient.getModified().toString());
+        statement.setString(8, patient.getDeath() == null ? null : patient.getDeath().toString());
+        statement.setString(9, patient.getBirthGender() == null ? null : patient.getBirthGender().toString().substring(0,1));
+        statement.setString(10, patient.getPreferredGender() == null ? null : patient.getPreferredGender().toString().substring(0,1));
+        statement.setString(11, patient.getPreferredName());
+        statement.setString(12, String.valueOf(patient.getHeight()));
+        statement.setString(13, String.valueOf(patient.getWeight()));
+        statement.setString(14, patient.getDeath() == null ? null : patient.getDeath().toString());
+        statement.setString(15, patient.getBloodGroup() == null ? null : patient.getBloodGroup().toString());
+        List<String> donationList = patient.getDonations().stream().map(GlobalEnums.Organ::toString).collect(Collectors.toList());
+        String donations = String.join(",", donationList).toLowerCase();
+        statement.setString(16, donations);
+        List<String> organsList = patient.getRequiredOrgans().stream().map(GlobalEnums.Organ::toString).collect(Collectors.toList());
+        String organs = String.join(",", organsList).toLowerCase();
+        statement.setString(17, organs);
     }
 
     /**
