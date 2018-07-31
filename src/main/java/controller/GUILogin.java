@@ -1,6 +1,9 @@
 package controller;
 
 import static utility.UserActionHistory.userActions;
+
+import DataAccess.DataAccessBase;
+import DataAccess.IPatientDataAccess;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -102,7 +105,8 @@ public class GUILogin implements TouchscreenCapable {
         ScreenControl screenControl = ScreenControl.getScreenControl();
         try {
             if (patient.isSelected()) {
-                Patient patient = database.getPatientByNhi(nhiLogin.getText());
+                IPatientDataAccess patientDataAccess = DataAccessBase.getPatientDataAccess();
+                Patient patient = patientDataAccess.selectOne(nhiLogin.getText());
                 if (patient == null) {
                     throw new InvalidObjectException("User doesn't exist");
                 }
