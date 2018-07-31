@@ -95,6 +95,7 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
     @Override
     public Patient selectOne(String nhi) {
         try (Connection connection = getConnectionInstance()) {
+            connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_BY_NHI"));
             statement.setString(1, nhi);
             ResultSet patientAttributes = statement.executeQuery();
@@ -105,7 +106,7 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
             List<Procedure> procedures = procedureDataAccess.select(nhi);
             return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, procedures, medications);
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return null;
     }
