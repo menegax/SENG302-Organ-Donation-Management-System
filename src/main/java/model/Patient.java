@@ -94,6 +94,7 @@ public class Patient extends User {
     private ArrayList<Disease> pastDiseases = new ArrayList<>();
 
     private GlobalEnums.Organ removedOrgan;
+    
 
     /**
      * Constructor for the patient class. Initializes basic attributes and adds listeners for status changes
