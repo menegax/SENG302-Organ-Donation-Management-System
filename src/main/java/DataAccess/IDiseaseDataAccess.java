@@ -8,7 +8,7 @@ public interface IDiseaseDataAccess {
 
     boolean update();
 
-    List<Disease> select();
+    List<Disease> select(String nhi);
 
     boolean delete();
 
