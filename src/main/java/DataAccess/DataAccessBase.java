@@ -68,5 +68,17 @@ abstract class  DataAccessBase {
         return new ContactDataAccessDAO();
     }
 
+    public static ILogDataAccess getAdministratorDataAccess() {
+        return new AdministratorLogDAO();
+    }
+
+    public static ILogDataAccess getPatientLogDataAccess() {
+        return new PatientLogDAO();
+    }
+
+    public static ILogDataAccess getClinicianLogDataAccess() {
+        return new ClinicianLogDAO();
+    }
+
 
 }

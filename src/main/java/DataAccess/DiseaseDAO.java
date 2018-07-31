@@ -12,11 +12,6 @@ public class DiseaseDAO implements IDiseaseDataAccess {
     }
 
     @Override
-    public boolean insert() {
-        return false;
-    }
-
-    @Override
     public List<Disease> select() {
         return null;
     }

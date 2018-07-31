@@ -18,22 +18,42 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
         IMedicationDataAccess medicationDataAccess = DataAccessBase.getMedicationDataAccess();
         IDiseaseDataAccess diseaseDataAccess = DataAccessBase.getDiseaseDataAccess();
         IContactDataAccess contactDataAccess = DataAccessBase.getContactDataAccess();
+        ILogDataAccess logDataAccess = DataAccessBase.getPatientLogDataAccess();
         try (Connection connection = getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_QUERY"));
             connection.setAutoCommit(false);
             for (Patient patient : patients) {
-                statement.setString(1, patient.getNhiNumber()); //todo:
                 statement.setString(1, patient.getNhiNumber());
-                statement.setString(1, patient.getNhiNumber());
-                statement.setString(1, patient.getNhiNumber());
-                statement.setString(1, patient.getNhiNumber());
-                statement.setString(1, patient.getNhiNumber());
-                statement.setString(1, patient.getNhiNumber());
-                statement.setString(1, patient.getNhiNumber());
-                statement.setString(1, patient.getNhiNumber());
-                statement.setString(1, patient.getNhiNumber());
-                statement.setString(1, patient.getNhiNumber());
-                statement.setString(1, patient.getNhiNumber());
+                statement.setString(2, patient.getFirstName());
+                statement.setString(3, patient.getMiddleNames() == null ? "" :String.join(" ", patient.getMiddleNames()));
+                statement.setString(4, patient.getLastName());
+                statement.setString(5, patient.getBirth().toString());
+                statement.setString(6, patient.getCREATED().toString());
+                statement.setString(7, patient.getModified().toString());
+                statement.setString(8, patient.getDeath() == null ? null : patient.getDeath().toString());
+                statement.setString(9, patient.getBirthGender() == null ? null : patient.getBirthGender().toString().substring(0,1));
+                statement.setString(10, patient.getPreferredGender() == null ? null : patient.getPreferredGender().toString().substring(0,1));
+                statement.setString(11, patient.getPreferredName());
+                statement.setString(12, String.valueOf(patient.getHeight()));
+                statement.setString(13, String.valueOf(patient.getWeight()));
+                statement.setString(14, patient.getDeath() == null ? null : patient.getDeath().toString());
+                statement.setString(15, patient.getBloodGroup() == null ? null : patient.getBloodGroup().toString());
+                String donations = "";
+                for (GlobalEnums.Organ organ: patient.getDonations()) {
+                    donations += organ.toString().toLowerCase() + ",";
+                }
+                int lastComma = donations.lastIndexOf(',');
+                donations = lastComma > 0 ? donations.substring(0, lastComma - 1) : "";
+                statement.setString(16, donations);
+
+                String organs = "";
+                for (GlobalEnums.Organ organ: patient.getRequiredOrgans()) {
+                    organs += organ.toString().toLowerCase() + ",";
+                }
+                lastComma = organs.lastIndexOf(',');
+                organs = lastComma > 0 ? organs.substring(0, lastComma - 1) : "";
+                statement.setString(17, organs);
+
                 statement.executeUpdate();
                 for (Medication medication : patient.getMedicationHistory()) {
                     medicationDataAccess.update(patient.getNhiNumber(), medication, GlobalEnums.MedicationStatus.HISTORY);
@@ -42,6 +62,7 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
                     medicationDataAccess.update(patient.getNhiNumber(), medication, GlobalEnums.MedicationStatus.CURRENT);
                 }
                 diseaseDataAccess.update();
+                logDataAccess.update(patient.getUserActionsList(), patient.getNhiNumber());
                 contactDataAccess.update(patient);
                 connection.commit(); //commit if no errors
             }
