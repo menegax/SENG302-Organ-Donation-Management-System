@@ -16,6 +16,7 @@ import utility.GlobalEnums;
 
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.INFO;
@@ -140,7 +141,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
      * @param patient patient with viewed donation
      */
     private void populateForm(Patient patient) {
-        ArrayList<GlobalEnums.Organ> organs = patient.getDonations();
+        List<GlobalEnums.Organ> organs = patient.getDonations();
         if (organs.contains(GlobalEnums.Organ.LIVER)) {
             liverCB.setSelected(true);
         }

@@ -1,7 +1,7 @@
 package DataAccess;
 
 import model.Medication;
-import utility.GlobalEnums;
+import utility.GlobalEnums.*;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public interface IMedicationDataAccess {
      * @param state -
      * @return -
      */
-    int update(String nhi, Medication medication, GlobalEnums.MedicationStatus state);
+    int update(String nhi, Medication medication, MedicationStatus state);
 
 
     /**

@@ -21,12 +21,14 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
     private IDiseaseDataAccess diseaseDataAccess;
     private IContactDataAccess contactDataAccess;
     private ILogDataAccess logDataAccess;
+    private IProcedureDataAccess procedureDataAccess;
 
     PatientDAO() {
         medicationDataAccess = DataAccessBase.getMedicationDataAccess();
         diseaseDataAccess = DataAccessBase.getDiseaseDataAccess();
         contactDataAccess = DataAccessBase.getContactDataAccess();
         logDataAccess = DataAccessBase.getPatientLogDataAccess();
+        procedureDataAccess = DataAccessBase.getProcedureDataAccess();
     }
 
     @Override
@@ -54,21 +56,42 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
         return 0;
     }
 
+    /**
+     *
+     * @param patient -
+     * @return
+     */
     @Override
     public boolean insert(Patient patient) {
         return false;
     }
 
+
+    /**
+     *
+     * @param patient -
+     * @return
+     */
     @Override
     public boolean insert(List<Patient> patient) {
         return false;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public List<Patient> select() {
         return null;
     }
 
+
+    /**
+     *
+     * @param nhi -
+     * @return -
+     */
     @Override
     public Patient selectOne(String nhi) {
         try (Connection connection = getConnectionInstance()) {
@@ -79,14 +102,20 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
             List<Disease> diseases = diseaseDataAccess.select();
             List<Medication> medications = medicationDataAccess.select(nhi);
             List<String> contacts = contactDataAccess.select(nhi);
-            return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, medications);
-
+            List<Procedure> procedures = procedureDataAccess.select(nhi);
+            return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, procedures, medications);
         } catch (SQLException e) {
 
         }
         return null;
     }
 
+    /**
+     *
+     * @param statement -
+     * @param patient -
+     * @throws SQLException -
+     */
     private void addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException {
         statement.setString(1, patient.getNhiNumber());
         statement.setString(2, patient.getFirstName());
@@ -112,8 +141,15 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
     }
 
     /**
-     * Creates a patient object from a string array of attributes retrieved from the server
-     * @return Patient parsed patient
+     *
+     * @param attributes
+     * @param contacts
+     * @param logs
+     * @param diseases
+     * @param procedures
+     * @param medications
+     * @return
+     * @throws SQLException
      */
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts, List<PatientActionRecord> logs,
                                            List<Disease> diseases, List<Procedure> procedures, List<Medication> medications) throws SQLException {
@@ -149,14 +185,23 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess{
         List<Medication> currentMedication = new ArrayList<>();
         List<Medication> pastMedication= new ArrayList<>();
         medications.forEach((x) -> {
-            if (x.getMedicationStatus().equals(MedicationStatus.CURRENT)) { currentMedication.add(x); }
-            else { pastMedication.add(x); }
+            if (x.getMedicationStatus().equals(MedicationStatus.CURRENT)) {
+                currentMedication.add(x);
+            } else {
+                pastMedication.add(x);
+            }
         });
 
         //map diseases
-        List<Disease>[] diseases = loadDiseases(birth, nhi);
-        List<Disease> currentDiseases = diseases[0];
-        List<Disease> pastDiseases = diseases[1];
+        List<Disease> currentDiseases = new ArrayList<>();
+        List<Disease> pastDiseases = new ArrayList<>();
+        diseases.forEach((x) -> {
+            if (x.getDiseaseState().equals(DiseaseState.CURED)) {
+                currentDiseases.add(x);
+            } else {
+                pastDiseases.add(x);
+            }
+        });
 
         return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName, height, weight,
                 bloodType, donations, requested, contacts.get(0), contacts.get(1), contacts.get(2), region, zip,

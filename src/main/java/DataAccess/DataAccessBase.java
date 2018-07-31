@@ -80,5 +80,7 @@ abstract class  DataAccessBase {
         return new ClinicianLogDAO();
     }
 
+    public static IProcedureDataAccess getProcedureDataAccess() {return new ProcedureDAO();}
+
 
 }

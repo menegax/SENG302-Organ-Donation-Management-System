@@ -1,15 +1,16 @@
 package DataAccess;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class ClinicianLogDAO extends DataAccessBase implements ILogDataAccess{
+public class ClinicianLogDAO extends DataAccessBase implements ILogDataAccess<ClinicianLogDAO>{
+
     @Override
-    public <T> int update(ArrayList<T> records, String id) {
+    public int update(List<ClinicianLogDAO> records, String id) {
         return 0;
     }
 
     @Override
-    public <T> ArrayList<T> selectAll() {
+    public List<ClinicianLogDAO> selectAll(String id) {
         return null;
     }
 }

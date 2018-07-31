@@ -79,12 +79,12 @@ public class GUIClinicianDiagnosis extends UndoableController{
     /**
      * Patient's current diseases
      */
-    private ArrayList<Disease> currentDiseases;
+    private List<Disease> currentDiseases;
 
     /**
      * Patient's past diseases
      */
-    private ArrayList<Disease> pastDiseases;
+    private List<Disease> pastDiseases;
 
 
     /**

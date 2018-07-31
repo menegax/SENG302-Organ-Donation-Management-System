@@ -1,15 +1,18 @@
 package DataAccess;
 
-import java.util.ArrayList;
+import utility.AdministratorActionRecord;
 
-public class AdministratorLogDAO extends DataAccessBase implements ILogDataAccess{
+import java.util.List;
+
+public class AdministratorLogDAO extends DataAccessBase implements ILogDataAccess<AdministratorActionRecord>{
+
     @Override
-    public <T> int update(ArrayList<T> records, String id) {
+    public int update(List records, String id) {
         return 0;
     }
 
     @Override
-    public <T> ArrayList<T> selectAll() {
+    public List selectAll(String id) {
         return null;
     }
 }

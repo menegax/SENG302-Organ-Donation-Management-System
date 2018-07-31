@@ -7,13 +7,14 @@ import java.util.List;
 
 public class ContactDataAccessDAO extends DataAccessBase implements IContactDataAccess {
 
+
     @Override
     public boolean update(Patient patient) {
         return false;
     }
 
     @Override
-    public List<Disease> select() {
+    public List<String> select(String nhi) {
         return null;
     }
 

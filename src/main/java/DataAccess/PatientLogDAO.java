@@ -14,7 +14,7 @@ import java.util.logging.Level;
 public class PatientLogDAO extends DataAccessBase implements ILogDataAccess<PatientActionRecord>{
 
     @Override
-    public int update(ArrayList records, String id) {
+    public int update(List<PatientActionRecord> records, String id) {
         return 0;
     }
 

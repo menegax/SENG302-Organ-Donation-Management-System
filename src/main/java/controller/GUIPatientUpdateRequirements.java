@@ -152,7 +152,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * @param patient currently being viewed
      */
     private void populateForm(Patient patient) {
-        ArrayList<GlobalEnums.Organ> organs = patient.getRequiredOrgans();
+        List<GlobalEnums.Organ> organs = patient.getRequiredOrgans();
         if (organs != null) {
             if (organs.contains(GlobalEnums.Organ.LIVER)) {
                 liverCB.setSelected(true);

@@ -8,6 +8,7 @@ import utility.GlobalEnums.Organ;
 
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -46,7 +47,7 @@ public class CLIPatientDonations implements Runnable {
     private ArrayList<String> rmDonations;
 
     private void displayPatientDonations(Patient patient) {
-        ArrayList<Organ> donations = patient.getDonations();
+        List<Organ> donations = patient.getDonations();
         if (donations == null) {
             userActions.log(Level.WARNING, "No donations registered for patient: " + patient.getNameConcatenated(), "attempted to display patient donations");
         }

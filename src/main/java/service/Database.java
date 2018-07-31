@@ -628,7 +628,7 @@ public class Database implements Serializable {
             query += ";" + UPDATEPATIENTMEDICATIONQUERYSTRING;
         }
         //Queries to add patient diseases details to database
-        ArrayList<Disease> allDiseases = patient.getCurrentDiseases();
+        List<Disease> allDiseases = patient.getCurrentDiseases();
         allDiseases.addAll(patient.getPastDiseases());
         for (Disease disease : allDiseases) {
             attr = ArrayUtils.addAll(attr, getDiseaseAttributes(patient, disease));
@@ -1021,6 +1021,7 @@ public class Database implements Serializable {
 //                contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
 //                contactAttr[11], contactAttr[12], contactAttr[13], contactAttr[14], records, currentDiseases,
 //                pastDiseases, currentMeds, medHistory, procedures);
+        return null;
     }
 
     /**
