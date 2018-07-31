@@ -957,70 +957,70 @@ public class Database implements Serializable {
      * @return Patient parsed patient
      */
     private Patient parsePatient(String[] attr) {
-        String nhi = attr[0];
-        String fName = attr[1];
-        ArrayList<String> mNames = new ArrayList<>();
-        mNames.addAll(Arrays.asList(attr[2].split(" ")));
-        String lName = attr[3];
-        LocalDate birth = LocalDate.parse(attr[4]);
-        Timestamp created = Timestamp.valueOf(attr[5]);
-        Timestamp modified = Timestamp.valueOf(attr[6]);
-        LocalDate death = null;
-        if (attr[7] != null) {
-        	death = LocalDate.parse(attr[7]);
-        }
-        GlobalEnums.BirthGender gender;
-        switch (String.valueOf((Object)attr[8])) {
-            case "M":
-                gender = GlobalEnums.BirthGender.MALE;
-                break;
-            default:
-                gender = GlobalEnums.BirthGender.FEMALE;
-                break;
-        }
-        GlobalEnums.PreferredGender preferredGender;
-        switch(String.valueOf((Object)attr[9])) {
-            case "M":
-                preferredGender = GlobalEnums.PreferredGender.MAN;
-                break;
-            case "F":
-                preferredGender = GlobalEnums.PreferredGender.WOMAN;
-                break;
-            default:
-                preferredGender = GlobalEnums.PreferredGender.NONBINARY;
-                break;
-        }
-        String prefName = attr[10];
-        double height = Double.parseDouble(attr[11]) / 100;
-        double weight = Double.parseDouble(attr[12]);
-        GlobalEnums.BloodGroup bloodType = null;
-        if (attr[13] != null) {
-        	bloodType = GlobalEnums.BloodGroup.getEnumFromString(attr[13]);
-        }
-        ArrayList<GlobalEnums.Organ> donations = loadOrgans(attr[14]);
-        ArrayList<GlobalEnums.Organ> requested = loadOrgans(attr[15]);
-        ArrayList<PatientActionRecord> records = loadPatientLogs(nhi);
-
-        String[] contactAttr = new String[15];
-        contactAttr = parsePatientContacts(nhi);
-        GlobalEnums.Region region = null;
-        if (contactAttr[3] != null) {
-        	region = GlobalEnums.Region.getEnumFromString(contactAttr[3]);
-        }
-        int zip = Integer.parseInt(contactAttr[4]);
-        ArrayList<Medication>[] meds = loadMedications(nhi);
-        ArrayList<Medication> currentMeds = meds[0];
-        ArrayList<Medication> medHistory = meds[1];
-        ArrayList<Disease>[] diseases = loadDiseases(birth, nhi);
-        ArrayList<Disease> currentDiseases = diseases[0];
-        ArrayList<Disease> pastDiseases = diseases[1];
-        List<Procedure> procedures = loadProcedures(nhi);
-		userActions.log(INFO, "Successfully loaded patient " + nhi + " from the database.", "Attempted to load a patient from the database.");
-        return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName, height, weight,
-                bloodType, donations, requested, contactAttr[0], contactAttr[1], contactAttr[2], region, zip,
-                contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
-                contactAttr[11], contactAttr[12], contactAttr[13], contactAttr[14], records, currentDiseases,
-                pastDiseases, currentMeds, medHistory, procedures);
+//        String nhi = attr[0];
+//        String fName = attr[1];
+//        ArrayList<String> mNames = new ArrayList<>();
+//        mNames.addAll(Arrays.asList(attr[2].split(" ")));
+//        String lName = attr[3];
+//        LocalDate birth = LocalDate.parse(attr[4]);
+//        Timestamp created = Timestamp.valueOf(attr[5]);
+//        Timestamp modified = Timestamp.valueOf(attr[6]);
+//        LocalDate death = null;
+//        if (attr[7] != null) {
+//        	death = LocalDate.parse(attr[7]);
+//        }
+//        GlobalEnums.BirthGender gender;
+//        switch (String.valueOf((Object)attr[8])) {
+//            case "M":
+//                gender = GlobalEnums.BirthGender.MALE;
+//                break;
+//            default:
+//                gender = GlobalEnums.BirthGender.FEMALE;
+//                break;
+//        }
+//        GlobalEnums.PreferredGender preferredGender;
+//        switch(String.valueOf((Object)attr[9])) {
+//            case "M":
+//                preferredGender = GlobalEnums.PreferredGender.MAN;
+//                break;
+//            case "F":
+//                preferredGender = GlobalEnums.PreferredGender.WOMAN;
+//                break;
+//            default:
+//                preferredGender = GlobalEnums.PreferredGender.NONBINARY;
+//                break;
+//        }
+//        String prefName = attr[10];
+//        double height = Double.parseDouble(attr[11]) / 100;
+//        double weight = Double.parseDouble(attr[12]);
+//        GlobalEnums.BloodGroup bloodType = null;
+//        if (attr[13] != null) {
+//        	bloodType = GlobalEnums.BloodGroup.getEnumFromString(attr[13]);
+//        }
+//        ArrayList<GlobalEnums.Organ> donations = loadOrgans(attr[14]);
+//        ArrayList<GlobalEnums.Organ> requested = loadOrgans(attr[15]);
+//        ArrayList<PatientActionRecord> records = loadPatientLogs(nhi);
+//
+//        String[] contactAttr = new String[15];
+//        contactAttr = parsePatientContacts(nhi);
+//        GlobalEnums.Region region = null;
+//        if (contactAttr[3] != null) {
+//        	region = GlobalEnums.Region.getEnumFromString(contactAttr[3]);
+//        }
+//        int zip = Integer.parseInt(contactAttr[4]);
+//        ArrayList<Medication>[] meds = loadMedications(nhi);
+//        ArrayList<Medication> currentMeds = meds[0];
+//        ArrayList<Medication> medHistory = meds[1];
+//        ArrayList<Disease>[] diseases = loadDiseases(birth, nhi);
+//        ArrayList<Disease> currentDiseases = diseases[0];
+//        ArrayList<Disease> pastDiseases = diseases[1];
+//        List<Procedure> procedures = loadProcedures(nhi);
+//		userActions.log(INFO, "Successfully loaded patient " + nhi + " from the database.", "Attempted to load a patient from the database.");
+//        return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName, height, weight,
+//                bloodType, donations, requested, contactAttr[0], contactAttr[1], contactAttr[2], region, zip,
+//                contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
+//                contactAttr[11], contactAttr[12], contactAttr[13], contactAttr[14], records, currentDiseases,
+//                pastDiseases, currentMeds, medHistory, procedures);
     }
 
     /**

@@ -124,13 +124,13 @@ public class Patient extends User {
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
                    Timestamp created, Timestamp modified, LocalDate death, GlobalEnums.BirthGender gender,
                    GlobalEnums.PreferredGender prefGender, String preferredName, double height, double weight,
-                   BloodGroup bloodType, ArrayList<Organ> donations, ArrayList<Organ> receiving, String street1,
+                   BloodGroup bloodType, List<Organ> donations, List<Organ> receiving, String street1,
                    String street2, String suburb, Region region, int zip, String homePhone, String workPhone,
                    String mobilePhone, String emailAddress, String contactName, String contactRelationship,
                    String contactHomePhone, String contactWorkPhone, String contactMobilePhone, String contactEmailAddress,
-                   ArrayList<PatientActionRecord> userActionsList, ArrayList<Disease> currentDiseases,
-                   ArrayList<Disease> pastDiseases, ArrayList<Medication> currentMedications,
-                   ArrayList<Medication> medicationHistory, List<Procedure> procedures) {
+                   List<PatientActionRecord> userActionsList, List<Disease> currentDiseases,
+                   List<Disease> pastDiseases, List<Medication> currentMedications,
+                   List<Medication> medicationHistory, List<Procedure> procedures) {
         super(firstName, middleNames, lastName);
     	this.nhiNumber = nhiNumber;
         this.birth = birth;
