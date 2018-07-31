@@ -30,8 +30,17 @@ public class MedicationDAO extends DataAccessBase implements IMedicationDataAcce
 
     @Override
     public List<Medication> select(String nhi) {
-        List<Medication> medications = new ArrayList<>();
         try (Connection connection = getConnectionInstance()) {
+            return select(connection, nhi);
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Medication> select(Connection connection, String nhi) {
+        try {
+            List<Medication> medications = new ArrayList<>();
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_MEDICATIONS_QUERY"));
             connection.setAutoCommit(false);
             statement.setString(1, nhi);
