@@ -72,4 +72,13 @@ abstract class  DataAccessBase {
         return connectionInstance;
     }
 
+    public IMedicationDataAccess getMedicationDataAccess() {
+        return new MedicationDAO();
+    }
+
+    public IDiseaseDataAccess getDiseaseDataAccess() {
+        return new DiseaseDAO();
+    }
+
+
 }
