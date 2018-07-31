@@ -8,8 +8,6 @@ public interface IDiseaseDataAccess {
 
     boolean update();
 
-    boolean insert();
-
     List<Disease> select();
 
     boolean delete();

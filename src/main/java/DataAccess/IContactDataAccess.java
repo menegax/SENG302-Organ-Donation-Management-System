@@ -5,7 +5,7 @@ import model.Patient;
 
 import java.util.List;
 
-public interface IContact {
+public interface IContactDataAccess {
 
     boolean update(Patient patient);
 

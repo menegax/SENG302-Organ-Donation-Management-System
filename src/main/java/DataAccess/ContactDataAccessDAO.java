@@ -5,7 +5,7 @@ import model.Patient;
 
 import java.util.List;
 
-public class ContactDAO extends DataAccessBase implements IContact {
+public class ContactDataAccessDAO extends DataAccessBase implements IContactDataAccess {
 
     @Override
     public boolean update(Patient patient) {
