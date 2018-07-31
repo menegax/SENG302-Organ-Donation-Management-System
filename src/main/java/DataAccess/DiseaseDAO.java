@@ -16,8 +16,20 @@ import java.util.List;
 public class DiseaseDAO extends DataAccessBase implements IDiseaseDataAccess {
 
     @Override
-    public boolean update() {
-        return false;
+    public int update(String nhi, Disease disease) {
+        try (Connection connection = getConnectionInstance()) {
+            deleteAll(connection, nhi);
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_DISEASES_QUERY"));
+            connection.setAutoCommit(false);
+            statement.setString(1, nhi);
+            statement.setString(2, disease.getDiseaseName());
+            statement.setString(3, disease.getDateDiagnosed().toString());
+            String diseaseState = disease.getDiseaseState() == null ? "0" : (disease.getDiseaseState() == DiseaseState.CHRONIC ? "1" : "2");
+            statement.setString(4, diseaseState);
+            return statement.executeUpdate();
+        } catch (SQLException e) {
+            return 0;
+        }
     }
 
     @Override
@@ -43,8 +55,10 @@ public class DiseaseDAO extends DataAccessBase implements IDiseaseDataAccess {
         }
     }
 
-    @Override
-    public boolean delete() {
-        return false;
+    private void deleteAll(Connection connection, String nhi) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_DISEASES_QUERY"));
+        connection.setAutoCommit(false);
+        statement.setString(1, nhi);
+        statement.executeUpdate();
     }
 }
