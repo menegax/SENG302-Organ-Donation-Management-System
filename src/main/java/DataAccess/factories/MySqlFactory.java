@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import static utility.SystemLogger.systemLogger;
 
 public class MySqlFactory extends DAOFactory{
-    private static HikariConfig config = new HikariConfig("src\\main\\resources\\sql\\HikariConfig.properties");
+    private static HikariConfig config = new HikariConfig("src\\main\\resources\\sql\\HikariConfig.properties"); //todo:  check in jar, apparently it wraps in class loader
     private static HikariDataSource ds = new HikariDataSource(config);
 
     private static MySqlFactory mySqlFactory = null;
@@ -30,6 +30,7 @@ public class MySqlFactory extends DAOFactory{
 
     public Connection getConnectionInstance(){
         Connection connection = null;
+        config.setAutoCommit(false);
         try {
             connection = ds.getConnection();
             systemLogger.log(Level.INFO, "Successfully retrieved connection from pool.", MySqlFactory.class);

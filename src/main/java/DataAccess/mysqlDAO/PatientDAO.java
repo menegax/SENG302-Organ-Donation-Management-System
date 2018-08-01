@@ -36,12 +36,11 @@ public class PatientDAO  implements IPatientDataAccess {
     }
 
     @Override
-    public int updatePatient(List<Patient> patients) {
+    public int savePatients(List<Patient> patients) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_QUERY"));
-            connection.setAutoCommit(false);
             for (Patient patient : patients) {
-                addUpdateParameters(statement, patient);
+                statement = addUpdateParameters(statement, patient);
                 statement.executeUpdate();
                 for (Medication medication : patient.getMedicationHistory()) {
                     medicationDataAccess.updateMedication(patient.getNhiNumber(), medication, MedicationStatus.HISTORY);
@@ -65,15 +64,9 @@ public class PatientDAO  implements IPatientDataAccess {
         return 0;
     }
 
-    @Override
-    public boolean addPatient(Patient patient) {
-        return false;
-    }
-
-
 
     @Override
-    public boolean addPatients(List<Patient> patient) {
+    public boolean addPatientsBatch(List<Patient> patient) {
         return false;
     }
 
@@ -129,7 +122,7 @@ public class PatientDAO  implements IPatientDataAccess {
     }
 
 
-    private void addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException {
+    private PreparedStatement addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException {
         statement.setString(1, patient.getNhiNumber());
         statement.setString(2, patient.getFirstName());
         statement.setString(3, patient.getMiddleNames() == null ? "" : String.join(" ", patient.getMiddleNames()));
@@ -151,6 +144,7 @@ public class PatientDAO  implements IPatientDataAccess {
         List<String> organsList = patient.getRequiredOrgans().stream().map(Organ::toString).collect(Collectors.toList());
         String organs = String.join(",", organsList).toLowerCase();
         statement.setString(17, organs);
+        return statement;
     }
 
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts, List<PatientActionRecord> logs,

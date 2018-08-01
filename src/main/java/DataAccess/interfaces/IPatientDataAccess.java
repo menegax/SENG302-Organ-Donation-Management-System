@@ -6,11 +6,9 @@ import java.util.List;
 
 public interface IPatientDataAccess {
 
-    public int updatePatient (List<Patient> patient);
+    public int savePatients (List<Patient> patient);
 
-    public boolean addPatient (Patient patient);
-
-    public  boolean addPatients (List<Patient> patient);
+    public  boolean addPatientsBatch (List<Patient> patient);
 
     public List<Patient> getPatients ();
 
