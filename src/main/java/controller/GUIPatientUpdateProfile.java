@@ -1,5 +1,8 @@
 package controller;
 
+import DataAccess.LocalDB;
+import DataAccess.factories.DAOFactory;
+import DataAccess.interfaces.IPatientDataAccess;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -102,7 +105,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     private UserControl userControl;
 
-    Database database = Database.getDatabase();
+    private Database database = Database.getDatabase();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -115,9 +118,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
         userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
         if (user instanceof Patient) {
-            loadProfile(((Patient) user).getNhiNumber());
+            loadProfile(((Patient) user).getNhiNumber(), DAOFactory.getDAOFactory(FactoryType.LOCAL));
         } else if (userControl.getTargetUser() != null) {
-            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
+            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber(), DAOFactory.getDAOFactory(FactoryType.LOCAL));
         }
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
@@ -154,8 +157,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
      *
      * @param nhi the NHI of the patient to load
      */
-    private void loadProfile(String nhi) {
-       Patient patient = database.getPatientByNhi(nhi);
+    private void loadProfile(String nhi, DAOFactory factory) {
+        IPatientDataAccess patientDataAccess = factory.getPatientDataAccess();
+        Patient patient = patientDataAccess.getPatientByNhi(nhi);
        if (patient != null) {
             target = patient;
             after = (Patient) patient.deepClone();

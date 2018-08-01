@@ -31,6 +31,7 @@ import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
@@ -105,6 +106,7 @@ public class GUILogin implements TouchscreenCapable {
     @FXML
     public void logIn() { //todo: ??????????? tidy up.
         DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
+        DAOFactory factoryLocal = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
         try {
             if (patient.isSelected()) {
                 //<-- Example
@@ -115,7 +117,9 @@ public class GUILogin implements TouchscreenCapable {
                 if (patient2 == null) {
                     throw new InvalidObjectException("User doesn't exist");
                 }
+                factoryLocal.getPatientDataAccess().savePatients(new ArrayList<Patient>() {{add(patient2);}});
                 login.addLoggedInUserToCache(patient2);
+
             } else if (clinician.isSelected()) {
                 IClinicianDataAccess clinicianDataAccess = factory.getClinicianDataAccess();
                 Clinician clinician = clinicianDataAccess.getClinicianByStaffId(Integer.parseInt(nhiLogin.getText()));
