@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
@@ -32,6 +33,8 @@ public class Patient extends User {
     private LocalDate birth;
 
     private LocalDate death;
+
+    private String deathLocation;
 
     private BirthGender birthGender;
 
@@ -221,7 +224,7 @@ public class Patient extends User {
         if (nhi != null) {
             setNhiNumber(nhi);
         }
-        userActions.log(Level.INFO, "Successfully updated patient " + getNhiNumber(), "attempted to update patient attributes");
+        userActions.log(INFO, "Successfully updated patient " + getNhiNumber(), "attempted to update patient attributes");
         userModified();
         Searcher.getSearcher().addIndex(this);
     }
@@ -284,7 +287,7 @@ public class Patient extends User {
                 if (organEnum == null) {
                     userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to patient donations");
                 } else {
-                    userActions.log(Level.INFO, addDonation(organEnum), "attempted to update patient donations");
+                    userActions.log(INFO, addDonation(organEnum), "attempted to update patient donations");
                     userModified();
                 }
             }
@@ -295,7 +298,7 @@ public class Patient extends User {
                 if (organEnum == null) {
                     userActions.log(Level.SEVERE,"Invalid organ \"" + organ + "\" given and not removed", "attempted to remove from patient donations");}
                  else {
-                    userActions.log(Level.INFO, removeDonation(organEnum), "attempted to remove from patient donations");
+                    userActions.log(INFO, removeDonation(organEnum), "attempted to remove from patient donations");
                     userModified();
                 }
             }
@@ -633,7 +636,7 @@ public class Patient extends User {
         else {
             donations.add(organ);
             userModified();
-            userActions.log(Level.INFO, "Added organ " + organ + " to patient donations", "Attempted to add organ " + organ + " to patient donations");
+            userActions.log(INFO, "Added organ " + organ + " to patient donations", "Attempted to add organ " + organ + " to patient donations");
             return "Successfully added " + organ + " to donations";
         }
     }
@@ -655,7 +658,7 @@ public class Patient extends User {
         }
         requiredOrgans.add(organ);
         userModified();
-        userActions.log(Level.INFO, "Added organ " + organ + " to patient required organs", "Attempted to add organ " + organ + " to patient required organs");
+        userActions.log(INFO, "Added organ " + organ + " to patient required organs", "Attempted to add organ " + organ + " to patient required organs");
         return "Successfully added " + organ + " to required organs";
     }
 
@@ -669,7 +672,7 @@ public class Patient extends User {
         if (donations.contains(organ)) {
             donations.remove(organ);
             userModified();
-            userActions.log(Level.INFO, "Removed " + organ + " from patient donations", "Attempted to remove donation from a patient");
+            userActions.log(INFO, "Removed " + organ + " from patient donations", "Attempted to remove donation from a patient");
             return "Successfully removed " + organ + " from donations";
         } else {
             return "Organ " + organ + " is not part of the patients donations, so could not be removed.";
@@ -900,5 +903,16 @@ public class Patient extends User {
         }
         Patient patient = (Patient) obj;
         return this.nhiNumber.equals(patient.nhiNumber);
+    }
+
+
+    public String getDeathLocation() {
+        return deathLocation;
+    }
+
+
+    public void setDeathLocation(String deathLocation) {
+        this.deathLocation = deathLocation;
+        SystemLogger.systemLogger.log(INFO, "Set death location for patient " + this.nhiNumber);
     }
 }
