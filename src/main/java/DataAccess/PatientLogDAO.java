@@ -11,25 +11,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class PatientLogDAO extends DataAccessBase implements ILogDataAccess<PatientActionRecord> {
+public class PatientLogDAO implements ILogDataAccess<PatientActionRecord> {
+
+    private DataAccessHelper dataAccessHelper;
+
+    PatientLogDAO () {
+        dataAccessHelper = DataAccessHelper.getDataAccessHelper();
+    }
 
     @Override
     public int update(List<PatientActionRecord> records, String id) {
         return 0;
     }
 
-    @Override
-    public List<PatientActionRecord> selectAll(String nhi) {
-        try (Connection connection = getConnectionInstance()) {
-            return selectAll(connection, nhi);
-        } catch (SQLException e) {
-            return null;
-        }
-    }
 
     @Override
-    public List<PatientActionRecord> selectAll(Connection connection, String id) {
-        try {
+    public List<PatientActionRecord> selectAll(String id) {
+        try (Connection connection = dataAccessHelper.getConnectionInstance()){
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_LOGS"));
             ResultSet results = statement.executeQuery();

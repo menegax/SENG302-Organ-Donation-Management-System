@@ -2,7 +2,6 @@ package DataAccess;
 
 import model.Disease;
 
-import java.sql.Connection;
 import java.util.List;
 
 public interface IDiseaseDataAccess {
@@ -11,5 +10,4 @@ public interface IDiseaseDataAccess {
 
     List<Disease> select(String nhi);
 
-    List<Disease> select(Connection connection, String nhi);
 }

@@ -22,5 +22,4 @@ public interface ILogDataAccess<T> {
      */
     List<T> selectAll(String id);
 
-    List<T> selectAll(Connection connection, String id);
 }

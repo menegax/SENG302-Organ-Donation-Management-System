@@ -13,11 +13,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiseaseDAO extends DataAccessBase implements IDiseaseDataAccess {
+public class DiseaseDAO implements IDiseaseDataAccess {
+
+
+    private DataAccessHelper dataAccessHelper;
+
+    DiseaseDAO () {
+        dataAccessHelper = DataAccessHelper.getDataAccessHelper();
+    }
 
     @Override
     public int update(String nhi, Disease disease) {
-        try (Connection connection = getConnectionInstance()) {
+        try (Connection connection = dataAccessHelper.getConnectionInstance()) {
             deleteAll(connection, nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_DISEASES_QUERY"));
             connection.setAutoCommit(false);
@@ -34,19 +41,10 @@ public class DiseaseDAO extends DataAccessBase implements IDiseaseDataAccess {
 
     @Override
     public List<Disease> select(String nhi) {
-        try (Connection connection = getConnectionInstance()) {
-            return select(connection, nhi);
-        } catch (SQLException e) {
-            return null;
-        }
-    }
-
-    @Override
-    public List<Disease> select(Connection connection, String nhi) {
-        try {
+        try (Connection connection1 = dataAccessHelper.getConnectionInstance()){
+            connection1.setAutoCommit(false);
             List<Disease> diseases = new ArrayList<>();
-            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_DISEASES_QUERY"));
-            connection.setAutoCommit(false);
+            PreparedStatement statement = connection1.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_DISEASES_QUERY"));
             statement.setString(1, nhi);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

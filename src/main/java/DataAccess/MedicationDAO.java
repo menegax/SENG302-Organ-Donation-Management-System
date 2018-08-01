@@ -11,11 +11,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MedicationDAO extends DataAccessBase implements IMedicationDataAccess {
+public class MedicationDAO  implements IMedicationDataAccess {
+
+
+    private DataAccessHelper dataAccessHelper;
+
+    MedicationDAO () {
+        dataAccessHelper = DataAccessHelper.getDataAccessHelper();
+    }
+
 
     @Override
     public int update(String nhi, Medication medication, MedicationStatus state) {
-        try (Connection connection = getConnectionInstance()) {
+        try (Connection connection = dataAccessHelper.getConnectionInstance()) {
             deleteAll(connection, nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_MEDICATION_QUERY"));
             connection.setAutoCommit(false);
@@ -28,21 +36,13 @@ public class MedicationDAO extends DataAccessBase implements IMedicationDataAcce
         }
     }
 
-    @Override
-    public List<Medication> select(String nhi) {
-        try (Connection connection = getConnectionInstance()) {
-            return select(connection, nhi);
-        } catch (SQLException e) {
-            return null;
-        }
-    }
 
     @Override
-    public List<Medication> select(Connection connection, String nhi) {
-        try {
+    public List<Medication> select(String nhi) {
+        try (Connection connection = dataAccessHelper.getConnectionInstance()){
+            connection.setAutoCommit(false);
             List<Medication> medications = new ArrayList<>();
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_MEDICATIONS_QUERY"));
-            connection.setAutoCommit(false);
             statement.setString(1, nhi);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

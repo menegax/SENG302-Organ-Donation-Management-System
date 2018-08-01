@@ -15,25 +15,27 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class PatientDAO extends DataAccessBase implements IPatientDataAccess {
+class PatientDAO  implements IPatientDataAccess {
 
     private IMedicationDataAccess medicationDataAccess;
     private IDiseaseDataAccess diseaseDataAccess;
     private IContactDataAccess contactDataAccess;
     private ILogDataAccess logDataAccess;
     private IProcedureDataAccess procedureDataAccess;
+    private DataAccessHelper dataAccessHelper;
 
     PatientDAO() {
-        medicationDataAccess = DataAccessBase.getMedicationDataAccess();
-        diseaseDataAccess = DataAccessBase.getDiseaseDataAccess();
-        contactDataAccess = DataAccessBase.getContactDataAccess();
-        logDataAccess = DataAccessBase.getPatientLogDataAccess();
-        procedureDataAccess = DataAccessBase.getProcedureDataAccess();
+        dataAccessHelper = DataAccessHelper.getDataAccessHelper();
+        medicationDataAccess = dataAccessHelper.getMedicationDataAccess();
+        diseaseDataAccess = dataAccessHelper.getDiseaseDataAccess();
+        contactDataAccess = dataAccessHelper.getContactDataAccess();
+        logDataAccess = dataAccessHelper.getPatientLogDataAccess();
+        procedureDataAccess = dataAccessHelper.getProcedureDataAccess();
     }
 
     @Override
     public int update(List<Patient> patients) {
-        try (Connection connection = getConnectionInstance()) {
+        try (Connection connection = dataAccessHelper.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_QUERY"));
             connection.setAutoCommit(false);
             for (Patient patient : patients) {
@@ -95,16 +97,16 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess {
      */
     @Override
     public Patient selectOne(String nhi) {
-        try (Connection connection = getConnectionInstance()) {
+        try (Connection connection = dataAccessHelper.getConnectionInstance()){
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_BY_NHI"));
             statement.setString(1, nhi);
             ResultSet patientAttributes = statement.executeQuery();
-            List<PatientActionRecord> patientLogs = logDataAccess.selectAll(connection, nhi);
-            List<Disease> diseases = diseaseDataAccess.select(connection, nhi);
-            List<Medication> medications = medicationDataAccess.select(connection, nhi);
-            List<String> contacts = contactDataAccess.select(connection, nhi);
-            List<Procedure> procedures = procedureDataAccess.select(connection, nhi);
+            List<PatientActionRecord> patientLogs = logDataAccess.selectAll(nhi);
+            List<Disease> diseases = diseaseDataAccess.select(nhi);
+            List<Medication> medications = medicationDataAccess.select(nhi);
+            List<String> contacts = contactDataAccess.select(nhi);
+            List<Procedure> procedures = procedureDataAccess.select(nhi);
             if (patientAttributes.next()) {
                 return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, procedures, medications);
             }
@@ -116,7 +118,7 @@ class PatientDAO extends DataAccessBase implements IPatientDataAccess {
 
     @Override
     public List<Patient> selectFiltered(String searchTerm) {
-        try (Connection connection = getConnectionInstance()) {
+        try (Connection connection = dataAccessHelper.getConnectionInstance()) {
             List<Patient> results = new ArrayList<>();
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS_FILTERED"));

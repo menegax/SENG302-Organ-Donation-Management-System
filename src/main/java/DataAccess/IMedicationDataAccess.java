@@ -3,7 +3,6 @@ package DataAccess;
 import model.Medication;
 import utility.GlobalEnums.*;
 
-import java.sql.Connection;
 import java.util.List;
 
 public interface IMedicationDataAccess {
@@ -25,5 +24,4 @@ public interface IMedicationDataAccess {
      */
     List<Medication> select(String nhi);
 
-    List<Medication> select(Connection connection, String nhi);
 }

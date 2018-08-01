@@ -2,7 +2,6 @@ package DataAccess;
 
 import model.Procedure;
 
-import java.sql.Connection;
 import java.util.List;
 
 public interface IProcedureDataAccess {
@@ -20,6 +19,4 @@ public interface IProcedureDataAccess {
      * @return -
      */
     List<Procedure> select(String nhi);
-
-    List<Procedure> select(Connection connection, String nhi);
 }

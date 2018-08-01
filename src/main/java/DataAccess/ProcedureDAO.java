@@ -15,11 +15,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ProcedureDAO extends DataAccessBase implements IProcedureDataAccess {
+public class ProcedureDAO implements IProcedureDataAccess {
+
+    private DataAccessHelper dataAccessHelper;
+
+    ProcedureDAO () {
+        dataAccessHelper = DataAccessHelper.getDataAccessHelper();
+    }
 
     @Override
     public int update(String nhi, Procedure procedure) {
-        try (Connection connection = getConnectionInstance()) {
+        try (Connection connection = dataAccessHelper.getConnectionInstance()) {
             deleteAll(connection, nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_PROCEDURES_QUERY"));
             connection.setAutoCommit(false);
@@ -37,19 +43,10 @@ public class ProcedureDAO extends DataAccessBase implements IProcedureDataAccess
 
     @Override
     public List<Procedure> select(String nhi) {
-        try (Connection connection = getConnectionInstance()) {
-            return select(connection, nhi);
-        } catch (SQLException e) {
-            return null;
-        }
-    }
-
-    @Override
-    public List<Procedure> select(Connection connection, String nhi) {
-        try {
+        try (Connection connection = dataAccessHelper.getConnectionInstance()){
+            connection.setAutoCommit(false);
             List<Procedure> procedures = new ArrayList<>();
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_PROCEDURES_QUERY"));
-            connection.setAutoCommit(false);
             statement.setString(1, nhi);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

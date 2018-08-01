@@ -10,26 +10,23 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactDAO extends DataAccessBase implements IContactDataAccess {
+public class ContactDAO  implements IContactDataAccess {
 
+    private DataAccessHelper dataAccessHelper;
+
+    ContactDAO () {
+        dataAccessHelper = DataAccessHelper.getDataAccessHelper();
+    }
 
     @Override
     public boolean update(Patient patient) {
         return false;
     }
 
-    @Override
-    public List<String> select(String nhi) {
-        try (Connection connection = getConnectionInstance()) {
-            return select(connection, nhi);
-        } catch (SQLException e) {
-            return null;
-        }
-    }
 
     @Override
-    public List<String> select(Connection connection, String nhi) {
-        try {
+    public List<String> select(String nhi) {
+        try (Connection connection = dataAccessHelper.getConnectionInstance()){
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_CONTACTS"));
             statement.setString(1, nhi);
             ResultSet results = statement.executeQuery();

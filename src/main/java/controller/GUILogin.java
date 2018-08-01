@@ -2,10 +2,9 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 
-import DataAccess.DataAccessBase;
+import DataAccess.DataAccessHelper;
 import DataAccess.IPatientDataAccess;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,7 +21,6 @@ import javafx.scene.layout.GridPane;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
-import model.User;
 import service.Database;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
@@ -105,7 +103,7 @@ public class GUILogin implements TouchscreenCapable {
         ScreenControl screenControl = ScreenControl.getScreenControl();
         try {
             if (patient.isSelected()) {
-                IPatientDataAccess patientDataAccess = DataAccessBase.getPatientDataAccess();
+                IPatientDataAccess patientDataAccess = DataAccessHelper.getDataAccessHelper().getPatientDataAccess();
                 Patient patient = patientDataAccess.selectOne(nhiLogin.getText());
                 if (patient == null) {
                     throw new InvalidObjectException("User doesn't exist");
