@@ -8,7 +8,6 @@ import java.util.List;
 
 public class AdministratorLogDAO  implements ILogDataAccess<AdministratorActionRecord> {
 
-
     @Override
     public int updateLogs(List<AdministratorActionRecord> records, String id) {
         return 0;
