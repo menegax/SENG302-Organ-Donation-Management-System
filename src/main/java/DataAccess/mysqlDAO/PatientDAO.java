@@ -77,6 +77,9 @@ public class PatientDAO  implements IPatientDataAccess {
     }
 
     @Override
+    public boolean deletePatient(Patient patient){ return false; };
+
+    @Override
     public Patient getPatientByNhi(String nhi) {
         try (Connection connection = mySqlFactory.getConnectionInstance()){
             connection.setAutoCommit(false);
