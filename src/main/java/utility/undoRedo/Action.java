@@ -1,8 +1,12 @@
 package utility.undoRedo;
 
+import DataAccess.factories.DAOFactory;
+import DataAccess.interfaces.IPatientDataAccess;
 import controller.ScreenControl;
+import model.Patient;
 import model.User;
 import service.Database;
+import utility.GlobalEnums;
 
 /**
  * Represents an action (edit, add, delete) performed on a user in the application
@@ -15,6 +19,8 @@ public class Action {
     private boolean isExecuted;
 
     ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     /**
      * Constructor for the action

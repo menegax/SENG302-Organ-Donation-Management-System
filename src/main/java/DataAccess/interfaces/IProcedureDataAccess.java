@@ -9,4 +9,6 @@ public interface IProcedureDataAccess {
     int updateProcedure (String nhi, Procedure procedure);
 
     List<Procedure> getProceduresByNhi (String nhi);
+
+    void deleteAllProceduresByNhi(String nhi);
 }

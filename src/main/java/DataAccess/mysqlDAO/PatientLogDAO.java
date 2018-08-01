@@ -43,4 +43,16 @@ public class PatientLogDAO implements ILogDataAccess<PatientActionRecord> {
             return null;
         }
     }
+
+    @Override
+    public boolean deleteLogsByUserId(String id) {
+        try (Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_ALL_PATIENT_LOGS"));
+            statement.setString(1, id);
+            statement.execute();
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
+    }
 }
