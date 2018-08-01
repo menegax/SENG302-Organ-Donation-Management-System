@@ -1,12 +1,12 @@
-package DataAccess.mysqlDAO;
+package DataAccess.localDAO;
 
+import DataAccess.LocalDB;
 import DataAccess.interfaces.IAdministratorDataAccess;
 import model.Administrator;
 
 import java.util.List;
 
-public class AdministatorDAO implements IAdministratorDataAccess {
-
+public class AdministratorLocalDAO implements IAdministratorDataAccess {
     @Override
     public int updateAdministrator(List<Administrator> clinician) {
         return 0;
@@ -19,7 +19,8 @@ public class AdministatorDAO implements IAdministratorDataAccess {
 
     @Override
     public Administrator getAdministratorByUsername(String username) {
-        return null;
+        LocalDB localDB = LocalDB.getInstance();
+        return localDB.getAdministratorByUsername(username);
     }
 
     @Override
