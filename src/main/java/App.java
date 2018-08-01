@@ -12,6 +12,8 @@ public class App {
 
         List<String> argArrayList = Arrays.asList(argv);
 
+        //Launch ScreenControl here
+
         if (argArrayList.contains("cli")) {
             CLIMain.main(null);
         }

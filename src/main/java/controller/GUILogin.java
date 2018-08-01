@@ -111,10 +111,14 @@ public class GUILogin implements TouchscreenCapable {
                 login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
             Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
-            Stage stage = (Stage) loginPane.getScene().getWindow();
+            if(screenControl.getTouch()) {
+                screenControl.show(TUIOFXMain.getUuid(), home);
+            } else {
+                Stage stage = (Stage) loginPane.getScene().getWindow();
 //            screenControl.addStage(stage.getUUID(), stage);
-            stage.setScene(new Scene(home));
+                stage.setScene(new Scene(home));
 //            screenControl.closeStage(Main.getUuid()); // close login scene after login
+            }
         } catch (InvalidObjectException e) {
             password.setText(""); //Reset password field on invalid login
             userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");

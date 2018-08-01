@@ -5,6 +5,7 @@ import static utility.SystemLogger.systemLogger;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,8 +13,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.User;
 import utility.undoRedo.UndoableStage;
@@ -65,7 +66,11 @@ public class ScreenControl {
 
     private UndoableStage touchStage = null;
 
+//    private Scene touchScene;
+
     private Pane touchPane;
+
+    private boolean isTouch;
 
     private ScreenControl() {
         applicationStages = new HashMap<>();
@@ -89,11 +94,13 @@ public class ScreenControl {
      * @param key the uuid of the stage to add
      * @param stage the stage object to add to the hashmap
      */
-    public void addStage(UUID key, Stage stage){
-        applicationStages.put(key, stage);
-        if (new UserControl().isUserLoggedIn()) { // if scene belongs to a user
-            systemLogger.log(FINE, "User is logged in and a stage is being added");
-            addUserStage(new UserControl().getLoggedInUser(), stage);
+    public void addStage(UUID key, Stage stage) {
+        if (touchStage == null) {
+                applicationStages.put(key, stage);
+            if (new UserControl().isUserLoggedIn()) { // if scene belongs to a user
+                systemLogger.log(FINE, "User is logged in and a stage is being added");
+                addUserStage(new UserControl().getLoggedInUser(), stage);
+            }
         }
     }
 
@@ -105,9 +112,20 @@ public class ScreenControl {
     public void show(UUID stageName, Parent root) {
         if (touchStage != null) {
             // if touch
-            Pane newPane = new Pane(root);
-            touchPane.getChildren().addAll(newPane);
-//            touchStage.show();
+            Pane newPane = new AnchorPane(root);
+            List<Node> nodes = new ArrayList<>(touchPane.getChildren());
+            System.out.println(nodes.size());
+//            touchPane.getChildren().add(newPane);
+//            touchScene = null;
+//            touchScene = new Scene(touchPane);
+            Pane newTouchPane = new Pane();
+            nodes.add(newPane);
+            newTouchPane.getChildren().addAll(nodes);
+            System.out.println(newTouchPane.getChildren().size());
+            touchPane = newTouchPane;
+//            touchScene = new Scene(touchPane);
+//            touchStage.hide();
+            touchStage.setScene(new Scene(touchPane));
             systemLogger.log(INFO, "Showing new touch stage scene"); //todo rm?
 
         } else {
@@ -126,9 +144,30 @@ public class ScreenControl {
      * @throws IOException any issue in loading the fxml file
      */
     public void show(Node node, String fxml) throws IOException{
-        Stage stage = applicationStages.get(((UndoableStage) node.getScene().getWindow()).getUUID());
-        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource(fxml))));
-        stage.show();
+        if (touchStage != null) {
+            // if touch
+            Parent root = FXMLLoader.load(getClass().getResource(fxml));
+            Pane newPane = new AnchorPane(root);
+            List<Node> nodes = new ArrayList<>(touchPane.getChildren());
+            System.out.println(nodes.size());
+//            touchPane.getChildren().add(newPane);
+//            touchScene = null;
+//            touchScene = new Scene(touchPane);
+            Pane newTouchPane = new Pane();
+            newTouchPane.getChildren().addAll(nodes);
+            newTouchPane.getChildren().addAll(newPane);
+            System.out.println(newTouchPane.getChildren().size());
+            touchPane = newTouchPane;
+//            touchScene = new Scene(touchPane);
+//            touchStage.hide();
+            touchStage.setScene(new Scene(touchPane));
+            systemLogger.log(INFO, "Showing new touch stage scene"); //todo rm?
+
+        } else {
+            Stage stage = applicationStages.get(((UndoableStage) node.getScene().getWindow()).getUUID());
+            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource(fxml))));
+            stage.show();
+        }
     }
 
     /**
@@ -136,10 +175,10 @@ public class ScreenControl {
      * @param stageName - node which is on the stage to close
      */
     void closeStage(UUID stageName) {
-        applicationStages.get(stageName)
-                .close();
-        applicationStages.remove(stageName);
-        userStages.remove(new UserControl().getLoggedInUser(), stageName);
+//        applicationStages.get(stageName)
+//                .close();
+//        applicationStages.remove(stageName);
+//        userStages.remove(new UserControl().getLoggedInUser(), stageName);
     }
 
 
@@ -148,14 +187,14 @@ public class ScreenControl {
      * @param node the stage to be closed
      */
     void closeStage(Node node) {
-        ((Stage) node.getScene()
-                .getWindow()).close();
-        if (node.getScene()
-                .getWindow() instanceof UndoableStage) {
-            applicationStages.remove(((UndoableStage) node.getScene()
-                    .getWindow()).getUUID());
-        }
-        userStages.remove(new UserControl().getLoggedInUser(), node);
+//        ((Stage) node.getScene()
+//                .getWindow()).close();
+//        if (node.getScene()
+//                .getWindow() instanceof UndoableStage) {
+//            applicationStages.remove(((UndoableStage) node.getScene()
+//                    .getWindow()).getUUID());
+//        }
+//        userStages.remove(new UserControl().getLoggedInUser(), node);
 
     }
 
@@ -177,8 +216,10 @@ public class ScreenControl {
 
 
     public void setTouchStage(UndoableStage touchStage) {
+        setTouch(true);
         this.touchStage = touchStage;
-        touchPane = new AnchorPane();
+        touchPane = new Pane();
+//        touchScene = new Scene(touchPane);
         this.touchStage.setScene(new Scene(touchPane));
     }
 
@@ -456,6 +497,14 @@ public class ScreenControl {
 
     public Set<Stage> getUsersStages(User user) {
         return userStages.get(user);
+    }
+
+    public void setTouch(boolean touch) {
+        isTouch = touch;
+    }
+
+    public boolean getTouch() {
+        return isTouch;
     }
 }
 

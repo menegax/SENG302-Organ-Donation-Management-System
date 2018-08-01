@@ -52,10 +52,10 @@ public class TouchPaneController {
      * @param scrollEvent scroll event
      */
     public void scrollPane(ScrollEvent scrollEvent) {
-        if(!scrollEvent.isInertia()) {
+//        if(!scrollEvent.isInertia()) {
             pane.setTranslateX(pane.getTranslateX() + scrollEvent.getDeltaX());
             pane.setTranslateY(pane.getTranslateY() + scrollEvent.getDeltaY());
-        }
+//        }
     }
 
 //    /**
