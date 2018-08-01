@@ -5,7 +5,6 @@ import utility.GlobalEnums.*;
 
 public abstract class DAOFactory {
 
-    @SuppressWarnings("nullable")
     public static DAOFactory getDAOFactory(FactoryType whichFactory) {
 
         switch (whichFactory) {
@@ -16,7 +15,6 @@ public abstract class DAOFactory {
                 return new LocalDatabaseFactory();
         }
     }
-
     public abstract IPatientDataAccess getPatientDataAccess();
     public abstract IMedicationDataAccess getMedicationDataAccess();
     public abstract IDiseaseDataAccess getDiseaseDataAccess();

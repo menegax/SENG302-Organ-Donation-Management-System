@@ -35,7 +35,7 @@ public class ContactDAO  implements IContactDataAccess {
             int columnCount = results.getMetaData().getColumnCount();
             List<String> contactInfo = new ArrayList<>();
             while (results.next()) {
-                int i = 1;
+                int i = 2; //start at 2 to skip nhi
                 while (i <= columnCount) {
                     contactInfo.add(results.getString(i++));
                 }
