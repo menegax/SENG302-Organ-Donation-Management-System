@@ -1,4 +1,4 @@
-package DataAccess;
+package DataAccess.interfaces;
 
 import model.Medication;
 import utility.GlobalEnums.*;

@@ -1,5 +1,7 @@
-package DataAccess;
+package DataAccess.mysqlDAO;
 
+import DataAccess.interfaces.IMedicationDataAccess;
+import DataAccess.factories.MySqlFactory;
 import model.Medication;
 import utility.GlobalEnums.*;
 import utility.ResourceManager;
@@ -16,7 +18,7 @@ public class MedicationDAO  implements IMedicationDataAccess {
 
     private MySqlFactory mySqlFactory;
 
-    MedicationDAO () {
+    public MedicationDAO () {
         mySqlFactory = MySqlFactory.getMySqlFactory();
     }
 

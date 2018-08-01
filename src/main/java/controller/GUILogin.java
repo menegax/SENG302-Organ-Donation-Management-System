@@ -2,8 +2,8 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 
-import DataAccess.MySqlFactory;
-import DataAccess.IPatientDataAccess;
+import DataAccess.factories.MySqlFactory;
+import DataAccess.interfaces.IPatientDataAccess;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

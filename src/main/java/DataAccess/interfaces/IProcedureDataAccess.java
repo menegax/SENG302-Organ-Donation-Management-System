@@ -1,4 +1,4 @@
-package DataAccess;
+package DataAccess.interfaces;
 
 import model.Procedure;
 

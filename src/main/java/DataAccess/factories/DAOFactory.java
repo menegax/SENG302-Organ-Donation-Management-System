@@ -1,4 +1,6 @@
-package DataAccess;
+package DataAccess.factories;
+
+import DataAccess.interfaces.*;
 
 public abstract class DAOFactory {
 

@@ -1,5 +1,7 @@
-package DataAccess;
+package DataAccess.mysqlDAO;
 
+import DataAccess.interfaces.IContactDataAccess;
+import DataAccess.factories.MySqlFactory;
 import model.Patient;
 import utility.ResourceManager;
 
@@ -14,7 +16,7 @@ public class ContactDAO  implements IContactDataAccess {
 
     private MySqlFactory mySqlFactory;
 
-    ContactDAO () {
+    public ContactDAO () {
         mySqlFactory = MySqlFactory.getMySqlFactory();
     }
 

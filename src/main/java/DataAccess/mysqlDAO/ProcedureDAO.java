@@ -1,5 +1,7 @@
-package DataAccess;
+package DataAccess.mysqlDAO;
 
+import DataAccess.interfaces.IProcedureDataAccess;
+import DataAccess.factories.MySqlFactory;
 import model.Procedure;
 import utility.GlobalEnums.Organ;
 import utility.ResourceManager;
@@ -19,7 +21,7 @@ public class ProcedureDAO implements IProcedureDataAccess {
 
     private MySqlFactory mySqlFactory;
 
-    ProcedureDAO () {
+    public ProcedureDAO () {
         mySqlFactory = MySqlFactory.getMySqlFactory();
     }
 

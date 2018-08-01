@@ -1,5 +1,7 @@
-package DataAccess;
+package DataAccess.factories;
 
+import DataAccess.interfaces.*;
+import DataAccess.mysqlDAO.*;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -26,7 +28,7 @@ public class MySqlFactory extends DAOFactory{
         return mySqlFactory;
     }
 
-     Connection getConnectionInstance(){
+    public Connection getConnectionInstance(){
         Connection connection = null;
         try {
             connection = ds.getConnection();
@@ -37,7 +39,7 @@ public class MySqlFactory extends DAOFactory{
         return connection;
     }
 
-    public  IMedicationDataAccess getMedicationDataAccess() {
+    public IMedicationDataAccess getMedicationDataAccess() {
         return new MedicationDAO();
     }
 
@@ -45,13 +47,13 @@ public class MySqlFactory extends DAOFactory{
         return new DiseaseDAO();
     }
 
-    public  IPatientDataAccess getPatientDataAccess() { return new PatientDAO(); }
+    public IPatientDataAccess getPatientDataAccess() { return new PatientDAO(); }
 
-    public  IContactDataAccess getContactDataAccess() {
+    public IContactDataAccess getContactDataAccess() {
         return new ContactDAO();
     }
 
-    public  ILogDataAccess getAdministratorDataAccess() {
+    public ILogDataAccess getAdministratorDataAccess() {
         return new AdministratorLogDAO();
     }
 
