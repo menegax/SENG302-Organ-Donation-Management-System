@@ -81,11 +81,7 @@ public class GUILogin implements TouchscreenCapable {
     @FXML
     public void goToRegister() {
         try {
-            Parent registerRoot = FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml"));
-            Stage stage = (Stage) loginPane.getScene().getWindow();
-            stage.setScene(new Scene(registerRoot));
-            stage.show();
-//            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml")));
+            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml")));
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load patient register").show();
             userActions.log(SEVERE, "Failed to load patient register", "Attempted to load patient register");
@@ -111,14 +107,10 @@ public class GUILogin implements TouchscreenCapable {
                 login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
             Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
-            if(screenControl.getTouch()) {
-                screenControl.show(TUIOFXMain.getUuid(), home);
-            } else {
-                Stage stage = (Stage) loginPane.getScene().getWindow();
-//            screenControl.addStage(stage.getUUID(), stage);
-                stage.setScene(new Scene(home));
-//            screenControl.closeStage(Main.getUuid()); // close login scene after login
-            }
+            UndoableStage stage = new UndoableStage();
+            screenControl.addStage(stage.getUUID(), stage);
+            screenControl.show(stage.getUUID(), home);
+            screenControl.closeStage(Main.getUuid()); // close login scene after login
         } catch (InvalidObjectException e) {
             password.setText(""); //Reset password field on invalid login
             userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");

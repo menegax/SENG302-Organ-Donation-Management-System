@@ -443,11 +443,11 @@ public class GUIUserRegister implements TouchscreenCapable {
 
     private void returnToPreviousPage() {
         try {
-            Stage stage = (Stage) userRegisterPane.getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-            stage.setScene(new Scene(root));
-            stage.show();
-//            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+//            Stage stage = (Stage) userRegisterPane.getScene().getWindow();
+//            Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+//            stage.setScene(new Scene(root));
+//            stage.show();
+            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
             userActions.log(SEVERE, "Failed to load login", "Attempted to load login");

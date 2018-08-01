@@ -33,58 +33,58 @@ public class TUIOFXMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
        // set up GUI
-//       UndoableStage stage = new UndoableStage();
-//       ScreenControl screenControl = ScreenControl.getScreenControl();
-//       screenControl.setTouchStage(stage);
-//       screenControl.addStage(uuid, stage);
-//       Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-//       screenControl.show(uuid, loginScreen);
-//
-//        Database.importFromDiskPatients("./patient.json");
-//        Database.importFromDiskClinicians("./clinician.json");
-//        Database.importFromDiskWaitlist("./waitlist.json");
-//        Database.importFromDiskAdministrators("./administrator.json");
-//
-//        Searcher.getSearcher()
-//                .createFullIndex(); // index patients for search, needs to be after importing or adding any patients
-//        openKeyboard();
-//        TuioFX tuioFX = new TuioFX(stage, Configuration.debug());
-//        tuioFX.start();
-//        stage.setResizable(true);
-//        stage.setFullScreen(true);
-//        stage.show();
+       UndoableStage stage = new UndoableStage();
+       ScreenControl screenControl = ScreenControl.getScreenControl();
+       screenControl.setTouchStage(stage);
+       screenControl.addStage(uuid, stage);
+       Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+       screenControl.show(uuid, loginScreen);
 
-        primaryStage = new UndoableStage();
-        Pane mainPane = new Pane();
+        Database.importFromDiskPatients("./patient.json");
+        Database.importFromDiskClinicians("./clinician.json");
+        Database.importFromDiskWaitlist("./waitlist.json");
+        Database.importFromDiskAdministrators("./administrator.json");
 
-        Pane loginPane = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-
-        Scene mainScene = new Scene(mainPane);
-
-        mainPane.getChildren().addAll(loginPane);
-//        mainPane.getChildren().addAll(userRegisterPane);
-
-        Button button = new Button();
-        button.setText("Load register");
-        mainPane.getChildren().addAll(button);
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    Pane userRegisterPane = FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml"));
-                    mainPane.getChildren().addAll(userRegisterPane);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        primaryStage.setScene(mainScene);
-
-        TuioFX tuioFX = new TuioFX(primaryStage, Configuration.debug());
+        Searcher.getSearcher()
+                .createFullIndex(); // index patients for search, needs to be after importing or adding any patients
+        openKeyboard();
+        TuioFX tuioFX = new TuioFX(stage, Configuration.debug());
         tuioFX.start();
+        stage.setResizable(true);
+        stage.setFullScreen(true);
+        stage.show();
 
-        primaryStage.show();
+//        primaryStage = new UndoableStage();
+//        Pane mainPane = new Pane();
+//
+//        Pane loginPane = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+//
+//        Scene mainScene = new Scene(mainPane);
+//
+//        mainPane.getChildren().addAll(loginPane);
+////        mainPane.getChildren().addAll(userRegisterPane);
+//
+//        Button button = new Button();
+//        button.setText("Load register");
+//        mainPane.getChildren().addAll(button);
+//        button.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                try {
+//                    Pane userRegisterPane = FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml"));
+//                    mainPane.getChildren().addAll(userRegisterPane);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//
+//        primaryStage.setScene(mainScene);
+//
+//        TuioFX tuioFX = new TuioFX(primaryStage, Configuration.debug());
+//        tuioFX.start();
+//
+//        primaryStage.show();
 
 
 

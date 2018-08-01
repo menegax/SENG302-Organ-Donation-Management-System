@@ -1,11 +1,6 @@
 package controller;
 
-import static java.util.logging.Level.*;
-import static utility.SystemLogger.systemLogger;
-
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,8 +8,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.User;
 import utility.undoRedo.UndoableStage;
@@ -22,12 +17,12 @@ import utility.undoRedo.UndoableStage;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * Maintains a collection of screens for the application
- */
-public class ScreenControl {
+import static java.util.logging.Level.*;
+import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
 
-    protected static ScreenControl screenControl;
+public class ScreenControlDesktop extends ScreenControl {
+    private static ScreenControl screenControl;
 
     @Deprecated
     private static HashMap<String, Pane> screenMap = new HashMap<>();
@@ -42,6 +37,8 @@ public class ScreenControl {
 
     @Deprecated
     private static Scene main;
+
+    private Map<UUID, Stage> applicationStages;
 
     private Map<Stage, TabPane> stageTabs = new HashMap<>();
 
@@ -62,36 +59,28 @@ public class ScreenControl {
 
     private Boolean isSaved = true;
 
-    protected UndoableStage touchStage = null;
+    private UndoableStage touchStage = null;
 
 //    private Scene touchScene;
 
-    protected Pane touchPane;
+    private Pane touchPane;
 
     private boolean isTouch;
 
-    protected ScreenControl() {
-        setUpKeyCodeCombinations();
+    private ScreenControlDesktop() {
+        super();
+        applicationStages = new HashMap<>();
     }
 
-
-
-    public static void setUpScreenControl(String arg) {
-        if(arg.equals("touch")) {
-            screenControl = ScreenControlTouch.getScreenControl();
-        } else {
-            screenControl = ScreenControlDesktop.getScreenControl();
-        }
-    }
 
     /**
      * Getter to enable this to be a singleton
      * @return the single ScreenControl object
      */
     public static ScreenControl getScreenControl() {
-//        if (screenControl == null) {
-//            screenControl = new ScreenControl();
-//        }
+        if (screenControl == null) {
+            screenControl = new ScreenControlDesktop();
+        }
         return screenControl;
     }
 
@@ -101,7 +90,11 @@ public class ScreenControl {
      * @param stage the stage object to add to the hashmap
      */
     public void addStage(UUID key, Stage stage) {
-
+        applicationStages.put(key, stage);
+        if (new UserControl().isUserLoggedIn()) { // if scene belongs to a user
+            systemLogger.log(FINE, "User is logged in and a stage is being added");
+            addUserStage(new UserControl().getLoggedInUser(), stage);
+        }
     }
 
     /**
@@ -110,7 +103,9 @@ public class ScreenControl {
      * @param root the screen to display on the stage
      */
     public void show(UUID stageName, Parent root) {
-
+        Stage stage = applicationStages.get(stageName);
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     /**
@@ -120,6 +115,9 @@ public class ScreenControl {
      * @throws IOException any issue in loading the fxml file
      */
     public void show(Node node, String fxml) throws IOException{
+        Stage stage = applicationStages.get(((UndoableStage) node.getScene().getWindow()).getUUID());
+        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource(fxml))));
+        stage.show();
 
     }
 
@@ -128,6 +126,10 @@ public class ScreenControl {
      * @param stageName - node which is on the stage to close
      */
     void closeStage(UUID stageName) {
+//        applicationStages.get(stageName)
+//                .close();
+//        applicationStages.remove(stageName);
+//        userStages.remove(new UserControl().getLoggedInUser(), stageName);
     }
 
 
@@ -136,6 +138,14 @@ public class ScreenControl {
      * @param node the stage to be closed
      */
     void closeStage(Node node) {
+        ((Stage) node.getScene()
+                .getWindow()).close();
+        if (node.getScene()
+                .getWindow() instanceof UndoableStage) {
+            applicationStages.remove(((UndoableStage) node.getScene()
+                    .getWindow()).getUUID());
+        }
+        userStages.remove(new UserControl().getLoggedInUser(), node);
 
     }
 
@@ -157,6 +167,7 @@ public class ScreenControl {
 
 
     public void setTouchStage(UndoableStage touchStage) {
+        setTouch(true);
         this.touchStage = touchStage;
         touchPane = new Pane();
 //        touchScene = new Scene(touchPane);
@@ -220,6 +231,7 @@ public class ScreenControl {
      * @exception IOException If the pane fails to load
      */
     static void loadPopUpPane(Scene scene, FXMLLoader fxmlLoader) throws IOException {
+        scene.setRoot(fxmlLoader.load());
     }
 
 
@@ -245,29 +257,6 @@ public class ScreenControl {
         popMap.get(name)
                 .close();
     }
-
-
-    /**
-     * Sets keyboard shortcuts depending on the OS
-     */
-    private void setUpKeyCodeCombinations() {
-        if (System.getProperty("os.name")
-                .startsWith("Mac")) { // MacOS
-            logOut = new KeyCodeCombination(KeyCode.Q, KeyCombination.ALT_DOWN, KeyCombination.META_DOWN);
-            save = new KeyCodeCombination(KeyCode.S, KeyCombination.META_DOWN);
-            importt = new KeyCodeCombination(KeyCode.I, KeyCombination.META_DOWN);
-            undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.META_DOWN);
-            redo = new KeyCodeCombination(KeyCode.Z, KeyCombination.SHIFT_DOWN, KeyCombination.META_DOWN);
-        }
-        else { // Windows or Linux
-            logOut = new KeyCodeCombination(KeyCode.Q, KeyCombination.ALT_DOWN, KeyCombination.CONTROL_DOWN);
-            save = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
-            importt = new KeyCodeCombination(KeyCode.I, KeyCombination.CONTROL_DOWN);
-            undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
-            redo = new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN);
-        }
-    }
-
 
     public KeyCodeCombination getSave() {
         return save;
@@ -311,6 +300,17 @@ public class ScreenControl {
      */
     private void addUserStage(User user, Stage newStage) {
 
+        systemLogger.log(FINE, "Added user and stage");
+
+        if (userStages.containsKey(user)) {
+            userStages.get(user)
+                    .add(newStage);
+        }
+        else {
+            Set<Stage> stages = new HashSet<>();
+            stages.add(newStage);
+            userStages.put(user, stages);
+        }
     }
 
 
@@ -319,6 +319,17 @@ public class ScreenControl {
      * @param user the user whose stages will be closed
      */
     void closeAllUserStages(User user) {
+        systemLogger.log(FINER, "Attempting to close all user stages...");
+        Set<Stage> stages = userStages.get(user);
+        try {
+            for (Stage stage : stages) {
+                stage.close();
+            }
+            systemLogger.log(FINER, "Closed all user stages.");
+        } catch (NullPointerException e) {
+            systemLogger.log(SEVERE, "Failed to close all user stages.", e);
+        }
+        userStages.remove(user);
 
     }
 
@@ -330,6 +341,27 @@ public class ScreenControl {
      */
     void setUpNewLogin() {
         // UNTIL WE SUPPORT MULTI USER LOGIN
+        try {
+            if(touchStage != null) {
+//                ScreenControl screenControl = ScreenControl.getScreenControl();
+//                touchPane.getChildren().clear();
+//                System.out.println(touchPane.getChildren().size());
+//                Pane loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+//                screenControl.show(touchStage.getUUID(), loginScreen);
+//                System.out.println(touchPane.getChildren().size());
+                Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+                touchStage.setScene(new Scene(root));
+                touchStage.show();
+            } else {
+                ScreenControl screenControl = ScreenControl.getScreenControl();
+                Pane loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+                screenControl.addStage(Main.getUuid(), new Stage());
+                screenControl.show(Main.getUuid(), loginScreen);
+            }
+        }
+        catch (IOException e) {
+            systemLogger.log(SEVERE, "Failed to recreate login scene");
+        }
     }
 
     /**
@@ -367,14 +399,24 @@ public class ScreenControl {
      * Removes asterisks from all stages when local changes are saved to disk
      */
     private void removeUnsavedAsterisks() {
-
+        for (Stage stage : applicationStages.values()) {
+            if (stage instanceof UndoableStage) {
+                ((UndoableStage) stage).getGuiHome().removeAsterisk();
+            }
+        }
     }
 
     /**
      * Adds asterisks to all stages when local changes have been made
      */
     private void addUnsavedAsterisks() {
-
+        for (Stage stage : applicationStages.values()) {
+            if (stage instanceof UndoableStage) {
+                if (((UndoableStage) stage).getGuiHome() != null) {
+                    ((UndoableStage) stage).getGuiHome().addAsterisk();
+                }
+            }
+        }
     }
 
     public boolean getIsSaved() {
@@ -392,7 +434,4 @@ public class ScreenControl {
     public boolean getTouch() {
         return isTouch;
     }
-
-
 }
-
