@@ -16,22 +16,13 @@ public class PatientLocalDAO implements IPatientDataAccess {
     }
 
     @Override
-    public int updatePatient(List<Patient> patient) {
+    public int savePatients(List<Patient> patient) {
         return 0;
     }
 
     @Override
-    public boolean addPatient(Patient patient) {
-        localDB.storePatient(patient); //todo:
-        return true;
-    }
-
-    @Override
-    public boolean addPatients(List<Patient> patient) {
-        patient.forEach(x -> {
-            localDB.storePatient(x);
-        });
-        return true; //TODO:
+    public boolean addPatientsBatch(List<Patient> patient) {
+        return false;
     }
 
     @Override

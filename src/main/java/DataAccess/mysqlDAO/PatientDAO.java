@@ -113,7 +113,8 @@ public class PatientDAO  implements IPatientDataAccess {
             }
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                results.add(constructMinimalPatientObject(resultSet));
+                List<String> contacts = contactDataAccess.getContactByNhi(resultSet.getString("Nhi"));
+                results.add(constructPatientObject(resultSet, contacts));
             }
             return results;
         } catch (SQLException e) {
@@ -145,6 +146,10 @@ public class PatientDAO  implements IPatientDataAccess {
         String organs = String.join(",", organsList).toLowerCase();
         statement.setString(17, organs);
         return statement;
+    }
+
+    private Patient constructPatientObject(ResultSet attributes, List<String> contacts) throws SQLException {
+        return constructPatientObject(attributes, contacts, null, null, null, null);
     }
 
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts, List<PatientActionRecord> logs,

@@ -10,7 +10,7 @@ public interface IAdministratorDataAccess {
 
     public boolean addAdministrator (Administrator clinician);
 
-    public Administrator getAdministrator (String username, String password);
+    public Administrator getAdministratorByUsername (String username);
 
     List<Administrator> searchAdministrator (String searchTerm);
 }
