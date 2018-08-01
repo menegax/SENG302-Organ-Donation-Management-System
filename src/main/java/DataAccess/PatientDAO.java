@@ -121,9 +121,14 @@ class PatientDAO  implements IPatientDataAccess {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             List<Patient> results = new ArrayList<>();
             connection.setAutoCommit(false);
-            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS_FILTERED"));
-            for (int i = 1; i <= 5; i++) {
-                statement.setString(i, searchTerm);
+            PreparedStatement statement;
+            if (searchTerm.equals("")) {
+                statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS"));
+            } else {
+                statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS_FILTERED"));
+                for (int i = 1; i <= 5; i++) {
+                    statement.setString(i, searchTerm);
+                }
             }
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
