@@ -136,7 +136,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
 
 
     /**
-     * Creates a list of control elements using all editable nodes on the updateMedication screen and initializes
+     * Creates a list of control elements using all editable nodes on the update screen and initializes
      * the StateHistoryScreen used to undo or redo actions using the control elements
      */
     private void setUpStateHistory() {
@@ -155,7 +155,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
 
 
     /**
-     * Populates the updateMedication screen using the current clinician attributes
+     * Populates the update screen using the current clinician attributes
      *
      * @param clinician logged in clinician
      */
@@ -264,14 +264,14 @@ public class GUIClinicianUpdateProfile extends UndoableController {
                     .toString()));
             userActions.log(Level.INFO,
                     "Successfully updated clinician profile",
-                    new String[] { "Attempted to updateMedication clinician profile", String.valueOf(after.getStaffID()) });
+                    new String[] { "Attempted to update clinician profile", String.valueOf(after.getStaffID()) });
             after.userModified();
 
             Action action = new Action(target, after);
             statesHistoryScreen.addAction(action);
         }
         else {
-            userActions.log(Level.WARNING, "Invalid fields", "Attempted to updateMedication clinician profile with invalid fields");
+            userActions.log(Level.WARNING, "Invalid fields", "Attempted to update clinician profile with invalid fields");
         }
     }
 

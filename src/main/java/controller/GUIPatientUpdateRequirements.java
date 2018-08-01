@@ -317,8 +317,8 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             screenControl.show(popUpStage.getUUID(), root);
         } catch (IOException e) {
             userActions.log(Level.SEVERE,
-                    "Failed to open deregistration of required organ scene from required organs updateMedication scene",
-                    "attempted to open deregistration of required organ reason window from required organs updateMedication scene");
+                    "Failed to open deregistration of required organ scene from required organs update scene",
+                    "attempted to open deregistration of required organ reason window from required organs update scene");
             new Alert(Alert.AlertType.ERROR, "Unable to open deregistration of required organ reason window", ButtonType.OK).show();
         }
     }

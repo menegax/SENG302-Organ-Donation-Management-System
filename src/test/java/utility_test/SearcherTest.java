@@ -334,7 +334,7 @@ public class SearcherTest {
 //
 //        Patient patient2 = database.getPatientByNhi("abc1231");
 //        patient2.setRegion(Region.CANTERBURY);
-//        database.updateMedication(patient2);
+//        database.update(patient2);
 //        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 //
 //        //2 results with region CANTERBURY
@@ -369,7 +369,7 @@ public class SearcherTest {
 //
 //        Patient p = database.getPatientByNhi("abc1230");
 //        p.setDonations(new ArrayList<Organ>(){{add(Organ.BONEMARROW);}});
-//        database.updateMedication(p);
+//        database.update(p);
 //
 //        List<User>  results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 //        Assert.assertEquals(1, results.size());
@@ -378,7 +378,7 @@ public class SearcherTest {
 //        //d2 - bone marrow
 //        Patient p2 = database.getPatientByNhi("abc1231");
 //        p2.setDonations(new ArrayList<Organ>(){{add(Organ.BONEMARROW);}});
-//        database.updateMedication(p2);
+//        database.update(p2);
 //
 //        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 //        Assert.assertEquals(2, results.size());
@@ -388,7 +388,7 @@ public class SearcherTest {
 //        //d3 - kidney
 //        Patient p3 = database.getPatientByNhi("abc1232");
 //        p3.setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
-//        database.updateMedication(p3);
+//        database.update(p3);
 //
 //
 //        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
@@ -399,9 +399,9 @@ public class SearcherTest {
 //        //d3 - heart
 //        Patient p4 = database.getPatientByNhi("abc1232");
 //        p4.setDonations(new ArrayList<Organ>(){{add(Organ.HEART);}});
-//        database.updateMedication(p4);
+//        database.update(p4);
 //
-//        // updateMedication filter
+//        // update filter
 //        filter.put(FilterOption.DONATIONS, Organ.HEART.toString());
 //        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 //        Assert.assertEquals(1, results.size());
@@ -423,7 +423,7 @@ public class SearcherTest {
 //        //d1 - female
 //        Patient p = database.getPatientByNhi("abc1230");
 //        p.setBirthGender(BirthGender.FEMALE);
-//        database.updateMedication(p);
+//        database.update(p);
 //
 //        List<User>  results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 //        hasBirthGender(results, BirthGender.FEMALE);
@@ -433,7 +433,7 @@ public class SearcherTest {
 //        filter.put(FilterOption.BIRTHGENDER, BirthGender.MALE.toString());
 //        Patient p1 = database.getPatientByNhi("abc1231");
 //        p1.setBirthGender(BirthGender.MALE);
-//        database.updateMedication(p);
+//        database.update(p);
 //
 //        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 //        hasBirthGender(results, BirthGender.MALE);
@@ -442,7 +442,7 @@ public class SearcherTest {
 //        //d2 - 2 male
 //        Patient p3 = database.getPatientByNhi("abc1232");
 //        p3.setBirthGender(BirthGender.MALE);
-//        database.updateMedication(p3);
+//        database.update(p3);
 //
 //        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 //        hasBirthGender(results, BirthGender.MALE);
@@ -509,7 +509,7 @@ public class SearcherTest {
 //
 //        Patient p = database.getPatientByNhi("abc1230");
 //        p.setDonations(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
-//        database.updateMedication(p);
+//        database.update(p);
 //
 //        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 //        Assert.assertEquals(1, results.size());
@@ -520,7 +520,7 @@ public class SearcherTest {
 //        filter.put(FilterOption.RECIEVER, "true");
 //        Patient p1 = database.getPatientByNhi("abc1231");
 //        p1.setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
-//        database.updateMedication(p1);
+//        database.update(p1);
 //
 //        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 //        Assert.assertEquals(2, results.size());
@@ -531,7 +531,7 @@ public class SearcherTest {
 //        filter.put(FilterOption.DONOR, "true");
 //        Patient p2 = database.getPatientByNhi("abc1230");
 //        p2.setRequiredOrgans(new ArrayList<Organ>(){{add(Organ.KIDNEY);}});
-//        database.updateMedication(p2);
+//        database.update(p2);
 //
 //        results = Searcher.getSearcher().search("", new UserTypes[] {UserTypes.PATIENT}, 30, filter);
 //        Assert.assertEquals(2, results.size());

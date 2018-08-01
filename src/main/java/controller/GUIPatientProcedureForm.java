@@ -166,7 +166,7 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
             this.procedureClone.setDate(dateInput.getValue());
             Action action = new Action(patient, patientClone);
             undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
-            userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to updateMedication procedure", patient.getNhiNumber()});
+            userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", patient.getNhiNumber()});
             goBackToProcedures();
         } else {
             userActions.log(Level.WARNING, "Invalid procedure inputs entered", "Attempted to edit procedure with invalid inputs");

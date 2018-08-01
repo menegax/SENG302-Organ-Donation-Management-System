@@ -94,7 +94,7 @@ public class GUIClinicianWaitingList {
     }
 
     /**
-     * Sets up double-click functionality for each row to open a patient profile updateMedication, ensures no duplicate profiles
+     * Sets up double-click functionality for each row to open a patient profile update, ensures no duplicate profiles
      */
     private void setupDoubleClickToPatientEdit() {
         ScreenControl screenControl = ScreenControl.getScreenControl();
