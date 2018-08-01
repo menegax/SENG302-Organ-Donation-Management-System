@@ -627,7 +627,7 @@ public class GUIPatientMedications extends UndoableController {
             }
         }
         else {
-            userActions.log(Level.WARNING, "Drug interactions not available. Please select 2 medications.", "Attempted to view drug interactions");
+            userActions.log(Level.WARNING, "Drug interactions not available. Please getMedicationsByNhi 2 medications.", "Attempted to view drug interactions");
         }
     }
 

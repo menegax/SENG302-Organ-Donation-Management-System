@@ -24,7 +24,7 @@ public class MedicationDAO  implements IMedicationDataAccess {
 
 
     @Override
-    public int update(String nhi, Medication medication, MedicationStatus state) {
+    public int updateMedication(String nhi, Medication medication, MedicationStatus state) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             deleteAll(connection, nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_MEDICATION_QUERY"));
@@ -40,7 +40,7 @@ public class MedicationDAO  implements IMedicationDataAccess {
 
 
     @Override
-    public List<Medication> select(String nhi) {
+    public List<Medication> getMedicationsByNhi(String nhi) {
         try (Connection connection = mySqlFactory.getConnectionInstance()){
             connection.setAutoCommit(false);
             List<Medication> medications = new ArrayList<>();

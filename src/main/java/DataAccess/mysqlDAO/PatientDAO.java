@@ -36,7 +36,7 @@ public class PatientDAO  implements IPatientDataAccess {
     }
 
     @Override
-    public int update(List<Patient> patients) {
+    public int updatePatient(List<Patient> patients) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_QUERY"));
             connection.setAutoCommit(false);
@@ -44,19 +44,19 @@ public class PatientDAO  implements IPatientDataAccess {
                 addUpdateParameters(statement, patient);
                 statement.executeUpdate();
                 for (Medication medication : patient.getMedicationHistory()) {
-                    medicationDataAccess.update(patient.getNhiNumber(), medication, MedicationStatus.HISTORY);
+                    medicationDataAccess.updateMedication(patient.getNhiNumber(), medication, MedicationStatus.HISTORY);
                 }
                 for (Medication medication : patient.getCurrentMedications()) {
-                    medicationDataAccess.update(patient.getNhiNumber(), medication, MedicationStatus.CURRENT);
+                    medicationDataAccess.updateMedication(patient.getNhiNumber(), medication, MedicationStatus.CURRENT);
                 }
                 for (Disease disease : patient.getPastDiseases()) {
-                    diseaseDataAccess.update(patient.getNhiNumber(), disease);
+                    diseaseDataAccess.updateDisease(patient.getNhiNumber(), disease);
                 }
                 for (Disease disease : patient.getCurrentDiseases()) {
-                    diseaseDataAccess.update(patient.getNhiNumber(), disease);
+                    diseaseDataAccess.updateDisease(patient.getNhiNumber(), disease);
                 }
-                logDataAccess.update(patient.getUserActionsList(), patient.getNhiNumber());
-                contactDataAccess.update(patient);
+                logDataAccess.updateLogs(patient.getUserActionsList(), patient.getNhiNumber());
+                contactDataAccess.updateContact(patient);
                 connection.commit(); //commit if no errors
             }
         } catch (SQLException e) {
@@ -70,7 +70,7 @@ public class PatientDAO  implements IPatientDataAccess {
      * @return
      */
     @Override
-    public boolean insert(Patient patient) {
+    public boolean addPatient(Patient patient) {
         return false;
     }
 
@@ -80,7 +80,7 @@ public class PatientDAO  implements IPatientDataAccess {
      * @return
      */
     @Override
-    public boolean insert(List<Patient> patient) {
+    public boolean addPatients(List<Patient> patient) {
         return false;
     }
 
@@ -88,7 +88,7 @@ public class PatientDAO  implements IPatientDataAccess {
      * @return
      */
     @Override
-    public List<Patient> select() {
+    public List<Patient> getPatients() {
         return null;
     }
 
@@ -98,17 +98,17 @@ public class PatientDAO  implements IPatientDataAccess {
      * @return -
      */
     @Override
-    public Patient selectOne(String nhi) {
+    public Patient getPatientByNhi(String nhi) {
         try (Connection connection = mySqlFactory.getConnectionInstance()){
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_BY_NHI"));
             statement.setString(1, nhi);
             ResultSet patientAttributes = statement.executeQuery();
-            List<PatientActionRecord> patientLogs = logDataAccess.selectAll(nhi);
-            List<Disease> diseases = diseaseDataAccess.select(nhi);
-            List<Medication> medications = medicationDataAccess.select(nhi);
-            List<String> contacts = contactDataAccess.select(nhi);
-            List<Procedure> procedures = procedureDataAccess.select(nhi);
+            List<PatientActionRecord> patientLogs = logDataAccess.getAllLogsByUserId(nhi);
+            List<Disease> diseases = diseaseDataAccess.getDiseaseByNhi(nhi);
+            List<Medication> medications = medicationDataAccess.getMedicationsByNhi(nhi);
+            List<String> contacts = contactDataAccess.getContactByNhi(nhi);
+            List<Procedure> procedures = procedureDataAccess.getProceduresByNhi(nhi);
             if (patientAttributes.next()) {
                 return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, procedures, medications);
             }
@@ -119,7 +119,7 @@ public class PatientDAO  implements IPatientDataAccess {
     }
 
     @Override
-    public List<Patient> selectFiltered(String searchTerm) {
+    public List<Patient> searchPatient(String searchTerm) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             List<Patient> results = new ArrayList<>();
             connection.setAutoCommit(false);

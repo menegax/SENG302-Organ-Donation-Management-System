@@ -401,4 +401,15 @@ public class GlobalEnums {
         }
 
     }
+
+    public enum FactoryType {
+        MYSQL(1),LOCAL(1);
+        private int value;
+
+        FactoryType(int value) { this.value = value; }
+
+        public int getValue() {
+            return value;
+        }
+    }
 }

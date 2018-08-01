@@ -21,13 +21,13 @@ public class ContactDAO  implements IContactDataAccess {
     }
 
     @Override
-    public boolean update(Patient patient) {
+    public boolean updateContact(Patient patient) {
         return false;
     }
 
 
     @Override
-    public List<String> select(String nhi) {
+    public List<String> getContactByNhi(String nhi) {
         try (Connection connection = mySqlFactory.getConnectionInstance()){
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_CONTACTS"));
             statement.setString(1, nhi);

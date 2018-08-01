@@ -7,13 +7,12 @@ import java.util.List;
 public class ClinicianLogDAO implements ILogDataAccess<ClinicianLogDAO> {
 
     @Override
-    public int update(List<ClinicianLogDAO> records, String id) {
+    public int updateLogs(List<ClinicianLogDAO> records, String id) {
         return 0;
     }
 
     @Override
-    public List<ClinicianLogDAO> selectAll(String id) {
+    public List<ClinicianLogDAO> getAllLogsByUserId(String id) {
         return null;
     }
-
 }

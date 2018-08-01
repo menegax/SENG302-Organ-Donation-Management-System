@@ -6,34 +6,34 @@ import model.Patient;
 import java.util.List;
 
 public class PatientLocalDAO implements IPatientDataAccess {
-    
+
     @Override
-    public int update(List<Patient> patient) {
+    public int updatePatient(List<Patient> patient) {
         return 0;
     }
 
     @Override
-    public boolean insert(Patient patient) {
+    public boolean addPatient(Patient patient) {
         return false;
     }
 
     @Override
-    public boolean insert(List<Patient> patient) {
+    public boolean addPatients(List<Patient> patient) {
         return false;
     }
 
     @Override
-    public List<Patient> select() {
+    public List<Patient> getPatients() {
         return null;
     }
 
     @Override
-    public Patient selectOne(String nhi) {
+    public Patient getPatientByNhi(String nhi) {
         return null;
     }
 
     @Override
-    public List<Patient> selectFiltered(String searchTerm) {
+    public List<Patient> searchPatient(String searchTerm) {
         return null;
     }
 }

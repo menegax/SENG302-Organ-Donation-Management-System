@@ -90,7 +90,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
 
 
     /**
-     * Creates a list of control elements using all editable nodes on the update screen and initializes
+     * Creates a list of control elements using all editable nodes on the updateMedication screen and initializes
      * the StateHistoryScreen used to undo or redo actions using the control elements
      */
     private void setUpStateHistory() {
@@ -104,7 +104,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
 
 
     /**
-     * Populates the update screen using the current administrator attributes
+     * Populates the updateMedication screen using the current administrator attributes
      *
      * @param administrator logged in administrator
      */
@@ -184,10 +184,10 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
             Action action = new Action(target, after);
             statesHistoryScreen.addAction(action);
 
-            userActions.log(Level.INFO, "Successfully updated admin profile", "Attempted to update admin profile");
+            userActions.log(Level.INFO, "Successfully updated admin profile", "Attempted to updateMedication admin profile");
         }
         else {
-            userActions.log(Level.WARNING, "Invalid fields", "Attempted to update admin profile");
+            userActions.log(Level.WARNING, "Invalid fields", "Attempted to updateMedication admin profile");
         }
     }
 

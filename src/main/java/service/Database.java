@@ -259,7 +259,7 @@ public class Database implements Serializable {
      *
      * @param query The SQL query to run.
      * @param params The parameters to put into the query. Cannot be null, but can be an empty array.
-     * @return Null if update or insert query or if select query ArrayList of String arrays
+     * @return Null if updateMedication or insert query or if getMedicationsByNhi query ArrayList of String arrays
      * with the ArrayList being the full set of results and each internal String
      * array being a row of the queried table.
      * @throws SQLException If there is an error communicating with the database or SQL syntax error.
@@ -276,7 +276,7 @@ public class Database implements Serializable {
     }
 
     /**x
-     * @param query The select query to run on the database.
+     * @param query The getMedicationsByNhi query to run on the database.
      * @return ArrayList of String arrays with the ArrayList being the full set of results and each internal String
      * array being a row of the queried table.
      * @throws SQLException If there is an error communicating with the database or SQL syntax error.
@@ -568,7 +568,7 @@ public class Database implements Serializable {
     /**
      * Update an object in the database. If it does not exist in the database it will create it.
      * @param object The object to be updated in the database.
-     * @return True if the object was update or created, false otherwise.
+     * @return True if the object was updateMedication or created, false otherwise.
      */
     public boolean update(Object object) {
     	Searcher searcher = Searcher.getSearcher();
@@ -584,7 +584,7 @@ public class Database implements Serializable {
 
     /**
      * Updates a patient in the database.
-     * @param patient The patient to update.
+     * @param patient The patient to updateMedication.
      * @return True if patient updated in database, false otherwise.
      */
     private boolean updatePatient(Patient patient, Searcher searcher) {
@@ -595,16 +595,16 @@ public class Database implements Serializable {
         try {
 			runQuery(query, attr);
 			searcher.updateIndex(patient);
-			userActions.log(INFO, "Updated patient attributes in database.", "Attempted to update patient attributes in database.");
+			userActions.log(INFO, "Updated patient attributes in database.", "Attempted to updateMedication patient attributes in database.");
 			return true;
 		} catch (SQLException e) {
-			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to update patient in database.");
+			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to updateMedication patient in database.");
 		}
         return false;
     }
 
     /**
-     * Gets the query and parameters for the query to update a patient.
+     * Gets the query and parameters for the query to updateMedication a patient.
      * The query will be the first index of the first index in the returned array of arrays eg. [0][0]
      * The parameters will be the second index of the returned array of arrays eg. [1]
      * @param patient The patient to create the query for.
@@ -651,35 +651,35 @@ public class Database implements Serializable {
 
     /**
      * Updates a clinician in the database.
-     * @param clinician The clinician to update.
+     * @param clinician The clinician to updateMedication.
      */
     private boolean updateClinician(Clinician clinician, Searcher searcher) {
     	String[] attr = getClinicianAttributes(clinician);
     	try {
 			runQuery(UPDATECLINICIANQUERYSTRING, attr);
-			userActions.log(INFO, "Updated clinician attributes in database.", "Attempted to update clinician attributes in database.");
+			userActions.log(INFO, "Updated clinician attributes in database.", "Attempted to updateMedication clinician attributes in database.");
 			searcher.updateIndex(clinician);
 			return true;
 		} catch (SQLException e) {
-			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to update clinician in database.");
+			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to updateMedication clinician in database.");
 		}
     	return false;
     }
 
     /**
      * Updates a Administrator in the database.
-     * @param admin The Administrator to update.
+     * @param admin The Administrator to updateMedication.
      * @return True if successfully updated, otherwise false.
      */
     private boolean updateAdministrator(Administrator admin, Searcher searcher) {
     	String[] attr = getAdministratorAttributes(admin);
     	try {
 			runQuery(UPDATEADMINQUERYSTRING, attr);
-			userActions.log(INFO, "Updated administrator attributes in database.", "Attempted to update administrator attributes in database.");
+			userActions.log(INFO, "Updated administrator attributes in database.", "Attempted to updateMedication administrator attributes in database.");
 			searcher.updateIndex(admin);
 			return true;
 		} catch (SQLException e) {
-			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to update administrator in database.");
+			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to updateMedication administrator in database.");
 		}
     	return false;
     }
@@ -1473,10 +1473,10 @@ public class Database implements Serializable {
     	}
     	try {
 			runQuery(query, params);
-			userActions.log(INFO, "Successfully updated all patients in database.", "Attempted to update all patients in database.");
+			userActions.log(INFO, "Successfully updated all patients in database.", "Attempted to updateMedication all patients in database.");
 			return true;
 		} catch (SQLException e) {
-			userActions.log(Level.SEVERE, "Failed to update all patients in database." + e.getMessage(), "Attempted to update all patients in database.");
+			userActions.log(Level.SEVERE, "Failed to updateMedication all patients in database." + e.getMessage(), "Attempted to updateMedication all patients in database.");
 		}
     	return false;
     }
@@ -1496,10 +1496,10 @@ public class Database implements Serializable {
     	}
     	try {
 			runQuery(query, params);
-			userActions.log(INFO, "Successfully updated all clinicians in database.", "Attempted to update all clinicians in database.");
+			userActions.log(INFO, "Successfully updated all clinicians in database.", "Attempted to updateMedication all clinicians in database.");
 			return true;
 		} catch (SQLException e) {
-			userActions.log(Level.SEVERE, "Failed to update all clinicians in database." + e.getMessage(), "Attempted to update all clinicians in database.");
+			userActions.log(Level.SEVERE, "Failed to updateMedication all clinicians in database." + e.getMessage(), "Attempted to updateMedication all clinicians in database.");
 		}
     	return false;
     }
@@ -1515,10 +1515,10 @@ public class Database implements Serializable {
     	}
     	try {
 			runQuery(query, params);
-			userActions.log(INFO, "Successfully updated all administrators in database.", "Attempted to update all administrators in database.");
+			userActions.log(INFO, "Successfully updated all administrators in database.", "Attempted to updateMedication all administrators in database.");
 			return true;
 		} catch (SQLException e) {
-			userActions.log(Level.SEVERE, "Failed to update all administrator in database." + e.getMessage(), "Attempted to update all administrators in database.");
+			userActions.log(Level.SEVERE, "Failed to updateMedication all administrator in database." + e.getMessage(), "Attempted to updateMedication all administrators in database.");
 		}
     	return false;
     }
@@ -1548,10 +1548,10 @@ public class Database implements Serializable {
     	}
         try {
             runQuery(query, attrs);
-			userActions.log(INFO, "Successfully updated all transplant request to database.", "Attempted to update all transplant request to database.");
+			userActions.log(INFO, "Successfully updated all transplant request to database.", "Attempted to updateMedication all transplant request to database.");
             return true;
         } catch (SQLException e) {
-			userActions.log(Level.SEVERE, "Failure to update all request to database " + e.getMessage(), "Attempted to update all transplant request.");
+			userActions.log(Level.SEVERE, "Failure to updateMedication all request to database " + e.getMessage(), "Attempted to updateMedication all transplant request.");
         }
         return false;
     }

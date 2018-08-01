@@ -25,7 +25,7 @@ public class DiseaseDAO implements IDiseaseDataAccess {
     }
 
     @Override
-    public int update(String nhi, Disease disease) {
+    public int updateDisease(String nhi, Disease disease) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             deleteAll(connection, nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_DISEASES_QUERY"));
@@ -42,7 +42,7 @@ public class DiseaseDAO implements IDiseaseDataAccess {
     }
 
     @Override
-    public List<Disease> select(String nhi) {
+    public List<Disease> getDiseaseByNhi(String nhi) {
         try (Connection connection1 = mySqlFactory.getConnectionInstance()){
             connection1.setAutoCommit(false);
             List<Disease> diseases = new ArrayList<>();

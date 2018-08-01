@@ -33,7 +33,7 @@ import static utility.GlobalEnums.UndoableScreen.CLINICIANDIAGNOSIS;
 import static utility.UserActionHistory.userActions;
 
 /**
- * Controller for diagnosis update popup window.
+ * Controller for diagnosis updateMedication popup window.
  */
 public class GUIPatientUpdateDiagnosis extends UndoableController implements TouchscreenCapable{
 
@@ -79,14 +79,14 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
 
     /**
      * Sets the diagnosis that is being updated
-     * @param disease diagnosis to update
+     * @param disease diagnosis to updateMedication
      */
     public static void setDisease(Disease disease) {
         target = disease;
     }
 
     /**
-     * Sets isAdd to true if the operation is a disease addition, and false if the operation is an update
+     * Sets isAdd to true if the operation is a disease addition, and false if the operation is an updateMedication
      * @param bool boolean
      */
     public static void setIsAdd(boolean bool) {
@@ -210,8 +210,8 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
 
     /**
      * Checks that the updated fields are valid (name, date and state of diagnosis.
-     * Returns true if the update is valid and false otherwise.
-     * If the update is valid, the node is reset to whatever is currently shown
+     * Returns true if the updateMedication is valid and false otherwise.
+     * If the updateMedication is valid, the node is reset to whatever is currently shown
      * @return boolean valid updates
      */
     private boolean isValidUpdate() {
@@ -289,14 +289,14 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
     }
 
     /**
-     * Called when the done button is selected. If the update is valid, the diagnosis for the donor is updated
+     * Called when the done button is selected. If the updateMedication is valid, the diagnosis for the donor is updated
      * (but not saved) to the current updated diagnosis information and the diagnoses view screen is returned to.
      *
      * If the operation is adding a diagnosis, the operation is checked for validity for adding. If the add is
      * valid, the new diagnosis is added to the patient's current diagnoses. Otherwise a message is shown and no new
      * dignosis
      *
-     * If the update is invalid, a message is shown with the errors in question explained in the message information.
+     * If the updateMedication is invalid, a message is shown with the errors in question explained in the message information.
      * The stage is not closed in this case.
      */
     public void completeUpdate() {
@@ -347,7 +347,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
                 errorString += "A chronic disease can not be cured. Please remove the chronic tag and save the diagnosis" +
                         " before marking this disease as cured.\n\n";
             }
-            userActions.log(Level.WARNING, errorString, "Attempted to update diagnosis with invalid fields");
+            userActions.log(Level.WARNING, errorString, "Attempted to updateMedication diagnosis with invalid fields");
         }
     }
 

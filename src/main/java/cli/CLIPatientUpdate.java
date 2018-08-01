@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
-@Command(name = "update", description = "used to update patient attributes")
+@Command(name = "updateMedication", description = "used to updateMedication patient attributes")
 public class CLIPatientUpdate implements Runnable {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
@@ -91,7 +91,7 @@ public class CLIPatientUpdate implements Runnable {
             patient.updateAttributes(firstName, lastName, middleNames, preferredName, birth, death, street1,
                     street2, suburb, region, birthGender, preferredGender, bloodGroup, height, weight, nhi);
         } else {
-            userActions.log(Level.SEVERE, "Patient " + searchNhi + " not found.", "attempted to update patient attributes");
+            userActions.log(Level.SEVERE, "Patient " + searchNhi + " not found.", "attempted to updateMedication patient attributes");
         }
     }
 

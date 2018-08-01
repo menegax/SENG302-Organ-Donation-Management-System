@@ -80,7 +80,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     }
 
     /**
-     * Sets up double-click functionality for each row to open a user profile update. Opens the selected
+     * Sets up double-click functionality for each row to open a user profile updateMedication. Opens the selected
      * users's profile view screen in a new window.
      */
     private void setupDoubleClickToUserEdit() {

@@ -1,11 +1,21 @@
 package DataAccess.factories;
 
 import DataAccess.interfaces.*;
+import utility.GlobalEnums.*;
 
 public abstract class DAOFactory {
 
-    private static final int MYSQL = 1;
-    private static final int LOCAL = 1;
+    @SuppressWarnings("nullable")
+    public static DAOFactory getDAOFactory(FactoryType whichFactory) {
+
+        switch (whichFactory) {
+            case MYSQL:
+                return MySqlFactory.getMySqlFactory();
+            case LOCAL:
+            default:
+                return new LocalDatabaseFactory();
+        }
+    }
 
     public abstract IPatientDataAccess getPatientDataAccess();
     public abstract IMedicationDataAccess getMedicationDataAccess();

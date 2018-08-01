@@ -147,7 +147,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     }
 
     /**
-     * Sets up double-click functionality for each row to open a patient profile update. Opens the selected
+     * Sets up double-click functionality for each row to open a patient profile updateMedication. Opens the selected
      * patient's profile view screen in a new window.
      */
     private void setupDoubleClickToPatientEdit() {
@@ -393,7 +393,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
 
     /**
-     * Adds listener to the age label to update when slider is moved
+     * Adds listener to the age label to updateMedication when slider is moved
      */
     private void setupAgeSliderListeners() {
         rangeSlider = new RangeSlider();

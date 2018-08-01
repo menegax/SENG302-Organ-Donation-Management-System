@@ -107,7 +107,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
-     * Initializes the profile update screen. Gets the logged in or viewed user and loads the user's profile.
+     * Initializes the profile updateMedication screen. Gets the logged in or viewed user and loads the user's profile.
      * Dropdown menus are populated. The enter key press event for saving changes is set up
      */
     public void initialize() {
@@ -278,7 +278,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
      */
     @FXML
     public void saveProfileUpdater() {
-        systemLogger.log(Level.FINEST, "Setting patient profile for update...");
+        systemLogger.log(Level.FINEST, "Setting patient profile for updateMedication...");
         Boolean valid = true;
 
         StringBuilder invalidContent = new StringBuilder();
@@ -488,10 +488,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
             Action action = new Action(target, after);
             statesHistoryScreen.addAction(action);
 
-            userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});
+            userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to updateMedication patient profile", after.getNhiNumber()});
         }
         else {
-            userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", after.getNhiNumber()});
+            userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to updateMedication patient profile", after.getNhiNumber()});
         }
     }
 

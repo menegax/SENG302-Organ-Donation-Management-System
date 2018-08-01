@@ -26,7 +26,7 @@ public class ProcedureDAO implements IProcedureDataAccess {
     }
 
     @Override
-    public int update(String nhi, Procedure procedure) {
+    public int updateProcedure(String nhi, Procedure procedure) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             deleteAll(connection, nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_PROCEDURES_QUERY"));
@@ -44,7 +44,7 @@ public class ProcedureDAO implements IProcedureDataAccess {
     }
 
     @Override
-    public List<Procedure> select(String nhi) {
+    public List<Procedure> getProceduresByNhi(String nhi) {
         try (Connection connection = mySqlFactory.getConnectionInstance()){
             connection.setAutoCommit(false);
             List<Procedure> procedures = new ArrayList<>();

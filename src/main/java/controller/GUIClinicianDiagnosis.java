@@ -110,7 +110,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
      * set before.
      * Current diseases and past diseases are set as the target's current and past diseases, and these lists are
      * loaded into the ListViews.
-     * Double click functions to update a diagnosis are added for both current and past diseases
+     * Double click functions to updateMedication a diagnosis are added for both current and past diseases
      */
     @FXML
     public void initialize() {
@@ -160,8 +160,8 @@ public class GUIClinicianDiagnosis extends UndoableController{
 
     /**
      * Sets up double click action of opening full disease edit window.
-     * Opens an update window to edit the selected disease in the table, and marks the window as being for
-     * an update.
+     * Opens an updateMedication window to edit the selected disease in the table, and marks the window as being for
+     * an updateMedication.
      */
     private void setUpDoubleClickEdit(TableView<Disease> tableView) {
         UndoableStage stage = new UndoableStage();
@@ -176,9 +176,9 @@ public class GUIClinicianDiagnosis extends UndoableController{
                     screenControl.show(stage.getUUID(), FXMLLoader.load(getClass().getResource("/scene/patientUpdateDiagnosis.fxml")));
                 } catch (IOException e) {
                     userActions.log(Level.SEVERE,
-                            "Failed to open diagnosis update window from the diagnoses page",
-                            "attempted to open diagnosis update window from the diagnoses page");
-                    new Alert(Alert.AlertType.ERROR, "Unable to open diagnosis update window", ButtonType.OK).show();
+                            "Failed to open diagnosis updateMedication window from the diagnoses page",
+                            "attempted to open diagnosis updateMedication window from the diagnoses page");
+                    new Alert(Alert.AlertType.ERROR, "Unable to open diagnosis updateMedication window", ButtonType.OK).show();
                 }
             }
 
@@ -187,8 +187,8 @@ public class GUIClinicianDiagnosis extends UndoableController{
 
 
     /**
-     * Opens the Patient update screen for the purpose of adding a diagnosis. Sets the update window to handle
-     * an addition of a disease rather than an update
+     * Opens the Patient updateMedication screen for the purpose of adding a diagnosis. Sets the updateMedication window to handle
+     * an addition of a disease rather than an updateMedication
      */
     private void addDiagnosis() {
         try {
@@ -201,9 +201,9 @@ public class GUIClinicianDiagnosis extends UndoableController{
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE,
-                    "Failed to open diagnosis update window from the diagnoses page",
-                    "attempted to open diagnosis update window from the diagnoses page");
-            new Alert(Alert.AlertType.ERROR, "Unable to open diagnosis update window", ButtonType.OK).show();
+                    "Failed to open diagnosis updateMedication window from the diagnoses page",
+                    "attempted to open diagnosis updateMedication window from the diagnoses page");
+            new Alert(Alert.AlertType.ERROR, "Unable to open diagnosis updateMedication window", ButtonType.OK).show();
         }
     }
 

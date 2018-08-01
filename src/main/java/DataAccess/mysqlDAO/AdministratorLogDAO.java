@@ -8,14 +8,14 @@ import java.util.List;
 
 public class AdministratorLogDAO  implements ILogDataAccess<AdministratorActionRecord> {
 
+
     @Override
-    public int update(List records, String id) {
+    public int updateLogs(List<AdministratorActionRecord> records, String id) {
         return 0;
     }
 
     @Override
-    public List selectAll(String id) {
+    public List<AdministratorActionRecord> getAllLogsByUserId(String id) {
         return null;
     }
-
 }

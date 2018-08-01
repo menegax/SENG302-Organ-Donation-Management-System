@@ -303,7 +303,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
     }
 
     /**
-     * Opens the popup to select a reason for organ deregistration
+     * Opens the popup to getMedicationsByNhi a reason for organ deregistration
      * @param organ organ being validated for reason of deregistration
      */
     private void openReasonPopup(GlobalEnums.Organ organ) {
@@ -317,8 +317,8 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             screenControl.show(popUpStage.getUUID(), root);
         } catch (IOException e) {
             userActions.log(Level.SEVERE,
-                    "Failed to open deregistration of required organ scene from required organs update scene",
-                    "attempted to open deregistration of required organ reason window from required organs update scene");
+                    "Failed to open deregistration of required organ scene from required organs updateMedication scene",
+                    "attempted to open deregistration of required organ reason window from required organs updateMedication scene");
             new Alert(Alert.AlertType.ERROR, "Unable to open deregistration of required organ reason window", ButtonType.OK).show();
         }
     }

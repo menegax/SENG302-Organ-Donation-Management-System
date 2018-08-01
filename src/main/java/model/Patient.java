@@ -244,7 +244,7 @@ public class Patient extends User {
                 setRegion((Region) globalEnum);
             }
             else {
-                userActions.log(Level.WARNING, "Invalid region", "attempted to update patient attributes");
+                userActions.log(Level.WARNING, "Invalid region", "attempted to updateMedication patient attributes");
             }
         }
         if (birthGender != null) {
@@ -253,7 +253,7 @@ public class Patient extends User {
                 setBirthGender((BirthGender) globalEnum);
             }
             else {
-                userActions.log(Level.WARNING, "Invalid birth gender", "attempted to update patient attributes");
+                userActions.log(Level.WARNING, "Invalid birth gender", "attempted to updateMedication patient attributes");
             }
         }
         if (preferredGender != null) {
@@ -262,7 +262,7 @@ public class Patient extends User {
                 setPreferredGender((PreferredGender) globalEnum);
             }
             else {
-                userActions.log(Level.WARNING, "Invalid preferred gender", "attempted to update patient attributes");
+                userActions.log(Level.WARNING, "Invalid preferred gender", "attempted to updateMedication patient attributes");
             }
         }
         if (bloodGroup != null) {
@@ -271,7 +271,7 @@ public class Patient extends User {
                 setBloodGroup((BloodGroup) globalEnum);
             }
             else {
-                userActions.log(Level.WARNING, "Invalid blood group", "attempted to update patient attributes");
+                userActions.log(Level.WARNING, "Invalid blood group", "attempted to updateMedication patient attributes");
             }
         }
         if (height > 0) {
@@ -283,7 +283,7 @@ public class Patient extends User {
         if (nhi != null) {
             setNhiNumber(nhi);
         }
-        userActions.log(Level.INFO, "Successfully updated patient " + getNhiNumber(), "attempted to update patient attributes");
+        userActions.log(Level.INFO, "Successfully updated patient " + getNhiNumber(), "attempted to updateMedication patient attributes");
         userModified();
         Searcher.getSearcher().addIndex(this);
     }
@@ -346,7 +346,7 @@ public class Patient extends User {
                 if (organEnum == null) {
                     userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to patient donations");
                 } else {
-                    userActions.log(Level.INFO, addDonation(organEnum), "attempted to update patient donations");
+                    userActions.log(Level.INFO, addDonation(organEnum), "attempted to updateMedication patient donations");
                     userModified();
                 }
             }

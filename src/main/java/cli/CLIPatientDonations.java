@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings({"unused"})
-@Command(name = "donations", description = "used to update the donations on a particular patient")
+@Command(name = "donations", description = "used to updateMedication the donations on a particular patient")
 public class CLIPatientDonations implements Runnable {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message and quits.")
@@ -66,7 +66,7 @@ public class CLIPatientDonations implements Runnable {
                patient.updateDonations(newDonations, rmDonations);
             }
         } else {
-            userActions.log(Level.SEVERE, "Patient " + searchNhi + " not found.", "attempted to view or update patient donations");
+            userActions.log(Level.SEVERE, "Patient " + searchNhi + " not found.", "attempted to view or updateMedication patient donations");
         }
     }
 

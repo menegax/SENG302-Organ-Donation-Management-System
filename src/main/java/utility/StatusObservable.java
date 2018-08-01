@@ -77,7 +77,7 @@ public class StatusObservable extends Observable {
 
 
     /**
-     * Notifies each observer (instances of GUIHome) to perform an update.
+     * Notifies each observer (instances of GUIHome) to perform an updateMedication.
      */
     public void notifyObservers() {
         for (Observer o : observers) {

@@ -2,6 +2,7 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 
+import DataAccess.factories.DAOFactory;
 import DataAccess.factories.MySqlFactory;
 import DataAccess.interfaces.IPatientDataAccess;
 import javafx.event.Event;
@@ -22,6 +23,7 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import service.Database;
+import utility.GlobalEnums;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 import utility.undoRedo.UndoableStage;
@@ -103,8 +105,13 @@ public class GUILogin implements TouchscreenCapable {
         ScreenControl screenControl = ScreenControl.getScreenControl();
         try {
             if (patient.isSelected()) {
-                IPatientDataAccess patientDataAccess = MySqlFactory.getMySqlFactory().getPatientDataAccess();
-                Patient patient2 = patientDataAccess.selectOne(nhiLogin.getText());
+
+                //<-- Example
+                DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
+                IPatientDataAccess patientDataAccess = factory.getPatientDataAccess();
+                Patient patient2 = patientDataAccess.getPatientByNhi(nhiLogin.getText());
+
+                // -- >
                 if (patient2 == null) {
                     throw new InvalidObjectException("User doesn't exist");
                 }

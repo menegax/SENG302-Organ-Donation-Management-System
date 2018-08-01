@@ -162,7 +162,7 @@ public class GUIPatientProfile {
     public void initialize(){
         Object user = null;
         if (userControl.getLoggedInUser() instanceof Patient) {
-            if (patientDataAccess.selectOne(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
+            if (patientDataAccess.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
                 receivingList.setDisable(true);
                 receivingList.setVisible(false);
                 receivingTitle.setDisable(true);
@@ -210,7 +210,7 @@ public class GUIPatientProfile {
      * @exception InvalidObjectException if the nhi of the patient does not exist in the database
      */
     private void loadProfile(String nhi) throws InvalidObjectException {
-        Patient patient = patientDataAccess.selectOne(nhi);
+        Patient patient = patientDataAccess.getPatientByNhi(nhi);
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
         firstNameValue.setText(patient.getFirstName());

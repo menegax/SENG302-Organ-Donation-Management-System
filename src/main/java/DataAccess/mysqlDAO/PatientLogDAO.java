@@ -22,12 +22,12 @@ public class PatientLogDAO implements ILogDataAccess<PatientActionRecord> {
     }
 
     @Override
-    public int update(List<PatientActionRecord> records, String id) {
+    public int updateLogs(List<PatientActionRecord> records, String id) {
         return 0;
     }
 
     @Override
-    public List<PatientActionRecord> selectAll(String id) {
+    public List<PatientActionRecord> getAllLogsByUserId (String id) {
         try (Connection connection = mySqlFactory.getConnectionInstance()){
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_LOGS"));
