@@ -12,10 +12,10 @@ import java.util.List;
 
 public class ContactDAO  implements IContactDataAccess {
 
-    private DataAccessHelper dataAccessHelper;
+    private MySqlFactory mySqlFactory;
 
     ContactDAO () {
-        dataAccessHelper = DataAccessHelper.getDataAccessHelper();
+        mySqlFactory = MySqlFactory.getMySqlFactory();
     }
 
     @Override
@@ -26,7 +26,7 @@ public class ContactDAO  implements IContactDataAccess {
 
     @Override
     public List<String> select(String nhi) {
-        try (Connection connection = dataAccessHelper.getConnectionInstance()){
+        try (Connection connection = mySqlFactory.getConnectionInstance()){
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_CONTACTS"));
             statement.setString(1, nhi);
             ResultSet results = statement.executeQuery();

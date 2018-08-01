@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
 
 public class ProcedureDAO implements IProcedureDataAccess {
 
-    private DataAccessHelper dataAccessHelper;
+    private MySqlFactory mySqlFactory;
 
     ProcedureDAO () {
-        dataAccessHelper = DataAccessHelper.getDataAccessHelper();
+        mySqlFactory = MySqlFactory.getMySqlFactory();
     }
 
     @Override
     public int update(String nhi, Procedure procedure) {
-        try (Connection connection = dataAccessHelper.getConnectionInstance()) {
+        try (Connection connection = mySqlFactory.getConnectionInstance()) {
             deleteAll(connection, nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_PROCEDURES_QUERY"));
             connection.setAutoCommit(false);
@@ -43,7 +43,7 @@ public class ProcedureDAO implements IProcedureDataAccess {
 
     @Override
     public List<Procedure> select(String nhi) {
-        try (Connection connection = dataAccessHelper.getConnectionInstance()){
+        try (Connection connection = mySqlFactory.getConnectionInstance()){
             connection.setAutoCommit(false);
             List<Procedure> procedures = new ArrayList<>();
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_PROCEDURES_QUERY"));

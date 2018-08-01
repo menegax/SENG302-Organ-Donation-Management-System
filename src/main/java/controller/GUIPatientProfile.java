@@ -1,22 +1,19 @@
 package controller;
 
+import DataAccess.MySqlFactory;
+import DataAccess.IPatientDataAccess;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import model.Clinician;
 import model.Medication;
 import javafx.stage.Stage;
-import model.Clinician;
-import model.Medication;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
-import service.Database;
 import utility.GlobalEnums;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
@@ -30,7 +27,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -149,26 +145,24 @@ public class GUIPatientProfile {
     @FXML
     private ListView<String> medList;
 
-    private UserControl userControl;
+    private UserControl userControl = new UserControl();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
-    Database database = Database.getDatabase();
+    private MySqlFactory mySqlFactory = MySqlFactory.getMySqlFactory();
+
+    private IPatientDataAccess patientDataAccess = mySqlFactory.getPatientDataAccess();
 
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
      *
-     * @exception InvalidObjectException -
-     */
-    public void initialize() throws InvalidObjectException {
-        userControl = new UserControl();
+     * */
+    public void initialize(){
         Object user = null;
         if (userControl.getLoggedInUser() instanceof Patient) {
-            if (database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber())
-                    .getRequiredOrgans()
-                    .size() == 0) {
+            if (patientDataAccess.selectOne(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
                 receivingList.setDisable(true);
                 receivingList.setVisible(false);
                 receivingTitle.setDisable(true);
@@ -216,7 +210,7 @@ public class GUIPatientProfile {
      * @exception InvalidObjectException if the nhi of the patient does not exist in the database
      */
     private void loadProfile(String nhi) throws InvalidObjectException {
-        Patient patient = database.getPatientByNhi(nhi);
+        Patient patient = patientDataAccess.selectOne(nhi);
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
         firstNameValue.setText(patient.getFirstName());
@@ -341,7 +335,7 @@ public class GUIPatientProfile {
             }
         }
         userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", patient.getNhiNumber()});
-        database.delete( patient );
+        //patientDataAccess.delete( patient ); //TODO:
         ((Stage) patientProfilePane.getScene().getWindow()).close();
     }
 

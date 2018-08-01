@@ -14,16 +14,16 @@ import java.util.List;
 public class MedicationDAO  implements IMedicationDataAccess {
 
 
-    private DataAccessHelper dataAccessHelper;
+    private MySqlFactory mySqlFactory;
 
     MedicationDAO () {
-        dataAccessHelper = DataAccessHelper.getDataAccessHelper();
+        mySqlFactory = MySqlFactory.getMySqlFactory();
     }
 
 
     @Override
     public int update(String nhi, Medication medication, MedicationStatus state) {
-        try (Connection connection = dataAccessHelper.getConnectionInstance()) {
+        try (Connection connection = mySqlFactory.getConnectionInstance()) {
             deleteAll(connection, nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_MEDICATION_QUERY"));
             connection.setAutoCommit(false);
@@ -39,7 +39,7 @@ public class MedicationDAO  implements IMedicationDataAccess {
 
     @Override
     public List<Medication> select(String nhi) {
-        try (Connection connection = dataAccessHelper.getConnectionInstance()){
+        try (Connection connection = mySqlFactory.getConnectionInstance()){
             connection.setAutoCommit(false);
             List<Medication> medications = new ArrayList<>();
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_MEDICATIONS_QUERY"));

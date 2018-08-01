@@ -13,10 +13,10 @@ import java.util.logging.Level;
 
 public class PatientLogDAO implements ILogDataAccess<PatientActionRecord> {
 
-    private DataAccessHelper dataAccessHelper;
+    private MySqlFactory mySqlFactory;
 
     PatientLogDAO () {
-        dataAccessHelper = DataAccessHelper.getDataAccessHelper();
+        mySqlFactory = MySqlFactory.getMySqlFactory();
     }
 
     @Override
@@ -24,10 +24,9 @@ public class PatientLogDAO implements ILogDataAccess<PatientActionRecord> {
         return 0;
     }
 
-
     @Override
     public List<PatientActionRecord> selectAll(String id) {
-        try (Connection connection = dataAccessHelper.getConnectionInstance()){
+        try (Connection connection = mySqlFactory.getConnectionInstance()){
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_LOGS"));
             ResultSet results = statement.executeQuery();

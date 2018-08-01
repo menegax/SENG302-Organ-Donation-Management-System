@@ -2,7 +2,7 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 
-import DataAccess.DataAccessHelper;
+import DataAccess.MySqlFactory;
 import DataAccess.IPatientDataAccess;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -103,12 +103,12 @@ public class GUILogin implements TouchscreenCapable {
         ScreenControl screenControl = ScreenControl.getScreenControl();
         try {
             if (patient.isSelected()) {
-                IPatientDataAccess patientDataAccess = DataAccessHelper.getDataAccessHelper().getPatientDataAccess();
-                Patient patient = patientDataAccess.selectOne(nhiLogin.getText());
-                if (patient == null) {
+                IPatientDataAccess patientDataAccess = MySqlFactory.getMySqlFactory().getPatientDataAccess();
+                Patient patient2 = patientDataAccess.selectOne(nhiLogin.getText());
+                if (patient2 == null) {
                     throw new InvalidObjectException("User doesn't exist");
                 }
-                login.addLoggedInUserToCache(patient);
+                login.addLoggedInUserToCache(patient2);
             } else if (clinician.isSelected()) {
                 Clinician clinician = database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
                 if (clinician == null) {
