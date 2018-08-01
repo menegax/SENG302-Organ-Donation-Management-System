@@ -1,7 +1,6 @@
 package DataAccess.interfaces;
 
 import model.Administrator;
-import model.Patient;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ public interface IAdministratorDataAccess {
 
     public boolean addAdministrator (Administrator clinician);
 
-    public Patient getAdministrator (String username, String password);
+    public Administrator getAdministrator (String username, String password);
 
-    List<Patient> searchAdministrator (String searchTerm);
+    List<Administrator> searchAdministrator (String searchTerm);
 }

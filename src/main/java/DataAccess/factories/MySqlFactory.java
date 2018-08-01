@@ -69,4 +69,6 @@ public class MySqlFactory extends DAOFactory{
         return new ProcedureDAO();
     }
 
+    public IClinicianDataAccess getClinicianDataAccess() { return new ClinicianDAO(); }
+
 }

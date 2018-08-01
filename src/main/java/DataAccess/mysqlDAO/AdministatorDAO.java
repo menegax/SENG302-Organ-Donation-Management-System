@@ -19,12 +19,12 @@ public class AdministatorDAO implements IAdministratorDataAccess {
     }
 
     @Override
-    public Patient getAdministrator(String username, String password) {
+    public Administrator getAdministrator(String username, String password) {
         return null;
     }
 
     @Override
-    public List<Patient> searchAdministrator(String searchTerm) {
+    public List<Administrator> searchAdministrator(String searchTerm) {
         return null;
     }
 }

@@ -46,4 +46,8 @@ public class LocalDatabaseFactory extends DAOFactory {
     public IProcedureDataAccess getProcedureDataAccess() {
         throw new NotImplementedException();
     }
+
+    @Override
+    public IClinicianDataAccess getClinicianDataAccess() { throw new NotImplementedException(); }
+
 }

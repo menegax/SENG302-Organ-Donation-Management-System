@@ -4,6 +4,7 @@ import static utility.UserActionHistory.userActions;
 
 import DataAccess.factories.DAOFactory;
 import DataAccess.factories.MySqlFactory;
+import DataAccess.interfaces.IClinicianDataAccess;
 import DataAccess.interfaces.IPatientDataAccess;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -61,6 +62,8 @@ public class GUILogin implements TouchscreenCapable {
 
     private TouchPaneController loginTouchPane;
 
+    private UserControl login = new UserControl();
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
@@ -100,14 +103,11 @@ public class GUILogin implements TouchscreenCapable {
      * If failed, gives alert
      */
     @FXML
-    public void logIn() {
-        UserControl login = new UserControl();
-        ScreenControl screenControl = ScreenControl.getScreenControl();
+    public void logIn() { //todo: ??????????? tidy up.
+        DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
         try {
             if (patient.isSelected()) {
-
                 //<-- Example
-                DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
                 IPatientDataAccess patientDataAccess = factory.getPatientDataAccess();
                 Patient patient2 = patientDataAccess.getPatientByNhi(nhiLogin.getText());
 
@@ -117,7 +117,8 @@ public class GUILogin implements TouchscreenCapable {
                 }
                 login.addLoggedInUserToCache(patient2);
             } else if (clinician.isSelected()) {
-                Clinician clinician = database.getClinicianByID(Integer.parseInt(nhiLogin.getText()));
+                IClinicianDataAccess clinicianDataAccess = factory.getClinicianDataAccess();
+                Clinician clinician = clinicianDataAccess.getClinicianByStaffId(Integer.parseInt(nhiLogin.getText()));
                 if (clinician == null) {
                     throw new InvalidObjectException("User doesn't exist");
                 }

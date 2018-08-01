@@ -1,17 +1,16 @@
 package DataAccess.interfaces;
 
 import model.Clinician;
-import model.Patient;
 
 import java.util.List;
 
 public interface IClinicianDataAccess {
 
-    public int updateClincian (List<Clinician> clinician);
+    public int updateClinician (List<Clinician> clinician);
 
-    public boolean addClincian (Clinician clinician);
+    public boolean addClinician (Clinician clinician);
 
-    public Patient getClinicianByStaffId (String id);
+    public Clinician getClinicianByStaffId (int id);
 
-    List<Patient> searchClinician (String searchTerm);
+    List<Clinician> searchClinician (String searchTerm);
 }

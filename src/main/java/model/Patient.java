@@ -962,6 +962,10 @@ public class Patient extends User {
     	userModified();
     }
 
+    public void setUserActionsList(List<PatientActionRecord> records) {
+        this.userActionsList = records;
+        userModified();
+    }
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
                 + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Preferred name: " + preferredName +
