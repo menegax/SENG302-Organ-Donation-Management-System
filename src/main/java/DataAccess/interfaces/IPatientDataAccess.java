@@ -6,41 +6,15 @@ import java.util.List;
 
 public interface IPatientDataAccess {
 
-    /**
-     *
-     * @param patient -
-     * @return -
-     */
-     public int update (List<Patient> patient);
+    public int updatePatient (List<Patient> patient);
 
+    public boolean addPatient (Patient patient);
 
-    /**
-     *
-     * @param patient -
-     * @return -
-     */
-    public boolean insert (Patient patient);
+    public  boolean addPatients (List<Patient> patient);
 
-    /**
-     *
-     * @param patient -
-     * @return -
-     */
-    public  boolean insert (List<Patient> patient);
+    public List<Patient> getPatients ();
 
-    /**
-     *
-     * @return -
-     */
-    public List<Patient> select ();
+    public Patient getPatientByNhi(String nhi);
 
-
-    /**
-     *
-     * @param nhi
-     * @return
-     */
-    public Patient selectOne(String nhi);
-
-    List<Patient> selectFiltered(String searchTerm);
+    List<Patient> searchPatient(String searchTerm);
 }

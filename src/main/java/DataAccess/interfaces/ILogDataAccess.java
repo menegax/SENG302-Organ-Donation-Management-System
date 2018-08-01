@@ -9,17 +9,9 @@ import java.util.List;
 public interface ILogDataAccess<T> {
 
 
-    /**
-     * @param records -
-     * @param id      -
-     * @return -
-     */
-    int update(List<T> records, String id);
+    int updateLogs (List<T> records, String id);
 
 
-    /**
-     * @return -
-     */
-    List<T> selectAll(String id);
+    List<T> getAllLogsByUserId (String id);
 
 }

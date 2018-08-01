@@ -11,14 +11,14 @@ public interface IContactDataAccess {
      * @param patient -
      * @return -
      */
-    boolean update(Patient patient);
+    boolean updateContact(Patient patient);
 
     /**
      *
      * @param nhi -
      * @return -
      */
-    List<String> select(String nhi);
+    List<String> getContactByNhi(String nhi);
 
     /**
      *

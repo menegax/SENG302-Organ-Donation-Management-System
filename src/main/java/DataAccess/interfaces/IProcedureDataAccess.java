@@ -6,17 +6,7 @@ import java.util.List;
 
 public interface IProcedureDataAccess {
 
-    /**
-     * @param nhi       -
-     * @param procedure -
-     * @return -
-     */
-    int update(String nhi, Procedure procedure);
+    int updateProcedure (String nhi, Procedure procedure);
 
-
-    /**
-     * @param nhi -
-     * @return -
-     */
-    List<Procedure> select(String nhi);
+    List<Procedure> getProceduresByNhi (String nhi);
 }

@@ -7,21 +7,9 @@ import java.util.List;
 
 public interface IMedicationDataAccess {
 
-    /**
-     *
-     * @param nhi -
-     * @param medication -
-     * @param state -
-     * @return -
-     */
-    int update(String nhi, Medication medication, MedicationStatus state);
 
+    int updateMedication (String nhi, Medication medication, MedicationStatus state);
 
-    /**
-     *
-     * @param nhi -
-     * @return -
-     */
-    List<Medication> select(String nhi);
+    List<Medication> getMedicationsByNhi (String nhi);
 
 }

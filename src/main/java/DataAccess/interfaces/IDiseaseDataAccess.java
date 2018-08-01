@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface IDiseaseDataAccess {
 
-    int update(String nhi, Disease disease);
+    int updateDisease(String nhi, Disease disease);
 
-    List<Disease> select(String nhi);
+    List<Disease> getDiseaseByNhi(String nhi);
 
 }
