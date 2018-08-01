@@ -66,15 +66,66 @@ public class LocalDB {
         return null;
     }
 
-    public void addPatient(Patient patient) {
-        patients.add(patient);
+    /**
+     * Finds the index of the patient with matching nhi in the patients list.
+     * - If the patient exists, the old patient object
+     * is replaced with the new patient object.
+     * - If not, the new patient is added to the list
+     * @param patient - The updated/new patient object
+     */
+    public void storePatient(Patient patient) {
+        Integer index = null;
+        for (int i=0; index == null && i<=patients.size(); i++) {
+            if (patients.get(i).getNhiNumber().toLowerCase().equals(patient.getNhiNumber().toLowerCase())) {
+                index = i;
+            }
+        }
+        if (index != null) {
+            patients.set(index, patient);
+        } else {
+            patients.add(patient);
+        }
     }
 
-    public void addClinician(Clinician clinician) {
-        clinicians.add(clinician);
+    /**
+     * Finds the index of the clinician with matching staff id in the clinicians list.
+     * - If the clinician exists, the old clinician object
+     * is replaced with the new clinician object.
+     * - If not, the new clinician is added to the list
+     * @param clinician - The updated/new clinician object
+     */
+    public void storeClinician(Clinician clinician) {
+        Integer index = null;
+        for (int i=0; index == null && i<=clinicians.size(); i++) {
+            if (clinicians.get(i).getStaffID() == clinician.getStaffID()) {
+                index = i;
+            }
+        }
+        if (index != null) {
+            clinicians.set(index, clinician);
+        } else {
+            clinicians.add(clinician);
+        }
     }
 
-    public void addAdministrator(Administrator administrator) {
-        administrators.add(administrator);
+    /**
+     * Finds the index of the administrator with matching username in the administrators list.
+     * - If the administrator exists, the old administrator object
+     * is replaced with the new administrator object.
+     * - If not, the new administrator is added to the list
+     * @param administrator - The updated/new administrator object
+     */
+    public void storeAdministrator(Administrator administrator) {
+        Integer index = null;
+        for (int i=0; index == null && i<=administrators.size(); i++) {
+            if (administrators.get(i).getUsername().toLowerCase().equals(administrator.getUsername().toLowerCase())) {
+                index = i;
+            }
+        }
+        if (index != null) {
+            administrators.set(index, administrator);
+        } else {
+            administrators.add(administrator);
+        }
     }
 }
