@@ -1,6 +1,10 @@
 package DataAccess;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 public class LocalDatabaseFactory extends DAOFactory {
+
+
     @Override
     public IPatientDataAccess getPatientDataAccess() {
         return null;
@@ -8,36 +12,36 @@ public class LocalDatabaseFactory extends DAOFactory {
 
     @Override
     public IMedicationDataAccess getMedicationDataAccess() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public IDiseaseDataAccess getDiseaseDataAccess() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public IContactDataAccess getContactDataAccess() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public ILogDataAccess getAdministratorDataAccess() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public ILogDataAccess getPatientLogDataAccess() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public ILogDataAccess getClinicianLogDataAccess() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public IProcedureDataAccess getProcedureDataAccess() {
-        return null;
+        throw new NotImplementedException();
     }
 }
