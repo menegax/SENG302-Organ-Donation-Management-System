@@ -27,7 +27,7 @@ public class DiseaseDAO implements IDiseaseDataAccess {
     @Override
     public int updateDisease(String nhi, Disease disease) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
-            deleteAll(connection, nhi);
+            deleteAllDiseasesByNhi(nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_DISEASES_QUERY"));
             connection.setAutoCommit(false);
             statement.setString(1, nhi);
@@ -64,10 +64,14 @@ public class DiseaseDAO implements IDiseaseDataAccess {
         }
     }
 
-    private void deleteAll(Connection connection, String nhi) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_DISEASES_QUERY"));
-        connection.setAutoCommit(false);
-        statement.setString(1, nhi);
-        statement.executeUpdate();
+    @Override
+    public void deleteAllDiseasesByNhi(String nhi) {
+        try (Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_DISEASES_QUERY"));
+            statement.setString(1, nhi);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+
+        }
     }
 }

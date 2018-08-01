@@ -65,6 +65,11 @@ public class MySqlFactory extends DAOFactory{
         return new PatientLogDAO();
     }
 
+    @Override
+    public ILogDataAccess getAdministratorLogDataAccess() {
+        return new AdministratorLogDAO();
+    }
+
     public  ILogDataAccess getClinicianLogDataAccess() {
         return new ClinicianLogDAO();
     }

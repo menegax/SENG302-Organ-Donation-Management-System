@@ -21,6 +21,7 @@ public abstract class DAOFactory {
     public abstract IContactDataAccess getContactDataAccess();
     public abstract IAdministratorDataAccess getAdministratorDataAccess();
     public abstract ILogDataAccess getPatientLogDataAccess();
+    public abstract ILogDataAccess getAdministratorLogDataAccess();
     public abstract ILogDataAccess getClinicianLogDataAccess();
     public abstract IProcedureDataAccess getProcedureDataAccess();
     public abstract IClinicianDataAccess getClinicianDataAccess();

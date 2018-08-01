@@ -10,4 +10,6 @@ public interface IDiseaseDataAccess {
 
     List<Disease> getDiseaseByNhi(String nhi);
 
+    public void deleteAllDiseasesByNhi(String nhi);
+
 }

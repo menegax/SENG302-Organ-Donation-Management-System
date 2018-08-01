@@ -2,6 +2,7 @@ package DataAccess.mysqlDAO;
 
 import DataAccess.factories.MySqlFactory;
 import DataAccess.interfaces.*;
+import com.sun.org.apache.regexp.internal.RE;
 import model.Disease;
 import model.Medication;
 import model.Patient;
@@ -122,6 +123,22 @@ public class PatientDAO  implements IPatientDataAccess {
             return results;
         } catch (SQLException e) {
             return null;
+        }
+    }
+
+    @Override
+    public void deletePatientByNhi(String nhi) {
+        try (Connection connection = mySqlFactory.getConnectionInstance()) {
+            medicationDataAccess.deleteAllMedicationsByNhi(nhi);
+            diseaseDataAccess.deleteAllDiseasesByNhi(nhi);
+            contactDataAccess.deleteContactByNhi(nhi);
+            logDataAccess.deleteLogsByUserId(nhi);
+            procedureDataAccess.deleteAllProceduresByNhi(nhi);
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_BY_NHI"));
+            statement.setString(1,nhi);
+            statement.execute();
+        }catch (SQLException e) {
+
         }
     }
 

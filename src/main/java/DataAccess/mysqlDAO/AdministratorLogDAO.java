@@ -17,4 +17,9 @@ public class AdministratorLogDAO  implements ILogDataAccess<AdministratorActionR
     public List<AdministratorActionRecord> getAllLogsByUserId(String id) {
         return null;
     }
+
+    @Override
+    public boolean deleteLogsByUserId(String id) {
+        return false;
+    }
 }

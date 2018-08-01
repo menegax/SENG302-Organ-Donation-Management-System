@@ -15,4 +15,9 @@ public class ClinicianLogDAO implements ILogDataAccess<ClinicianLogDAO> {
     public List<ClinicianLogDAO> getAllLogsByUserId(String id) {
         return null;
     }
+
+    @Override
+    public boolean deleteLogsByUserId(String id) {
+        return false;
+    }
 }
