@@ -1,5 +1,7 @@
-package DataAccess;
+package DataAccess.mysqlDAO;
 
+import DataAccess.interfaces.ILogDataAccess;
+import DataAccess.factories.MySqlFactory;
 import utility.PatientActionRecord;
 import utility.ResourceManager;
 
@@ -15,7 +17,7 @@ public class PatientLogDAO implements ILogDataAccess<PatientActionRecord> {
 
     private MySqlFactory mySqlFactory;
 
-    PatientLogDAO () {
+    public PatientLogDAO () {
         mySqlFactory = MySqlFactory.getMySqlFactory();
     }
 

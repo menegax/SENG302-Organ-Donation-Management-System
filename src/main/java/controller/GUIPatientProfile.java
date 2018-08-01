@@ -1,7 +1,7 @@
 package controller;
 
-import DataAccess.MySqlFactory;
-import DataAccess.IPatientDataAccess;
+import DataAccess.factories.MySqlFactory;
+import DataAccess.interfaces.IPatientDataAccess;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;

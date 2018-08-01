@@ -1,4 +1,6 @@
-package DataAccess;
+package DataAccess.mysqlDAO;
+
+import DataAccess.interfaces.ILogDataAccess;
 
 import java.util.List;
 

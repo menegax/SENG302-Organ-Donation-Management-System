@@ -1,5 +1,7 @@
-package DataAccess;
+package DataAccess.factories;
 
+import DataAccess.interfaces.*;
+import DataAccess.mysqlDAO.PatientDAO;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class LocalDatabaseFactory extends DAOFactory {
@@ -7,7 +9,7 @@ public class LocalDatabaseFactory extends DAOFactory {
 
     @Override
     public IPatientDataAccess getPatientDataAccess() {
-        return null;
+        return new PatientDAO();
     }
 
     @Override

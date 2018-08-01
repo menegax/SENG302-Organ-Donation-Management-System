@@ -1,5 +1,7 @@
-package DataAccess;
+package DataAccess.mysqlDAO;
 
+import DataAccess.factories.MySqlFactory;
+import DataAccess.interfaces.*;
 import model.Disease;
 import model.Medication;
 import model.Patient;
@@ -15,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class PatientDAO  implements IPatientDataAccess {
+public class PatientDAO  implements IPatientDataAccess {
 
     private IMedicationDataAccess medicationDataAccess;
     private IDiseaseDataAccess diseaseDataAccess;
@@ -24,7 +26,7 @@ class PatientDAO  implements IPatientDataAccess {
     private IProcedureDataAccess procedureDataAccess;
     private MySqlFactory mySqlFactory;
 
-    PatientDAO() {
+    public PatientDAO() {
         mySqlFactory = MySqlFactory.getMySqlFactory();
         medicationDataAccess = mySqlFactory.getMedicationDataAccess();
         diseaseDataAccess = mySqlFactory.getDiseaseDataAccess();

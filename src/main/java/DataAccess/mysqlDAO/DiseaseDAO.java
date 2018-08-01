@@ -1,5 +1,7 @@
-package DataAccess;
+package DataAccess.mysqlDAO;
 
+import DataAccess.interfaces.IDiseaseDataAccess;
+import DataAccess.factories.MySqlFactory;
 import model.Disease;
 import utility.GlobalEnums.DiseaseState;
 import utility.ResourceManager;
@@ -18,7 +20,7 @@ public class DiseaseDAO implements IDiseaseDataAccess {
 
     private MySqlFactory mySqlFactory;
 
-    DiseaseDAO () {
+    public DiseaseDAO () {
         mySqlFactory = MySqlFactory.getMySqlFactory();
     }
 
