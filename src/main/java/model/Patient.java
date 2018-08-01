@@ -236,6 +236,9 @@ public class Patient extends User {
      * @param newUserAttributes a user whose attributes this function copies
      */
     public void setAttributes(User newUserAttributes) {
+
+        //todo rework so this is open for extension @Aidan @Andrew
+
         Patient newPatientAttributes = (Patient) newUserAttributes.deepClone();
 
         setFirstName(newPatientAttributes.getFirstName());
@@ -244,6 +247,7 @@ public class Patient extends User {
         setPreferredName(newPatientAttributes.getPreferredName());
         setBirth(newPatientAttributes.getBirth());
         setDeath(newPatientAttributes.getDeath());
+        setDeathLocation(newPatientAttributes.getDeathLocation());
         setStreet1(newPatientAttributes.getStreet1());
         setStreet2(newPatientAttributes.getStreet2());
         setSuburb(newPatientAttributes.getSuburb());
