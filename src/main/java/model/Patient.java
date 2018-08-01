@@ -169,6 +169,21 @@ public class Patient extends User {
         databaseImport();
     }
 
+    public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
+                   Timestamp created, Timestamp modified, LocalDate death, GlobalEnums.BirthGender gender,
+                   GlobalEnums.PreferredGender prefGender, String preferredName) {
+        super(firstName, middleNames, lastName);
+        this.nhiNumber = nhiNumber;
+        this.birth = birth;
+        this.CREATED = created;
+        this.modified = modified;
+        this.death = death;
+        this.birthGender = gender;
+        this.preferredGender = prefGender;
+        this.preferredName = preferredName;
+        databaseImport();
+    }
+
 
     /**
      * Sets the attributes of the patient

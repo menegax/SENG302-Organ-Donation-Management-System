@@ -42,4 +42,5 @@ public interface IPatientDataAccess {
      */
     public Patient selectOne(String nhi);
 
+    List<Patient> selectFiltered(String searchTerm);
 }
