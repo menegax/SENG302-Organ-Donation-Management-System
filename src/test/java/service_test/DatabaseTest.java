@@ -7,12 +7,15 @@ import org.junit.Before;
 import org.junit.Test;
 import service.Database;
 import utility.GlobalEnums;
+import utility.UserActionHistory;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import static org.junit.Assert.*;
+import static utility.UserActionHistory.userActions;
 
 /**
  * Class used to test Database methods
@@ -30,6 +33,7 @@ public class DatabaseTest {
      */
     @Before
     public void reset() {
+
         user = null;
         Database.resetDatabase();
     }

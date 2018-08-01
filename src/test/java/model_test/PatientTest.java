@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import model.Disease;
 import model.Patient;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import service.Database;
@@ -19,14 +20,14 @@ import utility.GlobalEnums.Organ;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-
 import static org.junit.Assert.*;
 
-public class PatientTest implements Serializable{
+public class PatientTest implements Serializable {
 
     private static Patient testPatient; //Patient obj not within the database
 
     private static Patient testPatient1; //Patient obj not within the database
+
 
     /**
      * Populate database with test patients and disables logging
@@ -34,22 +35,23 @@ public class PatientTest implements Serializable{
     @BeforeClass
     public static void setUp() {
 
-        userActions.setLevel(Level.OFF);
-
-        testPatient = new Patient("ABC1234", "James", null, "Wallace",
-                LocalDate.of(1970, 2, 12));
+        testPatient = new Patient("ABC1234", "James", null, "Wallace", LocalDate.of(1970, 2, 12));
 
         Database.addPatient(new Patient("XYZ9876", "Joe", new ArrayList<String>() {{
             add("Jane");
-        }},
-                "Bloggs", LocalDate.of(1994, 12, 12)));
+        }}, "Bloggs", LocalDate.of(1994, 12, 12)));
 
-        Database.addPatient(new Patient("DEF4567", "Bob", null, "Bobby",
-                LocalDate.of(1994, 12, 12)));
+        Database.addPatient(new Patient("DEF4567", "Bob", null, "Bobby", LocalDate.of(1994, 12, 12)));
 
-        testPatient1 = new Patient("JJJ1234", "Rex", null, "Petsberg",
-                LocalDate.of(1977, 6, 16));
+        testPatient1 = new Patient("JJJ1234", "Rex", null, "Petsberg", LocalDate.of(1977, 6, 16));
     }
+
+
+    @Before
+    public void setup() {
+        userActions.setLevel(Level.OFF); // do not move to BeforeClass
+    }
+
 
     /**
      * Test patient constructor
@@ -59,6 +61,7 @@ public class PatientTest implements Serializable{
         Patient patient = givenPatient();
         thenPatientHasAttributes(patient);
     }
+
 
     /**
      * Adds a few organs correctly to requirements
@@ -73,6 +76,7 @@ public class PatientTest implements Serializable{
         assertEquals(expected, testPatient1.getRequiredOrgans());
     }
 
+
     /**
      * Removes a few organs correctly
      */
@@ -85,6 +89,7 @@ public class PatientTest implements Serializable{
         testPatient1.removeRequired(Organ.CORNEA);
         assertEquals(expected, testPatient1.getRequiredOrgans());
     }
+
 
     /**
      * Add a list of valid organs,
@@ -104,6 +109,7 @@ public class PatientTest implements Serializable{
         assertEquals(expected, testPatient.getDonations());
     }
 
+
     /**
      * Add a list containing at least one invalid organ,
      * expect only liver to be added to donations
@@ -120,6 +126,7 @@ public class PatientTest implements Serializable{
         }};
         assertEquals(expected, testPatient.getDonations());
     }
+
 
     /**
      * Remove a valid organ from donations,
@@ -139,6 +146,7 @@ public class PatientTest implements Serializable{
         resetDonationsPatient();
     }
 
+
     /**
      * Add a list containing at least one invalid organ
      * expect only liver to be in donations
@@ -155,6 +163,7 @@ public class PatientTest implements Serializable{
         assertEquals(expected, testPatient.getDonations());
         resetDonationsPatient();
     }
+
 
     /**
      * Pass two null arrays into updateDonation,
@@ -187,6 +196,7 @@ public class PatientTest implements Serializable{
         assertEquals("James Bloggs", testPatient.getNameConcatenated());
     }
 
+
     /**
      * Checks correct age of deceased patient
      */
@@ -195,6 +205,7 @@ public class PatientTest implements Serializable{
         testPatient.setDeath(LocalDate.of(2005, 5, 12));
         assertEquals(35, testPatient.getAge());
     }
+
 
     /**
      * Checks correct age of deceased patient who is just about to have a birthday
@@ -205,6 +216,7 @@ public class PatientTest implements Serializable{
         assertEquals(34, testPatient.getAge());
     }
 
+
     /**
      * Checks correct BMI for patient
      */
@@ -214,6 +226,7 @@ public class PatientTest implements Serializable{
         testPatient.setHeight(1.80);
         assertEquals(21.6, testPatient.getBmi(), 0.2);
     }
+
 
     /**
      * Checks that the patient can successfully sort its current and past disease lists
@@ -231,14 +244,14 @@ public class PatientTest implements Serializable{
         Disease cured = new Disease("test8", GlobalEnums.DiseaseState.CURED);
 
         // Add diseases to patient
-        testPatient.setCurrentDiseases(new ArrayList<Disease>(){{
+        testPatient.setCurrentDiseases(new ArrayList<Disease>() {{
             add(noneToCured);
             add(chronicToCured);
             add(noneToChronic);
             add(none);
             add(chronic);
         }});
-        testPatient.setPastDiseases(new ArrayList<Disease>(){{
+        testPatient.setPastDiseases(new ArrayList<Disease>() {{
             add(curedToNone);
             add(curedToChronic);
             add(cured);
@@ -269,6 +282,7 @@ public class PatientTest implements Serializable{
         checkSameDiseases(pastDiseasesExpected, testPatient.getPastDiseases());
     }
 
+
     /**
      * Tests the setAttributes method
      */
@@ -277,15 +291,25 @@ public class PatientTest implements Serializable{
         Patient beforePatient = givenPatient();
         Patient afterPatient = givenPatient();
         afterPatient.setFirstName("Different");
-        afterPatient.setMiddleNames(new ArrayList<String>() {{add("Middle"); add("Name");}});
+        afterPatient.setMiddleNames(new ArrayList<String>() {{
+            add("Middle");
+            add("Name");
+        }});
         beforePatient.setAttributes(afterPatient);
+
         assertEquals("Different", beforePatient.getFirstName());
-        assertEquals("Name", beforePatient.getMiddleNames().get(1));
+        assertEquals("Name",
+                beforePatient.getMiddleNames()
+                        .get(1));
 
         // checks deep copy has occurred
-        beforePatient.getMiddleNames().remove(0);
-        assertEquals("Middle", afterPatient.getMiddleNames().get(0));
+        beforePatient.getMiddleNames()
+                .remove(0);
+        assertEquals("Middle",
+                afterPatient.getMiddleNames()
+                        .get(0));
     }
+
 
     /**
      * Reset the logging level
@@ -296,13 +320,14 @@ public class PatientTest implements Serializable{
         userActions.setLevel(Level.INFO);
     }
 
+
     /**
      * Create patient object
      */
     private Patient givenPatient() {
-        return new Patient("AAA1111", "Bob", null, "Wallace",
-                LocalDate.of(1995, 12, 31));
+        return new Patient("AAA1111", "Bob", null, "Wallace", LocalDate.of(1995, 12, 31));
     }
+
 
     /**
      * Check the attributes have been set correctly upon patient obj creation
@@ -315,6 +340,7 @@ public class PatientTest implements Serializable{
         assertEquals(patient.getBirth(), LocalDate.of(1995, 12, 31));
     }
 
+
     /**
      * Helper method for testUpdateDonationsRmValid to populate donations
      */
@@ -323,12 +349,14 @@ public class PatientTest implements Serializable{
         testPatient.addDonation(Organ.LUNG);
     }
 
+
     /**
      * Helper method for testUpdateDonationsRmValid reset donations list
      */
     private void resetDonationsPatient() {
         testPatient.setDonations(new ArrayList<>()); //set to empty
     }
+
 
     /**
      * Helper method for setting patient names with multiple middle names
@@ -342,6 +370,7 @@ public class PatientTest implements Serializable{
         testPatient.setLastName("Bloggs");
     }
 
+
     /**
      * Helper method for setting patient names with no middle names
      */
@@ -351,10 +380,12 @@ public class PatientTest implements Serializable{
         testPatient.setLastName("Bloggs");
     }
 
+
     /**
      * Runs asserts that the same diseases occur in two lists irrespective of order
+     *
      * @param expectedDiseases the list of expected diseases
-     * @param actualDiseases the list of actual diseases
+     * @param actualDiseases   the list of actual diseases
      */
     private void checkSameDiseases(List<Disease> expectedDiseases, List<Disease> actualDiseases) {
         assertEquals(expectedDiseases.size(), actualDiseases.size());
