@@ -14,5 +14,7 @@ public interface IPatientDataAccess {
 
     public Patient getPatientByNhi(String nhi);
 
-    List<Patient> searchPatient(String searchTerm);
+    public List<Patient> searchPatient(String searchTerm);
+
+    public void deletePatientByNhi(String nhi);
 }
