@@ -1,11 +1,19 @@
 package DataAccess.localDAO;
 
+import DataAccess.LocalDB;
+import DataAccess.factories.LocalDatabaseFactory;
 import DataAccess.interfaces.IPatientDataAccess;
 import model.Patient;
 
 import java.util.List;
 
 public class PatientLocalDAO implements IPatientDataAccess {
+
+    private LocalDB localDB;
+
+    public PatientLocalDAO() {
+        localDB = LocalDatabaseFactory.getLocalDbInstance();
+    }
 
     @Override
     public int updatePatient(List<Patient> patient) {
@@ -14,12 +22,16 @@ public class PatientLocalDAO implements IPatientDataAccess {
 
     @Override
     public boolean addPatient(Patient patient) {
-        return false;
+        localDB.storePatient(patient); //todo:
+        return true;
     }
 
     @Override
     public boolean addPatients(List<Patient> patient) {
-        return false;
+        patient.forEach(x -> {
+            localDB.storePatient(x);
+        });
+        return true; //TODO:
     }
 
     @Override

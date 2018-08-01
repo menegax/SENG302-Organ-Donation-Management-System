@@ -1,11 +1,15 @@
 package DataAccess.factories;
 
+import DataAccess.LocalDB;
 import DataAccess.interfaces.*;
 import DataAccess.mysqlDAO.PatientDAO;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class LocalDatabaseFactory extends DAOFactory {
 
+    public static LocalDB getLocalDbInstance() {
+        return LocalDB.getInstance();
+    }
 
     @Override
     public IPatientDataAccess getPatientDataAccess() {

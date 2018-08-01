@@ -31,7 +31,7 @@ public class ClinicianDAO implements IClinicianDataAccess {
     public boolean addClinician(Clinician clinician) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_CLINICIAN_QUERY"));
-            statement = addUpdateParamters(clinician, statement);
+            statement = addUpdateParameters(clinician, statement);
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -68,7 +68,7 @@ public class ClinicianDAO implements IClinicianDataAccess {
         return null;
     }
 
-    private PreparedStatement addUpdateParamters(Clinician clinician, PreparedStatement statement) throws SQLException {
+    private PreparedStatement addUpdateParameters(Clinician clinician, PreparedStatement statement) throws SQLException {
         statement.setInt(1, clinician.getStaffID());
         statement.setString(2, clinician.getFirstName());
         statement.setString(3, clinician.getMiddleNames() == null ? "" : String.join(" ", clinician.getMiddleNames()));

@@ -2,7 +2,6 @@ package DataAccess.mysqlDAO;
 
 import DataAccess.interfaces.IAdministratorDataAccess;
 import model.Administrator;
-import model.Patient;
 
 import java.util.List;
 
