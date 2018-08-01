@@ -15,9 +15,13 @@ public class PatientLocalDAO implements IPatientDataAccess {
         localDB = LocalDatabaseFactory.getLocalDbInstance();
     }
 
+
     @Override
     public int savePatients(List<Patient> patient) {
-        return 0;
+        patient.forEach(x -> {
+            localDB.storePatient(x);
+        });
+        return 0; //TODO:
     }
 
     @Override

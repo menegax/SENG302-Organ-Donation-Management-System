@@ -75,7 +75,7 @@ public class LocalDB {
      */
     public void storePatient(Patient patient) {
         Integer index = null;
-        for (int i=0; index == null && i<=patients.size(); i++) {
+        for (int i=0; index == null && i<patients.size(); i++) {
             if (patients.get(i).getNhiNumber().toLowerCase().equals(patient.getNhiNumber().toLowerCase())) {
                 index = i;
             }
