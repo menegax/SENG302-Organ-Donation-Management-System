@@ -12,6 +12,7 @@ import model.Patient;
 import service.Database;
 import utility.GlobalEnums.*;
 import utility.StatusObservable;
+import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
@@ -489,7 +491,15 @@ public class GUIPatientUpdateProfile extends UndoableController {
             if (dateOfDeath.getValue() != null) {
                 after.setDeath(dateOfDeath.getValue());
             }
-            after.setDeathLocation(deathLocationTxt.getText());
+            SystemLogger.systemLogger.log(FINEST, "death location txt is " + deathLocationTxt.getText()); //todo rm
+//            after.setDeathLocation(deathLocationTxt.getText()); // todo fix undo/redo to use this instead of db call below
+            try {
+                Database.getPatientByNhi(target.getNhiNumber()).setDeathLocation(deathLocationTxt.getText()); //todo rm
+            }
+            catch (InvalidObjectException e) {
+                e.printStackTrace(); //todo rm
+            }
+
             after.setStreet1(street1Txt.getText());
             after.setStreet2(street2Txt.getText());
             after.setSuburb(suburbTxt.getText());

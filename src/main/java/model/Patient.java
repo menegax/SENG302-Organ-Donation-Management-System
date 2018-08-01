@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
@@ -886,7 +888,7 @@ public class Patient extends User {
     public void setDeathLocation(String deathLocation) {
         this.deathLocation = deathLocation;
         userModified();
-        SystemLogger.systemLogger.log(INFO, "Set death location for patient " + this.nhiNumber);
+        SystemLogger.systemLogger.log(FINEST, "Set death location for patient " + this.nhiNumber);
     }
 
     public void setProcedures(List<Procedure> procedures) {
