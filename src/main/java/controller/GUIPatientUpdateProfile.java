@@ -73,6 +73,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private DatePicker dateOfDeath;
 
     @FXML
+    private TextField deathLocationTxt;
+
+    @FXML
     private TextField street1Txt;
 
     @FXML
@@ -101,8 +104,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private Patient after;
 
     private UserControl userControl;
-
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initializes the profile update screen. Gets the logged in or viewed user and loads the user's profile.
@@ -169,6 +170,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 add(regionDD);
                 add(dobDate);
                 add(dateOfDeath);
+                add(deathLocationTxt);
                 add(birthGenderMaleRadio);
                 add(birthGenderFemaleRadio);
                 add(preferredGenderManRadio);
@@ -228,6 +230,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
         dobDate.setValue(patient.getBirth());
         dateOfDeath.setValue(patient.getDeath());
+        deathLocationTxt.setText(patient.getDeathLocation());
         if (patient.getStreet1() != null) {
             street1Txt.setText(patient.getStreet1());
         }
@@ -276,7 +279,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
      */
     @FXML
     public void saveProfileUpdater() {
-        systemLogger.log(Level.FINEST, "Setting patient profile for update...");
+        systemLogger.log(Level.FINEST, "Starting patient update method...");
         Boolean valid = true;
 
         StringBuilder invalidContent = new StringBuilder();
@@ -438,11 +441,21 @@ public class GUIPatientUpdateProfile extends UndoableController {
             setValid(dateOfDeath);
         }
 
+        // death location
+        if (deathLocationTxt.getText() != null && !deathLocationTxt.getText().matches("([A-Za-z0-9]+[.]*[-]*[']*[\\s]*)*")) {
+            valid = setInvalid(deathLocationTxt);
+            //todo repalce validation with google api validation
+        } else {
+            setValid(deathLocationTxt);
+        }
+
         // if all are valid
         if (valid) {
             after.setNhiNumber(nhiTxt.getText());
             after.setFirstName(firstnameTxt.getText());
             after.setLastName(lastnameTxt.getText());
+
+            // todo remove these if statements because the validation was already done above. also entire setting setters can be extracted to external method
             if (middlenameTxt.getText()
                     .equals("")) {
                 after.setMiddleNames(new ArrayList<>());
@@ -456,19 +469,19 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 after.setPreferredName(preferrednameTxt.getText());
             }
             if (birthGenderMaleRadio.isSelected()) {
-                after.setBirthGender((BirthGender) BirthGender.getEnumFromString("male"));
+                after.setBirthGender(BirthGender.getEnumFromString("male"));
             }
             if (birthGenderFemaleRadio.isSelected()) {
-                after.setBirthGender((BirthGender) BirthGender.getEnumFromString("female"));
+                after.setBirthGender(BirthGender.getEnumFromString("female"));
             }
             if (preferredGenderManRadio.isSelected()) {
-                after.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("man"));
+                after.setPreferredGender(PreferredGender.getEnumFromString("man"));
             }
             if (preferredGenderWomanRadio.isSelected()) {
-                after.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("woman"));
+                after.setPreferredGender(PreferredGender.getEnumFromString("woman"));
             }
             if (preferredGenderNonBinaryRadio.isSelected()) {
-                after.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("nonbinary"));
+                after.setPreferredGender(PreferredGender.getEnumFromString("nonbinary"));
             }
             if (dobDate.getValue() != null) {
                 after.setBirth(dobDate.getValue());
@@ -476,11 +489,12 @@ public class GUIPatientUpdateProfile extends UndoableController {
             if (dateOfDeath.getValue() != null) {
                 after.setDeath(dateOfDeath.getValue());
             }
+            after.setDeathLocation(deathLocationTxt.getText());
             after.setStreet1(street1Txt.getText());
             after.setStreet2(street2Txt.getText());
             after.setSuburb(suburbTxt.getText());
             if (regionDD.getValue() != null) {
-                after.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
+                after.setRegion(Region.getEnumFromString(regionDD.getSelectionModel()
                         .getSelectedItem()));
             }
             if (zipTxt.getText() != null) {
@@ -494,7 +508,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 after.setHeight(Double.parseDouble(heightTxt.getText()));
             }
             if (bloodGroupDD.getValue() != null) {
-                after.setBloodGroup((BloodGroup) BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
+                after.setBloodGroup(BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
                         .getSelectedItem()));
             }
 

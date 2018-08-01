@@ -878,6 +878,17 @@ public class Patient extends User {
         }
     }
 
+    public String getDeathLocation() {
+        return deathLocation;
+    }
+
+
+    public void setDeathLocation(String deathLocation) {
+        this.deathLocation = deathLocation;
+        userModified();
+        SystemLogger.systemLogger.log(INFO, "Set death location for patient " + this.nhiNumber);
+    }
+
     public void setProcedures(List<Procedure> procedures) {
         this.procedures = procedures;
     }
@@ -897,22 +908,12 @@ public class Patient extends User {
                 + weight + "\n" + "Blood group: " + bloodGroup + "\n";
     }
 
+
     public boolean equals(Object obj) {
         if (!(obj instanceof Patient)) {
             return false;
         }
         Patient patient = (Patient) obj;
         return this.nhiNumber.equals(patient.nhiNumber);
-    }
-
-
-    public String getDeathLocation() {
-        return deathLocation;
-    }
-
-
-    public void setDeathLocation(String deathLocation) {
-        this.deathLocation = deathLocation;
-        SystemLogger.systemLogger.log(INFO, "Set death location for patient " + this.nhiNumber);
     }
 }
