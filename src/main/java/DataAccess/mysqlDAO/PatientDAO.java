@@ -59,44 +59,30 @@ public class PatientDAO  implements IPatientDataAccess {
                 contactDataAccess.updateContact(patient);
                 connection.commit(); //commit if no errors
             }
-        } catch (SQLException e) {
+        } catch (SQLException ignore) {
 
         }
         return 0;
     }
 
-    /**
-     * @param patient -
-     * @return
-     */
     @Override
     public boolean addPatient(Patient patient) {
         return false;
     }
 
 
-    /**
-     * @param patient -
-     * @return
-     */
+
     @Override
     public boolean addPatients(List<Patient> patient) {
         return false;
     }
 
-    /**
-     * @return
-     */
+
     @Override
     public List<Patient> getPatients() {
         return null;
     }
 
-
-    /**
-     * @param nhi -
-     * @return -
-     */
     @Override
     public Patient getPatientByNhi(String nhi) {
         try (Connection connection = mySqlFactory.getConnectionInstance()){
@@ -171,29 +157,22 @@ public class PatientDAO  implements IPatientDataAccess {
                                            List<Disease> diseases, List<Procedure> procedures, List<Medication> medications) throws SQLException {
 
         Patient patient = constructMinimalPatientObject(attributes);
-
-        // add physical attributes
         patient.setHeight(Double.parseDouble(attributes.getString("Height")) / 100);
         patient.setHeight(Double.parseDouble(attributes.getString("Weight")));
-
         patient.setBloodGroup(attributes.getString("BloodType") != null ?
                 BloodGroup.getEnumFromString(attributes.getString("BloodType")) : null);
-
         patient.setDonations(Arrays.stream(attributes.getString("DonatingOrgans").split("\\s*,\\s*"))
                 .map(Organ::getEnumFromString).collect(Collectors.toList()));
-
         //must instantiate if null
         if (patient.getDonations().get(0) == null) {
             patient.setDonations(new ArrayList<>());
         }
         patient.setRequiredOrgans(Arrays.stream(attributes.getString("ReceivingOrgans").split("\\s*,\\s*"))
                 .map(Organ::getEnumFromString).collect(Collectors.toList()));
-
         //must instantiate if null
         if (patient.getRequiredOrgans().get(0) == null) {
             patient.setRequiredOrgans(new ArrayList<>());
         }
-
         //map medications
         List<Medication> currentMedication = new ArrayList<>();
         List<Medication> pastMedication = new ArrayList<>();
