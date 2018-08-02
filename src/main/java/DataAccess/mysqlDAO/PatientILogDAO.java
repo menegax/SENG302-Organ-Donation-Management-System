@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class PatientILogDAO implements ILogDataAccess<PatientActionRecord> {
+public class PatientILogDAO implements ILogDataAccess<PatientActionRecord>{
 
     private MySqlFactory mySqlFactory;
 

@@ -1,5 +1,7 @@
 package controller;
 
+import DataAccess.factories.DAOFactory;
+import DataAccess.factories.LocalDatabaseFactory;
 import DataAccess.factories.MySqlFactory;
 import DataAccess.interfaces.IPatientDataAccess;
 import javafx.beans.property.ListProperty;
@@ -12,7 +14,9 @@ import model.Clinician;
 import model.Medication;
 import javafx.stage.Stage;
 import model.Patient;
+import model.User;
 import org.apache.commons.lang3.StringUtils;
+import service.PatientServiceImpl;
 import utility.GlobalEnums;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
@@ -38,18 +42,6 @@ public class GUIPatientProfile {
 
     @FXML
     private GridPane patientProfilePane;
-
-    @FXML
-    public Button medicationBtn;
-
-    @FXML
-    public Button proceduresButton;
-
-    @FXML
-    public Button donationsButton;
-
-    @FXML
-    public Button requirementsButton;
 
     @FXML
     private Button deleteButton;
@@ -115,16 +107,10 @@ public class GUIPatientProfile {
     private Label prefGenderLbl;
 
     @FXML
-    private Label donatingTitle;
-
-    @FXML
     private Label firstNameLbl;
 
     @FXML
     private Label firstNameValue;
-
-    @FXML
-    private GridPane details;
 
     @FXML
     private RowConstraints genderRow;
@@ -132,18 +118,14 @@ public class GUIPatientProfile {
     @FXML
     private RowConstraints firstNameRow;
 
+    @FXML
+    private ListView donationList;
+    @FXML
+    private ListView<String> medList;
+
     private ListProperty<String> donatingListProperty = new SimpleListProperty<>();
 
     private ListProperty<String> receivingListProperty = new SimpleListProperty<>();
-
-    /**
-     * A list for the organs a patient is donating
-     */
-    @FXML
-    private ListView donationList;
-
-    @FXML
-    private ListView<String> medList;
 
     private UserControl userControl = new UserControl();
 
@@ -151,41 +133,46 @@ public class GUIPatientProfile {
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
-    private MySqlFactory mySqlFactory = MySqlFactory.getMySqlFactory();
-
-    private IPatientDataAccess patientDataAccess = mySqlFactory.getPatientDataAccess();
 
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
      *
      * */
     public void initialize(){
-        Object user = null;
-        if (userControl.getLoggedInUser() instanceof Patient) {
-            if (patientDataAccess.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
+        User user;
+        PatientServiceImpl patientService = new PatientServiceImpl();
+        Patient patient = patientService.getLoggedInPatient();
+        if (patient != null) {
+            if (patient.getRequiredOrgans().size() == 0) {
                 receivingList.setDisable(true);
                 receivingList.setVisible(false);
                 receivingTitle.setDisable(true);
-                receivingTitle.setVisible(false);
-                /* Hide the columns that would hold the receiving listview - this results in the visible nodes filling
-                   up the whole width of the scene */
+                receivingTitle.setVisible(false); // Hide the columns that would hold the receiving list view
                 for (int i = 9; i <= 11; i++) {
-                    patientProfilePane.getColumnConstraints()
-                            .get(i)
-                            .setMaxWidth(0);
+                    patientProfilePane.getColumnConstraints().get(i).setMaxWidth(0);
                 }
             }
-
             genderDeclaration.setVisible(false);
             genderStatus.setVisible(false);
             genderRow.setMaxHeight(0);
             firstNameLbl.setVisible(false);
             firstNameValue.setVisible(false);
             firstNameRow.setMaxHeight(0);
-
             user = userControl.getLoggedInUser();
-            deleteButton.setVisible( false );
-            deleteButton.setDisable( true );
+            deleteButton.setVisible(false);
+            deleteButton.setDisable(true);
+
+        }
+//        } else if () { //use clinician service
+//
+//        }
+
+        if (userControl.getLoggedInUser() instanceof Patient) {
+            if (patient.getRequiredOrgans().size() == 0) {
+
+            }
+
+
         } else if (userControl.getLoggedInUser() instanceof Clinician) {
             deleteButton.setVisible( false );
             deleteButton.setDisable( true );
@@ -193,24 +180,22 @@ public class GUIPatientProfile {
         } else {
             user = userControl.getTargetUser();
         }
-        try {
-            assert user != null;
-            loadProfile(((Patient) user).getNhiNumber());
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE, "Cannot load patient profile");
-        }
+//        try {
+//            assert user != null;
+//            loadProfile(((Patient) user));
+//        }
+//        catch (IOException e) {
+//            userActions.log(Level.SEVERE, "Cannot load patient profile");
+//        }
     }
 
 
     /**
      * Sets the patient's attributes for the scene's labels
      *
-     * @param nhi the nhi of the patient to be viewed
      * @exception InvalidObjectException if the nhi of the patient does not exist in the database
      */
-    private void loadProfile(String nhi) throws InvalidObjectException {
-        Patient patient = patientDataAccess.getPatientByNhi(nhi);
+    private void loadProfile(Patient patient) throws InvalidObjectException {
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
         firstNameValue.setText(patient.getFirstName());
