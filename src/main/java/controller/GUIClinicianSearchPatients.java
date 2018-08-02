@@ -235,9 +235,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 //masterData.add((Patient) user);
             //}
             List<Patient> results = patientDataAccess.searchPatient(searchEntry.getText(), null, numResults);
-            System.out.println(results.size());
-            masterData.clear();
-            patientDataTable.refresh();
             masterData.addAll(results);
             filteredData.setPredicate(patient -> true);
         });
@@ -269,7 +266,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     	for (User user: users) {
     		tempPatients.add((Patient)user);
     	}
-    	masterData.addAll(tempPatients);
+    	//masterData.addAll(tempPatients);
         // set the filter Predicate whenever the filter changes.
         searchEntry.textProperty()
                 .addListener((observable, oldValue, newValue) -> filteredData.setPredicate(patient -> {
@@ -288,12 +285,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                         return patient.getBirthGender().getValue().toLowerCase().equals( newValue.toLowerCase() ); // ------------------------------this is where it fails!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
                     filteredData.setPredicate(patientCheck -> true);
-                    List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT}, numResults, filter);
-                    List<Patient> patients = new ArrayList<>();
-                    for (User user : results) {
-                    	patients.add((Patient)user);
-                    }
-                    return patients.contains(patient);
+                    //List<User> results = searcher.search(newValue, new UserTypes[] {UserTypes.PATIENT}, numResults, filter);
+                    List<Patient> results = patientDataAccess.searchPatient(newValue, null, numResults);
+                    return results.contains(patient);
                 }));
     }
 
@@ -320,8 +314,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     }
                     filteredData.setPredicate(patientCheck -> true);
                     if (numResults > 0) {
-                    	return searcher.search(search, new UserTypes[]{UserTypes.PATIENT}, numResults, filter)
-                    			.contains(patient);
+                    	//return searcher.search(search, new UserTypes[]{UserTypes.PATIENT}, numResults, filter)
+                    			//.contains(patient);
+                        return patientDataAccess.searchPatient(search, null, numResults).contains(patient);
                     }
                     return false;
                 }));
@@ -342,9 +337,11 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             numResults = 30;
         }
         if (numResults > 0) {
-            for (User user : searcher.search(search, new UserTypes[]{UserTypes.PATIENT}, numResults, filter)) {
-                masterData.add((Patient) user);
-            }
+            //for (User user : searcher.search(search, new UserTypes[]{UserTypes.PATIENT}, numResults, filter)) {
+                //masterData.add((Patient) user);
+            //}
+            masterData.clear();
+            masterData.addAll(patientDataAccess.searchPatient(search, null, numResults));
         	patientDataTable.setItems(masterData);
         }
         displayY.setText( "Display all " + searcher.getDefaultResults(new UserTypes[]{UserTypes.PATIENT}, null).size() + " profiles" );

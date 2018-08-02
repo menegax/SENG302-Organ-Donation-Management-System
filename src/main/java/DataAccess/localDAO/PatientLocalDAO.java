@@ -42,7 +42,17 @@ public class PatientLocalDAO implements IPatientDataAccess {
     }
 
     @Override
+    public boolean deletePatient(Patient patient) {
+        return false;
+    }
+
+    @Override
     public List<Patient> searchPatient(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults) {
         return null;
+    }
+
+    @Override
+    public void deletePatientByNhi(String nhi) {
+
     }
 }
