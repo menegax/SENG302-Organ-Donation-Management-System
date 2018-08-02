@@ -48,7 +48,7 @@ public class TUIOFXMain extends Application {
         Searcher.getSearcher()
                 .createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         openKeyboard();
-        TuioFX tuioFX = new TuioFX(stage, Configuration.debug());
+        TuioFX tuioFX = new TuioFX(stage, Configuration.pqLabs());
         tuioFX.enableMTWidgets(true);
         tuioFX.start();
         stage.setResizable(true);

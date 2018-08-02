@@ -46,8 +46,10 @@ class ScreenControlTouch extends ScreenControl {
     public void show(UUID stageName, Parent root) {
         List<Node> nodes = new ArrayList<>(touchPane.getChildren());
         Pane newTouchPane = new Pane(root);
+        newTouchPane.getProperties().put("focusArea", "true");
         newTouchPane.getChildren().addAll(nodes);
         touchPane = newTouchPane;
+//        touchPane.getChildren().addAll(nodes);
         touchStage.setScene(new Scene(touchPane));
 
         systemLogger.log(INFO, "Showing new touch stage scene");
@@ -68,8 +70,10 @@ class ScreenControlTouch extends ScreenControl {
 //        System.out.println(touchPane.getChildren().size());
             screenControl.setTouchStage(touchStage);
             Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-            touchStage.setScene(new Scene(root));
-            touchStage.show();
+            touchPane = new Pane();
+            touchPane.getChildren().addAll(new Pane(root));
+            touchStage.setScene(new Scene(touchPane));
+//            touchStage.show();
         } catch (IOException e) {
             systemLogger.log(SEVERE, "Failed to recreate login scene in touch application");
 

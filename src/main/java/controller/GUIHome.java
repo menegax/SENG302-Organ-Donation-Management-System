@@ -96,6 +96,8 @@ public class GUIHome implements Observer, TouchscreenCapable {
     public void initialize() {
         StatusObservable statusObservable = StatusObservable.getInstance();
         statusObservable.addObserver(this);
+        homePane.getProperties().put("useFocusArea", false);
+        homePane.getProperties().put("focusArea", "true");
         horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty()
                 .addListener((observable1, oldStage, newStage) -> {
             setUpMenuBar((UndoableStage) newStage);
@@ -525,11 +527,13 @@ public class GUIHome implements Observer, TouchscreenCapable {
     @Override
     public void zoomWindow(ZoomEvent zoomEvent) {
         homeTouchPane.zoomPane(zoomEvent);
+        zoomEvent.consume();
     }
 
     @Override
     public void rotateWindow(RotateEvent rotateEvent) {
         homeTouchPane.rotatePane(rotateEvent);
+        rotateEvent.consume();
     }
 
     @Override
@@ -537,6 +541,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         if (scrollEvent.isDirect()) {
             homeTouchPane.scrollPane(scrollEvent);
         }
+        scrollEvent.consume();
     }
 
     /**
