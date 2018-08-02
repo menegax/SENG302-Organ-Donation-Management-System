@@ -1,5 +1,6 @@
 package controller;
 
+import DataAccess.factories.DAOFactory;
 import model.*;
 import service.APIHelper;
 import com.google.gson.JsonArray;
@@ -74,7 +75,7 @@ public class GUIPatientMedications extends UndoableController {
 
     private boolean itemSelected = false;
 
-    Database database = Database.getDatabase();
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
@@ -202,7 +203,7 @@ public class GUIPatientMedications extends UndoableController {
      */
     private void loadProfile(String nhi) {
         try {
-            target = database.getPatientByNhi(nhi);
+            target = factory.getPatientDataAccess().getPatientByNhi(nhi);
             after = (Patient) target.deepClone();
             if (after.getCurrentMedications() == null) {
                 after.setCurrentMedications(new ArrayList<>());

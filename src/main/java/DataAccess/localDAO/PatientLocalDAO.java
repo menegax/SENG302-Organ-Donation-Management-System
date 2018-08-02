@@ -4,6 +4,7 @@ import DataAccess.LocalDB;
 import DataAccess.factories.LocalDatabaseFactory;
 import DataAccess.interfaces.IPatientDataAccess;
 import model.Patient;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 
@@ -43,4 +44,10 @@ public class PatientLocalDAO implements IPatientDataAccess {
     public List<Patient> searchPatient(String searchTerm) {
         return null;
     }
+
+    @Override
+    public void deletePatientByNhi(String nhi) { throw new NotImplementedException(); }
+
+    @Override
+    public boolean deletePatient(Patient patient){ throw new NotImplementedException(); }
 }

@@ -3,6 +3,7 @@ package DataAccess.mysqlDAO;
 import DataAccess.factories.MySqlFactory;
 import DataAccess.interfaces.IClinicianDataAccess;
 import model.Clinician;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utility.GlobalEnums;
 import utility.ResourceManager;
 
@@ -72,6 +73,9 @@ public class ClinicianDAO implements IClinicianDataAccess {
     public List<Clinician> searchClinician(String searchTerm) {
         return null;
     }
+
+    @Override
+    public int nextStaffID() {throw new NotImplementedException();}
 
     private PreparedStatement addUpdateParameters(Clinician clinician, PreparedStatement statement) throws SQLException {
         statement.setInt(1, clinician.getStaffID());

@@ -105,7 +105,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     private UserControl userControl;
 
-    private Database database = Database.getDatabase();
+    DAOFactory factory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -295,7 +295,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
 
             // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
-            if (database.getPatientByNhi(nhiTxt.getText()).getUuid()  != target.getUuid()) {
+            if (factory.getPatientDataAccess().getPatientByNhi(nhiTxt.getText()).getUuid()  != target.getUuid()) {
                 valid = setInvalid(nhiTxt);
                 invalidContent.append("NHI is already in use\n");
             } else {

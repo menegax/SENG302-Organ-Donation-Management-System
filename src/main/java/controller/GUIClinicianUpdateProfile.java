@@ -1,5 +1,6 @@
 package controller;
 
+import DataAccess.factories.DAOFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,9 +35,6 @@ import static utility.UserActionHistory.userActions;
 public class GUIClinicianUpdateProfile extends UndoableController {
 
     @FXML
-    public AnchorPane clinicianUpdateAnchorPane;
-
-    @FXML
     private Label lastModifiedLbl;
 
     @FXML
@@ -65,25 +63,12 @@ public class GUIClinicianUpdateProfile extends UndoableController {
 
     private Clinician target;
 
-    private StatesHistoryScreen screenHistory;
-
-    Database database = Database.getDatabase();
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     /**
      * Undoes an action taken when editing a clinician
      */
-    @FXML
-    public void undo(){
-        screenHistory.undo();
-    }
 
-    /**
-     * Redoes an action taken when editing a clinician
-     */
-    @FXML
-    public void redo(){
-        screenHistory.redo();
-    }
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
 
@@ -125,7 +110,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
      * @param staffId ID of clinician to load
      */
     private void loadProfile(int staffId) {
-        Clinician clinician = database.getClinicianByID(staffId);
+        Clinician clinician = factory.getClinicianDataAccess().getClinicianByStaffId(staffId);
         if (clinician != null) {
             target = clinician;
             populateForm(clinician);
