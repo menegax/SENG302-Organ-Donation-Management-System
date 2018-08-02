@@ -4,6 +4,7 @@ import DataAccess.LocalDB;
 import DataAccess.factories.LocalDatabaseFactory;
 import DataAccess.interfaces.IPatientDataAccess;
 import model.Patient;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utility.GlobalEnums;
 
 import java.util.List;
@@ -52,7 +53,6 @@ public class PatientLocalDAO implements IPatientDataAccess {
     }
 
     @Override
-    public void deletePatientByNhi(String nhi) {
+    public void deletePatientByNhi(String nhi) { throw new NotImplementedException(); }
 
-    }
 }

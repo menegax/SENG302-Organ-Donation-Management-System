@@ -9,6 +9,9 @@ import DataAccess.localDAO.UserLocalDAO;
 import DataAccess.mysqlDAO.AdministratorLogDAO;
 import DataAccess.mysqlDAO.PatientDAO;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import utility.AdministratorActionRecord;
+import utility.ClinicianActionRecord;
+import utility.PatientActionRecord;
 
 public class LocalDatabaseFactory extends DAOFactory {
 
@@ -48,17 +51,17 @@ public class LocalDatabaseFactory extends DAOFactory {
     }
 
     @Override
-    public ILogDataAccess getPatientLogDataAccess() {
+    public ILogDataAccess<PatientActionRecord> getPatientLogDataAccess() {
         throw new NotImplementedException();
     }
 
     @Override
-    public ILogDataAccess getAdministratorLogDataAccess() {
+    public ILogDataAccess<AdministratorActionRecord> getAdministratorLogDataAccess() {
         throw new NotImplementedException();
     }
 
     @Override
-    public ILogDataAccess getClinicianLogDataAccess() {
+    public ILogDataAccess<ClinicianActionRecord> getClinicianLogDataAccess() {
         throw new NotImplementedException();
     }
 

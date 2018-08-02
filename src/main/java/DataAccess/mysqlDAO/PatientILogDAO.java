@@ -1,7 +1,7 @@
 package DataAccess.mysqlDAO;
 
-import DataAccess.interfaces.ILogDataAccess;
 import DataAccess.factories.MySqlFactory;
+import DataAccess.interfaces.ILogDataAccess;
 import utility.PatientActionRecord;
 import utility.ResourceManager;
 
@@ -13,17 +13,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class PatientLogDAO implements ILogDataAccess<PatientActionRecord> {
+public class PatientILogDAO implements ILogDataAccess<PatientActionRecord> {
 
     private MySqlFactory mySqlFactory;
 
-    public PatientLogDAO () {
+    public PatientILogDAO() {
         mySqlFactory = MySqlFactory.getMySqlFactory();
     }
 
+
     @Override
-    public int updateLogs(List<PatientActionRecord> records, String id) {
-        return 0;
+    public void saveLogs(List<PatientActionRecord> records, String id) {
+        try (Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("INSERT_PATIENT_LOGS"));
+            for (PatientActionRecord record : records) {
+                statement.setString(1, id);
+                statement.setString(4, record.getMessage());
+                statement.setString(2, record.getTimestamp().toString());
+                statement.setString(3, record.getLevel().toString());
+                statement.setString(5, record.getAction());
+                statement.addBatch();
+            }
+            statement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -45,14 +59,13 @@ public class PatientLogDAO implements ILogDataAccess<PatientActionRecord> {
     }
 
     @Override
-    public boolean deleteLogsByUserId(String id) {
+    public void deleteLogsByUserId(String id) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_ALL_PATIENT_LOGS"));
             statement.setString(1, id);
             statement.execute();
         } catch (SQLException e) {
-            return false;
+            e.printStackTrace();
         }
-        return true;
     }
 }

@@ -12,7 +12,7 @@ public interface IPatientDataAccess {
 
     public  boolean addPatientsBatch (List<Patient> patient);
 
-    public List<Patient> getPatients ();
+    public List<Patient> getPatients();
 
     public Patient getPatientByNhi(String nhi);
 
@@ -21,4 +21,5 @@ public interface IPatientDataAccess {
     List<Patient> searchPatient(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
 
     public void deletePatientByNhi(String nhi);
+
 }

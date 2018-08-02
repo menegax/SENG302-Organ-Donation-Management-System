@@ -34,8 +34,9 @@ public class MedicationDAO  implements IMedicationDataAccess {
             statement.setString(3, state.toString());
             return statement.executeUpdate();
         } catch (SQLException e) {
-            return 0;
+            e.printStackTrace();
         }
+        return 0;
     }
 
 
@@ -55,8 +56,9 @@ public class MedicationDAO  implements IMedicationDataAccess {
             }
             return medications;
         } catch (SQLException e) {
-            return null;
+            e.printStackTrace();
         }
+        return null;
     }
 
     @Override
@@ -66,7 +68,7 @@ public class MedicationDAO  implements IMedicationDataAccess {
             statement.setString(1, nhi);
             statement.executeUpdate();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 }

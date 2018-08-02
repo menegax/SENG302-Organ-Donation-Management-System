@@ -3,7 +3,6 @@ package DataAccess.mysqlDAO;
 import DataAccess.interfaces.IContactDataAccess;
 import DataAccess.factories.MySqlFactory;
 import model.Patient;
-import utility.GlobalEnums;
 import utility.ResourceManager;
 import utility.SystemLogger;
 
@@ -78,7 +77,7 @@ public class ContactDAO  implements IContactDataAccess {
             statement.setString(1, nhi);
             statement.execute();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 }

@@ -1,5 +1,6 @@
 package controller;
 
+import DataAccess.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -63,20 +64,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
     @FXML
     private GridPane patientDonationsAnchorPane;
 
-    Database database = Database.getDatabase();
-
-
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     private Patient target;
 
@@ -111,7 +99,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
      * @param nhi patient NHI
      */
     private void loadProfile(String nhi) {
-        Patient patient = database.getPatientByNhi(nhi);
+        Patient patient = factory.getPatientDataAccess().getPatientByNhi(nhi);
         if (patient != null) {
             target = patient;
             populateForm(patient);

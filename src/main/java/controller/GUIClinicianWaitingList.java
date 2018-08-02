@@ -1,5 +1,6 @@
 package controller;
 
+import DataAccess.factories.DAOFactory;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,7 +53,8 @@ public class GUIClinicianWaitingList {
 
     private UserControl userControl = new UserControl();
 
-    Database database = Database.getDatabase();
+    private DAOFactory factory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
@@ -60,10 +62,11 @@ public class GUIClinicianWaitingList {
      * to view a patient's profile.
      */
     public void initialize() {
-    	OrganWaitlist waitingList = database.getWaitingList();
-        for (OrganWaitlist.OrganRequest request: waitingList) {
-    		masterData.add(request);
-    	}
+        // todo implement below code
+//    	OrganWaitlist waitingList = factory.getWaitingListDataAccess().getAll();
+//        for (OrganWaitlist.OrganRequest request: waitingList) {
+//    		masterData.add(request);
+//    	}
         populateTable();
         setupDoubleClickToPatientEdit();
         populateFilterChoiceBoxes();
@@ -106,8 +109,8 @@ public class GUIClinicianWaitingList {
                 try {
                     userControl = new UserControl();
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
-                    DrugInteraction.setViewedPatient(database.getPatientByNhi(request.getReceiverNhi()));
-                    userControl.setTargetUser(database.getPatientByNhi(request.getReceiverNhi()));
+                    DrugInteraction.setViewedPatient(factory.getPatientDataAccess().getPatientByNhi(request.getReceiverNhi()));
+                    userControl.setTargetUser(factory.getPatientDataAccess().getPatientByNhi(request.getReceiverNhi()));
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     Parent root = fxmlLoader.load();
                     UndoableStage popUpStage = new UndoableStage();

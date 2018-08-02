@@ -71,7 +71,7 @@ public class DiseaseDAO implements IDiseaseDataAccess {
             statement.setString(1, nhi);
             statement.executeUpdate();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 }
