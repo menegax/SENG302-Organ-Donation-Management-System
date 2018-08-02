@@ -1,5 +1,6 @@
 package controller;
 
+import DataAccess.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -8,7 +9,11 @@ import javafx.stage.Stage;
 import model.Administrator;
 import model.User;
 import service.Database;
+import utility.GlobalEnums;
 import utility.StatusObservable;
+import utility.undoRedo.Action;
+import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.util.logging.Level;
 
@@ -33,8 +38,8 @@ public class GUIAdministratorProfile {
     private Administrator target;
 
     private UserControl userControl = new UserControl();
-    
-    private Database database = Database.getDatabase();
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
@@ -73,8 +78,18 @@ public class GUIAdministratorProfile {
      */
     public void deleteProfile() {
         if (!target.getUsername().toLowerCase().equals("admin")) {
+            Administrator administrator = (Administrator) userControl.getTargetUser();
+            Action action = new Action(administrator, null);
+            for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
+                if (stage instanceof UndoableStage) {
+                    for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
+                        if (statesHistoryScreen.getUndoableScreen().equals(GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS)) {
+                            statesHistoryScreen.addAction(action);
+                        }
+                    }
+                }
+            }
             userActions.log(Level.INFO, "Successfully deleted admin profile", new String[]{"Attempted to delete admin profile", target.getUsername()});
-            database.delete(target);
             if (!target.getUsername().equals(((Administrator) userControl.getLoggedInUser()).getUsername())) {
                 ((Stage) adminProfilePane.getScene().getWindow()).close();
             }

@@ -1,5 +1,6 @@
 package controller;
 
+import DataAccess.factories.DAOFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -78,7 +79,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
 
     private UserControl userControl = new UserControl();
 
-    Database database = Database.getDatabase();
+    DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     /**
      * Sets up register page GUI elements
@@ -307,7 +308,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
         if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", userIdRegister.getText().toUpperCase())) {
             valid = setInvalid(userIdRegister);
             userActions.log(Level.WARNING, "NHI must be 3 characters followed by 4 numbers", "Attempted to register new patient");
-        } else if (database.nhiInDatabase(userIdRegister.getText())) {
+        } else if (factory.getPatientDataAccess().getPatientByNhi(userIdRegister.getText()) != null) {
             // checks to see if nhi already in use
             valid = setInvalid(userIdRegister);
             userActions.log(Level.WARNING, "Patient with the given NHI already exists", "Attempted to register new patient");
@@ -355,7 +356,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
                 .matches("([A-Za-z0-9]+[-]*[_]*)+")) {
             valid = setInvalid(userIdRegister);
             error += "Invalid username.\n";
-        } else if (database.getAdministratorByUsername(userIdRegister.getText()) != null) {
+        } else if (factory.getAdministratorDataAccess().getAdministratorByUsername(userIdRegister.getText()) != null) {
             valid = setInvalid(userIdRegister);
             error += "Username already in use.\n";
         } else {
@@ -420,7 +421,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
-            int staffID = database.nextStaffID();
+            int staffID = factory.getClinicianDataAccess().nextStaffID();
             statesHistoryScreen.addAction(new Action(null, new Clinician(staffID, firstName, middles, lastName, Region.getEnumFromString(region))));
             userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
         } else {

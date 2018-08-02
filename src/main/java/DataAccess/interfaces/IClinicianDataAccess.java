@@ -12,5 +12,9 @@ public interface IClinicianDataAccess {
 
     public Clinician getClinicianByStaffId (int id);
 
+    public boolean deleteClinician(Clinician clinician);
+
+    public int nextStaffID();
+
     List<Clinician> searchClinician (String searchTerm);
 }

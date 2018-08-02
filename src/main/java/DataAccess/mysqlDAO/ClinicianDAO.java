@@ -3,6 +3,7 @@ package DataAccess.mysqlDAO;
 import DataAccess.factories.MySqlFactory;
 import DataAccess.interfaces.IClinicianDataAccess;
 import model.Clinician;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utility.GlobalEnums;
 import utility.ResourceManager;
 
@@ -41,6 +42,11 @@ public class ClinicianDAO implements IClinicianDataAccess {
     }
 
     @Override
+    public boolean deleteClinician(Clinician clinician) {
+        return false;
+    }
+
+    @Override
     public Clinician getClinicianByStaffId(int id) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement preparedStatement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_CLINICIAN_STAFF_ID"));
@@ -67,6 +73,9 @@ public class ClinicianDAO implements IClinicianDataAccess {
     public List<Clinician> searchClinician(String searchTerm) {
         return null;
     }
+
+    @Override
+    public int nextStaffID() {throw new NotImplementedException();}
 
     private PreparedStatement addUpdateParameters(Clinician clinician, PreparedStatement statement) throws SQLException {
         statement.setInt(1, clinician.getStaffID());

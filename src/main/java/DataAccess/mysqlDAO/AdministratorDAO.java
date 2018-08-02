@@ -18,6 +18,9 @@ public class AdministratorDAO implements IAdministratorDataAccess {
     }
 
     @Override
+    public boolean deleteAdministrator(Administrator administrator) { return false; }
+
+    @Override
     public Administrator getAdministratorByUsername(String username) {
         return null;
     }

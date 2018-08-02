@@ -4,9 +4,9 @@ import DataAccess.interfaces.*;
 import DataAccess.mysqlDAO.*;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import utility.AdministratorActionRecord;
 import utility.ClinicianActionRecord;
 import utility.PatientActionRecord;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -61,14 +61,13 @@ public class MySqlFactory extends DAOFactory{
         return new AdministratorDAO();
     }
 
+    public ILogDataAccess getAdministratorLogDataAccess() { return new AdministratorLogDAO(); }
+
+
     public ILogDataAccess<PatientActionRecord> getPatientLogDataAccess() {
         return new PatientILogDAO();
     }
 
-    @Override
-    public ILogDataAccess<AdministratorActionRecord> getAdministratorLogDataAccess() {
-        return new AdministratorLogDAO();
-    }
 
     public ILogDataAccess<ClinicianActionRecord> getClinicianLogDataAccess() {
         return new ClinicianILogDAO();
@@ -79,5 +78,7 @@ public class MySqlFactory extends DAOFactory{
     }
 
     public IClinicianDataAccess getClinicianDataAccess() { return new ClinicianDAO(); }
+
+    public IUserDataAccess getUserDataAccess() { throw new NotImplementedException(); }
 
 }

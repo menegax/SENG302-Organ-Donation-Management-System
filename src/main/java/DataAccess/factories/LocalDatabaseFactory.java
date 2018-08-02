@@ -5,6 +5,9 @@ import DataAccess.interfaces.*;
 import DataAccess.localDAO.AdministratorLocalDAO;
 import DataAccess.localDAO.ClinicianLocalDAO;
 import DataAccess.localDAO.PatientLocalDAO;
+import DataAccess.localDAO.UserLocalDAO;
+import DataAccess.mysqlDAO.AdministratorLogDAO;
+import DataAccess.mysqlDAO.PatientDAO;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utility.AdministratorActionRecord;
 import utility.ClinicianActionRecord;
@@ -20,6 +23,9 @@ public class LocalDatabaseFactory extends DAOFactory {
     public IPatientDataAccess getPatientDataAccess() {
         return new PatientLocalDAO();
     }
+
+    @Override
+    public IUserDataAccess getUserDataAccess(){ return new UserLocalDAO(); }
 
     @Override
     public IClinicianDataAccess getClinicianDataAccess() { return new ClinicianLocalDAO(); }

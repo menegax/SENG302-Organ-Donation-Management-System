@@ -1,8 +1,10 @@
 package DataAccess.interfaces;
 
 import model.Patient;
+import utility.GlobalEnums;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IPatientDataAccess {
 
@@ -14,7 +16,10 @@ public interface IPatientDataAccess {
 
     public Patient getPatientByNhi(String nhi);
 
-    public List<Patient> searchPatient(String searchTerm);
+    public boolean deletePatient(Patient patient);
+
+    List<Patient> searchPatient(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
 
     public void deletePatientByNhi(String nhi);
+
 }

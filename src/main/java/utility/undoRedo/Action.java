@@ -1,9 +1,10 @@
 package utility.undoRedo;
 
 import DataAccess.factories.DAOFactory;
-import DataAccess.interfaces.IPatientDataAccess;
+import DataAccess.factories.LocalDatabaseFactory;
+import DataAccess.interfaces.IUserDataAccess;
+import DataAccess.localDAO.UserLocalDAO;
 import controller.ScreenControl;
-import model.Patient;
 import model.User;
 import service.Database;
 import utility.GlobalEnums;
@@ -20,7 +21,8 @@ public class Action {
 
     ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+    DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+    IUserDataAccess dao = factory.getUserDataAccess();
 
     /**
      * Constructor for the action
@@ -50,11 +52,11 @@ public class Action {
      */
     public void execute() {
         if (after == null) {
-            Database.removeUser(current);
+            dao.deleteUser(current);
             current = null;
         } else if (before == null) {
             current = after.deepClone();
-            Database.addUser(current);
+            dao.addUser(current);
         } else {
             current.setAttributes(after);
         }
@@ -68,9 +70,9 @@ public class Action {
     public void unexecute() {
         if (after == null) {
             current = before.deepClone();
-            Database.addUser(current);
+            dao.addUser(current);
         } else if (before == null) {
-            Database.removeUser(current);
+            dao.deleteUser(current);
             current = null;
         } else {
             current.setAttributes(before);

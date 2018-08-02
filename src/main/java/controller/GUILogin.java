@@ -59,7 +59,7 @@ public class GUILogin implements TouchscreenCapable {
     @FXML
     private RadioButton administrator;
 
-    Database database = Database.getDatabase();
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
 
     private TouchPaneController loginTouchPane;
 
@@ -129,7 +129,7 @@ public class GUILogin implements TouchscreenCapable {
                 login.addLoggedInUserToCache(clinician);
             } else {
                 checkAdminCredentials();
-                login.addLoggedInUserToCache(database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
+                login.addLoggedInUserToCache(factory.getAdministratorDataAccess().getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
             Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
             UndoableStage stage = new UndoableStage();
@@ -147,7 +147,6 @@ public class GUILogin implements TouchscreenCapable {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
             alert.show();
         } catch (NumberFormatException e) {
-            e.printStackTrace();
             userActions.log(Level.WARNING, "Non-numeric staff IDs are not permitted", "Attempted to log in");
             Alert alert = new Alert(Alert.AlertType.WARNING, "Non-numeric staff ID are not permitted");
             alert.show();
@@ -156,7 +155,7 @@ public class GUILogin implements TouchscreenCapable {
     }
 
     private void checkAdminCredentials() throws InvalidObjectException {
-        Administrator admin = database.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
+        Administrator admin = factory.getAdministratorDataAccess().getAdministratorByUsername(nhiLogin.getText().toUpperCase());
         if (admin == null) {
             throw new InvalidObjectException("User doesn't exist");
         }

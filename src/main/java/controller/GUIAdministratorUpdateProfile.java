@@ -1,5 +1,6 @@
 package controller;
 
+import DataAccess.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
@@ -49,9 +50,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private Database database = Database.getDatabase();
-
-
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     /**
      * Initializes the administrator editing screen.
@@ -80,7 +79,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
      */
     private void loadProfile(String username) {
         try {
-            Administrator administrator = database.getAdministratorByUsername(username);
+            Administrator administrator = factory.getAdministratorDataAccess().getAdministratorByUsername(username);
             populateForm(administrator);
         }
         catch (NullPointerException e) {

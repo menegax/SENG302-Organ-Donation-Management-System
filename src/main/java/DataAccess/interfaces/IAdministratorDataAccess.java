@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface IAdministratorDataAccess {
 
-    public int updateAdministrator (List<Administrator> clinician);
+    public int updateAdministrator (List<Administrator> administrators);
 
-    public boolean addAdministrator (Administrator clinician);
+    public boolean addAdministrator (Administrator administrator);
+
+    public boolean deleteAdministrator (Administrator administrator);
 
     public Administrator getAdministratorByUsername (String username);
 

@@ -335,7 +335,6 @@ public class GUIPatientProfile {
             }
         }
         userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", patient.getNhiNumber()});
-        //patientDataAccess.delete( patient ); //TODO:
         ((Stage) patientProfilePane.getScene().getWindow()).close();
     }
 
