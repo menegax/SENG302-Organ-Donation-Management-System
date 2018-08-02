@@ -18,6 +18,9 @@ public class AdministratorLocalDAO implements IAdministratorDataAccess {
     }
 
     @Override
+    public boolean deleteAdministrator(Administrator administrator){ return false; }
+
+    @Override
     public Administrator getAdministratorByUsername(String username) {
         LocalDB localDB = LocalDB.getInstance();
         return localDB.getAdministratorByUsername(username);

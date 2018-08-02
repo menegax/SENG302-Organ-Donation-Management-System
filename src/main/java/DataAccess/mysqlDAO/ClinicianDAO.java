@@ -41,6 +41,11 @@ public class ClinicianDAO implements IClinicianDataAccess {
     }
 
     @Override
+    public boolean deleteClinician(Clinician clinician) {
+        return false;
+    }
+
+    @Override
     public Clinician getClinicianByStaffId(int id) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement preparedStatement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_CLINICIAN_STAFF_ID"));

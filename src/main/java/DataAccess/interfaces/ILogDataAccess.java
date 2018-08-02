@@ -9,9 +9,11 @@ import java.util.List;
 public interface ILogDataAccess<T> {
 
 
-    int updateLogs (List<T> records, String id);
+    int updateLogs(List<T> records, String id);
 
 
-    List<T> getAllLogsByUserId (String id);
+    List<T> getAllLogsByUserId(String id);
+
+    boolean deleteLogsByUserId(String id);
 
 }

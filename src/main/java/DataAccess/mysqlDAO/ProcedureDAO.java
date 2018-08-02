@@ -28,7 +28,7 @@ public class ProcedureDAO implements IProcedureDataAccess {
     @Override
     public int updateProcedure(String nhi, Procedure procedure) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
-            deleteAll(connection, nhi);
+            deleteAllProceduresByNhi(nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_PROCEDURES_QUERY"));
             connection.setAutoCommit(false);
             statement.setString(1, nhi);
@@ -68,10 +68,14 @@ public class ProcedureDAO implements IProcedureDataAccess {
         }
     }
 
-    private void deleteAll(Connection connection, String nhi) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_PROCEDURES"));
-        connection.setAutoCommit(false);
-        statement.setString(1, nhi);
-        statement.executeUpdate();
+    @Override
+    public void deleteAllProceduresByNhi(String nhi) {
+        try(Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_PROCEDURES"));
+            statement.setString(1, nhi);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+
+        }
     }
 }

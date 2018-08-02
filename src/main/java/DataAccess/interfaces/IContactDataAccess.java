@@ -24,5 +24,5 @@ public interface IContactDataAccess {
      *
      * @return -
      */
-    boolean delete();
+    public void deleteContactByNhi(String nhi);
 }

@@ -8,8 +8,10 @@ import java.util.List;
 public interface IMedicationDataAccess {
 
 
-    int updateMedication(String nhi, Medication medication, MedicationStatus state);
+    public int updateMedication(String nhi, Medication medication, MedicationStatus state);
 
-    List<Medication> getMedicationsByNhi (String nhi);
+    public List<Medication> getMedicationsByNhi (String nhi);
+
+    public void deleteAllMedicationsByNhi(String nhi);
 
 }

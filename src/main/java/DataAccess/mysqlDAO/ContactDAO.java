@@ -71,7 +71,14 @@ public class ContactDAO  implements IContactDataAccess {
     }
 
     @Override
-    public boolean delete() {
-        return false;
+    public void deleteContactByNhi(String nhi)
+    {
+        try(Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_CONTACT_BY_NHI"));
+            statement.setString(1, nhi);
+            statement.execute();
+        } catch (SQLException e) {
+
+        }
     }
 }

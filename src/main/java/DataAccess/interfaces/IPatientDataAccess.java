@@ -16,5 +16,9 @@ public interface IPatientDataAccess {
 
     public Patient getPatientByNhi(String nhi);
 
+    public boolean deletePatient(Patient patient);
+
     List<Patient> searchPatient(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
+
+    public void deletePatientByNhi(String nhi);
 }
