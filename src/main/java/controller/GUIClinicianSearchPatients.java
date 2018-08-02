@@ -165,8 +165,10 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     .getSelectedItem() != null) {
                 try {
                     UserControl userControl = new UserControl();
-                    userControl.setTargetUser(patientDataTable.getSelectionModel()
-                            .getSelectedItem());
+                    userControl.setTargetUser(patientDataTable.getSelectionModel().getSelectedItem());
+                    DAOFactory daoFactory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
+                    daoFactory.getPatientDataAccess().savePatients(new ArrayList<Patient>(){{
+                        add(patientDataTable.getSelectionModel().getSelectedItem());}});
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     UndoableStage popUpStage = new UndoableStage();
                     //Set initial popup dimensions
