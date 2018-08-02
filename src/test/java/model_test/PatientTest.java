@@ -333,9 +333,9 @@ public class PatientTest implements Serializable {
      * Check the attributes have been set correctly upon patient obj creation
      */
     private void thenPatientHasAttributes(Patient patient) {
-        assertTrue(patient.getCREATED() != null);
+        assertNotNull(patient.getCREATED());
         assertEquals(patient.getFirstName(), "Bob");
-        assertEquals(patient.getMiddleNames(), null);
+        assertNull(patient.getMiddleNames());
         assertEquals(patient.getLastName(), "Wallace");
         assertEquals(patient.getBirth(), LocalDate.of(1995, 12, 31));
     }
