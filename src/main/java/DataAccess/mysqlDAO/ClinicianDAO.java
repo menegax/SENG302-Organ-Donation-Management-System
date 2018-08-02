@@ -35,7 +35,7 @@ public class ClinicianDAO implements IClinicianDataAccess {
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return false;
     }
@@ -58,7 +58,7 @@ public class ClinicianDAO implements IClinicianDataAccess {
                 return clinician;
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return null;
     }

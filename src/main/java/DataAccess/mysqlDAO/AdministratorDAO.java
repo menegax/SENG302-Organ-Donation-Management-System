@@ -5,7 +5,7 @@ import model.Administrator;
 
 import java.util.List;
 
-public class AdministatorDAO implements IAdministratorDataAccess {
+public class AdministratorDAO implements IAdministratorDataAccess {
 
     @Override
     public int updateAdministrator(List<Administrator> clinician) {

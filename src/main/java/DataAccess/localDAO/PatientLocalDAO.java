@@ -43,4 +43,9 @@ public class PatientLocalDAO implements IPatientDataAccess {
     public List<Patient> searchPatient(String searchTerm) {
         return null;
     }
+
+    @Override
+    public void deletePatientByNhi(String nhi) {
+
+    }
 }

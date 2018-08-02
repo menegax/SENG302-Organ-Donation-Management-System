@@ -2,7 +2,6 @@ package DataAccess.mysqlDAO;
 
 import DataAccess.factories.MySqlFactory;
 import DataAccess.interfaces.*;
-import com.sun.org.apache.regexp.internal.RE;
 import model.Disease;
 import model.Medication;
 import model.Patient;
@@ -23,7 +22,7 @@ public class PatientDAO  implements IPatientDataAccess {
     private IMedicationDataAccess medicationDataAccess;
     private IDiseaseDataAccess diseaseDataAccess;
     private IContactDataAccess contactDataAccess;
-    private ILogDataAccess logDataAccess;
+    private ILogDataAccess<PatientActionRecord> logDataAccess;
     private IProcedureDataAccess procedureDataAccess;
     private MySqlFactory mySqlFactory;
 
@@ -55,7 +54,7 @@ public class PatientDAO  implements IPatientDataAccess {
                 for (Disease disease : patient.getCurrentDiseases()) {
                     diseaseDataAccess.updateDisease(patient.getNhiNumber(), disease);
                 }
-                logDataAccess.updateLogs(patient.getUserActionsList(), patient.getNhiNumber());
+                logDataAccess.saveLogs(patient.getUserActionsList(), patient.getNhiNumber());
                 contactDataAccess.updateContact(patient);
                 connection.commit(); //commit if no errors
             }

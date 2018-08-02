@@ -10,7 +10,7 @@ public interface IPatientDataAccess {
 
     public  boolean addPatientsBatch (List<Patient> patient);
 
-    public List<Patient> getPatients ();
+    public List<Patient> getPatients();
 
     public Patient getPatientByNhi(String nhi);
 

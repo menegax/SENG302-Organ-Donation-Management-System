@@ -260,8 +260,7 @@ public class GUIPatientMedications extends UndoableController {
     @SuppressWarnings("WeakerAccess")
     public void autoComplete() {
         Platform.runLater(() -> { // run this on the FX thread (next available)
-            getDrugSuggestions(newMedication.getText()
-                    .trim()); //possibly able to run this on the timer thread
+            getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread
             displayDrugSuggestions();//UPDATE UI
         });
     }
