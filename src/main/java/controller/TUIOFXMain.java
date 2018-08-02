@@ -36,7 +36,7 @@ public class TUIOFXMain extends Application {
        UndoableStage stage = new UndoableStage();
        ScreenControl screenControl = ScreenControl.getScreenControl();
        screenControl.setTouchStage(stage);
-       screenControl.addStage(uuid, stage);
+//       screenControl.addStage(uuid, stage);
        Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
        screenControl.show(uuid, loginScreen);
 
@@ -49,6 +49,7 @@ public class TUIOFXMain extends Application {
                 .createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         openKeyboard();
         TuioFX tuioFX = new TuioFX(stage, Configuration.debug());
+        tuioFX.enableMTWidgets(true);
         tuioFX.start();
         stage.setResizable(true);
         stage.setFullScreen(true);

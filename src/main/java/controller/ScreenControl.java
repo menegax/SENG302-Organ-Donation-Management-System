@@ -1,11 +1,6 @@
 package controller;
 
-import static java.util.logging.Level.*;
-import static utility.SystemLogger.systemLogger;
-
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,7 +9,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.User;
 import utility.undoRedo.UndoableStage;
@@ -157,10 +151,7 @@ public class ScreenControl {
 
 
     public void setTouchStage(UndoableStage touchStage) {
-        this.touchStage = touchStage;
-        touchPane = new Pane();
-//        touchScene = new Scene(touchPane);
-        this.touchStage.setScene(new Scene(touchPane));
+
     }
 
     /**

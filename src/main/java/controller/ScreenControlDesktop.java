@@ -165,15 +165,6 @@ public class ScreenControlDesktop extends ScreenControl {
         main = mainScene;
     }
 
-
-    public void setTouchStage(UndoableStage touchStage) {
-        setTouch(true);
-        this.touchStage = touchStage;
-        touchPane = new Pane();
-//        touchScene = new Scene(touchPane);
-        this.touchStage.setScene(new Scene(touchPane));
-    }
-
     /**
      * Add screen to the hash map of screens
      *
@@ -342,25 +333,13 @@ public class ScreenControlDesktop extends ScreenControl {
     void setUpNewLogin() {
         // UNTIL WE SUPPORT MULTI USER LOGIN
         try {
-            if(touchStage != null) {
-//                ScreenControl screenControl = ScreenControl.getScreenControl();
-//                touchPane.getChildren().clear();
-//                System.out.println(touchPane.getChildren().size());
-//                Pane loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-//                screenControl.show(touchStage.getUUID(), loginScreen);
-//                System.out.println(touchPane.getChildren().size());
-                Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-                touchStage.setScene(new Scene(root));
-                touchStage.show();
-            } else {
-                ScreenControl screenControl = ScreenControl.getScreenControl();
-                Pane loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-                screenControl.addStage(Main.getUuid(), new Stage());
-                screenControl.show(Main.getUuid(), loginScreen);
-            }
+            ScreenControl screenControl = ScreenControl.getScreenControl();
+            Pane loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+            screenControl.addStage(Main.getUuid(), new Stage());
+            screenControl.show(Main.getUuid(), loginScreen);
         }
         catch (IOException e) {
-            systemLogger.log(SEVERE, "Failed to recreate login scene");
+            systemLogger.log(SEVERE, "Failed to recreate login scene in desktop application");
         }
     }
 
@@ -427,11 +406,4 @@ public class ScreenControlDesktop extends ScreenControl {
         return userStages.get(user);
     }
 
-    public void setTouch(boolean touch) {
-        isTouch = touch;
-    }
-
-    public boolean getTouch() {
-        return isTouch;
-    }
 }
