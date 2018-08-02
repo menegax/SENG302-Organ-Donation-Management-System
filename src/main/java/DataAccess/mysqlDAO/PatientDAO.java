@@ -15,9 +15,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class PatientDAO  implements IPatientDataAccess {
+import static utility.GlobalEnums.FilterOption.*;
+
+public class PatientDAO implements IPatientDataAccess {
 
     private IMedicationDataAccess medicationDataAccess;
     private IDiseaseDataAccess diseaseDataAccess;
@@ -78,7 +81,7 @@ public class PatientDAO  implements IPatientDataAccess {
 
     @Override
     public Patient getPatientByNhi(String nhi) {
-        try (Connection connection = mySqlFactory.getConnectionInstance()){
+        try (Connection connection = mySqlFactory.getConnectionInstance()) {
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_BY_NHI"));
             statement.setString(1, nhi);
@@ -98,19 +101,22 @@ public class PatientDAO  implements IPatientDataAccess {
     }
 
     @Override
-    public List<Patient> searchPatient(String searchTerm) {
+    public List<Patient> searchPatient(String searchTerm, Map<FilterOption, String> filters, int numResults) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             List<Patient> results = new ArrayList<>();
             connection.setAutoCommit(false);
             PreparedStatement statement;
             if (searchTerm.equals("")) {
-                statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS"));
+                statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS_FILTERED").replaceAll("%FILTER%", getFilterString(filters)));
+                statement.setInt(1, numResults);
             } else {
-                statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS_FILTERED"));
+                statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS_FUZZY_FILTERED").replaceAll("%FILTER%", getFilterString(filters)));
                 for (int i = 1; i <= 5; i++) {
                     statement.setString(i, searchTerm);
                 }
+                statement.setInt(6, numResults);
             }
+            System.out.println(statement);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 List<String> contacts = contactDataAccess.getContactByNhi(resultSet.getString("Nhi"));
@@ -120,6 +126,44 @@ public class PatientDAO  implements IPatientDataAccess {
         } catch (SQLException e) {
             return null;
         }
+    }
+
+    private String getFilterString(Map<FilterOption, String> filters) {
+        if (filters == null) {
+            return "1=1";
+        }
+        StringBuilder query = new StringBuilder();
+        for (FilterOption filterOption : filters.keySet()) {
+            switch(filterOption) {
+                case AGELOWER:
+                    query.append(String.format("timestampdiff(YEAR, birth, now()) >= %d", Integer.valueOf(filters.get(AGELOWER))));
+                    break;
+                case AGEUPPER:
+                    query.append(String.format("timestampdiff(YEAR, birth, now()) <= %d", Integer.valueOf(filters.get(AGEUPPER))));
+                    break;
+                case BIRTHGENDER:
+                    query.append(String.format("birthgender = '%s'", filters.get(BIRTHGENDER)));
+                    break;
+                case REGION:
+                    query.append(String.format("EXISTS (SELECT * FROM tblContacts WHERE nhi=b.Nhi and Region='%s')", filters.get(REGION)));
+                    break;
+                case DONOR:
+                    query.append(String.format("DonatingOrgans %s ''", Boolean.valueOf(filters.get(DONOR)) ? "<>" : "="));
+                    break;
+                case RECIEVER:
+                    query.append(String.format("RecievingOrgans %s ''", Boolean.valueOf(filters.get(RECIEVER)) ? "<>" : "="));
+                    break;
+                case DONATIONS:
+                    query.append(String.format("FIND_IN_SET('%s', DonatingOrgans) > 0", filters.get(DONATIONS)));
+                    break;
+                case REQUESTEDDONATIONS:
+                    query.append(String.format("FIND_IN_SET('%s', RecievingOrgans) > 0", filters.get(REQUESTEDDONATIONS)));
+                    break;
+            }
+            query.append(" AND ");
+        }
+        query.append("1=1");
+        return query.toString();
     }
 
 
@@ -154,8 +198,26 @@ public class PatientDAO  implements IPatientDataAccess {
 
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts, List<PatientActionRecord> logs,
                                            List<Disease> diseases, List<Procedure> procedures, List<Medication> medications) throws SQLException {
-
-        Patient patient = constructMinimalPatientObject(attributes);
+        String nhi = attributes.getString("Nhi");
+        String fName = attributes.getString("FName");
+        ArrayList<String> mNames = new ArrayList<>(Arrays.asList(attributes.getString("MName").split(" ")));
+        String lName = attributes.getString("LName");
+        LocalDate birth = LocalDate.parse(attributes.getString("Birth"));
+        Timestamp created = Timestamp.valueOf(attributes.getString("Created"));
+        Timestamp modified = Timestamp.valueOf(attributes.getString("Modified"));
+        LocalDate death = attributes.getString("Death") != null ? LocalDate.parse(attributes.getString("Death")) : null;
+        String prefName = attributes.getString("PrefName");
+        //map enum and organ groups
+        BirthGender gender = null;
+        if (attributes.getString("BirthGender") != null) {
+            gender = attributes.getString("BirthGender").equals("M") ? BirthGender.MALE : BirthGender.FEMALE;
+        }
+        PreferredGender preferredGender = null;
+        if (attributes.getString("PrefGender") != null) {
+            preferredGender = attributes.getString("PrefGender").equals("F") ? PreferredGender.WOMAN :
+                    (attributes.getString("PrefGender").equals("M") ? PreferredGender.MAN : PreferredGender.NONBINARY);
+        }
+        Patient patient = new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName);
         patient.setHeight(Double.parseDouble(attributes.getString("Height")) / 100);
         patient.setHeight(Double.parseDouble(attributes.getString("Weight")));
         patient.setBloodGroup(attributes.getString("BloodType") != null ?
@@ -185,7 +247,6 @@ public class PatientDAO  implements IPatientDataAccess {
         });
         patient.setCurrentMedications(currentMedication);
         patient.setMedicationHistory(pastMedication);
-
         //map diseases
         List<Disease> currentDiseases = new ArrayList<>();
         List<Disease> pastDiseases = new ArrayList<>();
@@ -197,7 +258,6 @@ public class PatientDAO  implements IPatientDataAccess {
                 pastDiseases.add(x);
             }
         });
-
         //map contact info etc
         patient.setRegion(contacts.get(3) != null ? Region.getEnumFromString(contacts.get(3)) : null);
         patient.setZip(contacts.get(4) == null ? 0 : Integer.parseInt(contacts.get(4)));
@@ -221,28 +281,4 @@ public class PatientDAO  implements IPatientDataAccess {
         return patient;
     }
 
-    private Patient constructMinimalPatientObject(ResultSet attributes) throws SQLException {
-        String nhi = attributes.getString("Nhi");
-        String fName = attributes.getString("FName");
-        ArrayList<String> mNames = new ArrayList<>(Arrays.asList(attributes.getString("MName").split(" ")));
-        String lName = attributes.getString("LName");
-        LocalDate birth = LocalDate.parse(attributes.getString("Birth"));
-        Timestamp created = Timestamp.valueOf(attributes.getString("Created"));
-        Timestamp modified = Timestamp.valueOf(attributes.getString("Modified"));
-        LocalDate death = attributes.getString("Death") != null ? LocalDate.parse(attributes.getString("Death")) : null;
-        String prefName = attributes.getString("PrefName");
-
-        //map enum and organ groups
-        BirthGender gender = null;
-        if (attributes.getString("BirthGender") != null) {
-            gender = attributes.getString("BirthGender").equals("M") ? BirthGender.MALE : BirthGender.FEMALE;
-        }
-
-        PreferredGender preferredGender = null;
-        if (attributes.getString("PrefGender") != null) {
-            preferredGender = attributes.getString("PrefGender").equals("F") ? PreferredGender.WOMAN :
-                    (attributes.getString("PrefGender").equals("M") ? PreferredGender.MAN : PreferredGender.NONBINARY);
-        }
-        return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName);
-    }
 }
