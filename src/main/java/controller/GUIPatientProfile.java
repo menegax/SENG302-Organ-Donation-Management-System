@@ -139,7 +139,6 @@ public class GUIPatientProfile {
      *
      * */
     public void initialize(){
-        User user;
         PatientServiceImpl patientService = new PatientServiceImpl();
         Patient patient = patientService.getLoggedInPatient();
         if (patient != null) {
@@ -158,35 +157,22 @@ public class GUIPatientProfile {
             firstNameLbl.setVisible(false);
             firstNameValue.setVisible(false);
             firstNameRow.setMaxHeight(0);
-            user = userControl.getLoggedInUser();
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
-
-        }
-//        } else if () { //use clinician service
-//
-//        }
-
-        if (userControl.getLoggedInUser() instanceof Patient) {
-            if (patient.getRequiredOrgans().size() == 0) {
-
-            }
-
 
         } else if (userControl.getLoggedInUser() instanceof Clinician) {
             deleteButton.setVisible( false );
             deleteButton.setDisable( true );
-            user = userControl.getTargetUser();
-        } else {
-            user = userControl.getTargetUser();
+            patient = (Patient) userControl.getTargetUser();
         }
-//        try {
-//            assert user != null;
-//            loadProfile(((Patient) user));
-//        }
-//        catch (IOException e) {
-//            userActions.log(Level.SEVERE, "Cannot load patient profile");
-//        }
+        try {
+            if (patient != null) {
+                loadProfile(patient);
+            }
+        }
+        catch (IOException e) {
+            userActions.log(Level.SEVERE, "Cannot load patient profile");
+        }
     }
 
 

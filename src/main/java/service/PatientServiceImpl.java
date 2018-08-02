@@ -1,6 +1,5 @@
 package service;
 
-import BuisnessRules.BRPatient;
 import DataAccess.factories.DAOFactory;
 import DataAccess.interfaces.IPatientDataAccess;
 import controller.UserControl;
@@ -18,15 +17,19 @@ public class PatientServiceImpl {
         mysqlFactory = DAOFactory.getDAOFactory(FactoryType.MYSQL);
         localDbFactory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
     }
+
     public Patient getLoggedInPatient() {
         IPatientDataAccess patientDataAccess;
          if (userControl.getLoggedInUser() instanceof Patient){
+             String nhi = ((Patient) userControl.getLoggedInUser()).getNhiNumber();
               patientDataAccess = localDbFactory.getPatientDataAccess();
-         } else {
-             patientDataAccess = mysqlFactory.getPatientDataAccess();
+              Patient patient = patientDataAccess.getPatientByNhi(nhi);
+              if (patient != null) { //if local db does not contain patient
+                  return patient;
+              }
+              return mysqlFactory.getPatientDataAccess().getPatientByNhi(nhi); //get from remote
          }
-        BRPatient patientLogic = new BRPatient(patientDataAccess);
-        return patientLogic.getPatientByNhi(((Patient)userControl.getLoggedInUser()).getNhiNumber());
+         return null;
     }
 
 }

@@ -296,7 +296,7 @@ public class PatientDAO implements IPatientDataAccess {
         patient.setContactWorkPhone(contacts.get(12));
         patient.setContactMobilePhone(contacts.get(13));
         patient.setContactEmailAddress(contacts.get(14));
-        patient.setUserActionsList(logs);
+        patient.setUserActionsList(logs == null ? new ArrayList<>() : logs);
         patient.setProcedures(procedures);
         return patient;
     }
