@@ -5,19 +5,21 @@ import model.Clinician;
 import model.Patient;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class LocalDB {
     private static LocalDB instance;
 
-    private List<Patient> patients;
-    private List<Clinician> clinicians;
-    private List<Administrator> administrators;
+    private Set<Patient> patients;
+    private Set<Clinician> clinicians;
+    private Set<Administrator> administrators;
 
     private LocalDB() {
-        patients = new ArrayList<>();
-        clinicians = new ArrayList<>();
-        administrators = new ArrayList<>();
+        patients = new HashSet<>();
+        clinicians = new HashSet<>();
+        administrators = new HashSet<>();
     }
 
     public static LocalDB getInstance() {
@@ -27,7 +29,7 @@ public class LocalDB {
         return instance;
     }
 
-    public List<Patient> getPatients() {
+    public Set<Patient> getPatients() {
         return patients;
     }
 
@@ -40,7 +42,7 @@ public class LocalDB {
         return null;
     }
 
-    public List<Clinician> getClinicians() {
+    public Set<Clinician> getClinicians() {
         return clinicians;
     }
 
@@ -53,7 +55,7 @@ public class LocalDB {
         return null;
     }
 
-    public List<Administrator> getAdministrators() {
+    public Set<Administrator> getAdministrators() {
         return administrators;
     }
 
@@ -74,17 +76,8 @@ public class LocalDB {
      * @param patient - The updated/new patient object
      */
     public void storePatient(Patient patient) {
-        Integer index = null;
-        for (int i=0; index == null && i<patients.size(); i++) {
-            if (patients.get(i).getNhiNumber().toLowerCase().equals(patient.getNhiNumber().toLowerCase())) {
-                index = i;
-            }
-        }
-        if (index != null) {
-            patients.set(index, patient);
-        } else {
-            patients.add(patient);
-        }
+        patients.remove(patient);
+        patients.add(patient);
     }
 
     /**
@@ -95,17 +88,8 @@ public class LocalDB {
      * @param clinician - The updated/new clinician object
      */
     public void storeClinician(Clinician clinician) {
-        Integer index = null;
-        for (int i=0; index == null && i<=clinicians.size(); i++) {
-            if (clinicians.get(i).getStaffID() == clinician.getStaffID()) {
-                index = i;
-            }
-        }
-        if (index != null) {
-            clinicians.set(index, clinician);
-        } else {
-            clinicians.add(clinician);
-        }
+        clinicians.remove(clinician);
+        clinicians.add(clinician);
     }
 
     /**
@@ -116,16 +100,7 @@ public class LocalDB {
      * @param administrator - The updated/new administrator object
      */
     public void storeAdministrator(Administrator administrator) {
-        Integer index = null;
-        for (int i=0; index == null && i<=administrators.size(); i++) {
-            if (administrators.get(i).getUsername().toLowerCase().equals(administrator.getUsername().toLowerCase())) {
-                index = i;
-            }
-        }
-        if (index != null) {
-            administrators.set(index, administrator);
-        } else {
-            administrators.add(administrator);
-        }
+        administrators.remove(administrator);
+        administrators.add(administrator);
     }
 }

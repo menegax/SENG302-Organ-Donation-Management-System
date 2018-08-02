@@ -125,6 +125,7 @@ public class PatientDAO implements IPatientDataAccess {
                 List<String> contacts = contactDataAccess.getContactByNhi(resultSet.getString("Nhi"));
                 results.add(constructPatientObject(resultSet, contacts));
             }
+            
             return results;
         } catch (SQLException e) {
             return null;

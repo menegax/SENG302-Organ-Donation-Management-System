@@ -20,6 +20,8 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.RAMDirectory;
+
+import DataAccess.LocalDB;
 import service.Database;
 
 import java.io.IOException;
@@ -46,12 +48,12 @@ public class Searcher {
 
     private static Searcher instance = null;
 
-    private Database database;
+    private LocalDB database;
 
     public Searcher() {
         try {
             indexWriter = initializeWriter();
-            database = Database.getDatabase();
+            database = LocalDB.getInstance();
             systemLogger.log(Level.INFO, "Successfully initialized index writer.");
         } catch (IOException e) {
             systemLogger.log(Level.SEVERE, "Failed to initialize index writer.");
@@ -283,7 +285,7 @@ public class Searcher {
      */
     private Patient fetchPatient(Document doc) throws InvalidObjectException {
         String nhi = doc.get("nhi");
-        return database.getPatientByNhi(nhi);
+        return database.getPatientByNHI(nhi);
     }
 
     /**
@@ -295,7 +297,7 @@ public class Searcher {
      */
     private Clinician fetchClinician(Document doc) throws InvalidObjectException {
     	int staffID = Integer.valueOf(doc.get("staffid"));
-    	return database.getClinicianByID(staffID);
+    	return database.getClinicianByStaffID(staffID);
     }
 
     /**
@@ -436,6 +438,7 @@ public class Searcher {
         List<User> results = new ArrayList<>();
         if (input.isEmpty()) {
             if (filter != null) {
+            	//TODO does not work if numResults is over 30
                 if (numResults < getDefaultResults(types, filter).size()) {
                     return getDefaultResults(types, filter).subList(0, numResults);
                 } else {
