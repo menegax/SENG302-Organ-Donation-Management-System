@@ -5,8 +5,10 @@ import DataAccess.factories.LocalDatabaseFactory;
 import DataAccess.interfaces.IPatientDataAccess;
 import model.Patient;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import utility.GlobalEnums;
 
 import java.util.List;
+import java.util.Map;
 
 public class PatientLocalDAO implements IPatientDataAccess {
 
@@ -41,7 +43,7 @@ public class PatientLocalDAO implements IPatientDataAccess {
     }
 
     @Override
-    public List<Patient> searchPatient(String searchTerm) {
+    public List<Patient> searchPatient(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults) {
         return null;
     }
 

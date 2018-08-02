@@ -2,6 +2,8 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 
+import DataAccess.factories.DAOFactory;
+import DataAccess.interfaces.IPatientDataAccess;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -101,6 +103,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
     private int numResults = 30;
 
+    IPatientDataAccess patientDataAccess;
+
     /**
      * Initialises the data within the table to all patients
      *
@@ -109,6 +113,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
+        DAOFactory factory = DAOFactory.getDAOFactory(FactoryType.MYSQL);
+        patientDataAccess = factory.getPatientDataAccess();
     	displayY.setText( "Display all " + searcher.getDefaultResults(new UserTypes[]{UserTypes.PATIENT}, null).size() + " profiles" );
         setupAgeSliderListeners();
         populateDropdowns();
@@ -224,10 +230,15 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         // 2. Set the filter Predicate whenever the filter changes.
         searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             masterData.clear();
-            List<User> results = searcher.search(newValue, new UserTypes[]{UserTypes.PATIENT}, numResults, filter);
-            for (User user : results) {
-                masterData.add((Patient) user);
-            }
+            //List<User> results = searcher.search(newValue, new UserTypes[]{UserTypes.PATIENT}, numResults, filter);
+            //for (User user : results) {
+                //masterData.add((Patient) user);
+            //}
+            List<Patient> results = patientDataAccess.searchPatient(searchEntry.getText(), null, numResults);
+            System.out.println(results.size());
+            masterData.clear();
+            patientDataTable.refresh();
+            masterData.addAll(results);
             filteredData.setPredicate(patient -> true);
         });
 
