@@ -404,13 +404,35 @@ public class Searcher {
     }
 
     /**
+     * Creates the users from the ScoreDocs, adds them to a SortedSet and returns it.
+     * @param allDocs List of ScoreDocs from the search results.
+     * @param numResults The maximum number of results wanted.
+     * @return SortedSet of the Users created from the ScoreDocs.
+     */
+    private SortedSet<User> createUsers(List<ScoreDoc> allDocs, int numResults) {
+    	SortedSet<User> users = new TreeSet<>();
+    	User user;
+    	int docCount = 0;
+    	int userCount = 0;
+    	while (docCount < allDocs.size() && userCount < numResults) {
+    		user = fetchUser(allDocs.get(docCount));
+    		if (users.add(user)) {
+    			userCount += 1;
+    		}
+    		docCount += 1;
+    	}
+    	return users;
+    }
+    
+    /**
      * Creates the User objects from their relevant ScoreDoc objects.
      *
      * @param allDocs    The List of ScoreDoc objects.
      * @param numResults The maximum number of search results to retrieve.
      * @return A List of User objects.
      */
-    private List<User> createUsers(List<ScoreDoc> allDocs, int numResults) {
+    @Deprecated
+    private List<User> oldCreateUsers(List<ScoreDoc> allDocs, int numResults) {
         List<User> results = new ArrayList<User>();
         User user;
         int docCount = 0;
@@ -427,6 +449,45 @@ public class Searcher {
     }
 
     /**
+     * New search method for use with the DAO database.
+     * @param searchTerm The input user search.
+     * @param types The types of user for the search to find.
+     * @param numResults The maximum number of results of the search.
+     * @param filter A optional filter to apply to the search.
+     * @return A Map with the distance of the results as the key and a SortedSet of the results, as User objects, as the value.
+     */
+    public Map<Integer, SortedSet<User>> search(String searchTerm, UserTypes[] types, int numResults, Map<FilterOption, String> filter) {
+    	Map<Integer, SortedSet<User>> results = new HashMap<>();
+    	
+    	String[] terms = searchTerm.split(" ");
+    	List<FuzzyQuery> queries = new ArrayList<>();
+    	
+        queries.addAll(createQueries("nhi", terms, 0));
+        queries.addAll(createQueries("staffid", terms, 0));
+        queries.addAll(createQueries("username", terms, 0));
+        
+        List<ScoreDoc> allDocs;
+        SortedSet<User> users;
+        
+    	int distance = 0;
+    	while (distance <= 2) {
+            queries.addAll(createQueries("fName", terms, distance));
+            queries.addAll(createQueries("mName", terms, distance));
+            queries.addAll(createQueries("lName", terms, distance));
+    		
+            allDocs = getScoreDocs(queries, types);
+            allDocs = sortScoreDocs(allDocs);
+            users = createUsers(allDocs, numResults);
+            if (filter != null) {
+            	users = filterUsers(users, filter);
+            }
+            results.put(distance, users);
+    		distance += 1;
+    	}
+    	return results;
+    }
+    
+    /**
      * Searches the search index for the input String.
      *
      * @param input      The String to search by.
@@ -434,7 +495,8 @@ public class Searcher {
      * @param numResults The maximum number of search results to find.
      * @return The search results as a List of User objects.
      */
-    public List<User> search(String input, UserTypes[] types, int numResults, Map<FilterOption, String> filter) {
+    @Deprecated
+    public List<User> oldSearch(String input, UserTypes[] types, int numResults, Map<FilterOption, String> filter) {
         List<User> results = new ArrayList<>();
         if (input.isEmpty()) {
             if (filter != null) {
@@ -461,7 +523,7 @@ public class Searcher {
         List<ScoreDoc> allDocs = getScoreDocs(queries, types);
         allDocs = sortScoreDocs(allDocs);
 
-        results = createUsers(allDocs, numResults);
+        results = oldCreateUsers(allDocs, numResults);
 
         List<User> filteredResults = new ArrayList<>();
         if (filter != null) {
@@ -477,13 +539,28 @@ public class Searcher {
     }
 
     /**
+     * Filters a SortedSet of Users by set filters.
+     * @param users SortedSet of User objects.
+     * @param filter Map of the filter to use.
+     * @return SortedSet of Users after the filter has been applied.
+     */
+    private SortedSet<User> filterUsers(SortedSet<User> users, Map<FilterOption, String> filter) {
+    	for (User user : users) {
+    		if (!matchesFilter((Patient)user, filter)) {
+    			users.remove(user);
+    		}
+    	}
+    	return users;
+    }
+    
+    /**
      * Check if a patient matches the filter criteria
      *
      * @param patient - patient to check filter against
      * @param filter  - filter to use
      * @return - bool if a match
      */
-    private static boolean matchesFilter(Patient patient, Map<GlobalEnums.FilterOption, String> filter) {
+    private boolean matchesFilter(Patient patient, Map<GlobalEnums.FilterOption, String> filter) {
         if (filter == null) {
             return false;
         }
