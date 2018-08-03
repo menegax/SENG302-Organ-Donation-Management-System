@@ -19,7 +19,7 @@ import java.util.logging.Level;
 
 public class APIGoogleMaps {
 
-    private static APIGoogleMaps apiGoogleMaps;
+    private static APIGoogleMaps apiGoogleMaps = null;
 
     private static String placeApiKey = "AIzaSyDBlnI4yksZyDRL2y7le6SnRymPfTHRTRQ";
 
@@ -30,40 +30,23 @@ public class APIGoogleMaps {
 
 
     private APIGoogleMaps() {
-        //todo make into proper singleton
+
     }
 
-
-    public static void main(String[] ars) throws InterruptedException, ApiException, IOException, ExecutionException {
-
-        GeocodingResult[] results = GeocodingApi.geocode(context, "1600 Amphitheatre Parkway Mountain View, CA 94043")
-                .await();
-        Gson gson = new GsonBuilder().setPrettyPrinting()
-                .create();
-
-        double lat = results[0].geometry.location.lat;
-        double lng = results[0].geometry.location.lng;
-
-        System.out.println("Lat: " + lat);
-        System.out.println("Lng: " + lng);
-        System.out.println("Location: " + results[0].geometry.location);
-
-        System.out.println("SUP: " + getLatLng("hey"));
-    }
-
-
-    public APIGoogleMaps getApiGoogleMaps() {
+    public static APIGoogleMaps getInstance() {
+        if (apiGoogleMaps == null) {
+            apiGoogleMaps = new APIGoogleMaps();
+        }
         return apiGoogleMaps;
     }
 
-
-    public static LatLng getLatLng(String address) throws InterruptedException, ExecutionException {
+    public  LatLng getLatLng(String address) throws InterruptedException, ExecutionException {
         //todo should this be caught? or method thrown?
 
         CachedThreadPool pool = CachedThreadPool.getCachedThreadPool();
 
         Callable<LatLng> task = () -> {
-            GeocodingResult[] results = GeocodingApi.geocode(context, "1600 Amphitheatre Parkway Mountain View, CA 94043")
+            GeocodingResult[] results = GeocodingApi.geocode(context, address)
                     .await();
             return results[0].geometry.location;
 
