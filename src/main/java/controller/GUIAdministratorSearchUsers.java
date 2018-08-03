@@ -103,7 +103,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
                     popUpStage.setOnHiding(event -> {
                         Platform.runLater(this::tableRefresh);
                         masterData.clear();
-                        masterData.addAll(Searcher.getSearcher().search(searchEntry.getText(),
+                        masterData.addAll(Searcher.getSearcher().oldSearch(searchEntry.getText(),
                                 new UserTypes[]{UserTypes.PATIENT}, NUMRESULTS, null));
                         userControl.clearTargetUser();
                     });
@@ -153,7 +153,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
             if (newValue == null || newValue.isEmpty()) {
                 results = searcher.getDefaultResults(new UserTypes[] { UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN }, null);
             } else {
-                results = searcher.search(newValue, new UserTypes[] { UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN }, NUMRESULTS, null);
+                results = searcher.oldSearch(newValue, new UserTypes[] { UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN }, NUMRESULTS, null);
             }
             masterData.addAll(results);
             filteredData.setPredicate(patient -> true);
@@ -184,7 +184,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
-                    List<User> results = searcher.search(newValue, new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, NUMRESULTS, null);
+                    List<User> results = searcher.oldSearch(newValue, new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, NUMRESULTS, null);
                     return results.contains(user);
                 }));
     }

@@ -6,6 +6,7 @@ import model.Disease;
 import model.Medication;
 import model.Patient;
 import model.Procedure;
+import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.ResourceManager;
@@ -111,13 +112,11 @@ public class PatientDAO implements IPatientDataAccess {
             PreparedStatement statement;
             if (searchTerm.equals("")) {
                 statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS_FILTERED").replaceAll("%FILTER%", getFilterString(filters)));
-                statement.setInt(1, numResults);
             } else {
                 statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS_FUZZY_FILTERED").replaceAll("%FILTER%", getFilterString(filters)));
                 for (int i = 1; i <= 5; i++) {
                     statement.setString(i, searchTerm);
                 }
-                statement.setInt(6, numResults);
             }
             System.out.println(statement);
             ResultSet resultSet = statement.executeQuery();
@@ -125,7 +124,7 @@ public class PatientDAO implements IPatientDataAccess {
                 List<String> contacts = contactDataAccess.getContactByNhi(resultSet.getString("Nhi"));
                 results.add(constructPatientObject(resultSet, contacts));
             }
-            
+            System.out.println(results.size());
             return results;
         } catch (SQLException e) {
             return null;
@@ -154,33 +153,35 @@ public class PatientDAO implements IPatientDataAccess {
         }
         StringBuilder query = new StringBuilder();
         for (FilterOption filterOption : filters.keySet()) {
-            switch(filterOption) {
-                case AGELOWER:
-                    query.append(String.format("timestampdiff(YEAR, birth, now()) >= %d", Integer.valueOf(filters.get(AGELOWER))));
-                    break;
-                case AGEUPPER:
-                    query.append(String.format("timestampdiff(YEAR, birth, now()) <= %d", Integer.valueOf(filters.get(AGEUPPER))));
-                    break;
-                case BIRTHGENDER:
-                    query.append(String.format("birthgender = '%s'", filters.get(BIRTHGENDER)));
-                    break;
-                case REGION:
-                    query.append(String.format("EXISTS (SELECT * FROM tblContacts WHERE nhi=b.Nhi and Region='%s')", filters.get(REGION)));
-                    break;
-                case DONOR:
-                    query.append(String.format("DonatingOrgans %s ''", Boolean.valueOf(filters.get(DONOR)) ? "<>" : "="));
-                    break;
-                case RECIEVER:
-                    query.append(String.format("RecievingOrgans %s ''", Boolean.valueOf(filters.get(RECIEVER)) ? "<>" : "="));
-                    break;
-                case DONATIONS:
-                    query.append(String.format("FIND_IN_SET('%s', DonatingOrgans) > 0", filters.get(DONATIONS)));
-                    break;
-                case REQUESTEDDONATIONS:
-                    query.append(String.format("FIND_IN_SET('%s', RecievingOrgans) > 0", filters.get(REQUESTEDDONATIONS)));
-                    break;
+            if (!filters.get(filterOption).equals(GlobalEnums.NONE_ID)) {
+                switch (filterOption) {
+                    case AGELOWER:
+                        query.append(String.format("timestampdiff(YEAR, birth, now()) >= %d", Double.valueOf(filters.get(AGELOWER)).intValue()));
+                        break;
+                    case AGEUPPER:
+                        query.append(String.format("timestampdiff(YEAR, birth, now()) <= %d", Double.valueOf(filters.get(AGEUPPER)).intValue()));
+                        break;
+                    case BIRTHGENDER:
+                        query.append(String.format("birthgender = '%s'", filters.get(BIRTHGENDER)));
+                        break;
+                    case REGION:
+                        query.append(String.format("EXISTS (SELECT * FROM tblContacts WHERE nhi=b.Nhi and Region='%s')", filters.get(REGION)));
+                        break;
+                    case DONOR:
+                        query.append(String.format("DonatingOrgans %s ''", Boolean.valueOf(filters.get(DONOR)) ? "<>" : "="));
+                        break;
+                    case RECIEVER:
+                        query.append(String.format("ReceivingOrgans %s ''", Boolean.valueOf(filters.get(RECIEVER)) ? "<>" : "="));
+                        break;
+                    case DONATIONS:
+                        query.append(String.format("FIND_IN_SET('%s', DonatingOrgans) > 0", filters.get(DONATIONS)));
+                        break;
+                    case REQUESTEDDONATIONS:
+                        query.append(String.format("FIND_IN_SET('%s', ReceivingOrgans) > 0", filters.get(REQUESTEDDONATIONS)));
+                        break;
+                }
+                query.append(" AND ");
             }
-            query.append(" AND ");
         }
         query.append("1=1");
         return query.toString();
