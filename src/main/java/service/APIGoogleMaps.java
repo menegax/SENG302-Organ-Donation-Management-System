@@ -1,21 +1,14 @@
 package service;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
-import com.google.maps.errors.ApiException;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 import utility.CachedThreadPool;
-import utility.SystemLogger;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
 
 public class APIGoogleMaps {
 
@@ -40,7 +33,8 @@ public class APIGoogleMaps {
         return apiGoogleMaps;
     }
 
-    public  LatLng getLatLng(String address) throws InterruptedException, ExecutionException {
+
+    public LatLng getLatLng(String address) throws InterruptedException, ExecutionException {
         //todo should this be caught? or method thrown?
 
         CachedThreadPool pool = CachedThreadPool.getCachedThreadPool();
@@ -52,7 +46,8 @@ public class APIGoogleMaps {
 
         };
 
-        Future<LatLng> results = pool.getThreadService().submit(task);
+        Future<LatLng> results = pool.getThreadService()
+                .submit(task);
 
         return results.get();
     }
