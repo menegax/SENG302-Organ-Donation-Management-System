@@ -1,5 +1,6 @@
 package controller;
 
+import com.google.maps.model.LatLng;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import model.Patient;
+import service.APIGoogleMaps;
 import service.Database;
 import utility.GlobalEnums.*;
 import utility.StatusObservable;
@@ -444,11 +446,26 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
 
         // death location
-        if (deathLocationTxt.getText() != null && !deathLocationTxt.getText().matches("([A-Za-z0-9]+[.]*[-]*[']*[\\s]*)*")) {
+        if (deathLocationTxt.getText() == null) { //todo test if null check req
+
+            // || !deathLocationTxt.getText()
+            //                .matches("([A-Za-z0-9]+[.]*[-]*[']*[\\s]*)*")
+
             valid = setInvalid(deathLocationTxt);
-            //todo repalce validation with google api validation
-        } else {
-            setValid(deathLocationTxt);
+        }
+        else {
+
+            try {
+                // todo google maps validation
+                APIGoogleMaps apiGoogleMaps = APIGoogleMaps.getInstance();
+                LatLng latLng = apiGoogleMaps.getLatLng(deathLocationTxt.getText()); //todo make the latLng var be set to patient profile instead of string version
+                setValid(deathLocationTxt);
+            }
+            catch (Exception e) {
+                valid = setInvalid(deathLocationTxt);
+                invalidContent.append("Couldn't validate from Google. "); //todo replace with something prettier
+            }
+
         }
 
         // if all are valid

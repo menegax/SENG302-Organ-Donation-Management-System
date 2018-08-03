@@ -1,5 +1,6 @@
 package controller;
 
+import com.google.maps.model.LatLng;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
+import service.APIGoogleMaps;
 import utility.GlobalEnums;
 
 import java.time.LocalDate;
@@ -248,6 +250,15 @@ public class GUIRequiredOrganDeregistrationReason {
             valid = setInvalid(locationDeathTxt);
         }
         else {
+            try {
+                APIGoogleMaps apiGoogleMaps = APIGoogleMaps.getInstance();
+                LatLng latLng = apiGoogleMaps.getLatLng(locationDeathTxt.getText()); //todo make the latLng var be set to patient profile instead of string version
+                setValid(locationDeathTxt);
+            }
+            catch (Exception e) {
+                valid = setInvalid(locationDeathTxt);
+            }
+
             setValid(locationDeathTxt);
         }
         if (valid) {
