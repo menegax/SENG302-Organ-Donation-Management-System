@@ -96,7 +96,6 @@ public class GUIHome implements Observer, TouchscreenCapable {
     public void initialize() {
         StatusObservable statusObservable = StatusObservable.getInstance();
         statusObservable.addObserver(this);
-        homePane.getProperties().put("useFocusArea", false);
         homePane.getProperties().put("focusArea", "true");
         horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty()
                 .addListener((observable1, oldStage, newStage) -> {
@@ -111,7 +110,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
      */
     private void addTabs(UndoableStage stage) {
         UserControl userControl = new UserControl();
-        stage.setChangingStates(true);
+//        stage.setChangingStates(true);
         try {
             // Patient viewing themself
             if (userControl.getLoggedInUser() instanceof Patient) {

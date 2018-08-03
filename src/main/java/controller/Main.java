@@ -4,6 +4,7 @@ import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
+import com.sun.javafx.css.StyleManager;
 import controller.ScreenControl;
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;
@@ -38,6 +39,7 @@ public class Main extends Application {
         // setup GUI
         ScreenControl screenControl = ScreenControl.getScreenControl();
         primaryStage.setTitle("Login");
+        StyleManager.getInstance().addUserAgentStylesheet("../../resources/css/guiStyle.css");
         screenControl.addStage(uuid, primaryStage);
         primaryStage.setResizable(false);
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));

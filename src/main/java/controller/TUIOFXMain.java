@@ -1,5 +1,6 @@
 package controller;
 
+import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,7 +12,9 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.tuiofx.Configuration;
+import org.tuiofx.internal.base.GestureHandler;
 import service.Database;
 import utility.Searcher;
 import utility.SystemLogger;
@@ -32,13 +35,13 @@ public class TUIOFXMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-       // set up GUI
-       UndoableStage stage = new UndoableStage();
-       ScreenControl screenControl = ScreenControl.getScreenControl();
-       screenControl.setTouchStage(stage);
+        // set up GUI
+        UndoableStage stage = new UndoableStage();
+        ScreenControl screenControl = ScreenControl.getScreenControl();
+        screenControl.setTouchStage(stage);
 //       screenControl.addStage(uuid, stage);
-       Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-       screenControl.show(uuid, loginScreen);
+        Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+        screenControl.show(uuid, loginScreen);
 
         Database.importFromDiskPatients("./patient.json");
         Database.importFromDiskClinicians("./clinician.json");
@@ -55,44 +58,10 @@ public class TUIOFXMain extends Application {
         stage.setFullScreen(true);
         stage.show();
 
-//        primaryStage = new UndoableStage();
-//        Pane mainPane = new Pane();
-//
-//        Pane loginPane = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-//
-//        Scene mainScene = new Scene(mainPane);
-//
-//        mainPane.getChildren().addAll(loginPane);
-////        mainPane.getChildren().addAll(userRegisterPane);
-//
-//        Button button = new Button();
-//        button.setText("Load register");
-//        mainPane.getChildren().addAll(button);
-//        button.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                try {
-//                    Pane userRegisterPane = FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml"));
-//                    mainPane.getChildren().addAll(userRegisterPane);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//        primaryStage.setScene(mainScene);
-//
-//        TuioFX tuioFX = new TuioFX(primaryStage, Configuration.debug());
-//        tuioFX.start();
-//
-//        primaryStage.show();
+        stage.setOnCloseRequest(event -> System.exit(0));
 
-
-
-        //        screenControl.setTouchStage(stage); //todo...
-
+        //Todo remove log here
         systemLogger.log(INFO, "Finished the start method for the touch screen app. Beginning app");
-//        stage.show();
     }
 
 
@@ -133,5 +102,6 @@ public class TUIOFXMain extends Application {
             }
         }
     }
+
 
 }

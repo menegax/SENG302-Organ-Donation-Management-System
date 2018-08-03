@@ -31,6 +31,7 @@ public class TouchPaneController {
      * @param zoomEvent zoom event
      */
     public void zoomPane(ZoomEvent zoomEvent) {
+        pane.toFront();
 //        Window currentWindow = ((Node)zoomEvent.getTarget()).getScene().getWindow();
         pane.setScaleX(pane.getScaleX() * zoomEvent.getZoomFactor());
 //        currentWindow.setWidth(currentWindow.getWidth() * zoomEvent.getZoomFactor());
@@ -44,6 +45,7 @@ public class TouchPaneController {
      * @param rotateEvent rotate event
      */
     public void rotatePane(RotateEvent rotateEvent) {
+        pane.toFront();
         pane.setRotate(pane.getRotate() + rotateEvent.getAngle() * 0.8);
     }
 
@@ -52,10 +54,9 @@ public class TouchPaneController {
      * @param scrollEvent scroll event
      */
     public void scrollPane(ScrollEvent scrollEvent) {
-//        if(!scrollEvent.isInertia()) {
-            pane.setTranslateX(pane.getTranslateX() + scrollEvent.getDeltaX());
-            pane.setTranslateY(pane.getTranslateY() + scrollEvent.getDeltaY());
-//        }
+        pane.toFront();
+        pane.setTranslateX(pane.getTranslateX() + scrollEvent.getDeltaX());
+        pane.setTranslateY(pane.getTranslateY() + scrollEvent.getDeltaY());
     }
 
 //    /**

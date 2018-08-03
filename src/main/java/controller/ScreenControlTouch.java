@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.tuiofx.examples.demo.TUIOFXDemoApp;
+import org.tuiofx.internal.test.TuioFXCanvasTest;
+import org.tuiofx.internal.test.TuioFXTestApp;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
@@ -45,11 +48,14 @@ class ScreenControlTouch extends ScreenControl {
     @Override
     public void show(UUID stageName, Parent root) {
         List<Node> nodes = new ArrayList<>(touchPane.getChildren());
+        root.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5; -fx-border-width: 1;");
         Pane newTouchPane = new Pane(root);
-        newTouchPane.getProperties().put("focusArea", "true");
+//        newTouchPane.getProperties().put("focusArea", "true");
         newTouchPane.getChildren().addAll(nodes);
         touchPane = newTouchPane;
-//        touchPane.getChildren().addAll(nodes);
+//        for(Node n : touchPane.getChildren()) {
+//            n.getProperties().put("usefocusArea", false);
+//        }
         touchStage.setScene(new Scene(touchPane));
 
         systemLogger.log(INFO, "Showing new touch stage scene");
@@ -62,12 +68,6 @@ class ScreenControlTouch extends ScreenControl {
     @Override
     void setUpNewLogin() {
         try {
-//        ScreenControl screenControl = ScreenControl.getScreenControl();
-//        touchPane.getChildren().clear();
-//        System.out.println(touchPane.getChildren().size());
-//        Pane loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-//        screenControl.show(touchStage.getUUID(), loginScreen);
-//        System.out.println(touchPane.getChildren().size());
             screenControl.setTouchStage(touchStage);
             Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
             touchPane = new Pane();
