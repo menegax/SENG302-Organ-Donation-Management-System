@@ -13,10 +13,7 @@ import utility.ResourceManager;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static utility.GlobalEnums.FilterOption.*;
@@ -40,7 +37,7 @@ public class PatientDAO implements IPatientDataAccess {
     }
 
     @Override
-    public int savePatients(List<Patient> patients) {
+    public int savePatients(Set<Patient> patients) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_QUERY"));
             for (Patient patient : patients) {
@@ -60,10 +57,9 @@ public class PatientDAO implements IPatientDataAccess {
                 }
                 logDataAccess.saveLogs(patient.getUserActionsList(), patient.getNhiNumber());
                 contactDataAccess.updateContact(patient);
-                connection.commit(); //commit if no errors
             }
-        } catch (SQLException ignore) {
-
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return 0;
     }
@@ -76,7 +72,7 @@ public class PatientDAO implements IPatientDataAccess {
 
 
     @Override
-    public List<Patient> getPatients() {
+    public Set<Patient> getPatients() {
         return null;
     }
 
@@ -202,14 +198,13 @@ public class PatientDAO implements IPatientDataAccess {
         statement.setString(11, patient.getPreferredName());
         statement.setString(12, String.valueOf(patient.getHeight()));
         statement.setString(13, String.valueOf(patient.getWeight()));
-        statement.setString(14, patient.getDeath() == null ? null : patient.getDeath().toString());
-        statement.setString(15, patient.getBloodGroup() == null ? null : patient.getBloodGroup().toString());
+        statement.setString(14, patient.getBloodGroup() == null ? null : patient.getBloodGroup().toString());
         List<String> donationList = patient.getDonations().stream().map(Organ::toString).collect(Collectors.toList());
         String donations = String.join(",", donationList).toLowerCase();
-        statement.setString(16, donations);
+        statement.setString(15, donations);
         List<String> organsList = patient.getRequiredOrgans().stream().map(Organ::toString).collect(Collectors.toList());
         String organs = String.join(",", organsList).toLowerCase();
-        statement.setString(17, organs);
+        statement.setString(16, organs);
         return statement;
     }
 

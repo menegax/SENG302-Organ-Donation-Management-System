@@ -2,33 +2,36 @@ package service;
 
 import DataAccess.factories.DAOFactory;
 import model.Patient;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums.*;
 
-public class PatientServiceImpl {
+import java.util.HashSet;
+
+
+/**
+ * Split this to Patient USE-CASES -> which call dao
+ */
+public class PatientDataService implements IPatientDataService {
 
     private DAOFactory mysqlFactory;
     private DAOFactory localDbFactory;
 
-    public PatientServiceImpl() {
+    public PatientDataService() {
         mysqlFactory = DAOFactory.getDAOFactory(FactoryType.MYSQL);
         localDbFactory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
     }
 
-
-    /**
-     * Will check local db first before checking remote
-     * @param nhi -
-     * @return -
-     */
+    @Override
     public Patient getPatientByNhi(String nhi) {
         if (localDbFactory.getPatientDataAccess().getPatientByNhi(nhi) == null) { //not in local db
-            return mysqlFactory.getPatientDataAccess().getPatientByNhi(nhi);
+            return mysqlFactory.getPatientDataAccess().getPatientByNhi(nhi); //get from remote
         }
         return localDbFactory.getPatientDataAccess().getPatientByNhi(nhi);
     }
 
-    public void deletePatientByNhi(String nhi) {
-        localDbFactory.getPatientDataAccess().deletePatientByNhi(nhi); //todo:
+    @Override
+    public void save(Patient patient) {
+        localDbFactory.getPatientDataAccess().savePatients(new HashSet<Patient>(){{add(patient);}});
     }
 
 

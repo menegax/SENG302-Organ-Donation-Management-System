@@ -23,7 +23,10 @@ import javafx.scene.layout.GridPane;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
+import service.AdministratorDataService;
 import service.Database;
+import service.PatientDataService;
+import service.UserDataService;
 import utility.GlobalEnums;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
@@ -67,6 +70,10 @@ public class GUILogin implements TouchscreenCapable {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private PatientDataService patientDataService = new PatientDataService();
+
+    private UserDataService userDataService = new UserDataService();
+
     /**
      * Initializes the login window by adding key binding for login on enter and an event filter on the login field
      */
@@ -105,19 +112,16 @@ public class GUILogin implements TouchscreenCapable {
      */
     @FXML
     public void logIn() { //todo: ??????????? tidy up.
-        DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
-        DAOFactory factoryLocal = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+
         try {
             if (patient.isSelected()) {
                 //<-- Example
-                IPatientDataAccess patientDataAccess = factory.getPatientDataAccess();
-                Patient patient2 = patientDataAccess.getPatientByNhi(nhiLogin.getText());
-
+                Patient patient2 = patientDataService.getPatientByNhi(nhiLogin.getText());
                 // -- >
                 if (patient2 == null) {
                     throw new InvalidObjectException("User doesn't exist");
                 }
-                factoryLocal.getPatientDataAccess().savePatients(new ArrayList<Patient>() {{add(patient2);}});
+                patientDataService.save(patient2);
                 login.addLoggedInUserToCache(patient2);
 
             } else if (clinician.isSelected()) {
@@ -155,7 +159,8 @@ public class GUILogin implements TouchscreenCapable {
     }
 
     private void checkAdminCredentials() throws InvalidObjectException {
-        Administrator admin = factory.getAdministratorDataAccess().getAdministratorByUsername(nhiLogin.getText().toUpperCase());
+        AdministratorDataService administratorDataService = new AdministratorDataService();
+        Administrator admin = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
         if (admin == null) {
             throw new InvalidObjectException("User doesn't exist");
         }

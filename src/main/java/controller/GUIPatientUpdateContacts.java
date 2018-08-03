@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.Database;
+import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.StatusObservable;
 import utility.undoRedo.Action;
@@ -202,9 +203,9 @@ public class GUIPatientUpdateContacts extends UndoableController {
      * @param nhi The nhi of the patient to load
      */
     private void loadProfile(String nhi) {
-
+        PatientDataService patientDataService = new PatientDataService();
         try {
-            target = factory.getPatientDataAccess().getPatientByNhi(nhi);
+            target = patientDataService.getPatientByNhi(nhi);
         }
         catch (NullPointerException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");

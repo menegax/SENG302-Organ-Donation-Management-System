@@ -9,6 +9,7 @@ import utility.GlobalEnums;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class PatientLocalDAO implements IPatientDataAccess {
 
@@ -20,7 +21,7 @@ public class PatientLocalDAO implements IPatientDataAccess {
 
 
     @Override
-    public int savePatients(List<Patient> patient) {
+    public int savePatients(Set<Patient> patient) {
         patient.forEach(x -> {
             localDB.storePatient(x);
         });
@@ -33,9 +34,7 @@ public class PatientLocalDAO implements IPatientDataAccess {
     }
 
     @Override
-    public List<Patient> getPatients() {
-        return null;
-    }
+    public Set<Patient> getPatients() { return localDB.getPatients(); }
 
     @Override
     public Patient getPatientByNhi(String nhi) {

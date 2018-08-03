@@ -31,6 +31,7 @@ import model.Clinician;
 import model.Patient;
 import model.User;
 import service.Database;
+import service.UserDataService;
 import utility.Searcher;
 import utility.StatusObservable;
 import utility.TouchPaneController;
@@ -413,7 +414,8 @@ public class GUIHome implements Observer, TouchscreenCapable {
         menu2Item1.setAccelerator(screenControl.getSave());
         menu2Item1.setOnAction(event -> {
             screenControl.setIsSaved(true);
-            database.updateDatabase();
+            UserDataService userDataService = new UserDataService();
+            userDataService.save();
             userActions.log(INFO, "Successfully saved", "Attempted to save");
         });
         if (userControl.getLoggedInUser() instanceof Administrator) {

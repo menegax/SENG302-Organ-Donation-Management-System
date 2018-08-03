@@ -2,10 +2,7 @@ package DataAccess.factories;
 
 import DataAccess.LocalDB;
 import DataAccess.interfaces.*;
-import DataAccess.localDAO.AdministratorLocalDAO;
-import DataAccess.localDAO.ClinicianLocalDAO;
-import DataAccess.localDAO.PatientLocalDAO;
-import DataAccess.localDAO.UserLocalDAO;
+import DataAccess.localDAO.*;
 import DataAccess.mysqlDAO.AdministratorLogDAO;
 import DataAccess.mysqlDAO.PatientDAO;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -29,7 +26,7 @@ public class LocalDatabaseFactory extends DAOFactory {
 
     @Override
     public ITransplantWaitListDataAccess getTransplantWaitingListDataAccess() {
-        return null;
+        return new TransplantWaitListLocalDAO();
     }
 
     @Override

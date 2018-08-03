@@ -1,6 +1,5 @@
 package controller;
 
-import DataAccess.factories.DAOFactory;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,8 +9,10 @@ import javafx.scene.layout.GridPane;
 import model.DrugInteraction;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
+import service.ClinicianDataService;
 import service.OrganWaitlist;
-import service.PatientServiceImpl;
+import service.PatientDataService;
+import service.UserDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;
@@ -48,22 +49,16 @@ public class GUIClinicianWaitingList {
 
     private UserControl userControl = new UserControl();
 
-    private DAOFactory factoryMysql = DAOFactory.getDAOFactory(FactoryType.MYSQL);
-
-    private DAOFactory factoryLocal = DAOFactory.getDAOFactory(FactoryType.MYSQL);
-
-    private PatientServiceImpl patientService = new PatientServiceImpl();
+    private PatientDataService patientDataService = new PatientDataService();
 
     /**
      * Initializes waiting list screen by populating table and initializing a double click action
      * to view a patient's profile.
      */
     public void initialize() {
-        OrganWaitlist waitingList = factoryLocal.getTransplantWaitingListDataAccess().getWaitingList();
-        if (factoryLocal== null) {
-            waitingList = factoryMysql.getTransplantWaitingListDataAccess().getWaitingList();
-        }
-        for (OrganWaitlist.OrganRequest request: waitingList) {
+        ClinicianDataService clinicianDataService = new ClinicianDataService();
+        OrganWaitlist organRequests = clinicianDataService.getOrganWaitList();
+        for (OrganWaitlist.OrganRequest request: organRequests) {
     		masterData.add(request);
     	}
         populateTable();
@@ -108,7 +103,9 @@ public class GUIClinicianWaitingList {
                 try {
                     userControl = new UserControl();
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
-                    Patient patient = patientService.getPatientByNhi(request.getReceiverNhi());
+                    Patient patient = patientDataService.getPatientByNhi(request.getReceiverNhi());
+                    patientDataService.save(patient);
+                    userControl.setTargetUser(patient);
                     DrugInteraction.setViewedPatient(patient);
                     userControl.setTargetUser(patient);
 

@@ -2,32 +2,23 @@ package controller;
 
 import DataAccess.factories.DAOFactory;
 import model.*;
-import service.APIHelper;
+import service.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import service.Database;
-import service.PatientServiceImpl;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
-import service.TextWatcher;
-import utility.GlobalEnums;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -76,8 +67,6 @@ public class GUIPatientMedications extends UndoableController {
     private JsonObject suggestions;
 
     private boolean itemSelected = false;
-
-    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
@@ -172,6 +161,7 @@ public class GUIPatientMedications extends UndoableController {
      */
     @FXML
     public void initialize() {
+        Patient patient;
         userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
         //Register events for when an item is selected from a listView and set selection mode to multiple
@@ -181,18 +171,12 @@ public class GUIPatientMedications extends UndoableController {
                 .setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
-
-        PatientServiceImpl patientService = new PatientServiceImpl();
-        Patient patient = patientService.getLoggedInPatient();
-        if (patient != null) {
-            loadProfile(patient.getNhiNumber());
-        } else if () {
-
-        }
         if (user instanceof Patient) {
+            patient = (Patient)userControl.getLoggedInUser(); //get logged in patient
+            loadProfile(patient.getNhiNumber());
         } else if (user instanceof Administrator) {
-            viewedPatient = (Patient) userControl.getTargetUser();
-            loadProfile(viewedPatient.getNhiNumber());
+            patient = (Patient) userControl.getTargetUser();
+            loadProfile(patient.getNhiNumber());
         } else {
             viewedPatient = (Patient) userControl.getTargetUser();
             loadProfile(viewedPatient.getNhiNumber());
@@ -212,7 +196,8 @@ public class GUIPatientMedications extends UndoableController {
      */
     private void loadProfile(String nhi) {
         try {
-            target = factory.getPatientDataAccess().getPatientByNhi(nhi);
+            PatientDataService patientDataService = new PatientDataService();
+            target = patientDataService.getPatientByNhi(nhi);
             after = (Patient) target.deepClone();
             if (after.getCurrentMedications() == null) {
                 after.setCurrentMedications(new ArrayList<>());

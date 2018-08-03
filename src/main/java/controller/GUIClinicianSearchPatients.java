@@ -18,6 +18,9 @@ import javafx.scene.text.Text;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.RangeSlider;
+import service.ClinicianDataService;
+import service.PatientDataService;
+import service.UserDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
@@ -98,8 +101,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
     private int numResults = 30;
 
-    private IPatientDataAccess patientDataAccess;
-    private IPatientDataAccess localPatientDataAccess;
+    private PatientDataService patientDataService = new PatientDataService();
+
+    private ClinicianDataService clinicianDataService = new ClinicianDataService();
 
     /**
      * Initialises the data within the table to all patients
@@ -109,11 +113,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
-        DAOFactory mySQLFactory = DAOFactory.getDAOFactory(FactoryType.MYSQL);
-        patientDataAccess = mySQLFactory.getPatientDataAccess();
-        DAOFactory localFactory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
-        localPatientDataAccess = localFactory.getPatientDataAccess();
-
     	displayY.setText( "Display all " + searcher.getDefaultResults(new UserTypes[]{UserTypes.PATIENT}, null).size() + " profiles" );
         setupAgeSliderListeners();
         populateDropdowns();
@@ -167,8 +166,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 try {
                     UserControl userControl = new UserControl();
                     userControl.setTargetUser(patientDataTable.getSelectionModel().getSelectedItem());
-                    localPatientDataAccess.savePatients(new ArrayList<Patient>(){{
-                        add(patientDataTable.getSelectionModel().getSelectedItem());}});
+                    patientDataService.save(patientDataTable.getSelectionModel().getSelectedItem()); //save to local
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     UndoableStage popUpStage = new UndoableStage();
                     //Set initial popup dimensions
@@ -238,7 +236,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         CachedThreadPool pool = CachedThreadPool.getCachedThreadPool();
         ExecutorService service = pool.getThreadService();
         service.submit(() -> {
-            List<Patient> results = patientDataAccess.searchPatient(searchEntry.getText(), filter, numResults);
+            List<Patient> results = clinicianDataService.searchPatient(searchEntry.getText(), filter, numResults);
             masterData.clear();
             masterData.addAll(results);
             masterData.size();
@@ -305,7 +303,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     if (numResults > 0) {
                     	//return searcher.search(search, new UserTypes[]{UserTypes.PATIENT}, numResults, filter)
                     			//.contains(patient);
-                        return patientDataAccess.searchPatient(search, filter, numResults).contains(patient);
+                        return clinicianDataService.searchPatient(search, filter, numResults).contains(patient);
                     }
                     return false;
                 }));

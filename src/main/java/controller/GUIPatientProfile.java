@@ -1,9 +1,5 @@
 package controller;
 
-import DataAccess.factories.DAOFactory;
-import DataAccess.factories.LocalDatabaseFactory;
-import DataAccess.factories.MySqlFactory;
-import DataAccess.interfaces.IPatientDataAccess;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -14,9 +10,11 @@ import model.Clinician;
 import model.Medication;
 import javafx.stage.Stage;
 import model.Patient;
-import model.User;
 import org.apache.commons.lang3.StringUtils;
-import service.PatientServiceImpl;
+import service.PatientDataService;
+import service.UserDataService;
+import service.interfaces.IPatientDataService;
+import service.interfaces.IUserDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
@@ -139,9 +137,10 @@ public class GUIPatientProfile {
      *
      * */
     public void initialize(){
-        PatientServiceImpl patientService = new PatientServiceImpl();
-        Patient patient = patientService.getLoggedInPatient();
-        if (patient != null) {
+        Patient patient = null;
+        IPatientDataService patientDataService = new PatientDataService();
+        if (userControl.getLoggedInUser() instanceof  Patient) {
+             patient = patientDataService.getPatientByNhi(((Patient)userControl.getLoggedInUser()).getNhiNumber());
             if (patient.getRequiredOrgans().size() == 0) {
                 receivingList.setDisable(true);
                 receivingList.setVisible(false);

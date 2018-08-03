@@ -5,14 +5,15 @@ import utility.GlobalEnums;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface IPatientDataAccess {
 
-    public int savePatients (List<Patient> patient);
+    public int savePatients (Set<Patient> patient);
 
     public  boolean addPatientsBatch (List<Patient> patient);
 
-    public List<Patient> getPatients();
+    public Set<Patient> getPatients();
 
     public Patient getPatientByNhi(String nhi);
 

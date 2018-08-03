@@ -25,23 +25,26 @@ public class ContactDAO  implements IContactDataAccess {
     @Override
     public boolean updateContact(Patient patient) {
         try (Connection connection = mySqlFactory.getConnectionInstance()){
-            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_CLINICIAN_QUERY"));
-            statement.setString(1, patient.getStreet1());
-            statement.setString(2, patient.getStreet2());
-            statement.setString(3, patient.getSuburb());
-            statement.setString(4, patient.getRegion() == null ? null : patient.getRegion().getValue());
-            statement.setInt(5, patient.getZip());
-            statement.setString(6, patient.getHomePhone());
-            statement.setString(7, patient.getWorkPhone());
-            statement.setString(8, patient.getMobilePhone());
-            statement.setString(9, patient.getEmailAddress());
-            statement.setString(10, patient.getContactName());
-            statement.setString(11, patient.getContactRelationship());
-            statement.setString(12, patient.getContactHomePhone());
-            statement.setString(13, patient.getContactWorkPhone());
-            statement.setString(14, patient.getContactMobilePhone());
-            statement.setString(15, patient.getContactEmailAddress());
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_CONTACT_QUERY"));
+            statement.setString(1,patient.getNhiNumber());
+            statement.setString(2, patient.getStreet1());
+            statement.setString(3, patient.getStreet2());
+            statement.setString(4, patient.getSuburb());
+            statement.setString(5, patient.getRegion() == null ? null : patient.getRegion().getValue());
+            statement.setInt(6, patient.getZip());
+            statement.setString(7, patient.getHomePhone());
+            statement.setString(8, patient.getWorkPhone());
+            statement.setString(9, patient.getMobilePhone());
+            statement.setString(10, patient.getEmailAddress());
+            statement.setString(11, patient.getContactName());
+            statement.setString(12, patient.getContactRelationship());
+            statement.setString(13, patient.getContactHomePhone());
+            statement.setString(14, patient.getContactWorkPhone());
+            statement.setString(15, patient.getContactMobilePhone());
+            statement.setString(16, patient.getContactEmailAddress());
+            statement.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
             SystemLogger.systemLogger.log(Level.SEVERE, "Failed to update contact", this);
             return false;
         }

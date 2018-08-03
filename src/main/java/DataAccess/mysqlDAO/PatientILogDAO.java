@@ -26,15 +26,16 @@ public class PatientILogDAO implements ILogDataAccess<PatientActionRecord>{
     public void saveLogs(List<PatientActionRecord> records, String id) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("INSERT_PATIENT_LOGS"));
-            for (PatientActionRecord record : records) {
-                statement.setString(1, id);
-                statement.setString(4, record.getMessage());
-                statement.setString(2, record.getTimestamp().toString());
-                statement.setString(3, record.getLevel().toString());
-                statement.setString(5, record.getAction());
-                statement.addBatch();
+            if (records.size() > 0) {
+                for (PatientActionRecord record : records) {
+                    statement.setString(1, id);
+                    statement.setString(4, record.getMessage());
+                    statement.setString(2, record.getTimestamp().toString());
+                    statement.setString(3, record.getLevel().toString());
+                    statement.setString(5, record.getAction());
+                }
+                statement.executeUpdate();
             }
-            statement.executeBatch();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -44,7 +45,9 @@ public class PatientILogDAO implements ILogDataAccess<PatientActionRecord>{
     public List<PatientActionRecord> getAllLogsByUserId (String id) {
         try (Connection connection = mySqlFactory.getConnectionInstance()){
             connection.setAutoCommit(false);
+
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_LOGS"));
+            statement.setString(1,id);
             ResultSet results = statement.executeQuery();
             List<PatientActionRecord> logs = new ArrayList<>();
             while (results.next()) {
@@ -54,8 +57,9 @@ public class PatientILogDAO implements ILogDataAccess<PatientActionRecord>{
             }
             return logs;
         } catch (SQLException e) {
-            return null;
+            e.printStackTrace();
         }
+        return  null;
     }
 
     @Override

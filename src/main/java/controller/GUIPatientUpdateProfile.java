@@ -1,25 +1,17 @@
 package controller;
 
-import DataAccess.LocalDB;
-import DataAccess.factories.DAOFactory;
-import DataAccess.interfaces.IPatientDataAccess;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import model.Patient;
-import service.Database;
+import service.PatientDataService;
 import utility.GlobalEnums.*;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +19,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
@@ -105,7 +96,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     private UserControl userControl;
 
-    DAOFactory factory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
+    private PatientDataService patientDataService = new PatientDataService();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -118,9 +109,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
         userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
         if (user instanceof Patient) {
-            loadProfile(((Patient) user).getNhiNumber(), DAOFactory.getDAOFactory(FactoryType.LOCAL));
+            loadProfile(((Patient) user).getNhiNumber());
         } else if (userControl.getTargetUser() != null) {
-            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber(), DAOFactory.getDAOFactory(FactoryType.LOCAL));
+            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
         }
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
@@ -157,9 +148,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
      *
      * @param nhi the NHI of the patient to load
      */
-    private void loadProfile(String nhi, DAOFactory factory) {
-        IPatientDataAccess patientDataAccess = factory.getPatientDataAccess();
-        Patient patient = patientDataAccess.getPatientByNhi(nhi);
+    private void loadProfile(String nhi) {
+        Patient patient = patientDataService.getPatientByNhi(nhi);
        if (patient != null) {
             target = patient;
             after = (Patient) patient.deepClone();
@@ -295,7 +285,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
 
             // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
-            if (factory.getPatientDataAccess().getPatientByNhi(nhiTxt.getText()).getUuid()  != target.getUuid()) {
+            if (patientDataService.getPatientByNhi(nhiTxt.getText()).getUuid()  != target.getUuid()) {
                 valid = setInvalid(nhiTxt);
                 invalidContent.append("NHI is already in use\n");
             } else {

@@ -34,7 +34,6 @@ public class Main extends Application {
 
     private static final UUID uuid = UUID.randomUUID();
 
-    private static Database database;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -47,7 +46,6 @@ public class Main extends Application {
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
         screenControl.show(uuid, loginScreen);
 
-        database = Database.getDatabase();
         Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
         openKeyboard();
