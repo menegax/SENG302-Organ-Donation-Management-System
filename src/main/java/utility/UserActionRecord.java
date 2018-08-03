@@ -19,7 +19,7 @@ public class UserActionRecord {
 
     private String action;
 
-    public UserActionRecord(Timestamp timestamp, Level level, String action, String message){
+    UserActionRecord(Timestamp timestamp, Level level, String action, String message){
         this.timestamp = timestamp;
         this.level = level;
         this.action = action;

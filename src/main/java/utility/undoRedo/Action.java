@@ -19,10 +19,10 @@ public class Action {
     private User after;
     private boolean isExecuted;
 
-    ScreenControl screenControl = ScreenControl.getScreenControl();
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
-    IUserDataAccess dao = factory.getUserDataAccess();
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+    private IUserDataAccess dao = factory.getUserDataAccess();
 
     /**
      * Constructor for the action

@@ -39,7 +39,7 @@ public class PatientLocalDAO implements IPatientDataAccess {
 
     @Override
     public Patient getPatientByNhi(String nhi) {
-        return null;
+        return localDB.getPatientByNHI(nhi);
     }
 
     @Override

@@ -22,6 +22,7 @@ import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.RangeSlider;
 import model.User;
+import utility.CachedThreadPool;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.GlobalEnums.UserTypes;
@@ -36,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 
 public class GUIClinicianSearchPatients extends UndoableController implements Initializable {
@@ -163,8 +165,10 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     .getSelectedItem() != null) {
                 try {
                     UserControl userControl = new UserControl();
-                    userControl.setTargetUser(patientDataTable.getSelectionModel()
-                            .getSelectedItem());
+                    userControl.setTargetUser(patientDataTable.getSelectionModel().getSelectedItem());
+                    DAOFactory daoFactory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
+                    daoFactory.getPatientDataAccess().savePatients(new ArrayList<Patient>(){{
+                        add(patientDataTable.getSelectionModel().getSelectedItem());}});
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     UndoableStage popUpStage = new UndoableStage();
                     //Set initial popup dimensions
@@ -234,9 +238,18 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             //for (User user : results) {
                 //masterData.add((Patient) user);
             //}
-            List<Patient> results = patientDataAccess.searchPatient(searchEntry.getText(), null, numResults);
-            masterData.addAll(results);
-            filteredData.setPredicate(patient -> true);
+
+            CachedThreadPool pool = CachedThreadPool.getCachedThreadPool();
+            ExecutorService service = pool.getThreadService();
+            service.submit(() -> {
+                List<Patient> results = patientDataAccess.searchPatient(searchEntry.getText(), null, numResults);
+                filteredData.setPredicate(patient -> true);
+                masterData.addAll(results);
+            });
+            Platform.runLater(() -> {
+                patientDataTable.refresh();
+            });
+
         });
 
         setupFilterOptions();

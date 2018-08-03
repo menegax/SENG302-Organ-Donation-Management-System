@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import service.Database;
+import utility.CachedThreadPool;
 import utility.GlobalEnums;
 import service.TextWatcher;
 import utility.GlobalEnums;
@@ -260,9 +261,12 @@ public class GUIPatientMedications extends UndoableController {
      */
     @SuppressWarnings("WeakerAccess")
     public void autoComplete() {
-        Platform.runLater(() -> { // run this on the FX thread (next available)
+        CachedThreadPool cachedThreadPool = CachedThreadPool.getCachedThreadPool();
+        cachedThreadPool.getThreadService().submit(() -> {
             getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread
-            displayDrugSuggestions();//UPDATE UI
+            Platform.runLater(() -> { // run this on the FX thread (next available)
+                displayDrugSuggestions();//UPDATE UI
+            });
         });
     }
 
