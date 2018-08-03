@@ -442,16 +442,17 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 setValid(dateOfDeath);
             }
         } else {
+            if (dateOfDeath.getValue() == null && deathLocationTxt.getText() != null) {
+                valid = setInvalid(dateOfDeath);
+                invalidContent.append("Death date required if death location set");
+            }
             setValid(dateOfDeath);
         }
 
         // death location
-        if (deathLocationTxt.getText() == null) { //todo test if null check req
-
-            // || !deathLocationTxt.getText()
-            //                .matches("([A-Za-z0-9]+[.]*[-]*[']*[\\s]*)*")
-
+        if (dateOfDeath.getValue() != null && deathLocationTxt.getText() == null) {
             valid = setInvalid(deathLocationTxt);
+            invalidContent.append("Death location required if death date set");
         }
         else {
 
