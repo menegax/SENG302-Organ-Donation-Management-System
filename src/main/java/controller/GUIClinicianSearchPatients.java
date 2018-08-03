@@ -176,7 +176,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     // When pop up is closed, refresh the table
                     popUpStage.setOnHiding(event -> Platform.runLater(() -> {
                         masterData.clear();
-                        Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+                        Searcher.getSearcher().oldSearch(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
                                 numResults, filter).forEach(x ->  masterData.add((Patient)x));
                     }));
                 }
@@ -479,7 +479,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         regionFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.REGION, filter.get(FilterOption.REGION), newValue);
-            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+            Searcher.getSearcher().oldSearch(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
                     numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
@@ -487,7 +487,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         donationFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.DONATIONS, filter.get(FilterOption.DONATIONS), newValue);
-            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+            Searcher.getSearcher().oldSearch(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
                     numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
@@ -495,7 +495,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         recievingFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.REQUESTEDDONATIONS, filter.get(FilterOption.REQUESTEDDONATIONS), newValue);
-            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+            Searcher.getSearcher().oldSearch(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
                     numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
@@ -503,35 +503,35 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         birthGenderFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.BIRTHGENDER, filter.get(FilterOption.BIRTHGENDER), newValue);
-            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+            Searcher.getSearcher().oldSearch(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
                     numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         isDonorCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.DONOR, filter.get(FilterOption.DONOR), newValue.toString());
-            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+            Searcher.getSearcher().oldSearch(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
                     numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         isRecieverCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.RECIEVER, filter.get(FilterOption.RECIEVER), newValue.toString());
-            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+            Searcher.getSearcher().oldSearch(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
                     numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.AGEUPPER, filter.get(FilterOption.AGEUPPER), String.valueOf(newValue.intValue()));
-            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+            Searcher.getSearcher().oldSearch(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
                     numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
 
         rangeSlider.lowValueProperty().addListener(((observable, oldValue, newValue) -> {
             masterData.clear();
             filter.replace(FilterOption.AGELOWER, filter.get(FilterOption.AGELOWER), String.valueOf(newValue.intValue()));
-            Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+            Searcher.getSearcher().oldSearch(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
                     numResults, filter).forEach(x ->  masterData.add((Patient)x));
         }));
     }
