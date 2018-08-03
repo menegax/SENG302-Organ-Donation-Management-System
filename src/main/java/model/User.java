@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.FINEST;
 import static utility.SystemLogger.systemLogger;
 
 public abstract class User implements Serializable {
@@ -111,7 +112,7 @@ public abstract class User implements Serializable {
        if(propertyChangeSupport != null) {
            propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "User Modified", null, null));
        }
-       systemLogger.log(FINER, "User " + getUuid() + " modified");
+//       systemLogger.log(FINEST, "User " + getUuid() + " modified");
    }
 
     public UUID getUuid() {
