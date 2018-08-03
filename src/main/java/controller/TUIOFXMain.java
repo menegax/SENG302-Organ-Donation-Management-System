@@ -5,12 +5,14 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.tuiofx.Configuration;
@@ -32,14 +34,31 @@ public class TUIOFXMain extends Application {
 
     private static final UUID uuid = UUID.randomUUID();
 
+    /**
+     * Creates a new UndoableStage and positions and sizes the stage to be the size of the screen boundaries
+     * @return Undoable stage resized and positioned stage
+     */
+    private UndoableStage setUpStage() {
+
+        UndoableStage stage = new UndoableStage();
+
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
+        stage.setX(primaryScreenBounds.getMinX());
+        stage.setY(primaryScreenBounds.getMinY());
+        stage.setWidth(primaryScreenBounds.getWidth());
+        stage.setHeight(primaryScreenBounds.getHeight());
+
+        return stage;
+
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         // set up GUI
-        UndoableStage stage = new UndoableStage();
+        UndoableStage stage = setUpStage();
         ScreenControl screenControl = ScreenControl.getScreenControl();
         screenControl.setTouchStage(stage);
-//       screenControl.addStage(uuid, stage);
         Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
         screenControl.show(uuid, loginScreen);
 
@@ -54,8 +73,7 @@ public class TUIOFXMain extends Application {
         TuioFX tuioFX = new TuioFX(stage, Configuration.pqLabs());
         tuioFX.enableMTWidgets(true);
         tuioFX.start();
-        stage.setResizable(true);
-        stage.setFullScreen(true);
+
         stage.show();
 
         stage.setOnCloseRequest(event -> System.exit(0));

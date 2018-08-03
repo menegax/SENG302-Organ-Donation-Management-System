@@ -6,7 +6,10 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TouchEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
 import javafx.stage.Window;
+
+import java.awt.geom.Rectangle2D;
 
 /**
  * Wrapper class for a Pane object to enable base touch functionality, including zooming, rotating and scrolling
@@ -17,6 +20,8 @@ public class TouchPaneController {
      * Pane to perform touch operations on
      */
     private Pane pane;
+
+    private javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 
     /**
      * Creates a new TouchPaneController
@@ -55,21 +60,34 @@ public class TouchPaneController {
      */
     public void scrollPane(ScrollEvent scrollEvent) {
         pane.toFront();
-        pane.setTranslateX(pane.getTranslateX() + scrollEvent.getDeltaX());
-        pane.setTranslateY(pane.getTranslateY() + scrollEvent.getDeltaY());
+        if(!outOfBoundsX()) {
+            pane.setTranslateX(pane.getTranslateX() + scrollEvent.getDeltaX());
+        } else {
+            if(pane.getTranslateX() < 0) {
+                pane.setTranslateX(bounds.getMaxX() - pane.getWidth() / 2 + scrollEvent.getDeltaX());
+            } else {
+                pane.setTranslateX(-1 * pane.getWidth() / 2 + scrollEvent.getDeltaX());
+            }
+        }
+
+        if(!outOfBoundsY()) {
+            pane.setTranslateY(pane.getTranslateY() + scrollEvent.getDeltaY());
+        } else {
+            if(pane.getTranslateY() < 0) {
+                pane.setTranslateY(bounds.getMaxY() - pane.getHeight() / 2 + scrollEvent.getDeltaY());
+            } else {
+                pane.setTranslateY(-1 * pane.getHeight() / 2 + scrollEvent.getDeltaY());
+            }
+        }
     }
 
-//    /**
-//     * Resizes the pane to be the same size as the window it is displayed in. The pane is translated to
-//     * (0, 0) to re-center it.
-//     */
-//    private void resizePane() {
-//        Window currentWindow = pane.getScene().getWindow();
-//        double stageWidth = currentWindow.getWidth();
-//        double stageHeight = currentWindow.getHeight();
-//        pane.resize(stageWidth, stageHeight);
-//        pane.setTranslateX(0);
-//        pane.setTranslateY(0);
-//    }
+
+    private boolean outOfBoundsX() {
+        return pane.getTranslateX() > bounds.getMaxX() - pane.getWidth() / 2 || pane.getTranslateX() <= bounds.getMaxX() * -1 + pane.getWidth();
+    }
+
+    private boolean outOfBoundsY() {
+        return pane.getTranslateY() > bounds.getMaxY() - pane.getHeight() / 2 || pane.getTranslateY() <= bounds.getMaxY() * -1 + pane.getHeight() / 2;
+    }
 
 }
