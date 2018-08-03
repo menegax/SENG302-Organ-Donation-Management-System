@@ -28,6 +28,11 @@ public class LocalDatabaseFactory extends DAOFactory {
     public IUserDataAccess getUserDataAccess(){ return new UserLocalDAO(); }
 
     @Override
+    public ITransplantWaitListDataAccess getTransplantWaitingListDataAccess() {
+        return null;
+    }
+
+    @Override
     public IClinicianDataAccess getClinicianDataAccess() { return new ClinicianLocalDAO(); }
 
     @Override

@@ -15,6 +15,7 @@ public class LocalDB {
     private Set<Patient> patients;
     private Set<Clinician> clinicians;
     private Set<Administrator> administrators;
+    private Set<Patient> deleted;
 
     private LocalDB() {
         patients = new HashSet<>();

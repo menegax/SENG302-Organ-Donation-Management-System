@@ -12,17 +12,10 @@ import utility.GlobalEnums.Region;
 public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 
 	private SortedSet<OrganRequest> requests;
-	private Database database;
 
 	
 	public OrganWaitlist() {
-	    requests = new TreeSet<OrganRequest>();
-	}
-
-	private void checkDatabase() {
-		if(database == null) {
-			database = Database.getDatabase();
-		}
+	    requests = new TreeSet<>();
 	}
 	
 	/**
@@ -32,7 +25,6 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	 * @return			- Returns true if Collection changed otherwise false.
 	 */
 	public boolean add(Patient receiver, Organ organ) {
-		checkDatabase();
 		OrganRequest request = new OrganRequest(receiver, organ);
 	    return requests.add(request);
 	}
@@ -70,7 +62,6 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	
 	/**
 	 * A organ request for the waiting list.
-	 * @author PGLaffey
 	 */
 	public class OrganRequest implements Comparable<OrganRequest> {
 		LocalDate date;

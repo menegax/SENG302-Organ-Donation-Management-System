@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import service.Database;
+import service.PatientServiceImpl;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 import service.TextWatcher;
@@ -180,8 +181,15 @@ public class GUIPatientMedications extends UndoableController {
                 .setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
+
+        PatientServiceImpl patientService = new PatientServiceImpl();
+        Patient patient = patientService.getLoggedInPatient();
+        if (patient != null) {
+            loadProfile(patient.getNhiNumber());
+        } else if () {
+
+        }
         if (user instanceof Patient) {
-            loadProfile(((Patient) user).getNhiNumber());
         } else if (user instanceof Administrator) {
             viewedPatient = (Patient) userControl.getTargetUser();
             loadProfile(viewedPatient.getNhiNumber());
@@ -263,10 +271,8 @@ public class GUIPatientMedications extends UndoableController {
     public void autoComplete() {
         CachedThreadPool cachedThreadPool = CachedThreadPool.getCachedThreadPool();
         cachedThreadPool.getThreadService().submit(() -> {
-            getDrugSuggestions(newMedication.getText().trim()); //possibly able to run this on the timer thread
-            Platform.runLater(() -> { // run this on the FX thread (next available)
-                displayDrugSuggestions();//UPDATE UI
-            });
+            getDrugSuggestions(newMedication.getText().trim());
+            Platform.runLater(this::displayDrugSuggestions);
         });
     }
 

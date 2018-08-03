@@ -6,15 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import model.Administrator;
-import model.Clinician;
 import model.DrugInteraction;
+import model.Patient;
 import org.apache.commons.lang3.StringUtils;
-import service.Database;
 import service.OrganWaitlist;
+import service.PatientServiceImpl;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,10 +21,8 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import utility.undoRedo.UndoableStage;
 
-import java.io.IOException;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -53,20 +48,24 @@ public class GUIClinicianWaitingList {
 
     private UserControl userControl = new UserControl();
 
-    private DAOFactory factory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
+    private DAOFactory factoryMysql = DAOFactory.getDAOFactory(FactoryType.MYSQL);
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    private DAOFactory factoryLocal = DAOFactory.getDAOFactory(FactoryType.MYSQL);
+
+    private PatientServiceImpl patientService = new PatientServiceImpl();
 
     /**
      * Initializes waiting list screen by populating table and initializing a double click action
      * to view a patient's profile.
      */
     public void initialize() {
-        // todo implement below code
-//    	OrganWaitlist waitingList = factory.getWaitingListDataAccess().getAll();
-//        for (OrganWaitlist.OrganRequest request: waitingList) {
-//    		masterData.add(request);
-//    	}
+        OrganWaitlist waitingList = factoryLocal.getTransplantWaitingListDataAccess().getWaitingList();
+        if (factoryLocal== null) {
+            waitingList = factoryMysql.getTransplantWaitingListDataAccess().getWaitingList();
+        }
+        for (OrganWaitlist.OrganRequest request: waitingList) {
+    		masterData.add(request);
+    	}
         populateTable();
         setupDoubleClickToPatientEdit();
         populateFilterChoiceBoxes();
@@ -109,8 +108,10 @@ public class GUIClinicianWaitingList {
                 try {
                     userControl = new UserControl();
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
-                    DrugInteraction.setViewedPatient(factory.getPatientDataAccess().getPatientByNhi(request.getReceiverNhi()));
-                    userControl.setTargetUser(factory.getPatientDataAccess().getPatientByNhi(request.getReceiverNhi()));
+                    Patient patient = patientService.getPatientByNhi(request.getReceiverNhi());
+                    DrugInteraction.setViewedPatient(patient);
+                    userControl.setTargetUser(patient);
+
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     Parent root = fxmlLoader.load();
                     UndoableStage popUpStage = new UndoableStage();

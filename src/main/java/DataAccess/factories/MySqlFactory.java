@@ -81,4 +81,9 @@ public class MySqlFactory extends DAOFactory{
 
     public IUserDataAccess getUserDataAccess() { throw new NotImplementedException(); }
 
+    public ITransplantWaitListDataAccess getTransplantWaitingListDataAccess() {
+
+        return new TransplantWaitingListDAO();
+    }
+
 }
