@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane prefHeight="220.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIRequiredOrganDeregistrationReason">
+<GridPane prefHeight="220.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIRequiredOrganDeregistrationReason">
   <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="140.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="449.33331298828125" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="140.66668701171875" />
   </columnConstraints>
@@ -31,9 +31,9 @@
         <ChoiceBox fx:id="reasons" onAction="#reasonSelected" prefHeight="27.0" prefWidth="435.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <Label fx:id="curedLabel" text="Cured Disease:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <MenuButton fx:id="diseaseCured" mnemonicParsing="false" prefHeight="27.0" prefWidth="435.0" text="Cured disease" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP" />
-        <Label fx:id="dateOfDeathLabel" text="Date of Death:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Label fx:id="dateOfDeathLabel" text="Date and Location of Death:" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" />
         <DatePicker fx:id="dateOfDeath" editable="false" focusTraversable="false" prefHeight="27.0" prefWidth="220.0" promptText="Date of death" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP" />
-      <TextField prefHeight="27.0" prefWidth="384.0" promptText="Location of Death" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <TextField fx:id="locationDeathTxt" prefHeight="27.0" prefWidth="384.0" promptText="Location of Death" GridPane.columnIndex="1" GridPane.rowIndex="5" />
       <Button fx:id="okButton" mnemonicParsing="false" onAction="#saveReason" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="OK" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="CENTER">
          <GridPane.margin>
             <Insets bottom="5.0" right="10.0" />

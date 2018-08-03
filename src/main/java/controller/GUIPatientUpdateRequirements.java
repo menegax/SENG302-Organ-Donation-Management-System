@@ -294,6 +294,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             openReasonPopup(organ);
             after.removeRequired(organ);
         }
+
     }
 
     /**
