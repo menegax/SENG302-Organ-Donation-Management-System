@@ -10,10 +10,7 @@ import utility.GlobalEnums.FilterOption;
 import utility.GlobalEnums.UserTypes;
 import utility.Searcher;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 
 
 public class PatientLocalDAO implements IPatientDataAccess {
@@ -55,8 +52,19 @@ public class PatientLocalDAO implements IPatientDataAccess {
 
     @Override
     public Map<Integer, List<Patient>> searchPatients(String searchTerm, Map<FilterOption, String> filters, int numResults) {
-        //return Searcher.getSearcher().search(searchTerm, new UserTypes[]{UserTypes.PATIENT}, numResults, filters);
-        return null;
+        Map<Integer, List<User>> searchResults = Searcher.getSearcher().search(searchTerm, new UserTypes[]{UserTypes.PATIENT}, numResults, filters);
+        Map<Integer, List<Patient>> results = new HashMap<>();
+        results.put(0, new ArrayList<>());
+        results.put(1, new ArrayList<>());
+        results.put(2, new ArrayList<>());
+        for (Integer i : searchResults.keySet()) {
+            for (User u : searchResults.get(i)) {
+                if (u instanceof Patient) {
+                    results.get(i).add((Patient) u);
+                }
+            }
+        }
+        return results;
     }
 
     @Override

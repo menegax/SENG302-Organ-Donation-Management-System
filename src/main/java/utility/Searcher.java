@@ -403,8 +403,8 @@ public class Searcher {
      * @param numResults The maximum number of results wanted.
      * @return SortedSet of the Users created from the ScoreDocs.
      */
-    private SortedSet<User> createUsers(List<ScoreDoc> allDocs, int numResults) {
-    	SortedSet<User> users = new TreeSet<>();
+    private List<User> createUsers(List<ScoreDoc> allDocs, int numResults) {
+    	List<User> users = new ArrayList<>();
     	User user;
     	int docCount = 0;
     	int userCount = 0;
@@ -450,8 +450,8 @@ public class Searcher {
      * @param filter A optional filter to apply to the search.
      * @return A Map with the distance of the results as the key and a SortedSet of the results, as User objects, as the value.
      */
-    public Map<Integer, SortedSet<User>> search(String searchTerm, UserTypes[] types, int numResults, Map<FilterOption, String> filter) {
-    	Map<Integer, SortedSet<User>> results = new HashMap<>();
+    public Map<Integer, List<User>> search(String searchTerm, UserTypes[] types, int numResults, Map<FilterOption, String> filter) {
+    	Map<Integer, List<User>> results = new HashMap<>();
     	
     	String[] terms = searchTerm.split(" ");
     	List<FuzzyQuery> queries = new ArrayList<>();
@@ -461,7 +461,7 @@ public class Searcher {
         queries.addAll(createQueries("username", terms, 0));
         
         List<ScoreDoc> allDocs;
-        SortedSet<User> users;
+        List<User> users;
 
     	int distance = 0;
     	while (distance <= 2) {
@@ -538,7 +538,7 @@ public class Searcher {
      * @param filter Map of the filter to use.
      * @return SortedSet of Users after the filter has been applied.
      */
-    private SortedSet<User> filterUsers(SortedSet<User> users, Map<FilterOption, String> filter) {
+    private List<User> filterUsers(List<User> users, Map<FilterOption, String> filter) {
     	for (User user : users) {
     		if (!matchesFilter((Patient)user, filter)) {
     			users.remove(user);
