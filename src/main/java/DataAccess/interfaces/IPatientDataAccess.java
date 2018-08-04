@@ -1,11 +1,13 @@
 package DataAccess.interfaces;
 
 import model.Patient;
+import model.User;
 import utility.GlobalEnums;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 
 public interface IPatientDataAccess {
 
@@ -19,7 +21,7 @@ public interface IPatientDataAccess {
 
     public boolean deletePatient(Patient patient);
 
-    List<Patient> searchPatient(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
+    Map<Integer, SortedSet<User>> searchPatients(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
 
     public void deletePatientByNhi(String nhi);
 

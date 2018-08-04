@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import static utility.SystemLogger.systemLogger;
 
-public abstract class User implements Serializable {
+public abstract class User implements Serializable, Comparable<User> {
 
     private final UUID uuid = UUID.randomUUID();
 
@@ -163,5 +163,10 @@ public abstract class User implements Serializable {
             propertyChangeSupport = new PropertyChangeSupport(this);
         }
         propertyChangeSupport.addPropertyChangeListener(propertyChangeListener);
+    }
+
+    @Override
+    public int compareTo(User o) {
+        return this.getNameConcatenated().compareTo(o.getNameConcatenated());
     }
 }

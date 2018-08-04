@@ -468,7 +468,7 @@ public class Searcher {
         
         List<ScoreDoc> allDocs;
         SortedSet<User> users;
-        
+
     	int distance = 0;
     	while (distance <= 2) {
             queries.addAll(createQueries("fName", terms, distance));

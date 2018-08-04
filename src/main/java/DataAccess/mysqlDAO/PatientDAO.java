@@ -2,10 +2,7 @@ package DataAccess.mysqlDAO;
 
 import DataAccess.factories.MySqlFactory;
 import DataAccess.interfaces.*;
-import model.Disease;
-import model.Medication;
-import model.Patient;
-import model.Procedure;
+import model.*;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
@@ -77,7 +74,9 @@ public class PatientDAO implements IPatientDataAccess {
     }
 
     @Override
-    public boolean deletePatient(Patient patient){ return false; };
+    public boolean deletePatient(Patient patient) {
+        return false;
+    }
 
     @Override
     public Patient getPatientByNhi(String nhi) {
@@ -101,9 +100,12 @@ public class PatientDAO implements IPatientDataAccess {
     }
 
     @Override
-    public List<Patient> searchPatient(String searchTerm, Map<FilterOption, String> filters, int numResults) {
+    public Map<Integer, SortedSet<User>> searchPatients(String searchTerm, Map<FilterOption, String> filters, int numResults) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
-            List<Patient> results = new ArrayList<>();
+            Map<Integer, SortedSet<User>> resultMap = new HashMap<>();
+            for (int i = 0; i <= 2; i++) {
+                resultMap.put(i, new TreeSet<>());
+            }
             connection.setAutoCommit(false);
             PreparedStatement statement;
             if (searchTerm.equals("")) {
@@ -118,10 +120,17 @@ public class PatientDAO implements IPatientDataAccess {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 List<String> contacts = contactDataAccess.getContactByNhi(resultSet.getString("Nhi"));
-                results.add(constructPatientObject(resultSet, contacts));
+                Patient patient = constructPatientObject(resultSet, contacts);
+                //Add patient to resultMap with appropriate score
+                if (searchTerm.equals("")) {
+                    resultMap.get(0).add(patient);
+                } else {
+                    Integer[] scores = new Integer[]{resultSet.getInt("NhiMatch"), resultSet.getInt("NameMatch"), resultSet.getInt("FullNameMatch")};
+                    int score = Collections.min(Arrays.asList(scores));
+                    resultMap.get(score).add(patient);
+                }
             }
-            System.out.println(results.size());
-            return results;
+            return resultMap;
         } catch (SQLException e) {
             return null;
         }
@@ -136,9 +145,9 @@ public class PatientDAO implements IPatientDataAccess {
             logDataAccess.deleteLogsByUserId(nhi);
             procedureDataAccess.deleteAllProceduresByNhi(nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_BY_NHI"));
-            statement.setString(1,nhi);
+            statement.setString(1, nhi);
             statement.execute();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
 
         }
     }
@@ -152,31 +161,34 @@ public class PatientDAO implements IPatientDataAccess {
             if (!filters.get(filterOption).equals(GlobalEnums.NONE_ID)) {
                 switch (filterOption) {
                     case AGELOWER:
-                        query.append(String.format("timestampdiff(YEAR, birth, now()) >= %d", Double.valueOf(filters.get(AGELOWER)).intValue()));
+                        query.append(String.format("timestampdiff(YEAR, birth, now()) >= %d AND ", Double.valueOf(filters.get(AGELOWER)).intValue()));
                         break;
                     case AGEUPPER:
-                        query.append(String.format("timestampdiff(YEAR, birth, now()) <= %d", Double.valueOf(filters.get(AGEUPPER)).intValue()));
+                        query.append(String.format("timestampdiff(YEAR, birth, now()) <= %d AND ", Double.valueOf(filters.get(AGEUPPER)).intValue()));
                         break;
                     case BIRTHGENDER:
-                        query.append(String.format("birthgender = '%s'", filters.get(BIRTHGENDER)));
+                        query.append(String.format("birthgender = '%s' AND ", filters.get(BIRTHGENDER)));
                         break;
                     case REGION:
-                        query.append(String.format("EXISTS (SELECT * FROM tblContacts WHERE nhi=b.Nhi and Region='%s')", filters.get(REGION)));
+                        query.append(String.format("EXISTS (SELECT * FROM tblPatientContact c WHERE c.Patient=Nhi and c.Region='%s') AND ", filters.get(REGION)));
                         break;
                     case DONOR:
-                        query.append(String.format("DonatingOrgans %s ''", Boolean.valueOf(filters.get(DONOR)) ? "<>" : "="));
+                        if (Boolean.valueOf(filters.get(DONOR))) {
+                            query.append("DonatingOrgans <> '' AND ");
+                        }
                         break;
                     case RECIEVER:
-                        query.append(String.format("ReceivingOrgans %s ''", Boolean.valueOf(filters.get(RECIEVER)) ? "<>" : "="));
+                        if (Boolean.valueOf(filters.get(RECIEVER))) {
+                            query.append("ReceivingOrgans <> '' AND ");
+                        }
                         break;
                     case DONATIONS:
-                        query.append(String.format("FIND_IN_SET('%s', DonatingOrgans) > 0", filters.get(DONATIONS)));
+                        query.append(String.format("FIND_IN_SET('%s', DonatingOrgans) > 0 AND ", filters.get(DONATIONS)));
                         break;
                     case REQUESTEDDONATIONS:
-                        query.append(String.format("FIND_IN_SET('%s', ReceivingOrgans) > 0", filters.get(REQUESTEDDONATIONS)));
+                        query.append(String.format("FIND_IN_SET('%s', ReceivingOrgans) > 0 AND ", filters.get(REQUESTEDDONATIONS)));
                         break;
                 }
-                query.append(" AND ");
             }
         }
         query.append("1=1");

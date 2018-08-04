@@ -4,12 +4,17 @@ import DataAccess.LocalDB;
 import DataAccess.factories.LocalDatabaseFactory;
 import DataAccess.interfaces.IPatientDataAccess;
 import model.Patient;
+import model.User;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import utility.GlobalEnums;
+import utility.GlobalEnums.FilterOption;
+import utility.GlobalEnums.UserTypes;
+import utility.Searcher;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+
 
 public class PatientLocalDAO implements IPatientDataAccess {
 
@@ -34,7 +39,9 @@ public class PatientLocalDAO implements IPatientDataAccess {
     }
 
     @Override
-    public Set<Patient> getPatients() { return localDB.getPatients(); }
+    public Set<Patient> getPatients() {
+        return localDB.getPatients();
+    }
 
     @Override
     public Patient getPatientByNhi(String nhi) {
@@ -47,11 +54,13 @@ public class PatientLocalDAO implements IPatientDataAccess {
     }
 
     @Override
-    public List<Patient> searchPatient(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults) {
-        return null;
+    public Map<Integer, SortedSet<User>> searchPatients(String searchTerm, Map<FilterOption, String> filters, int numResults) {
+        return Searcher.getSearcher().search(searchTerm, new UserTypes[]{UserTypes.PATIENT}, numResults, filters);
     }
 
     @Override
-    public void deletePatientByNhi(String nhi) { throw new NotImplementedException(); }
+    public void deletePatientByNhi(String nhi) {
+        throw new NotImplementedException();
+    }
 
 }

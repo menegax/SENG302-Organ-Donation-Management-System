@@ -14,7 +14,7 @@ public interface IClinicianDataService {
 
     public Clinician getClinician(String staffId);
 
-    public List<Patient> searchPatient(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
+    public List<Patient> searchPatients(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
 
     /**
      * Will save to LOCAL ONLY
