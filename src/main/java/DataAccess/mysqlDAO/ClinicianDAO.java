@@ -2,8 +2,10 @@ package DataAccess.mysqlDAO;
 
 import DataAccess.factories.MySqlFactory;
 import DataAccess.interfaces.IClinicianDataAccess;
+import DataAccess.interfaces.ILogDataAccess;
 import model.Clinician;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
 import utility.ResourceManager;
 
@@ -32,6 +34,8 @@ public class ClinicianDAO implements IClinicianDataAccess {
             for (Clinician clinician : clinicians) {
                 preparedStatement = addUpdateParameters(clinician, preparedStatement);
                 preparedStatement.executeUpdate();
+                ILogDataAccess<ClinicianActionRecord> clinicianActionRecordILogDataAccess = mySqlFactory.getClinicianLogDataAccess();
+                clinicianActionRecordILogDataAccess.saveLogs(clinician.getClinicianActionsList(), String.valueOf(clinician.getStaffID()));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,6 +75,8 @@ public class ClinicianDAO implements IClinicianDataAccess {
                 clinician.setStreet2(resultSet.getString("Street2"));
                 clinician.setRegion(GlobalEnums.Region.getEnumFromString(resultSet.getString("Region")));
                 clinician.setSuburb(resultSet.getString("Suburb"));
+                ILogDataAccess<ClinicianActionRecord> iLogDataAccess = mySqlFactory.getClinicianLogDataAccess();
+                clinician.setClinicianActionsList(iLogDataAccess.getAllLogsByUserId(String.valueOf(clinician.getStaffID())));
                 return clinician;
             }
         } catch (SQLException e) {

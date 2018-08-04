@@ -30,9 +30,8 @@ public class ClinicianILogDAO implements ILogDataAccess<ClinicianActionRecord> {
                 statement.setString(3, record.getLevel().toString());
                 statement.setString(6, record.getTarget());
                 statement.setString(5, record.getAction());
-                statement.addBatch();
+                statement.executeUpdate();
             }
-            statement.executeBatch();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -43,6 +42,7 @@ public class ClinicianILogDAO implements ILogDataAccess<ClinicianActionRecord> {
         try (Connection connection = mySqlFactory.getConnectionInstance()){
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_CLINICIAN_LOGS"));
+            statement.setString(1, id);
             ResultSet results = statement.executeQuery();
             List<ClinicianActionRecord> logs = new ArrayList<>();
             while (results.next()) {

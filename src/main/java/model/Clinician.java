@@ -173,4 +173,8 @@ public class Clinician extends User {
     public List<ClinicianActionRecord> getClinicianActionsList() {
         return clinicianActionsList;
     }
+
+    public void setClinicianActionsList(List<ClinicianActionRecord> records) {
+        clinicianActionsList = records;
+    }
 }
