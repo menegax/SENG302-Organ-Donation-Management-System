@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.RangeSlider;
 import service.ClinicianDataService;
 import service.PatientDataService;
+import service.TextWatcher;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.Searcher;
@@ -29,6 +30,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianSearchPatients extends UndoableController implements Initializable {
@@ -113,9 +115,18 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         populateDropdowns();
         setupFilterOptions();
         setupTableColumnsAndData();
-
+        TextWatcher watcher = new TextWatcher();
         searchEntry.textProperty().addListener((observable, oldValue, newValue) -> {
-            search();
+            if (!newValue.equals(oldValue)) {
+                watcher.onTextChange(); //reset
+            }
+            try {
+                watcher.afterTextChange(GUIClinicianSearchPatients.class.getMethod("search"), this); //start timer
+
+            }
+            catch (NoSuchMethodException e) {
+                userActions.log(SEVERE, "No method exists for autocomplete", "Attempted to make API call"); // MAJOR ISSUE HERE!
+            }
         });
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();

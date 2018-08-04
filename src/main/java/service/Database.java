@@ -200,7 +200,7 @@ public class Database implements Serializable {
         patients = new HashSet<>();
         clinicians = new HashSet<>();
         organWaitingList = new OrganWaitlist();
-        //initializeConnection();
+        initializeConnection();
         if (conn != null) {
         	loadAll();
         }
@@ -221,31 +221,31 @@ public class Database implements Serializable {
     }
 
 
-//    /**
-//     * Initialize the connection to the remote database.
-//     */
-//    private void initializeConnection() {
-//		try {
-//			conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
-//			systemLogger.log(INFO, "Connected to UC database");
-//		} catch (SQLException e1) {
-//			System.err.println("Failed to connect to UC database server.");
-//			try {
-//				conn = DriverManager.getConnection("jdbc:mysql://222.154.74.253:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
-//                systemLogger.log(INFO, "Connected to Patrick's database remotely");
-//            } catch (SQLException e2) {
-//				System.err.println("Failed to connect to database mimic from external source.");
-//				try {
-//                    systemLogger.log(INFO, "Connected to Patrick's database locally");
-//                    conn = DriverManager.getConnection("jdbc:mysql://192.168.1.70:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
-//				} catch (SQLException e3) {
-//					System.err.println("Failed to connect to database mimic from internal source.");
-//					System.err.println("All database connections failed.");
-//					conn = null;
-//				}
-//			}
-//		}
-//    }
+    /**
+     * Initialize the connection to the remote database.
+     */
+    private void initializeConnection() {
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+			systemLogger.log(INFO, "Connected to UC database");
+		} catch (SQLException e1) {
+			System.err.println("Failed to connect to UC database server.");
+			try {
+				conn = DriverManager.getConnection("jdbc:mysql://222.154.74.253:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+                systemLogger.log(INFO, "Connected to Patrick's database remotely");
+            } catch (SQLException e2) {
+				System.err.println("Failed to connect to database mimic from external source.");
+				try {
+                    systemLogger.log(INFO, "Connected to Patrick's database locally");
+                    conn = DriverManager.getConnection("jdbc:mysql://192.168.1.70:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+				} catch (SQLException e3) {
+					System.err.println("Failed to connect to database mimic from internal source.");
+					System.err.println("All database connections failed.");
+					conn = null;
+				}
+			}
+		}
+    }
 
     public int nextStaffID() {
     	while (staffIDInDatabase(curStaffID)) {
@@ -259,7 +259,7 @@ public class Database implements Serializable {
      *
      * @param query The SQL query to run.
      * @param params The parameters to put into the query. Cannot be null, but can be an empty array.
-     * @return Null if update or insert query or if getMedicationsByNhi query ArrayList of String arrays
+     * @return Null if update or insert query or if select query ArrayList of String arrays
      * with the ArrayList being the full set of results and each internal String
      * array being a row of the queried table.
      * @throws SQLException If there is an error communicating with the database or SQL syntax error.
@@ -276,7 +276,7 @@ public class Database implements Serializable {
     }
 
     /**x
-     * @param query The getMedicationsByNhi query to run on the database.
+     * @param query The select query to run on the database.
      * @return ArrayList of String arrays with the ArrayList being the full set of results and each internal String
      * array being a row of the queried table.
      * @throws SQLException If there is an error communicating with the database or SQL syntax error.
@@ -376,7 +376,11 @@ public class Database implements Serializable {
         attr[3] = patient.getLastName();
         attr[4] = patient.getBirth().toString();
         attr[5] = patient.getCREATED().toString();
-        attr[6] = patient.getModified().toString();
+        if (patient.getModified() == null) {
+        	attr[6] = patient.getCREATED().toString();
+        } else {
+        	attr[6] = patient.getModified().toString();
+        }
         if (patient.getDeath() != null) {
             attr[7] = patient.getDeath().toString();
         }
@@ -387,7 +391,7 @@ public class Database implements Serializable {
         	attr[9] = patient.getPreferredGender().toString().substring(0, 1);
         }
         attr[10] = patient.getPreferredName();
-        attr[11] = String.valueOf(patient.getHeight() * 100);
+        attr[11] = String.valueOf(patient.getHeight() / 1000);
         attr[12] = String.valueOf(patient.getWeight());
         if(patient.getBloodGroup() != null) {
             attr[13] = patient.getBloodGroup().toString();
@@ -423,18 +427,46 @@ public class Database implements Serializable {
         contactAttr[2] = patient.getStreet2();
         contactAttr[3] = patient.getSuburb();
         if(patient.getRegion() != null) {
-            contactAttr[4] = patient.getRegion().toString();
+        	if (patient.getRegion() == GlobalEnums.Region.HAWKESBAY) {
+        		contactAttr[4] = "Hawkes Bay";
+        	} else {
+        		contactAttr[4] = patient.getRegion().getValue();
+        	}
         }
         contactAttr[5] = String.valueOf(patient.getZip());
-        contactAttr[6] = patient.getHomePhone();
-        contactAttr[7] = patient.getWorkPhone();
-        contactAttr[8] = patient.getMobilePhone();
+        if (patient.getHomePhone() == null || patient.getHomePhone().length() > 9) {
+        	contactAttr[6] = "";
+        } else {
+        	contactAttr[6] = patient.getHomePhone();
+        }
+        if (patient.getWorkPhone() == null || patient.getWorkPhone().length() > 9) {
+        	contactAttr[7] = "";
+        } else {
+        	contactAttr[7] = patient.getWorkPhone();
+        }
+        if (patient.getMobilePhone() == null || patient.getMobilePhone().length() > 11) {
+        	contactAttr[8] = "";
+        } else {
+        	contactAttr[8] = patient.getMobilePhone();
+        }
         contactAttr[9] = patient.getEmailAddress();
         contactAttr[10] = patient.getContactName();
         contactAttr[11] = patient.getContactRelationship();
-        contactAttr[12] = patient.getContactHomePhone();
-        contactAttr[13] = patient.getContactWorkPhone();
-        contactAttr[14] = patient.getContactMobilePhone();
+        if (patient.getContactHomePhone() == null || patient.getContactHomePhone().length() > 9) {
+        	contactAttr[12] = "";
+        } else {
+        	contactAttr[12] = patient.getContactHomePhone();
+        }
+        if (patient.getContactWorkPhone() == null || patient.getContactWorkPhone().length() > 9) {
+        	contactAttr[13] = "";
+        } else {
+        	contactAttr[13] = patient.getContactWorkPhone();
+        }
+        if (patient.getContactMobilePhone() == null || patient.getContactMobilePhone().length() > 11) {
+        	contactAttr[14] = "";
+        } else {
+        	contactAttr[14] = patient.getContactMobilePhone();
+        }
         contactAttr[15] = patient.getContactEmailAddress();
         return contactAttr;
     }
@@ -924,11 +956,7 @@ public class Database implements Serializable {
      * @return UserActionRecord user action log entry
      */
     private PatientActionRecord parseLog(String[] attr) {
-        Timestamp timestamp = Timestamp.valueOf(attr[1]);
-        Level level = Level.parse(attr[2]);
-        String message = attr[3];
-        String action = attr[4];
-        return new PatientActionRecord(timestamp, level, message, action);
+        return null;
     }
 
     /**
@@ -943,7 +971,7 @@ public class Database implements Serializable {
     	String[] param = {nhi};
         String[] contactsRaw;
 		try {
-			contactsRaw = runQuery(query, param).get(0);
+    			contactsRaw = runQuery(query, param).get(0);
 			return Arrays.copyOfRange(contactsRaw, 1, contactsRaw.length);
 		} catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Couldn't query database " + e.getMessage(), "Attempted to read patient contact attributes.");
@@ -957,71 +985,70 @@ public class Database implements Serializable {
      * @return Patient parsed patient
      */
     private Patient parsePatient(String[] attr) {
-//        String nhi = attr[0];
-//        String fName = attr[1];
-//        ArrayList<String> mNames = new ArrayList<>();
-//        mNames.addAll(Arrays.asList(attr[2].split(" ")));
-//        String lName = attr[3];
-//        LocalDate birth = LocalDate.parse(attr[4]);
-//        Timestamp created = Timestamp.valueOf(attr[5]);
-//        Timestamp modified = Timestamp.valueOf(attr[6]);
-//        LocalDate death = null;
-//        if (attr[7] != null) {
-//        	death = LocalDate.parse(attr[7]);
-//        }
-//        GlobalEnums.BirthGender gender;
-//        switch (String.valueOf((Object)attr[8])) {
-//            case "M":
-//                gender = GlobalEnums.BirthGender.MALE;
-//                break;
-//            default:
-//                gender = GlobalEnums.BirthGender.FEMALE;
-//                break;
-//        }
-//        GlobalEnums.PreferredGender preferredGender;
-//        switch(String.valueOf((Object)attr[9])) {
-//            case "M":
-//                preferredGender = GlobalEnums.PreferredGender.MAN;
-//                break;
-//            case "F":
-//                preferredGender = GlobalEnums.PreferredGender.WOMAN;
-//                break;
-//            default:
-//                preferredGender = GlobalEnums.PreferredGender.NONBINARY;
-//                break;
-//        }
-//        String prefName = attr[10];
-//        double height = Double.parseDouble(attr[11]) / 100;
-//        double weight = Double.parseDouble(attr[12]);
-//        GlobalEnums.BloodGroup bloodType = null;
-//        if (attr[13] != null) {
-//        	bloodType = GlobalEnums.BloodGroup.getEnumFromString(attr[13]);
-//        }
-//        ArrayList<GlobalEnums.Organ> donations = loadOrgans(attr[14]);
-//        ArrayList<GlobalEnums.Organ> requested = loadOrgans(attr[15]);
-//        ArrayList<PatientActionRecord> records = loadPatientLogs(nhi);
-//
-//        String[] contactAttr = new String[15];
-//        contactAttr = parsePatientContacts(nhi);
-//        GlobalEnums.Region region = null;
-//        if (contactAttr[3] != null) {
-//        	region = GlobalEnums.Region.getEnumFromString(contactAttr[3]);
-//        }
-//        int zip = Integer.parseInt(contactAttr[4]);
-//        ArrayList<Medication>[] meds = loadMedications(nhi);
-//        ArrayList<Medication> currentMeds = meds[0];
-//        ArrayList<Medication> medHistory = meds[1];
-//        ArrayList<Disease>[] diseases = loadDiseases(birth, nhi);
-//        ArrayList<Disease> currentDiseases = diseases[0];
-//        ArrayList<Disease> pastDiseases = diseases[1];
-//        List<Procedure> procedures = loadProcedures(nhi);
-//		userActions.log(INFO, "Successfully loaded patient " + nhi + " from the database.", "Attempted to load a patient from the database.");
-//        return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName, height, weight,
-//                bloodType, donations, requested, contactAttr[0], contactAttr[1], contactAttr[2], region, zip,
-//                contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
-//                contactAttr[11], contactAttr[12], contactAttr[13], contactAttr[14], records, currentDiseases,
-//                pastDiseases, currentMeds, medHistory, procedures);
-        return null;
+        String nhi = attr[0];
+        String fName = attr[1];
+        ArrayList<String> mNames = new ArrayList<>();
+        mNames.addAll(Arrays.asList(attr[2].split(" ")));
+        String lName = attr[3];
+        LocalDate birth = LocalDate.parse(attr[4]);
+        Timestamp created = Timestamp.valueOf(attr[5]);
+        Timestamp modified = Timestamp.valueOf(attr[6]);
+        LocalDate death = null;
+        if (attr[7] != null) {
+        	death = LocalDate.parse(attr[7]);
+        }
+        GlobalEnums.BirthGender gender;
+        switch (String.valueOf((Object)attr[8])) {
+            case "M":
+                gender = GlobalEnums.BirthGender.MALE;
+                break;
+            default:
+                gender = GlobalEnums.BirthGender.FEMALE;
+                break;
+        }
+        GlobalEnums.PreferredGender preferredGender;
+        switch(String.valueOf((Object)attr[9])) {
+            case "M":
+                preferredGender = GlobalEnums.PreferredGender.MAN;
+                break;
+            case "F":
+                preferredGender = GlobalEnums.PreferredGender.WOMAN;
+                break;
+            default:
+                preferredGender = GlobalEnums.PreferredGender.NONBINARY;
+                break;
+        }
+        String prefName = attr[10];
+        double height = Double.parseDouble(attr[11]) / 100;
+        double weight = Double.parseDouble(attr[12]);
+        GlobalEnums.BloodGroup bloodType = null;
+        if (attr[13] != null) {
+        	bloodType = GlobalEnums.BloodGroup.getEnumFromString(attr[13]);
+        }
+        ArrayList<GlobalEnums.Organ> donations = loadOrgans(attr[14]);
+        ArrayList<GlobalEnums.Organ> requested = loadOrgans(attr[15]);
+        ArrayList<PatientActionRecord> records = loadPatientLogs(nhi);
+
+        String[] contactAttr = new String[15];
+        contactAttr = parsePatientContacts(nhi);
+        GlobalEnums.Region region = null;
+        if (contactAttr[3] != null) {
+        	region = GlobalEnums.Region.getEnumFromString(contactAttr[3]);
+        }
+        int zip = Integer.parseInt(contactAttr[4]);
+        ArrayList<Medication>[] meds = loadMedications(nhi);
+        ArrayList<Medication> currentMeds = meds[0];
+        ArrayList<Medication> medHistory = meds[1];
+        ArrayList<Disease>[] diseases = loadDiseases(birth, nhi);
+        ArrayList<Disease> currentDiseases = diseases[0];
+        ArrayList<Disease> pastDiseases = diseases[1];
+        List<Procedure> procedures = loadProcedures(nhi);
+		userActions.log(INFO, "Successfully loaded patient " + nhi + " from the database.", "Attempted to load a patient from the database.");
+        return new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName, height, weight,
+                bloodType, donations, requested, contactAttr[0], contactAttr[1], contactAttr[2], region, zip,
+                contactAttr[5], contactAttr[6], contactAttr[7], contactAttr[8], contactAttr[9], contactAttr[10],
+                contactAttr[11], contactAttr[12], contactAttr[13], contactAttr[14], records, currentDiseases,
+                pastDiseases, currentMeds, medHistory, procedures);
     }
 
     /**
@@ -1095,17 +1122,17 @@ public class Database implements Serializable {
      * @return The Procedure object.
      */
     private Procedure parseProcedure(String[] attr) {
-        Procedure procedure = new Procedure(null, null, null, null);
-        procedure.setSummary(attr[1]);
-        procedure.setDescription(attr[2]);
-        procedure.setDate(LocalDate.parse(attr[3]));
-        String[] organArray = attr[4].split(",");
-        Set<GlobalEnums.Organ> organSet = new HashSet<>();
-        for (String organ : organArray) {
-            organSet.add(GlobalEnums.Organ.valueOf(organ));
-        }
-        procedure.setAffectedDonations(organSet);
-        return procedure;
+//        Procedure procedure = new Procedure(null, null, null, null);
+//        procedure.setSummary(attr[1]);
+//        procedure.setDescription(attr[2]);
+//        procedure.setDate(LocalDate.parse(attr[3]));
+//        String[] organArray = attr[4].split(",");
+//        Set<GlobalEnums.Organ> organSet = new HashSet<>();
+//        for (String organ : organArray) {
+//            organSet.add(GlobalEnums.Organ.valueOf(organ));
+//        }
+//        procedure.setAffectedDonations(organSet);
+        return null;
     }
 
     /**
@@ -1456,24 +1483,192 @@ public class Database implements Serializable {
         return null;
     }
 
+    private String[] getInitialUpdateQueries() {
+		String[] queries = new String[6];
+    	queries[0] = "INSERT INTO tblPatients "
+    			+ "(Nhi, FName, MName, LName, Birth, Created, Modified, Death, BirthGender, "
+                + "PrefGender, PrefName, Height, Weight, BloodType, DonatingOrgans, ReceivingOrgans) "
+                + "VALUES ";
+    	queries[1] = "INSERT INTO tblPatientContact "
+        		+ "(Patient, Street1, Street2, Suburb, Region, Zip, HomePhone, WorkPhone, "
+        		+ "MobilePhone, Email, ECName, ECRelationship, ECHomePhone, ECWorkPhone, "
+        		+ "ECMobilePhone, ECEmail) VALUES ";
+    	queries[2] = "INSERT INTO tblDiseases "
+                + "(Patient, Name, DateDiagnosed, State) VALUES ";
+    	queries[3] = "INSERT INTO tblMedications (Patient, Name) VALUES ";
+    	queries[4] = "INSERT INTO tblProcedures "
+                + "(Patient, Summary, Description, ProDate, AffectedOrgans) VALUES ";
+    	queries[5] = "INSERT INTO tblPatientLogs "
+                + "(Patient, Time, Level, Message, Action) VALUES ";
+    	return queries;
+    }
+
+    private String[][][] getUpdatePatientQueryArray(Patient patient) {
+    	String[][] params = new String[6][];
+    	String[] queries = new String[6];
+    	//Query to add base patient attributes to database
+    	queries[0] = "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), ";
+    	params[0] = getPatientAttributes(patient);
+    	//Query to add patient contact details to database
+    	queries[1] = "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), ";
+    	params[1] = getPatientContactAttributes(patient);
+        //Queries to add patient diseases details to database
+        List<Disease> allDiseases = patient.getCurrentDiseases();
+        allDiseases.addAll(patient.getPastDiseases());
+        params[2] = new String[0];
+        queries[2] = "";
+        for (Disease disease : allDiseases) {
+            params[2] = ArrayUtils.addAll(params[2], getDiseaseAttributes(patient, disease));
+            queries[2] += "(?, ?, ?, ?), ";
+         }
+        params[3] = new String[0];
+        queries[3] = "";
+    	//Queries to add patient medication details to database
+        for (Medication medication : patient.getCurrentMedications()) {
+            params[3] = ArrayUtils.addAll(params[3], getMedicationAttributes(patient, medication, true));
+            queries[3] += "(?, ?), ";
+        }
+
+        for (Medication medication : patient.getMedicationHistory()) {
+        	params[3] = ArrayUtils.addAll(params[3], getMedicationAttributes(patient, medication, false));
+            queries[3] += "(?, ?), ";
+        }
+        //Queries to add patient procedures details to database
+        params[4] = new String[0];
+        queries[4] = "";
+        for(Procedure procedure : patient.getProcedures()) {
+            params[4] = ArrayUtils.addAll(params[4], getProcedureAttributes(patient, procedure));
+            queries[4] += "(?, ?, ?, ?, ?), ";
+        }
+        //Queries to add patient logs details to database
+        params[5] = new String[0];
+        queries[5] = "";
+        for (PatientActionRecord record : patient.getUserActionsList()) {
+            params[5] = ArrayUtils.addAll(params[5], getLogAttributes(patient, record));
+            queries[5] += "(?, ?, ?, ?, ?), ";
+        }
+        String[][] packagedQueries = new String[][] {queries};
+    	return new String[][][] {packagedQueries, params};
+    }
+
+    private String addQueryEnd(String query, int queryNum) {
+    	switch(queryNum) {
+    	case 0:
+    		return query + " ON DUPLICATE KEY UPDATE "
+    	            + "FName = VALUES (FName), "
+    	            + "MName = VALUES (MName), "
+    	            + "LName = VALUES (LName), "
+    	            + "Birth = VALUES (Birth), "
+    	            + "Created = VALUES (Created), "
+    	            + "Modified = VALUES (Modified), "
+    	            + "Death = VALUES (Death), "
+    	            + "BirthGender = VALUES (BirthGender), "
+    	            + "PrefGender = VALUES (PrefGender), "
+    	            + "PrefName = VALUES (PrefName), "
+    	            + "Height = VALUES (Height), "
+    	            + "Weight = VALUES (Weight), "
+    	            + "BloodType = VALUES (BloodType), "
+    	            + "DonatingOrgans = VALUES (DonatingOrgans), "
+    	            + "ReceivingOrgans = VALUES (ReceivingOrgans)";
+    	case 1:
+    		return query + " ON DUPLICATE KEY UPDATE "
+    		+ "Street1 = VALUES (Street1), "
+    		+ "Street2 = VALUES (Street2), "
+    		+ "Suburb = VALUES (Suburb), "
+    		+ "Region = VALUES (Region), "
+    		+ "Zip = VALUES (Zip), "
+    		+ "HomePhone = VALUES (HomePhone), "
+    		+ "WorkPhone = VALUES (WorkPhone), "
+    		+ "MobilePhone = VALUES (MobilePhone), "
+    		+ "Email = VALUES (Email), "
+    		+ "ECName = VALUES (ECName), "
+    		+ "ECRelationship = VALUES (ECRelationship), "
+    		+ "ECHomePhone = VALUES (ECHomePhone), "
+    		+ "ECWorkPhone = VALUES (ECWorkPhone), "
+    		+ "ECMobilePhone = VALUES (ECMobilePhone), "
+    		+ "ECEmail = VALUES (ECEmail)";
+    	case 2:
+    		return query + " ON DUPLICATE KEY UPDATE "
+            + "State = VALUES (State)";
+    	case 3:
+    		return query + " ON DUPLICATE KEY UPDATE "
+            + "Name = VALUES (Name)";
+    	case 4:
+    		return query + " ON DUPLICATE KEY UPDATE "
+            + "Description = VALUES (Description), "
+            + "AffectedOrgans = VALUES (AffectedOrgans)";
+    	case 5:
+    		return query + " ON DUPLICATE KEY UPDATE "
+            + "Time = VALUES (Time)";
+    	}
+    	return "";
+    }
+
     /**
      * Pushes all local changes to patients to the database.
      * @return True if successfully updated all patients, otherwise false.
      */
     private boolean updateAllPatients() {
-    	String[][] info;
-    	String[] params = new String[0];
-    	String query = new String();
+    	String[][][] info;
+    	String[][] params = new String[6][0];
+    	String query;
+    	String finalQuery;
+    	String[] finalParams;
+    	String[] queries = getInitialUpdateQueries();
+    	int queryCount = 0;
+    	int insertCount = 1;
     	for (Patient patient : getPatients()) {
     		if (patient.getChanged()) {
-    			info = getPreparedUpdatePatientQuery(patient);
-    			query += info[0][0];
-    			params = ArrayUtils.addAll(params, info[1]);
+    			info = getUpdatePatientQueryArray(patient);
+    			queryCount = 0;
+    			while (queryCount < info[0][0].length) {
+    				queries[queryCount] += info[0][0][queryCount];
+    				params[queryCount] = ArrayUtils.addAll(params[queryCount], info[1][queryCount]);
+    				queryCount += 1;
+    			}
+    			insertCount += 1;
+    		}
+    		if (insertCount == 4000) {
+    			finalQuery = "";
+    			finalParams = new String[0];
+    			queryCount = 0;
+    			while (queryCount < queries.length) {
+    				query = queries[queryCount];
+    				if (!query.equals("")) {
+    					query = query.substring(0, query.length() - 2);
+    					finalQuery += addQueryEnd(query, queryCount) + ";";
+    					finalParams = ArrayUtils.addAll(finalParams, params[queryCount]);
+    				}
+    				queryCount += 1;
+    			}
+    			try {
+					runQuery(finalQuery, finalParams);
+					queries = getInitialUpdateQueries();
+					params = new String[6][0];
+					insertCount = 1;
+				} catch (SQLException e) {
+					userActions.log(Level.SEVERE, "Failed to update all patients in database." + e.getMessage(), "Attempted to update all patients in database.");
+					return false;
+				}
     		}
     	}
     	try {
-			runQuery(query, params);
-			userActions.log(INFO, "Successfully updated all patients in database.", "Attempted to update all patients in database.");
+       		if (insertCount > 0) {
+    			finalQuery = "";
+    			finalParams = new String[0];
+    			queryCount = 0;
+    			while (queryCount < queries.length) {
+    				query = queries[queryCount];
+    				if (!query.equals("")) {
+    					query = query.substring(0, query.length() - 2);
+    					finalQuery += addQueryEnd(query, queryCount) + ";";
+    					finalParams = ArrayUtils.addAll(finalParams, params[queryCount]);
+    				}
+    				queryCount += 1;
+    			}
+    			runQuery(finalQuery, finalParams);
+    		}
+			userActions.log(Level.INFO, "Successfully updated all patients in database.", "Attempted to update all patients in database.");
 			return true;
 		} catch (SQLException e) {
 			userActions.log(Level.SEVERE, "Failed to update all patients in database." + e.getMessage(), "Attempted to update all patients in database.");
@@ -1884,4 +2079,10 @@ public class Database implements Serializable {
         }
         userActions.setLevel(ALL);
     }
+
+    public void importToDb(List records) {
+        patients.addAll(records);
+        updateDatabase();
+    }
 }
+
