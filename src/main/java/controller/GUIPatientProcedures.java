@@ -14,6 +14,7 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.Procedure;
+import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.StatusObservable;
@@ -84,6 +85,8 @@ public class GUIPatientProcedures extends UndoableController {
 
     private UserControl userControl;
 
+    private PatientDataService patientDataService = new PatientDataService();
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
 
@@ -93,7 +96,7 @@ public class GUIPatientProcedures extends UndoableController {
     public void initialize() {
         userControl = new UserControl();
         if (userControl.getLoggedInUser() instanceof Patient) {
-            this.patient = (Patient) userControl.getLoggedInUser();
+            this.patient = patientDataService.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber());
             this.patientClone = (Patient) this.patient.deepClone();
             setupTables();
             //Disable any add, edit, or delete functionality for patients
@@ -101,7 +104,7 @@ public class GUIPatientProcedures extends UndoableController {
             editProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
         } else if (userControl.getLoggedInUser() instanceof Clinician || userControl.getLoggedInUser() instanceof Administrator) {
-            this.patient = (Patient) userControl.getTargetUser();
+            this.patient = patientDataService.getPatientByNhi(((Patient) userControl.getTargetUser()).getNhiNumber());
             this.patientClone = (Patient) this.patient.deepClone();
             setupTables();
         }

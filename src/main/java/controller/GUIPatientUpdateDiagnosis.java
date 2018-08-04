@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import model.User;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
@@ -75,6 +77,8 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
     private ScreenControl screenControl = ScreenControl.getScreenControl();
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
+    private IPatientDataService patientDataService = new PatientDataService();
+
     private TouchPaneController diagnosisTouchPane;
 
     /**
@@ -100,7 +104,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
      */
     public void initialize() {
         userControl = new UserControl();
-        currentPatient = (Patient) userControl.getTargetUser();
+        currentPatient = patientDataService.getPatientByNhi(((Patient) userControl.getTargetUser()).getNhiNumber());
         patientClone = (Patient) currentPatient.deepClone();
         if(isAdd) {
             targetClone = new Disease(null, null);

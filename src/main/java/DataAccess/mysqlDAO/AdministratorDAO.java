@@ -73,7 +73,7 @@ public class AdministratorDAO implements IAdministratorDataAccess {
     private PreparedStatement addUpdateParams(Administrator admin, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setString(1, admin.getUsername());
         preparedStatement.setString(2, admin.getFirstName());
-        preparedStatement.setString(3, admin.getMiddleNames() == null ? null : String.join(",",admin.getMiddleNames()));
+        preparedStatement.setString(3, admin.getMiddleNames().size()  == 0 ? "" : String.join(" ",admin.getMiddleNames()));
         preparedStatement.setString(4, admin.getLastName());
         preparedStatement.setString(5, admin.getSalt());
         preparedStatement.setString(6, admin.getHashedPassword());

@@ -203,7 +203,7 @@ public class PatientDAO implements IPatientDataAccess {
     private PreparedStatement addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException {
         statement.setString(1, patient.getNhiNumber());
         statement.setString(2, patient.getFirstName());
-        statement.setString(3, patient.getMiddleNames() == null ? "" : String.join(" ", patient.getMiddleNames()));
+        statement.setString(3, patient.getMiddleNames().size()  == 0 ? "" : String.join(" ", patient.getMiddleNames()));
         statement.setString(4, patient.getLastName());
         statement.setString(5, patient.getBirth().toString());
         statement.setString(6, patient.getCREATED().toString());

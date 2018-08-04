@@ -101,7 +101,7 @@ public class ClinicianDAO implements IClinicianDataAccess {
     private PreparedStatement addUpdateParameters(Clinician clinician, PreparedStatement statement) throws SQLException {
         statement.setInt(1, clinician.getStaffID());
         statement.setString(2, clinician.getFirstName());
-        statement.setString(3, clinician.getMiddleNames() == null ? "" : String.join(" ", clinician.getMiddleNames()));
+        statement.setString(3, clinician.getMiddleNames().size() == 0 ? "" : String.join(" ", clinician.getMiddleNames()));
         statement.setString(4, clinician.getLastName());
         statement.setString(5, clinician.getStreet1());
         statement.setString(6, clinician.getStreet2());

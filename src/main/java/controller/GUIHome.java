@@ -408,9 +408,9 @@ public class GUIHome implements Observer, TouchscreenCapable {
         MenuItem menu2Item1 = new MenuItem("Save");
         menu2Item1.setAccelerator(screenControl.getSave());
         menu2Item1.setOnAction(event -> {
-            screenControl.setIsSaved(true);
             UserDataService userDataService = new UserDataService();
             userDataService.save();
+            screenControl.setIsSaved(true);
             userActions.log(INFO, "Successfully saved", "Attempted to save");
         });
         if (userControl.getLoggedInUser() instanceof Administrator) {
