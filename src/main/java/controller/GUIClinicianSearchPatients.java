@@ -125,7 +125,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
             }
             catch (NoSuchMethodException e) {
-                userActions.log(SEVERE, "No method exists for autocomplete", "Attempted to make API call"); // MAJOR ISSUE HERE!
+                userActions.log(SEVERE, "No method exists for search", "Attempted to search");
             }
         });
         setupDoubleClickToPatientEdit();
