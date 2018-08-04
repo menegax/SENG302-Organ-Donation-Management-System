@@ -3,6 +3,7 @@ package DataAccess.localDAO;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
+import utility.Searcher;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -75,7 +76,9 @@ class LocalDB { //leave package private
      * @param patient - The updated/new patient object
      */
     public void storePatient(Patient patient) {
+        Searcher.getSearcher().removeIndex(patient);
         patients.remove(patient);
+        Searcher.getSearcher().addIndex(patient);
         patients.add(patient);
     }
 

@@ -5,6 +5,7 @@ import DataAccess.interfaces.IClinicianDataAccess;
 import DataAccess.interfaces.IPatientDataAccess;
 import model.Clinician;
 import model.Patient;
+import model.User;
 import service.interfaces.IClinicianDataService;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utility.CachedThreadPool;
@@ -50,9 +51,9 @@ public class ClinicianDataService implements IClinicianDataService {
         List<Patient> results = new ArrayList<>();
 
         IPatientDataAccess dbPatientDataAccess = mysqlFactory.getPatientDataAccess();
-        //IPatientDataAccess localPatientDataAccess = localDbFactory.getPatientDataAccess(); //todo uncomment once Searcher.search is done
-        //Map<Integer, SortedSet<User>> localResults = localPatientDataAccess.searchPatients(searchTerm, filters, numResults);
-        Map<Integer, List<Patient>> localResults = getMockedLocal();
+        IPatientDataAccess localPatientDataAccess = localDbFactory.getPatientDataAccess();
+        Map<Integer, List<Patient>> localResults = localPatientDataAccess.searchPatients(searchTerm, filters, numResults);
+        //Map<Integer, List<Patient>> localResults = getMockedLocal();
 
         CachedThreadPool pool = CachedThreadPool.getCachedThreadPool();
         ExecutorService service = pool.getThreadService();
