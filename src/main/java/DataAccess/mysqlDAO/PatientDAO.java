@@ -122,8 +122,7 @@ public class PatientDAO implements IPatientDataAccess {
             System.out.println(statement);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                List<String> contacts = contactDataAccess.getContactByNhi(resultSet.getString("Nhi"));
-                Patient patient = constructPatientObject(resultSet, contacts);
+                Patient patient = constructPatientObject(resultSet, new ArrayList<String>(){{add(resultSet.getString("Region"));}});
                 //Add patient to resultMap with appropriate score
                 if (searchTerm.equals("")) {
                     resultMap.get(0).add(patient);
@@ -290,25 +289,30 @@ public class PatientDAO implements IPatientDataAccess {
             }
         });
         //map contact info etc
-        patient.setRegion(contacts.get(3) != null ? Region.getEnumFromString(contacts.get(3)) : null);
-        patient.setZip(contacts.get(4) == null ? 0 : Integer.parseInt(contacts.get(4)));
-        patient.setCurrentDiseases(currentDiseases);
-        patient.setPastDiseases(pastDiseases);
-        patient.setStreet1(contacts.get(0));
-        patient.setStreet2(contacts.get(1));
-        patient.setSuburb(contacts.get(2));
-        patient.setHomePhone(contacts.get(5));
-        patient.setWorkPhone(contacts.get(6));
-        patient.setMobilePhone(contacts.get(7));
-        patient.setEmailAddress(contacts.get(8));
-        patient.setContactName(contacts.get(9));
-        patient.setContactRelationship(contacts.get(10));
-        patient.setContactHomePhone(contacts.get(11));
-        patient.setContactWorkPhone(contacts.get(12));
-        patient.setContactMobilePhone(contacts.get(13));
-        patient.setContactEmailAddress(contacts.get(14));
-        patient.setUserActionsList(logs == null ? new ArrayList<>() : logs);
-        patient.setProcedures(procedures == null ? new ArrayList<>() : procedures);
+        if (contacts.size() != 1) {
+            patient.setRegion(contacts.get(3) != null ? Region.getEnumFromString(contacts.get(3)) : null);
+            patient.setZip(contacts.get(4) == null ? 0 : Integer.parseInt(contacts.get(4)));
+            patient.setCurrentDiseases(currentDiseases);
+            patient.setPastDiseases(pastDiseases);
+            patient.setStreet1(contacts.get(0));
+            patient.setStreet2(contacts.get(1));
+            patient.setSuburb(contacts.get(2));
+            patient.setHomePhone(contacts.get(5));
+            patient.setWorkPhone(contacts.get(6));
+            patient.setMobilePhone(contacts.get(7));
+            patient.setEmailAddress(contacts.get(8));
+            patient.setContactName(contacts.get(9));
+            patient.setContactRelationship(contacts.get(10));
+            patient.setContactHomePhone(contacts.get(11));
+            patient.setContactWorkPhone(contacts.get(12));
+            patient.setContactMobilePhone(contacts.get(13));
+            patient.setContactEmailAddress(contacts.get(14));
+            patient.setUserActionsList(logs == null ? new ArrayList<>() : logs);
+            patient.setProcedures(procedures == null ? new ArrayList<>() : procedures);
+        } else {
+            patient.setRegion(contacts.get(0) != null ? Region.getEnumFromString(contacts.get(0)) : null);
+        }
+
         return patient;
     }
 
