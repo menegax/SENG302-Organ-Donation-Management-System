@@ -54,13 +54,14 @@ public class DiseaseDAO implements IDiseaseDataAccess {
                 String recordState = resultSet.getString("State");
                 DiseaseState state = recordState.equals("0") ? null : (recordState.equals("1") ? DiseaseState.CHRONIC : DiseaseState.CURED);
                 Disease disease = new Disease(name, state);
-                disease.setDateDiagnosed(diagnosed, null); //todo temp - Need to have patient object, or modify setDateDiagnosed in Disease
+                disease.setDateDiagnosed(diagnosed, LocalDate.parse(resultSet.getString("Birth")));
                 diseases.add(disease);
             }
             return diseases;
         } catch (SQLException | IOException e) {
-            return null;
+           e.printStackTrace();
         }
+        return null;
     }
 
     @Override
