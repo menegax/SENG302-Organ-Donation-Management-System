@@ -171,7 +171,7 @@ public class PatientDAO implements IPatientDataAccess {
                         query.append(String.format("timestampdiff(YEAR, birth, now()) <= %d AND ", Double.valueOf(filters.get(AGEUPPER)).intValue()));
                         break;
                     case BIRTHGENDER:
-                        query.append(String.format("birthgender = '%s' AND ", filters.get(BIRTHGENDER)));
+                        query.append(String.format("birthgender = '%s' AND ", filters.get(BIRTHGENDER).charAt(0)));
                         break;
                     case REGION:
                         query.append(String.format("EXISTS (SELECT * FROM tblPatientContact c WHERE c.Patient=Nhi and c.Region='%s') AND ", filters.get(REGION)));
