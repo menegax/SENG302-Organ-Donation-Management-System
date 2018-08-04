@@ -8,7 +8,7 @@ import utility.Searcher;
 import java.util.HashSet;
 import java.util.Set;
 
-class LocalDB { //leave package private
+public class LocalDB {
     private static LocalDB instance;
 
     private Set<Patient> patients;

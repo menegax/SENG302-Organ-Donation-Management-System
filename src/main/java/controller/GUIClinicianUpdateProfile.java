@@ -11,7 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.User;
 import service.ClinicianDataService;
-import service.Database;
+    import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UIRegex;
@@ -103,7 +103,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
      */
     private void loadProfile(int staffId) {
         ClinicianDataService dataService = new ClinicianDataService();
-        Clinician clinician = dataService.getClinician(staffId);
+        Clinician clinician = dataService.getClinician(staffId); //load from db
         if (clinician != null) {
             target = clinician;
             populateForm(clinician);

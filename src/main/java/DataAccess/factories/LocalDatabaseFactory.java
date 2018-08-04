@@ -1,10 +1,8 @@
 package DataAccess.factories;
 
-import DataAccess.LocalDB;
+
 import DataAccess.interfaces.*;
 import DataAccess.localDAO.*;
-import DataAccess.mysqlDAO.AdministratorLogDAO;
-import DataAccess.mysqlDAO.PatientDAO;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utility.AdministratorActionRecord;
 import utility.ClinicianActionRecord;

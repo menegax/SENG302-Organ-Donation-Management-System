@@ -7,7 +7,7 @@ import java.util.Set;
 
 public interface IClinicianDataAccess {
 
-    public int saveClinician(Set<Clinician> clinician);
+    public void saveClinician(Set<Clinician> clinician);
 
     public boolean addClinician (Clinician clinician);
 

@@ -24,8 +24,10 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import service.AdministratorDataService;
+import service.ClinicianDataService;
 import service.PatientDataService;
 import service.UserDataService;
+import service.interfaces.IClinicianDataService;
 import utility.GlobalEnums;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
@@ -34,6 +36,7 @@ import utility.undoRedo.UndoableStage;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
@@ -124,11 +127,12 @@ public class GUILogin implements TouchscreenCapable {
                 login.addLoggedInUserToCache(patient2);
 
             } else if (clinician.isSelected()) {
-                IClinicianDataAccess clinicianDataAccess = factory.getClinicianDataAccess();
-                Clinician clinician = clinicianDataAccess.getClinicianByStaffId(Integer.parseInt(nhiLogin.getText()));
+                IClinicianDataService clinicianDataService = new ClinicianDataService();
+                Clinician clinician = clinicianDataService.getClinician(Integer.parseInt(nhiLogin.getText()));
                 if (clinician == null) {
                     throw new InvalidObjectException("User doesn't exist");
                 }
+                clinicianDataService.save(clinician);
                 login.addLoggedInUserToCache(clinician);
             } else {
                 checkAdminCredentials();

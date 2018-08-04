@@ -18,8 +18,8 @@ public class ClinicianLocalDAO implements IClinicianDataAccess {
 
 
     @Override
-    public int saveClinician(Set<Clinician> clinician) {
-        return 0;
+    public void saveClinician(Set<Clinician> clinician) {
+        clinician.forEach(x -> localDB.storeClinician(x));
     }
 
     @Override

@@ -16,8 +16,8 @@ public class AdministratorLocalDAO implements IAdministratorDataAccess {
 
 
     @Override
-    public int saveAdministrator(Set<Administrator> administrators) {
-        return 0;
+    public void saveAdministrator(Set<Administrator> administrators) {
+        administrators.forEach(x -> localDB.storeAdministrator(x));
     }
 
     @Override

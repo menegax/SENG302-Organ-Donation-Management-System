@@ -26,8 +26,16 @@ public class ClinicianDAO implements IClinicianDataAccess {
 
 
     @Override
-    public int saveClinician(Set<Clinician> clinician) {
-        return 0;
+    public void saveClinician(Set<Clinician> clinicians) {
+        try (Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement preparedStatement  = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_CLINICIAN_QUERY"));
+            for (Clinician clinician : clinicians) {
+                preparedStatement = addUpdateParameters(clinician, preparedStatement);
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -93,6 +101,7 @@ public class ClinicianDAO implements IClinicianDataAccess {
         statement.setString(6, clinician.getStreet2());
         statement.setString(7, clinician.getSuburb());
         statement.setString(8, clinician.getRegion() == null ? null : clinician.getRegion().toString());
+        statement.setString(9,clinician.getModified().toString());
         return statement;
     }
 }

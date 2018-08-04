@@ -252,10 +252,10 @@ public class GUIHome implements Observer, TouchscreenCapable {
      * @param title - title of the new tab
      * @param fxmlPath - path of the fxml to be loaded
      */
-    private void createTab(TabName title, String fxmlPath) throws IOException {
+    private void createTab(TabName title, String fxmlPath) {
         Tab newTab = new Tab();
         newTab.setText(title.toString());
-            newTab.setOnSelectionChanged(event -> {
+            newTab.selectedProperty().addListener(observable ->{
                 try {
                     newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
                 } catch (IOException e) {

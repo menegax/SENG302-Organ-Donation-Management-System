@@ -12,10 +12,7 @@ import utility.CachedThreadPool;
 import utility.GlobalEnums;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -107,7 +104,7 @@ public class ClinicianDataService implements IClinicianDataService {
 
     @Override
     public void save(Clinician clinician) {
-        throw new NotImplementedException();
+        localDbFactory.getClinicianDataAccess().saveClinician(new HashSet<Clinician>(){{add(clinician);}});
     }
 
 }

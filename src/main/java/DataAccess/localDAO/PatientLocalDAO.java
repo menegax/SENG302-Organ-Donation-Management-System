@@ -1,6 +1,5 @@
 package DataAccess.localDAO;
 
-import DataAccess.LocalDB;
 import DataAccess.factories.LocalDatabaseFactory;
 import DataAccess.interfaces.IPatientDataAccess;
 import model.Patient;

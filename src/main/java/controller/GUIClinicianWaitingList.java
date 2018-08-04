@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import service.ClinicianDataService;
 import service.OrganWaitlist;
 import service.PatientDataService;
-import service.UserDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;

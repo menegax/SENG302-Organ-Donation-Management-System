@@ -7,7 +7,7 @@ import java.util.Set;
 
 public interface IAdministratorDataAccess {
 
-    public int saveAdministrator (Set<Administrator> administrators);
+    public void saveAdministrator (Set<Administrator> administrators);
 
     public boolean addAdministrator (Administrator administrator);
 
