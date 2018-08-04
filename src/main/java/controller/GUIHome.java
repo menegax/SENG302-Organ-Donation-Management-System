@@ -66,7 +66,6 @@ public class GUIHome implements Observer, TouchscreenCapable {
 
     private UserControl userControl = new UserControl();
 
-    private Database database = Database.getDatabase();
 
     private  enum TabName {
         PROFILE("Profile"), UPDATE("Update"), DONATIONS("Donations"), CONTACTDETAILS("Contact Details"),
@@ -381,10 +380,6 @@ public class GUIHome implements Observer, TouchscreenCapable {
         screenControl.setIsSaved(true);
         userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
 
-        // Resets all local changes
-        database.resetLocalDatabase();
-        database.loadAll();
-
         Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
     }
 
@@ -425,7 +420,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
             menu2Item2.setOnAction(event -> {
                 File file = new FileChooser().showOpenDialog(stage);
                 if (file != null) {
-                    database.importFromDiskPatients(file.getAbsolutePath());
+                    //database.importFromDiskPatients(file.getAbsolutePath()); //TODO
                     userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
                 }
             });
@@ -433,7 +428,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
             menu2Item3.setOnAction(event -> {
                 File file = new FileChooser().showOpenDialog(stage);
                 if (file != null) {
-                    database.importFromDiskPatients(file.getAbsolutePath());
+                  //  database.importFromDiskPatients(file.getAbsolutePath());
                     userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
                 }
             });

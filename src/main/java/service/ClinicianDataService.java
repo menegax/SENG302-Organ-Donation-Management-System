@@ -34,12 +34,12 @@ public class ClinicianDataService implements IClinicianDataService {
     }
 
     @Override
-    public Clinician getClinician(String staffId) {
+    public Clinician getClinician(int staffId) {
         IClinicianDataAccess clinicianDataAccessLocal = localDbFactory.getClinicianDataAccess();
-        if (clinicianDataAccessLocal.getClinicianByStaffId(Integer.parseInt(staffId)) == null) {
-            return mysqlFactory.getClinicianDataAccess().getClinicianByStaffId(Integer.parseInt(staffId));
+        if (clinicianDataAccessLocal.getClinicianByStaffId(staffId) == null) {
+            return mysqlFactory.getClinicianDataAccess().getClinicianByStaffId(staffId);
         }
-        return  clinicianDataAccessLocal.getClinicianByStaffId(Integer.parseInt(staffId));
+        return  clinicianDataAccessLocal.getClinicianByStaffId(staffId);
     }
 
     @Override

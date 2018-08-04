@@ -1,6 +1,6 @@
 package controller;
 
-import DataAccess.factories.DAOFactory;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,6 +10,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.User;
+import service.ClinicianDataService;
 import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
@@ -63,15 +64,6 @@ public class GUIClinicianUpdateProfile extends UndoableController {
 
     private Clinician target;
 
-    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
-
-    /**
-     * Undoes an action taken when editing a clinician
-     */
-
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
-
-
     /**
      * Initializes the clinician editing screen.
      * Populates the Region drop down menu using region enums.
@@ -110,7 +102,8 @@ public class GUIClinicianUpdateProfile extends UndoableController {
      * @param staffId ID of clinician to load
      */
     private void loadProfile(int staffId) {
-        Clinician clinician = factory.getClinicianDataAccess().getClinicianByStaffId(staffId);
+        ClinicianDataService dataService = new ClinicianDataService();
+        Clinician clinician = dataService.getClinician(staffId);
         if (clinician != null) {
             target = clinician;
             populateForm(clinician);

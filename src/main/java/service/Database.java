@@ -202,7 +202,7 @@ public class Database implements Serializable {
         organWaitingList = new OrganWaitlist();
         initializeConnection();
         if (conn != null) {
-        	loadAll();
+        	//loadAll();
         }
     }
 
@@ -897,19 +897,7 @@ public class Database implements Serializable {
         return false;
     }
 
-    /**
-     * loads all data from database into application.
-     */
-    public void loadAll() {
-        systemLogger.log(INFO, "Loading all data from db...");
-        userActions.setLevel(OFF);
-        loadAllPatients();
-        loadAllClinicians();
-        loadAllAdministrators();
-        loadTransplantWaitingList();
-        userActions.setLevel(ALL);
 
-    }
 
     /**
      * Loads all organs for a patient and stores them in an ArrayList.

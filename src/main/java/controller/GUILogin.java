@@ -24,7 +24,6 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import service.AdministratorDataService;
-import service.Database;
 import service.PatientDataService;
 import service.UserDataService;
 import utility.GlobalEnums;

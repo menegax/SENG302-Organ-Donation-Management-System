@@ -12,7 +12,7 @@ public interface IClinicianDataService {
 
     public OrganWaitlist getOrganWaitList();
 
-    public Clinician getClinician(String staffId);
+    public Clinician getClinician(int staffId);
 
     public List<Patient> searchPatients(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
 
