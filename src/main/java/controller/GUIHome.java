@@ -42,6 +42,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class GUIHome implements Observer, TouchscreenCapable {
 
@@ -411,7 +413,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
             UserDataService userDataService = new UserDataService();
             userDataService.save();
             screenControl.setIsSaved(true);
-            userActions.log(INFO, "Successfully saved", "Attempted to save");
+            userActions.log(INFO, "Saved successfully", "Attempted to save");
         });
         if (userControl.getLoggedInUser() instanceof Administrator) {
             Menu subMenuImport = new Menu("Import"); // import submenu

@@ -1,7 +1,5 @@
 package service.interfaces;
 
-import model.Patient;
-
 public interface IUserDataService {
 
 

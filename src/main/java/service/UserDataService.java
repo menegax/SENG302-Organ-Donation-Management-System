@@ -32,12 +32,13 @@ public class UserDataService implements IUserDataService {
         IClinicianDataAccess clinicianDataService = mysqlFactory.getClinicianDataAccess();
         IAdministratorDataAccess administratorDataAccess = mysqlFactory.getAdministratorDataAccess();
 
+
+        //Thread management
         CachedThreadPool threadPool = CachedThreadPool.getCachedThreadPool();
         threadPool.getThreadService().submit(() -> {
             clinicianDataService.saveClinician(clinicians);
             patientDataAccess.savePatients(patients); //save to remote db
             administratorDataAccess.saveAdministrator(administrators);
         });
-
     }
 }
