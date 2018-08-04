@@ -12,6 +12,8 @@ import javafx.scene.layout.GridPane;
 import model.Disease;
 import model.Patient;
 import service.Database;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.StatusObservable;
 import utility.undoRedo.Action;
@@ -92,6 +94,8 @@ public class GUIClinicianDiagnosis extends UndoableController{
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private IPatientDataService patientDataService = new PatientDataService();
+
 
     /**
      * Sets if the patient's diagnoses have been altered at all.
@@ -111,14 +115,14 @@ public class GUIClinicianDiagnosis extends UndoableController{
     public void initialize() {
         userControl = new UserControl();
         if(userControl.getLoggedInUser() instanceof Patient) {
-            target = (Patient) userControl.getLoggedInUser();
+            target = patientDataService.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber());
             targetClone = (Patient) target.deepClone();
             addDiagnosisButton.setVisible(false);
             addDiagnosisButton.setDisable(true);
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
         } else {
-            target = (Patient) userControl.getTargetUser();
+            target = patientDataService.getPatientByNhi(((Patient) userControl.getTargetUser()).getNhiNumber());
             targetClone = (Patient) target.deepClone();
             addDiagnosisButton.setVisible(true);
             addDiagnosisButton.setDisable(false);

@@ -22,6 +22,7 @@ public class ClinicianILogDAO implements ILogDataAccess<ClinicianActionRecord> {
     @Override
     public void saveLogs(List<ClinicianActionRecord> records, String id) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
+            deleteLogsByUserId(id);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("INSERT_CLINICIAN_LOGS"));
             for (ClinicianActionRecord record : records) {
                 statement.setString(1, id);

@@ -3,9 +3,13 @@ package service;
 import DataAccess.factories.DAOFactory;
 import model.Patient;
 import service.interfaces.IPatientDataService;
+import utility.CachedThreadPool;
 import utility.GlobalEnums.*;
 
 import java.util.HashSet;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 
 /**
@@ -23,10 +27,20 @@ public class PatientDataService implements IPatientDataService {
 
     @Override
     public Patient getPatientByNhi(String nhi) {
-        if (localDbFactory.getPatientDataAccess().getPatientByNhi(nhi) == null) { //not in local db
-            return mysqlFactory.getPatientDataAccess().getPatientByNhi(nhi); //get from remote
+        CachedThreadPool threadPool = CachedThreadPool.getCachedThreadPool();
+        Callable<Patient> task = () -> {
+            if (localDbFactory.getPatientDataAccess().getPatientByNhi(nhi) == null) { //not in local db
+                return mysqlFactory.getPatientDataAccess().getPatientByNhi(nhi); //get from remote
+            }
+            return localDbFactory.getPatientDataAccess().getPatientByNhi(nhi);
+        };
+        Future<Patient> patientFuture = threadPool.getThreadService().submit(task);
+        try {
+            return patientFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
-        return localDbFactory.getPatientDataAccess().getPatientByNhi(nhi);
+        return null;
     }
 
     @Override

@@ -7,6 +7,7 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import service.interfaces.IUserDataService;
+import utility.CachedThreadPool;
 import utility.GlobalEnums;
 
 import java.util.Set;
@@ -28,10 +29,15 @@ public class UserDataService implements IUserDataService {
         Set<Clinician> clinicians = localDatabase.getClinicianDataAccess().getClinicians();
         Set<Administrator> administrators = localDatabase.getAdministratorDataAccess().getAdministrators();
         IPatientDataAccess patientDataAccess = mysqlFactory.getPatientDataAccess();
-        patientDataAccess.savePatients(patients); //save to remote db
         IClinicianDataAccess clinicianDataService = mysqlFactory.getClinicianDataAccess();
-        clinicianDataService.saveClinician(clinicians);
         IAdministratorDataAccess administratorDataAccess = mysqlFactory.getAdministratorDataAccess();
-        administratorDataAccess.saveAdministrator(administrators);
+
+        CachedThreadPool threadPool = CachedThreadPool.getCachedThreadPool();
+        threadPool.getThreadService().submit(() -> {
+            clinicianDataService.saveClinician(clinicians);
+            patientDataAccess.savePatients(patients); //save to remote db
+            administratorDataAccess.saveAdministrator(administrators);
+        });
+
     }
 }

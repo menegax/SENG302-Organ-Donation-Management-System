@@ -373,8 +373,7 @@ public class GUIPatientMedications extends UndoableController {
                     .toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
-                after.getCurrentMedications()
-                        .add(new Medication(medication));
+                after.getCurrentMedications().add(new Medication(medication, GlobalEnums.MedicationStatus.CURRENT));
                 statesHistoryScreen.addAction(new Action(target, after));
                 userActions.log(Level.INFO,
                         "Added medication: " + medication,
@@ -448,12 +447,10 @@ public class GUIPatientMedications extends UndoableController {
     private void moveToCurrent(ArrayList<String> medications) {
         for (String medication : medications) {
             if (history.contains(medication)) {
-                after.getMedicationHistory()
-                        .remove(history.indexOf(medication));
+                after.getMedicationHistory().remove(history.indexOf(medication));
 
                 if (!current.contains(medication)) {
-                    after.getCurrentMedications()
-                            .add(new Medication(medication));
+                    after.getCurrentMedications().add(new Medication(medication, GlobalEnums.MedicationStatus.CURRENT));
                     viewCurrentMedications();
                 }
                 userActions.log(Level.INFO,
@@ -475,12 +472,9 @@ public class GUIPatientMedications extends UndoableController {
     private void moveToHistory(ArrayList<String> medications) {
         for (String medication : medications) {
             if (current.contains(medication)) {
-                after.getCurrentMedications()
-                        .remove(current.indexOf(medication));
-
+                after.getCurrentMedications().remove(current.indexOf(medication));
                 if (!history.contains(medication)) {
-                    after.getMedicationHistory()
-                            .add(new Medication(medication));
+                    after.getMedicationHistory().add(new Medication(medication, GlobalEnums.MedicationStatus.HISTORY));
                     viewPastMedications();
                 }
                 userActions.log(Level.INFO,

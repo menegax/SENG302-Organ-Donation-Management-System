@@ -25,6 +25,7 @@ public class AdministratorLogDAO implements ILogDataAccess<AdministratorActionRe
     public void saveLogs(List<AdministratorActionRecord> records, String id) {
        try (Connection connection = mysqlFactory.getConnectionInstance()) {
            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("INSERT_ADMINISTRATOR_LOGS"));
+           deleteLogsByUserId(id);
            for (AdministratorActionRecord record : records) {
                statement.setString(1, id);
                statement.setString(4, record.getMessage());

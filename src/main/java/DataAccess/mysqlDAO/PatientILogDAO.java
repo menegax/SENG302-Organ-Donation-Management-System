@@ -26,6 +26,7 @@ public class PatientILogDAO implements ILogDataAccess<PatientActionRecord>{
     public void saveLogs(List<PatientActionRecord> records, String id) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("INSERT_PATIENT_LOGS"));
+            deleteLogsByUserId(id);
             if (records.size() > 0) {
                 for (PatientActionRecord record : records) {
                     statement.setString(1, id);

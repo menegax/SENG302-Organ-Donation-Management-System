@@ -1170,15 +1170,16 @@ public class Database implements Serializable {
      * @return The updated ArrayList arry of current and past medication.
      */
     private ArrayList<Medication>[] parseMedication(String[] attr, ArrayList<Medication>[] meds) {
-        switch (attr[2]) {
-            case "0":
-                meds[0].add(new Medication(attr[1]));
-                break;
-            case "1":
-                meds[1].add(new Medication(attr[1]));
-                break;
-        }
-        return meds;
+//        switch (attr[2]) {
+//            case "0":
+//                meds[0].add(new Medication(attr[1]));
+//                break;
+//            case "1":
+//                meds[1].add(new Medication(attr[1]));
+//                break;
+//        }
+//        return meds;
+        return null;
     }
 
     /**

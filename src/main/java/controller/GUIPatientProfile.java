@@ -162,7 +162,7 @@ public class GUIPatientProfile {
         } else if (userControl.getLoggedInUser() instanceof Clinician) {
             deleteButton.setVisible( false );
             deleteButton.setDisable( true );
-            patient = (Patient) userControl.getTargetUser();
+            patient = patientDataService.getPatientByNhi(((Patient)userControl.getTargetUser()).getNhiNumber());
         }
         try {
             if (patient != null) {

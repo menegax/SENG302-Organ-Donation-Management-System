@@ -10,7 +10,8 @@ public class Medication implements Serializable {
 
     private MedicationStatus medicationStatus;
 
-    public Medication(String name) {
+    public Medication(String name, MedicationStatus status) {
+        medicationStatus = status;
         medicationName = name;
     }
 

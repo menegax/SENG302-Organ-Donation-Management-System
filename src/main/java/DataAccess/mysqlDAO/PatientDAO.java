@@ -40,12 +40,12 @@ public class PatientDAO implements IPatientDataAccess {
             for (Patient patient : patients) {
                 statement = addUpdateParameters(statement, patient);
                 statement.executeUpdate();
-                for (Medication medication : patient.getMedicationHistory()) {
-                    medicationDataAccess.updateMedication(patient.getNhiNumber(), medication, MedicationStatus.HISTORY);
-                }
-                for (Medication medication : patient.getCurrentMedications()) {
-                    medicationDataAccess.updateMedication(patient.getNhiNumber(), medication, MedicationStatus.CURRENT);
-                }
+                List<Medication> fullList = new ArrayList<>();
+                fullList.addAll(patient.getCurrentMedications());
+                fullList.addAll(patient.getMedicationHistory());
+                medicationDataAccess.updateMedication(patient.getNhiNumber(), fullList);
+
+                diseaseDataAccess.deleteAllDiseasesByNhi(patient.getNhiNumber());
                 for (Disease disease : patient.getPastDiseases()) {
                     diseaseDataAccess.updateDisease(patient.getNhiNumber(), disease);
                 }
@@ -53,6 +53,8 @@ public class PatientDAO implements IPatientDataAccess {
                     diseaseDataAccess.updateDisease(patient.getNhiNumber(), disease);
                 }
                 logDataAccess.saveLogs(patient.getUserActionsList(), patient.getNhiNumber());
+
+                procedureDataAccess.deleteAllProceduresByNhi(patient.getNhiNumber());
                 contactDataAccess.updateContact(patient);
                 for (Procedure procedure : patient.getProcedures()) {
                     procedureDataAccess.updateProcedure(patient.getNhiNumber(), procedure);
