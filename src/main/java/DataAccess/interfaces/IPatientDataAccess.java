@@ -21,7 +21,7 @@ public interface IPatientDataAccess {
 
     public boolean deletePatient(Patient patient);
 
-    Map<Integer, SortedSet<User>> searchPatients(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
+    Map<Integer, List<Patient>> searchPatients(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
 
     public void deletePatientByNhi(String nhi);
 

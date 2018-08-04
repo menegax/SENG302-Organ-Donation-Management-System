@@ -54,8 +54,9 @@ public class PatientLocalDAO implements IPatientDataAccess {
     }
 
     @Override
-    public Map<Integer, SortedSet<User>> searchPatients(String searchTerm, Map<FilterOption, String> filters, int numResults) {
-        return Searcher.getSearcher().search(searchTerm, new UserTypes[]{UserTypes.PATIENT}, numResults, filters);
+    public Map<Integer, List<Patient>> searchPatients(String searchTerm, Map<FilterOption, String> filters, int numResults) {
+        //return Searcher.getSearcher().search(searchTerm, new UserTypes[]{UserTypes.PATIENT}, numResults, filters);
+        return null;
     }
 
     @Override

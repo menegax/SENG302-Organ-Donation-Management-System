@@ -1,14 +1,10 @@
 package utility;
 
-import static utility.GlobalEnums.NONE_ID;
-import static utility.SystemLogger.systemLogger;
-
-import utility.GlobalEnums.*;
+import DataAccess.LocalDB;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -20,17 +16,15 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.RAMDirectory;
-
-import DataAccess.LocalDB;
-import service.Database;
+import utility.GlobalEnums.*;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.*;
-
-import utility.GlobalEnums.UserTypes;
-
 import java.util.logging.Level;
+
+import static utility.GlobalEnums.*;
+import static utility.SystemLogger.systemLogger;
 
 public class Searcher {
 

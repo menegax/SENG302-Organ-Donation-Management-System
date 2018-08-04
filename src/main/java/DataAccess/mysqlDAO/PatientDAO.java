@@ -103,11 +103,11 @@ public class PatientDAO implements IPatientDataAccess {
     }
 
     @Override
-    public Map<Integer, SortedSet<User>> searchPatients(String searchTerm, Map<FilterOption, String> filters, int numResults) {
+    public Map<Integer, List<Patient>> searchPatients(String searchTerm, Map<FilterOption, String> filters, int numResults) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
-            Map<Integer, SortedSet<User>> resultMap = new HashMap<>();
+            Map<Integer, List<Patient>> resultMap = new HashMap<>();
             for (int i = 0; i <= 2; i++) {
-                resultMap.put(i, new TreeSet<>());
+                resultMap.put(i, new ArrayList<>());
             }
             connection.setAutoCommit(false);
             PreparedStatement statement;
