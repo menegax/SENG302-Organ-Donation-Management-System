@@ -21,8 +21,8 @@ public class AdministratorLocalDAO implements IAdministratorDataAccess {
     }
 
     @Override
-    public boolean addAdministrator(Administrator clinician) {
-        return false;
+    public void addAdministrator(Administrator administrator) {
+        localDB.storeAdministrator(administrator);
     }
 
     @Override

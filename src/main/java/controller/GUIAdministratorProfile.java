@@ -8,6 +8,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Administrator;
 import model.User;
+import service.AdministratorDataService;
 import service.Database;
 import utility.GlobalEnums;
 import utility.StatusObservable;
@@ -41,15 +42,15 @@ public class GUIAdministratorProfile {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    /**
-     * Initializes the clinician profile view screen by loading the logged in clinician's profile
-     */
+    private AdministratorDataService administratorDataService = new AdministratorDataService();
+
+
     public void initialize() {
         User loggedIn = userControl.getLoggedInUser();
         if (userControl.getTargetUser() instanceof Administrator) {
-            target = (Administrator) userControl.getTargetUser();
+            target = administratorDataService.getAdministratorByUsername(((Administrator) userControl.getTargetUser()).getUsername());
         } else {
-            target = (Administrator) loggedIn;
+            target = administratorDataService.getAdministratorByUsername(((Administrator) loggedIn).getUsername());
         }
         if (target.getUsername().toLowerCase().equals("admin")) {
             deleteButton.setVisible(false);

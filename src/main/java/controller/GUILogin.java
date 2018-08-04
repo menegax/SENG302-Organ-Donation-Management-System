@@ -64,7 +64,6 @@ public class GUILogin implements TouchscreenCapable {
     @FXML
     private RadioButton administrator;
 
-    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
 
     private TouchPaneController loginTouchPane;
 
@@ -74,7 +73,7 @@ public class GUILogin implements TouchscreenCapable {
 
     private PatientDataService patientDataService = new PatientDataService();
 
-    private UserDataService userDataService = new UserDataService();
+    private AdministratorDataService administratorDataService = new AdministratorDataService();
 
     /**
      * Initializes the login window by adding key binding for login on enter and an event filter on the login field
@@ -136,7 +135,8 @@ public class GUILogin implements TouchscreenCapable {
                 login.addLoggedInUserToCache(clinician);
             } else {
                 checkAdminCredentials();
-                login.addLoggedInUserToCache(factory.getAdministratorDataAccess().getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
+                Administrator administrator = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
+                login.addLoggedInUserToCache(administrator);
             }
             Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
             UndoableStage stage = new UndoableStage();
@@ -162,7 +162,6 @@ public class GUILogin implements TouchscreenCapable {
     }
 
     private void checkAdminCredentials() throws InvalidObjectException {
-        AdministratorDataService administratorDataService = new AdministratorDataService();
         Administrator admin = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
         if (admin == null) {
             throw new InvalidObjectException("User doesn't exist");

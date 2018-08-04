@@ -19,6 +19,8 @@ import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
+import service.AdministratorDataService;
+import service.ClinicianDataService;
 import service.Database;
 import utility.GlobalEnums;
 import utility.Searcher;
@@ -48,7 +50,8 @@ public class Main extends Application {
 
         Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
-        openKeyboard();
+        prepareApplication();
+       // openKeyboard();
         primaryStage.show();
     }
 
@@ -82,5 +85,19 @@ public class Main extends Application {
                 alert.show();
             }
         }
+    }
+
+    private void prepareApplication() {
+        AdministratorDataService dataService = new AdministratorDataService();
+        ClinicianDataService clinicianDataService = new ClinicianDataService();
+        if (clinicianDataService.getClinician(0) == null) {
+            systemLogger.log(INFO, "Default clinician not in database. Adding default clinician to database.");
+            clinicianDataService.save(new Clinician(0, "Rob", new ArrayList<>(), "Burns", GlobalEnums.Region.CANTERBURY));
+        }
+        if (dataService.getAdministratorByUsername("admin") == null) {
+            systemLogger.log(INFO, "Default admin not in database. Adding default admin to database.");
+            dataService.save(new Administrator("admin", "John", new ArrayList<>(), "Smith", "password"));
+        }
+
     }
 }

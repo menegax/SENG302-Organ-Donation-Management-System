@@ -9,7 +9,7 @@ public interface IAdministratorDataAccess {
 
     public void saveAdministrator (Set<Administrator> administrators);
 
-    public boolean addAdministrator (Administrator administrator);
+    public void addAdministrator (Administrator administrator);
 
     public boolean deleteAdministrator (Administrator administrator);
 

@@ -18,31 +18,29 @@ public class UserLocalDAO implements IUserDataAccess {
 
     private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
-    public boolean addUser(User user) {
+    public void addUser(User user) {
         if (user instanceof Patient) {
             IPatientDataAccess patientDAO = factory.getPatientDataAccess();
-            return patientDAO.addPatientsBatch(new ArrayList<Patient>(){{add((Patient) user);}});
+            patientDAO.addPatientsBatch(new ArrayList<Patient>(){{add((Patient) user);}});
         } else if (user instanceof Clinician) {
             IClinicianDataAccess clinicianDAO = factory.getClinicianDataAccess();
-            return clinicianDAO.addClinician((Clinician) user);
+            clinicianDAO.addClinician((Clinician) user);
         } else if (user instanceof Administrator) {
             IAdministratorDataAccess administratorDAO = factory.getAdministratorDataAccess();
-            return administratorDAO.addAdministrator((Administrator) user);
+            administratorDAO.addAdministrator((Administrator) user);
         }
-        return false;
     }
 
-    public boolean deleteUser(User user) {
+    public void deleteUser(User user) {
         if (user instanceof Patient) {
             IPatientDataAccess patientDAO = factory.getPatientDataAccess();
-            return patientDAO.deletePatient((Patient) user);
+            patientDAO.deletePatient((Patient) user);
         } else if (user instanceof Clinician) {
             IClinicianDataAccess clinicianDAO = factory.getClinicianDataAccess();
-            return clinicianDAO.deleteClinician((Clinician) user);
+            clinicianDAO.deleteClinician((Clinician) user);
         } else if (user instanceof Administrator) {
             IAdministratorDataAccess administratorDAO = factory.getAdministratorDataAccess();
-            return administratorDAO.deleteAdministrator((Administrator) user);
+            administratorDAO.deleteAdministrator((Administrator) user);
         }
-        return false;
     }
 }

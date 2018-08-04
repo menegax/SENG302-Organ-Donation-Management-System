@@ -46,14 +46,16 @@ public class AdministratorDataService implements IAdministratorDataService {
     @Override
     public Administrator getAdministratorByUsername(String username) {
         IAdministratorDataAccess administratorDataAccess = localDbFactory.getAdministratorDataAccess();
-        if (administratorDataAccess.getAdministratorByUsername(username) == null) {
+        Administrator administrator = administratorDataAccess.getAdministratorByUsername(username);
+        if (administrator == null) {
             return mysqlFactory.getAdministratorDataAccess().getAdministratorByUsername(username);
         }
-        return administratorDataAccess.getAdministratorByUsername(username);
+        return administrator;
     }
 
     @Override
     public void save(Administrator administrator) {
-        throw new NotImplementedException();
+        IAdministratorDataAccess dataAccess = localDbFactory.getAdministratorDataAccess();
+        dataAccess.addAdministrator(administrator);
     }
 }

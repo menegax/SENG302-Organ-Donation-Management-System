@@ -40,8 +40,8 @@ public class AdministratorDAO implements IAdministratorDataAccess {
     }
 
     @Override
-    public boolean addAdministrator(Administrator clinician) {
-        return false;
+    public void addAdministrator(Administrator clinician) {
+        throw new NotImplementedException();
     }
 
     @Override
