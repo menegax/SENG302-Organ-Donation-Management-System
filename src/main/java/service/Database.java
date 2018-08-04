@@ -59,6 +59,12 @@ public class Database {
                 } catch (IllegalArgumentException e) {
                     userActions.log(Level.WARNING, "Failed to add user " + ((Clinician) user).getStaffID() + ". Staff ID not unique", "Attempted to add existing clinician");
                 }
+            } else if (user instanceof Administrator) {
+                try {
+                    addAdministrator((Administrator) user);
+                } catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Failed to add user " + ((Administrator) user).getUsername() + ". Username not unique", "Attempted to add existing administrator");
+                }
             }
         } else {
             userActions.log(Level.WARNING, "New user not added", "Attempted to add null user");
