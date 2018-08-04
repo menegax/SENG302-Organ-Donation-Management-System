@@ -54,6 +54,9 @@ public class PatientDAO implements IPatientDataAccess {
                 }
                 logDataAccess.saveLogs(patient.getUserActionsList(), patient.getNhiNumber());
                 contactDataAccess.updateContact(patient);
+                for (Procedure procedure : patient.getProcedures()) {
+                    procedureDataAccess.updateProcedure(patient.getNhiNumber(), procedure);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -305,7 +308,7 @@ public class PatientDAO implements IPatientDataAccess {
         patient.setContactMobilePhone(contacts.get(13));
         patient.setContactEmailAddress(contacts.get(14));
         patient.setUserActionsList(logs == null ? new ArrayList<>() : logs);
-        patient.setProcedures(procedures);
+        patient.setProcedures(procedures == null ? new ArrayList<>() : procedures);
         return patient;
     }
 

@@ -30,17 +30,17 @@ public class ProcedureDAO implements IProcedureDataAccess {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             deleteAllProceduresByNhi(nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_PROCEDURES_QUERY"));
-            connection.setAutoCommit(false);
             statement.setString(1, nhi);
             statement.setString(2, procedure.getSummary());
             statement.setString(3, procedure.getDescription());
             statement.setString(4, procedure.getDate().toString());
-            String organs = String.join(",", procedure.getAffectedDonations().stream().map(Organ::toString).collect(Collectors.toList()));
+            String organs = procedure.getAffectedDonations() == null ? null :String.join(",", procedure.getAffectedDonations().stream().map(Organ::toString).collect(Collectors.toList()));
             statement.setString(5, organs);
             return statement.executeUpdate();
         } catch (SQLException e) {
-            return 0;
+            e.printStackTrace();
         }
+        return 0;
     }
 
     @Override
@@ -56,15 +56,18 @@ public class ProcedureDAO implements IProcedureDataAccess {
                 String description = resultSet.getString("Description");
                 LocalDate date = LocalDate.parse(resultSet.getString("ProDate"));
                 Set<Organ> affected = new HashSet<>();
-                for (String string : resultSet.getString("AffectedOrgans").split(",")) {
-                    affected.add(Organ.getEnumFromString(string));
+                if (resultSet.getString("AffectedOrgans") != null) {
+                    for (String string : resultSet.getString("AffectedOrgans").split(",")) {
+                        affected.add(Organ.getEnumFromString(string));
+                    }
                 }
                 Procedure procedure = new Procedure(summary, description, date, affected);
                 procedures.add(procedure);
             }
             return procedures;
         } catch (SQLException e) {
-            return null;
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 
