@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 import static utility.GlobalEnums.*;
+import static utility.GlobalEnums.FilterOption.AGELOWER;
 import static utility.SystemLogger.systemLogger;
 
 public class Searcher {
@@ -592,8 +593,8 @@ public class Searcher {
                     }
                     case AGEUPPER:
                     case AGELOWER: {
-                        if (patient.getAge() > Integer.parseInt(filter.get(FilterOption.AGEUPPER))
-                                || patient.getAge() < Integer.parseInt(filter.get(FilterOption.AGELOWER))) { return false; }
+                        if (patient.getAge() > Double.valueOf(filter.get(FilterOption.AGEUPPER)).intValue()
+                                || patient.getAge() < Double.valueOf(filter.get(FilterOption.AGELOWER)).intValue()) { return false; }
                         break;
                     }
                 }

@@ -28,7 +28,6 @@ public class ProcedureDAO implements IProcedureDataAccess {
     @Override
     public int updateProcedure(String nhi, Procedure procedure) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
-            deleteAllProceduresByNhi(nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_PROCEDURES_QUERY"));
             statement.setString(1, nhi);
             statement.setString(2, procedure.getSummary());
