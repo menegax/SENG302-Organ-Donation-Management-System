@@ -28,10 +28,9 @@ public class MedicationDAO  implements IMedicationDataAccess {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             deleteAllMedicationsByNhi(nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_MEDICATION_QUERY"));
-            connection.setAutoCommit(false);
             statement.setString(1, nhi);
             statement.setString(2, medication.getMedicationName());
-            statement.setString(3, state.toString());
+            statement.setInt(3, state.getValue());
             return statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -43,7 +42,6 @@ public class MedicationDAO  implements IMedicationDataAccess {
     @Override
     public List<Medication> getMedicationsByNhi(String nhi) {
         try (Connection connection = mySqlFactory.getConnectionInstance()){
-            connection.setAutoCommit(false);
             List<Medication> medications = new ArrayList<>();
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_MEDICATIONS_QUERY"));
             statement.setString(1, nhi);

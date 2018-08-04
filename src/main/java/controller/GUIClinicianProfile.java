@@ -7,7 +7,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
+import service.ClinicianDataService;
 import service.Database;
+import service.interfaces.IClinicianDataService;
 import utility.GlobalEnums;
 import utility.StatusObservable;
 import utility.undoRedo.Action;
@@ -46,6 +48,8 @@ public class GUIClinicianProfile {
     private UserControl userControl = new UserControl();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private IClinicianDataService clinicianDataService = new ClinicianDataService();
 
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile

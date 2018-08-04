@@ -390,7 +390,7 @@ public class GlobalEnums {
     }
 
     public enum MedicationStatus {
-        CURRENT(0), HISTORY(1);
+        CURRENT(1), HISTORY(0);
 
         private int value;
 
