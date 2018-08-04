@@ -3,10 +3,11 @@ package DataAccess.interfaces;
 import model.Administrator;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IAdministratorDataAccess {
 
-    public int updateAdministrator (List<Administrator> administrators);
+    public int saveAdministrator (Set<Administrator> administrators);
 
     public boolean addAdministrator (Administrator administrator);
 
@@ -14,5 +15,7 @@ public interface IAdministratorDataAccess {
 
     public Administrator getAdministratorByUsername (String username);
 
-    List<Administrator> searchAdministrator (String searchTerm);
+    public List<Administrator> searchAdministrator (String searchTerm);
+
+    public Set<Administrator> getAdministrators();
 }

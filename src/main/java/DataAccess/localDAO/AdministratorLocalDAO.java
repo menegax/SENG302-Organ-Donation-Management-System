@@ -1,14 +1,22 @@
 package DataAccess.localDAO;
 
-import DataAccess.LocalDB;
+import DataAccess.factories.LocalDatabaseFactory;
 import DataAccess.interfaces.IAdministratorDataAccess;
 import model.Administrator;
 
 import java.util.List;
+import java.util.Set;
 
 public class AdministratorLocalDAO implements IAdministratorDataAccess {
+    private LocalDB localDB;
+
+    public AdministratorLocalDAO() {
+        localDB = LocalDatabaseFactory.getLocalDbInstance();
+    }
+
+
     @Override
-    public int updateAdministrator(List<Administrator> clinician) {
+    public int saveAdministrator(Set<Administrator> administrators) {
         return 0;
     }
 
@@ -22,12 +30,16 @@ public class AdministratorLocalDAO implements IAdministratorDataAccess {
 
     @Override
     public Administrator getAdministratorByUsername(String username) {
-        LocalDB localDB = LocalDB.getInstance();
         return localDB.getAdministratorByUsername(username);
     }
 
     @Override
     public List<Administrator> searchAdministrator(String searchTerm) {
         return null;
+    }
+
+    @Override
+    public Set<Administrator> getAdministrators() {
+        return localDB.getAdministrators();
     }
 }

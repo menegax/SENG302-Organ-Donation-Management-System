@@ -164,9 +164,11 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 try {
                     UserControl userControl = new UserControl();
                     userControl.setTargetUser(patientDataTable.getSelectionModel().getSelectedItem());
-                    patientDataService.save(patientDataTable.getSelectionModel().getSelectedItem()); //save to local
+                    Patient patient = patientDataService.getPatientByNhi(patientDataTable.getSelectionModel().getSelectedItem().getNhiNumber());
+                    patientDataService.save(patient); //save to local
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     UndoableStage popUpStage = new UndoableStage();
+
                     //Set initial popup dimensions
                     popUpStage.setWidth(1150);
                     popUpStage.setHeight(700);

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class UserLocalDAO implements IUserDataAccess {
 
-    DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     public boolean addUser(User user) {
         if (user instanceof Patient) {

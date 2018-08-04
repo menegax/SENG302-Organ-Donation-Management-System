@@ -1,15 +1,13 @@
-package DataAccess;
+package DataAccess.localDAO;
 
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-public class LocalDB {
+class LocalDB { //leave package private
     private static LocalDB instance;
 
     private Set<Patient> patients;

@@ -3,10 +3,11 @@ package DataAccess.interfaces;
 import model.Clinician;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IClinicianDataAccess {
 
-    public int updateClinician (List<Clinician> clinician);
+    public int saveClinician(Set<Clinician> clinician);
 
     public boolean addClinician (Clinician clinician);
 
@@ -16,5 +17,8 @@ public interface IClinicianDataAccess {
 
     public int nextStaffID();
 
-    List<Clinician> searchClinician (String searchTerm);
+    public List<Clinician> searchClinician (String searchTerm);
+
+    public Set<Clinician> getClinicians();
+
 }

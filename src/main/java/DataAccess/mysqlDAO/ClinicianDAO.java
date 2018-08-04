@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class ClinicianDAO implements IClinicianDataAccess {
 
@@ -23,8 +24,9 @@ public class ClinicianDAO implements IClinicianDataAccess {
         mySqlFactory = MySqlFactory.getMySqlFactory();
     }
 
+
     @Override
-    public int updateClinician(List<Clinician> clinician) {
+    public int saveClinician(Set<Clinician> clinician) {
         return 0;
     }
 
@@ -72,6 +74,11 @@ public class ClinicianDAO implements IClinicianDataAccess {
     @Override
     public List<Clinician> searchClinician(String searchTerm) {
         return null;
+    }
+
+    @Override
+    public Set<Clinician> getClinicians() {
+        throw new NotImplementedException();
     }
 
     @Override
