@@ -16,8 +16,6 @@ public class APIGoogleMaps {
 
     private static String placeApiKey = "AIzaSyDBlnI4yksZyDRL2y7le6SnRymPfTHRTRQ";
 
-    private static String originalApiKey = "AIzaSyB9o0cMPFkqyKOTyifZYMiOdlMXUyMgpzA";
-
     private static GeoApiContext context = new GeoApiContext.Builder().apiKey(placeApiKey)
             .build();
 
