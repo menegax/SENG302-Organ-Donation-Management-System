@@ -246,6 +246,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             after.userModified();
 
             Action action = new Action(target, after);
+            new ClinicianDataService().save(after);
             statesHistoryScreen.addAction(action);
         }
         else {

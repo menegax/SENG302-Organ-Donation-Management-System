@@ -177,4 +177,17 @@ public class Clinician extends User {
     public void setClinicianActionsList(List<ClinicianActionRecord> records) {
         clinicianActionsList = records;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Clinician)) {
+            return false;
+        }
+        return staffID == ((Clinician) obj).getStaffID();
+    }
+
+    @Override
+    public int hashCode() {
+        return String.valueOf(staffID).hashCode();
+    }
 }

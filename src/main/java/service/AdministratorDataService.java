@@ -125,6 +125,6 @@ public class AdministratorDataService implements IAdministratorDataService {
     @Override
     public void save(Administrator administrator) {
         IAdministratorDataAccess dataAccess = localDbFactory.getAdministratorDataAccess();
-        dataAccess.addAdministrator(administrator);
+        dataAccess.saveAdministrator(new HashSet<Administrator>(){{add(administrator);}});
     }
 }

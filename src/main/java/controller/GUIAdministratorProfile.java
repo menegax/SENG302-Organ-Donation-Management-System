@@ -1,6 +1,5 @@
 package controller;
 
-import DataAccess.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,9 +8,7 @@ import javafx.stage.Stage;
 import model.Administrator;
 import model.User;
 import service.AdministratorDataService;
-import service.Database;
 import utility.GlobalEnums;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;

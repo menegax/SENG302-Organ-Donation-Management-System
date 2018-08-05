@@ -118,4 +118,17 @@ public class Administrator extends User {
         setMiddleNames(newAdministratorAttributes.getMiddleNames());
         setPassword(newAdministratorAttributes.getHashedPassword());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Administrator)) {
+            return false;
+        }
+        return username.toLowerCase().equals(((Administrator) obj).getUsername().toLowerCase());
+    }
+
+    @Override
+    public int hashCode() {
+        return username.toLowerCase().hashCode();
+    }
 }
