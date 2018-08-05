@@ -73,7 +73,7 @@ public class TouchPaneController {
             if(pane.getTranslateY() < 0) {
                 pane.setTranslateY(bounds.getMaxY() - pane.getHeight() / 2 + scrollEvent.getDeltaY());
             } else {
-                pane.setTranslateY(-1 * pane.getHeight() / 2 + scrollEvent.getDeltaY());
+                pane.setTranslateY(-1 * pane.getHeight() / 2 + 100 + scrollEvent.getDeltaY());
             }
         }
     }
@@ -86,7 +86,7 @@ public class TouchPaneController {
      * @return boolean out of bounds
      */
     private boolean outOfBoundsX() {
-        return pane.getTranslateX() > bounds.getMaxX() - pane.getWidth() / 2 || pane.getTranslateX() <= bounds.getMaxX() * -1 + pane.getWidth();
+        return pane.getTranslateX() > bounds.getMaxX() - pane.getWidth() / 2 || pane.getTranslateX() <= bounds.getMaxX() * -1 + pane.getWidth() / 2;
     }
 
     /**
