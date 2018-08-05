@@ -1,18 +1,13 @@
 package DataAccess.mysqlDAO;
 
-import DataAccess.factories.LocalDatabaseFactory;
 import DataAccess.factories.MySqlFactory;
 import DataAccess.interfaces.IAdministratorDataAccess;
 import model.Administrator;
-import model.User;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import utility.GlobalEnums;
 import utility.ResourceManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -84,9 +79,14 @@ public class AdministratorDAO implements IAdministratorDataAccess {
 
     private Administrator constructAdministratorObject(ResultSet resultSet) throws SQLException {
         if (resultSet.next()) {
-            return new Administrator(resultSet.getString("Username"),
-                    resultSet.getString("FName"), Arrays.asList(resultSet.getString("MName").split(" ")),
-                    resultSet.getString("LName"), resultSet.getString("Password"));
+            String username = resultSet.getString("Username");
+            String fName = resultSet.getString("FName");
+            ArrayList<String> mNames = new ArrayList<>(Arrays.asList(resultSet.getString("MName").split(" ")));
+            String lName = resultSet.getString("LName");
+            String salt = resultSet.getString("salt");
+            String password = resultSet.getString("password");
+            Timestamp modified = Timestamp.valueOf(resultSet.getString("Modified"));
+            return new Administrator(username, fName, mNames, lName, salt, password, modified);
             // administrator.getModified(); //todo:
         }
         return null;

@@ -136,6 +136,7 @@ public class GUILogin implements TouchscreenCapable {
             } else {
                 checkAdminCredentials();
                 Administrator administrator = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
+                administratorDataService.save(administrator);
                 login.addLoggedInUserToCache(administrator);
             }
             Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
