@@ -4,27 +4,23 @@ import controller.GUIHome;
 import controller.ScreenControl;
 import controller.UndoRedoControl;
 import controller.UndoableController;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.Parent;
 import javafx.scene.control.Tab;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 
-import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-/**
- * Controls undo and redo functionality within its own stage
- */
-public class UndoableStage extends Stage {
+public class UndoableWrapper {
+
+    private Pane pane;
+
+    private Stage stage;
 
     private List<StatesHistoryScreen> statesHistoryScreens = new ArrayList<>();
 
@@ -41,13 +37,15 @@ public class UndoableStage extends Stage {
     private GUIHome guiHome;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
-    /**
-     * Constructor for the undoable stage
-     */
-    public UndoableStage() {
-        //set min sizes
-        super.setMinWidth(800);
-        super.setMinHeight(640);
+
+    public UndoableWrapper(Object object) {
+        if (object instanceof Pane) {
+            this.pane = (Pane) object;
+        } else if (object instanceof Stage) {
+            this.stage = (Stage) object;
+            stage.setMinWidth(800);
+            stage.setMinHeight(640);
+        }
     }
 
     /**
@@ -136,19 +134,6 @@ public class UndoableStage extends Stage {
         }
     }
 
-//    /**
-//     * Adds listeners for undo/redo for undoable pop-ups (procedures, diagnoses)
-//     */
-//    public void setPopUp() {
-//        this.getScene().setOnKeyPressed(event ->  {
-//            if (screenControl.getUndo().match(event)) {
-//                undo();
-//            } else if (screenControl.getRedo().match(event)) {
-//                redo();
-//            }
-//        });
-//    }
-
     /**
      * Gets the UUID of the stage
      * to be used as the stages hash key in screen control
@@ -184,5 +169,22 @@ public class UndoableStage extends Stage {
 
     public List<StatesHistoryScreen> getStatesHistoryScreens() {
         return statesHistoryScreens;
+    }
+
+    public Stage getStage() {
+        return this.stage;
+    }
+
+    public Pane getPane() {
+        return this.pane;
+    }
+
+    public Object getWrapped() {
+        if (stage != null) {
+            return stage;
+        } else if (pane != null) {
+            return pane;
+        }
+        return null;
     }
 }

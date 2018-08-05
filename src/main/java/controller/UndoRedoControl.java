@@ -5,10 +5,9 @@ import javafx.stage.Stage;
 import utility.GlobalEnums;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
+import utility.undoRedo.UndoableWrapper;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +21,7 @@ public class UndoRedoControl {
 
     private static UndoRedoControl undoRedoControl;
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    private static ScreenControl screenControl = ScreenControl.getScreenControl();
     private UserControl userControl = new UserControl();
 
     private UndoRedoControl() {
@@ -110,12 +109,10 @@ public class UndoRedoControl {
      * @param undoableScreen the undoable screen of the statesHistoryScreen to add it to
      */
     public void addAction(Action action, GlobalEnums.UndoableScreen undoableScreen) {
-        for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
-            if (stage instanceof UndoableStage) {
-                for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
-                    if (statesHistoryScreen.getUndoableScreen().equals(undoableScreen)) {
-                        statesHistoryScreen.addAction(action);
-                    }
+        for (UndoableWrapper undoableWrapper : screenControl.getUndoableWrappers()) {
+            for (StatesHistoryScreen statesHistoryScreen : undoableWrapper.getStatesHistoryScreens()) {
+                if (statesHistoryScreen.getUndoableScreen().equals(undoableScreen)) {
+                    statesHistoryScreen.addAction(action);
                 }
             }
         }

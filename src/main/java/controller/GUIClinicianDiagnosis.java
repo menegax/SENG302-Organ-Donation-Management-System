@@ -10,11 +10,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import model.Disease;
 import model.Patient;
-import service.Database;
 import utility.GlobalEnums;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
-import utility.undoRedo.UndoableStage;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -22,7 +19,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;
 
-import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -162,22 +158,12 @@ public class GUIClinicianDiagnosis extends UndoableController{
      * an update.
      */
     private void setUpDoubleClickEdit(TableView<Disease> tableView) {
-        UndoableStage stage = new UndoableStage();
-        //stage.setPopUp();
         tableView.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && tableView.getSelectionModel().getSelectedItem() != null) {
                 GUIPatientUpdateDiagnosis.setDisease(tableView.getSelectionModel().getSelectedItem());
                 GUIPatientUpdateDiagnosis.setIsAdd(false);
-                screenControl.addStage(stage.getUUID(), stage);
-                stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-                try {
-                    screenControl.show(stage.getUUID(), FXMLLoader.load(getClass().getResource("/scene/patientUpdateDiagnosis.fxml")));
-                } catch (IOException e) {
-                    userActions.log(Level.SEVERE,
-                            "Failed to open diagnosis update window from the diagnoses page",
-                            "attempted to open diagnosis update window from the diagnoses page");
-                    new Alert(Alert.AlertType.ERROR, "Unable to open diagnosis update window", ButtonType.OK).show();
-                }
+                //stage.setOnHiding(event -> Platform.runLater(this::tableRefresh)); todo implement
+                screenControl.show("/scene/patientUpdateDiagnosis.fxml");
             }
 
         });
@@ -189,20 +175,9 @@ public class GUIClinicianDiagnosis extends UndoableController{
      * an addition of a disease rather than an update
      */
     private void addDiagnosis() {
-        try {
-            GUIPatientUpdateDiagnosis.setIsAdd(true);
-            UndoableStage stage = new UndoableStage();
-            //stage.setPopUp();
-            screenControl.addStage(stage.getUUID(), stage);
-            screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/patientUpdateDiagnosis.fxml")));
-            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE,
-                    "Failed to open diagnosis update window from the diagnoses page",
-                    "attempted to open diagnosis update window from the diagnoses page");
-            new Alert(Alert.AlertType.ERROR, "Unable to open diagnosis update window", ButtonType.OK).show();
-        }
+        GUIPatientUpdateDiagnosis.setIsAdd(true);
+        screenControl.show("/scene/patientUpdateDiagnosis.fxml");
+        //stage.setOnHiding(event -> Platform.runLater(this::tableRefresh)); todo implement
     }
 
     /**

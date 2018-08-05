@@ -4,74 +4,28 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.User;
-import utility.undoRedo.UndoableStage;
+import utility.undoRedo.UndoableWrapper;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
 
 import static java.util.logging.Level.*;
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
 
 public class ScreenControlDesktop extends ScreenControl {
-    private static ScreenControl screenControl;
-
-    @Deprecated
-    private static HashMap<String, Pane> screenMap = new HashMap<>();
-
-    @Deprecated
-    private static HashMap<String, Stage> popMap = new HashMap<>();
-
-    @Deprecated
-    public static Map<String, Parent> scenes = new HashMap<>();
-
-    private Map<User, Set<Stage>> userStages = new HashMap<>();
-
-    @Deprecated
-    private static Scene main;
-
-    private Map<UUID, Stage> applicationStages;
-
-    private Map<Stage, TabPane> stageTabs = new HashMap<>();
+    private static ScreenControlDesktop screenControl;
 
     private boolean macOs = System.getProperty("os.name")
             .startsWith("Mac");
-
-    private KeyCodeCombination logOut;
-
-    private KeyCodeCombination save;
-
-    private KeyCodeCombination importt;
-
-    private KeyCodeCombination undo;
-
-    private KeyCodeCombination redo;
-
-    private String appName = "Big Pharma";
-
-    private Boolean isSaved = true;
-
-    private UndoableStage touchStage = null;
-
-//    private Scene touchScene;
-
-    private Pane touchPane;
-
-    private boolean isTouch;
-
-    private ScreenControlDesktop() {
-        super();
-        applicationStages = new HashMap<>();
-    }
-
 
     /**
      * Getter to enable this to be a singleton
@@ -85,258 +39,41 @@ public class ScreenControlDesktop extends ScreenControl {
     }
 
     /**
-     * Adds a stage to the hashmap
-     * @param key the uuid of the stage to add
-     * @param stage the stage object to add to the hashmap
-     */
-    public void addStage(UUID key, Stage stage) {
-        applicationStages.put(key, stage);
-        if (new UserControl().isUserLoggedIn()) { // if scene belongs to a user
-            systemLogger.log(FINE, "User is logged in and a stage is being added");
-            addUserStage(new UserControl().getLoggedInUser(), stage);
-        }
-    }
-
-    /**
-     * Shows the root(screen) on the given stage
-     * @param stageName the UUID of the stage
-     * @param root the screen to display on the stage
-     */
-    public void show(UUID stageName, Parent root) {
-        Stage stage = applicationStages.get(stageName);
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
-
-    /**
-     * shows the fxml (screen) on the stage that a node is on
-     * @param node a node on the appropriate stage
+     * shows the fxml (screen)
      * @param fxml the fxml to display
      * @throws IOException any issue in loading the fxml file
      */
-    public void show(Node node, String fxml) throws IOException{
-        Stage stage = applicationStages.get(((UndoableStage) node.getScene().getWindow()).getUUID());
-        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource(fxml))));
-        stage.show();
-
-    }
-
-    /**
-     * Closes the stage that the provided node is on
-     * @param stageName - node which is on the stage to close
-     */
-    void closeStage(UUID stageName) {
-//        applicationStages.get(stageName)
-//                .close();
-//        applicationStages.remove(stageName);
-//        userStages.remove(new UserControl().getLoggedInUser(), stageName);
-    }
-
-
-    /**
-     * Closes (terminates) a stage
-     * @param node the stage to be closed
-     */
-    void closeStage(Node node) {
-        ((Stage) node.getScene()
-                .getWindow()).close();
-        if (node.getScene()
-                .getWindow() instanceof UndoableStage) {
-            applicationStages.remove(((UndoableStage) node.getScene()
-                    .getWindow()).getUUID());
-        }
-        userStages.remove(new UserControl().getLoggedInUser(), node);
-
-    }
-
-
-    @Deprecated
-    public static Scene getMain() {
-        return main;
-    }
-
-    /**
-     * set initial screen to display
-     *
-     * @param mainScene - main screen to display
-     */
-    @Deprecated
-    static void setRootScene(Scene mainScene) {
-        main = mainScene;
-    }
-
-    /**
-     * Add screen to the hash map of screens
-     *
-     * @param name - name of screen to add
-     * @param pane - Pane object from FXML
-     */
-    @Deprecated
-    static void addTabToHome(String name, Pane pane) {
-        //create tab
-        // load pane into tab
-        // add tab to existing tab pane
-        screenMap.put(name, pane);
-    }
-
-
-    /**
-     * Remove screen from hash map
-     *
-     * @param name - screen to remove from the hashmap of screens
-     */
-    @Deprecated
-    static void removeScreen(String name) {
-        screenMap.remove(name);
-    }
-
-
-    /**
-     * Displays the given scene to the UI
-     *
-     * @param name - screen name to display
-     */
-    @Deprecated
-    static void activate(String name) {
-        main.setRoot(screenMap.get(name));
-    }
-
-
-    /**
-     * Adds stage, name pair to a hashmap
-     *
-     * @param name  - name of the popup
-     * @param stage - stage to display
-     */
-    @Deprecated
-    static void addPopUp(String name, Stage stage) {
-        popMap.put(name, stage);
-    }
-
-
-    /**
-     * Switches panes within a popup window, while passing along the current viewed patient
-     *
-     * @param scene      The scene to load the new pane into
-     * @param fxmlLoader The fxmlLoader for the new pane
-     * @exception IOException If the pane fails to load
-     */
-    static void loadPopUpPane(Scene scene, FXMLLoader fxmlLoader) throws IOException {
-        scene.setRoot(fxmlLoader.load());
-    }
-
-
-    /**
-     * Displays a given popup
-     *
-     * @param name - name of the pop up to display
-     */
-    @Deprecated
-    static void displayPopUp(String name) {
-        popMap.get(name)
-                .show();
-    }
-
-
-    /**
-     * Closes a given popup
-     *
-     * @param name - name of the popup to hide
-     */
-    @Deprecated
-    public static void closePopUp(String name) {
-        popMap.get(name)
-                .close();
-    }
-
-    public KeyCodeCombination getSave() {
-        return save;
-    }
-
-
-    public KeyCodeCombination getImportt() {
-        return importt;
-    }
-
-
-    public KeyCodeCombination getUndo() {
-        return undo;
-    }
-
-
-    public KeyCodeCombination getRedo() {
-        return redo;
-    }
-
-
-    KeyCodeCombination getLogOut() {
-        return logOut;
-    }
-
-
-    boolean isMacOs() {
-        return macOs;
-    }
-
-
-    String getAppName() {
-        return appName;
-    }
-
-
-    /**
-     * Adds a stage to the collection of stages with a connection the user responsible for the stage
-     * @param user the user responsible for the stage
-     * @param newStage the new stage to be tied to the user
-     */
-    private void addUserStage(User user, Stage newStage) {
-
-        systemLogger.log(FINE, "Added user and stage");
-
-        if (userStages.containsKey(user)) {
-            userStages.get(user)
-                    .add(newStage);
-        }
-        else {
-            Set<Stage> stages = new HashSet<>();
-            stages.add(newStage);
-            userStages.put(user, stages);
-        }
-    }
-
-
-    /**
-     * Closes all the stages related to a given user
-     * @param user the user whose stages will be closed
-     */
-    void closeAllUserStages(User user) {
-        systemLogger.log(FINER, "Attempting to close all user stages...");
-        Set<Stage> stages = userStages.get(user);
+    public void show(String fxml) {
         try {
-            for (Stage stage : stages) {
-                stage.close();
+            Stage stage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
+            UndoableWrapper undoableWrapper = new UndoableWrapper(stage);
+            if (fxmlLoader.getController() instanceof GUIHome) {
+                undoableWrapper.setGuiHome(fxmlLoader.getController());
             }
-            systemLogger.log(FINER, "Closed all user stages.");
-        } catch (NullPointerException e) {
-            systemLogger.log(SEVERE, "Failed to close all user stages.", e);
+            undoableWrappers.add(new UndoableWrapper(stage));
+            stage.setScene(new Scene(fxmlLoader.load()));
+            stage.show();
+            systemLogger.log(Level.INFO, "Showing new desktop stage");
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE, "Unable to load window", "Attempted to load fxml: " + fxml);
+            new Alert(Alert.AlertType.ERROR, "Unable to open window", ButtonType.OK).show();
         }
-        userStages.remove(user);
-
     }
-
 
     /**
      * Sets up a new login scene
-     *
      * To be used when the user has logged out and a new login scene needs to be instantiated
      */
     void setUpNewLogin() {
-        // UNTIL WE SUPPORT MULTI USER LOGIN
+        for (UndoableWrapper undoableStage : undoableWrappers) {
+            undoableStage.getStage().close();
+        }
         try {
-            ScreenControl screenControl = ScreenControl.getScreenControl();
-            Pane loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-            screenControl.addStage(Main.getUuid(), new Stage());
-            screenControl.show(Main.getUuid(), loginScreen);
+            FXMLLoader loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(loginScreen.load());
+            stage.show();
         }
         catch (IOException e) {
             systemLogger.log(SEVERE, "Failed to recreate login scene in desktop application");
@@ -344,66 +81,21 @@ public class ScreenControlDesktop extends ScreenControl {
     }
 
     /**
-     * Adds a tabpane to a map of stages to tabpanes
-     * @param stage the stage of the tadpane
-     * @param tabPane the tabpane associated with that stage
-     */
-    public void addStageTab(Stage stage, TabPane tabPane) {
-        stageTabs.put(stage, tabPane);
-    }
-
-    /**
-     * Gets the tab pane of the given stage
-     * @param stage the required stage
-     * @return the TabPane of that stage
-     */
-    public TabPane getTabPane(Stage stage) {
-        return stageTabs.get(stage);
-    }
-
-    /**
-     * Sets the isSaved boolean and adjusts screens accordingly
-     * @param isSaved whether local changes have been saved or not
-     */
-    public void setIsSaved(Boolean isSaved) {
-        this.isSaved = isSaved;
-        if (isSaved) {
-            removeUnsavedAsterisks();
-        } else {
-            addUnsavedAsterisks();
-        }
-    }
-
-    /**
      * Removes asterisks from all stages when local changes are saved to disk
      */
-    private void removeUnsavedAsterisks() {
-        for (Stage stage : applicationStages.values()) {
-            if (stage instanceof UndoableStage) {
-                ((UndoableStage) stage).getGuiHome().removeAsterisk();
-            }
+    void removeUnsavedAsterisks() {
+        for (UndoableWrapper undoableStage : undoableWrappers) {
+            undoableStage.getGuiHome().removeAsterisk();
         }
     }
 
     /**
      * Adds asterisks to all stages when local changes have been made
      */
-    private void addUnsavedAsterisks() {
-        for (Stage stage : applicationStages.values()) {
-            if (stage instanceof UndoableStage) {
-                if (((UndoableStage) stage).getGuiHome() != null) {
-                    ((UndoableStage) stage).getGuiHome().addAsterisk();
-                }
-            }
+    void addUnsavedAsterisks() {
+        for (UndoableWrapper undoableStage : undoableWrappers) {
+            undoableStage.getGuiHome().addAsterisk();
         }
-    }
-
-    public boolean getIsSaved() {
-        return isSaved;
-    }
-
-    public Set<Stage> getUsersStages(User user) {
-        return userStages.get(user);
     }
 
 }

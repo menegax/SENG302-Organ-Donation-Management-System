@@ -119,30 +119,30 @@ public class GUIAdministratorUserRegister extends UndoableController {
     private void setUpButtonListeners() {
         patientButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             if (!oldValue && newValue) {
-                if (!statesHistoryScreen.getUndoableStage().getChangingStates()) {
-                    statesHistoryScreen.getUndoableStage().setChangingStates(true);
+                if (!statesHistoryScreen.getUndoableWrapper().getChangingStates()) {
+                    statesHistoryScreen.getUndoableWrapper().setChangingStates(true);
                     clearFields();
-                    statesHistoryScreen.getUndoableStage().setChangingStates(false);
+                    statesHistoryScreen.getUndoableWrapper().setChangingStates(false);
                 }
                 onSelectPatient();
             }
         }));
         clinicianButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             if (!oldValue && newValue) {
-                if (!statesHistoryScreen.getUndoableStage().getChangingStates()) {
-                    statesHistoryScreen.getUndoableStage().setChangingStates(true);
+                if (!statesHistoryScreen.getUndoableWrapper().getChangingStates()) {
+                    statesHistoryScreen.getUndoableWrapper().setChangingStates(true);
                     clearFields();
-                    statesHistoryScreen.getUndoableStage().setChangingStates(false);
+                    statesHistoryScreen.getUndoableWrapper().setChangingStates(false);
                 }
                 onSelectClinician();
             }
         }));
         administratorButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             if (!oldValue && newValue) {
-                if (!statesHistoryScreen.getUndoableStage().getChangingStates()) {
-                    statesHistoryScreen.getUndoableStage().setChangingStates(true);
+                if (!statesHistoryScreen.getUndoableWrapper().getChangingStates()) {
+                    statesHistoryScreen.getUndoableWrapper().setChangingStates(true);
                     clearFields();
-                    statesHistoryScreen.getUndoableStage().setChangingStates(false);
+                    statesHistoryScreen.getUndoableWrapper().setChangingStates(false);
                 }
                 onSelectAdministrator();
             }
@@ -429,9 +429,9 @@ public class GUIAdministratorUserRegister extends UndoableController {
                 userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");
             }
         }
-        statesHistoryScreen.getUndoableStage().setChangingStates(true);
+        statesHistoryScreen.getUndoableWrapper().setChangingStates(true);
         clearFields();
-        statesHistoryScreen.getUndoableStage().setChangingStates(false);
+        statesHistoryScreen.getUndoableWrapper().setChangingStates(false);
         if (userControl.getLoggedInUser() == null) {
             returnToPreviousPage();
         }
@@ -449,7 +449,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
 
     private void returnToPreviousPage() {
         try {
-            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
+            screenControl.show(FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
         } catch (IOException e) {
             new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
             userActions.log(SEVERE, "Failed to load login", "Attempted to load login");

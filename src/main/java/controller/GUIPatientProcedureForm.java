@@ -2,36 +2,26 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import model.Patient;
 import model.Procedure;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
-import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -247,7 +237,7 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
      * Closes the pop-up stage for the procedure form
      */
     public void goBackToProcedures() {
-        screenControl.closeStage(((UndoableStage) summaryInput.getScene().getWindow()).getUUID());
+        //screenControl.closeStage(((UndoableStage) summaryInput.getScene().getWindow()).getUUID()); todo implement???
     }
 
     @Override

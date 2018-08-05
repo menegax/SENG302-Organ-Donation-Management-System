@@ -12,6 +12,7 @@ import de.codecentric.centerdevice.MenuToolkit;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -24,6 +25,7 @@ import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Administrator;
@@ -35,7 +37,6 @@ import utility.Searcher;
 import utility.StatusObservable;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
-import utility.undoRedo.UndoableStage;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +60,10 @@ public class GUIHome implements Observer, TouchscreenCapable {
     @FXML
     private Label statusLbl;
 
-    private TouchPaneController homeTouchPane;
+    @FXML
+    private Label paneTitle;
+
+    private TouchPaneController homePaneTouchController;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -98,20 +102,19 @@ public class GUIHome implements Observer, TouchscreenCapable {
         statusObservable.addObserver(this);
         homePane.getProperties().put("useFocusArea", false);
         homePane.getProperties().put("focusArea", "true");
-        horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty()
-                .addListener((observable1, oldStage, newStage) -> {
-            setUpMenuBar((UndoableStage) newStage);
-            addTabs((UndoableStage) newStage);
-        }));
+        if (screenControl.isTouch()) {
+            addPaneListener();
+        } else {
+            addStageListener();
+        }
     }
+
 
     /**
      * Detects the appropriate user and adds the tabs to the tab bar accordingly
-     * @param stage the stage the horizontal tab is on
      */
-    private void addTabs(UndoableStage stage) {
+    private void addTabs() {
         UserControl userControl = new UserControl();
-        stage.setChangingStates(true);
         try {
             // Patient viewing themself
             if (userControl.getLoggedInUser() instanceof Patient) {
@@ -154,25 +157,18 @@ public class GUIHome implements Observer, TouchscreenCapable {
                     setUpColouredBar(userControl.getLoggedInUser());
                 }
             }
-            homeTouchPane = new TouchPaneController(homePane);
-            horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty().addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
+            homePaneTouchController = new TouchPaneController(homePane);
             homePane.setOnZoom(this::zoomWindow);
             homePane.setOnRotate(this::rotateWindow);
             homePane.setOnScroll(this::scrollWindow);
-            addStageListener();
-            horizontalTabPane.sceneProperty()
-                    .addListener((observable, oldScene, newScene) -> newScene.windowProperty()
-                            .addListener((observable1, oldStage, newStage) -> setUpMenuBar((Stage) newStage)));
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());
         }
-        stage.setChangingStates(false);
     }
 
 
     private void addStageListener() {
-
         // The following code waits for the stage to be loaded
         if (homePane.getScene() == null) {
             homePane.sceneProperty()
@@ -184,12 +180,22 @@ public class GUIHome implements Observer, TouchscreenCapable {
                                             if (newStage != null) {
                                                 homeStage = (Stage) newStage;
                                                 // Methods to call after initialize
+                                                setUpMenuBar(homeStage);
+                                                screenControl.addTab(homeStage, horizontalTabPane);
+                                                screenControl.getUndoableWrapper(homeStage).setChangingStates(true);
+                                                addTabs();
+                                                screenControl.getUndoableWrapper(homeStage).setChangingStates(false);
                                                 setStageTitle();
                                             }
                                         });
                             } else {
                                 homeStage = (Stage) newScene.getWindow();
                                 // Methods to call after initialize
+                                setUpMenuBar(homeStage);
+                                screenControl.addTab(homeStage, horizontalTabPane);
+                                screenControl.getUndoableWrapper(homeStage).setChangingStates(true);
+                                addTabs();
+                                screenControl.getUndoableWrapper(homeStage).setChangingStates(false);
                                 setStageTitle();
                             }
                         }
@@ -202,6 +208,11 @@ public class GUIHome implements Observer, TouchscreenCapable {
                         if (newStage != null) {
                             homeStage = (Stage) newStage;
                             // Methods to call after initialize
+                            setUpMenuBar(homeStage);
+                            screenControl.addTab(homeStage, horizontalTabPane);
+                            screenControl.getUndoableWrapper(homeStage).setChangingStates(true);
+                            addTabs();
+                            screenControl.getUndoableWrapper(homeStage).setChangingStates(false);
                             setStageTitle();
                         }
                     });
@@ -209,8 +220,22 @@ public class GUIHome implements Observer, TouchscreenCapable {
             homeStage = (Stage) homePane.getScene()
                     .getWindow();
             // Methods to call after initialize
+            setUpMenuBar(homeStage);
+            screenControl.addTab(homeStage, horizontalTabPane);
+            screenControl.getUndoableWrapper(homeStage).setChangingStates(true);
+            addTabs();
+            screenControl.getUndoableWrapper(homeStage).setChangingStates(false);
             setStageTitle();
         }
+    }
+
+    private void addPaneListener() {
+        homePane.parentProperty().addListener((observable, oldValue, newValue) -> {
+            setUpMenuBar(homeStage);
+            screenControl.addTab((Pane) newValue, horizontalTabPane);
+            addTabs();
+            setPaneTitle();
+        });
     }
 
     /**
@@ -218,7 +243,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
      */
     private void setStageTitle() {
         homeStage.setTitle("Home");
-        ((UndoableStage) homeStage).setGuiHome(this);
+        screenControl.getUndoableWrapper(homeStage).setGuiHome(this);
         // If clinician viewing patient
         if (userControl.getTargetUser() != null) {
             // viewing patient
@@ -232,6 +257,29 @@ public class GUIHome implements Observer, TouchscreenCapable {
             // viewing admin
             else if (userControl.getTargetUser() instanceof Administrator) {
                 homeStage.setTitle("Administrator " + ((Administrator) homeTarget).getUsername());
+            }
+        }
+    }
+
+    /**
+     * Sets the title of the pane
+     * Called when touch entry point is used
+     */
+    private void setPaneTitle() {
+        paneTitle.setText("Home");
+        // If clinician viewing patient
+        if (userControl.getTargetUser() != null) {
+            // viewing patient
+            if (userControl.getTargetUser() instanceof Patient) {
+                paneTitle.setText("Patient " + ((Patient) homeTarget).getNhiNumber());
+            }
+            // viewing clinician
+            else if (userControl.getTargetUser() instanceof Clinician) {
+                paneTitle.setText("Clinician " + ((Clinician) homeTarget).getStaffID());
+            }
+            // viewing admin
+            else if (userControl.getTargetUser() instanceof Administrator) {
+                paneTitle.setText("Administrator " + ((Administrator) homeTarget).getUsername());
             }
         }
     }
@@ -365,10 +413,8 @@ public class GUIHome implements Observer, TouchscreenCapable {
      * Logs the user out of the application
      */
     private void logOut() {
-        screenControl.closeAllUserStages(new UserControl().getLoggedInUser());
+        screenControl.logOut();
         new UserControl().rmLoggedInUserCache();
-        screenControl.setUpNewLogin(); // ONLY FOR SINGLE USER SUPPORT. REMOVE WHEN MULTI USER SUPPORT
-        screenControl.setIsSaved(true);
         userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
 
         // Resets all local changes
@@ -385,8 +431,6 @@ public class GUIHome implements Observer, TouchscreenCapable {
      * Creates a native-looking MacOS menu bar for the application
      */
     private void setUpMenuBar(Stage stage) {
-        screenControl.addStageTab(stage, horizontalTabPane);
-
         // Create a new menu bar
         MenuBar bar = new MenuBar();
 
@@ -437,10 +481,14 @@ public class GUIHome implements Observer, TouchscreenCapable {
         Menu menu3 = new Menu("Edit");
         MenuItem menu3Item1 = new MenuItem("Undo");
         menu3Item1.setAccelerator(screenControl.getUndo());
-        menu3Item1.setOnAction(event -> ((UndoableStage) stage).undo());
+        menu3Item1.setOnAction((event) -> {
+            screenControl.getUndoableWrapper(stage).undo();
+        });
         MenuItem menu3Item2 = new MenuItem("Redo");
         menu3Item2.setAccelerator(screenControl.getRedo());
-        menu3Item2.setOnAction(event -> ((UndoableStage) stage).redo());
+        menu3Item2.setOnAction((event) -> {
+            screenControl.getUndoableWrapper(stage).redo();
+        });
         menu3.getItems().addAll(menu3Item1, menu3Item2);
 
         //WINDOW
@@ -526,20 +574,20 @@ public class GUIHome implements Observer, TouchscreenCapable {
 
     @Override
     public void zoomWindow(ZoomEvent zoomEvent) {
-        homeTouchPane.zoomPane(zoomEvent);
+        homePaneTouchController.zoomPane(zoomEvent);
         zoomEvent.consume();
     }
 
     @Override
     public void rotateWindow(RotateEvent rotateEvent) {
-        homeTouchPane.rotatePane(rotateEvent);
+        homePaneTouchController.rotatePane(rotateEvent);
         rotateEvent.consume();
     }
 
     @Override
     public void scrollWindow(ScrollEvent scrollEvent) {
         if (scrollEvent.isDirect()) {
-            homeTouchPane.scrollPane(scrollEvent);
+            homePaneTouchController.scrollPane(scrollEvent);
         }
         scrollEvent.consume();
     }
