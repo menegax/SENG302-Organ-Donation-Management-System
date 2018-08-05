@@ -36,7 +36,7 @@ public abstract class ScreenControl {
 
     private Boolean isSaved = true;
 
-    private Map<UndoableWrapper, TabPane> tabs = new HashMap<>();
+    private Map<Object, TabPane> tabs = new HashMap<>();
 
     protected List<UndoableWrapper> undoableWrappers = new ArrayList<>();
 
@@ -81,19 +81,11 @@ public abstract class ScreenControl {
     }
 
     public void addTab(Stage stage, TabPane tabPane) {
-        for (UndoableWrapper undoableStage : undoableWrappers) {
-            if (stage.equals(undoableStage.getStage())) {
-                tabs.put(undoableStage, tabPane);
-            }
-        }
+        tabs.put(stage, tabPane);
     }
 
     public void addTab(Pane pane, TabPane tabPane) {
-        for (UndoableWrapper undoablePane : undoableWrappers) {
-            if (pane.equals(undoablePane.getPane())) {
-                tabs.put(undoablePane, tabPane);
-            }
-        }
+        tabs.put(pane, tabPane);
     }
 
     /**
@@ -102,7 +94,7 @@ public abstract class ScreenControl {
      * @return the TabPane of that undoableWrapper
      */
     public TabPane getTabPane(UndoableWrapper undoableWrapper) {
-        return tabs.get(undoableWrapper);
+        return tabs.get(undoableWrapper.getWrapped());
     }
 
     public UndoableWrapper getUndoableWrapper(Object wrapped) {
