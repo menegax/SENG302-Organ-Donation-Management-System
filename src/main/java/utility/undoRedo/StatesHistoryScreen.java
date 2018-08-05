@@ -89,7 +89,9 @@ public class StatesHistoryScreen {
         if (node.getParent() == null) {
             node.parentProperty().addListener((observable, oldValue, newValue) -> {
                 if (screenControl.getUndoableWrapper(newValue) == null) {
-                    findUndoableWrapper(newValue);
+                    if (newValue != null) {
+                        findUndoableWrapper(newValue);
+                    }
                 } else {
                     addToUndoableWrapper(screenControl.getUndoableWrapper(newValue));
                 }

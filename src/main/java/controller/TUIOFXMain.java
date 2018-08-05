@@ -54,7 +54,8 @@ public class TUIOFXMain extends Application {
     public void start(Stage primaryStage) throws Exception {
         // set up GUI
         Stage stage = setUpStage();
-        ScreenControl screenControl = ScreenControl.getScreenControl();
+        ScreenControlTouch screenControl = (ScreenControlTouch) ScreenControl.getScreenControl();
+        screenControl.setTouchStage(stage);
         screenControl.show("/scene/login.fxml");
 
         Database.importFromDiskPatients("./patient.json");

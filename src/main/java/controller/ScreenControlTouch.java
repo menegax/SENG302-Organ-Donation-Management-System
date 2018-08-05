@@ -42,15 +42,14 @@ class ScreenControlTouch extends ScreenControl {
         try {
             List<Node> panes = new ArrayList<>(touchPane.getChildren());
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
-            Pane pane = new Pane();
+            Pane pane = fxmlLoader.load();
+            pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
             panes.add(0, pane);
             UndoableWrapper undoablePane = new UndoableWrapper(pane);
             undoableWrappers.add(undoablePane);
             if (fxmlLoader.getController() instanceof GUIHome) {
                 undoablePane.setGuiHome(fxmlLoader.getController());
             }
-            pane.getChildren().add(0, fxmlLoader.load());
-            pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5; -fx-border-width: 1;");
             Parent root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
             touchPane = new Pane(root);
             touchPane.getChildren().addAll(panes);
