@@ -176,7 +176,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                     screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
 
                     // When pop up is closed, rerun the search (this refreshes the modified patients
-                    popUpStage.setOnHiding(event -> Platform.runLater(() -> patientDataTable.refresh()));
+                    popUpStage.setOnHiding(event -> Platform.runLater(this::search));
                 } catch (IOException e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open patient profile scene from search patients table",
