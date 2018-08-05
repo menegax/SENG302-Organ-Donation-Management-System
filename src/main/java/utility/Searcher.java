@@ -547,12 +547,13 @@ public class Searcher {
      * @return SortedSet of Users after the filter has been applied.
      */
     private List<User> filterUsers(List<User> users, Map<FilterOption, String> filter) {
+        List<User> filtered = new ArrayList<>();
     	for (User user : users) {
-    		if (!matchesFilter((Patient)user, filter)) {
-    			users.remove(user);
+    		if (matchesFilter((Patient)user, filter)) {
+    			filtered.add(user);
     		}
     	}
-    	return users;
+    	return filtered;
     }
     
     /**
