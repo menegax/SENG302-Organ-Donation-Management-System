@@ -21,7 +21,8 @@ public class MySqlFactory extends DAOFactory{
     private static MySqlFactory mySqlFactory = null;
 
     private MySqlFactory() {
-        if (System.getProperty("connection_type").equals(TEST.getValue())) {
+        String connection_type = System.getProperty("connection_type");
+        if (connection_type != null && connection_type.equals(TEST.getValue())) {
             config = new HikariConfig("src/main/resources/sql/HikariConfigTest.properties"); //todo:  check in jar, apparently it wraps in class loader
         } else {
             config = new HikariConfig("src/main/resources/sql/HikariConfigProd.properties"); //todo:  check in jar, apparently it wraps in class loader

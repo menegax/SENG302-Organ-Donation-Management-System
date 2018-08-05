@@ -243,7 +243,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         updateProfileCount();
     }
 
-    public void updateProfileCount() {
+    private void updateProfileCount() {
         CachedThreadPool cachedThreadPool = CachedThreadPool.getCachedThreadPool();
         ExecutorService service = cachedThreadPool.getThreadService();
         service.submit(() -> {
