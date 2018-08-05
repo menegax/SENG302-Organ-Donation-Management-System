@@ -5,6 +5,7 @@ import DataAccess.mysqlDAO.*;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import utility.ClinicianActionRecord;
+import utility.GlobalEnums;
 import utility.PatientActionRecord;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utility.ResourceManager;
@@ -13,6 +14,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
+import static utility.GlobalEnums.DbType.TEST;
 import static utility.SystemLogger.systemLogger;
 
 public class MySqlFactory extends DAOFactory{
@@ -21,7 +23,7 @@ public class MySqlFactory extends DAOFactory{
     private static MySqlFactory mySqlFactory = null;
 
     private MySqlFactory() {
-        if (System.getProperty("connection_type").equals("test")) {
+        if (System.getProperty("connection_type").equals(TEST)) {
             config = new HikariConfig("src/main/resources/sql/HikariConfigTest.properties"); //todo:  check in jar, apparently it wraps in class loader
         } else {
             config = new HikariConfig("src/main/resources/sql/HikariConfigProd.properties"); //todo:  check in jar, apparently it wraps in class loader
