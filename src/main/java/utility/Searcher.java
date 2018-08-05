@@ -385,15 +385,12 @@ public class Searcher {
      * @return The sorted List of ScoreDoc objects.
      */
     private List<ScoreDoc> sortScoreDocs(List<ScoreDoc> allDocs) {
-        Collections.sort(allDocs, new Comparator<ScoreDoc>() {
-            @Override
-            public int compare(ScoreDoc o1, ScoreDoc o2) {
-                int comparison = Float.compare(o2.score, o1.score);
-                if (comparison == 0) {
-                    comparison = fetchUser(o1).getNameConcatenated().compareTo(fetchUser(o2).getNameConcatenated());
-                }
-                return comparison;
+        allDocs.sort((o1, o2) -> {
+            int comparison = Float.compare(o2.score, o1.score);
+            if (comparison == 0) {
+                comparison = fetchUser(o1).getNameConcatenated().compareTo(fetchUser(o2).getNameConcatenated());
             }
+            return comparison;
         });
         return allDocs;
     }
