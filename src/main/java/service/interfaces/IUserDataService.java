@@ -8,5 +8,5 @@ public interface IUserDataService {
      */
     public void save();
 
-
+    void clear();
 }

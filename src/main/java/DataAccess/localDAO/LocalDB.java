@@ -19,6 +19,7 @@ public class LocalDB {
         patients = new HashSet<>();
         clinicians = new HashSet<>();
         administrators = new HashSet<>();
+        deleted = new HashSet<>();
     }
 
     public static LocalDB getInstance() {
@@ -101,5 +102,15 @@ public class LocalDB {
     public void storeAdministrator(Administrator administrator) {
         administrators.remove(administrator);
         administrators.add(administrator);
+    }
+
+    /**
+     * Clears all local data from the application. Called when the user logs out without saving changes
+     */
+    public void clear() {
+        patients.clear();
+        clinicians.clear();
+        administrators.clear();
+        deleted.clear();
     }
 }
