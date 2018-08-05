@@ -25,6 +25,7 @@ public class PatientLocalDAO implements IPatientDataAccess {
     public int savePatients(Set<Patient> patient) {
         patient.forEach(x -> {
             localDB.storePatient(x);
+            Searcher.getSearcher().updateIndex(x);
         });
         return 0; //TODO:
     }

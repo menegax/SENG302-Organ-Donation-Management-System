@@ -1,26 +1,21 @@
 package model;
 
 import org.apache.commons.lang3.StringUtils;
-import service.Database;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.Searcher;
-import utility.SystemLogger;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
-import java.io.*;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
@@ -981,5 +976,10 @@ public class Patient extends User {
         }
         Patient patient = (Patient) obj;
         return this.nhiNumber.equals(patient.nhiNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return nhiNumber.hashCode();
     }
 }

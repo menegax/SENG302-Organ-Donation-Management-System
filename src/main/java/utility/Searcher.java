@@ -25,7 +25,6 @@ import java.util.*;
 import java.util.logging.Level;
 
 import static utility.GlobalEnums.*;
-import static utility.GlobalEnums.FilterOption.AGELOWER;
 import static utility.SystemLogger.systemLogger;
 
 public class Searcher {
@@ -412,9 +411,11 @@ public class Searcher {
     	int userCount = 0;
     	while (docCount < allDocs.size() && userCount < numResults) {
     		user = fetchUser(allDocs.get(docCount));
-    		if (users.add(user)) {
-    			userCount += 1;
-    		}
+    		if (!users.contains(user)) {
+                if (users.add(user)) {
+                    userCount += 1;
+                }
+            }
     		docCount += 1;
     	}
     	return users;
@@ -474,6 +475,11 @@ public class Searcher {
             allDocs = getScoreDocs(queries, types);
             allDocs = sortScoreDocs(allDocs);
             users = createUsers(allDocs, numResults);
+            if (distance > 0) {
+                for (int dist=distance - 1; dist>=0; dist--) {
+                    users.removeAll(results.get(dist));
+                }
+            }
             if (filter != null) {
             	users = filterUsers(users, filter);
             }
