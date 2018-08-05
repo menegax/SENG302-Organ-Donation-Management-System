@@ -57,6 +57,7 @@ public class TUIOFXMain extends Application {
         ScreenControlTouch screenControl = (ScreenControlTouch) ScreenControl.getScreenControl();
         screenControl.setTouchStage(stage);
         screenControl.show("/scene/login.fxml");
+        screenControl.setLoginShowing(true);
 
         Database.importFromDiskPatients("./patient.json");
         Database.importFromDiskClinicians("./clinician.json");

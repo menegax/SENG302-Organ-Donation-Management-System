@@ -157,6 +157,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
                 }
             }
             homePaneTouchController = new TouchPaneController(homePane);
+            homePane.setOnTouchPressed(event -> homePane.toFront());
             homePane.setOnZoom(this::zoomWindow);
             homePane.setOnRotate(this::rotateWindow);
             homePane.setOnScroll(this::scrollWindow);
@@ -476,6 +477,11 @@ public class GUIHome implements Observer, TouchscreenCapable {
             menu2.getItems().addAll(subMenuImport);
         }
         menu2.getItems().addAll(menu2Item1);
+        MenuItem menu2item4 = new MenuItem("Close window");
+        menu2item4.setOnAction(event -> {
+
+        });
+        menu2.getItems().addAll(menu2item4);
 
         Menu menu3 = new Menu("Edit");
         MenuItem menu3Item1 = new MenuItem("Undo");

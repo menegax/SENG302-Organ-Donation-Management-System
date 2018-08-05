@@ -28,7 +28,10 @@ class ScreenControlTouch extends ScreenControl {
 
     private static ScreenControlTouch screenControlTouch;
 
+    private boolean isLoginShowing;
+
     private ScreenControlTouch() {
+        isLoginShowing = true;
     }
 
     public static ScreenControlTouch getScreenControl() {
@@ -44,7 +47,13 @@ class ScreenControlTouch extends ScreenControl {
      */
     public void show(String fxml) {
         try {
-            List<Node> panes = new ArrayList<>(touchPane.getChildren());
+            List<Node> panes;
+            if(isLoginShowing) {
+                panes = new ArrayList<>();
+                setLoginShowing(false);
+            } else {
+                panes = new ArrayList<>(touchPane.getChildren());
+            }
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
             Pane pane = fxmlLoader.load();
             pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
@@ -75,6 +84,7 @@ class ScreenControlTouch extends ScreenControl {
             touchPane = new Pane();
             touchPane.getChildren().addAll(new Pane(root));
             touchStage.setScene(new Scene(touchPane));
+            setLoginShowing(true);
         } catch (IOException e) {
             systemLogger.log(SEVERE, "Failed to recreate login scene in touch application");
 
@@ -99,8 +109,14 @@ class ScreenControlTouch extends ScreenControl {
      */
     void removeUnsavedAsterisks() {
         for (UndoableWrapper undoablePane : undoableWrappers) {
-            undoablePane.getGuiHome().removeAsterisk();
+            if(undoablePane.getGuiHome() != null) {
+                undoablePane.getGuiHome().removeAsterisk();
+            }
         }
+    }
+
+    public void setLoginShowing(boolean showing) {
+        this.isLoginShowing = showing;
     }
 
 }
