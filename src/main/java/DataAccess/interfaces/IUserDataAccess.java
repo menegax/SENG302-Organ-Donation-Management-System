@@ -14,5 +14,7 @@ public interface IUserDataAccess {
 
     Set<User> getUsers();
 
+    Set<User> getDeletedUsers();
+
     Map<Integer, List<User>> searchUsers(String searchTerm);
 }

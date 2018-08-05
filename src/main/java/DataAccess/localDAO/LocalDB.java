@@ -3,7 +3,9 @@ package DataAccess.localDAO;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
+import model.User;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +15,7 @@ public class LocalDB {
     private Set<Patient> patients;
     private Set<Clinician> clinicians;
     private Set<Administrator> administrators;
-    private Set<Patient> deleted;
+    private Set<User> deleted;
 
     private LocalDB() {
         patients = new HashSet<>();
@@ -112,5 +114,15 @@ public class LocalDB {
         clinicians.clear();
         administrators.clear();
         deleted.clear();
+    }
+
+    public Set<User> getDeletedUsers() {
+        return Collections.unmodifiableSet(deleted);
+    }
+
+    boolean deleteUser(User user) {
+        boolean removed = patients.remove(user);
+        deleted.add(user);
+        return removed;
     }
 }
