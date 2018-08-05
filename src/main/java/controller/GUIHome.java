@@ -157,6 +157,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
                 }
             }
             homePaneTouchController = new TouchPaneController(homePane);
+            homePane.setOnTouchPressed(event -> homePane.toFront());
             homePane.setOnZoom(this::zoomWindow);
             homePane.setOnRotate(this::rotateWindow);
             homePane.setOnScroll(this::scrollWindow);
