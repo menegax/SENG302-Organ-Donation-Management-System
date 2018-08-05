@@ -97,6 +97,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         StatusObservable statusObservable = StatusObservable.getInstance();
         statusObservable.addObserver(this);
         homePane.getProperties().put("focusArea", "true");
+
         horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty()
                 .addListener((observable1, oldStage, newStage) -> {
             setUpMenuBar((UndoableStage) newStage);
@@ -432,6 +433,14 @@ public class GUIHome implements Observer, TouchscreenCapable {
             menu2.getItems().addAll(subMenuImport);
         }
         menu2.getItems().addAll(menu2Item1);
+        MenuItem menu2item4 = new MenuItem("Close window");
+        menu2item4.setOnAction(event -> {
+            if(screenControl.getTouch()) {
+                System.out.println(menuBar.getParent().getClass());
+                screenControl.closeStage(menuBar.getParent());
+            }
+        });
+        menu2.getItems().addAll(menu2item4);
 
         Menu menu3 = new Menu("Edit");
         MenuItem menu3Item1 = new MenuItem("Undo");
