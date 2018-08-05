@@ -7,6 +7,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import utility.ClinicianActionRecord;
 import utility.PatientActionRecord;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import utility.ResourceManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,13 +16,17 @@ import java.util.logging.Level;
 import static utility.SystemLogger.systemLogger;
 
 public class MySqlFactory extends DAOFactory{
-    private static HikariConfig config = new HikariConfig("src\\main\\resources\\sql\\HikariConfig.properties"); //todo:  check in jar, apparently it wraps in class loader
-    private static HikariDataSource ds = new HikariDataSource(config);
-
+    private HikariConfig config;
+    private HikariDataSource ds;
     private static MySqlFactory mySqlFactory = null;
 
     private MySqlFactory() {
-
+        if (System.getProperty("connection_type").equals("test")) {
+            config = new HikariConfig("src/main/resources/sql/HikariConfigTest.properties"); //todo:  check in jar, apparently it wraps in class loader
+        } else {
+            config = new HikariConfig("src/main/resources/sql/HikariConfigProd.properties"); //todo:  check in jar, apparently it wraps in class loader
+        }
+        ds = new HikariDataSource(config);
     }
 
     public static MySqlFactory getMySqlFactory(){
