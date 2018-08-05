@@ -4,6 +4,7 @@ import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
+import com.sun.javafx.css.StyleManager;
 import controller.ScreenControl;
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;

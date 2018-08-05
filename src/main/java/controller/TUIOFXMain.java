@@ -1,10 +1,20 @@
 package controller;
 
+import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.tuiofx.Configuration;
+import org.tuiofx.internal.base.GestureHandler;
 import service.Database;
 import utility.Searcher;
 import utility.SystemLogger;
@@ -21,13 +31,31 @@ public class TUIOFXMain extends Application {
 
     private static final UUID uuid = UUID.randomUUID();
 
+    /**
+     * Creates a new Stage and positions and sizes the stage to be the size of the screen boundaries
+     * @return stage resized and positioned stage
+     */
+    private Stage setUpStage() {
+
+        Stage stage = new Stage();
+
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
+        stage.setX(primaryScreenBounds.getMinX());
+        stage.setY(primaryScreenBounds.getMinY());
+        stage.setWidth(primaryScreenBounds.getWidth());
+        stage.setHeight(primaryScreenBounds.getHeight());
+
+        return stage;
+
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-       // set up GUI
-       ScreenControlTouch screenControl = ScreenControlTouch.getScreenControl();
-       screenControl.setTouchStage(primaryStage);
-       screenControl.show("/scene/login.fxml");
+        // set up GUI
+        Stage stage = setUpStage();
+        ScreenControl screenControl = ScreenControl.getScreenControl();
+        screenControl.show("/scene/login.fxml");
 
         Database.importFromDiskPatients("./patient.json");
         Database.importFromDiskClinicians("./clinician.json");
@@ -37,12 +65,15 @@ public class TUIOFXMain extends Application {
         Searcher.getSearcher()
                 .createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         openKeyboard();
-        TuioFX tuioFX = new TuioFX(primaryStage, Configuration.pqLabs());
+        TuioFX tuioFX = new TuioFX(stage, Configuration.pqLabs());
         tuioFX.enableMTWidgets(true);
         tuioFX.start();
-        primaryStage.setResizable(true);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
+
+        stage.show();
+
+        stage.setOnCloseRequest(event -> System.exit(0));
+
+        //Todo remove log here
         systemLogger.log(INFO, "Finished the start method for the touch screen app. Beginning app");
     }
 

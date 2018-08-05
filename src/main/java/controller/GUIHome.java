@@ -100,7 +100,6 @@ public class GUIHome implements Observer, TouchscreenCapable {
     public void initialize() {
         StatusObservable statusObservable = StatusObservable.getInstance();
         statusObservable.addObserver(this);
-        homePane.getProperties().put("useFocusArea", false);
         homePane.getProperties().put("focusArea", "true");
         if (screenControl.isTouch()) {
             addPaneListener();
