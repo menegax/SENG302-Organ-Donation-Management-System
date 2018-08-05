@@ -1,16 +1,19 @@
 package service.interfaces;
 
 import model.Administrator;
+import model.User;
+
+import java.util.List;
 
 public interface IAdministratorDataService {
 
-    public void deletePatient(String nhi);
+    void deletePatient(String nhi);
 
-    public void importRecords();
+    void importRecords();
 
-    public void searchUsers();
+    List<User> searchUsers(String searchTerm);
 
-    public Administrator getAdministratorByUsername(String username);
+    Administrator getAdministratorByUsername(String username);
 
-    public void save(Administrator administrator);
+    void save(Administrator administrator);
 }

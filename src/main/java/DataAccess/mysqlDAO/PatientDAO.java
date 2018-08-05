@@ -2,7 +2,10 @@ package DataAccess.mysqlDAO;
 
 import DataAccess.factories.MySqlFactory;
 import DataAccess.interfaces.*;
-import model.*;
+import model.Disease;
+import model.Medication;
+import model.Patient;
+import model.Procedure;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
@@ -121,10 +124,11 @@ public class PatientDAO implements IPatientDataAccess {
                     statement.setString(i, searchTerm);
                 }
             }
-            System.out.println(statement);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Patient patient = constructPatientObject(resultSet, new ArrayList<String>(){{add(resultSet.getString("Region"));}});
+                Patient patient = constructPatientObject(resultSet, new ArrayList<String>() {{
+                    add(resultSet.getString("Region"));
+                }});
                 //Add patient to resultMap with appropriate score
                 if (searchTerm.equals("")) {
                     resultMap.get(0).add(patient);
@@ -203,7 +207,7 @@ public class PatientDAO implements IPatientDataAccess {
     private PreparedStatement addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException {
         statement.setString(1, patient.getNhiNumber());
         statement.setString(2, patient.getFirstName());
-        statement.setString(3, patient.getMiddleNames().size()  == 0 ? "" : String.join(" ", patient.getMiddleNames()));
+        statement.setString(3, patient.getMiddleNames().size() == 0 ? "" : String.join(" ", patient.getMiddleNames()));
         statement.setString(4, patient.getLastName());
         statement.setString(5, patient.getBirth().toString());
         statement.setString(6, patient.getCREATED().toString());

@@ -3,8 +3,10 @@ package DataAccess.localDAO;
 import DataAccess.factories.LocalDatabaseFactory;
 import DataAccess.interfaces.IAdministratorDataAccess;
 import model.Administrator;
+import utility.Searcher;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class AdministratorLocalDAO implements IAdministratorDataAccess {
@@ -17,7 +19,10 @@ public class AdministratorLocalDAO implements IAdministratorDataAccess {
 
     @Override
     public void saveAdministrator(Set<Administrator> administrators) {
-        administrators.forEach(x -> localDB.storeAdministrator(x));
+        administrators.forEach(x -> {
+            localDB.storeAdministrator(x);
+            Searcher.getSearcher().updateIndex(x);
+        });
     }
 
     @Override
@@ -34,7 +39,7 @@ public class AdministratorLocalDAO implements IAdministratorDataAccess {
     }
 
     @Override
-    public List<Administrator> searchAdministrator(String searchTerm) {
+    public Map<Integer, List<Administrator>> searchAdministrators(String searchTerm) {
         return null;
     }
 

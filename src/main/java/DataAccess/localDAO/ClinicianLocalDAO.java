@@ -4,8 +4,10 @@ import DataAccess.factories.LocalDatabaseFactory;
 import DataAccess.interfaces.IClinicianDataAccess;
 import model.Clinician;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import utility.Searcher;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ClinicianLocalDAO implements IClinicianDataAccess {
@@ -19,7 +21,10 @@ public class ClinicianLocalDAO implements IClinicianDataAccess {
 
     @Override
     public void saveClinician(Set<Clinician> clinician) {
-        clinician.forEach(x -> localDB.storeClinician(x));
+        clinician.forEach(x -> {
+            localDB.storeClinician(x);
+            Searcher.getSearcher().updateIndex(x);
+        });
     }
 
     @Override
@@ -36,7 +41,7 @@ public class ClinicianLocalDAO implements IClinicianDataAccess {
     }
 
     @Override
-    public List<Clinician> searchClinician(String searchTerm) {
+    public Map<Integer,List<Clinician>> searchClinicians(String searchTerm) {
         return null;
     }
 

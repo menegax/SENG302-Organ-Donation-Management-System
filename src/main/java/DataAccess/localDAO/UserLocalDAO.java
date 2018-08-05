@@ -1,7 +1,6 @@
 package DataAccess.localDAO;
 
 import DataAccess.factories.DAOFactory;
-import DataAccess.factories.LocalDatabaseFactory;
 import DataAccess.interfaces.IAdministratorDataAccess;
 import DataAccess.interfaces.IClinicianDataAccess;
 import DataAccess.interfaces.IPatientDataAccess;
@@ -10,13 +9,14 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
-import utility.GlobalEnums;
+import utility.GlobalEnums.*;
+import utility.Searcher;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class UserLocalDAO implements IUserDataAccess {
 
-    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+    private DAOFactory factory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
 
     public void addUser(User user) {
         if (user instanceof Patient) {
@@ -42,5 +42,21 @@ public class UserLocalDAO implements IUserDataAccess {
             IAdministratorDataAccess administratorDAO = factory.getAdministratorDataAccess();
             administratorDAO.deleteAdministrator((Administrator) user);
         }
+    }
+
+    @Override
+    public Set<User> getUsers() {
+        IPatientDataAccess patientDataAccess = factory.getPatientDataAccess();
+        IClinicianDataAccess clinicianDataAccess = factory.getClinicianDataAccess();
+        IAdministratorDataAccess administratorDataAccess = factory.getAdministratorDataAccess();
+        Set<User> users = new HashSet<>(patientDataAccess.getPatients());
+        users.addAll(clinicianDataAccess.getClinicians());
+        users.addAll(administratorDataAccess.getAdministrators());
+        return users;
+    }
+
+    @Override
+    public Map<Integer, List<User>> searchUsers(String searchTerm) {
+        return Searcher.getSearcher().search(searchTerm, new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, 30, null);
     }
 }

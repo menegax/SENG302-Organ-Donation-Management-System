@@ -3,22 +3,23 @@ package DataAccess.interfaces;
 import model.Clinician;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface IClinicianDataAccess {
 
-    public void saveClinician(Set<Clinician> clinician);
+    void saveClinician(Set<Clinician> clinician);
 
-    public boolean addClinician (Clinician clinician);
+    boolean addClinician(Clinician clinician);
 
-    public Clinician getClinicianByStaffId (int id);
+    Clinician getClinicianByStaffId(int id);
 
-    public boolean deleteClinician(Clinician clinician);
+    boolean deleteClinician(Clinician clinician);
 
-    public int nextStaffID();
+    int nextStaffID();
 
-    public List<Clinician> searchClinician (String searchTerm);
+    Map<Integer, List<Clinician>> searchClinicians(String searchTerm);
 
-    public Set<Clinician> getClinicians();
+    Set<Clinician> getClinicians();
 
 }
