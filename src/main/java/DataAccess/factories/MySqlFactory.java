@@ -4,11 +4,9 @@ import DataAccess.interfaces.*;
 import DataAccess.mysqlDAO.*;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import utility.ClinicianActionRecord;
-import utility.GlobalEnums;
-import utility.PatientActionRecord;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import utility.ResourceManager;
+import utility.ClinicianActionRecord;
+import utility.PatientActionRecord;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,7 +21,7 @@ public class MySqlFactory extends DAOFactory{
     private static MySqlFactory mySqlFactory = null;
 
     private MySqlFactory() {
-        if (System.getProperty("connection_type").equals(TEST)) {
+        if (System.getProperty("connection_type").equals(TEST.getValue())) {
             config = new HikariConfig("src/main/resources/sql/HikariConfigTest.properties"); //todo:  check in jar, apparently it wraps in class loader
         } else {
             config = new HikariConfig("src/main/resources/sql/HikariConfigProd.properties"); //todo:  check in jar, apparently it wraps in class loader
@@ -89,7 +87,6 @@ public class MySqlFactory extends DAOFactory{
     public IUserDataAccess getUserDataAccess() { throw new NotImplementedException(); }
 
     public ITransplantWaitListDataAccess getTransplantWaitingListDataAccess() {
-
         return new TransplantWaitingListDAO();
     }
 

@@ -639,7 +639,7 @@ public class Patient extends User {
      */
     public void setCurrentMedications(List<Medication> currentMedications) {
         this.currentMedications = currentMedications;
-        medicationHistory.forEach(x -> x.setMedicationStatus(MedicationStatus.CURRENT));
+        currentMedications.forEach(x -> x.setMedicationStatus(MedicationStatus.CURRENT));
         userModified();
     }
 

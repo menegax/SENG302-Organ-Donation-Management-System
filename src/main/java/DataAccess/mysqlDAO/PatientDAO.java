@@ -309,7 +309,7 @@ public class PatientDAO implements IPatientDataAccess {
             }
         });
         //map contact info etc
-        if (contacts.size() != 1) {
+        if (contacts.size() > 1) {
             patient.setRegion(contacts.get(3) != null ? Region.getEnumFromString(contacts.get(3)) : null);
             patient.setZip(contacts.get(4) == null ? 0 : Integer.parseInt(contacts.get(4)));
             patient.setCurrentDiseases(currentDiseases);
