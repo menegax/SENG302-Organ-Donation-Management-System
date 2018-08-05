@@ -38,6 +38,10 @@ class ScreenControlTouch extends ScreenControl {
         return screenControlTouch;
     }
 
+    /**
+     * Displays a new pane with the loaded fxml
+     * @param fxml the fxml to display
+     */
     public void show(String fxml) {
         try {
             List<Node> panes = new ArrayList<>(touchPane.getChildren());
@@ -53,9 +57,7 @@ class ScreenControlTouch extends ScreenControl {
             Parent root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
             touchPane = new Pane(root);
             touchPane.getChildren().addAll(panes);
-//            if (touchStage.getScene() == null) {
-                touchStage.setScene(new Scene(touchPane));
-//            }
+            touchStage.setScene(new Scene(touchPane));
 
             systemLogger.log(INFO, "Showing new touch stage scene");
         } catch (IOException e) {
@@ -64,6 +66,9 @@ class ScreenControlTouch extends ScreenControl {
         }
     }
 
+    /**
+     * Creates a login pane
+     */
     void setUpNewLogin() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
@@ -80,12 +85,18 @@ class ScreenControlTouch extends ScreenControl {
         this.touchStage = touchStage;
     }
 
+    /**
+     * Adds asterisks to all panes with a coloured bar
+     */
     void addUnsavedAsterisks() {
         for (UndoableWrapper undoablePane : undoableWrappers) {
             undoablePane.getGuiHome().addAsterisk();
         }
     }
 
+    /**
+     * Removes all asterisks from panes with a coloured bar
+     */
     void removeUnsavedAsterisks() {
         for (UndoableWrapper undoablePane : undoableWrappers) {
             undoablePane.getGuiHome().removeAsterisk();
