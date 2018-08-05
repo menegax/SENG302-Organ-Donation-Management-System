@@ -42,6 +42,11 @@ public class ClinicianDataService implements IClinicianDataService {
     }
 
     @Override
+    public int getPatientCount() {
+        return mysqlFactory.getPatientDataAccess().getPatientCount();
+    }
+
+    @Override
     public List<Patient> searchPatients(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults) {
         List<Patient> results = new ArrayList<>();
 

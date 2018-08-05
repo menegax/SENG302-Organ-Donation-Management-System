@@ -17,6 +17,8 @@ public interface IPatientDataAccess {
 
     public Set<Patient> getPatients();
 
+    int getPatientCount();
+
     public Patient getPatientByNhi(String nhi);
 
     public boolean deletePatient(Patient patient);

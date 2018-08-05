@@ -41,6 +41,11 @@ public class PatientLocalDAO implements IPatientDataAccess {
     }
 
     @Override
+    public int getPatientCount() {
+        return localDB.getPatients().size();
+    }
+
+    @Override
     public Patient getPatientByNhi(String nhi) {
         return localDB.getPatientByNHI(nhi);
     }

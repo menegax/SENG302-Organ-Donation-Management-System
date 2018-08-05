@@ -19,6 +19,7 @@ import org.controlsfx.control.RangeSlider;
 import service.ClinicianDataService;
 import service.PatientDataService;
 import service.TextWatcher;
+import utility.CachedThreadPool;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.Searcher;
@@ -28,6 +29,7 @@ import utility.undoRedo.UndoableStage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
@@ -98,6 +100,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
     private int numResults = 30;
 
+    private int count = 0;
+
     private PatientDataService patientDataService = new PatientDataService();
 
     private ClinicianDataService clinicianDataService = new ClinicianDataService();
@@ -133,6 +137,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         searchEntry.setPromptText("There are " + getProfileCount() + " profiles");
 
         setupUndoRedo();
+        updateProfileCount();
     }
 
     /**
@@ -235,6 +240,20 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         List<Patient> results = clinicianDataService.searchPatients(searchEntry.getText(), filter, numResults);
         masterData.clear();
         masterData.addAll(results);
+        updateProfileCount();
+    }
+
+    public void updateProfileCount() {
+        CachedThreadPool cachedThreadPool = CachedThreadPool.getCachedThreadPool();
+        ExecutorService service = cachedThreadPool.getThreadService();
+        service.submit(() -> {
+            count = clinicianDataService.getPatientCount();
+            if (count > 100) {
+                displayY.setText("Display 100 profiles");
+            } else {
+                displayY.setText("Display all " + count + " profiles");
+            }
+        });
     }
 
     @FXML
@@ -262,11 +281,12 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      */
     @FXML
     private void displayAllResults() {
-        masterData.clear();
-        //for (User user : searcher.getDefaultResults(new UserTypes[]{UserTypes.PATIENT}, null)) {
-        // masterData.add((Patient)user);
-        //}
-        //patientDataTable.setItems(masterData);
+        if (count > 100) {
+            numResults = 100;
+        } else {
+            numResults = count;
+        }
+        search();
     }
 
     /**
@@ -335,6 +355,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     @FXML
     public void clearFilterOptions() {
         valueX.setText("30");
+        numResults = 30;
         recievingFilter.getSelectionModel().select(GlobalEnums.NONE_ID);
         donationFilter.getSelectionModel().select(GlobalEnums.NONE_ID);
         regionFilter.getSelectionModel().select(GlobalEnums.NONE_ID);

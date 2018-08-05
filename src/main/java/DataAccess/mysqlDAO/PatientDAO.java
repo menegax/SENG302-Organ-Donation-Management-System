@@ -82,6 +82,20 @@ public class PatientDAO implements IPatientDataAccess {
     }
 
     @Override
+    public int getPatientCount() {
+        try (Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("GET_PATIENT_COUNT"));
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("count");
+            }
+            return 0;
+        } catch (SQLException e) {
+            return 0;
+        }
+    }
+
+    @Override
     public boolean deletePatient(Patient patient) {
         return false;
     }
