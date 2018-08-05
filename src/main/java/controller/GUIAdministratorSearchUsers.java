@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -19,17 +20,14 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.UserTypes;
 import utility.Searcher;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIAdministratorSearchUsers extends UndoableController implements Initializable {
@@ -89,27 +87,14 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         	UserControl userControl = new UserControl();
         	User selected = userDataTable.getSelectionModel().getSelectedItem();
             if (click.getClickCount() == 2 && selected != null && selected != userControl.getLoggedInUser()) {
-                try {
-                    userControl.setTargetUser(selected);
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
-                    UndoableStage popUpStage = new UndoableStage();
-                    //Set initial popup dimensions
-                    popUpStage.setWidth(1150);
-                    popUpStage.setHeight(700);
-                    screenControl.addStage(popUpStage.getUUID(), popUpStage);
-                    screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
+                userControl.setTargetUser(selected);
+                screenControl.show("/scene/home.fxml");
 
-                    // When pop up is closed, refresh the table
-                    popUpStage.setOnHiding(event -> {
-                        Platform.runLater(this::tableRefresh);
-                        userControl.clearTargetUser();
-                    });
-                } catch (IOException e) {
-                    userActions.log(Level.SEVERE,
-                            "Failed to open user profile scene from search users table",
-                            "attempted to open user edit window from search users table");
-                    new Alert(Alert.AlertType.ERROR, "Unable to open user edit window", ButtonType.OK).show();
-                }
+//                    // When pop up is closed, refresh the table
+//                    popUpStage.setOnHiding(event -> {
+//                        Platform.runLater(this::tableRefresh);
+//                        userControl.clearTargetUser();
+//                    }); todo implement
             }
         });
     }

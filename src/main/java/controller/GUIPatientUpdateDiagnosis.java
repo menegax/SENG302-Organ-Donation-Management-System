@@ -3,26 +3,18 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
-import model.User;
 import utility.GlobalEnums;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
-import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 
-import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
@@ -170,7 +162,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
      * before calling the stage close method.
      */
     public void cancelUpdate() {
-        screenControl.closeStage(((UndoableStage)cancelButton.getScene().getWindow()).getUUID());
+        // screenControl.closeStage(((UndoableStage)cancelButton.getScene().getWindow()).getUUID()); todo implement
     }
 
     /***
@@ -329,7 +321,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
             Action action = new Action(currentPatient, patientClone);
             undoRedoControl.addAction(action, CLINICIANDIAGNOSIS);
 
-            screenControl.closeStage(((UndoableStage)doneButton.getScene().getWindow()).getUUID());
+            // screenControl.closeStage(((UndoableStage)doneButton.getScene().getWindow()).getUUID()); todo implement
         } else {
             String errorString = "Diseases must not have the same disease name and diagnosis date as another disease\n\n";
             if(diseaseNameTextField.getStyleClass().contains("invalid")) {

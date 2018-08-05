@@ -2,8 +2,6 @@ package controller;
 
 import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -22,7 +20,6 @@ import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
 import org.tuiofx.TuioFX;
-import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -35,12 +32,12 @@ public class TUIOFXMain extends Application {
     private static final UUID uuid = UUID.randomUUID();
 
     /**
-     * Creates a new UndoableStage and positions and sizes the stage to be the size of the screen boundaries
-     * @return Undoable stage resized and positioned stage
+     * Creates a new Stage and positions and sizes the stage to be the size of the screen boundaries
+     * @return stage resized and positioned stage
      */
-    private UndoableStage setUpStage() {
+    private Stage setUpStage() {
 
-        UndoableStage stage = new UndoableStage();
+        Stage stage = new Stage();
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
@@ -56,11 +53,10 @@ public class TUIOFXMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // set up GUI
-        UndoableStage stage = setUpStage();
-        ScreenControl screenControl = ScreenControl.getScreenControl();
+        Stage stage = setUpStage();
+        ScreenControlTouch screenControl = (ScreenControlTouch) ScreenControl.getScreenControl();
         screenControl.setTouchStage(stage);
-        Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-        screenControl.show(uuid, loginScreen);
+        screenControl.show("/scene/login.fxml");
 
         Database.importFromDiskPatients("./patient.json");
         Database.importFromDiskClinicians("./clinician.json");
@@ -120,6 +116,5 @@ public class TUIOFXMain extends Application {
             }
         }
     }
-
 
 }

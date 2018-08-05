@@ -11,12 +11,10 @@ import javafx.scene.control.Control;
 import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.OrganWaitlist;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
 import utility.GlobalEnums;
-import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -298,20 +296,8 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * @param organ organ being validated for reason of deregistration
      */
     private void openReasonPopup(GlobalEnums.Organ organ) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/deregistrationReason.fxml"));
-            Parent root = fxmlLoader.load();
-            GUIRequiredOrganDeregistrationReason controller = fxmlLoader.getController();
-            controller.setOrgan(organ);
-            UndoableStage popUpStage = new UndoableStage();
-            screenControl.addStage(popUpStage.getUUID(), popUpStage);
-            screenControl.show(popUpStage.getUUID(), root);
-        } catch (IOException e) {
-            userActions.log(Level.SEVERE,
-                    "Failed to open deregistration of required organ scene from required organs update scene",
-                    "attempted to open deregistration of required organ reason window from required organs update scene");
-            new Alert(Alert.AlertType.ERROR, "Unable to open deregistration of required organ reason window", ButtonType.OK).show();
-        }
+            // controller.setOrgan(organ); todo implement
+            screenControl.show("/scene/deregistrationReason.fxml");
     }
 
     /**

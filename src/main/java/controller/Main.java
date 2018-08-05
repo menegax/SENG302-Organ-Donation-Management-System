@@ -38,12 +38,9 @@ public class Main extends Application {
 
         // setup GUI
         ScreenControl screenControl = ScreenControl.getScreenControl();
-        primaryStage.setTitle("Login");
-        StyleManager.getInstance().addUserAgentStylesheet("../../resources/css/guiStyle.css");
-        screenControl.addStage(uuid, primaryStage);
-        primaryStage.setResizable(false);
-        Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-        screenControl.show(uuid, loginScreen);
+//        primaryStage.setTitle("Login");
+//        primaryStage.setResizable(false); todo implement
+        screenControl.show("/scene/login.fxml");
 
         // add objects
         Database.importFromDiskPatients("./patient.json");

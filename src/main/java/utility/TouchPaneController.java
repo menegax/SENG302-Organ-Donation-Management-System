@@ -37,12 +37,8 @@ public class TouchPaneController {
      */
     public void zoomPane(ZoomEvent zoomEvent) {
         pane.toFront();
-//        Window currentWindow = ((Node)zoomEvent.getTarget()).getScene().getWindow();
         pane.setScaleX(pane.getScaleX() * zoomEvent.getZoomFactor());
-//        currentWindow.setWidth(currentWindow.getWidth() * zoomEvent.getZoomFactor());
         pane.setScaleY(pane.getScaleY() * zoomEvent.getZoomFactor());
-//        currentWindow.setHeight(currentWindow.getHeight() * zoomEvent.getZoomFactor());
-//        resizePane();
     }
 
     /**

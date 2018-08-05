@@ -2,11 +2,9 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.*;
@@ -17,12 +15,10 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import model.Administrator;
 import service.Database;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
-import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -80,12 +76,7 @@ public class GUILogin implements TouchscreenCapable {
      */
     @FXML
     public void goToRegister() {
-        try {
-            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml")));
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load patient register").show();
-            userActions.log(SEVERE, "Failed to load patient register", "Attempted to load patient register");
-        }
+        screenControl.show("/scene/userRegister.fxml");
     }
 
     /**
@@ -106,20 +97,11 @@ public class GUILogin implements TouchscreenCapable {
                 checkAdminCredentials();
                 login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
-            Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
-            UndoableStage stage = new UndoableStage();
-            screenControl.addStage(stage.getUUID(), stage);
-            screenControl.show(stage.getUUID(), home);
-            screenControl.closeStage(Main.getUuid()); // close login scene after login
+            screenControl.show("/scene/home.fxml");
         } catch (InvalidObjectException e) {
             password.setText(""); //Reset password field on invalid login
             userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
             Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
-            alert.show();
-        } catch (IOException e) {
-            userActions.log(Level.WARNING, "Unable to load home page", "Attempted to log in");
-            systemLogger.log(Level.INFO, "Failed to find the .fxml file for login" + e.getStackTrace());
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
             alert.show();
         } catch (NumberFormatException e) {
             userActions.log(Level.WARNING, "Non-numeric staff IDs are not permitted", "Attempted to log in");

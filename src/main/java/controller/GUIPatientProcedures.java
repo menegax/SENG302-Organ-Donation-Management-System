@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -16,10 +15,8 @@ import model.Patient;
 import model.Procedure;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -191,19 +188,8 @@ public class GUIPatientProcedures extends UndoableController {
      */
     @FXML
     public void addProcedure() {
-        try {
-            UndoableStage stage = new UndoableStage();
-            //stage.setPopUp();
-            screenControl.addStage(stage.getUUID(), stage);
-            screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/patientProcedureForm.fxml")));
-            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE,
-                    "Failed to open add procedure popup from patient procedures",
-                    "Attempted to open add procedure popup from patient procedures");
-            new Alert(Alert.AlertType.ERROR, "Unable to open add procedure window", ButtonType.OK).show();
-        }
+            screenControl.show("/scene/patientProcedureForm.fxml");
+            //stage.setOnHiding(event -> Platform.runLater(this::tableRefresh)); todo implement
     }
 
     /**
@@ -222,23 +208,11 @@ public class GUIPatientProcedures extends UndoableController {
             userActions.log(Level.WARNING, "No procedure selected", "Attempted to edit a procedure");
             return;
         }
-        try {
-            UndoableStage stage = new UndoableStage();
-            //stage.setPopUp();
-            screenControl.addStage(stage.getUUID(), stage);
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
-            screenControl.show(stage.getUUID(),fxmlLoader.load());
-            GUIPatientProcedureForm controller = fxmlLoader.getController();
-            controller.setupEditing(selectedProcedure);
-            systemLogger.log(Level.FINE, "set up event");
-            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE,
-                    "Failed to load edit procedure scene from patient procedures popup",
-                    "Attempted to load edit procedure scene from patient procedures popup");
-            new Alert(Alert.AlertType.ERROR, "Unable to load procedures page", ButtonType.OK).show();
-        }
+        screenControl.show("/scene/patientProcedureForm.fxml");
+//            GUIPatientProcedureForm controller = fxmlLoader.getController();
+//            controller.setupEditing(selectedProcedure);
+//            systemLogger.log(Level.FINE, "set up event");
+//            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh)); todo implement
     }
 
     /**

@@ -5,11 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import model.Administrator;
-import model.Clinician;
 import model.DrugInteraction;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
@@ -21,12 +17,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import utility.undoRedo.UndoableStage;
 
-import java.io.IOException;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -105,14 +98,10 @@ public class GUIClinicianWaitingList {
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
                     DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
                     userControl.setTargetUser(Database.getPatientByNhi(request.getReceiverNhi()));
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
-                    Parent root = fxmlLoader.load();
-                    UndoableStage popUpStage = new UndoableStage();
-                    screenControl.addStage(popUpStage.getUUID(), popUpStage);
-                    screenControl.show(popUpStage.getUUID(), root);
+                    screenControl.show("/scene/home.fxml");
                     openProfiles.add(request);
                     // When pop up is closed, refresh the table
-                    popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request )));
+                    // popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request ))); todo implement
 
                     }
                 catch (Exception e) {

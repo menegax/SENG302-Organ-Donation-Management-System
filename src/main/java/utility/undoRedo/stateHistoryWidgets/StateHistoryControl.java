@@ -1,7 +1,9 @@
 package utility.undoRedo.stateHistoryWidgets;
 
+import controller.ScreenControl;
+import javafx.scene.Node;
 import javafx.scene.control.Control;
-import utility.undoRedo.UndoableStage;
+import utility.undoRedo.UndoableWrapper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +20,9 @@ public abstract class StateHistoryControl {
 
     Control control;
 
-    private UndoableStage undoableStage;
+    private UndoableWrapper undoableWrapper;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Display the state of the object one action ahead
@@ -76,40 +80,33 @@ public abstract class StateHistoryControl {
     }
 
     /**
-     * Sets the undoable stage that this control is on
+     * Finds the appropriate undoable wrapper for this control
+     * @param node a node on the screen of the undoable wrapper
      */
-    void setUpUndoableStage() {
-        if (control.getScene() == null) {
-            control.sceneProperty().addListener((observable, oldScene, newScene) -> {
-                if (newScene != null) {
-                    if (newScene.getWindow() == null) {
-                        newScene.windowProperty().addListener((observable2, oldStage, newStage) -> {
-                            if (newStage != null) {
-                                undoableStage = (UndoableStage) newStage;
-                            }
-                        });
-                    } else {
-                        undoableStage = (UndoableStage) newScene.getWindow();
-                    }
-                }
-            });
-        } else if (control.getScene().getWindow() == null){
-            control.getScene().windowProperty().addListener((observable2, oldStage, newStage) -> {
-                if (newStage != null) {
-                    undoableStage = (UndoableStage) newStage;
+    protected void setUpUndoableWrapper(Node node) {
+        if (node.getParent() == null) {
+            node.parentProperty().addListener((observable, oldValue, newValue) -> {
+                if (screenControl.getUndoableWrapper(newValue) == null) {
+                    setUpUndoableWrapper(newValue);
+                } else {
+                    undoableWrapper = screenControl.getUndoableWrapper(newValue);
                 }
             });
         } else {
-            undoableStage = (UndoableStage) control.getScene().getWindow();
+            if (screenControl.getUndoableWrapper(node.getParent()) == null) {
+                setUpUndoableWrapper(node.getParent());
+            } else {
+                undoableWrapper = screenControl.getUndoableWrapper(node.getParent());
+            }
         }
     }
 
     /**
-     * Gets the undoable stage that this stateHistoryControl is on
-     * @return the undoableStage of this stateHistoryControl
+     * Gets the undoableWrapper that this stateHistoryControl is on
+     * @return the undoableWrapper of this stateHistoryControl
      */
-    private UndoableStage getUndoableStage() {
-        return undoableStage;
+    private UndoableWrapper getUndoableWrapper() {
+        return undoableWrapper;
     }
 
     /**
@@ -119,6 +116,6 @@ public abstract class StateHistoryControl {
     public void setStates(StateHistoryControl stateHistoryControl) {
         this.states = stateHistoryControl.getStates();
         this.index = stateHistoryControl.getIndex();
-        this.undoableStage = stateHistoryControl.getUndoableStage();
+        this.undoableWrapper = stateHistoryControl.getUndoableWrapper();
     }
 }

@@ -4,22 +4,17 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import model.Clinician;
 import model.Medication;
 import javafx.stage.Stage;
-import model.Clinician;
-import model.Medication;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import utility.GlobalEnums;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -30,7 +25,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -155,7 +149,7 @@ public class GUIPatientProfile {
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
-
+    private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
 
     /**
@@ -330,15 +324,7 @@ public class GUIPatientProfile {
     public void deleteProfile() {
         Patient patient = (Patient) userControl.getTargetUser();
         Action action = new Action(patient, null);
-        for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
-            if (stage instanceof UndoableStage) {
-                for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
-                    if (statesHistoryScreen.getUndoableScreen().equals(GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS)) {
-                        statesHistoryScreen.addAction(action);
-                    }
-                }
-            }
-        }
+        undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
         userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", patient.getNhiNumber()});
         ((Stage) patientProfilePane.getScene().getWindow()).close();
     }

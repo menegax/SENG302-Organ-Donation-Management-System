@@ -18,7 +18,7 @@ public class StateHistoryDatePicker extends StateHistoryControl {
         } else {
             states.add(((DatePicker) control).getValue().toString());
         }
-        setUpUndoableStage();
+        setUpUndoableWrapper(this.control);
     }
 
     /**

@@ -25,7 +25,6 @@ import utility.GlobalEnums.*;
 import utility.GlobalEnums.UserTypes;
 import utility.Searcher;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -153,33 +152,18 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     private void setupDoubleClickToPatientEdit() {
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
-            if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
-                    .getSelectedItem() != null) {
-                try {
-                    UserControl userControl = new UserControl();
-                    userControl.setTargetUser(patientDataTable.getSelectionModel()
-                            .getSelectedItem());
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
-                    UndoableStage popUpStage = new UndoableStage();
-                    //Set initial popup dimensions
-                    popUpStage.setWidth(1150);
-                    popUpStage.setHeight(700);
-                    screenControl.addStage(popUpStage.getUUID(), popUpStage);
-                    screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
+            if (click.getClickCount() == 2 && patientDataTable.getSelectionModel().getSelectedItem() != null) {
+                UserControl userControl = new UserControl();
+                userControl.setTargetUser(patientDataTable.getSelectionModel()
+                        .getSelectedItem());
+                screenControl.show("/scene/home.fxml");
 
-                    // When pop up is closed, refresh the table
-                    popUpStage.setOnHiding(event -> Platform.runLater(() -> {
-                        masterData.clear();
-                        Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
-                                numResults, filter).forEach(x ->  masterData.add((Patient)x));
-                    }));
-                }
-                catch (IOException e) {
-                    userActions.log(Level.SEVERE,
-                            "Failed to open patient profile scene from search patients table",
-                            "attempted to open patient edit window from search patients table");
-                    new Alert(Alert.AlertType.ERROR, "Unable to open patient edit window", ButtonType.OK).show();
-                }
+//                    // When pop up is closed, refresh the table
+//                    popUpStage.setOnHiding(event -> Platform.runLater(() -> {
+//                        masterData.clear();
+//                        Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+//                                numResults, filter).forEach(x ->  masterData.add((Patient)x));
+//                    })); todo implement
             }
         });
     }
