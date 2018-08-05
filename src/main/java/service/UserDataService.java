@@ -8,6 +8,7 @@ import DataAccess.localDAO.LocalDB;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
+import model.User;
 import service.interfaces.IUserDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
@@ -34,6 +35,7 @@ public class UserDataService implements IUserDataService {
         Set<Patient> patients = localDatabase.getPatientDataAccess().getPatients();
         Set<Clinician> clinicians = localDatabase.getClinicianDataAccess().getClinicians();
         Set<Administrator> administrators = localDatabase.getAdministratorDataAccess().getAdministrators();
+        Set<User> deleted = localDatabase.getUserDataAccess().getDeletedUsers();
         IPatientDataAccess patientDataAccess = mysqlFactory.getPatientDataAccess();
         IClinicianDataAccess clinicianDataService = mysqlFactory.getClinicianDataAccess();
         IAdministratorDataAccess administratorDataAccess = mysqlFactory.getAdministratorDataAccess();
@@ -45,6 +47,15 @@ public class UserDataService implements IUserDataService {
             clinicianDataService.saveClinician(clinicians);
             patientDataAccess.savePatients(patients); //save to remote db
             administratorDataAccess.saveAdministrator(administrators);
+            /*deleted.forEach(u -> {
+                if (u instanceof Patient) {
+                    patientDataAccess.deletePatient((Patient) u);
+                } else if (u instanceof Clinician) {
+                    clinicianDataService.deleteClinician((Clinician) u);
+                } else {
+                    administratorDataAccess.deleteAdministrator((Administrator) u);
+                }
+            });*/
         });
     }
 

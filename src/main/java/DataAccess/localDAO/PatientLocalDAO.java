@@ -52,7 +52,7 @@ public class PatientLocalDAO implements IPatientDataAccess {
 
     @Override
     public boolean deletePatient(Patient patient) {
-        return false;
+        return localDB.deleteUser(patient);
     }
 
     @Override

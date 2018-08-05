@@ -9,7 +9,6 @@ import service.interfaces.IClinicianDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;

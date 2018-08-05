@@ -56,6 +56,11 @@ public class UserLocalDAO implements IUserDataAccess {
     }
 
     @Override
+    public Set<User> getDeletedUsers() {
+        return LocalDB.getInstance().getDeletedUsers();
+    }
+
+    @Override
     public Map<Integer, List<User>> searchUsers(String searchTerm) {
         return Searcher.getSearcher().search(searchTerm, new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, 30, null);
     }
