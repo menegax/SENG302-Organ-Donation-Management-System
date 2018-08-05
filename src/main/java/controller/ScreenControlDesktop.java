@@ -41,12 +41,13 @@ public class ScreenControlDesktop extends ScreenControl {
     /**
      * shows the fxml (screen)
      * @param fxml the fxml to display
-     * @throws IOException any issue in loading the fxml file
+     * @return the controller of this fxml
      */
-    public void show(String fxml) {
+    public Object show(String fxml) {
         try {
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
+            Object controller = fxmlLoader.getController();
             UndoableWrapper undoableWrapper = new UndoableWrapper(stage);
             if (fxmlLoader.getController() instanceof GUIHome) {
                 undoableWrapper.setGuiHome(fxmlLoader.getController());
@@ -55,10 +56,12 @@ public class ScreenControlDesktop extends ScreenControl {
             stage.setScene(new Scene(fxmlLoader.load()));
             stage.show();
             systemLogger.log(Level.INFO, "Showing new desktop stage");
+            return controller;
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Unable to load window", "Attempted to load fxml: " + fxml);
             new Alert(Alert.AlertType.ERROR, "Unable to open window", ButtonType.OK).show();
         }
+        return null;
     }
 
     /**

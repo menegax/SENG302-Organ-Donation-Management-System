@@ -296,8 +296,8 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * @param organ organ being validated for reason of deregistration
      */
     private void openReasonPopup(GlobalEnums.Organ organ) {
-            // controller.setOrgan(organ); todo implement
-            screenControl.show("/scene/deregistrationReason.fxml");
+        GUIRequiredOrganDeregistrationReason controller = (GUIRequiredOrganDeregistrationReason) screenControl.show("/scene/deregistrationReason.fxml");
+        controller.setOrgan(organ);
     }
 
     /**

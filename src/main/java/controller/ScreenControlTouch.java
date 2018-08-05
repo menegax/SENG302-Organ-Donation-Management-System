@@ -9,6 +9,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.tuiofx.examples.demo.FXMLController;
 import utility.undoRedo.UndoableWrapper;
 
 import java.io.IOException;
@@ -44,8 +45,9 @@ class ScreenControlTouch extends ScreenControl {
     /**
      * Displays a new pane with the loaded fxml
      * @param fxml the fxml to display
+     * @return the controller created for this fxml
      */
-    public void show(String fxml) {
+    public Object show(String fxml) {
         try {
             List<Node> panes;
             if(isLoginShowing) {
@@ -55,6 +57,7 @@ class ScreenControlTouch extends ScreenControl {
                 panes = new ArrayList<>(touchPane.getChildren());
             }
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
+            Object controller = fxmlLoader.getController();
             Pane pane = fxmlLoader.load();
             pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
             panes.add(0, pane);
@@ -69,10 +72,12 @@ class ScreenControlTouch extends ScreenControl {
             touchStage.setScene(new Scene(touchPane));
 
             systemLogger.log(INFO, "Showing new touch stage scene");
+            return controller;
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Unable to load window", "Attempted to load a new window");
             new Alert(Alert.AlertType.ERROR, "Unable to open window", ButtonType.OK).show();
         }
+        return null;
     }
 
     /**
