@@ -20,6 +20,7 @@ public class MYSQLPatientDAOTest {
     private static DBHelper dbHelper;
     private Patient patient;
 
+
     @BeforeClass
     public static void setUp() {
         System.setProperty("connection_type", DbType.TEST.getValue());

@@ -127,7 +127,6 @@ public class AdministratorDAO implements IAdministratorDataAccess {
             String password = resultSet.getString("password");
             Timestamp modified = Timestamp.valueOf(resultSet.getString("Modified"));
             return new Administrator(username, fName, mNames, lName, salt, password, modified);
-            // administrator.getModified(); //todo:
         }
         return null;
     }

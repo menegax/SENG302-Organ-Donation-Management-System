@@ -33,9 +33,8 @@ public class AdministratorLogDAO implements ILogDataAccess<AdministratorActionRe
                statement.setString(3, record.getLevel().toString());
                statement.setString(5, record.getAction());
                statement.setString(6, record.getTarget());
-               statement.addBatch();
+               statement.executeUpdate();
            }
-           statement.executeBatch();
        } catch (SQLException e) {
            e.printStackTrace();
        }

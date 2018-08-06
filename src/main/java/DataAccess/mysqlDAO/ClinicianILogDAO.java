@@ -48,7 +48,7 @@ public class ClinicianILogDAO implements ILogDataAccess<ClinicianActionRecord> {
             List<ClinicianActionRecord> logs = new ArrayList<>();
             while (results.next()) {
                 logs.add(new ClinicianActionRecord(Timestamp.valueOf(results.getString("Time")), Level.parse(results.getString("Level")),
-                        results.getString("Message"), results.getString("Action"), results.getString("TargetNhi")));
+                        results.getString("Action"), results.getString("Message"), results.getString("TargetNhi")));
             }
             return logs;
         } catch (SQLException e) {

@@ -34,8 +34,8 @@ public class PatientILogDAO implements ILogDataAccess<PatientActionRecord>{
                     statement.setString(2, record.getTimestamp().toString());
                     statement.setString(3, record.getLevel().toString());
                     statement.setString(5, record.getAction());
+                    statement.executeUpdate();
                 }
-                statement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
