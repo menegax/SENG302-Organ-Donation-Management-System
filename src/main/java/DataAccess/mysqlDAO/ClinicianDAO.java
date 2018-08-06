@@ -140,6 +140,9 @@ public class ClinicianDAO implements IClinicianDataAccess {
         throw new NotImplementedException();
     }
 
+    /**
+     * Returns the next staff ID for a new clinician account according to highest staff ID in the database
+     */
     @Override
     public int nextStaffID() {
         try(Connection connection = mySqlFactory.getConnectionInstance()) {
