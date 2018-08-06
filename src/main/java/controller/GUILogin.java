@@ -76,7 +76,7 @@ public class GUILogin implements TouchscreenCapable {
      */
     @FXML
     public void goToRegister() {
-        screenControl.show("/scene/userRegister.fxml");
+        screenControl.show("/scene/userRegister.fxml", null);
     }
 
     /**
@@ -97,7 +97,7 @@ public class GUILogin implements TouchscreenCapable {
                 checkAdminCredentials();
                 login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
-            screenControl.show("/scene/home.fxml");
+            screenControl.show("/scene/home.fxml", null);
         } catch (InvalidObjectException e) {
             password.setText(""); //Reset password field on invalid login
             userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");

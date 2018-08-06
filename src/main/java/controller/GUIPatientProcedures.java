@@ -31,7 +31,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller class for the Patient procedures screen
  */
-public class GUIPatientProcedures extends UndoableController {
+public class GUIPatientProcedures extends UndoableController implements IWindowObserver{
 
     @FXML
     public AnchorPane patientProceduresPane;
@@ -188,8 +188,14 @@ public class GUIPatientProcedures extends UndoableController {
      */
     @FXML
     public void addProcedure() {
-            screenControl.show("/scene/patientProcedureForm.fxml");
-            //stage.setOnHiding(event -> Platform.runLater(this::tableRefresh)); todo implement
+            screenControl.show("/scene/patientProcedureForm.fxml", this);
+    }
+
+    /**
+     * Called when the add/edit procedure window is closed
+     */
+    public void windowClosed() {
+        tableRefresh();
     }
 
     /**
@@ -208,10 +214,8 @@ public class GUIPatientProcedures extends UndoableController {
             userActions.log(Level.WARNING, "No procedure selected", "Attempted to edit a procedure");
             return;
         }
-        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml");
+        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", this);
         controller.setupEditing(selectedProcedure);
-//            systemLogger.log(Level.FINE, "set up event");
-//            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh)); todo implement
     }
 
     /**

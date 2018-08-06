@@ -45,9 +45,10 @@ class ScreenControlTouch extends ScreenControl {
     /**
      * Displays a new pane with the loaded fxml
      * @param fxml the fxml to display
+     * @param parentController controller to notify when pane shown closes
      * @return the controller created for this fxml
      */
-    public Object show(String fxml) {
+    public Object show(String fxml, IWindowObserver parentController) {
         try {
             List<Node> panes;
             if(isLoginShowing) {
@@ -70,7 +71,11 @@ class ScreenControlTouch extends ScreenControl {
             touchPane = new Pane(root);
             touchPane.getChildren().addAll(panes);
             touchStage.setScene(new Scene(touchPane));
-
+            pane.visibleProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue && parentController != null) {
+                    parentController.windowClosed();
+                }
+            });
             systemLogger.log(INFO, "Showing new touch stage scene");
             return controller;
         } catch (IOException e) {
@@ -105,7 +110,9 @@ class ScreenControlTouch extends ScreenControl {
      */
     void addUnsavedAsterisks() {
         for (UndoableWrapper undoablePane : undoableWrappers) {
-            undoablePane.getGuiHome().addAsterisk();
+            if (undoablePane.getGuiHome() != null) {
+                undoablePane.getGuiHome().addAsterisk();
+            }
         }
     }
 

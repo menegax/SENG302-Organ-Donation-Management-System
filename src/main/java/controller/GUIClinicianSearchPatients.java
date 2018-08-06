@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
-public class GUIClinicianSearchPatients extends UndoableController implements Initializable {
+public class GUIClinicianSearchPatients extends UndoableController implements Initializable, IWindowObserver {
 
     @FXML
     private TableView<Patient> patientDataTable;
@@ -156,16 +156,18 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 UserControl userControl = new UserControl();
                 userControl.setTargetUser(patientDataTable.getSelectionModel()
                         .getSelectedItem());
-                screenControl.show("/scene/home.fxml");
-
-//                    // When pop up is closed, refresh the table
-//                    popUpStage.setOnHiding(event -> Platform.runLater(() -> {
-//                        masterData.clear();
-//                        Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
-//                                numResults, filter).forEach(x ->  masterData.add((Patient)x));
-//                    })); todo implement
+                screenControl.show("/scene/home.fxml", this);
             }
         });
+    }
+
+    /**
+     * Called when the profile window of a patient opened by this controller is closed
+     */
+    public void windowClosed() {
+        masterData.clear();
+        Searcher.getSearcher().search(searchEntry.getText(),new UserTypes[] {UserTypes.PATIENT},
+        numResults, filter).forEach(x ->  masterData.add((Patient)x));
     }
 
     /**

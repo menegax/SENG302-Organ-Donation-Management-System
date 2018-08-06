@@ -232,7 +232,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
     private void addPaneListener() {
         homePane.parentProperty().addListener((observable, oldValue, newValue) -> {
             setUpMenuBar(homeStage);
-            screenControl.addTab((Pane) homePane, horizontalTabPane);
+            screenControl.addTab(homePane, horizontalTabPane);
             addTabs();
             setPaneTitle();
         });

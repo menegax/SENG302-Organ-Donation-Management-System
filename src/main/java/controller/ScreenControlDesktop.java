@@ -41,9 +41,10 @@ public class ScreenControlDesktop extends ScreenControl {
     /**
      * shows the fxml (screen)
      * @param fxml the fxml to display
+     * @param parentController controller to notify when stage shown closes
      * @return the controller of this fxml
      */
-    public Object show(String fxml) {
+    public Object show(String fxml, IWindowObserver parentController) {
         try {
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
@@ -55,6 +56,9 @@ public class ScreenControlDesktop extends ScreenControl {
             undoableWrappers.add(new UndoableWrapper(stage));
             stage.setScene(new Scene(fxmlLoader.load()));
             stage.show();
+            if (parentController != null) {
+                stage.setOnHiding(event -> parentController.windowClosed());
+            }
             systemLogger.log(Level.INFO, "Showing new desktop stage");
             return controller;
         } catch (IOException e) {
