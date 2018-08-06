@@ -9,6 +9,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import model.User;
 import utility.undoRedo.UndoableWrapper;
 
@@ -66,6 +67,13 @@ public class ScreenControlDesktop extends ScreenControl {
             new Alert(Alert.AlertType.ERROR, "Unable to open window", ButtonType.OK).show();
         }
         return null;
+    }
+
+    @Override
+    boolean closeWindow(Pane pane) {
+        Stage window = (Stage) pane.getScene().getWindow();
+        window.close();
+        return true;
     }
 
     /**

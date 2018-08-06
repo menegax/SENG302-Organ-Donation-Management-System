@@ -1,15 +1,26 @@
 package utility;
 
 import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TouchEvent;
 import javafx.scene.input.ZoomEvent;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Window;
 
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Wrapper class for a Pane object to enable base touch functionality, including zooming, rotating and scrolling
@@ -39,6 +50,9 @@ public class TouchPaneController {
         pane.toFront();
         pane.setScaleX(pane.getScaleX() * zoomEvent.getZoomFactor());
         pane.setScaleY(pane.getScaleY() * zoomEvent.getZoomFactor());
+        for(Node node : pane.getChildren()) {
+            resizeFont(node, zoomEvent.getZoomFactor());
+        }
     }
 
     /**
@@ -73,7 +87,7 @@ public class TouchPaneController {
             if(pane.getTranslateY() < 0) {
                 pane.setTranslateY(bounds.getMaxY() - pane.getHeight() / 2 + scrollEvent.getDeltaY());
             } else {
-                pane.setTranslateY(-1 * pane.getHeight() / 2 + 100 + scrollEvent.getDeltaY());
+                pane.setTranslateY(-1 * pane.getHeight() / 2 + 200 + scrollEvent.getDeltaY());
             }
         }
     }
@@ -97,6 +111,57 @@ public class TouchPaneController {
      */
     private boolean outOfBoundsY() {
         return pane.getTranslateY() > bounds.getMaxY() - pane.getHeight() / 2 || pane.getTranslateY() <= bounds.getMaxY() * -1 + pane.getHeight() / 2;
+    }
+
+    private void resizeFont(Node node, double zoomFactor) {
+        if(node instanceof Label) {
+            Label l = (Label) node;
+            l.setFont(Font.font(l.getFont().getSize() * zoomFactor));
+        } else if(node instanceof TextField) {
+            TextField t= (TextField) node;
+            t.setFont(Font.font(t.getFont().getSize() * zoomFactor));
+        } else if(node instanceof Button) {
+            Button b = (Button) node;
+            b.setFont(Font.font(b.getFont().getSize() * zoomFactor));
+        } else if(node instanceof CheckBox) {
+            CheckBox checkBox = (CheckBox) node;
+            checkBox.setFont(Font.font(checkBox.getFont().getSize() * zoomFactor));
+        } else if(node instanceof RadioButton) {
+            RadioButton rB = (RadioButton) node;
+            rB.setFont(Font.font(rB.getFont().getSize() * zoomFactor));
+        } else if(node instanceof Hyperlink) {
+            Hyperlink hyperlink = (Hyperlink) node;
+            hyperlink.setFont(Font.font(hyperlink.getFont().getSize() * zoomFactor));
+        } else if(node instanceof DatePicker) {
+            DatePicker datePicker = (DatePicker) node;
+            datePicker.getEditor().setFont(Font.font(datePicker.getEditor().getFont().getSize() * zoomFactor));
+        } else if(node instanceof VBox) {
+            VBox vBox = (VBox) node;
+            for(Node vNode : vBox.getChildren()) {
+                resizeFont(vNode, zoomFactor);
+            }
+        } else if(node instanceof HBox) {
+            HBox hBox = (HBox) node;
+            for(Node hNode : hBox.getChildren()) {
+                resizeFont(hNode, zoomFactor);
+            }
+        } else if (node instanceof GridPane) {
+            GridPane gridPane = (GridPane) node;
+            for(Node gridNode : gridPane.getChildren()) {
+                resizeFont(gridNode, zoomFactor);
+            }
+        } else if(node instanceof TabPane) {
+            TabPane tabPane = (TabPane) node;
+            List<Node> tabList = new ArrayList<>(tabPane.getChildrenUnmodifiable());
+            for(Node tabNode : tabList) {
+                resizeFont(tabNode, zoomFactor);
+            }
+        } else if (node instanceof AnchorPane) {
+            AnchorPane anchorPane = (AnchorPane) node;
+            for(Node anchorNode : anchorPane.getChildren()) {
+                resizeFont(anchorNode, zoomFactor);
+            }
+        }
     }
 
 }

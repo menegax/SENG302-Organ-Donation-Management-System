@@ -252,7 +252,7 @@ public class GUIUserRegister implements TouchscreenCapable {
     }
 
     private void returnToPreviousPage() {
-        screenControl.show("/scene/login.fxml", null);
+        screenControl.setUpNewLogin();
     }
 
     /**
