@@ -46,6 +46,11 @@ public class ClinicianDataService implements IClinicianDataService {
     }
 
     @Override
+    public int nextStaffId() {
+        return mysqlFactory.getClinicianDataAccess().nextStaffID(); //todo: check in local also
+    }
+
+    @Override
     public List<Patient> searchPatients(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults) {
         List<Patient> results = new ArrayList<>();
 

@@ -2,6 +2,8 @@ package service.interfaces;
 
 import model.Patient;
 
+import java.util.List;
+
 public interface IPatientDataService {
 
     /**
@@ -12,5 +14,7 @@ public interface IPatientDataService {
     public Patient getPatientByNhi(String nhi);
 
     public void save(Patient patient);
+
+    public void save(List<Patient> patientList);
 
 }

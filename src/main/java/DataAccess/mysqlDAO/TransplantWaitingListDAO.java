@@ -39,7 +39,6 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
 
     /**
      * Deletes all in db then updates from the organ list from client
-     * @return - OrganWaitlist
      */
     @Override
     public void updateWaitingList(OrganWaitlist organRequests) {
@@ -50,9 +49,8 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
                 preparedStatement.setString(2, organRequest.getRequestDate().toString());
                 preparedStatement.setString(3, organRequest.getRequestedOrgan().toString());
                 preparedStatement.setString(4, organRequest.getRequestRegion().getValue());
-                preparedStatement.addBatch();
+                preparedStatement.executeUpdate();
             }
-            preparedStatement.execute();
         } catch (SQLException e) {
                 e.printStackTrace();
         }
@@ -61,7 +59,7 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
     @Override
     public void deleteWaitingList() {
         try(Connection connection = daoFactory.getConnectionInstance()){
-            PreparedStatement preparedStatement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_TRANSPLANT_WAIT"));
+            PreparedStatement preparedStatement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_ALL_TRANSPLANT_WAIT"));
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

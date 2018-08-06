@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import static java.util.logging.Level.OFF;
 import static utility.UserActionHistory.userActions;
 
-public class MYSQLAdministratorDAOTest {
+public class MYSQLAdministratorLogDAOTest {
 
     private static DAOFactory daoFactory;
     private static DBHelper dbHelper;
