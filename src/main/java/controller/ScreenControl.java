@@ -6,6 +6,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.tuiofx.examples.demo.FXMLController;
 import utility.undoRedo.UndoableWrapper;
 
 import java.util.*;
@@ -43,8 +44,8 @@ public abstract class ScreenControl {
     abstract void setUpNewLogin();
     abstract void removeUnsavedAsterisks();
     abstract void addUnsavedAsterisks();
-    abstract public void show(String fxml);
     abstract void closeWindow(Pane pane);
+    abstract public Object show(String fxml);
 
     protected ScreenControl() {
         setUpKeyCodeCombinations();
@@ -73,18 +74,19 @@ public abstract class ScreenControl {
     }
 
     /**
-     * Adds a tabpane to a map of undoableWrappers to tabpanes
-     * @param undoableWrapper the undoable wrapper pane of the tabpane
-     * @param tabPane the tabpane associated with that undoableWrapper
+     * Connects the tabpane to the stage it is on
+     * @param stage the stage the tabpane is on
+     * @param tabPane the tabpane object
      */
-    public void addTab(UndoableWrapper undoableWrapper, TabPane tabPane) {
-        tabs.put(undoableWrapper, tabPane);
-    }
-
     public void addTab(Stage stage, TabPane tabPane) {
         tabs.put(stage, tabPane);
     }
 
+    /**
+     * Connects the tabpane to the pane it is on
+     * @param pane the pane the tabpane is on
+     * @param tabPane the tabpane object
+     */
     public void addTab(Pane pane, TabPane tabPane) {
         tabs.put(pane, tabPane);
     }
@@ -98,6 +100,11 @@ public abstract class ScreenControl {
         return tabs.get(undoableWrapper.getWrapped());
     }
 
+    /**
+     * Gets the undoable wrapper object that wraps the given stage or pane
+     * @param wrapped the stage or pane wrapped by the undoableWrapper
+     * @return the undoable wrapper
+     */
     public UndoableWrapper getUndoableWrapper(Object wrapped) {
         for (UndoableWrapper undoableWrapper : undoableWrappers) {
             if (undoableWrapper.getWrapped().equals(wrapped)) {

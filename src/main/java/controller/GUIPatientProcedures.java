@@ -208,9 +208,8 @@ public class GUIPatientProcedures extends UndoableController {
             userActions.log(Level.WARNING, "No procedure selected", "Attempted to edit a procedure");
             return;
         }
-        screenControl.show("/scene/patientProcedureForm.fxml");
-//            GUIPatientProcedureForm controller = fxmlLoader.getController();
-//            controller.setupEditing(selectedProcedure);
+        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml");
+        controller.setupEditing(selectedProcedure);
 //            systemLogger.log(Level.FINE, "set up event");
 //            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh)); todo implement
     }

@@ -9,6 +9,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.tuiofx.examples.demo.FXMLController;
 import utility.undoRedo.UndoableWrapper;
 
 import java.io.IOException;
@@ -43,10 +44,16 @@ class ScreenControlTouch extends ScreenControl {
         return screenControlTouch;
     }
 
-    public void show(String fxml) {
+    /**
+     * Displays a new pane with the loaded fxml
+     * @param fxml the fxml to display
+     * @return the controller created for this fxml
+     */
+    public Object show(String fxml) {
         try {
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
+            Object controller = fxmlLoader.getController();
             Pane pane = fxmlLoader.load();
             pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
             List<Node> panes;
@@ -66,17 +73,20 @@ class ScreenControlTouch extends ScreenControl {
             Parent root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
             touchPane = new Pane(root);
             touchPane.getChildren().addAll(panes);
-//            if (touchStage.getScene() == null) {
-                touchStage.setScene(new Scene(touchPane));
-//            }
+            touchStage.setScene(new Scene(touchPane));
 
             systemLogger.log(INFO, "Showing new touch stage scene");
+            return controller;
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Unable to load window", "Attempted to load a new window");
             new Alert(Alert.AlertType.ERROR, "Unable to open window", ButtonType.OK).show();
         }
+        return null;
     }
 
+    /**
+     * Creates a login pane
+     */
     void setUpNewLogin() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
@@ -94,12 +104,18 @@ class ScreenControlTouch extends ScreenControl {
         this.touchStage = touchStage;
     }
 
+    /**
+     * Adds asterisks to all panes with a coloured bar
+     */
     void addUnsavedAsterisks() {
         for (UndoableWrapper undoablePane : undoableWrappers) {
             undoablePane.getGuiHome().addAsterisk();
         }
     }
 
+    /**
+     * Removes all asterisks from panes with a coloured bar
+     */
     void removeUnsavedAsterisks() {
         for (UndoableWrapper undoablePane : undoableWrappers) {
             if(undoablePane.getGuiHome() != null) {
