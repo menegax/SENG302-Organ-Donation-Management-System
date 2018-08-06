@@ -24,6 +24,8 @@ class ScreenControlTouch extends ScreenControl {
 
     private Stage touchStage;
 
+    private Pane rootPane;
+
     private Pane touchPane = new Pane();
 
     private static ScreenControlTouch screenControlTouch;
@@ -43,16 +45,18 @@ class ScreenControlTouch extends ScreenControl {
 
     public void show(String fxml) {
         try {
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
+            Pane pane = fxmlLoader.load();
+            pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
             List<Node> panes;
             if(isLoginShowing) {
                 panes = new ArrayList<>();
+                rootPane = pane;
                 setLoginShowing(false);
             } else {
                 panes = new ArrayList<>(touchPane.getChildren());
             }
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
-            Pane pane = fxmlLoader.load();
-            pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
             panes.add(0, pane);
             UndoableWrapper undoablePane = new UndoableWrapper(pane);
             undoableWrappers.add(undoablePane);
@@ -104,8 +108,17 @@ class ScreenControlTouch extends ScreenControl {
         }
     }
 
-    public void setLoginShowing(boolean showing) {
+    void setLoginShowing(boolean showing) {
         this.isLoginShowing = showing;
+    }
+
+    void closeWindow(Pane pane) {
+        Parent parent = pane.getParent();
+        for(Node n : touchPane.getChildren()) {
+            System.out.println(n.equals(pane.getParent()));
+            System.out.println(n.equals(pane.getParent().getParent()));
+        }
+        touchPane.getChildren().remove(parent);
     }
 
 }

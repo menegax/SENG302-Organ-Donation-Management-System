@@ -44,6 +44,7 @@ public abstract class ScreenControl {
     abstract void removeUnsavedAsterisks();
     abstract void addUnsavedAsterisks();
     abstract public void show(String fxml);
+    abstract void closeWindow(Pane pane);
 
     protected ScreenControl() {
         setUpKeyCodeCombinations();

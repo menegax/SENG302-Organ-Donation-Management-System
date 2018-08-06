@@ -479,7 +479,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         menu2.getItems().addAll(menu2Item1);
         MenuItem menu2item4 = new MenuItem("Close window");
         menu2item4.setOnAction(event -> {
-
+            screenControl.closeWindow(homePane);
         });
         menu2.getItems().addAll(menu2item4);
 
