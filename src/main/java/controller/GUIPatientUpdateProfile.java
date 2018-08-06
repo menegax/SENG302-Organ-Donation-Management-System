@@ -122,6 +122,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         Object user = userControl.getLoggedInUser();
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
+            disablePatientElements();
         } else if (userControl.getTargetUser() != null) {
             loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
         }
@@ -131,6 +132,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 saveProfileUpdater();
             }
         });
+    }
+
+
+    private void disablePatientElements() {
+        deathLocationTxt.setDisable(true);
     }
 
 
