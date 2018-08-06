@@ -143,6 +143,14 @@ public class MYSQLPatientDAOTest {
         thenSearchHasNoResults();
     }
 
+    @Test
+    public void testPatientNHISearch() {
+        givenPatient();
+        whenPatientsSaved();
+        whenSearched("ZLH0909");
+        thenSearchHasResults();
+    }
+
     @AfterClass
     public static void reset() {
         dbHelper.reset();
