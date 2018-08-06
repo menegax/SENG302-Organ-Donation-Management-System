@@ -66,9 +66,10 @@ public class ScreenControlDesktop extends ScreenControl {
     }
 
     @Override
-    void closeWindow(Pane pane) {
+    boolean closeWindow(Pane pane) {
         Stage window = (Stage) pane.getScene().getWindow();
         window.close();
+        return true;
     }
 
     /**

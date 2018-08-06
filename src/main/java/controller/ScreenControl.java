@@ -44,7 +44,7 @@ public abstract class ScreenControl {
     abstract void setUpNewLogin();
     abstract void removeUnsavedAsterisks();
     abstract void addUnsavedAsterisks();
-    abstract void closeWindow(Pane pane);
+    abstract boolean closeWindow(Pane pane);
     abstract public Object show(String fxml);
 
     protected ScreenControl() {

@@ -128,13 +128,15 @@ class ScreenControlTouch extends ScreenControl {
         this.isLoginShowing = showing;
     }
 
-    void closeWindow(Pane pane) {
-        Parent parent = pane.getParent();
-        for(Node n : touchPane.getChildren()) {
-            System.out.println(n.equals(pane.getParent()));
-            System.out.println(n.equals(pane.getParent().getParent()));
+    boolean closeWindow(Pane pane) {
+        List<Node> nodes = new ArrayList<>(touchPane.getChildren());
+        for(Node n : nodes) {
+            if(n.equals(pane) && !(pane.equals(rootPane))) {
+                touchPane.getChildren().remove(n);
+                return true;
+            }
         }
-        touchPane.getChildren().remove(parent);
+        return false;
     }
 
 }
