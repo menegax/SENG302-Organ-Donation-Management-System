@@ -30,7 +30,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIAdministratorSearchUsers extends UndoableController implements Initializable {
+public class GUIAdministratorSearchUsers extends UndoableController implements Initializable, IWindowObserver {
 
     @FXML
     private TableView<User> userDataTable;
@@ -49,6 +49,8 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     private ObservableList<User> masterData = FXCollections.observableArrayList();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private UserControl userControl = new UserControl();
 
     private Searcher searcher = Searcher.getSearcher();
 
@@ -84,19 +86,20 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     private void setupDoubleClickToUserEdit() {
         // Add double-click event to rows
         userDataTable.setOnMouseClicked(click -> {
-        	UserControl userControl = new UserControl();
         	User selected = userDataTable.getSelectionModel().getSelectedItem();
             if (click.getClickCount() == 2 && selected != null && selected != userControl.getLoggedInUser()) {
                 userControl.setTargetUser(selected);
-                screenControl.show("/scene/home.fxml");
-
-//                    // When pop up is closed, refresh the table
-//                    popUpStage.setOnHiding(event -> {
-//                        Platform.runLater(this::tableRefresh);
-//                        userControl.clearTargetUser();
-//                    }); todo implement
+                screenControl.show("/scene/home.fxml", this);
             }
         });
+    }
+
+    /**
+     * Called when the created window from opening a profile is closed
+     */
+    public void windowClosed() {
+        tableRefresh();
+        userControl.clearTargetUser();
     }
 
     /**

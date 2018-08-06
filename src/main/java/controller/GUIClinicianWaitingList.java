@@ -25,7 +25,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
  */
-public class GUIClinicianWaitingList {
+public class GUIClinicianWaitingList implements IWindowObserver{
 
     public GridPane clinicianWaitingList;
     public TableView<OrganWaitlist.OrganRequest> waitingListTableView;
@@ -75,15 +75,6 @@ public class GUIClinicianWaitingList {
     }
 
     /**
-     * Closes an opened profile, and removes patient from profile open list so profile can be reopened
-     *
-     * @param index The index in the list of opened patient profiles
-     */
-    private void closeProfile(int index) {
-        Platform.runLater(this::tableRefresh);
-    }
-
-    /**
      * Sets up double-click functionality for each row to open a patient profile update, ensures no duplicate profiles
      */
     private void setupDoubleClickToPatientEdit() {
@@ -98,11 +89,8 @@ public class GUIClinicianWaitingList {
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
                     DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
                     userControl.setTargetUser(Database.getPatientByNhi(request.getReceiverNhi()));
-                    screenControl.show("/scene/home.fxml");
+                    screenControl.show("/scene/home.fxml", this);
                     openProfiles.add(request);
-                    // When pop up is closed, refresh the table
-                    // popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request ))); todo implement
-
                     }
                 catch (Exception e) {
                     userActions.log(Level.SEVERE,
@@ -112,6 +100,13 @@ public class GUIClinicianWaitingList {
                 }
             }
         });
+    }
+
+    /**
+     * Called when a profile window created by this controller is closed
+     */
+    public void windowClosed() {
+        tableRefresh();
     }
 
     /**

@@ -56,7 +56,7 @@ public class TUIOFXMain extends Application {
         Stage stage = setUpStage();
         ScreenControlTouch screenControl = (ScreenControlTouch) ScreenControl.getScreenControl();
         screenControl.setTouchStage(stage);
-        screenControl.show("/scene/login.fxml");
+        screenControl.show("/scene/login.fxml", null);
         screenControl.setLoginShowing(true);
 
         Database.importFromDiskPatients("./patient.json");
@@ -75,7 +75,6 @@ public class TUIOFXMain extends Application {
 
         stage.setOnCloseRequest(event -> System.exit(0));
 
-        //Todo remove log here
         systemLogger.log(INFO, "Finished the start method for the touch screen app. Beginning app");
     }
 

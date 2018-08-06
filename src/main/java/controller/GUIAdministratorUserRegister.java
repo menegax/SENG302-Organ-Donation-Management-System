@@ -36,9 +36,6 @@ public class GUIAdministratorUserRegister extends UndoableController {
     public Button doneButton;
 
     @FXML
-    private Label backButton;
-
-    @FXML
     private TextField firstnameRegister;
 
     @FXML
@@ -89,19 +86,13 @@ public class GUIAdministratorUserRegister extends UndoableController {
         setDateConverter();
         birthRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         regionRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        if (userControl.getLoggedInUser() instanceof Administrator) {
-            ObservableList<String> regions = FXCollections.observableArrayList();
-            for (Region region : Region.values()) {
-                regions.add(region.getValue());
-            }
-            regionRegister.setItems(regions);
-            backButton.setVisible(false);
-            userRegisterPane.getRowConstraints().get(0).setMaxHeight(0);
-        } else {
-            patientButton.setVisible(false);
-            clinicianButton.setVisible(false);
-            administratorButton.setVisible(false);
+        ObservableList<String> regions = FXCollections.observableArrayList();
+        for (Region region : Region.values()) {
+            regions.add(region.getValue());
         }
+        regionRegister.setItems(regions);
+        userRegisterPane.getRowConstraints().get(0).setMaxHeight(0);
+
         setUpUndoRedo();
         setUpButtonListeners();
 
@@ -207,16 +198,6 @@ public class GUIAdministratorUserRegister extends UndoableController {
         verifyPasswordTxt.setVisible(true);
         userIdRegister.setVisible(true);
     }
-
-    /**
-     * Back button listener to switch to the login screen
-     */
-    @FXML
-    public void goBackToLogin() {
-        clearFields();
-        returnToPreviousPage();
-    }
-
 
     /**
      * Clears the data in the fields of the GUI
@@ -407,7 +388,6 @@ public class GUIAdministratorUserRegister extends UndoableController {
         String lastName = lastnameRegister.getText();
         String password = passwordTxt.getText();
         ArrayList<String> middles = new ArrayList<>();
-        String alertMsg;
         if (!middlenameRegister.getText().equals("")) {
             List<String> middleNames = Arrays.asList(middlenameRegister.getText().split(" "));
             middles = new ArrayList<>(middleNames);
@@ -432,9 +412,6 @@ public class GUIAdministratorUserRegister extends UndoableController {
         statesHistoryScreen.getUndoableWrapper().setChangingStates(true);
         clearFields();
         statesHistoryScreen.getUndoableWrapper().setChangingStates(false);
-        if (userControl.getLoggedInUser() == null) {
-            returnToPreviousPage();
-        }
     }
 
     /***
@@ -445,15 +422,6 @@ public class GUIAdministratorUserRegister extends UndoableController {
         target.getStyleClass()
                 .add("invalid");
         return false;
-    }
-
-    private void returnToPreviousPage() {
-        try {
-            screenControl.show(FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
-            userActions.log(SEVERE, "Failed to load login", "Attempted to load login");
-        }
     }
 
     /**

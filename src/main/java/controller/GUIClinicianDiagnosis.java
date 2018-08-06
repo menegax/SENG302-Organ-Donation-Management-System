@@ -24,7 +24,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller class for clinician viewing and editing of a patient's diagnoses.
  */
-public class GUIClinicianDiagnosis extends UndoableController{
+public class GUIClinicianDiagnosis extends UndoableController implements IWindowObserver{
 
     @FXML
     public GridPane clinicianDiagnosesPane;
@@ -162,8 +162,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
             if (click.getClickCount() == 2 && tableView.getSelectionModel().getSelectedItem() != null) {
                 GUIPatientUpdateDiagnosis.setDisease(tableView.getSelectionModel().getSelectedItem());
                 GUIPatientUpdateDiagnosis.setIsAdd(false);
-                //stage.setOnHiding(event -> Platform.runLater(this::tableRefresh)); todo implement
-                screenControl.show("/scene/patientUpdateDiagnosis.fxml");
+                screenControl.show("/scene/patientUpdateDiagnosis.fxml", this);
             }
 
         });
@@ -176,8 +175,14 @@ public class GUIClinicianDiagnosis extends UndoableController{
      */
     private void addDiagnosis() {
         GUIPatientUpdateDiagnosis.setIsAdd(true);
-        screenControl.show("/scene/patientUpdateDiagnosis.fxml");
-        //stage.setOnHiding(event -> Platform.runLater(this::tableRefresh)); todo implement
+        screenControl.show("/scene/patientUpdateDiagnosis.fxml", this);
+    }
+
+    /**
+     * Called when a window created by this controller is closed
+     */
+    public void windowClosed() {
+        tableRefresh();
     }
 
     /**

@@ -41,9 +41,6 @@
                <GridPane.margin>
                   <Insets bottom="5.0" />
                </GridPane.margin></DatePicker>
-            <ChoiceBox fx:id="regionRegister" disable="true" prefWidth="150.0" visible="false" GridPane.rowIndex="4" />
-            <PasswordField fx:id="passwordTxt" disable="true" promptText="Password" visible="false" GridPane.rowIndex="4" />
-            <PasswordField fx:id="verifyPasswordTxt" disable="true" promptText="Verify password" visible="false" GridPane.rowIndex="5" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -70,15 +67,6 @@
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
-         <children>
-            <RadioButton fx:id="clinicianButton" mnemonicParsing="false" onAction="#onSelectClinician" text="Clinician" GridPane.columnIndex="1" GridPane.halignment="CENTER">
-               <toggleGroup>
-                  <ToggleGroup fx:id="usertype" />
-               </toggleGroup>
-            </RadioButton>
-            <RadioButton fx:id="administratorButton" mnemonicParsing="false" onAction="#onSelectAdministrator" text="Administrator" toggleGroup="$usertype" GridPane.columnIndex="2" GridPane.halignment="LEFT" />
-            <RadioButton fx:id="patientButton" mnemonicParsing="false" onAction="#onSelectPatient" selected="true" text="Patient" toggleGroup="$usertype" GridPane.halignment="RIGHT" />
-         </children>
          <GridPane.margin>
             <Insets />
          </GridPane.margin>
