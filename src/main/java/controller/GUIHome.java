@@ -9,6 +9,8 @@ import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 import de.codecentric.centerdevice.MenuToolkit;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -230,11 +232,15 @@ public class GUIHome implements Observer, TouchscreenCapable {
     }
 
     private void addPaneListener() {
-        homePane.parentProperty().addListener((observable, oldValue, newValue) -> {
-            setUpMenuBar(homeStage);
-            screenControl.addTab(homePane, horizontalTabPane);
-            addTabs();
-            setPaneTitle();
+        homePane.parentProperty().addListener(new ChangeListener<Parent>() {
+            @Override
+            public void changed(ObservableValue<? extends Parent> observable, Parent oldValue, Parent newValue) {
+                setUpMenuBar(homeStage);
+                screenControl.addTab(homePane, horizontalTabPane);
+                addTabs();
+                setPaneTitle();
+                homePane.parentProperty().removeListener(this);
+            }
         });
     }
 
