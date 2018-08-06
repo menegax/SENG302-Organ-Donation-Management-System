@@ -2,6 +2,8 @@ package model_test;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -202,7 +204,7 @@ public class PatientTest implements Serializable {
      */
     @Test
     public void testGetAge() {
-        testPatient.setDeath(LocalDate.of(2005, 5, 12));
+        testPatient.setDeath(LocalDateTime.of(2005, Month.MAY, 12, 12, 0));
         assertEquals(35, testPatient.getAge());
     }
 
@@ -212,7 +214,7 @@ public class PatientTest implements Serializable {
      */
     @Test
     public void testGetAgeRightBeforeBirthday() {
-        testPatient.setDeath(LocalDate.of(2005, 2, 11));
+        testPatient.setDeath(LocalDateTime.of(2005, Month.FEBRUARY, 11, 12, 0));
         assertEquals(34, testPatient.getAge());
     }
 

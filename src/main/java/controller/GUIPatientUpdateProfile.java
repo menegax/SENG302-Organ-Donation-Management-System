@@ -21,6 +21,7 @@ import utility.undoRedo.StatesHistoryScreen;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +32,8 @@ import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
+
+import tornadofx.control.DateTimePicker;
 
 public class GUIPatientUpdateProfile extends UndoableController {
 
@@ -74,7 +77,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private DatePicker dobDate;
 
     @FXML
-    private DatePicker dateOfDeath;
+    private DateTimePicker dateOfDeath;
 
     @FXML
     private TextField deathLocationTxt;
@@ -233,7 +236,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             }
         }
         dobDate.setValue(patient.getBirth());
-        dateOfDeath.setValue(patient.getDeath());
+        dateOfDeath.setDateTimeValue(patient.getDeath());
         deathLocationTxt.setText(patient.getDeathLocation());
         if (patient.getStreet1() != null) {
             street1Txt.setText(patient.getStreet1());
@@ -507,7 +510,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 after.setBirth(dobDate.getValue());
             }
             if (dateOfDeath.getValue() != null) {
-                after.setDeath(dateOfDeath.getValue());
+                after.setDeath(dateOfDeath.getDateTimeValue());
             }
             after.setDeathLocation(deathLocationTxt.getText());
             after.setStreet1(street1Txt.getText());

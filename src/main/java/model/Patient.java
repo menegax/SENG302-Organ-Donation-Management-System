@@ -14,6 +14,7 @@ import java.io.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class Patient extends User {
 
     private LocalDate birth;
 
-    private LocalDate death;
+    private LocalDateTime death;
 
     private String deathLocation;
 
@@ -149,7 +150,7 @@ public class Patient extends User {
      * @param nhi               NHI
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
-                                 LocalDate birth, LocalDate death, String street1, String street2, String suburb,
+                                 LocalDate birth, LocalDateTime death, String street1, String street2, String suburb,
                                  String region, String birthGender, String preferredGender, String bloodGroup,
                                  double height, double weight, String nhi) throws IllegalArgumentException {
         Enum globalEnum;
@@ -404,11 +405,11 @@ public class Patient extends User {
             userModified();
     }
 
-    public LocalDate getDeath() {
+    public LocalDateTime getDeath() {
         return death;
     }
 
-    public void setDeath(LocalDate death) {
+    public void setDeath(LocalDateTime death) {
             this.death = death;
             userModified();
     }

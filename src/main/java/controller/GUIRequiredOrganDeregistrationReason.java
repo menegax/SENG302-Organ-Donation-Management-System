@@ -15,6 +15,7 @@ import model.Disease;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.APIGoogleMaps;
+import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums;
 
 import java.time.LocalDate;
@@ -31,7 +32,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIRequiredOrganDeregistrationReason {
 
     @FXML
-    private DatePicker dateOfDeath;
+    private DateTimePicker dateOfDeath;
 
     @FXML
     private Label dateOfDeathLabel;
@@ -268,7 +269,7 @@ public class GUIRequiredOrganDeregistrationReason {
                 target.removeRequired(organ);
                 userActions.log(Level.INFO, "Deregistered " + organ + " due to death", new String[] { "Attempted to deregister " + organ, target.getNhiNumber() });
             }
-            target.setDeath(dateOfDeath.getValue());
+            target.setDeath(dateOfDeath.getDateTimeValue());
             target.setDeathLocation(locationDeathTxt.getText()); //todo
         }
         return valid;
