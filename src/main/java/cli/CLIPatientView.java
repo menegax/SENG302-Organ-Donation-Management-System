@@ -1,7 +1,12 @@
 package cli;
+import DataAccess.factories.DAOFactory;
+import DataAccess.interfaces.IPatientDataAccess;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.Database;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
+import utility.GlobalEnums;
 
 import java.io.InvalidObjectException;
 import java.util.logging.Level;
@@ -21,18 +26,18 @@ public class CLIPatientView implements Runnable {
     @Option(names = {"-a", "--all"}, description = "View all patients")
     private boolean searchAll;
 
-    Database database = Database.getDatabase();
-
+    private IPatientDataService patientDataService = new PatientDataService();
+    private IPatientDataAccess patientDataAccess = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL).getPatientDataAccess();
 
     public void run() {
         if (searchNhi != null) {
-            userActions.log(Level.INFO, database.getPatientByNhi(searchNhi).toString(), "attempted to view a particular patient");
+            userActions.log(Level.INFO, patientDataService.getPatientByNhi(searchNhi).toString(), "attempted to view a particular patient");
         }
         if (searchAll) {
-            if (database.getPatients().size() == 0) {
+            if (patientDataAccess.getPatients().size() == 0) {
                 userActions.log(Level.INFO, "No patient in the database", "attempted to view all patients");
             } else {
-                userActions.log(Level.WARNING, database.getPatients().toString(), "attempted to view all patients");
+                userActions.log(Level.WARNING, patientDataAccess.getPatients().toString(), "attempted to view all patients");
             }
         }
         if (searchNhi == null && !searchAll) {

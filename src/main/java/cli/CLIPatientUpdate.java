@@ -3,9 +3,9 @@ package cli;
 import model.Patient;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import service.Database;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -82,14 +82,14 @@ public class CLIPatientUpdate implements Runnable {
             "AB_POSITIVE, AB_NEGATIVE, O_POSITIVE, O_NEGATIVE")
     private String bloodGroup;
 
-    Database database = Database.getDatabase();
-
+    private IPatientDataService patientDataService = new PatientDataService();
 
     public void run() {
-        Patient patient = database.getPatientByNhi(searchNhi);
+        Patient patient = patientDataService.getPatientByNhi(searchNhi);
         if (patient != null) {
             patient.updateAttributes(firstName, lastName, middleNames, preferredName, birth, death, street1,
                     street2, suburb, region, birthGender, preferredGender, bloodGroup, height, weight, nhi);
+            patientDataService.save(patient);
         } else {
             userActions.log(Level.SEVERE, "Patient " + searchNhi + " not found.", "attempted to update patient attributes");
         }
