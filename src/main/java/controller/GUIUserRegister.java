@@ -1,10 +1,8 @@
 package controller;
 
-import DataAccess.factories.DAOFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -16,18 +14,16 @@ import model.Clinician;
 import model.Patient;
 import service.AdministratorDataService;
 import service.ClinicianDataService;
-import service.Database;
 import service.PatientDataService;
+import service.UserDataService;
 import service.interfaces.IAdministratorDataService;
 import service.interfaces.IClinicianDataService;
 import service.interfaces.IPatientDataService;
-import utility.GlobalEnums;
+import service.interfaces.IUserDataService;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UIRegex;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
-import utility.StatusObservable;
-import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -39,7 +35,6 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
 import static utility.UserActionHistory.userActions;
 
 public class GUIUserRegister implements TouchscreenCapable {
@@ -92,7 +87,7 @@ public class GUIUserRegister implements TouchscreenCapable {
     private IAdministratorDataService administratorDataService = new AdministratorDataService();
     private IPatientDataService patientDataService = new PatientDataService();
     private IClinicianDataService clinicianDataService = new ClinicianDataService();
-
+    private IUserDataService userDataService = new UserDataService();
 
     private TouchPaneController registerTouchPane;
 
@@ -405,6 +400,9 @@ public class GUIUserRegister implements TouchscreenCapable {
             List<Patient> patientToAdd = new ArrayList<>();
             patientToAdd.add(new Patient(id, firstName, middles, lastName, birth));
             patientDataService.save(patientToAdd);
+            if (userControl.getLoggedInUser() == null) {
+                userDataService.save();
+            }
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
             errorMsg = "Successfully registered patient with NHI " + id;
             screenControl.setIsSaved(false);
