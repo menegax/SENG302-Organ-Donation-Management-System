@@ -31,6 +31,8 @@ public abstract class ScreenControl {
 
     private KeyCodeCombination redo;
 
+    private KeyCodeCombination closeWindow;
+
     private String appName = "Big Pharma";
 
     private static boolean isTouch;
@@ -142,6 +144,7 @@ public abstract class ScreenControl {
             importt = new KeyCodeCombination(KeyCode.I, KeyCombination.META_DOWN);
             undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.META_DOWN);
             redo = new KeyCodeCombination(KeyCode.Z, KeyCombination.SHIFT_DOWN, KeyCombination.META_DOWN);
+            closeWindow = new KeyCodeCombination(KeyCode.W, KeyCombination.META_DOWN);
         }
         else { // Windows or Linux
             logOut = new KeyCodeCombination(KeyCode.Q, KeyCombination.ALT_DOWN, KeyCombination.CONTROL_DOWN);
@@ -149,6 +152,7 @@ public abstract class ScreenControl {
             importt = new KeyCodeCombination(KeyCode.I, KeyCombination.CONTROL_DOWN);
             undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
             redo = new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN);
+            closeWindow = new KeyCodeCombination(KeyCode.W, KeyCombination.CONTROL_DOWN);
         }
     }
 
@@ -171,6 +175,8 @@ public abstract class ScreenControl {
     public KeyCodeCombination getRedo() {
         return redo;
     }
+
+    public KeyCodeCombination getCloseWindow() { return closeWindow; }
 
 
     KeyCodeCombination getLogOut() {

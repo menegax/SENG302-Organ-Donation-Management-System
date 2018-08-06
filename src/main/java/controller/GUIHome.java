@@ -478,6 +478,9 @@ public class GUIHome implements Observer, TouchscreenCapable {
         }
         menu2.getItems().addAll(menu2Item1);
         MenuItem menu2item4 = new MenuItem("Close window");
+        if(!screenControl.isTouch()) {
+            menu2item4.setAccelerator(screenControl.getCloseWindow());
+        }
         menu2item4.setOnAction(event -> {
             if(!(screenControl.closeWindow(homePane))) {
                 setStatusLbl("Root window can not be closed. Please log out to exit.");
