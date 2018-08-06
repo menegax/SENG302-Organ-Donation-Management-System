@@ -51,7 +51,6 @@ public class Main extends Application {
         Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
         openKeyboard();
-        primaryStage.show();
     }
 
     public static void main(String[] args) {

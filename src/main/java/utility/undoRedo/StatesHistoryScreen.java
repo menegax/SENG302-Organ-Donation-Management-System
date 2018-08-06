@@ -2,6 +2,7 @@ package utility.undoRedo;
 
 import controller.ScreenControl;
 import javafx.scene.Node;
+import javafx.scene.input.KeyCombination;
 import utility.GlobalEnums.UndoableScreen;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryControl;
 import javafx.scene.control.*;
@@ -86,11 +87,23 @@ public class StatesHistoryScreen {
      * @param node a node on the current screen
      */
     private void findUndoableWrapper(Node node) {
+        if (screenControl.isTouch()) {
+            findUndoableWrapperTouch(node);
+        } else {
+            findUndoableWrapperDesktop(node);
+        }
+    }
+
+    /**
+     * Finds the appropriate undoable wrapper for this stateshistoryscreen on a touch application
+     * @param node a node on the current screen
+     */
+    private void findUndoableWrapperTouch(Node node) {
         if (node.getParent() == null) {
             node.parentProperty().addListener((observable, oldValue, newValue) -> {
                 if (screenControl.getUndoableWrapper(newValue) == null) {
                     if (newValue != null) {
-                        findUndoableWrapper(newValue);
+                        findUndoableWrapperTouch(newValue);
                     }
                 } else {
                     addToUndoableWrapper(screenControl.getUndoableWrapper(newValue));
@@ -98,10 +111,36 @@ public class StatesHistoryScreen {
             });
         } else {
             if (screenControl.getUndoableWrapper(node.getParent()) == null) {
-                findUndoableWrapper(node.getParent());
+                findUndoableWrapperTouch(node.getParent());
             } else {
                 addToUndoableWrapper(screenControl.getUndoableWrapper(node.getParent()));
             }
+        }
+    }
+
+    /**
+     * Finds the appropriate undoable wrapper for this stateshistoryscreen on a desktop application
+     * @param node a node on the current screen
+     */
+    private void findUndoableWrapperDesktop(Node node) {
+        if (node.getScene() == null) {
+            node.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    if (newScene.getWindow() == null) {
+                        newScene.windowProperty().addListener((observable1, oldStage, newStage) -> {
+                            addToUndoableWrapper(screenControl.getUndoableWrapper(newStage));
+                        });
+                    } else {
+                        addToUndoableWrapper(screenControl.getUndoableWrapper(newScene.getWindow()));
+                    }
+                }
+            });
+        } else if (node.getScene().getWindow() == null) {
+            node.getScene().windowProperty().addListener((observable, oldStage, newStage) -> {
+                addToUndoableWrapper(screenControl.getUndoableWrapper(newStage));
+            });
+        } else {
+            addToUndoableWrapper(screenControl.getUndoableWrapper(node.getScene().getWindow()));
         }
     }
 
@@ -128,6 +167,17 @@ public class StatesHistoryScreen {
                 store();
             }
         });
+        ((TextField) entry).setOnKeyPressed(event -> {
+            if (screenControl.getUndo().match(event)) {
+                ((TextField) entry).getParent().requestFocus();
+                undoableWrapper.undo();
+            }
+            else if (screenControl.getRedo().match(event)) {
+                ((TextField) entry).getParent().requestFocus();
+                undoableWrapper.redo();
+            }
+        });
+
     }
 
 

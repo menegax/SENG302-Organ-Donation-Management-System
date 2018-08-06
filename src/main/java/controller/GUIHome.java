@@ -506,14 +506,22 @@ public class GUIHome implements Observer, TouchscreenCapable {
             menu3Item1.setAccelerator(screenControl.getUndo());
         }
         menu3Item1.setOnAction((event) -> {
-            screenControl.getUndoableWrapper(stage).undo();
+            if (screenControl.isTouch()) {
+                screenControl.getUndoableWrapper(homePane).undo();
+            } else {
+                screenControl.getUndoableWrapper(stage).undo();
+            }
         });
         MenuItem menu3Item2 = new MenuItem("Redo");
         if(!screenControl.isTouch()) {
             menu3Item2.setAccelerator(screenControl.getRedo());
         }
         menu3Item2.setOnAction((event) -> {
-            screenControl.getUndoableWrapper(stage).redo();
+            if (screenControl.isTouch()) {
+                screenControl.getUndoableWrapper(homePane).redo();
+            } else {
+                screenControl.getUndoableWrapper(stage).redo();
+            }
         });
         menu3.getItems().addAll(menu3Item1, menu3Item2);
 

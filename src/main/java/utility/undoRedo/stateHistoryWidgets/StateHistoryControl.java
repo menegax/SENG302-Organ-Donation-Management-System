@@ -3,6 +3,7 @@ package utility.undoRedo.stateHistoryWidgets;
 import controller.ScreenControl;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
+import javafx.stage.Stage;
 import utility.undoRedo.UndoableWrapper;
 
 import java.util.ArrayList;
@@ -84,20 +85,58 @@ public abstract class StateHistoryControl {
      * @param node a node on the screen of the undoable wrapper
      */
     protected void setUpUndoableWrapper(Node node) {
+        if (screenControl.isTouch()) {
+            setUpUndoableWrapperTouch(node);
+        } else {
+            setUpUndoableWrapperDesktop(node);
+        }
+    }
+
+    /**
+     * Finds the appropriate undoable wrapper for this control on a touch application
+     * @param node a node on the screen of the undoable wrapper
+     */
+    private void setUpUndoableWrapperTouch(Node node) {
         if (node.getParent() == null) {
             node.parentProperty().addListener((observable, oldValue, newValue) -> {
-                if (screenControl.getUndoableWrapper(newValue) == null) {
-                    setUpUndoableWrapper(newValue);
+                if (screenControl.getUndoableWrapper(newValue) == null && newValue != null) {
+                    setUpUndoableWrapperTouch(newValue);
                 } else {
                     undoableWrapper = screenControl.getUndoableWrapper(newValue);
                 }
             });
         } else {
             if (screenControl.getUndoableWrapper(node.getParent()) == null) {
-                setUpUndoableWrapper(node.getParent());
+                setUpUndoableWrapperTouch(node.getParent());
             } else {
                 undoableWrapper = screenControl.getUndoableWrapper(node.getParent());
             }
+        }
+    }
+
+    /**
+     * Finds the appropriate undoable wrapper for this control on a desktop application
+     * @param node a node on the screen of the undoable wrapper
+     */
+    private void setUpUndoableWrapperDesktop(Node node) {
+        if (node.getScene() == null) {
+            node.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    if (newScene.getWindow() == null) {
+                        newScene.windowProperty().addListener((observable1, oldStage, newStage) -> {
+                            undoableWrapper = screenControl.getUndoableWrapper(newStage);
+                        });
+                    } else {
+                        undoableWrapper = screenControl.getUndoableWrapper(newScene.getWindow());
+                    }
+                }
+            });
+        } else if (node.getScene().getWindow() == null) {
+            node.getScene().windowProperty().addListener((observable, oldStage, newStage) -> {
+                undoableWrapper = screenControl.getUndoableWrapper(newStage);
+            });
+        } else {
+            undoableWrapper = screenControl.getUndoableWrapper(node.getScene().getWindow());
         }
     }
 

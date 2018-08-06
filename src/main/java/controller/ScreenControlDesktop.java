@@ -100,7 +100,9 @@ public class ScreenControlDesktop extends ScreenControl {
      */
     void removeUnsavedAsterisks() {
         for (UndoableWrapper undoableStage : undoableWrappers) {
-            undoableStage.getGuiHome().removeAsterisk();
+            if (undoableStage.getGuiHome() != null) {
+                undoableStage.getGuiHome().removeAsterisk();
+            }
         }
     }
 
@@ -109,7 +111,9 @@ public class ScreenControlDesktop extends ScreenControl {
      */
     void addUnsavedAsterisks() {
         for (UndoableWrapper undoableStage : undoableWrappers) {
-            undoableStage.getGuiHome().addAsterisk();
+            if (undoableStage.getGuiHome() != null) {
+                undoableStage.getGuiHome().addAsterisk();
+            }
         }
     }
 
