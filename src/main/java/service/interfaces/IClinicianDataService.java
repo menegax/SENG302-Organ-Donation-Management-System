@@ -16,6 +16,8 @@ public interface IClinicianDataService {
 
     int getPatientCount();
 
+    int nextStaffId();
+
     public List<Patient> searchPatients(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
 
     /**

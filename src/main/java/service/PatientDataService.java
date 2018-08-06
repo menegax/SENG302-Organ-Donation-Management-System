@@ -7,6 +7,7 @@ import utility.CachedThreadPool;
 import utility.GlobalEnums.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -46,6 +47,13 @@ public class PatientDataService implements IPatientDataService {
     @Override
     public void save(Patient patient) {
         localDbFactory.getPatientDataAccess().savePatients(new HashSet<Patient>(){{add(patient);}});
+    }
+
+    @Override
+    public void save(List<Patient> patients) {
+        for (Patient patient : patients) {
+            save(patient); //TODO:
+        }
     }
 
 

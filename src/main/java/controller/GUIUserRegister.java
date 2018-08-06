@@ -14,7 +14,13 @@ import javafx.util.StringConverter;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
+import service.AdministratorDataService;
+import service.ClinicianDataService;
 import service.Database;
+import service.PatientDataService;
+import service.interfaces.IAdministratorDataService;
+import service.interfaces.IClinicianDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UIRegex;
@@ -83,7 +89,10 @@ public class GUIUserRegister implements TouchscreenCapable {
 
     private UserControl userControl = new UserControl();
 
-    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+    private IAdministratorDataService administratorDataService = new AdministratorDataService();
+    private IPatientDataService patientDataService = new PatientDataService();
+    private IClinicianDataService clinicianDataService = new ClinicianDataService();
+
 
     private TouchPaneController registerTouchPane;
 
@@ -285,7 +294,7 @@ public class GUIUserRegister implements TouchscreenCapable {
         if (!Pattern.matches(UIRegex.NHI.getValue(), userIdRegister.getText().toUpperCase())) {
             valid = setInvalid(userIdRegister);
             userActions.log(Level.WARNING, "NHI must be 3 characters followed by 4 numbers", "Attempted to create patient with invalid NHI");
-        } else if (factory.getPatientDataAccess().getPatientByNhi((userIdRegister.getText())) != null) {
+        } else if (patientDataService.getPatientByNhi((userIdRegister.getText())) != null) {
             // checks to see if nhi already in use
             valid = setInvalid(userIdRegister);
             userActions.log(Level.WARNING, "Patient with the given NHI already exists", "Attempted to create patient with invalid NHI");
@@ -332,7 +341,7 @@ public class GUIUserRegister implements TouchscreenCapable {
         if (!Pattern.matches(UIRegex.USERNAME.getValue(), userIdRegister.getText().toUpperCase())) {
             valid = setInvalid(userIdRegister);
             error += "Invalid username. ";
-        } else if (factory.getAdministratorDataAccess().getAdministratorByUsername(userIdRegister.getText().toUpperCase()) != null) {
+        } else if (administratorDataService.getAdministratorByUsername(userIdRegister.getText().toUpperCase()) != null) {
             valid = setInvalid(userIdRegister);
             error += "Username already in use. ";
         } else {
@@ -395,21 +404,21 @@ public class GUIUserRegister implements TouchscreenCapable {
             LocalDate birth = birthRegister.getValue();
             List<Patient> patientToAdd = new ArrayList<>();
             patientToAdd.add(new Patient(id, firstName, middles, lastName, birth));
-            factory.getPatientDataAccess().addPatientsBatch(patientToAdd);
+            patientDataService.save(patientToAdd);
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
             errorMsg = "Successfully registered patient with NHI " + id;
             screenControl.setIsSaved(false);
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
-            int staffID = factory.getClinicianDataAccess().nextStaffID();
-            factory.getClinicianDataAccess().addClinician(new Clinician(staffID, firstName, middles, lastName, (Region) Region.getEnumFromString(region)));
+            int staffID = clinicianDataService.nextStaffId();
+            clinicianDataService.save(new Clinician(staffID, firstName, middles, lastName, (Region) Region.getEnumFromString(region)));
             userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
             errorMsg = "Successfully registered clinician with staff ID " + staffID;
             clearFields();
             screenControl.setIsSaved(false);
         } else {
             try {
-                factory.getAdministratorDataAccess().addAdministrator(new Administrator(id, firstName, middles, lastName, password));
+                administratorDataService.save(new Administrator(id, firstName, middles, lastName, password));
                 userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
                 errorMsg = "Successfully registered administrator with username " + id;
                 screenControl.setIsSaved(false);
