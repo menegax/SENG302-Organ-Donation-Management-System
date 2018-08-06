@@ -426,7 +426,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
-            int staffID = mysqlFactory.getClinicianDataAccess().nextStaffID();
+            int staffID = Integer.max(mysqlFactory.getClinicianDataAccess().nextStaffID(), factory.getClinicianDataAccess().nextStaffID());
             Clinician after = new Clinician(staffID, firstName, middles, lastName, Region.getEnumFromString(region));
             statesHistoryScreen.addAction(new Action(null, after));
             new ClinicianDataService().save(after);

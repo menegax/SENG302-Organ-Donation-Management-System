@@ -53,6 +53,17 @@ public class ClinicianLocalDAO implements IClinicianDataAccess {
         return localDB.getClinicians();
     }
 
+    /**
+     * Returns the next staff ID for a new clinician account according to highest staff ID in the local database
+     */
     @Override
-    public int nextStaffID() {throw new NotImplementedException();}
+    public int nextStaffID() {
+        int highest = 0;
+        for (Clinician c : getClinicians()) {
+            if (c.getStaffID() > highest) {
+                highest = c.getStaffID();
+            }
+        }
+        return highest + 1;
+    }
 }
