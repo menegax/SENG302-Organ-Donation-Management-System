@@ -12,16 +12,15 @@ import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TouchEvent;
 import javafx.scene.input.ZoomEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Window;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Wrapper class for a Pane object to enable base touch functionality, including zooming, rotating and scrolling
@@ -133,10 +132,18 @@ public class TouchPaneController {
         } else if(node instanceof Hyperlink) {
             Hyperlink hyperlink = (Hyperlink) node;
             hyperlink.setFont(Font.font(hyperlink.getFont().getSize() * zoomFactor));
+        } else if(node instanceof DatePicker) {
+            DatePicker datePicker = (DatePicker) node;
+            datePicker.getEditor().setFont(Font.font(datePicker.getEditor().getFont().getSize() * zoomFactor));
         } else if(node instanceof VBox) {
             VBox vBox = (VBox) node;
             for(Node vNode : vBox.getChildren()) {
                 resizeFont(vNode, zoomFactor);
+            }
+        } else if(node instanceof HBox) {
+            HBox hBox = (HBox) node;
+            for(Node hNode : hBox.getChildren()) {
+                resizeFont(hNode, zoomFactor);
             }
         } else if (node instanceof GridPane) {
             GridPane gridPane = (GridPane) node;
@@ -145,7 +152,8 @@ public class TouchPaneController {
             }
         } else if(node instanceof TabPane) {
             TabPane tabPane = (TabPane) node;
-            for(Node tabNode : tabPane.getChildrenUnmodifiable()) {
+            List<Node> tabList = new ArrayList<>(tabPane.getChildrenUnmodifiable());
+            for(Node tabNode : tabList) {
                 resizeFont(tabNode, zoomFactor);
             }
         } else if (node instanceof AnchorPane) {
