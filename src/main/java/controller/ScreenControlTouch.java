@@ -140,6 +140,7 @@ class ScreenControlTouch extends ScreenControl {
         for(Node n : nodes) {
             if(n.equals(pane) && !(pane.equals(rootPane))) {
                 touchPane.getChildren().remove(n);
+                n.setVisible(false);
                 return true;
             }
         }
