@@ -4,17 +4,20 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.stage.Stage;
 import model.Clinician;
 import model.Medication;
-import javafx.stage.Stage;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
+import service.AdministratorDataService;
 import service.PatientDataService;
-import service.UserDataService;
 import service.interfaces.IPatientDataService;
-import service.interfaces.IUserDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
@@ -295,6 +298,7 @@ public class GUIPatientProfile {
     public void deleteProfile() {
         Patient patient = (Patient) userControl.getTargetUser();
         Action action = new Action(patient, null);
+        new AdministratorDataService().deleteUser(patient);
         for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
             if (stage instanceof UndoableStage) {
                 for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {

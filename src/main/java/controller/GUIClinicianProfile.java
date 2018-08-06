@@ -7,11 +7,10 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
+import service.AdministratorDataService;
 import service.ClinicianDataService;
-import service.Database;
 import service.interfaces.IClinicianDataService;
 import utility.GlobalEnums;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
@@ -101,6 +100,7 @@ public class GUIClinicianProfile {
         Clinician clinician = (Clinician) userControl.getTargetUser();
         if (clinician.getStaffID() != 0) {
             Action action = new Action(clinician, null);
+            new AdministratorDataService().deleteUser(clinician);
             for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
                 if (stage instanceof UndoableStage) {
                     for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {

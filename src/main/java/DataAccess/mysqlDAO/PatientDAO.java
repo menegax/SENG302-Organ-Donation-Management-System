@@ -97,7 +97,16 @@ public class PatientDAO implements IPatientDataAccess {
 
     @Override
     public boolean deletePatient(Patient patient) {
-        return false;
+        try(Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENTS"));
+            for (int i=1; i<=6; i++) {
+                statement.setString(i, patient.getNhiNumber());
+            }
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     @Override

@@ -33,7 +33,10 @@ public class ClinicianLocalDAO implements IClinicianDataAccess {
     }
 
     @Override
-    public boolean deleteClinician(Clinician clinician) { return false; }
+    public boolean deleteClinician(Clinician clinician) {
+        Searcher.getSearcher().removeIndex(clinician);
+        return localDB.deleteUser(clinician);
+    }
 
     @Override
     public Clinician getClinicianByStaffId(int id) {

@@ -38,7 +38,16 @@ public class AdministratorDAO implements IAdministratorDataAccess {
 
     @Override
     public boolean deleteAdministrator(Administrator administrator) {
-        return false;
+        try(Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_ADMINISTRATORS"));
+            for (int i=1; i<=2; i++) {
+                statement.setString(i, administrator.getUsername());
+            }
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     @Override

@@ -9,6 +9,8 @@ public interface IAdministratorDataService {
 
     void deletePatient(String nhi);
 
+    void deleteUser(User user);
+
     void importRecords();
 
     List<User> searchUsers(String searchTerm);

@@ -121,7 +121,14 @@ public class LocalDB {
     }
 
     boolean deleteUser(User user) {
-        boolean removed = patients.remove(user);
+        boolean removed;
+        if (user instanceof Patient) {
+            removed = patients.remove(user);
+        } else if (user instanceof Clinician) {
+            removed = clinicians.remove(user);
+        } else {
+            removed = administrators.remove(user);
+        }
         deleted.add(user);
         return removed;
     }

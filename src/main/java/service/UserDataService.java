@@ -47,7 +47,7 @@ public class UserDataService implements IUserDataService {
             clinicianDataService.saveClinician(clinicians);
             patientDataAccess.savePatients(patients); //save to remote db
             administratorDataAccess.saveAdministrator(administrators);
-            /*deleted.forEach(u -> {
+            deleted.forEach(u -> {
                 if (u instanceof Patient) {
                     patientDataAccess.deletePatient((Patient) u);
                 } else if (u instanceof Clinician) {
@@ -55,7 +55,7 @@ public class UserDataService implements IUserDataService {
                 } else {
                     administratorDataAccess.deleteAdministrator((Administrator) u);
                 }
-            });*/
+            });
         });
     }
 

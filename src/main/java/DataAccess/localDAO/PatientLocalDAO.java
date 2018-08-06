@@ -52,6 +52,7 @@ public class PatientLocalDAO implements IPatientDataAccess {
 
     @Override
     public boolean deletePatient(Patient patient) {
+        Searcher.getSearcher().removeIndex(patient);
         return localDB.deleteUser(patient);
     }
 

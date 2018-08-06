@@ -38,6 +38,11 @@ public class AdministratorDataService implements IAdministratorDataService {
     }
 
     @Override
+    public void deleteUser(User user) {
+        localDbFactory.getUserDataAccess().deleteUser(user);
+    }
+
+    @Override
     public void importRecords() {
         cachedThreadPool.getThreadService().submit(() -> {
             //List<Patient> patients = parseCSV.parse(filepath); //todo:
@@ -59,9 +64,11 @@ public class AdministratorDataService implements IAdministratorDataService {
         Future task = service.submit(() -> {
             Map<Integer, List<User>> dbResults = collectDBResults(searchTerm);
             Set<User> localUsers = localUserDataAccess.getUsers();
+            Set<User> deletedUsers = localUserDataAccess.getDeletedUsers();
             //Remove users in dbResults that are already in local storage
             for (List<User> userList : dbResults.values()) {
                 userList.removeAll(localUsers);
+                userList.removeAll(deletedUsers);
             }
             //Place the results in one final Map
             Map<Integer, List<User>> resultMap = new HashMap<>(localResults);

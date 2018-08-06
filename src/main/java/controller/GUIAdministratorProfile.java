@@ -78,6 +78,7 @@ public class GUIAdministratorProfile {
         if (!target.getUsername().toLowerCase().equals("admin")) {
             Administrator administrator = (Administrator) userControl.getTargetUser();
             Action action = new Action(administrator, null);
+            new AdministratorDataService().deleteUser(administrator);
             for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
                 if (stage instanceof UndoableStage) {
                     for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
