@@ -88,8 +88,10 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
 
     public void search() {
         List<User> results = administratorDataService.searchUsers(searchEntry.getText());
-        masterData.clear();
-        masterData.addAll(results);
+        if (results != null) {
+            masterData.clear();
+            masterData.addAll(results);
+        }
     }
 
     /**

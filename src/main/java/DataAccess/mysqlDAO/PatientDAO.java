@@ -268,8 +268,8 @@ public class PatientDAO implements IPatientDataAccess {
                     (attributes.getString("PrefGender").equals("M") ? PreferredGender.MAN : PreferredGender.NONBINARY);
         }
         Patient patient = new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName);
-        patient.setHeight(Double.parseDouble(attributes.getString("Height")) / 100);
-        patient.setHeight(Double.parseDouble(attributes.getString("Weight")));
+        patient.setHeight(attributes.getDouble("Height") / 100);
+        patient.setWeight(attributes.getDouble("Weight"));
         patient.setBloodGroup(attributes.getString("BloodType") != null ?
                 BloodGroup.getEnumFromString(attributes.getString("BloodType")) : null);
         patient.setDonations(Arrays.stream(attributes.getString("DonatingOrgans").split("\\s*,\\s*"))
