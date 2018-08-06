@@ -14,7 +14,9 @@ import javafx.util.StringConverter;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
-import service.Database;
+import service.AdministratorDataService;
+import service.ClinicianDataService;
+import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.undoRedo.Action;
@@ -80,6 +82,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
     private UserControl userControl = new UserControl();
 
     DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+    DAOFactory mysqlFactory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
 
     /**
      * Sets up register page GUI elements
@@ -417,16 +420,22 @@ public class GUIAdministratorUserRegister extends UndoableController {
         }
         if (patientButton.isSelected()) {
             LocalDate birth = birthRegister.getValue();
-            statesHistoryScreen.addAction(new Action(null, new Patient(id, firstName, middles, lastName, birth)));
+            Patient after = new Patient(id, firstName, middles, lastName, birth);
+            statesHistoryScreen.addAction(new Action(null, after));
+            new PatientDataService().save(after);
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
-            int staffID = factory.getClinicianDataAccess().nextStaffID();
-            statesHistoryScreen.addAction(new Action(null, new Clinician(staffID, firstName, middles, lastName, Region.getEnumFromString(region))));
+            int staffID = mysqlFactory.getClinicianDataAccess().nextStaffID();
+            Clinician after = new Clinician(staffID, firstName, middles, lastName, Region.getEnumFromString(region));
+            statesHistoryScreen.addAction(new Action(null, after));
+            new ClinicianDataService().save(after);
             userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
         } else {
             try {
-                statesHistoryScreen.addAction(new Action(null, new Administrator(id, firstName, middles, lastName, password)));
+                Administrator after = new Administrator(id, firstName, middles, lastName, password);
+                statesHistoryScreen.addAction(new Action(null, after));
+                new AdministratorDataService().save(after);
                 userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");

@@ -1,6 +1,7 @@
 package service;
 
 import DataAccess.factories.DAOFactory;
+import DataAccess.interfaces.IPatientDataAccess;
 import model.Patient;
 import service.interfaces.IPatientDataService;
 import utility.CachedThreadPool;
@@ -46,7 +47,8 @@ public class PatientDataService implements IPatientDataService {
 
     @Override
     public void save(Patient patient) {
-        localDbFactory.getPatientDataAccess().savePatients(new HashSet<Patient>(){{add(patient);}});
+        IPatientDataAccess patientDataAccess = localDbFactory.getPatientDataAccess();
+        patientDataAccess.savePatients(new HashSet<Patient>(){{add(patient);}});
     }
 
     @Override
