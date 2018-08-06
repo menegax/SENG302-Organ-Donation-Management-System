@@ -9,20 +9,29 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import utility.GlobalEnums.*;
+import utility.SystemLogger;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+
+import static java.util.logging.Level.OFF;
+import static utility.UserActionHistory.userActions;
 
 public class MYSQLPatientDAOTest {
     private static DAOFactory daoFactory;
     private static DBHelper dbHelper;
     private Patient patient;
+    private Map<Integer, List<Patient>> searchResults;
 
 
     @BeforeClass
+    @SuppressWarnings("Duplicates")
     public static void setUp() {
+        userActions.setLevel(OFF);
+        SystemLogger.systemLogger.setLevel(OFF);
         System.setProperty("connection_type", DbType.TEST.getValue());
         daoFactory = DAOFactory.getDAOFactory(FactoryType.MYSQL);
         dbHelper = new DBHelper();
@@ -94,6 +103,45 @@ public class MYSQLPatientDAOTest {
         thenPatientIsInDB();
     }
 
+    private void whenSearched(String searchTerm) {
+        searchResults = daoFactory.getPatientDataAccess().searchPatients(searchTerm, null, 50);
+    }
+
+    private void thenSearchHasResults() {
+        boolean found = false;
+        for (List<Patient> patList : searchResults.values()) {
+            if (patList.contains(patient)) {
+                found = true;
+            }
+        }
+        assert found;
+    }
+
+    @Test
+    public void testPatientMatchingSearch() {
+        givenPatient();
+        whenPatientsSaved();
+        whenSearched("henro");
+        thenSearchHasResults();
+    }
+
+    private void thenSearchHasNoResults() {
+        boolean found = false;
+        for (List<Patient> patList : searchResults.values()) {
+            if (patList.contains(patient)) {
+                found = true;
+            }
+        }
+        assert !found;
+    }
+
+    @Test
+    public void testPatientNonMatchingSearch() {
+        givenPatient();
+        whenPatientsSaved();
+        whenSearched("zxcvbnm");
+        thenSearchHasNoResults();
+    }
 
     @AfterClass
     public static void reset() {
