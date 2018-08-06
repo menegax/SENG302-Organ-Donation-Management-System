@@ -237,7 +237,7 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
      * Closes the pop-up stage for the procedure form
      */
     public void goBackToProcedures() {
-        //screenControl.closeStage(((UndoableStage) summaryInput.getScene().getWindow()).getUUID()); todo implement???
+        screenControl.closeWindow(procedureUpdatePane);
     }
 
     @Override

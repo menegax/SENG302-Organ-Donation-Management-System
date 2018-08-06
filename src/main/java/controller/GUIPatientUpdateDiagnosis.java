@@ -162,7 +162,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
      * before calling the stage close method.
      */
     public void cancelUpdate() {
-        // screenControl.closeStage(((UndoableStage)cancelButton.getScene().getWindow()).getUUID()); todo implement
+        screenControl.closeWindow(diagnosisUpdatePane);
     }
 
     /***
@@ -321,7 +321,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
             Action action = new Action(currentPatient, patientClone);
             undoRedoControl.addAction(action, CLINICIANDIAGNOSIS);
 
-            // screenControl.closeStage(((UndoableStage)doneButton.getScene().getWindow()).getUUID()); todo implement
+            screenControl.closeWindow(diagnosisUpdatePane);
         } else {
             String errorString = "Diseases must not have the same disease name and diagnosis date as another disease\n\n";
             if(diseaseNameTextField.getStyleClass().contains("invalid")) {
