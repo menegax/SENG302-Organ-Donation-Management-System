@@ -439,7 +439,9 @@ public class GUIHome implements Observer, TouchscreenCapable {
         // APP
         Menu menu1 = new Menu("App");
         MenuItem menu1Item1 = new MenuItem("Log out");
-        menu1Item1.setAccelerator(screenControl.getLogOut());
+        if(!screenControl.isTouch()) {
+            menu1Item1.setAccelerator(screenControl.getLogOut());
+        }
         menu1Item1.setOnAction(event -> {
             attemptLogOut();
         });
@@ -448,7 +450,9 @@ public class GUIHome implements Observer, TouchscreenCapable {
         // FILE
         Menu menu2 = new Menu("File");
         MenuItem menu2Item1 = new MenuItem("Save");
-        menu2Item1.setAccelerator(screenControl.getSave());
+        if(!screenControl.isTouch()) {
+            menu2Item1.setAccelerator(screenControl.getSave());
+        }
         menu2Item1.setOnAction(event -> {
             Database.saveToDisk();
             userActions.log(INFO, "Successfully saved to disk", "Attempted to save to disk");
@@ -457,7 +461,9 @@ public class GUIHome implements Observer, TouchscreenCapable {
         if (userControl.getLoggedInUser() instanceof Administrator) {
             Menu subMenuImport = new Menu("Import"); // import submenu
             MenuItem menu2Item2 = new MenuItem("Import patients...");
-            menu2Item2.setAccelerator(screenControl.getImportt());
+            if(!screenControl.isTouch()) {
+                menu2Item2.setAccelerator(screenControl.getImportt());
+            }
             menu2Item2.setOnAction(event -> {
                 File file = new FileChooser().showOpenDialog(stage);
                 if (file != null) {
@@ -490,12 +496,16 @@ public class GUIHome implements Observer, TouchscreenCapable {
 
         Menu menu3 = new Menu("Edit");
         MenuItem menu3Item1 = new MenuItem("Undo");
-        menu3Item1.setAccelerator(screenControl.getUndo());
+        if(!screenControl.isTouch()) {
+            menu3Item1.setAccelerator(screenControl.getUndo());
+        }
         menu3Item1.setOnAction((event) -> {
             screenControl.getUndoableWrapper(stage).undo();
         });
         MenuItem menu3Item2 = new MenuItem("Redo");
-        menu3Item2.setAccelerator(screenControl.getRedo());
+        if(!screenControl.isTouch()) {
+            menu3Item2.setAccelerator(screenControl.getRedo());
+        }
         menu3Item2.setOnAction((event) -> {
             screenControl.getUndoableWrapper(stage).redo();
         });
