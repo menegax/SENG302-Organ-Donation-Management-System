@@ -142,7 +142,16 @@ public class ClinicianDAO implements IClinicianDataAccess {
 
     @Override
     public int nextStaffID() {
-        throw new NotImplementedException();
+        try(Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_NEXT_STAFF_ID"));
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("nextID");
+            }
+            return 1;
+        } catch (SQLException e) {
+            return 1;
+        }
     }
 
     private PreparedStatement addUpdateParameters(Clinician clinician, PreparedStatement statement) throws SQLException {

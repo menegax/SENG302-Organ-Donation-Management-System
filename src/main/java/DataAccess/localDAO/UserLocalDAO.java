@@ -62,6 +62,15 @@ public class UserLocalDAO implements IUserDataAccess {
 
     @Override
     public Map<Integer, List<User>> searchUsers(String searchTerm) {
-        return Searcher.getSearcher().search(searchTerm, new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, 30, null);
+        Map<Integer, List<User>> searchResults = new HashMap<>();
+        if (searchTerm.equals("")) {
+            searchResults.put(0, new ArrayList<>());
+            searchResults.put(1, new ArrayList<>());
+            searchResults.put(2, new ArrayList<>());
+            searchResults.get(0).addAll(getUsers());
+        } else {
+            searchResults = Searcher.getSearcher().search(searchTerm, new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, 30, null);
+        }
+        return searchResults;
     }
 }
