@@ -9,7 +9,10 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import service.AdministratorDataService;
+import service.ClinicianDataService;
 import service.Database;
+import service.UserDataService;
 import utility.GlobalEnums;
 
 import java.io.IOException;
@@ -33,11 +36,13 @@ import static utility.UserActionHistory.userActions;
  */
 public class ClinicianTest implements Serializable{
 
-    Database database;
-
     private Clinician clinician;
 
     private static boolean validConnection = false;
+
+    private ClinicianDataService clinicianDataService = new ClinicianDataService();
+
+    private AdministratorDataService dataService = new AdministratorDataService();
     
 	@BeforeClass
 	public static void setUpBeforeClass() {
@@ -62,7 +67,6 @@ public class ClinicianTest implements Serializable{
     @Before
     public void setUp() {
     	Assume.assumeTrue(validConnection);
-    	database  = Database.getDatabase();
         userActions.setLevel(Level.OFF);
         systemLogger.setLevel(Level.OFF);
         clinician = new Clinician(0, "Joe", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND);    }
@@ -73,8 +77,8 @@ public class ClinicianTest implements Serializable{
     @Test
     public void testGettingClinicianById() {
         int id = 101;
-        database.add(new Clinician(id, "Joeseph", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND));
-        assertEquals(database.getClinicianByID(id).getFirstName(), "Joeseph");
+        clinicianDataService.save(new Clinician(id, "Joeseph", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND));
+        assertEquals(clinicianDataService.getClinician(id).getFirstName(), "Joeseph");
     }
 
     /**
@@ -83,8 +87,8 @@ public class ClinicianTest implements Serializable{
     @Test
     public void testCreationWithAddress() {
         int id = 102;
-        database.add(new Clinician(id, "Lorem", new ArrayList<>(), "Ipsum", "123 some street", "This place", "Ilam", GlobalEnums.Region.GISBORNE));
-        assertNotNull(database.getClinicianByID(id).getStreet1());
+        clinicianDataService.save(new Clinician(id, "Lorem", new ArrayList<>(), "Ipsum", "123 some street", "This place", "Ilam", GlobalEnums.Region.GISBORNE));
+        assertNotNull(clinicianDataService.getClinician(id).getStreet1());
     }
 
     /**
@@ -98,15 +102,15 @@ public class ClinicianTest implements Serializable{
 
 
     private void givenDefaultClinician() {
-        database.getClinicianByID(clinician.getStaffID());
+        clinicianDataService.getClinician(clinician.getStaffID());
     }
 
     private void whenDeletingClinician(Clinician clinician) {
-        database.delete(clinician);
+        dataService.deleteUser(clinician);
     }
 
     private void thenClinicianShouldntBeRemovedFromDatabase(Clinician clinician) {
-        database.getClinicianByID(clinician.getStaffID());
+        clinicianDataService.getClinician(clinician.getStaffID());
     }
 
     @Test

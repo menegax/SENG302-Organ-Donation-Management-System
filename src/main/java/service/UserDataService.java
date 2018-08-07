@@ -13,13 +13,14 @@ import service.interfaces.IUserDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Set;
 
 import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 
-public class UserDataService implements IUserDataService {
+public class UserDataService implements IUserDataService, Serializable {
 
     private DAOFactory mysqlFactory;
     private DAOFactory localDatabase;

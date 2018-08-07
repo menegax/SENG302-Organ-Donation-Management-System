@@ -1,5 +1,6 @@
 package utility_test;
 
+import DataAccess.interfaces.IPatientDataAccess;
 import model.Clinician;
 import model.Patient;
 import model.User;
@@ -11,7 +12,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static utility.UserActionHistory.userActions;
 
+import service.AdministratorDataService;
+import service.ClinicianDataService;
 import service.Database;
+import service.PatientDataService;
+import service.interfaces.IAdministratorDataService;
+import service.interfaces.IClinicianDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.Action;
 
@@ -39,8 +46,11 @@ public class ActionTest {
 
     private int staffId = 1;
 
-    Database database;
-    
+    private IClinicianDataService clinicianDataService = new ClinicianDataService();
+
+    private IPatientDataService patientDataService = new PatientDataService();
+
+
     private static boolean validConnection = false;
 
     /**
@@ -71,11 +81,9 @@ public class ActionTest {
     @Before
     public void reset() {
     	Assume.assumeTrue(validConnection);
-    	database  = Database.getDatabase();
         current = null;
         after = null;
         action = null;
-//        database.resetdatabase();
     }
 
     /**
@@ -428,7 +436,7 @@ public class ActionTest {
      * @throws InvalidObjectException thrown when no patient with that nhi
      */
     private void thenAfterPatientIndatabase() throws InvalidObjectException {
-        assertEquals(afterName, database.getPatientByNhi(nhi).getFirstName());
+        assertEquals(afterName, patientDataService.getPatientByNhi(nhi).getFirstName());
     }
 
     /**
@@ -436,7 +444,7 @@ public class ActionTest {
      * @throws InvalidObjectException thrown when no patient with that nhi
      */
     private void thenBeforePatientIndatabase() throws InvalidObjectException {
-        assertEquals(beforeName, database.getPatientByNhi(nhi).getFirstName());
+        assertEquals(beforeName, patientDataService.getPatientByNhi(nhi).getFirstName());
     }
 
     /**
@@ -444,7 +452,7 @@ public class ActionTest {
      */
     private void thenAfterPatientNotIndatabase() {
         try {
-            assertNotEquals(afterName, database.getPatientByNhi(nhi).getFirstName());
+            assertNotEquals(afterName, patientDataService.getPatientByNhi(nhi).getFirstName());
         } catch (NullPointerException e) {
             assertTrue(true);
         }
@@ -455,7 +463,7 @@ public class ActionTest {
      */
     private void thenBeforePatientNotIndatabase() {
         try {
-            assertNotEquals(beforeName, database.getPatientByNhi(nhi).getFirstName());
+            assertNotEquals(beforeName, patientDataService.getPatientByNhi(nhi).getFirstName());
         } catch (NullPointerException e) {
             assertTrue(true);
         }
@@ -466,7 +474,7 @@ public class ActionTest {
      * @throws InvalidObjectException thrown when no clinician with that staffId
      */
     private void thenAfterClinicianIndatabase() throws InvalidObjectException {
-        assertEquals(afterName, database.getClinicianByID(staffId).getFirstName());
+        assertEquals(afterName, clinicianDataService.getClinician(staffId).getFirstName());
     }
 
     /**
@@ -474,7 +482,7 @@ public class ActionTest {
      * @throws InvalidObjectException thrown when no clinician with that staffId
      */
     private void thenBeforeClinicianIndatabase() throws InvalidObjectException {
-        assertEquals(beforeName, database.getClinicianByID(staffId).getFirstName());
+        assertEquals(beforeName, clinicianDataService.getClinician(staffId).getFirstName());
     }
 
     /**
@@ -482,7 +490,7 @@ public class ActionTest {
      */
     private void thenAfterClinicianNotIndatabase() {
         try {
-            assertNotEquals(afterName, database.getClinicianByID(staffId).getFirstName());
+            assertNotEquals(afterName, clinicianDataService.getClinician(staffId).getFirstName());
         } catch (NullPointerException e) {
             assertTrue(true);
         }
@@ -493,7 +501,7 @@ public class ActionTest {
      */
     private void thenBeforeClinicianNotIndatabase() {
         try {
-            assertNotEquals(beforeName, database.getClinicianByID(staffId).getFirstName());
+            assertNotEquals(beforeName, clinicianDataService.getClinician(staffId).getFirstName());
         } catch (NullPointerException e) {
             assertTrue(true);
         }
