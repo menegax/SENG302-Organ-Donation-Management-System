@@ -3,10 +3,10 @@ package cli;
 import model.Patient;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import service.Database;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums.Organ;
 
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,7 +26,7 @@ public class CLIPatientDonations implements Runnable {
     @Option(names = {"-l", "--list"}, description = "Lists current organ donations.")
     private boolean donationsRequested;
 
-    Database database = Database.getDatabase();
+    private IPatientDataService patientDataService = new PatientDataService();
 
     @Option(names = "--add", split = ",", description = "Takes a comma-separated list of organs to add to donations.\n" +
             "LIVER\n" +
@@ -50,20 +50,19 @@ public class CLIPatientDonations implements Runnable {
         List<Organ> donations = patient.getDonations();
         if (donations == null) {
             userActions.log(Level.WARNING, "No donations registered for patient: " + patient.getNameConcatenated(), "attempted to display patient donations");
-        }
-        else {
+        } else {
             userActions.log(Level.INFO, donations.toString(), "attempted to display patient donations");
         }
     }
 
     public void run() {
-        Patient patient = database.getPatientByNhi(searchNhi);
+        Patient patient = patientDataService.getPatientByNhi(searchNhi);
         if (patient != null) {
             if (donationsRequested) {
                 displayPatientDonations(patient);
-            }
-            else {
-               patient.updateDonations(newDonations, rmDonations);
+            } else {
+                patient.updateDonations(newDonations, rmDonations);
+                patientDataService.save(patient);
             }
         } else {
             userActions.log(Level.SEVERE, "Patient " + searchNhi + " not found.", "attempted to view or update patient donations");

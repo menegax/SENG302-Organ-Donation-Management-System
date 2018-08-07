@@ -6,9 +6,27 @@ import java.util.List;
 
 public interface IProcedureDataAccess {
 
-    int updateProcedure (String nhi, Procedure procedure);
+    /**
+     * Updates the given procedure for the patient with the given nhi
+     *
+     * @param nhi       The patients nhi
+     * @param procedure The procedure that is being updated
+     * @return The success code of the update
+     */
+    int updateProcedure(String nhi, Procedure procedure);
 
-    List<Procedure> getProceduresByNhi (String nhi);
+    /**
+     * Returns a list of procedures for a certain patient (given by the nhi)
+     *
+     * @param nhi The nhi for the patient to fetch procedures for
+     * @return The list of procedures
+     */
+    List<Procedure> getProceduresByNhi(String nhi);
 
+    /**
+     * Removes all procedures for a certain patient (given by the nhi)
+     *
+     * @param nhi The nhi for the patient to remove procedures from
+     */
     void deleteAllProceduresByNhi(String nhi);
 }

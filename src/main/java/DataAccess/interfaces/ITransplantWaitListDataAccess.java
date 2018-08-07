@@ -4,10 +4,23 @@ import service.OrganWaitlist;
 
 public interface ITransplantWaitListDataAccess {
 
-    public OrganWaitlist getWaitingList();
+    /**
+     * Gets the transplant waiting list
+     *
+     * @return The OrganWaitList object representing the waiting list
+     */
+    OrganWaitlist getWaitingList();
 
-    public void updateWaitingList(OrganWaitlist organRequests);
+    /**
+     * Updates the organ waiting list with the given OrganWaitList object
+     *
+     * @param organRequests The new state of the OrganWaitList
+     */
+    void updateWaitingList(OrganWaitlist organRequests);
 
-    public void deleteWaitingList();
+    /**
+     * Deletes the organ waiting list
+     */
+    void deleteWaitingList();
 
 }
