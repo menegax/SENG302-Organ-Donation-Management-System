@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import static utility.GlobalEnums.DbType.TEST;
 import static utility.SystemLogger.systemLogger;
 
-public class MySqlFactory extends DAOFactory{
+public class MySqlFactory extends DAOFactory {
     private HikariConfig config;
     private HikariDataSource ds;
     private static MySqlFactory mySqlFactory = null;

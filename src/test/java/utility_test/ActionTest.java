@@ -93,16 +93,19 @@ public class ActionTest {
     public void testPatientActionConstructor() throws InvalidObjectException{
         givenEditedPatient();
         whenActionCreated();
+        whenUserSaved();
         thenCurrentEqualsAfterPatient();
 
         reset();
         givenNewPatient();
         whenActionCreated();
+        whenUserSaved();
         thenAfterPatientIndatabase();
 
         reset();
         givenDeletedPatient();
         whenActionCreated();
+        whenUserSaved();
         thenBeforePatientNotIndatabase();
     }
 
@@ -113,16 +116,19 @@ public class ActionTest {
     public void testClinicianActionConstructor() throws InvalidObjectException{
         givenEditedClinician();
         whenActionCreated();
+        whenUserSaved();
         thenCurrentEqualsAfterClinician();
 
         reset();
         givenNewClinician();
         whenActionCreated();
+        whenUserSaved();
         thenAfterClinicianIndatabase();
 
         reset();
         givenDeletedClinician();
         whenActionCreated();
+        whenUserSaved();
         thenBeforeClinicianNotIndatabase();
     }
 
@@ -181,6 +187,7 @@ public class ActionTest {
         whenActionCreated();
         whenActionUnexecuted();
         whenActionExecuted();
+        whenUserSaved();
         thenCurrentEqualsAfterPatient();
 
         reset();
@@ -188,6 +195,7 @@ public class ActionTest {
         whenActionCreated();
         whenActionUnexecuted();
         whenActionExecuted();
+        whenUserSaved();
         thenAfterPatientIndatabase();
 
         reset();
@@ -195,7 +203,16 @@ public class ActionTest {
         whenActionCreated();
         whenActionUnexecuted();
         whenActionExecuted();
+        whenUserSaved();
         thenBeforePatientNotIndatabase();
+    }
+
+    private void whenUserSaved() {
+        if (after instanceof Patient) {
+            patientDataService.save((Patient) after);
+        } else if (after instanceof Clinician) {
+            clinicianDataService.save((Clinician) after);
+        }
     }
 
     /**
@@ -207,6 +224,7 @@ public class ActionTest {
         whenActionCreated();
         whenActionUnexecuted();
         whenActionExecuted();
+        whenUserSaved();
         thenCurrentEqualsAfterClinician();
 
         reset();
@@ -214,6 +232,7 @@ public class ActionTest {
         whenActionCreated();
         whenActionUnexecuted();
         whenActionExecuted();
+        whenUserSaved();
         thenAfterClinicianIndatabase();
 
         reset();
@@ -221,6 +240,7 @@ public class ActionTest {
         whenActionCreated();
         whenActionUnexecuted();
         whenActionExecuted();
+        whenUserSaved();
         thenBeforeClinicianNotIndatabase();
     }
 
@@ -232,18 +252,21 @@ public class ActionTest {
         givenEditedPatient();
         whenActionCreated();
         whenActionExecuted();
+        whenUserSaved();
         thenCurrentEqualsAfterPatient();
 
         reset();
         givenNewPatient();
         whenActionCreated();
         whenActionExecuted();
+        whenUserSaved();
         thenAfterPatientIndatabase();
 
         reset();
         givenDeletedPatient();
         whenActionCreated();
         whenActionExecuted();
+        whenUserSaved();
         thenBeforePatientNotIndatabase();
     }
 
@@ -255,18 +278,21 @@ public class ActionTest {
         givenEditedClinician();
         whenActionCreated();
         whenActionExecuted();
+        whenUserSaved();
         thenCurrentEqualsAfterClinician();
 
         reset();
         givenNewClinician();
         whenActionCreated();
         whenActionExecuted();
+        whenUserSaved();
         thenAfterClinicianIndatabase();
 
         reset();
         givenDeletedPatient();
         whenActionCreated();
         whenActionExecuted();
+        whenUserSaved();
         thenBeforeClinicianNotIndatabase();
     }
 

@@ -4,13 +4,7 @@ import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 
-import java.sql.Time;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;

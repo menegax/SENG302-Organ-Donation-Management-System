@@ -9,12 +9,13 @@ import service.interfaces.IClinicianDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-public class ClinicianDataService implements IClinicianDataService {
+public class ClinicianDataService implements IClinicianDataService, Serializable {
 
     private DAOFactory mysqlFactory;
     private DAOFactory localDbFactory;
