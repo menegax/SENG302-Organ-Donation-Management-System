@@ -20,6 +20,20 @@
     </repositories>
 
     <dependencies>
+    	<!-- https://mvnrepository.com/artifact/no.tornado/tornadofx -->
+		<dependency>
+  		    <groupId>no.tornado</groupId>
+    		<artifactId>tornadofx</artifactId>
+   			<version>1.7.16</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/no.tornado/tornadofx-controls -->
+			<dependency>
+ 		    <groupId>no.tornado</groupId>
+ 		    <artifactId>tornadofx-controls</artifactId>
+ 		    <version>1.0.6</version>
+		</dependency>
+    
         <!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
         <dependency>
             <groupId>org.controlsfx</groupId>
