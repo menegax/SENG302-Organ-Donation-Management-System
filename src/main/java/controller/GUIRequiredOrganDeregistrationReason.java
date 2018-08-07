@@ -84,6 +84,8 @@ public class GUIRequiredOrganDeregistrationReason {
     private void prepareHiddenForm() {
         dateOfDeath.setDisable(true);
         dateOfDeath.setVisible(false);
+        locationDeathTxt.setDisable(true);
+        locationDeathTxt.setVisible(false);
         dateOfDeathLabel.setDisable(true);
         dateOfDeathLabel.setVisible(false);
         curedLabel.setDisable(true);
@@ -162,6 +164,8 @@ public class GUIRequiredOrganDeregistrationReason {
             diseaseCured.setVisible(false);
             dateOfDeath.setDisable(false);
             dateOfDeath.setVisible(true);
+            locationDeathTxt.setDisable(false);
+            locationDeathTxt.setVisible(true);
             dateOfDeathLabel.setDisable(false);
             dateOfDeathLabel.setVisible(true);
             locationDeathTxt.setDisable(false);
@@ -175,6 +179,8 @@ public class GUIRequiredOrganDeregistrationReason {
             diseaseCured.setVisible(true);
             dateOfDeath.setDisable(true);
             dateOfDeath.setVisible(false);
+            locationDeathTxt.setDisable(true);
+            locationDeathTxt.setVisible(false);
             dateOfDeathLabel.setDisable(true);
             dateOfDeathLabel.setVisible(false);
 //            okButton.setLayoutY(169.0);
@@ -182,6 +188,8 @@ public class GUIRequiredOrganDeregistrationReason {
         else {
             dateOfDeath.setDisable(true);
             dateOfDeath.setVisible(false);
+            locationDeathTxt.setDisable(true);
+            locationDeathTxt.setVisible(false);
             dateOfDeathLabel.setDisable(true);
             dateOfDeathLabel.setVisible(false);
             curedLabel.setDisable(true);

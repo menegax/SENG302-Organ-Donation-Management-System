@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import model.Patient;
+import org.joda.time.DateTime;
 import service.APIGoogleMaps;
 import service.Database;
 import utility.GlobalEnums.*;
@@ -137,6 +138,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     private void disablePatientElements() {
         deathLocationTxt.setDisable(true);
+        dateOfDeath.setDisable(true);
     }
 
 
@@ -201,6 +203,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }
+
 
     /**
      * Populates the scene controls with values from the patient object
