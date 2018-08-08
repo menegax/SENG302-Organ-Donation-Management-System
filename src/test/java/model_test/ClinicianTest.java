@@ -1,22 +1,15 @@
 package model_test;
 
 
-import model.Administrator;
 import model.Clinician;
-import model.Patient;
-import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import service.AdministratorDataService;
 import service.ClinicianDataService;
-import service.Database;
-import service.UserDataService;
 import utility.GlobalEnums;
 
-import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -27,7 +20,6 @@ import java.util.logging.Level;
 import static java.util.logging.Level.OFF;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertEquals;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
@@ -125,7 +117,10 @@ public class ClinicianTest implements Serializable{
     @Test
     public void testSetAttributes() {
         Clinician beforeClinician = new Clinician(1, "First", new ArrayList<>(), "Last", GlobalEnums.Region.CANTERBURY);
-        Clinician afterClinician = new Clinician(1, "Second", new ArrayList<String>(){{add("Middle"); add("Name");}}, "Last", GlobalEnums.Region.CANTERBURY);
+        ArrayList<String> middles = new ArrayList<>();
+        middles.add("Middle");
+        middles.add("Name");
+        Clinician afterClinician = new Clinician(1, "Second", middles, "Last", GlobalEnums.Region.CANTERBURY);
         beforeClinician.setAttributes(afterClinician);
         assertEquals("Second", beforeClinician.getFirstName());
         assertEquals("Name", beforeClinician.getMiddleNames().get(1));
