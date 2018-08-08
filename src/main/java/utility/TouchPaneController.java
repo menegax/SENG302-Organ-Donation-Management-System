@@ -40,6 +40,7 @@ public class TouchPaneController {
      */
     public TouchPaneController(Pane pane) {
         this.pane = pane;
+//        this.pane.getProperties().put("focusArea", "true");
     }
 
     /**
