@@ -15,10 +15,10 @@ public class UserDataServiceTest {
 
     private static LocalDB localDB;
     private static DBHelper dbHelper;
-    private UserDataService userDataService;
+    private static UserDataService userDataService;
 
     @BeforeClass
-    public void setUp() {
+    public static void setUp() {
         localDB = LocalDB.getInstance();
         dbHelper = new DBHelper();
         userDataService = new UserDataService();
