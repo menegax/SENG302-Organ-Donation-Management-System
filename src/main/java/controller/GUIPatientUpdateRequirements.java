@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.OrganWaitlist;
 import utility.StatusObservable;
+import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 import service.Database;
@@ -25,6 +26,7 @@ import java.util.Iterator;
 import java.util.*;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.INFO;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -284,6 +286,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * reason popup for each deregistered organ
      */
     private void deregistrationReason() {
+        SystemLogger.systemLogger.log(INFO, "Patient had organ requirements deregistered. Asking for deregistration reason...");
         Set<GlobalEnums.Organ> removedOrgans = initialRequirements;
         removedOrgans.removeAll(finalRequirements);
 
@@ -291,6 +294,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             openReasonPopup(organ);
             after.removeRequired(organ);
         }
+
     }
 
     /**

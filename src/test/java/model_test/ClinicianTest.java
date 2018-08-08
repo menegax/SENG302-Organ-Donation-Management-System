@@ -38,7 +38,6 @@ public class ClinicianTest implements Serializable{
         clinician = new Clinician(0, "Joe", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND);
     }
 
-
     /**
      *  verify the new staffID
      */
