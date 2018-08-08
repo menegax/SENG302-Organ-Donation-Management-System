@@ -454,8 +454,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
             try {
                 // todo google maps validation
-                APIGoogleMaps apiGoogleMaps = APIGoogleMaps.getInstance();
-                LatLng latLng = apiGoogleMaps.getLatLng(deathLocationTxt.getText()); //todo make the latLng var be set to patient profile instead of string version
+//                APIGoogleMaps apiGoogleMaps = APIGoogleMaps.getInstance();
+//                LatLng latLng = apiGoogleMaps.getLatLng(deathLocationTxt.getText()); //todo make the latLng var be set to patient profile instead of string version
                 setValid(deathLocationTxt);
             }
             catch (Exception e) {
