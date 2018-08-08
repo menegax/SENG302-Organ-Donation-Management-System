@@ -97,7 +97,7 @@
                   <Insets right="5.0" />
                </GridPane.margin>
             </Label>
-            <DateTimePicker fx:id="dateOfDeath" editable="false" prefHeight="38.0" prefWidth="902.0" promptText="Date of death" showWeekNumbers="true" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+            <DateTimePicker fx:id="dateOfDeath" editable="true" prefHeight="38.0" prefWidth="902.0" promptText="Date of death" showWeekNumbers="true" GridPane.columnIndex="2" GridPane.rowIndex="8" />
          </children>
       </GridPane>
       <Button fx:id="saveButtonForUpdate" mnemonicParsing="false" onAction="#saveProfileUpdater" prefHeight="39.0" prefWidth="115.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Set" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
