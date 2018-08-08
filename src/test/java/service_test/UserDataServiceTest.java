@@ -19,6 +19,7 @@ public class UserDataServiceTest {
 
     @BeforeClass
     public static void setUp() {
+        System.setProperty("connection_type", GlobalEnums.DbType.TEST.getValue());
         localDB = LocalDB.getInstance();
         dbHelper = new DBHelper();
         userDataService = new UserDataService();
