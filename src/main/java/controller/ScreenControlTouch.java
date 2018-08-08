@@ -51,16 +51,16 @@ class ScreenControlTouch extends ScreenControl {
     /**
      * Displays a new pane with the loaded fxml
      * @param fxml the fxml to display
+     * @param undoable if the pane to be displayed is undoable or not
      * @param parentController controller to notify when pane shown closes
      * @return the controller created for this fxml
      */
-    public Object show(String fxml, IWindowObserver parentController) {
+    public Object show(String fxml, Boolean undoable, IWindowObserver parentController) {
         try {
-
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
-            Object controller = fxmlLoader.getController();
             Region pane = fxmlLoader.load();
             pane.getProperties().put("focusArea", "true");
+            Object controller = fxmlLoader.getController();
             pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
             List<Node> panes;
             if(isLoginShowing) {
@@ -70,11 +70,13 @@ class ScreenControlTouch extends ScreenControl {
             } else {
                 panes = new ArrayList<>(touchPane.getChildren());
             }
-            panes.add(0, pane);
-            UndoableWrapper undoablePane = new UndoableWrapper(pane);
-            undoableWrappers.add(undoablePane);
-            if (fxmlLoader.getController() instanceof GUIHome) {
-                undoablePane.setGuiHome(fxmlLoader.getController());
+            panes.add(pane);
+            if (undoable) {
+                UndoableWrapper undoablePane = new UndoableWrapper(pane);
+                undoableWrappers.add(undoablePane);
+                if (fxmlLoader.getController() instanceof GUIHome) {
+                    undoablePane.setGuiHome(fxmlLoader.getController());
+                }
             }
             Region root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
             touchPane = new Pane(root);
@@ -149,6 +151,11 @@ class ScreenControlTouch extends ScreenControl {
         this.isLoginShowing = showing;
     }
 
+    /**
+     * Closes the provided pane
+     * @param pane the pane to close
+     * @return if a pane was closed successfully
+     */
     boolean closeWindow(Pane pane) {
         List<Node> nodes = new ArrayList<>(touchPane.getChildren());
         for(Node n : nodes) {

@@ -47,7 +47,7 @@ public abstract class ScreenControl {
     abstract void removeUnsavedAsterisks();
     abstract void addUnsavedAsterisks();
     abstract boolean closeWindow(Pane pane);
-    abstract public Object show(String fxml, IWindowObserver parentController);
+    abstract public Object show(String fxml, Boolean undoable, IWindowObserver parentController);
 
     protected ScreenControl() {
         setUpKeyCodeCombinations();

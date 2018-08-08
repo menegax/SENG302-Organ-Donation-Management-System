@@ -89,7 +89,7 @@ public class GUIClinicianWaitingList implements IWindowObserver{
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
                     DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
                     userControl.setTargetUser(Database.getPatientByNhi(request.getReceiverNhi()));
-                    screenControl.show("/scene/home.fxml", this);
+                    screenControl.show("/scene/home.fxml", true, this);
                     openProfiles.add(request);
                     }
                 catch (Exception e) {

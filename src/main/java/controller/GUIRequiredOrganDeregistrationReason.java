@@ -8,12 +8,18 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.RotateEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import utility.GlobalEnums;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,7 +31,7 @@ import java.util.stream.Collectors;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIRequiredOrganDeregistrationReason {
+public class GUIRequiredOrganDeregistrationReason implements TouchscreenCapable{
 
     @FXML
     private DatePicker dateOfDeath;
@@ -57,8 +63,12 @@ public class GUIRequiredOrganDeregistrationReason {
 
     private Patient target;
 
+    private TouchPaneController deregistrationReasonTouchController;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
     @FXML
-    private AnchorPane requiredOrganDeregistrationReasonPane;
+    private GridPane deregistrationReasonPane;
 
     /**
      * Initializes the organ deregistration screen. Gets the target patient and sets optional elements as
@@ -77,6 +87,13 @@ public class GUIRequiredOrganDeregistrationReason {
         curedLabel.setVisible(false);
         diseaseCured.setDisable(true);
         diseaseCured.setVisible(false);
+        deregistrationReasonTouchController = new TouchPaneController(deregistrationReasonPane);
+        deregistrationReasonPane.setOnTouchPressed(event -> {
+            deregistrationReasonPane.toFront();
+        });
+        deregistrationReasonPane.setOnZoom(this::zoomWindow);
+        deregistrationReasonPane.setOnRotate(this::rotateWindow);
+        deregistrationReasonPane.setOnScroll(this::scrollWindow);
     }
 
     /**
@@ -195,10 +212,8 @@ public class GUIRequiredOrganDeregistrationReason {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         }
         if (confirmed){
-            Stage reasonStage = (Stage)reasons.getScene().getWindow();
-            reasonStage.close();
+            screenControl.closeWindow(deregistrationReasonPane);
         }
-        //GUIPatientUpdateRequirements.setClosed(true);
     }
 
     /**
@@ -226,5 +241,25 @@ public class GUIRequiredOrganDeregistrationReason {
         for (Disease disease : selected) {
             disease.setDiseaseState(GlobalEnums.DiseaseState.CURED);
         }
+    }
+
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        deregistrationReasonTouchController.zoomPane(zoomEvent);
+        zoomEvent.consume();
+    }
+
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        deregistrationReasonTouchController.rotatePane(rotateEvent);
+        rotateEvent.consume();
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        if (scrollEvent.isDirect()) {
+            deregistrationReasonTouchController.scrollPane(scrollEvent);
+        }
+        scrollEvent.consume();
     }
 }

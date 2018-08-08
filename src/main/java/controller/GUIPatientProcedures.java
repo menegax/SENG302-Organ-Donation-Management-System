@@ -188,7 +188,7 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
      */
     @FXML
     public void addProcedure() {
-            screenControl.show("/scene/patientProcedureForm.fxml", this);
+            screenControl.show("/scene/patientProcedureForm.fxml", false, this);
     }
 
     /**
@@ -214,7 +214,7 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
             userActions.log(Level.WARNING, "No procedure selected", "Attempted to edit a procedure");
             return;
         }
-        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", this);
+        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this);
         controller.setupEditing(selectedProcedure);
     }
 

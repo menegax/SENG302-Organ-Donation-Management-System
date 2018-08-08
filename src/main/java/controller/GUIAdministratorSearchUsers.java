@@ -89,7 +89,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         	User selected = userDataTable.getSelectionModel().getSelectedItem();
             if (click.getClickCount() == 2 && selected != null && selected != userControl.getLoggedInUser()) {
                 userControl.setTargetUser(selected);
-                screenControl.show("/scene/home.fxml", this);
+                screenControl.show("/scene/home.fxml", true, this);
             }
         });
     }
