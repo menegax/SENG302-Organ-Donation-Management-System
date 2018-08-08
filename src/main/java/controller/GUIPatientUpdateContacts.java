@@ -2,24 +2,16 @@ package controller;
 
 import DataAccess.factories.DAOFactory;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import model.Patient;
-import service.Database;
 import service.PatientDataService;
 import utility.GlobalEnums;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
@@ -27,7 +19,6 @@ import java.util.regex.Pattern;
 import utility.GlobalEnums.UIRegex;
 
 import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**

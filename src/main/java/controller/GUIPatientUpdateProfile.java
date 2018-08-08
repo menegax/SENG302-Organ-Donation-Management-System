@@ -1,6 +1,5 @@
 package controller;
 
-import com.google.maps.model.LatLng;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,25 +8,17 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.PatientDataService;
-import org.joda.time.DateTime;
-import service.APIGoogleMaps;
-import service.Database;
 import utility.GlobalEnums.*;
-import utility.StatusObservable;
-import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 

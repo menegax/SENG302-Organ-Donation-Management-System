@@ -2,8 +2,6 @@ package controller;
 
 import DataAccess.factories.DAOFactory;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
@@ -11,13 +9,10 @@ import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import service.Database;
 import utility.GlobalEnums;
 
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;

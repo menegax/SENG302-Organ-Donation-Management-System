@@ -3,9 +3,11 @@ package model_test;
 import model.Disease;
 import model.Patient;
 import org.junit.*;
-import service.Database;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
+import utility.SystemLogger;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -30,29 +32,17 @@ public class PatientTest implements Serializable {
 
     private static Patient testPatient1; //Patient obj not within the database
 
-    private static boolean validConnection = false;
+    private static IPatientDataService patientDataService = new PatientDataService();
 
     @BeforeClass
     public static void setUpBeforeClass() {
         userActions.setLevel(OFF);
-        validConnection = validateConnection();
-    }
-
-
-    private static boolean validateConnection() {
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
-        } catch (SQLException e1) {
-            System.err.println("Failed to connect to UC database server.");
-        }
-        return conn != null;
+        SystemLogger.systemLogger.setLevel(OFF);
+        System.setProperty("connection_type", GlobalEnums.DbType.TEST.getValue());
     }
 
     @Before
     public void setUp() {
-        Assume.assumeTrue(validConnection);
-        Database database = Database.getDatabase();
         userActions.setLevel(Level.OFF);
         systemLogger.setLevel(Level.OFF);
         userActions.setLevel(Level.OFF);
@@ -60,12 +50,12 @@ public class PatientTest implements Serializable {
         testPatient = new Patient("ABC1234", "James", new ArrayList<>(), "Wallace",
                 LocalDate.of(1970, 2, 12));
 
-        database.add(new Patient("XYZ9876", "Joe", new ArrayList<String>() {{
+        patientDataService.save(new Patient("XYZ9876", "Joe", new ArrayList<String>() {{
             add("Jane");
         }},
                 "Bloggs", LocalDate.of(1994, 12, 12)));
 
-        database.add(new Patient("DEF4567", "Bob", new ArrayList<String>(), "Bobby",
+        patientDataService.save(new Patient("DEF4567", "Bob", new ArrayList<String>(), "Bobby",
                 LocalDate.of(1994, 12, 12)));
 
         testPatient1 = new Patient("JJJ1234", "Rex", new ArrayList<String>(), "Petsberg",

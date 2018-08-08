@@ -11,21 +11,16 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import javafx.scene.layout.GridPane;
 import model.Patient;
-import service.OrganWaitlist;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
-import utility.StatusObservable;
 import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import service.Database;
 import utility.GlobalEnums;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.*;
 import java.util.logging.Level;
 

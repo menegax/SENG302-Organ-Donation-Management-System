@@ -4,26 +4,30 @@ import model.Disease;
 import model.Patient;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import utility.GlobalEnums;
+import utility.SystemLogger;
 
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.OFF;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class DiseaseTest {
 
-    private Disease disease;
-    private Patient diseaseCarrier;
+    private static Disease disease;
+    private static Patient diseaseCarrier;
 
 
-    @Before
-    public void setUp() {
-        userActions.setLevel(Level.OFF);
-        systemLogger.setLevel(Level.OFF);
+    @BeforeClass
+    public static void setUp() {
+        userActions.setLevel(OFF);
+        SystemLogger.systemLogger.setLevel(OFF);
+        System.setProperty("connection_type", GlobalEnums.DbType.TEST.getValue());
         disease = new Disease("Aids", GlobalEnums.DiseaseState.CHRONIC);
         diseaseCarrier = new Patient("ABC1239", "Joe", null, "Bloggs", LocalDate.of(2018, 01, 01));
     }

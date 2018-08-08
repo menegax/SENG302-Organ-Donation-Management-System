@@ -3,12 +3,10 @@ import DataAccess.factories.DAOFactory;
 import DataAccess.interfaces.IPatientDataAccess;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import service.Database;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 
-import java.io.InvalidObjectException;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;

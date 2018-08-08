@@ -1,6 +1,5 @@
 package controller;
 
-import DataAccess.factories.DAOFactory;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,11 +10,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import model.Disease;
 import model.Patient;
-import service.Database;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.UndoableStage;
 import utility.undoRedo.StatesHistoryScreen;
@@ -25,7 +22,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;
 
-import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
