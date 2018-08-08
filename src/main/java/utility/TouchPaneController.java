@@ -21,6 +21,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Wrapper class for a Pane object to enable base touch functionality, including zooming, rotating and scrolling
@@ -136,6 +137,12 @@ public class TouchPaneController {
         } else if(node instanceof DatePicker) {
             DatePicker datePicker = (DatePicker) node;
             datePicker.getEditor().setFont(Font.font(datePicker.getEditor().getFont().getSize() * zoomFactor));
+        } else if(node instanceof TableView) {
+            TableView tableView = (TableView) node;
+            List<TableColumn> columns = tableView.getColumns();
+            for(TableColumn column : columns) {
+
+            }
         } else if(node instanceof VBox) {
             VBox vBox = (VBox) node;
             for(Node vNode : vBox.getChildren()) {
@@ -153,8 +160,9 @@ public class TouchPaneController {
             }
         } else if(node instanceof TabPane) {
             TabPane tabPane = (TabPane) node;
-            List<Node> tabList = new ArrayList<>(tabPane.getChildrenUnmodifiable());
-            for(Node tabNode : tabList) {
+            List<Tab> tabs = tabPane.getTabs();
+            List<Node> tabNodes = tabs.stream().map(Tab::getContent).collect(Collectors.toList());
+            for(Node tabNode : tabNodes) {
                 resizeFont(tabNode, zoomFactor);
             }
         } else if (node instanceof AnchorPane) {
