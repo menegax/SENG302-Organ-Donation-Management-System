@@ -35,14 +35,14 @@ public class ClinicianTest implements Serializable{
     private ClinicianDataService clinicianDataService = new ClinicianDataService();
 
     private AdministratorDataService dataService = new AdministratorDataService();
-    
+
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		userActions.setLevel(OFF);
 		validConnection = validateConnection();
 	}
-	
-	
+
+
 	private static boolean validateConnection() {
 		Connection conn = null;
 		try {
@@ -55,14 +55,33 @@ public class ClinicianTest implements Serializable{
 		}
 		return true;
 	}
-    
+
     @Before
     public void setUp() {
     	Assume.assumeTrue(validConnection);
         userActions.setLevel(Level.OFF);
         systemLogger.setLevel(Level.OFF);
-        clinician = new Clinician(0, "Joe", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND);    }
-    
+        clinician = new Clinician(0, "Joe", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND);
+    }
+
+    /**
+     *  verify the new staffID
+     */
+    @Test
+    public void testIncreasingStaffID() {
+        Clinician newClinician = new Clinician(Database.getNextStaffID(), "John", new ArrayList<>(), "Doe", GlobalEnums.Region.AUCKLAND);
+        Database.addClinician(newClinician);
+        assertEquals(newClinician.getStaffID() + 1, Database.getNextStaffID());
+    }
+
+    /**
+     * Verify creation of a new clinician with an invalid first name results in an exception
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testIllegalFirstName() {
+        Database.addClinician(new Clinician(Database.getNextStaffID(), "23-%%d", new ArrayList<>(), "Everyman", GlobalEnums.Region.GISBORNE));
+    }
+
     /**
      * Verifys db level getting of a clinician by id
      */

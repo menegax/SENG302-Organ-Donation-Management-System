@@ -72,6 +72,12 @@ public class Database implements Serializable {
                 } catch (IllegalArgumentException e) {
                     userActions.log(WARNING, "Failed to add user " + ((Clinician) user).getStaffID() + ". Staff ID not unique", "Attempted to add existing clinician");
                 }
+            } else if (user instanceof Administrator) {
+                try {
+                    addAdministrator((Administrator) user);
+                } catch (IllegalArgumentException e) {
+                    userActions.log(Level.WARNING, "Failed to add user " + ((Administrator) user).getUsername() + ". Username not unique", "Attempted to add existing administrator");
+                }
             }
         } else {
             userActions.log(WARNING, "New user not added", "Attempted to add null user");
@@ -2061,6 +2067,7 @@ public class Database implements Serializable {
                     .setRegion(GlobalEnums.Region.CANTERBURY);
             getPatientByNhi("ABC1234")
                     .setBirthGender(GlobalEnums.BirthGender.FEMALE);
+            Database.getPatientByNhi("ABC1234").setDeathLocation("The set death location"); //todo rm
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");

@@ -17,7 +17,7 @@ public class Administrator extends User {
 
     private String username;
 
-    private final String salt;
+    private String salt;
 
     private String password;
 
@@ -96,6 +96,13 @@ public class Administrator extends User {
         userModified();
     }
 
+    private void setHashedPassword(String hashedPassword) {
+        this.password = hashedPassword;
+    }
+
+    private void setSalt(String salt) {
+        this.salt = salt;
+    }
 
     /**
      * Returns the list of this admins actions. This should only be modified within UserActionHistory
@@ -116,7 +123,8 @@ public class Administrator extends User {
         setFirstName(newAdministratorAttributes.getFirstName());
         setLastName(newAdministratorAttributes.getLastName());
         setMiddleNames(newAdministratorAttributes.getMiddleNames());
-        setPassword(newAdministratorAttributes.getHashedPassword());
+        setHashedPassword(newAdministratorAttributes.getHashedPassword());
+        setSalt(newAdministratorAttributes.getSalt());
     }
 
     @Override

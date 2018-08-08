@@ -385,13 +385,13 @@ public class GUIHome implements Observer, TouchscreenCapable {
         /* Build the menu bar with new menus and menu items */
 
         // APP
-        Menu menu1 = new Menu("App");
-        MenuItem menu1Item1 = new MenuItem("Log out");
-        menu1Item1.setAccelerator(screenControl.getLogOut());
-        menu1Item1.setOnAction(event -> {
-            attemptLogOut();
-        });
-        menu1.getItems().addAll(menu1Item1);
+//        Menu menu1 = new Menu("App");
+//        MenuItem menu1Item1 = new MenuItem("Log out");
+//        menu1Item1.setAccelerator(screenControl.getLogOut());
+//        menu1Item1.setOnAction(event -> {
+//            attemptLogOut();
+//        });
+//        menu1.getItems().addAll(menu1Item1);
 
         // FILE
         Menu menu2 = new Menu("File");
@@ -425,7 +425,10 @@ public class GUIHome implements Observer, TouchscreenCapable {
             subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
             menu2.getItems().addAll(subMenuImport);
         }
-        menu2.getItems().addAll(menu2Item1);
+        MenuItem menu2Item4 = new MenuItem("Log out");
+        menu2Item4.setAccelerator(screenControl.getLogOut());
+        menu2Item4.setOnAction(event -> attemptLogOut());
+        menu2.getItems().addAll(menu2Item1, menu2Item4);
 
         Menu menu3 = new Menu("Edit");
         MenuItem menu3Item1 = new MenuItem("Undo");
@@ -436,7 +439,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         menu3Item2.setOnAction(event -> ((UndoableStage) stage).redo());
         menu3.getItems().addAll(menu3Item1, menu3Item2);
 
-        bar.getMenus().addAll(menu1, menu2, menu3);
+        bar.getMenus().addAll(menu2, menu3);
 
         boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless")
                 .equals("true");
@@ -458,7 +461,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
                 menuBar.getMenus()
                         .clear();
                 menuBar.getMenus()
-                        .addAll(menu1, menu2, menu3);
+                        .addAll(menu2, menu3);
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
             }
         }

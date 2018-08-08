@@ -1,5 +1,8 @@
 package controller;
 
+import static java.util.logging.Level.INFO;
+import static utility.SystemLogger.systemLogger;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -49,7 +52,7 @@ public class Main extends Application {
      * Gets the uuid hash key used for the primary stage
      * @return the uuid hash key used in the primary stage
      */
-    public static UUID getUuid() {
+    static UUID getUuid() {
         return uuid;
     }
 
