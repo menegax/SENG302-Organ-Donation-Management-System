@@ -247,7 +247,8 @@ public class Searcher {
      * @param types  The user types to select
      * @return The default list of patient search results.
      */
-    public List<User> getDefaultResults(UserTypes[] types, Map<FilterOption, String> filter) {
+    public Map<Integer, List<User>> getDefaultResults(UserTypes[] types, Map<FilterOption, String> filter) {
+        Map<Integer, List<User>> results = new HashMap<>();
         List<UserTypes> typesList = Arrays.asList(types);
         List<User> defaultResults = new ArrayList<>();
         if (typesList.contains(UserTypes.PATIENT)) {
@@ -273,7 +274,10 @@ public class Searcher {
         if (defaultResults.size() > 30) {
             defaultResults = new ArrayList<>(defaultResults.subList(0, NUM_RESULTS)); // truncate into size num_results
         }
-        return defaultResults;
+        results.put(0, defaultResults);
+        results.put(1, new ArrayList<>());
+        results.put(2, new ArrayList<>());
+        return results;
     }
 
     /**
@@ -506,9 +510,9 @@ public class Searcher {
             if (filter != null) {
                 //TODO does not work if numResults is over 30
                 if (numResults < getDefaultResults(types, filter).size()) {
-                    return getDefaultResults(types, filter).subList(0, numResults);
+                    return getDefaultResults(types, filter).get(0);
                 } else {
-                    return getDefaultResults(types, filter);
+                    return getDefaultResults(types, filter).get(0);
                 }
             }
             return results;
