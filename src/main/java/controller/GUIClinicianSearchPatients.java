@@ -22,7 +22,6 @@ import service.TextWatcher;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
-import utility.Searcher;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
 
@@ -92,8 +91,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private Searcher searcher = Searcher.getSearcher();
-
     private RangeSlider rangeSlider;
 
     private Map<FilterOption, String> filter = new HashMap<>();
@@ -114,7 +111,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
-        displayY.setText("Display all " + searcher.getDefaultResults(new UserTypes[]{UserTypes.PATIENT}, null).size() + " profiles");
+        displayY.setText("Display all " + count + " profiles");
         setupAgeSliderListeners();
         populateDropdowns();
         setupFilterOptions();
@@ -127,14 +124,12 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             try {
                 watcher.afterTextChange(GUIClinicianSearchPatients.class.getMethod("search"), this); //start timer
 
-            }
-            catch (NoSuchMethodException e) {
+            } catch (NoSuchMethodException e) {
                 userActions.log(SEVERE, "No method exists for search", "Attempted to search");
             }
         });
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
-        searchEntry.setPromptText("There are " + getProfileCount() + " profiles");
 
         setupUndoRedo();
         updateProfileCount();
@@ -295,7 +290,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
      * @return An integer value representing the total number of profiles returned from the search
      */
     private int getProfileCount() {
-        return searcher.getDefaultResults(new UserTypes[]{UserTypes.PATIENT}, null).size();
+        return count;
     }
 
     /**
