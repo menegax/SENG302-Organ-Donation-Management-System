@@ -1,34 +1,25 @@
 package utility_test;
 
-import DataAccess.interfaces.IPatientDataAccess;
 import model.Clinician;
 import model.Patient;
 import model.User;
-import org.junit.AfterClass;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static utility.UserActionHistory.userActions;
-
-import service.AdministratorDataService;
+import org.junit.*;
 import service.ClinicianDataService;
-import service.Database;
 import service.PatientDataService;
-import service.interfaces.IAdministratorDataService;
 import service.interfaces.IClinicianDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.Action;
 
-import java.io.InvalidObjectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
+
+import static org.junit.Assert.*;
+import static utility.UserActionHistory.userActions;
 
 public class ActionTest {
 
@@ -62,25 +53,22 @@ public class ActionTest {
         validConnection = validateConnection();
     }
 
-	private static boolean validateConnection() {
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
-		} catch (SQLException e1) {
-			System.err.println("Failed to connect to UC database server.");
-		}
-		if (conn == null) {
-			return false;
-		}
-		return true;
-	}
+    private static boolean validateConnection() {
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+        } catch (SQLException e1) {
+            System.err.println("Failed to connect to UC database server.");
+        }
+        return conn != null;
+    }
 
     /**
      * Resets the users and action attributes before each test
      */
     @Before
     public void reset() {
-    	Assume.assumeTrue(validConnection);
+        Assume.assumeTrue(validConnection);
         current = null;
         after = null;
         action = null;
@@ -90,7 +78,7 @@ public class ActionTest {
      * tests the action constructor using patients
      */
     @Test
-    public void testPatientActionConstructor() throws InvalidObjectException{
+    public void testPatientActionConstructor() {
         givenEditedPatient();
         whenActionCreated();
         whenUserSaved();
@@ -106,14 +94,14 @@ public class ActionTest {
         givenDeletedPatient();
         whenActionCreated();
         whenUserSaved();
-        thenBeforePatientNotIndatabase();
+        thenBeforePatientNotInDatabase();
     }
 
     /**
      * tests the action constructor using clinicians
      */
     @Test
-    public void testClinicianActionConstructor() throws InvalidObjectException{
+    public void testClinicianActionConstructor() {
         givenEditedClinician();
         whenActionCreated();
         whenUserSaved();
@@ -123,13 +111,13 @@ public class ActionTest {
         givenNewClinician();
         whenActionCreated();
         whenUserSaved();
-        thenAfterClinicianIndatabase();
+        thenAfterClinicianInDatabase();
 
         reset();
         givenDeletedClinician();
         whenActionCreated();
         whenUserSaved();
-        thenBeforeClinicianNotIndatabase();
+        thenBeforeClinicianNotInDatabase();
     }
 
 //    /**
@@ -146,13 +134,13 @@ public class ActionTest {
 //        givenNewPatient();
 //        whenActionCreated();
 //        whenActionUnexecuted();
-//        thenAfterPatientNotIndatabase();
+//        thenAfterPatientNotInDatabase();
 //
 //        reset();
 //        givenDeletedPatient();
 //        whenActionCreated();
 //        whenActionUnexecuted();
-//        thenBeforePatientIndatabase();
+//        thenBeforePatientInDatabase();
 //    }
 
 //    /**
@@ -182,7 +170,7 @@ public class ActionTest {
      * tests the action execute method using patients
      */
     @Test
-    public void testPatientExecute() throws InvalidObjectException{
+    public void testPatientExecute() {
         givenEditedPatient();
         whenActionCreated();
         whenActionUnexecuted();
@@ -204,7 +192,7 @@ public class ActionTest {
         whenActionUnexecuted();
         whenActionExecuted();
         whenUserSaved();
-        thenBeforePatientNotIndatabase();
+        thenBeforePatientNotInDatabase();
     }
 
     private void whenUserSaved() {
@@ -219,7 +207,7 @@ public class ActionTest {
      * tests the action execute method using clinicians
      */
     @Test
-    public void testClinicianExecute() throws InvalidObjectException{
+    public void testClinicianExecute() {
         givenEditedClinician();
         whenActionCreated();
         whenActionUnexecuted();
@@ -233,7 +221,7 @@ public class ActionTest {
         whenActionUnexecuted();
         whenActionExecuted();
         whenUserSaved();
-        thenAfterClinicianIndatabase();
+        thenAfterClinicianInDatabase();
 
         reset();
         givenDeletedClinician();
@@ -241,14 +229,14 @@ public class ActionTest {
         whenActionUnexecuted();
         whenActionExecuted();
         whenUserSaved();
-        thenBeforeClinicianNotIndatabase();
+        thenBeforeClinicianNotInDatabase();
     }
 
     /**
      * tests the action execute method does nothing gracefully using patients
      */
     @Test
-    public void testUselessExecutePatient() throws InvalidObjectException{
+    public void testUselessExecutePatient() {
         givenEditedPatient();
         whenActionCreated();
         whenActionExecuted();
@@ -267,14 +255,14 @@ public class ActionTest {
         whenActionCreated();
         whenActionExecuted();
         whenUserSaved();
-        thenBeforePatientNotIndatabase();
+        thenBeforePatientNotInDatabase();
     }
 
     /**
      * tests the action execute method does nothing gracefully using clinicians
      */
     @Test
-    public void testUselessExecuteClinician() throws InvalidObjectException{
+    public void testUselessExecuteClinician() {
         givenEditedClinician();
         whenActionCreated();
         whenActionExecuted();
@@ -286,14 +274,14 @@ public class ActionTest {
         whenActionCreated();
         whenActionExecuted();
         whenUserSaved();
-        thenAfterClinicianIndatabase();
+        thenAfterClinicianInDatabase();
 
         reset();
         givenDeletedPatient();
         whenActionCreated();
         whenActionExecuted();
         whenUserSaved();
-        thenBeforeClinicianNotIndatabase();
+        thenBeforeClinicianNotInDatabase();
     }
 
 //    /**
@@ -312,14 +300,14 @@ public class ActionTest {
 //        whenActionCreated();
 //        whenActionUnexecuted();
 //        whenActionUnexecuted();
-//        thenAfterPatientNotIndatabase();
+//        thenAfterPatientNotInDatabase();
 //
 //        reset();
 //        givenDeletedPatient();
 //        whenActionCreated();
 //        whenActionUnexecuted();
 //        whenActionUnexecuted();
-//        thenBeforePatientIndatabase();
+//        thenBeforePatientInDatabase();
 //    }
 
 //    /**
@@ -429,54 +417,52 @@ public class ActionTest {
      * checks that the current patient's first name is the after value
      */
     private void thenCurrentEqualsAfterPatient() {
-        assertEquals(((Patient) current).getFirstName(), ((Patient) after).getFirstName());
-        assertEquals(afterName, ((Patient) current).getFirstName());
+        assertEquals(current.getFirstName(), after.getFirstName());
+        assertEquals(afterName, current.getFirstName());
     }
 
     /**
      * checks that the current clinician's first name is the after value
      */
     private void thenCurrentEqualsAfterClinician() {
-        assertEquals(((Clinician) current).getFirstName(), ((Clinician) after).getFirstName());
-        assertEquals(afterName, ((Clinician) current).getFirstName());
+        assertEquals(current.getFirstName(), after.getFirstName());
+        assertEquals(afterName, current.getFirstName());
     }
 
     /**
      * checks that the current patient's first name is the before value
      */
     private void thenCurrentEqualsBeforePatient() {
-        assertNotEquals(((Patient) current).getFirstName(), ((Patient) after).getFirstName());
-        assertEquals(beforeName, ((Patient) current).getFirstName());
+        assertNotEquals(current.getFirstName(), after.getFirstName());
+        assertEquals(beforeName, current.getFirstName());
     }
 
     /**
      * checks that the current clinician's first name is the before value
      */
     private void thenCurrentEqualsBeforeClinician() {
-        assertNotEquals(((Clinician) current).getFirstName(), ((Clinician) after).getFirstName());
-        assertEquals(beforeName, ((Clinician) current).getFirstName());
+        assertNotEquals(current.getFirstName(), after.getFirstName());
+        assertEquals(beforeName, current.getFirstName());
     }
 
     /**
      * checks that a patient with the correct nhi and after first name is in the database
-     * @throws InvalidObjectException thrown when no patient with that nhi
      */
-    private void thenAfterPatientIndatabase() throws InvalidObjectException {
+    private void thenAfterPatientIndatabase() {
         assertEquals(afterName, patientDataService.getPatientByNhi(nhi).getFirstName());
     }
 
     /**
      * checks that a patient with the correct nhi and before first name is in the database
-     * @throws InvalidObjectException thrown when no patient with that nhi
      */
-    private void thenBeforePatientIndatabase() throws InvalidObjectException {
+    private void thenBeforePatientInDatabase() {
         assertEquals(beforeName, patientDataService.getPatientByNhi(nhi).getFirstName());
     }
 
     /**
      * checks that a patient with the correct nhi and after first name is not in the database
      */
-    private void thenAfterPatientNotIndatabase() {
+    private void thenAfterPatientNotInDatabase() {
         try {
             assertNotEquals(afterName, patientDataService.getPatientByNhi(nhi).getFirstName());
         } catch (NullPointerException e) {
@@ -487,7 +473,7 @@ public class ActionTest {
     /**
      * checks that a patient with the correct nhi and before first name is not in the database
      */
-    private void thenBeforePatientNotIndatabase() {
+    private void thenBeforePatientNotInDatabase() {
         try {
             assertNotEquals(beforeName, patientDataService.getPatientByNhi(nhi).getFirstName());
         } catch (NullPointerException e) {
@@ -497,17 +483,15 @@ public class ActionTest {
 
     /**
      * checks that a clinician with the correct staffId and after first name is in the database
-     * @throws InvalidObjectException thrown when no clinician with that staffId
      */
-    private void thenAfterClinicianIndatabase() throws InvalidObjectException {
+    private void thenAfterClinicianInDatabase() {
         assertEquals(afterName, clinicianDataService.getClinician(staffId).getFirstName());
     }
 
     /**
      * checks that a clinician with the correct staffId and before first name is in the database
-     * @throws InvalidObjectException thrown when no clinician with that staffId
      */
-    private void thenBeforeClinicianIndatabase() throws InvalidObjectException {
+    private void thenBeforeClinicianIndatabase() {
         assertEquals(beforeName, clinicianDataService.getClinician(staffId).getFirstName());
     }
 
@@ -525,7 +509,7 @@ public class ActionTest {
     /**
      * checks that a clinician with the correct staffId and before first name is not in the database
      */
-    private void thenBeforeClinicianNotIndatabase() {
+    private void thenBeforeClinicianNotInDatabase() {
         try {
             assertNotEquals(beforeName, clinicianDataService.getClinician(staffId).getFirstName());
         } catch (NullPointerException e) {

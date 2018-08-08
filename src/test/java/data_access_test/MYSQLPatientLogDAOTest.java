@@ -48,7 +48,7 @@ public class MYSQLPatientLogDAOTest {
 
 
     /**
-     * Check that logs are not duplicated -> test added for regression as this was an existing bug
+     * Check that logs are not duplicated - test added for regression as this was an existing bug
      */
     @Test
     public void testSaveNoNewPatientLogs() {
@@ -74,12 +74,14 @@ public class MYSQLPatientLogDAOTest {
     private void givenPatientInDb() {
         if (patient == null) {
             patient = new Patient("ZLH0909", "Henry", new ArrayList<>(), "Smith", LocalDate.of(1950, 2, 2));
-            daoFactory.getPatientDataAccess().savePatients(new HashSet<Patient>(){{add(patient);}});
+            daoFactory.getPatientDataAccess().savePatients(new HashSet<Patient>() {{
+                add(patient);
+            }});
         }
     }
 
     /**
-     *  Save patient logs
+     * Save patient logs
      */
     private void whenPatientLogSaved() {
         List<PatientActionRecord> recordList = new ArrayList<>();
