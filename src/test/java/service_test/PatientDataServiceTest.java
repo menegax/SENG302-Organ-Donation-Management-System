@@ -2,41 +2,38 @@ package service_test;
 
 import DataAccess.DBHelper;
 import DataAccess.factories.DAOFactory;
-import DataAccess.factories.MySqlFactory;
 import DataAccess.localDAO.LocalDB;
 import model.Patient;
 import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import service.PatientDataService;
 import utility.GlobalEnums;
+import utility.SystemLogger;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static org.mockito.Mockito.mock;
+import static java.util.logging.Level.OFF;
+import static utility.UserActionHistory.userActions;
 
-@RunWith(MockitoJUnitRunner.class)
 public class PatientDataServiceTest {
 
-    private static  LocalDB localDB = mock(LocalDB.getInstance().getClass());
-    @Mock
+    private static  LocalDB localDB = LocalDB.getInstance();
     private DAOFactory daoFactory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
-
-    @Mock
-    private DAOFactory localInstance = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
-
-    @InjectMocks
+    private Patient patient;
+    private static DBHelper dbHelper = new DBHelper();
     private PatientDataService patientDataService = new PatientDataService();
 
-    private Patient patient;
 
-    private static DBHelper dbHelper = new DBHelper();
-
+    @BeforeClass
+    @SuppressWarnings("Duplicates")
+    public static void setUp() {
+        userActions.setLevel(OFF);
+        SystemLogger.systemLogger.setLevel(OFF);
+        System.setProperty("connection_type", GlobalEnums.DbType.TEST.getValue());
+    }
 
     /**
      * Check that the patient can be found in remote db if its not in local
