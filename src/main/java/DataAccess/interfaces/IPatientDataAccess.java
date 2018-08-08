@@ -1,18 +1,17 @@
 package DataAccess.interfaces;
 
 import model.Patient;
-import model.User;
 import utility.GlobalEnums;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 public interface IPatientDataAccess {
 
     /**
      * Saves the given set of patients to the local or external database
+     *
      * @param patient The set of patient objects to save
      * @return The success code of the save
      */
@@ -21,6 +20,7 @@ public interface IPatientDataAccess {
     /**
      * Adds a list of patients to the local or external database
      * and adds them using a batch operation
+     *
      * @param patient The list of patients to add
      * @return The success status of the add
      */
@@ -28,18 +28,21 @@ public interface IPatientDataAccess {
 
     /**
      * Returns all patient objects
+     *
      * @return The set of patients
      */
     Set<Patient> getPatients();
 
     /**
      * Gets the number of patients present in the local or external database
+     *
      * @return The number of patients
      */
     int getPatientCount();
 
     /**
      * Gets the patient object that has the matching nhi
+     *
      * @param nhi The nhi to match
      * @return The matching patient object
      */
@@ -47,6 +50,7 @@ public interface IPatientDataAccess {
 
     /**
      * Deletes the given patient object
+     *
      * @param patient The patient to delete
      * @return The success status of the deletion
      */
@@ -61,12 +65,15 @@ public interface IPatientDataAccess {
      * (ie 0 characters difference, 1 character difference, 2 characters difference)
      *
      * @param searchTerm The search term to match on
+     * @param filters    The filters map to filter results on
+     * @param numResults The max number of results to fetch
      * @return A Map containing the matching patients
      */
     Map<Integer, List<Patient>> searchPatients(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
 
     /**
      * Deletes the patient from the local or external database that has the given nhi
+     *
      * @param nhi The nhi of the patient to delete
      */
     void deletePatientByNhi(String nhi);

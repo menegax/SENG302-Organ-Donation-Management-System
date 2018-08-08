@@ -13,9 +13,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-
 /**
- * Split this to Patient USE-CASES -> which call dao
+ * Split this to Patient USE-CASES - which call dao
  */
 public class PatientDataService implements IPatientDataService {
 

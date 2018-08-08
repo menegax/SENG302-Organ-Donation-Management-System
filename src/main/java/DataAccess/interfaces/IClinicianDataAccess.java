@@ -20,6 +20,7 @@ public interface IClinicianDataAccess {
      * Adds the given clinician to the local or external database
      *
      * @param clinician The clinician to save
+     * @return The success status
      */
     boolean addClinician(Clinician clinician);
 
@@ -43,7 +44,7 @@ public interface IClinicianDataAccess {
      * Returns the next due staff id from the local or external database. This is given by the max
      * staff id found in the data (local or external), and adding 1
      *
-     * @return
+     * @return The next staff ID
      */
     int nextStaffID();
 

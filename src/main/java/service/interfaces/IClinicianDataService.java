@@ -10,18 +10,19 @@ import java.util.Map;
 
 public interface IClinicianDataService {
 
-    public OrganWaitlist getOrganWaitList();
+    OrganWaitlist getOrganWaitList();
 
-    public Clinician getClinician(int staffId);
+    Clinician getClinician(int staffId);
 
     int getPatientCount();
 
     int nextStaffId();
 
-    public List<Patient> searchPatients(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
+    List<Patient> searchPatients(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
 
     /**
      * Will save to LOCAL ONLY
+     * @param clinician The clinician to save
      */
-    public void save(Clinician clinician);
+    void save(Clinician clinician);
 }

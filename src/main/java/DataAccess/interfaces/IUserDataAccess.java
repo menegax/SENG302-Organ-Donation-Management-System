@@ -27,7 +27,7 @@ public interface IUserDataAccess {
     /**
      * Returns all users in the local database
      *
-     * @return
+     * @return the set of all users
      */
     Set<User> getUsers();
 
@@ -45,7 +45,7 @@ public interface IUserDataAccess {
      * is within 2 characters difference (Using the levenshtein distance) from the search term
      *
      * @param searchTerm The search term to match users on
-     * @return
+     * @return The map of all matching users
      */
     Map<Integer, List<User>> searchUsers(String searchTerm);
 }
