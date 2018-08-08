@@ -26,52 +26,49 @@ import static utility.UserActionHistory.userActions;
 /**
  * Tests valid and invalid controller creation, fetching clinicians from the database, as well as updating clinicians
  */
-public class ClinicianTest implements Serializable{
+public class ClinicianTest implements Serializable {
 
     private Clinician clinician;
 
     private static boolean validConnection = false;
 
-    private ClinicianDataService clinicianDataService = new ClinicianDataService();
+    private final ClinicianDataService clinicianDataService = new ClinicianDataService();
 
-    private AdministratorDataService dataService = new AdministratorDataService();
+    private final AdministratorDataService dataService = new AdministratorDataService();
 
-	@BeforeClass
-	public static void setUpBeforeClass() {
-		userActions.setLevel(OFF);
-		validConnection = validateConnection();
-	}
+    @BeforeClass
+    public static void setUpBeforeClass() {
+        userActions.setLevel(OFF);
+        validConnection = validateConnection();
+    }
 
 
-	private static boolean validateConnection() {
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
-		} catch (SQLException e1) {
-			System.err.println("Failed to connect to UC database server.");
-		}
-		if (conn == null) {
-			return false;
-		}
-		return true;
-	}
+    private static boolean validateConnection() {
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
+        } catch (SQLException e1) {
+            System.err.println("Failed to connect to UC database server.");
+        }
+        return conn != null;
+    }
 
     @Before
     public void setUp() {
-    	Assume.assumeTrue(validConnection);
+        Assume.assumeTrue(validConnection);
         userActions.setLevel(Level.OFF);
         systemLogger.setLevel(Level.OFF);
         clinician = new Clinician(0, "Joe", new ArrayList<>(), "Bloggs", GlobalEnums.Region.AUCKLAND);
     }
 
     /**
-     *  verify the new staffID
+     * verify the new staffID
      */
     @Test
     public void testIncreasingStaffID() {
-        Clinician newClinician = new Clinician(Database.getNextStaffID(), "John", new ArrayList<>(), "Doe", GlobalEnums.Region.AUCKLAND);
-        Database.addClinician(newClinician);
-        assertEquals(newClinician.getStaffID() + 1, Database.getNextStaffID());
+        Clinician newClinician = new Clinician(clinicianDataService.nextStaffId(), "John", new ArrayList<>(), "Doe", GlobalEnums.Region.AUCKLAND);
+        clinicianDataService.save(newClinician);
+        assertEquals(newClinician.getStaffID() + 1, clinicianDataService.nextStaffId());
     }
 
     /**
@@ -79,7 +76,7 @@ public class ClinicianTest implements Serializable{
      */
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalFirstName() {
-        Database.addClinician(new Clinician(Database.getNextStaffID(), "23-%%d", new ArrayList<>(), "Everyman", GlobalEnums.Region.GISBORNE));
+        clinicianDataService.save(new Clinician(clinicianDataService.nextStaffId(), "23-%%d", new ArrayList<>(), "Everyman", GlobalEnums.Region.GISBORNE));
     }
 
     /**
@@ -130,6 +127,7 @@ public class ClinicianTest implements Serializable{
         whenDeletingClinician(clinician);
         thenClinicianShouldntBeRemovedFromDatabase(clinician);
     }
+
     /**
      * Tests the setAttributes method
      */

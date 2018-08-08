@@ -13,6 +13,7 @@ import utility.ResourceManager;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,12 +21,12 @@ import static utility.GlobalEnums.FilterOption.*;
 
 public class PatientDAO implements IPatientDataAccess {
 
-    private IMedicationDataAccess medicationDataAccess;
-    private IDiseaseDataAccess diseaseDataAccess;
-    private IContactDataAccess contactDataAccess;
-    private ILogDataAccess<PatientActionRecord> logDataAccess;
-    private IProcedureDataAccess procedureDataAccess;
-    private MySqlFactory mySqlFactory;
+    private final IMedicationDataAccess medicationDataAccess;
+    private final IDiseaseDataAccess diseaseDataAccess;
+    private final IContactDataAccess contactDataAccess;
+    private final ILogDataAccess<PatientActionRecord> logDataAccess;
+    private final IProcedureDataAccess procedureDataAccess;
+    private final MySqlFactory mySqlFactory;
 
     public PatientDAO() {
         mySqlFactory = MySqlFactory.getMySqlFactory();
@@ -64,7 +65,7 @@ public class PatientDAO implements IPatientDataAccess {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            return -1;
         }
         return 0;
     }
@@ -97,9 +98,9 @@ public class PatientDAO implements IPatientDataAccess {
 
     @Override
     public boolean deletePatient(Patient patient) {
-        try(Connection connection = mySqlFactory.getConnectionInstance()) {
+        try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENTS"));
-            for (int i=1; i<=6; i++) {
+            for (int i = 1; i <= 6; i++) {
                 statement.setString(i, patient.getNhiNumber());
             }
             statement.executeUpdate();
@@ -124,10 +125,10 @@ public class PatientDAO implements IPatientDataAccess {
             if (patientAttributes.next()) {
                 return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, procedures, medications);
             }
+            return null;
         } catch (SQLException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -178,7 +179,7 @@ public class PatientDAO implements IPatientDataAccess {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_BY_NHI"));
             statement.setString(1, nhi);
             statement.execute();
-        } catch (SQLException e) {
+        } catch (SQLException ignored) {
 
         }
     }
@@ -264,7 +265,7 @@ public class PatientDAO implements IPatientDataAccess {
         LocalDate birth = LocalDate.parse(attributes.getString("Birth"));
         Timestamp created = Timestamp.valueOf(attributes.getString("Created"));
         Timestamp modified = Timestamp.valueOf(attributes.getString("Modified"));
-        LocalDate death = attributes.getString("Death") != null ? LocalDate.parse(attributes.getString("Death")) : null;
+        LocalDateTime death = attributes.getString("Death") != null ? LocalDateTime.parse(attributes.getString("Death")) : null;
         String prefName = attributes.getString("PrefName");
         //map enum and organ groups
         BirthGender gender = null;
