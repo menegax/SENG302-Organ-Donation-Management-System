@@ -39,11 +39,11 @@ public class UserDataServiceTest {
     private void givenAdminAndClinicianInDB() {
         localDB.storeAdministrator(new Administrator("admin", "John", new ArrayList<>(), "Smith", "password"));
         localDB.storeClinician(new Clinician(0, "Rob", new ArrayList<>(), "Burns", GlobalEnums.Region.CANTERBURY));
-        userDataService.save();
+        //userDataService.save();
     }
 
     private void thenClinicianAndAdminInDB() {
-         assert localDB.getAdministrators().size() == 1; //not going to add check if admin object in case we change them
-         assert localDB.getClinicians().size() == 1;
+        assert localDB.getAdministrators().size() == 1; //not going to add check if admin object in case we change them
+        assert localDB.getClinicians().size() == 1;
     }
 }
