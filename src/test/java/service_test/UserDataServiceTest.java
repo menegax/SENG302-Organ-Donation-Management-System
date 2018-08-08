@@ -4,6 +4,7 @@ import DataAccess.DBHelper;
 import DataAccess.localDAO.LocalDB;
 import model.Administrator;
 import model.Clinician;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import service.UserDataService;
 import utility.GlobalEnums;
@@ -12,9 +13,16 @@ import java.util.ArrayList;
 
 public class UserDataServiceTest {
 
-    private static LocalDB localDB = LocalDB.getInstance();
-    private static DBHelper dbHelper = new DBHelper();
-    private UserDataService userDataService = new UserDataService();
+    private static LocalDB localDB;
+    private static DBHelper dbHelper;
+    private UserDataService userDataService;
+
+    @BeforeClass
+    public void setUp() {
+        localDB = LocalDB.getInstance();
+        dbHelper = new DBHelper();
+        userDataService = new UserDataService();
+    }
 
     @Test
     public void testPrepareApplication() {
