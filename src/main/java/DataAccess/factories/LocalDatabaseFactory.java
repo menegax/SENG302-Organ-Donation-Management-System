@@ -8,8 +8,15 @@ import utility.AdministratorActionRecord;
 import utility.ClinicianActionRecord;
 import utility.PatientActionRecord;
 
+/**
+ * Local DB factory, methods point to local db implementations rather that mysql
+ */
 public class LocalDatabaseFactory extends DAOFactory {
 
+    /**
+     * Gets the local db instance
+     * @return - LOCAL DB
+     */
     public static LocalDB getLocalDbInstance() {
         return LocalDB.getInstance();
     }

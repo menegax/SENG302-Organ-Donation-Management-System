@@ -42,13 +42,6 @@ public class AdministratorTest implements Serializable {
     }
 
 
-//    @Test
-//    public void testDeletingNonDefaultAdmin() {
-//        givenNonDefaultAdmin();
-//        whenDeletingAdmin(nonDefaultAdmin);
-//        thenAdminShouldBeRemovedFromDatabase(nonDefaultAdmin);
-//    }
-
 
     @Test
     public void testDeletingDefaultAdmin() {
