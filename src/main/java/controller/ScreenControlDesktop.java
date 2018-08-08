@@ -42,19 +42,22 @@ public class ScreenControlDesktop extends ScreenControl {
     /**
      * shows the fxml (screen)
      * @param fxml the fxml to display
+     * @param undoable if the displayed screen is to be undoable or not
      * @param parentController controller to notify when stage shown closes
      * @return the controller of this fxml
      */
-    public Object show(String fxml, IWindowObserver parentController) {
+    public Object show(String fxml, Boolean undoable, IWindowObserver parentController) {
         try {
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
             Object controller = fxmlLoader.getController();
-            UndoableWrapper undoableWrapper = new UndoableWrapper(stage);
-            if (fxmlLoader.getController() instanceof GUIHome) {
-                undoableWrapper.setGuiHome(fxmlLoader.getController());
+            if (undoable) {
+                UndoableWrapper undoableWrapper = new UndoableWrapper(stage);
+                if (fxmlLoader.getController() instanceof GUIHome) {
+                    undoableWrapper.setGuiHome(fxmlLoader.getController());
+                }
+                undoableWrappers.add(new UndoableWrapper(stage));
             }
-            undoableWrappers.add(new UndoableWrapper(stage));
             stage.setScene(new Scene(fxmlLoader.load()));
             stage.show();
             if (parentController != null) {

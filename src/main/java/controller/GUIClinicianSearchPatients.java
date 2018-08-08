@@ -156,7 +156,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 UserControl userControl = new UserControl();
                 userControl.setTargetUser(patientDataTable.getSelectionModel()
                         .getSelectedItem());
-                screenControl.show("/scene/home.fxml", this);
+                screenControl.show("/scene/home.fxml", true, this);
             }
         });
     }
