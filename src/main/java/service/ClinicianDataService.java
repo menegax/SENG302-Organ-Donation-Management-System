@@ -48,7 +48,7 @@ public class ClinicianDataService implements IClinicianDataService {
 
     @Override
     public int nextStaffId() {
-        return mysqlFactory.getClinicianDataAccess().nextStaffID(); //todo: check in local also
+        return Integer.max(mysqlFactory.getClinicianDataAccess().nextStaffID(), localDbFactory.getClinicianDataAccess().nextStaffID());
     }
 
     @Override
