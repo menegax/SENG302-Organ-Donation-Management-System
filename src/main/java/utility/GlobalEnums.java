@@ -141,10 +141,6 @@ public class GlobalEnums {
     /**
      * Enumerates all options for organs
      */
-
-    /**
-     *
-     */
     public enum Organ {
         LIVER("liver"), KIDNEY("kidney"), PANCREAS("pancreas"), HEART("heart"), LUNG("lung"), INTESTINE("intestine"), CORNEA("cornea"), MIDDLEEAR(
                 "middle ear"), SKIN("skin"), BONE("bone"), BONEMARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
@@ -331,6 +327,22 @@ public class GlobalEnums {
             } catch (IllegalArgumentException e) {
                 return null;
             }
+        }
+    }
+
+    /**
+     * Common regex expressions for validation
+     */
+    public enum Regex {
+        DEATH_LOCATION("^(\\d+ )?([a-zA-Z]+,? ?)+$");
+
+        private String value;
+        Regex(final String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
         }
     }
 }

@@ -1,36 +1,25 @@
 package controller;
 
-import com.google.maps.model.LatLng;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import model.Patient;
-import org.joda.time.DateTime;
-import service.APIGoogleMaps;
 import service.Database;
 import utility.GlobalEnums.*;
-import utility.StatusObservable;
-import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
@@ -111,21 +100,19 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     private Patient after;
 
-    private UserControl userControl;
-
     /**
      * Initializes the profile update screen. Gets the logged in or viewed user and loads the user's profile.
      * Dropdown menus are populated. The enter key press event for saving changes is set up
      */
     public void initialize() {
         populateDropdowns();
-        userControl = new UserControl();
+        UserControl userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
             disablePatientElements();
         } else if (userControl.getTargetUser() != null) {
-            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
+            loadProfile(((Patient) userControl.getTargetUser()).getNhiNumber());
         }
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
@@ -454,7 +441,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 setValid(dateOfDeath);
             }
         } else {
-            if (dateOfDeath.getValue() == null && deathLocationTxt.getText() != null) {
+            if (deathLocationTxt.getText() != null) {
                 valid = setInvalid(dateOfDeath);
                 invalidContent.append("Death date required if death location set");
             }
@@ -462,23 +449,18 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
 
         // death location
-        if (dateOfDeath.getValue() != null && deathLocationTxt.getText() == null) {
-            valid = setInvalid(deathLocationTxt);
-            invalidContent.append("Death location required if death date set");
-        }
-        else {
-
-            try {
-                // todo google maps validation
-                APIGoogleMaps apiGoogleMaps = APIGoogleMaps.getInstance();
-                LatLng latLng = apiGoogleMaps.getLatLng(deathLocationTxt.getText()); //todo make the latLng var be set to patient profile instead of string version
+        if (dateOfDeath.getValue() != null) {
+            if (deathLocationTxt.getText().length() == 0) {
+                valid = setInvalid(deathLocationTxt);
+                invalidContent.append("Death location required if death date set");
+            } else if (!deathLocationTxt.getText().matches(Regex.DEATH_LOCATION.getValue())) {
+                valid = setInvalid(deathLocationTxt);
+                invalidContent.append("Incorrect death location format");
+            } else {
                 setValid(deathLocationTxt);
             }
-            catch (Exception e) {
-                valid = setInvalid(deathLocationTxt);
-                invalidContent.append("Couldn't validate from Google. "); //todo replace with something prettier
-            }
-
+        } else {
+            setValid(deathLocationTxt);
         }
 
         // if all are valid
@@ -571,11 +553,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
      * @param target The target to remove the class from
      */
     private void setValid(Control target) {
-        if (target.getStyleClass()
-                .contains("invalid")) {
-            target.getStyleClass()
-                    .remove("invalid");
-        }
+        target.getStyleClass()
+                .remove("invalid");
     }
 
 }

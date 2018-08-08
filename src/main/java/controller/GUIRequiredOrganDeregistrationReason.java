@@ -1,6 +1,5 @@
 package controller;
 
-import com.google.maps.model.LatLng;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,12 +13,10 @@ import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
-import service.APIGoogleMaps;
 import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -42,9 +39,6 @@ public class GUIRequiredOrganDeregistrationReason {
     private ChoiceBox<GlobalEnums.DeregistrationReason> reasons;
 
     @FXML
-    private Button okButton;
-
-    @FXML
     private Label pleaseSpecify;
 
     @FXML
@@ -61,12 +55,7 @@ public class GUIRequiredOrganDeregistrationReason {
 
     private GlobalEnums.Organ organ;
 
-    private UserControl userControl;
-
     private Patient target;
-
-    @FXML
-    private AnchorPane requiredOrganDeregistrationReasonPane;
 
 
     /**
@@ -74,7 +63,7 @@ public class GUIRequiredOrganDeregistrationReason {
      * disabled and not visible.
      */
     public void initialize() {
-        userControl = new UserControl();
+        UserControl userControl = new UserControl();
         target = (Patient) userControl.getTargetUser();
         System.out.println("target orgs: " + target.getRequiredOrgans()); //todo rm
         populateDropdown();
@@ -255,20 +244,9 @@ public class GUIRequiredOrganDeregistrationReason {
         else {
             setValid(dateOfDeath);
         }
-        if (locationDeathTxt.getText()
-                .equals("")) {
+        if (!locationDeathTxt.getText().matches(GlobalEnums.Regex.DEATH_LOCATION.getValue())) {
             valid = setInvalid(locationDeathTxt);
-        }
-        else {
-            try {
-                APIGoogleMaps apiGoogleMaps = APIGoogleMaps.getInstance();
-                LatLng latLng = apiGoogleMaps.getLatLng(locationDeathTxt.getText()); //todo make the latLng var be set to patient profile instead of string version
-                setValid(locationDeathTxt);
-            }
-            catch (Exception e) {
-                valid = setInvalid(locationDeathTxt);
-            }
-
+        } else {
             setValid(locationDeathTxt);
         }
         if (valid) {
