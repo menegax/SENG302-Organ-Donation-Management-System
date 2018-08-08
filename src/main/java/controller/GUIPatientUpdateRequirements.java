@@ -12,6 +12,8 @@ import javafx.scene.control.Control;
 import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.OrganWaitlist;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.StatusObservable;
 import utility.SystemLogger;
 import utility.undoRedo.Action;
@@ -283,6 +285,8 @@ public class GUIPatientUpdateRequirements extends UndoableController{
 
         Action action = new Action(target, after);
         statesHistoryScreen.addAction(action);
+        IPatientDataService patientDataService = new PatientDataService();
+        patientDataService.save(after);
     }
 
     /**

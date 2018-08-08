@@ -9,6 +9,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
@@ -260,6 +262,8 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
         Action action = new Action(target, after);
         statesHistoryScreen.addAction(action);
+        IPatientDataService patientDataService = new PatientDataService();
+        patientDataService.save(after);
 
         userActions.log(INFO, "Updated user donations to: " + newDonations, "Attempted to update donations");
     }
