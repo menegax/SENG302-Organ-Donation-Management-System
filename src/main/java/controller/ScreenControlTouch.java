@@ -8,8 +8,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.tuiofx.examples.demo.FXMLController;
+import org.tuiofx.internal.base.TuioFXCanvas;
 import utility.undoRedo.UndoableWrapper;
 
 import java.io.IOException;
@@ -25,9 +27,11 @@ class ScreenControlTouch extends ScreenControl {
 
     private Stage touchStage;
 
-    private Pane rootPane;
+    private Region rootPane;
 
     private Pane touchPane = new Pane();
+
+    private Scene touchScene = null;
 
     private static ScreenControlTouch screenControlTouch;
 
@@ -54,7 +58,8 @@ class ScreenControlTouch extends ScreenControl {
     public Object show(String fxml, Boolean undoable, IWindowObserver parentController) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
-            Pane pane = fxmlLoader.load();
+            Region pane = fxmlLoader.load();
+            pane.getProperties().put("focusArea", "true");
             Object controller = fxmlLoader.getController();
             pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
             List<Node> panes;
@@ -73,10 +78,19 @@ class ScreenControlTouch extends ScreenControl {
                     undoablePane.setGuiHome(fxmlLoader.getController());
                 }
             }
-            Parent root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
+            Region root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
             touchPane = new Pane(root);
             touchPane.getChildren().addAll(panes);
-            touchStage.setScene(new Scene(touchPane));
+//            if(touchScene == null) {
+//                touchScene = new Scene(touchPane);
+//            } else {
+//                touchScene.setRoot(root);
+//            }
+//            touchStage.setScene(touchScene);
+            Scene newScene = new Scene(touchPane);
+            touchStage.setScene(newScene);
+            addCanvas(newScene);
+//            newScene.getRoot().getProperties().put("focusArea", "true");
             pane.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue && parentController != null) {
                     parentController.windowClosed();
@@ -152,6 +166,18 @@ class ScreenControlTouch extends ScreenControl {
             }
         }
         return false;
+    }
+
+    private void addCanvas(Scene scene) {
+        if(!(scene.getRoot() instanceof TuioFXCanvas)) {
+            TuioFXCanvas tuioFXCanvas = new TuioFXCanvas();
+            Region oldRoot = (Region) scene.getRoot();
+            tuioFXCanvas.getChildren().addAll(oldRoot);
+            scene.setRoot(tuioFXCanvas);
+            oldRoot.setTranslateX(0.0D);
+            oldRoot.setTranslateY(0.0D);
+            oldRoot.getStyleClass().removeAll("root");
+        }
     }
 
 }
