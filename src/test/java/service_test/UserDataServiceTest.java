@@ -1,28 +1,43 @@
 package service_test;
 
 import DataAccess.DBHelper;
+import DataAccess.factories.DAOFactory;
 import DataAccess.localDAO.LocalDB;
 import model.Administrator;
 import model.Clinician;
+import model.User;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import service.ClinicianDataService;
 import service.UserDataService;
 import utility.GlobalEnums;
 
 import java.util.ArrayList;
 
+@RunWith(MockitoJUnitRunner.class)
 public class UserDataServiceTest {
+
+    @Mock
+    private DAOFactory mysqlFactory;
+
+    @Mock
+    private DAOFactory localDatabase;
+
+    @InjectMocks
+    private UserDataService userDataService;
 
     private static LocalDB localDB;
     private static DBHelper dbHelper;
-    private static UserDataService userDataService;
 
     @BeforeClass
     public static void setUp() {
         System.setProperty("connection_type", GlobalEnums.DbType.TEST.getValue());
         localDB = LocalDB.getInstance();
         dbHelper = new DBHelper();
-        userDataService = new UserDataService();
     }
 
     @Test

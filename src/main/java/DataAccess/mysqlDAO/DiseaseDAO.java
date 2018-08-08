@@ -50,7 +50,7 @@ public class DiseaseDAO implements IDiseaseDataAccess {
                 String name = resultSet.getString("Name");
                 LocalDate diagnosed = LocalDate.parse(resultSet.getString("DateDiagnosed"));
                 String recordState = resultSet.getString("State");
-                DiseaseState state = recordState.equals("0") ? null : (recordState.equals("1") ? DiseaseState.CHRONIC : DiseaseState.CURED);
+                DiseaseState state = recordState.equals("0") ? DiseaseState.NONE : (recordState.equals("1") ? DiseaseState.CHRONIC : DiseaseState.CURED);
                 Disease disease = new Disease(name, state);
                 disease.setDateDiagnosed(diagnosed, LocalDate.parse(resultSet.getString("Birth")));
                 diseases.add(disease);

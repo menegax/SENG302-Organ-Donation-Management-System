@@ -287,7 +287,7 @@ public class GlobalEnums {
      * Enumerates all possible disease states
      */
     public enum DiseaseState {
-        CURED("cured"), CHRONIC("chronic");
+        CURED("cured"), CHRONIC("chronic"), NONE("none");
 
         private String value;
 

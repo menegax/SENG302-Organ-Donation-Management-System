@@ -163,9 +163,9 @@ public class PatientDAO implements IPatientDataAccess {
                 }
             }
             return resultMap;
-        } catch (SQLException e) {
-            return null;
-        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }return null;
     }
 
     @Override

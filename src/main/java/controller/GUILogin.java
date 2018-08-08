@@ -148,6 +148,7 @@ public class GUILogin implements TouchscreenCapable {
             password.setText(""); //Reset password field on invalid login
             userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
             Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
+            e.printStackTrace();
             alert.show();
         } catch (IOException e) {
             userActions.log(Level.WARNING, "Unable to load home page", "Attempted to log in");

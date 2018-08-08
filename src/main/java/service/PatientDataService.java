@@ -18,13 +18,9 @@ import java.util.concurrent.Future;
  */
 public class PatientDataService implements IPatientDataService {
 
-    private DAOFactory mysqlFactory;
-    private DAOFactory localDbFactory;
+    private DAOFactory mysqlFactory = DAOFactory.getDAOFactory(FactoryType.MYSQL);
+    private DAOFactory localDbFactory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
 
-    public PatientDataService() {
-        mysqlFactory = DAOFactory.getDAOFactory(FactoryType.MYSQL);
-        localDbFactory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
-    }
 
     @Override
     public Patient getPatientByNhi(String nhi) {

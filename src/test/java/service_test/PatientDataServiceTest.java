@@ -2,10 +2,15 @@ package service_test;
 
 import DataAccess.DBHelper;
 import DataAccess.factories.DAOFactory;
+import DataAccess.factories.MySqlFactory;
 import DataAccess.localDAO.LocalDB;
 import model.Patient;
 import org.junit.After;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import service.PatientDataService;
 import utility.GlobalEnums;
 
@@ -13,13 +18,24 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import static org.mockito.Mockito.mock;
+
+@RunWith(MockitoJUnitRunner.class)
 public class PatientDataServiceTest {
 
-    private static  LocalDB localDB = LocalDB.getInstance();
+    private static  LocalDB localDB = mock(LocalDB.getInstance().getClass());
+    @Mock
     private DAOFactory daoFactory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
-    private Patient patient;
-    private static DBHelper dbHelper = new DBHelper();
+
+    @Mock
+    private DAOFactory localInstance = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+
+    @InjectMocks
     private PatientDataService patientDataService = new PatientDataService();
+
+    private Patient patient;
+
+    private static DBHelper dbHelper = new DBHelper();
 
 
     /**
