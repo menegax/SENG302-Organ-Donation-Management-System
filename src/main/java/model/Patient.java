@@ -14,16 +14,12 @@ import java.io.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.text.DecimalFormat;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
@@ -35,9 +31,7 @@ public class Patient extends User {
 
     private LocalDate birth;
 
-    private LocalDateTime death;
-
-    private String deathLocation;
+    private LocalDate death;
 
     private BirthGender birthGender;
 
@@ -150,7 +144,7 @@ public class Patient extends User {
      * @param nhi               NHI
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
-                                 LocalDate birth, LocalDateTime death, String street1, String street2, String suburb,
+                                 LocalDate birth, LocalDate death, String street1, String street2, String suburb,
                                  String region, String birthGender, String preferredGender, String bloodGroup,
                                  double height, double weight, String nhi) throws IllegalArgumentException {
         Enum globalEnum;
@@ -227,7 +221,7 @@ public class Patient extends User {
         if (nhi != null) {
             setNhiNumber(nhi);
         }
-        userActions.log(INFO, "Successfully updated patient " + getNhiNumber(), "attempted to update patient attributes");
+        userActions.log(Level.INFO, "Successfully updated patient " + getNhiNumber(), "attempted to update patient attributes");
         userModified();
         Searcher.getSearcher().addIndex(this);
     }
@@ -237,9 +231,6 @@ public class Patient extends User {
      * @param newUserAttributes a user whose attributes this function copies
      */
     public void setAttributes(User newUserAttributes) {
-
-        //todo rework so this is open for extension @Aidan @Andrew
-
         Patient newPatientAttributes = (Patient) newUserAttributes.deepClone();
 
         setFirstName(newPatientAttributes.getFirstName());
@@ -248,7 +239,6 @@ public class Patient extends User {
         setPreferredName(newPatientAttributes.getPreferredName());
         setBirth(newPatientAttributes.getBirth());
         setDeath(newPatientAttributes.getDeath());
-        setDeathLocation(newPatientAttributes.getDeathLocation());
         setStreet1(newPatientAttributes.getStreet1());
         setStreet2(newPatientAttributes.getStreet2());
         setSuburb(newPatientAttributes.getSuburb());
@@ -294,7 +284,7 @@ public class Patient extends User {
                 if (organEnum == null) {
                     userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to patient donations");
                 } else {
-                    userActions.log(INFO, addDonation(organEnum), "attempted to update patient donations");
+                    userActions.log(Level.INFO, addDonation(organEnum), "attempted to update patient donations");
                     userModified();
                 }
             }
@@ -305,7 +295,7 @@ public class Patient extends User {
                 if (organEnum == null) {
                     userActions.log(Level.SEVERE,"Invalid organ \"" + organ + "\" given and not removed", "attempted to remove from patient donations");}
                  else {
-                    userActions.log(INFO, removeDonation(organEnum), "attempted to remove from patient donations");
+                    userActions.log(Level.INFO, removeDonation(organEnum), "attempted to remove from patient donations");
                     userModified();
                 }
             }
@@ -405,11 +395,11 @@ public class Patient extends User {
             userModified();
     }
 
-    public LocalDateTime getDeath() {
+    public LocalDate getDeath() {
         return death;
     }
 
-    public void setDeath(LocalDateTime death) {
+    public void setDeath(LocalDate death) {
             this.death = death;
             userModified();
     }
@@ -643,7 +633,7 @@ public class Patient extends User {
         else {
             donations.add(organ);
             userModified();
-            userActions.log(INFO, "Added organ " + organ + " to patient donations", "Attempted to add organ " + organ + " to patient donations");
+            userActions.log(Level.INFO, "Added organ " + organ + " to patient donations", "Attempted to add organ " + organ + " to patient donations");
             return "Successfully added " + organ + " to donations";
         }
     }
@@ -665,7 +655,7 @@ public class Patient extends User {
         }
         requiredOrgans.add(organ);
         userModified();
-        userActions.log(INFO, "Added organ " + organ + " to patient required organs", "Attempted to add organ " + organ + " to patient required organs");
+        userActions.log(Level.INFO, "Added organ " + organ + " to patient required organs", "Attempted to add organ " + organ + " to patient required organs");
         return "Successfully added " + organ + " to required organs";
     }
 
@@ -679,7 +669,7 @@ public class Patient extends User {
         if (donations.contains(organ)) {
             donations.remove(organ);
             userModified();
-            userActions.log(INFO, "Removed " + organ + " from patient donations", "Attempted to remove donation from a patient");
+            userActions.log(Level.INFO, "Removed " + organ + " from patient donations", "Attempted to remove donation from a patient");
             return "Successfully removed " + organ + " from donations";
         } else {
             return "Organ " + organ + " is not part of the patients donations, so could not be removed.";
@@ -885,17 +875,6 @@ public class Patient extends User {
         }
     }
 
-    public String getDeathLocation() {
-        return deathLocation;
-    }
-
-
-    public void setDeathLocation(String deathLocation) {
-        this.deathLocation = deathLocation;
-        userModified();
-        SystemLogger.systemLogger.log(FINEST, "Set death location for patient " + this.nhiNumber);
-    }
-
     public void setProcedures(List<Procedure> procedures) {
         this.procedures = procedures;
     }
@@ -914,7 +893,6 @@ public class Patient extends User {
                 "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: " + height + "\n" + "Weight: "
                 + weight + "\n" + "Blood group: " + bloodGroup + "\n";
     }
-
 
     public boolean equals(Object obj) {
         if (!(obj instanceof Patient)) {
