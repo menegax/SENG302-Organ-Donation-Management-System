@@ -14,6 +14,7 @@ import utility.ResourceManager;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -267,7 +268,8 @@ public class PatientDAO implements IPatientDataAccess {
         LocalDate birth = LocalDate.parse(attributes.getString("Birth"));
         Timestamp created = Timestamp.valueOf(attributes.getString("Created"));
         Timestamp modified = Timestamp.valueOf(attributes.getString("Modified"));
-        LocalDateTime death = attributes.getString("Death") != null ? LocalDateTime.parse(attributes.getString("Death")) : null;
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0");
+        LocalDateTime death = attributes.getString("Death") != null ? LocalDateTime.parse(attributes.getString("Death"), dtf) : null;
         String prefName = attributes.getString("PrefName");
         //map enum and organ groups
         BirthGender gender = null;
