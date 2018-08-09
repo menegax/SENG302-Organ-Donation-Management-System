@@ -10,7 +10,6 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.ResourceManager;
-import utility.SystemLogger;
 
 import java.sql.*;
 import java.time.LocalDate;

@@ -49,18 +49,8 @@ public class ActionTest {
      */
     @BeforeClass
     public static void setup() {
+        System.setProperty("connection_type", GlobalEnums.DbType.TEST.getValue());
         userActions.setLevel(Level.OFF);
-        validConnection = validateConnection();
-    }
-
-    private static boolean validateConnection() {
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
-        } catch (SQLException e1) {
-            System.err.println("Failed to connect to UC database server.");
-        }
-        return conn != null;
     }
 
     /**
@@ -68,7 +58,6 @@ public class ActionTest {
      */
     @Before
     public void reset() {
-        Assume.assumeTrue(validConnection);
         current = null;
         after = null;
         action = null;
