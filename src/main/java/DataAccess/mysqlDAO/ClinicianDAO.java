@@ -9,10 +9,7 @@ import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
 import utility.ResourceManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -76,10 +73,7 @@ public class ClinicianDAO implements IClinicianDataAccess {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                ArrayList<String> middleNames = new ArrayList<>(Arrays.asList(resultSet.getString("MName"), " "));
-                Clinician clinician = new Clinician(resultSet.getInt("StaffID"), resultSet.getString("FName"),
-                        middleNames, resultSet.getString("LName"), resultSet.getString("Region") != null ?
-                        GlobalEnums.Region.getEnumFromString(resultSet.getString("Region")) : null);
+                Clinician clinician = constructClinicianObject(resultSet);
                 clinician.setStreet1(resultSet.getString("Street1"));
                 clinician.setStreet2(resultSet.getString("Street2"));
                 clinician.setRegion(GlobalEnums.Region.getEnumFromString(resultSet.getString("Region")));
@@ -133,7 +127,12 @@ public class ClinicianDAO implements IClinicianDataAccess {
     private Clinician constructClinicianObject(ResultSet resultSet) throws SQLException {
         int staffID = resultSet.getInt("Staffid");
         String fName = resultSet.getString("FName");
-        ArrayList<String> mNames = new ArrayList<>(Arrays.asList(resultSet.getString("MName").split(" ")));
+        ArrayList<String> mNames;
+        if (resultSet.getString("MName").length() != 0) {
+            mNames = new ArrayList<>(Arrays.asList(resultSet.getString("MName").split(" ")));
+        } else {
+            mNames = new ArrayList<>();
+        }
         String lName = resultSet.getString("LName");
         GlobalEnums.Region region = GlobalEnums.Region.getEnumFromString(resultSet.getString("region"));
         return new Clinician(staffID, fName, mNames, lName, region);
