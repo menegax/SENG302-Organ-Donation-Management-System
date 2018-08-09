@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import static utility.SystemLogger.systemLogger;
+
 public class PatientILogDAO implements ILogDataAccess<PatientActionRecord>{
 
     private MySqlFactory mySqlFactory;
@@ -38,7 +40,7 @@ public class PatientILogDAO implements ILogDataAccess<PatientActionRecord>{
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not save patient logs for the nhi " + id + " to the MySQL database");
         }
     }
 
@@ -58,7 +60,7 @@ public class PatientILogDAO implements ILogDataAccess<PatientActionRecord>{
             }
             return logs;
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not get patient logs for the nhi " + id + " from the MySQL database");
         }
         return  null;
     }
@@ -70,7 +72,7 @@ public class PatientILogDAO implements ILogDataAccess<PatientActionRecord>{
             statement.setString(1, id);
             statement.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not delete patient logs for the nhi " + id + " from the MySQL database");
         }
     }
 }

@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import static utility.SystemLogger.systemLogger;
+
 public class AdministratorLogDAO implements ILogDataAccess<AdministratorActionRecord> {
 
     private MySqlFactory mysqlFactory;
@@ -36,7 +38,7 @@ public class AdministratorLogDAO implements ILogDataAccess<AdministratorActionRe
                statement.executeUpdate();
            }
        } catch (SQLException e) {
-           e.printStackTrace();
+           systemLogger.log(Level.SEVERE, "Could not save administrator logs for the username " + id + " to the MySQL database");
        }
     }
 
@@ -54,7 +56,7 @@ public class AdministratorLogDAO implements ILogDataAccess<AdministratorActionRe
             }
             return logs;
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not get administrator logs for the username " + username + " from the MySQL database");
         }
         return null;
     }
@@ -66,7 +68,7 @@ public class AdministratorLogDAO implements ILogDataAccess<AdministratorActionRe
             statement.setString(1, username);
             statement.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not delete administrator logs for the username " + username + " from the MySQL database");
         }
     }
 }
