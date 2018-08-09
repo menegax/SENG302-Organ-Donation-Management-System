@@ -34,9 +34,7 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
                         results.getString("nhi"));
             }
             return organRequests;
-        } catch (Exception e) {
-
-            e.printStackTrace();
+        } catch (SQLException e) {
             systemLogger.log(Level.SEVERE, "Could not get transplant waiting list from MYSQL DB", this);
         }
         return null;
@@ -60,8 +58,7 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
                     preparedStatement.executeUpdate();
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
             systemLogger.log(Level.SEVERE, "Could not update wait list in MYSQL DB", this);
         }
     }
@@ -73,6 +70,17 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
             preparedStatement.execute();
         } catch (SQLException e) {
             systemLogger.log(Level.SEVERE, "Could not delete waiting list from MYSQL DB", this);
+        }
+    }
+
+    @Override
+    public void deleteRequestsByNhi(String nhi) {
+        try(Connection connection = daoFactory.getConnectionInstance()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_ORGAN_REQUEST_BY_NHI"));
+            preparedStatement.setString(1, nhi);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e){
+            systemLogger.log(Level.SEVERE, "Could not delete requests by nhi", this);
         }
     }
 

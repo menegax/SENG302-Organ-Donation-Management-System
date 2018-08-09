@@ -2,6 +2,7 @@ package DataAccess.localDAO;
 
 import DataAccess.interfaces.ITransplantWaitListDataAccess;
 import service.OrganWaitlist;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class TransplantWaitListLocalDAO implements ITransplantWaitListDataAccess {
 
@@ -20,5 +21,10 @@ public class TransplantWaitListLocalDAO implements ITransplantWaitListDataAccess
     @Override
     public void deleteWaitingList() {
         localDB.setOrganWaitlist(new OrganWaitlist());
+    }
+
+    @Override
+    public void deleteRequestsByNhi(String nhi) {
+        throw new NotImplementedException();
     }
 }

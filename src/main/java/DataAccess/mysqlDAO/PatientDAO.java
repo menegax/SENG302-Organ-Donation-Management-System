@@ -68,7 +68,7 @@ public class PatientDAO implements IPatientDataAccess {
                     procedureDataAccess.updateProcedure(patient.getNhiNumber(), procedure);
                 }
             }
-        } catch (SQLException ignored) {
+        } catch (SQLException e) {
             systemLogger.log(Level.SEVERE, "Could not save patients to MySQL database");
         }
     }
@@ -129,9 +129,10 @@ public class PatientDAO implements IPatientDataAccess {
                 return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, procedures, medications);
             }
             return null;
-        } catch (SQLException e) {
-            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     @Override
@@ -179,11 +180,13 @@ public class PatientDAO implements IPatientDataAccess {
             contactDataAccess.deleteContactByNhi(nhi);
             logDataAccess.deleteLogsByUserId(nhi);
             procedureDataAccess.deleteAllProceduresByNhi(nhi);
+            transplantWaitListDataAccess.deleteRequestsByNhi(nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_BY_NHI"));
             statement.setString(1, nhi);
             statement.execute();
-        } catch (SQLException ignored) {
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not delete patient", this);
         }
     }
 
@@ -283,7 +286,7 @@ public class PatientDAO implements IPatientDataAccess {
         }
         PreferredGender preferredGender = null;
         if (attributes.getString("PrefGender") != null) {
-            preferredGender = attributes.getString("PrefGender").equals("F") ? PreferredGender.WOMAN :
+            preferredGender = attributes.getString("PrefGender").equals("W") ? PreferredGender.WOMAN :
                     (attributes.getString("PrefGender").equals("M") ? PreferredGender.MAN : PreferredGender.NONBINARY);
         }
         Patient patient = new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName);
@@ -348,7 +351,7 @@ public class PatientDAO implements IPatientDataAccess {
             patient.setContactEmailAddress(contacts.get(14));
             patient.setUserActionsList(logs == null ? new ArrayList<>() : logs);
             patient.setProcedures(procedures == null ? new ArrayList<>() : procedures);
-        } else {
+        } else if (!contacts.isEmpty()) {
             patient.setRegion(contacts.get(0) != null ? Region.getEnumFromString(contacts.get(0)) : null);
         }
 

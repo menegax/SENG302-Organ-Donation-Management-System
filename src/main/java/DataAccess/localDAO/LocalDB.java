@@ -127,7 +127,7 @@ public class LocalDB {
         clinicians.clear();
         administrators.clear();
         deleted.clear();
-        organWaitlist = new OrganWaitlist();
+        organWaitlist = null;
     }
 
     public Set<User> getDeletedUsers() {

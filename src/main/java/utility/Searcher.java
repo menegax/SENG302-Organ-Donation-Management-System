@@ -44,7 +44,7 @@ public class Searcher {
 
     private LocalDB database;
 
-    public Searcher() {
+    private Searcher() {
         try {
             indexWriter = initializeWriter();
             database = LocalDB.getInstance();
