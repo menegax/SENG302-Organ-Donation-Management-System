@@ -2,19 +2,31 @@ package controller;
 
 import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
 
+import controller.ScreenControl;
+import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import model.Administrator;
+import model.Clinician;
+import model.Patient;
 import service.Database;
+import utility.GlobalEnums;
 import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
-
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class Main extends Application {
 
@@ -53,7 +65,7 @@ public class Main extends Application {
      * Gets the uuid hash key used for the primary stage
      * @return the uuid hash key used in the primary stage
      */
-    static UUID getUuid() {
+    public static UUID getUuid() {
         return uuid;
     }
 
