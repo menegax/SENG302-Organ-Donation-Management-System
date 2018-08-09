@@ -251,7 +251,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
                 try {
                     newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
                 } catch (IOException e) {
-                    systemLogger.log(SEVERE, "Failed to create tab", e);
+                    systemLogger.log(SEVERE, "Failed to create tab", e);;
                 }
             });
         horizontalTabPane.getTabs().add(newTab);

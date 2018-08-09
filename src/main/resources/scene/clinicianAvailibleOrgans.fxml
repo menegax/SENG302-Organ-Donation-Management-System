@@ -23,7 +23,7 @@
       <RowConstraints minHeight="0.80001143217087" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <TableView fx:id="availableOrgansTableView">
+      <TableView fx:id="availableOrgansTableView" GridPane.hgrow="ALWAYS" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="patientCol" prefWidth="75.0" text="Patient" />
           <TableColumn fx:id="organCol" prefWidth="75.0" text="Organ" />

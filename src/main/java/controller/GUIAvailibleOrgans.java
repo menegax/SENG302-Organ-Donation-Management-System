@@ -3,6 +3,7 @@ package controller;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -25,6 +26,8 @@ import utility.undoRedo.UndoableStage;
 import model.Patient;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
@@ -38,7 +41,7 @@ public class GUIAvailibleOrgans {
 	@FXML
     private GridPane availableOrgans;
     @FXML
-    private TableView<PatientOrgan> availibleOrgansTableView;
+    private TableView<PatientOrgan> availableOrgansTableView;
     @FXML
     private TableColumn<PatientOrgan, String> patientCol;
     @FXML
@@ -63,9 +66,9 @@ public class GUIAvailibleOrgans {
     			}
     		}
     	}
-    	
+    	populateTable();
     }
-
+    
     /**
      * Populates waiting list table with all patients waiting to receive an organ
      */
@@ -76,11 +79,11 @@ public class GUIAvailibleOrgans {
         organCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getOrgan().toString()));
         //TODO add death location when merged
-        locationCol.setCellValueFactory(r -> new SimpleStringProperty("Death Location"));
+        //locationCol.setCellValueFactory(r -> new SimpleStringProperty("Death Location"));
         deathCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getPatient().getDeath().toString()));
         //TODO add expiry countdown
-        expiryCol.setCellValueFactory(r -> new SimpleStringProperty("Expiry"));
+        //expiryCol.setCellValueFactory(r -> new SimpleStringProperty("Expiry"));
 
         // wrap ObservableList in a FilteredList
         FilteredList<PatientOrgan> filteredData = new FilteredList<>(masterData);
@@ -89,18 +92,19 @@ public class GUIAvailibleOrgans {
         SortedList<PatientOrgan> sortedData = new SortedList<>(filteredData);
 
         // bind the SortedList comparator to the TableView comparator.
-        sortedData.comparatorProperty().bind(availibleOrgansTableView.comparatorProperty());
+        sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
 
         // add sorted (and filtered) data to the table.
-        availibleOrgansTableView.setItems(sortedData);
-
+        availableOrgansTableView.setItems(sortedData);
+        availableOrgansTableView.setVisible(true);
+        tableRefresh();
     }
     
     /**
      * Refreshes the table data
      */
     private void tableRefresh() {
-        availibleOrgansTableView.refresh();
+        availableOrgansTableView.refresh();
     }
     
     /**
