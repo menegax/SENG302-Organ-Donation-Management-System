@@ -5,18 +5,20 @@ import service.OrganWaitlist;
 
 public class TransplantWaitListLocalDAO implements ITransplantWaitListDataAccess {
 
+    private LocalDB localDB = LocalDB.getInstance();
+
     @Override
     public OrganWaitlist getWaitingList() {
-        return null;
+        return localDB.getOrganWaitlist();
     }
 
     @Override
     public void updateWaitingList(OrganWaitlist organRequests) {
-
+        localDB.setOrganWaitlist(organRequests);
     }
 
     @Override
     public void deleteWaitingList() {
-
+        localDB.setOrganWaitlist(new OrganWaitlist());
     }
 }
