@@ -14,6 +14,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.logging.Level;
+
+import static utility.SystemLogger.systemLogger;
 
 public class ClinicianDAO implements IClinicianDataAccess {
 
@@ -35,7 +38,7 @@ public class ClinicianDAO implements IClinicianDataAccess {
                 clinicianActionRecordILogDataAccess.saveLogs(clinician.getClinicianActionsList(), String.valueOf(clinician.getStaffID()));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not save clinician to MYSQL DB", this);
         }
     }
 
@@ -47,8 +50,7 @@ public class ClinicianDAO implements IClinicianDataAccess {
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            systemLogger.log(Level.SEVERE, "Could not add clinician to MYSQL DB", this);        }
         return false;
     }
 
@@ -62,8 +64,9 @@ public class ClinicianDAO implements IClinicianDataAccess {
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            return false;
+            systemLogger.log(Level.SEVERE, "Could not delete clinician from MYSQL DB", this);
         }
+        return false;
     }
 
     @Override
@@ -86,7 +89,7 @@ public class ClinicianDAO implements IClinicianDataAccess {
                 return clinician;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not get clinician from MYSQL DB", this);
         }
         return null;
     }
@@ -122,8 +125,9 @@ public class ClinicianDAO implements IClinicianDataAccess {
             }
             return resultMap;
         } catch (SQLException e) {
-            return null;
+            systemLogger.log(Level.SEVERE, "Could not get clinicians from search in MYSQL DB", this);
         }
+        return null;
     }
 
     private Clinician constructClinicianObject(ResultSet resultSet) throws SQLException {
@@ -153,8 +157,9 @@ public class ClinicianDAO implements IClinicianDataAccess {
             }
             return 1;
         } catch (SQLException e) {
-            return 1;
+            systemLogger.log(Level.SEVERE, "Could not get next StaffID from MYSQL DB", this);
         }
+        return 1;
     }
 
     private PreparedStatement addUpdateParameters(Clinician clinician, PreparedStatement statement) throws SQLException {

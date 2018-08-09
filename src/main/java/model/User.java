@@ -152,7 +152,6 @@ public abstract class User implements Serializable, Comparable<User> {
             ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
             return (User) in.readObject();
         } catch (Exception e) {
-            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Error cloning user");
         }
         return null;

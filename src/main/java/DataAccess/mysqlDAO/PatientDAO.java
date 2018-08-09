@@ -15,9 +15,11 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import static utility.GlobalEnums.FilterOption.*;
+import static utility.SystemLogger.systemLogger;
 
 public class PatientDAO implements IPatientDataAccess {
 
@@ -164,7 +166,7 @@ public class PatientDAO implements IPatientDataAccess {
             }
             return resultMap;
         } catch (Exception e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not search patients from MYSQL DB", this);
         }return null;
     }
 

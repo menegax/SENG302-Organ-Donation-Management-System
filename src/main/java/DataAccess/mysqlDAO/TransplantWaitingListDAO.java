@@ -11,6 +11,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.logging.Level;
+
+import static utility.SystemLogger.systemLogger;
 
 public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
 
@@ -31,7 +34,7 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
             }
             return organRequests;
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not get transplant waiting list from MYSQL DB", this);
         }
         return null;
     }
@@ -52,7 +55,7 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
-                e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not update wait list in MYSQL DB", this);
         }
     }
 
@@ -62,7 +65,7 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
             PreparedStatement preparedStatement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_ALL_TRANSPLANT_WAIT"));
             preparedStatement.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not delete waiting list from MYSQL DB", this);
         }
     }
 

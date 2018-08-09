@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
+
+import static utility.SystemLogger.systemLogger;
 
 public class ProcedureDAO implements IProcedureDataAccess {
 
@@ -37,7 +40,7 @@ public class ProcedureDAO implements IProcedureDataAccess {
             statement.setString(5, organs);
             return statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not update procedure in MYSQL DB", this);
         }
         return 0;
     }
@@ -65,9 +68,9 @@ public class ProcedureDAO implements IProcedureDataAccess {
             }
             return procedures;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
+            systemLogger.log(Level.SEVERE, "Could not get procedure from MYSQL DB", this);
         }
+        return new ArrayList<>();
     }
 
     @Override
@@ -77,7 +80,7 @@ public class ProcedureDAO implements IProcedureDataAccess {
             statement.setString(1, nhi);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not delete procedure from MYSQL DB", this);
         }
     }
 }

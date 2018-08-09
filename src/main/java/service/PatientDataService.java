@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+
+import static utility.SystemLogger.systemLogger;
 
 /**
  * Split this to Patient USE-CASES - which call dao
@@ -35,7 +38,7 @@ public class PatientDataService implements IPatientDataService {
         try {
             return patientFuture.get();
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not get patient fromMYSQL DB", this);
         }
         return null;
     }

@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import static utility.SystemLogger.systemLogger;
+
 public class ContactDAO  implements IContactDataAccess {
 
     private MySqlFactory mySqlFactory;
@@ -44,7 +46,6 @@ public class ContactDAO  implements IContactDataAccess {
             statement.setString(16, patient.getContactEmailAddress());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             SystemLogger.systemLogger.log(Level.SEVERE, "Failed to update contact", this);
             return false;
         }
@@ -68,8 +69,9 @@ public class ContactDAO  implements IContactDataAccess {
             }
             return contactInfo;
         } catch (SQLException e) {
-            return null;
+            systemLogger.log(Level.SEVERE, "Could not get contact from MYSQL DB", this);
         }
+        return null;
     }
 
     @Override
@@ -80,7 +82,7 @@ public class ContactDAO  implements IContactDataAccess {
             statement.setString(1, nhi);
             statement.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not delete contact from MYSQL DB", this);
         }
     }
 }

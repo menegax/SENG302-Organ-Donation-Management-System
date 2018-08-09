@@ -59,8 +59,7 @@ public class MySqlFactory extends DAOFactory {
             connection = ds.getConnection();
             systemLogger.log(Level.INFO, "Successfully retrieved connection from pool.", MySqlFactory.class);
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            systemLogger.log(Level.SEVERE, "Could not get connection", this);        }
         return connection;
     }
 

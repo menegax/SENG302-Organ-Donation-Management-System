@@ -12,6 +12,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+
+import static utility.SystemLogger.systemLogger;
 
 public class MedicationDAO  implements IMedicationDataAccess {
 
@@ -35,7 +38,7 @@ public class MedicationDAO  implements IMedicationDataAccess {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not update medication to MYSQL DB", this);
         }
         return 0;
     }
@@ -56,8 +59,7 @@ public class MedicationDAO  implements IMedicationDataAccess {
             }
             return medications;
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            systemLogger.log(Level.SEVERE, "Could not get medication from MYSQL DB", this);        }
         return null;
     }
 
@@ -68,7 +70,7 @@ public class MedicationDAO  implements IMedicationDataAccess {
             statement.setString(1, nhi);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not delete medication from MYSQL DB", this);
         }
     }
 }

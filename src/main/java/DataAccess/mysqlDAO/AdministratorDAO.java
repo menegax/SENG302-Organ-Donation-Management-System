@@ -8,6 +8,9 @@ import utility.ResourceManager;
 
 import java.sql.*;
 import java.util.*;
+import java.util.logging.Level;
+
+import static utility.SystemLogger.systemLogger;
 
 public class AdministratorDAO implements IAdministratorDataAccess {
 
@@ -27,7 +30,7 @@ public class AdministratorDAO implements IAdministratorDataAccess {
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not save administrator to MYSQL DB", this);
         }
     }
 
@@ -46,8 +49,9 @@ public class AdministratorDAO implements IAdministratorDataAccess {
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            return false;
+            systemLogger.log(Level.SEVERE, "Could not delete administrator from MYSQL DB", this);
         }
+        return false;
     }
 
     @Override
@@ -57,8 +61,7 @@ public class AdministratorDAO implements IAdministratorDataAccess {
             preparedStatement.setString(1, username);
             return constructAdministratorObject(preparedStatement.executeQuery());
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            systemLogger.log(Level.SEVERE, "Could not get administrator from MYSQL DB", this);        }
         return null;
     }
 
@@ -93,8 +96,9 @@ public class AdministratorDAO implements IAdministratorDataAccess {
             }
             return resultMap;
         } catch (SQLException e) {
-            return null;
+            systemLogger.log(Level.SEVERE, "Could not search administrators in MYSQL DB", this);
         }
+        return null;
     }
 
     private Administrator constructAdminObject(ResultSet resultSet) throws SQLException {

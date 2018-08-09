@@ -14,6 +14,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+
+import static utility.SystemLogger.systemLogger;
 
 public class DiseaseDAO implements IDiseaseDataAccess {
 
@@ -35,8 +38,9 @@ public class DiseaseDAO implements IDiseaseDataAccess {
             statement.setString(4, diseaseState);
             return statement.executeUpdate();
         } catch (SQLException e) {
-            return 0;
+            systemLogger.log(Level.SEVERE, "Could not update disease in MYSQL DB", this);
         }
+        return 0;
     }
 
     @Override
@@ -57,7 +61,7 @@ public class DiseaseDAO implements IDiseaseDataAccess {
             }
             return diseases;
         } catch (SQLException | IOException e) {
-           e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not get disease from MYSQL DB", this);
         }
         return null;
     }
@@ -69,7 +73,7 @@ public class DiseaseDAO implements IDiseaseDataAccess {
             statement.setString(1, nhi);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not delete disease from MYSQL DB", this);
         }
     }
 }

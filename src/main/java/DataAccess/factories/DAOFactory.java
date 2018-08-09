@@ -9,9 +9,9 @@ import utility.PatientActionRecord;
 public abstract class DAOFactory {
 
     /**
-     *
-     * @param whichFactory
-     * @return
+     * Gets the correct factory object
+     * @param whichFactory - FactoryType type of factory to get
+     * @return - DAOFactory
      */
     public static DAOFactory getDAOFactory(FactoryType whichFactory) {
 
