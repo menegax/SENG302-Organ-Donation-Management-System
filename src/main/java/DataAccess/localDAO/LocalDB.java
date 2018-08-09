@@ -17,14 +17,13 @@ public class LocalDB {
     private Set<Clinician> clinicians;
     private Set<Administrator> administrators;
     private Set<User> deleted;
-    private OrganWaitlist organWaitlist;
+    private OrganWaitlist organWaitlist = null;
 
     private LocalDB() {
         patients = new HashSet<>();
         clinicians = new HashSet<>();
         administrators = new HashSet<>();
         deleted = new HashSet<>();
-        organWaitlist = new OrganWaitlist();
     }
 
     public static LocalDB getInstance() {

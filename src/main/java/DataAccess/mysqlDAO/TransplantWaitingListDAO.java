@@ -26,10 +26,11 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
             ResultSet results =  preparedStatement.executeQuery();
             OrganWaitlist organRequests = new OrganWaitlist();
             while (results.next()) {
+                Region region = results.getString("Region") == null ? null : Region.getEnumFromString(results.getString("Region"));
                 organRequests.add(results.getString("FName"),
                         Organ.getEnumFromString(results.getString("Organ")),
                         LocalDate.parse(results.getString("RequestDate")),
-                        Region.getEnumFromString(results.getString("Region")),
+                        region,
                         results.getString("nhi"));
             }
             return organRequests;
