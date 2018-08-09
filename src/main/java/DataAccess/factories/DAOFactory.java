@@ -56,19 +56,19 @@ public abstract class DAOFactory {
 
     /**
      * Gets the correct implementation of PatientLogDAO
-     * @return - ILogDataAccess<PatientActionRecord> implementation
+     * @return - ILogDataAccess PatientActionRecord implementation
      */
     public abstract ILogDataAccess<PatientActionRecord> getPatientLogDataAccess();
 
     /**
      * Gets the correct implementation of AdministratorLogDAO
-     * @return - ILogDataAccess<AdministratorActionRecord> implementation
+     * @return - ILogDataAccess AdministratorActionRecord implementation
      */
     public abstract ILogDataAccess<AdministratorActionRecord> getAdministratorLogDataAccess();
 
     /**
      * Gets the correct implementation of ClinicianLogDAO
-     * @return - ILogDataAccess<ClinicianActionRecord> implementation
+     * @return - ILogDataAccess ClinicianActionRecord implementation
      */
     public abstract ILogDataAccess<ClinicianActionRecord> getClinicianLogDataAccess();
 

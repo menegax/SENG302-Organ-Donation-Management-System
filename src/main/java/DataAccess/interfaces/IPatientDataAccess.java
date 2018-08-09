@@ -13,7 +13,6 @@ public interface IPatientDataAccess {
      * Saves the given set of patients to the local or external database
      *
      * @param patient The set of patient objects to save
-     * @return The success code of the save
      */
     void savePatients(Set<Patient> patient);
 
