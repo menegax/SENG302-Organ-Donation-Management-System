@@ -33,6 +33,11 @@ public class ClinicianDataService implements IClinicianDataService {
     }
 
     @Override
+    public void updateOrganWaitList(OrganWaitlist organRequests) {
+        localDbFactory.getTransplantWaitingListDataAccess().updateWaitingList(organRequests);
+    }
+
+    @Override
     public Clinician getClinician(int staffId) {
         IClinicianDataAccess clinicianDataAccessLocal = localDbFactory.getClinicianDataAccess();
         if (clinicianDataAccessLocal.getClinicianByStaffId(staffId) == null) {

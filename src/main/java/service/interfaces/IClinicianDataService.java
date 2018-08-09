@@ -12,6 +12,8 @@ public interface IClinicianDataService {
 
     OrganWaitlist getOrganWaitList();
 
+    void updateOrganWaitList(OrganWaitlist organRequests);
+
     Clinician getClinician(int staffId);
 
     int getPatientCount();
@@ -25,4 +27,5 @@ public interface IClinicianDataService {
      * @param clinician The clinician to save
      */
     void save(Clinician clinician);
+
 }

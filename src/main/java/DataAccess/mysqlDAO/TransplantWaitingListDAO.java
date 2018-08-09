@@ -33,7 +33,9 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
                         results.getString("nhi"));
             }
             return organRequests;
-        } catch (SQLException e) {
+        } catch (Exception e) {
+
+            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Could not get transplant waiting list from MYSQL DB", this);
         }
         return null;
@@ -51,10 +53,11 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
                 preparedStatement.setString(1, organRequest.getReceiverNhi());
                 preparedStatement.setString(2, organRequest.getRequestDate().toString());
                 preparedStatement.setString(3, organRequest.getRequestedOrgan().toString());
-                preparedStatement.setString(4, organRequest.getRequestRegion().getValue());
+                preparedStatement.setString(4, organRequest.getRequestRegion() != null ? organRequest.getRequestRegion().getValue(): null);
                 preparedStatement.executeUpdate();
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Could not update wait list in MYSQL DB", this);
         }
     }

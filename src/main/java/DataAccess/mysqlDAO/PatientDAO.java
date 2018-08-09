@@ -28,6 +28,7 @@ public class PatientDAO implements IPatientDataAccess {
     private final IContactDataAccess contactDataAccess;
     private final ILogDataAccess<PatientActionRecord> logDataAccess;
     private final IProcedureDataAccess procedureDataAccess;
+    private final ITransplantWaitListDataAccess transplantWaitListDataAccess;
     private final MySqlFactory mySqlFactory;
 
     public PatientDAO() {
@@ -37,6 +38,7 @@ public class PatientDAO implements IPatientDataAccess {
         contactDataAccess = mySqlFactory.getContactDataAccess();
         logDataAccess = mySqlFactory.getPatientLogDataAccess();
         procedureDataAccess = mySqlFactory.getProcedureDataAccess();
+        transplantWaitListDataAccess = mySqlFactory.getTransplantWaitingListDataAccess();
     }
 
     @Override
@@ -59,7 +61,6 @@ public class PatientDAO implements IPatientDataAccess {
                     diseaseDataAccess.updateDisease(patient.getNhiNumber(), disease);
                 }
                 logDataAccess.saveLogs(patient.getUserActionsList(), patient.getNhiNumber());
-
                 procedureDataAccess.deleteAllProceduresByNhi(patient.getNhiNumber());
                 contactDataAccess.updateContact(patient);
                 for (Procedure procedure : patient.getProcedures()) {

@@ -4,6 +4,7 @@ import DataAccess.factories.DAOFactory;
 import DataAccess.interfaces.IAdministratorDataAccess;
 import DataAccess.interfaces.IClinicianDataAccess;
 import DataAccess.interfaces.IPatientDataAccess;
+import DataAccess.interfaces.ITransplantWaitListDataAccess;
 import DataAccess.localDAO.LocalDB;
 import model.Administrator;
 import model.Clinician;
@@ -37,9 +38,12 @@ public class UserDataService implements IUserDataService, Serializable {
         Set<Clinician> clinicians = localDatabase.getClinicianDataAccess().getClinicians();
         Set<Administrator> administrators = localDatabase.getAdministratorDataAccess().getAdministrators();
         Set<User> deleted = localDatabase.getUserDataAccess().getDeletedUsers();
+
+        OrganWaitlist organRequests = localDatabase.getTransplantWaitingListDataAccess().getWaitingList();
         IPatientDataAccess patientDataAccess = mysqlFactory.getPatientDataAccess();
         IClinicianDataAccess clinicianDataService = mysqlFactory.getClinicianDataAccess();
         IAdministratorDataAccess administratorDataAccess = mysqlFactory.getAdministratorDataAccess();
+        ITransplantWaitListDataAccess access = mysqlFactory.getTransplantWaitingListDataAccess();
 
 
         //Thread management
@@ -48,6 +52,7 @@ public class UserDataService implements IUserDataService, Serializable {
             clinicianDataService.saveClinician(clinicians);
             patientDataAccess.savePatients(patients); //save to remote db
             administratorDataAccess.saveAdministrator(administrators);
+            access.updateWaitingList(organRequests);
             deleted.forEach(u -> {
                 if (u instanceof Patient) {
                     patientDataAccess.deletePatient((Patient) u);

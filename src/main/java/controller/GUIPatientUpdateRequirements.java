@@ -1,6 +1,8 @@
 package controller;
 
 import DataAccess.factories.DAOFactory;
+import DataAccess.interfaces.IClinicianDataAccess;
+import DataAccess.localDAO.ClinicianLocalDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,7 +13,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import javafx.scene.layout.GridPane;
 import model.Patient;
+import service.ClinicianDataService;
+import service.OrganWaitlist;
 import service.PatientDataService;
+import service.interfaces.IClinicianDataService;
 import service.interfaces.IPatientDataService;
 import utility.SystemLogger;
 import utility.undoRedo.Action;
@@ -85,7 +90,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
 
     private Set<GlobalEnums.Organ> finalRequirements = new HashSet<>();
 
-//    private boolean closed = false;
+    private IClinicianDataService clinicianDataService = new ClinicianDataService();
 
     /**
      * Initializes the requirements screen by laoding in the current patient
@@ -326,18 +331,18 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * waiting list.
      */
     private void createOrganRequests() {
-        // todo check other methods (waitlist.add()) and implement below code
-//        OrganWaitlist waitlist = factory.getWaitingListDataAccess().getAll();
-//        Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();
-//        while (iter.hasNext()) {
-//            OrganWaitlist.OrganRequest next = iter.next();
-//            if (next.getReceiverNhi().equals(after.getNhiNumber())) {
-//                iter.remove();
-//            }
-//        }
-//        for (GlobalEnums.Organ organ : after.getRequiredOrgans()) {
-//            waitlist.add(after, organ);
-//        }
+        OrganWaitlist waitlist = clinicianDataService.getOrganWaitList();
+        Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();
+        while (iter.hasNext()) {
+            OrganWaitlist.OrganRequest next = iter.next();
+            if (next.getReceiverNhi().equals(after.getNhiNumber())) {
+                iter.remove();
+            }
+        }
+        for (GlobalEnums.Organ organ : after.getRequiredOrgans()) {
+            waitlist.add(after, organ);
+        }
+        clinicianDataService.updateOrganWaitList(waitlist);
     }
 
 }

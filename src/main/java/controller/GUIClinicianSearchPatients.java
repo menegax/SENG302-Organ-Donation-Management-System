@@ -22,16 +22,20 @@ import service.TextWatcher;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
+import utility.SystemLogger;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianSearchPatients extends UndoableController implements Initializable {
@@ -241,14 +245,19 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     private void updateProfileCount() {
         CachedThreadPool cachedThreadPool = CachedThreadPool.getCachedThreadPool();
         ExecutorService service = cachedThreadPool.getThreadService();
-        service.submit(() -> {
+        Future task = service.submit(() -> {
             count = clinicianDataService.getPatientCount();
+        });
+        try {
+            task.get();
             if (count > 100) {
                 displayY.setText("Display 100 profiles");
             } else {
                 displayY.setText("Display all " + count + " profiles");
             }
-        });
+        } catch (InterruptedException | ExecutionException e) {
+            systemLogger.log(Level.WARNING, "Error receiving profile count");
+        }
     }
 
     @FXML
