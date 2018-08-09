@@ -10,6 +10,7 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.ResourceManager;
+import utility.SystemLogger;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -40,7 +41,7 @@ public class PatientDAO implements IPatientDataAccess {
     }
 
     @Override
-    public int savePatients(Set<Patient> patients) {
+    public void savePatients(Set<Patient> patients) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_QUERY"));
             for (Patient patient : patients) {
@@ -66,10 +67,9 @@ public class PatientDAO implements IPatientDataAccess {
                     procedureDataAccess.updateProcedure(patient.getNhiNumber(), procedure);
                 }
             }
-        } catch (SQLException e) {
-            return -1;
+        } catch (SQLException ignored) {
+            systemLogger.log(Level.SEVERE, "Could not save patients to MySQL database");
         }
-        return 0;
     }
 
 

@@ -112,7 +112,7 @@ public class GUILogin implements TouchscreenCapable {
      * If failed, gives alert
      */
     @FXML
-    public void logIn() { //todo: ??????????? tidy up.
+    public void logIn() {
 
         try {
             if (patient.isSelected()) {

@@ -52,7 +52,7 @@ public class PatientDataService implements IPatientDataService {
     @Override
     public void save(List<Patient> patients) {
         for (Patient patient : patients) {
-            save(patient); //TODO:
+            save(patient);
         }
     }
 

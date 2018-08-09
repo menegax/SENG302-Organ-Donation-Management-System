@@ -22,12 +22,11 @@ public class PatientLocalDAO implements IPatientDataAccess {
 
 
     @Override
-    public int savePatients(Set<Patient> patient) {
+    public void savePatients(Set<Patient> patient) {
         patient.forEach(x -> {
             localDB.storePatient(x);
             Searcher.getSearcher().updateIndex(x);
         });
-        return 0; //TODO:
     }
 
     @Override

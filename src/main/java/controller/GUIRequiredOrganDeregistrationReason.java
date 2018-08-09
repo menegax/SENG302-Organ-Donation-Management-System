@@ -75,7 +75,6 @@ public class GUIRequiredOrganDeregistrationReason {
     public void initialize() {
         userControl = new UserControl();
         target = (Patient) userControl.getTargetUser();
-        System.out.println("target orgs: " + target.getRequiredOrgans()); //todo rm
         populateDropdown();
         populateForm();
         prepareHiddenForm();

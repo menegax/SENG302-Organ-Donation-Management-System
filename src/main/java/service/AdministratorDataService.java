@@ -33,7 +33,7 @@ public class AdministratorDataService implements IAdministratorDataService {
 
     @Override
     public void deletePatient(String nhi) {
-        IPatientDataAccess patientDataAccess = mysqlFactory.getPatientDataAccess(); //todo:
+        IPatientDataAccess patientDataAccess = mysqlFactory.getPatientDataAccess();
         patientDataAccess.deletePatientByNhi(nhi);
     }
 

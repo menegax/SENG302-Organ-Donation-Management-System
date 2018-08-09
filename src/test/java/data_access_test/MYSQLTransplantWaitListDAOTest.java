@@ -85,7 +85,6 @@ public class MYSQLTransplantWaitListDAOTest {
     private void thenWaitingListIsInDb() {
         OrganWaitlist waitlist = daoFactory.getTransplantWaitingListDataAccess().getWaitingList();
         assert waitlist.getRequests().size() == 2;
-        //todo: how to make a better test using the current implementation of organ requests....................
     }
 
     /**

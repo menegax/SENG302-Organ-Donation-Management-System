@@ -508,7 +508,6 @@ public class Searcher {
         List<User> results = new ArrayList<>();
         if (input.isEmpty()) {
             if (filter != null) {
-                //TODO does not work if numResults is over 30
                 if (numResults < getDefaultResults(types, filter).size()) {
                     return getDefaultResults(types, filter).get(0);
                 } else {
