@@ -50,12 +50,15 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
     public void updateWaitingList(OrganWaitlist organRequests) {
         try(Connection connection = daoFactory.getConnectionInstance()){
             PreparedStatement preparedStatement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_TRANSPLANT_WAIT"));
-            for (OrganWaitlist.OrganRequest organRequest : organRequests) {
-                preparedStatement.setString(1, organRequest.getReceiverNhi());
-                preparedStatement.setString(2, organRequest.getRequestDate().toString());
-                preparedStatement.setString(3, organRequest.getRequestedOrgan().toString());
-                preparedStatement.setString(4, organRequest.getRequestRegion() != null ? organRequest.getRequestRegion().getValue(): null);
-                preparedStatement.executeUpdate();
+            if (organRequests != null) {
+                deleteWaitingList();
+                for (OrganWaitlist.OrganRequest organRequest : organRequests) {
+                    preparedStatement.setString(1, organRequest.getReceiverNhi());
+                    preparedStatement.setString(2, organRequest.getRequestDate().toString());
+                    preparedStatement.setString(3, organRequest.getRequestedOrgan().toString());
+                    preparedStatement.setString(4, organRequest.getRequestRegion() != null ? organRequest.getRequestRegion().getValue(): null);
+                    preparedStatement.executeUpdate();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
