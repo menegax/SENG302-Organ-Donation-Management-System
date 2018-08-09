@@ -593,7 +593,6 @@ public class Database {
                     .setRegion(GlobalEnums.Region.CANTERBURY);
             Database.getPatientByNhi("ABC1234")
                     .setBirthGender(GlobalEnums.BirthGender.FEMALE);
-            Database.getPatientByNhi("ABC1234").setDeathLocation("The set death location"); //todo rm
         }
         catch (Exception e) {
             userActions.log(Level.WARNING, "Unable to add dummy patients", "Attempted to load dummy patients for testing");
