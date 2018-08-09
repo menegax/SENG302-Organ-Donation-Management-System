@@ -64,7 +64,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         DISEASEHISTORY("View Disease History"), HISTORY("History"), PROCEDURES("Procedures"),
         TRANSPLANTWAITINGLIST("Transplant Waiting List"), SEARCHPATIENTS("Search Patients"),
         REQUESTEDDONATIONS("Requested Donations"), MEDICATIONS("Medications"), SEARCHPUSERS("Search Users"),
-        USERREGISTER("User Register");
+        USERREGISTER("User Register"), AVAILIBLEORGANS("Available Organs");
 
         private String value;
 
@@ -300,6 +300,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         createTab(TabName.UPDATE, "/scene/clinicianProfileUpdate.fxml");
         createTab(TabName.SEARCHPATIENTS, "/scene/clinicianSearchPatients.fxml");
         createTab(TabName.TRANSPLANTWAITINGLIST, "/scene/clinicianWaitingList.fxml");
+        createTab(TabName.AVAILIBLEORGANS, "/scene/clinicianAvailibleOrgans.fxml");
         createTab(TabName.HISTORY, "/scene/clinicianHistory.fxml");
     }
 
@@ -314,6 +315,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         createTab(TabName.USERREGISTER, "/scene/administratorUserRegister.fxml");
         createTab(TabName.SEARCHPUSERS, "/scene/administratorSearchUsers.fxml");
         createTab(TabName.TRANSPLANTWAITINGLIST, "/scene/clinicianWaitingList.fxml");
+        createTab(TabName.AVAILIBLEORGANS, "/scene/clinicianAvailibleOrgans.fxml");
         createTab(TabName.HISTORY, "/scene/adminHistory.fxml");
     }
 
