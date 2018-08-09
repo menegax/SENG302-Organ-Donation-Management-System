@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import static utility.SystemLogger.systemLogger;
+
 public class ClinicianILogDAO implements ILogDataAccess<ClinicianActionRecord> {
 
     private MySqlFactory mySqlFactory;
@@ -34,7 +36,7 @@ public class ClinicianILogDAO implements ILogDataAccess<ClinicianActionRecord> {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not save clinician logs for the id " + id + " to the MySQL database");
         }
     }
 
@@ -52,7 +54,7 @@ public class ClinicianILogDAO implements ILogDataAccess<ClinicianActionRecord> {
             }
             return logs;
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not get clinician logs for the id " + id + " from the MySQL database");
         }
 
         return null;
@@ -65,7 +67,7 @@ public class ClinicianILogDAO implements ILogDataAccess<ClinicianActionRecord> {
             statement.setString(1, id);
             statement.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not delete clinician logs for the id " + id + " from the MySQL database");
         }
     }
 }
