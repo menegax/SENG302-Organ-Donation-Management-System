@@ -4,6 +4,7 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
+import service.OrganWaitlist;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -16,12 +17,14 @@ public class LocalDB {
     private Set<Clinician> clinicians;
     private Set<Administrator> administrators;
     private Set<User> deleted;
+    private OrganWaitlist organWaitlist;
 
     private LocalDB() {
         patients = new HashSet<>();
         clinicians = new HashSet<>();
         administrators = new HashSet<>();
         deleted = new HashSet<>();
+        organWaitlist = new OrganWaitlist();
     }
 
     public static LocalDB getInstance() {
@@ -75,6 +78,7 @@ public class LocalDB {
      * - If the patient exists, the old patient object
      * is replaced with the new patient object.
      * - If not, the new patient is added to the list
+     *
      * @param patient - The updated/new patient object
      */
     public void storePatient(Patient patient) {
@@ -87,6 +91,7 @@ public class LocalDB {
      * - If the clinician exists, the old clinician object
      * is replaced with the new clinician object.
      * - If not, the new clinician is added to the list
+     *
      * @param clinician - The updated/new clinician object
      */
     public void storeClinician(Clinician clinician) {
@@ -99,11 +104,20 @@ public class LocalDB {
      * - If the administrator exists, the old administrator object
      * is replaced with the new administrator object.
      * - If not, the new administrator is added to the list
+     *
      * @param administrator - The updated/new administrator object
      */
     public void storeAdministrator(Administrator administrator) {
         administrators.remove(administrator);
         administrators.add(administrator);
+    }
+
+    public OrganWaitlist getOrganWaitlist() {
+        return organWaitlist;
+    }
+
+    public void setOrganWaitlist(OrganWaitlist organWaitlist) {
+        this.organWaitlist = organWaitlist;
     }
 
     /**
@@ -114,6 +128,7 @@ public class LocalDB {
         clinicians.clear();
         administrators.clear();
         deleted.clear();
+        organWaitlist = new OrganWaitlist();
     }
 
     public Set<User> getDeletedUsers() {
