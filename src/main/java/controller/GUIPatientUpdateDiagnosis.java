@@ -119,10 +119,12 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
             add(tagsDD);
         }};
         //statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDIAGNOSIS);
-        diagnosisTouchPane = new TouchPaneController(diagnosisUpdatePane);
-        diagnosisUpdatePane.setOnZoom(this::zoomWindow);
-        diagnosisUpdatePane.setOnRotate(this::rotateWindow);
-        diagnosisUpdatePane.setOnScroll(this::scrollWindow);
+        if(screenControl.isTouch()) {
+            diagnosisTouchPane = new TouchPaneController(diagnosisUpdatePane);
+            diagnosisUpdatePane.setOnZoom(this::zoomWindow);
+            diagnosisUpdatePane.setOnRotate(this::rotateWindow);
+            diagnosisUpdatePane.setOnScroll(this::scrollWindow);
+        }
     }
 
     /**

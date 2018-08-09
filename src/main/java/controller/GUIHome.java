@@ -158,11 +158,13 @@ public class GUIHome implements Observer, TouchscreenCapable {
                     setUpColouredBar(userControl.getLoggedInUser());
                 }
             }
-            homePaneTouchController = new TouchPaneController(homePane);
-            homePane.setOnTouchPressed(event -> homePane.toFront());
-            homePane.setOnZoom(this::zoomWindow);
-            homePane.setOnRotate(this::rotateWindow);
-            homePane.setOnScroll(this::scrollWindow);
+            if(screenControl.isTouch()) {
+                homePaneTouchController = new TouchPaneController(homePane);
+                homePane.setOnTouchPressed(event -> homePane.toFront());
+                homePane.setOnZoom(this::zoomWindow);
+                homePane.setOnRotate(this::rotateWindow);
+                homePane.setOnScroll(this::scrollWindow);
+            }
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
             systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());

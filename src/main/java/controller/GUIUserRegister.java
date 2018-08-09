@@ -80,10 +80,12 @@ public class GUIUserRegister implements TouchscreenCapable {
                 register();
             }
         });
-        registerTouchPane = new TouchPaneController(userRegisterPane);
-        userRegisterPane.setOnZoom(this::zoomWindow);
-        userRegisterPane.setOnRotate(this::rotateWindow);
-        userRegisterPane.setOnScroll(this::scrollWindow);
+        if(screenControl.isTouch()) {
+            registerTouchPane = new TouchPaneController(userRegisterPane);
+            userRegisterPane.setOnZoom(this::zoomWindow);
+            userRegisterPane.setOnRotate(this::rotateWindow);
+            userRegisterPane.setOnScroll(this::scrollWindow);
+        }
 
     }
 
