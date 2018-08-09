@@ -298,7 +298,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
 
             // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
-            if (patientDataService.getPatientByNhi(nhiTxt.getText()).getUuid()  != target.getUuid()) {
+            if (!patientDataService.getPatientByNhi(nhiTxt.getText()).getNhiNumber().equals(target.getNhiNumber())) {
                 valid = setInvalid(nhiTxt);
                 invalidContent.append("NHI is already in use\n");
             } else {

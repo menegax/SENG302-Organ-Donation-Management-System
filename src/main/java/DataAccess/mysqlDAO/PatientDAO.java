@@ -264,6 +264,11 @@ public class PatientDAO implements IPatientDataAccess {
         String nhi = attributes.getString("Nhi");
         String fName = attributes.getString("FName");
         ArrayList<String> mNames = new ArrayList<>(Arrays.asList(attributes.getString("MName").split(" ")));
+        ArrayList<String> list = new ArrayList<>();
+        for (String mName : mNames) {
+            list.add(mName.replace(" ", ""));
+        }
+        mNames = list;
         String lName = attributes.getString("LName");
         LocalDate birth = LocalDate.parse(attributes.getString("Birth"));
         Timestamp created = Timestamp.valueOf(attributes.getString("Created"));
