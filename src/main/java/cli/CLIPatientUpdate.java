@@ -7,7 +7,6 @@ import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -39,7 +38,7 @@ public class CLIPatientUpdate implements Runnable {
     private LocalDate birth;
 
     @Option(names = {"-d", "--dateofdeath"}, description = "The date of death of the patient (yyyy-mm-dd).")
-    private LocalDateTime death;
+    private LocalDate death;
 
     @Option(names = {"--birthGender"}, description = "The birth gender of the patient. Choose one from: \n" +
             "FEMALE, MALE")

@@ -30,11 +30,6 @@
 5. Go to the profile tab
 6. Compare what was entered in the update tab to what is displayed. If there is a mismatch, the test fails. Otherwise it succeeds.
 
-### Test 3
-1. Log in as a patient
-2. Go to the update profile tab
-3. The death location textfield should be disabled and uneditable.
-
 ##Test History
 
 ###19/07/2018 - Maree

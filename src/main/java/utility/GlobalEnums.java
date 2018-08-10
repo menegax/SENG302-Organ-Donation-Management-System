@@ -328,15 +328,6 @@ public class GlobalEnums {
 
         private String value;
 
-        public String getValue() {
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return this.getValue();
-        }
-
 
         DeregistrationReason(final String value) {
             this.value = value;

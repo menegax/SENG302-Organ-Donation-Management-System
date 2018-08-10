@@ -63,9 +63,6 @@ public class GUIPatientProfile {
     private Label dateOfDeathLabel;
 
     @FXML
-    private Label deathLocationLbl;
-
-    @FXML
     private Label age;
 
     @FXML
@@ -198,7 +195,6 @@ public class GUIPatientProfile {
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         dateOfDeathLabel.setText(patient.getDeath() == null ? "Not set" : patient.getDeath()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        deathLocationLbl.setText(patient.getDeathLocation() == null ? "Not set" : patient.getDeathLocation());
         age.setText(String.valueOf(patient.getAge()));
         heightLbl.setText(String.valueOf(patient.getHeight() + " m"));
         weightLbl.setText(String.valueOf(patient.getWeight() + " kg"));
