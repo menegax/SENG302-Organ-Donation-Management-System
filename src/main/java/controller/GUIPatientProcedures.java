@@ -75,11 +75,9 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
     @FXML
     public Button deleteProcedureButton;
 
-    private Patient patient;
-
     private Patient patientClone;
 
-    private UserControl userControl;
+    private UserControl userControl = UserControl.getUserControl();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -87,19 +85,16 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
     /**
      * Sets the TableViews to the appropriate procedures for the current patient
      */
-    public void initialize() {
-        userControl = new UserControl();
+    public void load() {
         if (userControl.getLoggedInUser() instanceof Patient) {
-            this.patient = (Patient) userControl.getLoggedInUser();
-            this.patientClone = (Patient) this.patient.deepClone();
+            this.patientClone = (Patient) this.target.deepClone();
             setupTables();
             //Disable any add, edit, or delete functionality for patients
             addProcedureButton.setVisible(false);
             editProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
         } else if (userControl.getLoggedInUser() instanceof Clinician || userControl.getLoggedInUser() instanceof Administrator) {
-            this.patient = (Patient) userControl.getTargetUser();
-            this.patientClone = (Patient) this.patient.deepClone();
+            this.patientClone = (Patient) this.target.deepClone();
             setupTables();
         }
         setupUndoRedo();
@@ -120,7 +115,7 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
      * Sets up the tables to display the patient's procedures
      */
     private void setupTables() {
-        this.patientClone = (Patient) this.patient.deepClone();
+        this.patientClone = (Patient) this.target.deepClone();
         ObservableList<Procedure> previousProcedures = FXCollections.observableArrayList();
         ObservableList<Procedure> pendingProcedures = FXCollections.observableArrayList();
         for (Procedure procedure : patientClone.getProcedures()) {
@@ -188,7 +183,8 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
      */
     @FXML
     public void addProcedure() {
-            screenControl.show("/scene/patientProcedureForm.fxml", false, this);
+        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target);
+        controller.setTarget(target);
     }
 
     /**
@@ -214,7 +210,8 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
             userActions.log(Level.WARNING, "No procedure selected", "Attempted to edit a procedure");
             return;
         }
-        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this);
+        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target);
+        controller.setTarget(target);
         controller.setupEditing(selectedProcedure);
     }
 
@@ -239,8 +236,8 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
         }
         if (selectedProcedure != null) {
             patientClone.removeProcedure(selectedProcedure);
-            statesHistoryScreen.addAction(new Action(patient, patientClone));
-            userActions.log(INFO, "Removed procedure " + selectedProcedure.getSummary(), new String[]{"Attempted to remove a procedure", patient.getNhiNumber()});
+            statesHistoryScreen.addAction(new Action(target, patientClone));
+            userActions.log(INFO, "Removed procedure " + selectedProcedure.getSummary(), new String[]{"Attempted to remove a procedure", ((Patient) target).getNhiNumber()});
             setupTables();
         }
     }

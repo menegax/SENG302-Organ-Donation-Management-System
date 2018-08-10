@@ -32,7 +32,7 @@ import static utility.UserActionHistory.userActions;
  * In clinician view, they can see the highlighted cell if the donating organ is also required by the patient.
  * This class loads and controls this view.
  */
-public class GUIPatientProfile {
+public class GUIPatientProfile extends TargetedController{
 
     @FXML
     private GridPane patientProfilePane;
@@ -143,7 +143,7 @@ public class GUIPatientProfile {
     @FXML
     private ListView<String> medList;
 
-    private UserControl userControl;
+    private UserControl userControl = UserControl.getUserControl();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -154,47 +154,39 @@ public class GUIPatientProfile {
 
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
-     *
-     * @exception InvalidObjectException -
      */
-    public void initialize() throws InvalidObjectException {
-        userControl = new UserControl();
-        Object user = null;
-        if (userControl.getLoggedInUser() instanceof Patient) {
-            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
-                receivingList.setDisable(true);
-                receivingList.setVisible(false);
-                receivingTitle.setDisable(true);
-                receivingTitle.setVisible(false);
+    public void load() {
+        try {
+            if (userControl.getLoggedInUser() instanceof Patient) {
+                if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
+                    receivingList.setDisable(true);
+                    receivingList.setVisible(false);
+                    receivingTitle.setDisable(true);
+                    receivingTitle.setVisible(false);
                 /* Hide the columns that would hold the receiving listview - this results in the visible nodes filling
                    up the whole width of the scene */
-                for (int i = 9; i <= 11; i++) {
-                    patientProfilePane.getColumnConstraints()
-                            .get(i)
-                            .setMaxWidth(0);
+                    for (int i = 9; i <= 11; i++) {
+                        patientProfilePane.getColumnConstraints()
+                                .get(i)
+                                .setMaxWidth(0);
+                    }
                 }
+
+                genderDeclaration.setVisible(false);
+                genderStatus.setVisible(false);
+                genderRow.setMaxHeight(0);
+                firstNameLbl.setVisible(false);
+                firstNameValue.setVisible(false);
+                firstNameRow.setMaxHeight(0);
+
+                deleteButton.setVisible(false);
+                deleteButton.setDisable(true);
+            } else if (userControl.getLoggedInUser() instanceof Clinician) {
+                deleteButton.setVisible(false);
+                deleteButton.setDisable(true);
             }
-
-            genderDeclaration.setVisible(false);
-            genderStatus.setVisible(false);
-            genderRow.setMaxHeight(0);
-            firstNameLbl.setVisible(false);
-            firstNameValue.setVisible(false);
-            firstNameRow.setMaxHeight(0);
-
-            user = userControl.getLoggedInUser();
-            deleteButton.setVisible( false );
-            deleteButton.setDisable( true );
-        } else if (userControl.getLoggedInUser() instanceof Clinician) {
-            deleteButton.setVisible( false );
-            deleteButton.setDisable( true );
-            user = userControl.getTargetUser();
-        } else {
-            user = userControl.getTargetUser();
-        }
-        try {
-            assert user != null;
-            loadProfile(((Patient) user).getNhiNumber());
+            assert target != null;
+            loadProfile(((Patient) target).getNhiNumber());
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Cannot load patient profile");
@@ -322,10 +314,9 @@ public class GUIPatientProfile {
      * Deletes the current profile from the HashSet in Database, not from disk, not until saved
      */
     public void deleteProfile() {
-        Patient patient = (Patient) userControl.getTargetUser();
-        Action action = new Action(patient, null);
+        Action action = new Action(target, null);
         undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
-        userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", patient.getNhiNumber()});
+        userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", ((Patient) target).getNhiNumber()});
         ((Stage) patientProfilePane.getScene().getWindow()).close();
     }
 

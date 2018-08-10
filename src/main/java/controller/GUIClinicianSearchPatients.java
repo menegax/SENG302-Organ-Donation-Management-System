@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
-public class GUIClinicianSearchPatients extends UndoableController implements Initializable, IWindowObserver {
+public class GUIClinicianSearchPatients extends UndoableController implements IWindowObserver {
 
     @FXML
     private TableView<Patient> patientDataTable;
@@ -102,12 +102,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
     /**
      * Initialises the data within the table to all patients
-     *
-     * @param url URL not used
-     * @param rb  Resource bundle not used
      */
-    @FXML
-    public void initialize(URL url, ResourceBundle rb) {
+    public void load() {
     	displayY.setText( "Display all " + searcher.getDefaultResults(new UserTypes[]{UserTypes.PATIENT}, null).size() + " profiles" );
         setupAgeSliderListeners();
         populateDropdowns();
@@ -153,10 +149,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel().getSelectedItem() != null) {
-                UserControl userControl = new UserControl();
-                userControl.setTargetUser(patientDataTable.getSelectionModel()
-                        .getSelectedItem());
-                screenControl.show("/scene/home.fxml", true, this);
+                User selected = patientDataTable.getSelectionModel().getSelectedItem();
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
+                controller.setTarget(selected);
             }
         });
     }

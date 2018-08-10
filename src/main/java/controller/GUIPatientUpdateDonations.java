@@ -62,25 +62,12 @@ public class GUIPatientUpdateDonations extends UndoableController {
     @FXML
     private GridPane patientDonationsAnchorPane;
 
-    private Patient target;
-
-    private UserControl userControl;
-
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
-
     /**
      * Initializes the donations screen by loading the profile of the patient logged in or viewed.
      * Sets up enter key press event to save changes
      */
-    public void initialize() {
-        userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
-        if (user instanceof Patient) {
-            loadProfile(((Patient) user).getNhiNumber());
-        }
-        if (userControl.getTargetUser() != null) {
-            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
-        }
+    public void load() {
+        loadProfile(((Patient) target).getNhiNumber());
 
         // Enter key triggers log in
         patientDonationsAnchorPane.setOnKeyPressed(e -> {

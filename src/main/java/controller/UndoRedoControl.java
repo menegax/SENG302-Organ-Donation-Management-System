@@ -16,13 +16,9 @@ import java.util.Map;
  */
 public class UndoRedoControl {
 
-//    public String undoShortcut = "Ctrl+Z";
-//    public String redoShortcut = "Ctrl+Y";
-
     private static UndoRedoControl undoRedoControl;
 
     private static ScreenControl screenControl = ScreenControl.getScreenControl();
-    private UserControl userControl = new UserControl();
 
     private UndoRedoControl() {
 

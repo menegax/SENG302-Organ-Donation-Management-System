@@ -70,11 +70,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
     @FXML
     private GridPane patientRequirementsPane;
 
-    private Patient target;
-
     private Patient after;
-
-    private UserControl userControl;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -82,20 +78,11 @@ public class GUIPatientUpdateRequirements extends UndoableController{
 
     private Set<GlobalEnums.Organ> finalRequirements = new HashSet<>();
 
-//    private boolean closed = false;
-
     /**
-     * Initializes the requirements screen by laoding in the current patient
+     * Initializes the requirements screen by loading in the current patient
      */
-    public void initialize() {
-        userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
-        if (user instanceof Patient) {
-            loadProfile(((Patient) user).getNhiNumber());
-        }
-        if (userControl.getTargetUser() != null) {
-            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
-        }
+    public void load() {
+        loadProfile(((Patient) target).getNhiNumber());
         // Enter key triggers log in
         patientRequirementsPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -296,8 +283,9 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * @param organ organ being validated for reason of deregistration
      */
     private void openReasonPopup(GlobalEnums.Organ organ) {
-        GUIRequiredOrganDeregistrationReason controller = (GUIRequiredOrganDeregistrationReason) screenControl.show("/scene/deregistrationReason.fxml", false,null);
+        GUIRequiredOrganDeregistrationReason controller = (GUIRequiredOrganDeregistrationReason) screenControl.show("/scene/deregistrationReason.fxml", false,null, target);
         controller.setOrgan(organ);
+        controller.setTarget(target);
     }
 
     /**

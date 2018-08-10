@@ -175,8 +175,8 @@ public class UndoableWrapper {
         return this.stage;
     }
 
-    public Pane getPane() {
-        return this.pane;
+    public void setPane(Pane pane) {
+        this.pane = pane;
     }
 
     public Object getWrapped() {

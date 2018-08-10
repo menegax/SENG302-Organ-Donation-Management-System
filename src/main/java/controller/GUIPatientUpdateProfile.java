@@ -96,27 +96,15 @@ public class GUIPatientUpdateProfile extends UndoableController {
     @FXML
     private ChoiceBox<String> bloodGroupDD;
 
-    private Patient target;
-
     private Patient after;
-
-    private UserControl userControl;
-
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Initializes the profile update screen. Gets the logged in or viewed user and loads the user's profile.
      * Dropdown menus are populated. The enter key press event for saving changes is set up
      */
-    public void initialize() {
+    public void load() {
         populateDropdowns();
-        userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
-        if (user instanceof Patient) {
-            loadProfile(((Patient) user).getNhiNumber());
-        } else if (userControl.getTargetUser() != null) {
-            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
-        }
+        loadProfile(((Patient) target).getNhiNumber());
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {

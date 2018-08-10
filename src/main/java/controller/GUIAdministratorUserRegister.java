@@ -71,14 +71,10 @@ public class GUIAdministratorUserRegister extends UndoableController {
     @FXML
     private GridPane userRegisterPane;
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
-
-    private UserControl userControl = new UserControl();
-
     /**
      * Sets up register page GUI elements
      */
-    public void initialize() {
+    public void load() {
         firstnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         lastnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         middlenameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);

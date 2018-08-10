@@ -16,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
+import model.User;
 import org.apache.commons.lang3.StringUtils;
 import utility.GlobalEnums;
 import utility.TouchPaneController;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIRequiredOrganDeregistrationReason implements TouchscreenCapable{
+public class GUIRequiredOrganDeregistrationReason extends TargetedController implements TouchscreenCapable{
 
     @FXML
     private DatePicker dateOfDeath;
@@ -59,10 +60,6 @@ public class GUIRequiredOrganDeregistrationReason implements TouchscreenCapable{
 
     private GlobalEnums.Organ organ;
 
-    private UserControl userControl;
-
-    private Patient target;
-
     private TouchPaneController deregistrationReasonTouchController;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
@@ -70,13 +67,17 @@ public class GUIRequiredOrganDeregistrationReason implements TouchscreenCapable{
     @FXML
     private GridPane deregistrationReasonPane;
 
+    @Override
+    public void setTarget(User target) {
+        this.target = target;
+        load();
+    }
+
     /**
      * Initializes the organ deregistration screen. Gets the target patient and sets optional elements as
      * disabled and not visible.
      */
-    public void initialize() {
-        userControl = new UserControl();
-        target = (Patient) userControl.getTargetUser();
+    public void load() {
         populateDropdown();
         populateForm();
         dateOfDeath.setDisable(true);
@@ -102,7 +103,7 @@ public class GUIRequiredOrganDeregistrationReason implements TouchscreenCapable{
     private void populateDropdown() {
         // Populate blood group drop down with values from the deregistration reasons enum
         List<GlobalEnums.DeregistrationReason> deregistrationReasons = new ArrayList<>();
-        if (target.getCurrentDiseases().size() < 1) {
+        if (((Patient) target).getCurrentDiseases().size() < 1) {
             for (GlobalEnums.DeregistrationReason reason : GlobalEnums.DeregistrationReason.values()) {
                 if (reason != GlobalEnums.DeregistrationReason.CURED) {
                     deregistrationReasons.add(reason);
@@ -113,7 +114,7 @@ public class GUIRequiredOrganDeregistrationReason implements TouchscreenCapable{
                 deregistrationReasons.add(reason);
             }
             Set<CustomMenuItem> diseaseItems = new HashSet<>();
-            for (Disease disease : target.getCurrentDiseases()) {
+            for (Disease disease : ((Patient) target).getCurrentDiseases()) {
                 if (disease.getDiseaseState() != GlobalEnums.DiseaseState.CURED) {
                     CheckBox checkbox = new CheckBox(disease.getDiseaseName());
                     checkbox.setUserData(disease);
@@ -191,25 +192,25 @@ public class GUIRequiredOrganDeregistrationReason implements TouchscreenCapable{
         boolean confirmed = true;
         GlobalEnums.DeregistrationReason reason = reasons.getSelectionModel().getSelectedItem();
         if (reason == GlobalEnums.DeregistrationReason.ERROR) {
-            userActions.log(Level.INFO, "Deregistered " + organ + " due to error", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+            userActions.log(Level.INFO, "Deregistered " + organ + " due to error", new String[]{"Attempted to deregister " + organ, ((Patient) target).getNhiNumber()});
         } else if (reason == GlobalEnums.DeregistrationReason.CURED) {
             List<Disease> selected = getSelectedDiseases();
             List<String> selectedStrings = selected.stream().map(Disease::getDiseaseName).collect(Collectors.toList());
             String diseaseCuredString = selected.size() == 0 ? "" : " Cured: " + String.join(",", selectedStrings);
-            userActions.log(Level.INFO, "Deregistered " + organ + " due to cure." + diseaseCuredString, new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+            userActions.log(Level.INFO, "Deregistered " + organ + " due to cure." + diseaseCuredString, new String[]{"Attempted to deregister " + organ, ((Patient) target).getNhiNumber()});
             curePatientDiseases(selected);
         } else if (reason == GlobalEnums.DeregistrationReason.DIED) {
-            if (dateOfDeath.getValue().isBefore(target.getBirth()) || dateOfDeath.getValue().isAfter(LocalDate.now())) {
+            if (dateOfDeath.getValue().isBefore(((Patient) target).getBirth()) || dateOfDeath.getValue().isAfter(LocalDate.now())) {
                 confirmed = false;
                 dateOfDeath.getStyleClass().add("invalid");
             }
-            for (GlobalEnums.Organ organ : target.getRequiredOrgans()) {
-                userActions.log(Level.INFO, "Deregistered " + organ + " due to death on this date: " + dateOfDeath.getValue(), new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+            for (GlobalEnums.Organ organ : ((Patient) target).getRequiredOrgans()) {
+                userActions.log(Level.INFO, "Deregistered " + organ + " due to death on this date: " + dateOfDeath.getValue(), new String[]{"Attempted to deregister " + organ, ((Patient) target).getNhiNumber()});
             }
-            target.setRequiredOrgans(new ArrayList());
-            target.setDeath(dateOfDeath.getValue());
+            ((Patient) target).setRequiredOrgans(new ArrayList<>());
+            ((Patient) target).setDeath(dateOfDeath.getValue());
         } else if (reason == GlobalEnums.DeregistrationReason.RECEIVED) {
-            userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+            userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, ((Patient) target).getNhiNumber()});
         }
         if (confirmed){
             screenControl.closeWindow(deregistrationReasonPane);

@@ -44,8 +44,6 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
     @FXML
     private PasswordField passwordTxt;
 
-    private Administrator target;
-
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
 
@@ -54,16 +52,9 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
      * Populates the Region drop down menu using region enums.
      * Calls to load the administrator profile and calls to set up undo/redo functionality
      */
-    public void initialize() {
+    public void load() {
         // Registering a change event to clear the invalid class
-        UserControl userControl = new UserControl();
-        if (userControl.getTargetUser() instanceof Administrator) {
-            target = (Administrator) userControl.getTargetUser();
-        }
-        else {
-            target = (Administrator) userControl.getLoggedInUser();
-        }
-        loadProfile(target.getUsername());
+        loadProfile(((Administrator) target).getUsername());
         setUpStateHistory();
     }
 

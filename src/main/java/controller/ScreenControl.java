@@ -6,6 +6,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.User;
 import org.tuiofx.examples.demo.FXMLController;
 import utility.undoRedo.UndoableWrapper;
 
@@ -47,7 +48,7 @@ public abstract class ScreenControl {
     abstract void removeUnsavedAsterisks();
     abstract void addUnsavedAsterisks();
     abstract boolean closeWindow(Pane pane);
-    abstract public Object show(String fxml, Boolean undoable, IWindowObserver parentController);
+    abstract public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser);
 
     protected ScreenControl() {
         setUpKeyCodeCombinations();

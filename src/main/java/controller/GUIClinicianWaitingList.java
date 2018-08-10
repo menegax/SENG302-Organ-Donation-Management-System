@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import model.DrugInteraction;
+import model.User;
 import org.apache.commons.lang3.StringUtils;
 import service.Database;
 import service.OrganWaitlist;
@@ -25,7 +26,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
  */
-public class GUIClinicianWaitingList implements IWindowObserver{
+public class GUIClinicianWaitingList extends TargetedController implements IWindowObserver{
 
     public GridPane clinicianWaitingList;
     public TableView<OrganWaitlist.OrganRequest> waitingListTableView;
@@ -43,13 +44,11 @@ public class GUIClinicianWaitingList implements IWindowObserver{
     @FXML
     private ComboBox<String> regionSelection;
 
-    private UserControl userControl = new UserControl();
-
     /**
      * Initializes waiting list screen by populating table and initializing a double click action
      * to view a patient's profile.
      */
-    public void initialize() {
+    public void load() {
         OrganWaitlist waitingList = Database.getWaitingList();
         for (OrganWaitlist.OrganRequest request : waitingList) {
             masterData.add(request);
@@ -85,11 +84,11 @@ public class GUIClinicianWaitingList implements IWindowObserver{
                     .getSelectedItem() != null && !openProfiles.contains(waitingListTableView.getSelectionModel()
                     .getSelectedItem())) {
                 try {
-                    userControl = new UserControl();
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
                     DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
-                    userControl.setTargetUser(Database.getPatientByNhi(request.getReceiverNhi()));
-                    screenControl.show("/scene/home.fxml", true, this);
+                    User selectedUser = Database.getPatientByNhi(request.getReceiverNhi());
+                    GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser);
+                    controller.setTarget(selectedUser);
                     openProfiles.add(request);
                     }
                 catch (Exception e) {

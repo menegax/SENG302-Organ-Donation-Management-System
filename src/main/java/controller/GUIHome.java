@@ -45,7 +45,7 @@ import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
-public class GUIHome implements Observer, TouchscreenCapable {
+public class GUIHome extends TargetedController implements Observer, TouchscreenCapable {
 
     @FXML
     public BorderPane homePane;
@@ -69,7 +69,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private UserControl userControl = new UserControl();
+    private UserControl userControl = UserControl.getUserControl();
 
     private  enum TabName {
         PROFILE("Profile"), UPDATE("Update"), DONATIONS("Donations"), CONTACTDETAILS("Contact Details"),
@@ -92,14 +92,9 @@ public class GUIHome implements Observer, TouchscreenCapable {
 
     private Stage homeStage;
 
-    /**
-     * The user that the home controller is viewing. If it is a clinician viewing a patient it is the patient
-     */
-    private User homeTarget;
-
 
     @FXML
-    public void initialize() {
+    public void load() {
         StatusObservable statusObservable = StatusObservable.getInstance();
         statusObservable.addObserver(this);
         homePane.getProperties().put("focusArea", "true");
@@ -115,44 +110,37 @@ public class GUIHome implements Observer, TouchscreenCapable {
      * Detects the appropriate user and adds the tabs to the tab bar accordingly
      */
     private void addTabs() {
-        UserControl userControl = new UserControl();
         try {
             // Patient viewing themself
             if (userControl.getLoggedInUser() instanceof Patient) {
-                homeTarget = userControl.getLoggedInUser();
                 addTabsPatient();
                 setUpColouredBar(userControl.getLoggedInUser());
             } else if (userControl.getLoggedInUser() instanceof Clinician) {
                 // Clinician viewing a patient
-                if (userControl.getTargetUser() != null) {
-                    homeTarget = userControl.getTargetUser();
+                if (target instanceof Patient) {
                     addTabsForPatientClinician(); // if we are a clinician looking at a patient
-                    setUpColouredBar(userControl.getTargetUser());
+                    setUpColouredBar(target);
                 }
                 // Clinician viewing themself
                 else {
-                    homeTarget = userControl.getLoggedInUser();
                     addTabsClinician();
-                    setUpColouredBar(userControl.getLoggedInUser());
+                    setUpColouredBar(target);
                 }
             } else if (userControl.getLoggedInUser() instanceof Administrator) {
                 // admin viewing patient
-                if (userControl.getTargetUser() instanceof Patient) {
-                    homeTarget = userControl.getTargetUser();
+                if (target instanceof Patient) {
                     addTabsForPatientClinician();
-                    setUpColouredBar(userControl.getTargetUser());
+                    setUpColouredBar(target);
                 }
                 // admin viewing clinician
-                else if (userControl.getTargetUser() instanceof Clinician) {
-                    homeTarget = userControl.getTargetUser();
+                else if (target instanceof Clinician) {
                     addTabsClinicianAdministrator();
-                    setUpColouredBar(userControl.getTargetUser());
+                    setUpColouredBar(target);
                 }
                 // admin viewing admin
-                else if (userControl.getTargetUser() instanceof Administrator) {
-                    homeTarget = userControl.getTargetUser();
+                else if (target instanceof Administrator) {
                     addTabsAdministrator();
-                    setUpColouredBar(userControl.getTargetUser());
+                    setUpColouredBar(target);
                 } else {
                     addTabsAdministrator();
                     setUpColouredBar(userControl.getLoggedInUser());
@@ -251,18 +239,18 @@ public class GUIHome implements Observer, TouchscreenCapable {
         homeStage.setTitle("Home");
         screenControl.getUndoableWrapper(homeStage).setGuiHome(this);
         // If clinician viewing patient
-        if (userControl.getTargetUser() != null) {
+        if (userControl.getLoggedInUser() != target) {
             // viewing patient
-            if (userControl.getTargetUser() instanceof Patient) {
-                homeStage.setTitle("Patient " + ((Patient) homeTarget).getNhiNumber());
+            if (target instanceof Patient) {
+                homeStage.setTitle("Patient " + ((Patient) target).getNhiNumber());
             }
             // viewing clinician
-            else if (userControl.getTargetUser() instanceof Clinician) {
-                homeStage.setTitle("Clinician " + ((Clinician) homeTarget).getStaffID());
+            else if (target instanceof Clinician) {
+                homeStage.setTitle("Clinician " + ((Clinician) target).getStaffID());
             }
             // viewing admin
-            else if (userControl.getTargetUser() instanceof Administrator) {
-                homeStage.setTitle("Administrator " + ((Administrator) homeTarget).getUsername());
+            else if (target instanceof Administrator) {
+                homeStage.setTitle("Administrator " + ((Administrator) target).getUsername());
             }
         }
     }
@@ -274,18 +262,18 @@ public class GUIHome implements Observer, TouchscreenCapable {
     private void setPaneTitle() {
         paneTitle.setText("Home");
         // If clinician viewing patient
-        if (userControl.getTargetUser() != null) {
+        if (userControl.getLoggedInUser() != target) {
             // viewing patient
-            if (userControl.getTargetUser() instanceof Patient) {
-                paneTitle.setText("Patient " + ((Patient) homeTarget).getNhiNumber());
+            if (target instanceof Patient) {
+                paneTitle.setText("Patient " + ((Patient) target).getNhiNumber());
             }
             // viewing clinician
-            else if (userControl.getTargetUser() instanceof Clinician) {
-                paneTitle.setText("Clinician " + ((Clinician) homeTarget).getStaffID());
+            else if (target instanceof Clinician) {
+                paneTitle.setText("Clinician " + ((Clinician) target).getStaffID());
             }
             // viewing admin
-            else if (userControl.getTargetUser() instanceof Administrator) {
-                paneTitle.setText("Administrator " + ((Administrator) homeTarget).getUsername());
+            else if (target instanceof Administrator) {
+                paneTitle.setText("Administrator " + ((Administrator) target).getUsername());
             }
         }
     }
@@ -311,7 +299,10 @@ public class GUIHome implements Observer, TouchscreenCapable {
         newTab.setText(title.toString());
             newTab.setOnSelectionChanged(event -> {
                 try {
-                    newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));;
+                    newTab.setContent(fxmlLoader.load());
+                    TargetedController targetedController = fxmlLoader.getController();
+                    targetedController.setTarget(target);
                 } catch (IOException e) {
                     systemLogger.log(SEVERE, "Failed to create tab", e);
                 }
@@ -420,7 +411,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
      */
     private void logOut() {
         screenControl.logOut();
-        new UserControl().rmLoggedInUserCache();
+        userControl.rmLoggedInUserCache();
         userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
 
         // Resets all local changes

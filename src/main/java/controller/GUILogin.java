@@ -53,6 +53,8 @@ public class GUILogin implements TouchscreenCapable {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private UserControl userControl = UserControl.getUserControl();
+
     /**
      * Initializes the login window by adding key binding for login on enter and an event filter on the login field
      */
@@ -76,7 +78,7 @@ public class GUILogin implements TouchscreenCapable {
      */
     @FXML
     public void goToRegister() {
-        screenControl.show("/scene/userRegister.fxml", false, null);
+        screenControl.show("/scene/userRegister.fxml", false, null, null);
     }
 
     /**
@@ -86,18 +88,18 @@ public class GUILogin implements TouchscreenCapable {
      */
     @FXML
     public void logIn() {
-        UserControl login = new UserControl();
         ScreenControl screenControl = ScreenControl.getScreenControl();
         try {
             if (patient.isSelected()) {
-                login.addLoggedInUserToCache(Database.getPatientByNhi(nhiLogin.getText()));
+                userControl.addLoggedInUserToCache(Database.getPatientByNhi(nhiLogin.getText()));
             } else if (clinician.isSelected()) {
-                login.addLoggedInUserToCache(Database.getClinicianByID(Integer.parseInt(nhiLogin.getText())));
+                userControl.addLoggedInUserToCache(Database.getClinicianByID(Integer.parseInt(nhiLogin.getText())));
             } else {
                 checkAdminCredentials();
-                login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
+                userControl.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
-            screenControl.show("/scene/home.fxml", true, null);
+            GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, userControl.getLoggedInUser());
+            controller.setTarget(userControl.getLoggedInUser());
         } catch (InvalidObjectException e) {
             password.setText(""); //Reset password field on invalid login
             userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");

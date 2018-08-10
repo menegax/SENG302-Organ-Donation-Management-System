@@ -17,7 +17,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIClinicianProfile {
+public class GUIClinicianProfile extends TargetedController {
     @FXML
     private GridPane clinicianProfilePane;
 
@@ -42,23 +42,21 @@ public class GUIClinicianProfile {
     @FXML
     private Button deleteButton;
 
-    private UserControl userControl = new UserControl();
-
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    private UserControl userControl = UserControl.getUserControl();
 
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
-    public void initialize() {
+    public void load() {
         if (userControl.getLoggedInUser() instanceof Clinician) {
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
-            loadProfile(((Clinician) userControl.getLoggedInUser()));
+            loadProfile((Clinician) target);
         } else if (userControl.getLoggedInUser() instanceof Administrator) {
-            loadProfile(((Clinician) userControl.getTargetUser()));
-            if (((Clinician) userControl.getTargetUser()).getStaffID() == 0) {
+            loadProfile((Clinician) target);
+            if (((Clinician) target).getStaffID() == 0) {
                 deleteButton.setVisible(false);
                 deleteButton.setDisable(true);
             }
@@ -95,12 +93,11 @@ public class GUIClinicianProfile {
      * Deletes the current profile from the HashSet in Database, not from disk, not until saved
      */
     public void deleteProfile() {
-        Clinician clinician = (Clinician) userControl.getTargetUser();
-        if (clinician.getStaffID() != 0) {
-            Action action = new Action(clinician, null);
+        if (((Clinician) target).getStaffID() != 0) {
+            Action action = new Action((target), null);
             undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
-            userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(clinician.getStaffID())});
-            Database.deleteClinician(clinician);
+            userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(((Clinician) target).getStaffID())});
+            Database.deleteClinician(((Clinician) target));
             ((Stage) clinicianProfilePane.getScene().getWindow()).close();
         }
     }

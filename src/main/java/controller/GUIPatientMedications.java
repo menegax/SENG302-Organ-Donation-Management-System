@@ -48,8 +48,6 @@ public class GUIPatientMedications extends UndoableController {
 
     private ArrayList<String> history;
 
-    private Patient target;
-
     private Patient after;
 
     @FXML
@@ -100,8 +98,6 @@ public class GUIPatientMedications extends UndoableController {
      */
     @FXML
     private ListView<String> medicineInformation;
-
-    private Patient viewedPatient;
 
     ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -162,16 +158,11 @@ public class GUIPatientMedications extends UndoableController {
     }
 
 
-    private UserControl userControl;
-
-
     /**
      * Initializes the Medication GUI pane, adds any medications stored for donor to current and past listViews
      */
     @FXML
-    public void initialize() {
-        userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
+    public void load() {
         //Register events for when an item is selected from a listView and set selection mode to multiple
         currentMedications.setOnMouseClicked(event -> onSelect(currentMedications));
         pastMedications.setOnMouseClicked(event -> onSelect(pastMedications));
@@ -179,12 +170,7 @@ public class GUIPatientMedications extends UndoableController {
                 .setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
-        if (user instanceof Patient) {
-            loadProfile(((Patient) user).getNhiNumber());
-        } else {
-            viewedPatient = (Patient) userControl.getTargetUser();
-            loadProfile(viewedPatient.getNhiNumber());
-        }
+        loadProfile(((Patient) target).getNhiNumber());
         controls = new ArrayList<Control>() {{
             add(pastMedications);
             add(currentMedications);
@@ -381,7 +367,7 @@ public class GUIPatientMedications extends UndoableController {
                 statesHistoryScreen.addAction(new Action(target, after));
                 userActions.log(Level.INFO,
                         "Added medication: " + medication,
-                        new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
+                        new String[] { "Attempted to add medication: " + medication, ((Patient) target).getNhiNumber() });
                 viewCurrentMedications();
                 newMedication.clear();
                 screenControl.setIsSaved(false);
@@ -393,13 +379,13 @@ public class GUIPatientMedications extends UndoableController {
             else {
                 userActions.log(Level.WARNING,
                         "Medication already registered",
-                        new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
+                        new String[] { "Attempted to add medication: " + medication, ((Patient) target).getNhiNumber() });
             }
         }
         else {
             userActions.log(Level.WARNING,
                     "Invalid medication registration",
-                    new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
+                    new String[] { "Attempted to add medication: " + medication, ((Patient) target).getNhiNumber() });
         }
     }
 
@@ -426,7 +412,7 @@ public class GUIPatientMedications extends UndoableController {
                     .remove(history.indexOf(medication));
             userActions.log(Level.INFO,
                     "Deleted medication: " + medication,
-                    new String[] { "Attempted to delete medication: " + medication, target.getNhiNumber() });
+                    new String[] { "Attempted to delete medication: " + medication, ((Patient) target).getNhiNumber() });
             viewPastMedications();
         }
         else if (current.contains(medication)) {
@@ -434,7 +420,7 @@ public class GUIPatientMedications extends UndoableController {
                     .remove(current.indexOf(medication));
             userActions.log(Level.INFO,
                     "Deleted medication: " + medication,
-                    new String[] { "Attempted to delete medication: " + medication, target.getNhiNumber() });
+                    new String[] { "Attempted to delete medication: " + medication, ((Patient) target).getNhiNumber() });
 
             viewCurrentMedications();
         }
@@ -617,7 +603,7 @@ public class GUIPatientMedications extends UndoableController {
         }};
         if (selectedMedications.size() == 2) { //if two are selected
             try {
-                DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1), viewedPatient);
+                DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1), (Patient) target);
                 displayInteractions(interaction.getInteractionsWithDurations(), selectedMedications.get(0), selectedMedications.get(1));
             }
             catch (IOException e) {

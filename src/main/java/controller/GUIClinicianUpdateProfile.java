@@ -62,8 +62,6 @@ public class GUIClinicianUpdateProfile extends UndoableController {
     @FXML
     private ChoiceBox regionDD;
 
-    private Clinician target;
-
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
 
@@ -72,7 +70,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
      * Populates the Region drop down menu using region enums.
      * Calls to load the clinician profile and calls to set up undo/redo functionality
      */
-    public void initialize() {
+    public void load() {
         // Populate region dropdown with values from the Regions enum
         List<String> regions = new ArrayList<>();
         for (Region region : Region.values()) {
@@ -85,15 +83,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
         regionDD.getSelectionModel()
                 .selectedIndexProperty()
                 .addListener((observable, oldValue, newValue) -> setValid(regionDD));
-        UserControl userControl = new UserControl();
-        User loggedIn = userControl.getLoggedInUser();
-        if (loggedIn instanceof Clinician) {
-            target = (Clinician) loggedIn;
-        }
-        else {
-            target = (Clinician) userControl.getTargetUser();
-        }
-        loadProfile(target.getStaffID());
+        loadProfile(((Clinician) target).getStaffID());
         setUpStateHistory();
     }
 

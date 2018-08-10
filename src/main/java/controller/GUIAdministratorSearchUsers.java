@@ -30,7 +30,7 @@ import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIAdministratorSearchUsers extends UndoableController implements Initializable, IWindowObserver {
+public class GUIAdministratorSearchUsers extends UndoableController implements IWindowObserver {
 
     @FXML
     private TableView<User> userDataTable;
@@ -50,18 +50,14 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private UserControl userControl = new UserControl();
+    private UserControl userControl = UserControl.getUserControl();
 
     private Searcher searcher = Searcher.getSearcher();
 
     /**
      * Initialises the data within the table to all users
-     *
-     * @param url URL not used
-     * @param rb  Resource bundle not used
      */
-    @FXML
-    public void initialize(URL url, ResourceBundle rb) {
+    public void load() {
         FilteredList<User> filteredData = setupTableColumnsAndData();
         setupSearchingListener(filteredData);
         setupDoubleClickToUserEdit();
@@ -88,8 +84,8 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         userDataTable.setOnMouseClicked(click -> {
         	User selected = userDataTable.getSelectionModel().getSelectedItem();
             if (click.getClickCount() == 2 && selected != null && selected != userControl.getLoggedInUser()) {
-                userControl.setTargetUser(selected);
-                screenControl.show("/scene/home.fxml", true, this);
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
+                controller.setTarget(selected);
             }
         });
     }
@@ -99,7 +95,6 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
      */
     public void windowClosed() {
         tableRefresh();
-        userControl.clearTargetUser();
     }
 
     /**

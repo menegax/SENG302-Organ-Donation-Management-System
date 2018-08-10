@@ -10,6 +10,7 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
 import model.Patient;
 import model.Procedure;
+import model.User;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.TouchPaneController;
@@ -27,7 +28,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Form to add and edit patient procedures only accessible by a clinician
  */
-public class GUIPatientProcedureForm implements TouchscreenCapable {
+public class GUIPatientProcedureForm extends TargetedController implements TouchscreenCapable {
 
     @FXML
     public Button doneButton;
@@ -50,13 +51,11 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
     @FXML
     public GridPane procedureUpdatePane;
 
-    private Patient patient;
     private Patient patientClone;
     private boolean isEditInstance = false;
     private Procedure procedure; //The Procedure that is being edited (null in the case of adding a procedure)
     private Procedure procedureClone;
     private ScreenControl screenControl = ScreenControl.getScreenControl();
-    private UserControl userControl = new UserControl();
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
     private TouchPaneController procedureTouchPane;
@@ -64,9 +63,8 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
     /**
      * Initial setup. Sets up undo/redo, Populates the affected organs dropdown
      */
-    public void initialize() {
-        patient = (Patient) new UserControl().getTargetUser();
-        patientClone = (Patient) patient.deepClone();
+    public void load() {
+        patientClone = (Patient) target.deepClone();
         setupDonations();
         for (MenuItem menuItem : affectedInput.getItems()) { //Adding organ checkboxes to the undo/redo controls
             if (((CustomMenuItem) menuItem).getContent() instanceof CheckBox) {
@@ -154,9 +152,9 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
             this.procedureClone.setDescription(descriptionInput.getText());
             this.procedureClone.setAffectedDonations(affectedDonations);
             this.procedureClone.setDate(dateInput.getValue());
-            Action action = new Action(patient, patientClone);
+            Action action = new Action(target, patientClone);
             undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
-            userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", patient.getNhiNumber()});
+            userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", ((Patient) target).getNhiNumber()});
             goBackToProcedures();
         } else {
             userActions.log(Level.WARNING, "Invalid procedure inputs entered", "Attempted to edit procedure with invalid inputs");
@@ -178,7 +176,7 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
             procedureClone = new Procedure( summaryInput.getText(), descriptionInput.getText(),
                     dateInput.getValue(), affectedDonations );
             patientClone.addProcedure( procedureClone );
-            Action action = new Action(patient, patientClone);
+            Action action = new Action(target, patientClone);
             undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
             userActions.log(Level.INFO, "Added procedure " + procedureClone.getSummary(), new String[]{"Attempted to add a procedure", patientClone.getNhiNumber()});
             goBackToProcedures();
@@ -198,7 +196,7 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
      */
     private Boolean validateInputs(String summary, String description, LocalDate date) {
         Boolean isValid = true;
-        if (date == null || date.isBefore(patient.getBirth())) {
+        if (date == null || date.isBefore(((Patient) target).getBirth())) {
             isValid = false;
             dateInput.setStyle("-fx-base: red;");
         }
@@ -220,7 +218,7 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
      */
     private void setupDonations() {
         ObservableList<CustomMenuItem> donations = FXCollections.observableArrayList();
-        for (Organ organ : patient.getDonations()) {
+        for (Organ organ : ((Patient) target).getDonations()) {
             CustomMenuItem organSelection = new CustomMenuItem(new CheckBox(organ.getValue()));
             organSelection.setHideOnClick(false);
             donations.add(organSelection);

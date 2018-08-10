@@ -24,6 +24,7 @@ import static utility.UserActionHistory.userActions;
 
 public class ScreenControlDesktop extends ScreenControl {
     private static ScreenControlDesktop screenControl;
+    private UserControl userControl = UserControl.getUserControl();
 
     private boolean macOs = System.getProperty("os.name")
             .startsWith("Mac");
@@ -46,19 +47,21 @@ public class ScreenControlDesktop extends ScreenControl {
      * @param parentController controller to notify when stage shown closes
      * @return the controller of this fxml
      */
-    public Object show(String fxml, Boolean undoable, IWindowObserver parentController) {
+    public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser) {
         try {
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
+            Scene scene = new Scene(fxmlLoader.load());
             Object controller = fxmlLoader.getController();
             if (undoable) {
                 UndoableWrapper undoableWrapper = new UndoableWrapper(stage);
-                if (fxmlLoader.getController() instanceof GUIHome) {
-                    undoableWrapper.setGuiHome(fxmlLoader.getController());
+                if (controller instanceof GUIHome) {
+                    undoableWrapper.setGuiHome((GUIHome) controller);
                 }
                 undoableWrappers.add(new UndoableWrapper(stage));
+                userControl.setTargetUser(targetUser, undoableWrapper);
             }
-            stage.setScene(new Scene(fxmlLoader.load()));
+            stage.setScene(scene);
             stage.show();
             if (parentController != null) {
                 stage.setOnHiding(event -> parentController.windowClosed());
@@ -88,9 +91,9 @@ public class ScreenControlDesktop extends ScreenControl {
             undoableStage.getStage().close();
         }
         try {
-            FXMLLoader loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+            FXMLLoader loginScreen = new FXMLLoader(getClass().getResource("/scene/login.fxml"));
             Stage stage = new Stage();
-            stage.setScene(loginScreen.load());
+            stage.setScene(new Scene(loginScreen.load()));
             stage.show();
         }
         catch (IOException e) {

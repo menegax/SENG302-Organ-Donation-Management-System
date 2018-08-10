@@ -62,13 +62,7 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
     @FXML
     public Button addDiagnosisButton;
 
-
-    /**
-     * Patient being viewed
-     */
-    private static Patient target;
-
-    private static Patient targetClone;
+    private Patient targetClone;
 
     /**
      * Patient's current diseases
@@ -86,7 +80,7 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
      */
     private static boolean changed = false; // Boolean for if there are any un-saved edits when leaving pane
 
-    private UserControl userControl;
+    private UserControl userControl = UserControl.getUserControl();
 
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
@@ -107,17 +101,14 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
      * Double click functions to update a diagnosis are added for both current and past diseases
      */
     @FXML
-    public void initialize() {
-        userControl = new UserControl();
+    public void load() {
         if(userControl.getLoggedInUser() instanceof Patient) {
-            target = (Patient) userControl.getLoggedInUser();
             targetClone = (Patient) target.deepClone();
             addDiagnosisButton.setVisible(false);
             addDiagnosisButton.setDisable(true);
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
         } else {
-            target = (Patient) userControl.getTargetUser();
             targetClone = (Patient) target.deepClone();
             addDiagnosisButton.setVisible(true);
             addDiagnosisButton.setDisable(false);
@@ -160,9 +151,9 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
     private void setUpDoubleClickEdit(TableView<Disease> tableView) {
         tableView.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && tableView.getSelectionModel().getSelectedItem() != null) {
-                GUIPatientUpdateDiagnosis.setDisease(tableView.getSelectionModel().getSelectedItem());
-                GUIPatientUpdateDiagnosis.setIsAdd(false);
-                screenControl.show("/scene/patientUpdateDiagnosis.fxml", false,this);
+                GUIPatientUpdateDiagnosis controller = (GUIPatientUpdateDiagnosis) screenControl.show("/scene/patientUpdateDiagnosis.fxml", false,this, target);
+                controller.setDisease(tableView.getSelectionModel().getSelectedItem());
+                controller.setIsAdd(false);
             }
 
         });
@@ -174,8 +165,8 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
      * an addition of a disease rather than an update
      */
     private void addDiagnosis() {
-        GUIPatientUpdateDiagnosis.setIsAdd(true);
-        screenControl.show("/scene/patientUpdateDiagnosis.fxml", false, this);
+        GUIPatientUpdateDiagnosis controller = (GUIPatientUpdateDiagnosis) screenControl.show("/scene/patientUpdateDiagnosis.fxml", false, this, target);
+        controller.setIsAdd(true);
     }
 
     /**

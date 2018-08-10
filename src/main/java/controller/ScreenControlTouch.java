@@ -10,6 +10,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import model.User;
 import org.tuiofx.examples.demo.FXMLController;
 import org.tuiofx.internal.base.TuioFXCanvas;
 import utility.undoRedo.UndoableWrapper;
@@ -31,9 +32,9 @@ class ScreenControlTouch extends ScreenControl {
 
     private Pane touchPane = new Pane();
 
-    private Scene touchScene = null;
-
     private static ScreenControlTouch screenControlTouch;
+
+    private UserControl userControl = UserControl.getUserControl();
 
     private boolean isLoginShowing;
 
@@ -55,12 +56,25 @@ class ScreenControlTouch extends ScreenControl {
      * @param parentController controller to notify when pane shown closes
      * @return the controller created for this fxml
      */
-    public Object show(String fxml, Boolean undoable, IWindowObserver parentController) {
+    public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
-            Region pane = fxmlLoader.load();
-            pane.getProperties().put("focusArea", "true");
             Object controller = fxmlLoader.getController();
+            Region pane = new Region();
+            if (undoable) {
+                UndoableWrapper undoablePane = new UndoableWrapper(pane);
+                undoableWrappers.add(undoablePane);
+                userControl.setTargetUser(targetUser, undoablePane);
+                if (controller instanceof GUIHome) {
+                    undoablePane.setGuiHome((GUIHome) controller);
+                    ((GUIHome) controller).setTarget(targetUser);
+                }
+                pane = fxmlLoader.load();
+                undoablePane.setPane((Pane) pane);
+            } else {
+                pane = fxmlLoader.load();
+            }
+            pane.getProperties().put("focusArea", "true");
             pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
             List<Node> panes;
             if(isLoginShowing) {
@@ -71,13 +85,6 @@ class ScreenControlTouch extends ScreenControl {
                 panes = new ArrayList<>(touchPane.getChildren());
             }
             panes.add(pane);
-            if (undoable) {
-                UndoableWrapper undoablePane = new UndoableWrapper(pane);
-                undoableWrappers.add(undoablePane);
-                if (fxmlLoader.getController() instanceof GUIHome) {
-                    undoablePane.setGuiHome(fxmlLoader.getController());
-                }
-            }
             Region root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
             touchPane = new Pane(root);
             touchPane.getChildren().addAll(panes);
