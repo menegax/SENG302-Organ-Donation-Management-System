@@ -78,7 +78,7 @@ public class UserDataService implements IUserDataService, Serializable {
             systemLogger.log(INFO, "Default clinician not in database. Adding default clinician to database.");
             clinicianDataService.save(new Clinician(0, "Rob", new ArrayList<>(), "Burns", GlobalEnums.Region.CANTERBURY));
         }
-        if (administratorDataService.getAdministratorByUsername("admin") == null) {
+        if (administratorDataService.getAdministratorByUsername("ADMIN") == null) {
             systemLogger.log(INFO, "Default admin not in database. Adding default admin to database.");
             administratorDataService.save(new Administrator("admin", "John", new ArrayList<>(), "Smith", "password"));
         }

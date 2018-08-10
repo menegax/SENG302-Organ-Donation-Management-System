@@ -59,12 +59,13 @@ public class Administrator extends User {
      * @param modified Timestamp of the last time the admin was modified.
      */
     public Administrator(String username, String fName, ArrayList<String> mNames, String lName, 
-    		String salt, String password, Timestamp modified) {
+    		String salt, String password, Timestamp modified, List<AdministratorActionRecord> records) {
 		super(fName, mNames, lName);
 		this.username = username;
 		this.salt = salt;
 		this.password = password;
 		this.modified = modified;
+		this.adminActionsList = records;
 		databaseImport();
 	}
 

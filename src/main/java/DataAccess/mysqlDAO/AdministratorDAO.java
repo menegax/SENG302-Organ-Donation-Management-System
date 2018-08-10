@@ -65,8 +65,11 @@ public class AdministratorDAO implements IAdministratorDataAccess {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement preparedStatement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_ADMIN_USERNAME"));
             preparedStatement.setString(1, username);
-            return constructAdministratorObject(preparedStatement.executeQuery());
-        } catch (SQLException e) {
+            List<AdministratorActionRecord> records = administratorLogDAO.getAllLogsByUserId(username);
+            Administrator a = constructAdministratorObject(preparedStatement.executeQuery(), records);
+            return a;
+        } catch (Exception e) {
+            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Could not get administrator from MYSQL DB", this);        }
         return null;
     }
@@ -115,7 +118,7 @@ public class AdministratorDAO implements IAdministratorDataAccess {
         String salt = resultSet.getString("Salt");
         String password = resultSet.getString("Password");
         Timestamp modified = Timestamp.valueOf(resultSet.getString("Modified"));
-        return new Administrator(username, fName, mNames, lName, salt, password, modified);
+        return new Administrator(username, fName, mNames, lName, salt, password, modified, new ArrayList<>());
     }
 
     @Override
@@ -136,7 +139,7 @@ public class AdministratorDAO implements IAdministratorDataAccess {
     }
 
 
-    private Administrator constructAdministratorObject(ResultSet resultSet) throws SQLException {
+    private Administrator constructAdministratorObject(ResultSet resultSet, List<AdministratorActionRecord> records) throws SQLException {
         if (resultSet.next()) {
             String username = resultSet.getString("Username");
             String fName = resultSet.getString("FName");
@@ -145,7 +148,7 @@ public class AdministratorDAO implements IAdministratorDataAccess {
             String salt = resultSet.getString("salt");
             String password = resultSet.getString("password");
             Timestamp modified = Timestamp.valueOf(resultSet.getString("Modified"));
-            return new Administrator(username, fName, mNames, lName, salt, password, modified);
+            return new Administrator(username, fName, mNames, lName, salt, password, modified, records == null ? new ArrayList<>() : records);
         }
         return null;
     }
