@@ -14,6 +14,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.tuiofx.Configuration;
+import org.tuiofx.TangibleEvent;
+import org.tuiofx.TangibleListener;
 import org.tuiofx.internal.base.GestureHandler;
 import service.Database;
 import utility.Searcher;
@@ -70,6 +72,22 @@ public class TUIOFXMain extends Application {
         TuioFX tuioFX = new TuioFX(stage, Configuration.pqLabs());
         tuioFX.enableMTWidgets(true);
         tuioFX.start();
+        tuioFX.addTangibleListener(new TangibleListener() {
+            @Override
+            public void tuioTangibleUpdated(TangibleEvent tangibleEvent) {
+                
+            }
+
+            @Override
+            public void tuioTangibleAdded(TangibleEvent tangibleEvent) {
+
+            }
+
+            @Override
+            public void tuioTangibleRemoved(TangibleEvent tangibleEvent) {
+
+            }
+        });
 
         stage.show();
 

@@ -12,6 +12,9 @@ import de.codecentric.centerdevice.MenuToolkit;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,6 +28,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -34,6 +38,7 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
+import org.tuiofx.internal.gesture.TuioJFXEvent;
 import service.Database;
 import utility.Searcher;
 import utility.StatusObservable;
@@ -159,8 +164,17 @@ public class GUIHome implements Observer, TouchscreenCapable {
                 }
             }
             if(screenControl.isTouch()) {
+                homePane.addEventHandler(Event.ANY, new EventHandler<Event>() {
+                    @Override
+                    public void handle(Event event) {
+                        System.out.println(event.getEventType().getName());
+                    }
+                });
                 homePaneTouchController = new TouchPaneController(homePane);
-                homePane.setOnTouchPressed(event -> homePane.toFront());
+
+                homePane.setOnTouchPressed(event -> {
+                    homePane.toFront();
+                });
                 homePane.setOnZoom(this::zoomWindow);
                 homePane.setOnRotate(this::rotateWindow);
                 homePane.setOnScroll(this::scrollWindow);
@@ -610,22 +624,28 @@ public class GUIHome implements Observer, TouchscreenCapable {
 
     @Override
     public void zoomWindow(ZoomEvent zoomEvent) {
-        homePaneTouchController.zoomPane(zoomEvent);
-        zoomEvent.consume();
+        if(zoomEvent.getSource().equals(homePane)) {
+            homePaneTouchController.zoomPane(zoomEvent);
+            zoomEvent.consume();
+        }
     }
 
     @Override
     public void rotateWindow(RotateEvent rotateEvent) {
-        homePaneTouchController.rotatePane(rotateEvent);
-        rotateEvent.consume();
+        if(rotateEvent.getSource().equals(homePane)) {
+            homePaneTouchController.rotatePane(rotateEvent);
+            rotateEvent.consume();
+        }
     }
 
     @Override
     public void scrollWindow(ScrollEvent scrollEvent) {
-        if (scrollEvent.isDirect()) {
-            homePaneTouchController.scrollPane(scrollEvent);
+        if(scrollEvent.getSource().equals(homePane)) {
+            if (scrollEvent.isDirect()) {
+                homePaneTouchController.scrollPane(scrollEvent);
+            }
+            scrollEvent.consume();
         }
-        scrollEvent.consume();
     }
 
     /**
