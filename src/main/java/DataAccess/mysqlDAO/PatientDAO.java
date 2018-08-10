@@ -189,6 +189,11 @@ public class PatientDAO implements IPatientDataAccess {
         }
     }
 
+    /**
+     * Builds up a filter string for searching in db
+     * @param filters - filters to apply to the patient data set
+     * @return - string built from filters
+     */
     private String getFilterString(Map<FilterOption, String> filters) {
         if (filters == null) {
             return "1=1";
@@ -233,6 +238,13 @@ public class PatientDAO implements IPatientDataAccess {
     }
 
 
+    /**
+     * Adds params to statement for execution
+     * @param statement - statement to add params to
+     * @param patient - patient to strip params off
+     * @return - prepared statement
+     * @throws SQLException - thrown if there is a type error when setting statement params
+     */
     private PreparedStatement addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException {
         statement.setString(1, patient.getNhiNumber());
         statement.setString(2, patient.getFirstName());
@@ -261,6 +273,17 @@ public class PatientDAO implements IPatientDataAccess {
         return constructPatientObject(attributes, contacts, null, null, null, null);
     }
 
+    /**
+     * Constructs a full patient object
+     * @param attributes - from patient table
+     * @param contacts - from contacts table
+     * @param logs - from logs table
+     * @param diseases - from diseases table
+     * @param procedures - from procedures table
+     * @param medications - from medications table
+     * @return - full patient object
+     * @throws SQLException - thrown if an error occurs when getting values from result set
+     */
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts, List<PatientActionRecord> logs,
                                            List<Disease> diseases, List<Procedure> procedures, List<Medication> medications) throws SQLException {
         String nhi = attributes.getString("Nhi");

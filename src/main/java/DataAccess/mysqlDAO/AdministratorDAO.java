@@ -22,9 +22,7 @@ public class AdministratorDAO implements IAdministratorDataAccess {
     public AdministratorDAO() {
         mySqlFactory = MySqlFactory.getMySqlFactory();
         administratorLogDAO = mySqlFactory.getAdministratorLogDataAccess();
-
     }
-
 
     @Override
     public void saveAdministrator(Set<Administrator> administrators) {
@@ -109,6 +107,12 @@ public class AdministratorDAO implements IAdministratorDataAccess {
         return null;
     }
 
+    /**
+     * Constructs a minimal admin object for search tables
+     * @param resultSet - results from admin table
+     * @return - minimal admin object
+     * @throws SQLException - thrown if an error occurs when getting results from result set
+     */
     private Administrator constructAdminObject(ResultSet resultSet) throws SQLException {
         String username = resultSet.getString("Username");
         String fName = resultSet.getString("FName");
@@ -126,6 +130,13 @@ public class AdministratorDAO implements IAdministratorDataAccess {
     }
 
 
+    /**
+     * Adds params to prepared statement for updates
+     * @param admin - admin object to strip attributes off
+     * @param preparedStatement - statement to build
+     * @return - prepared statement
+     * @throws SQLException - thrown if error occurs when preparing the statement
+     */
     private PreparedStatement addUpdateParams(Administrator admin, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setString(1, admin.getUsername());
         preparedStatement.setString(2, admin.getFirstName());
@@ -138,6 +149,13 @@ public class AdministratorDAO implements IAdministratorDataAccess {
     }
 
 
+    /**
+     *  Constructs an admin object from the db
+     * @param resultSet - results from admin table
+     * @param records - records from logs table
+     * @return - Admin object
+     * @throws SQLException - thrown if error occurs in getting next result
+     */
     private Administrator constructAdministratorObject(ResultSet resultSet, List<AdministratorActionRecord> records) throws SQLException {
         if (resultSet.next()) {
             String username = resultSet.getString("Username");

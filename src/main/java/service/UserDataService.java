@@ -71,6 +71,10 @@ public class UserDataService implements IUserDataService, Serializable {
         prepareApplication();
     }
 
+
+    /**
+     * Prepares the application on start up. Adds default admin and clinician to remote database
+     */
     public void prepareApplication() {
         AdministratorDataService administratorDataService = new AdministratorDataService();
         ClinicianDataService clinicianDataService = new ClinicianDataService();
