@@ -69,7 +69,6 @@ public class AdministratorDAO implements IAdministratorDataAccess {
             Administrator a = constructAdministratorObject(preparedStatement.executeQuery(), records);
             return a;
         } catch (Exception e) {
-            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Could not get administrator from MYSQL DB", this);        }
         return null;
     }

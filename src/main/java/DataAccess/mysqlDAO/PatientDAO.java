@@ -130,7 +130,7 @@ public class PatientDAO implements IPatientDataAccess {
             }
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
+           systemLogger.log(Level.SEVERE, "Could not get patient from remote db", this);
         }
         return null;
     }
@@ -185,7 +185,6 @@ public class PatientDAO implements IPatientDataAccess {
             statement.setString(1, nhi);
             statement.execute();
         } catch (Exception e) {
-            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Could not delete patient", this);
         }
     }
