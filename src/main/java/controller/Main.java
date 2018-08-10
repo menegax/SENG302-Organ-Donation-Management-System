@@ -38,6 +38,7 @@ public class Main extends Application {
 
         Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app");
+        System.setProperty("connection_type", GlobalEnums.DbType.PRODUCTION.getValue()); //LEAVE HERE!! production db
         new UserDataService().prepareApplication();
        // openKeyboard();
         primaryStage.show();
