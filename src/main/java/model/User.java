@@ -17,7 +17,7 @@ import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.FINEST;
 import static utility.SystemLogger.systemLogger;
 
-public abstract class User implements Serializable {
+public abstract class User implements Serializable, Comparable<User> {
 
     private final UUID uuid = UUID.randomUUID();
 
@@ -29,6 +29,8 @@ public abstract class User implements Serializable {
     transient PropertyChangeSupport propertyChangeSupport;
 
     protected String lastName;
+
+    private boolean changed = true;
 
     protected Timestamp modified;
 
@@ -109,11 +111,22 @@ public abstract class User implements Serializable {
     */
    public void userModified() {
        this.modified = new Timestamp(System.currentTimeMillis());
+       changed = true;
        if(propertyChangeSupport != null) {
            propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "User Modified", null, null));
        }
 //       systemLogger.log(FINEST, "User " + getUuid() + " modified");
    }
+
+
+    public boolean getChanged() {
+        return changed;
+    }
+
+    protected void databaseImport() {
+        changed = false;
+    }
+
 
     public UUID getUuid() {
         return uuid;
@@ -153,5 +166,10 @@ public abstract class User implements Serializable {
             propertyChangeSupport = new PropertyChangeSupport(this);
         }
         propertyChangeSupport.addPropertyChangeListener(propertyChangeListener);
+    }
+
+    @Override
+    public int compareTo(User o) {
+        return this.getNameConcatenated().compareTo(o.getNameConcatenated());
     }
 }

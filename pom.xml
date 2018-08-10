@@ -20,6 +20,11 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.1.0</version>
+        </dependency>
 
     	<!-- https://mvnrepository.com/artifact/no.tornado/tornadofx -->
 		<dependency>
@@ -27,14 +32,14 @@
     		<artifactId>tornadofx</artifactId>
    			<version>1.7.16</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/no.tornado/tornadofx-controls -->
 			<dependency>
  		    <groupId>no.tornado</groupId>
  		    <artifactId>tornadofx-controls</artifactId>
  		    <version>1.0.6</version>
 		</dependency>
-    
+
         <!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
         <dependency>
             <groupId>com.google.maps</groupId>
@@ -124,59 +129,32 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>guava</groupId>
-            <artifactId>guava-14.0.1</artifactId>
-            <version>14.0.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/guava/guava-14.0.1/14.0.1/guava-14.0.1.jar</systemPath>
-        </dependency>
+    		<groupId>org.apache.lucene</groupId>
+    		<artifactId>lucene-queryparser</artifactId>
+    		<version>7.3.0</version>
+		</dependency>
+		<dependency>
+ 		   <groupId>org.apache.lucene</groupId>
+ 		   <artifactId>lucene-core</artifactId>
+ 		   <version>7.3.0</version>
+		</dependency>
         <dependency>
-            <groupId>libTUIO</groupId>
-            <artifactId>libTUIO-1.0</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/libTUIO/libTUIO-1.0/1.0/libTUIO.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>ScenicView</groupId>
-            <artifactId>ScenicView-1.0</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/ScenicView/ScenicView-1.0/1.0/ScenicView.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>slf4j</groupId>
-            <artifactId>slf4j-api-1.7.6</artifactId>
-            <version>1.7.6</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/slf4j/slf4j-api-1.7.6/1.7.6/slf4j-api-1.7.6.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>slf4j</groupId>
-            <artifactId>slf4j-simple-1.7.6</artifactId>
-            <version>1.7.6</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/slf4j/slf4j-simple-1.7.6/1.7.6/slf4j-simple-1.7.6.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>tuiofx</groupId>
-            <artifactId>tuiofx-all-0.10.4</artifactId>
-            <version>0.10.4</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/tuiofx/tuiofx-all-0.10.4/0.10.4/tuiofx-all-0.10.4.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>tuiofx</groupId>
-            <artifactId>tuiofx-core-0.10.4</artifactId>
-            <version>0.10.4</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/tuiofx/tuiofx-core-0.10.4/0.10.4/tuiofx-core-0.10.4.jar</systemPath>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.sonarsource.scanner.maven</groupId>
             <artifactId>sonar-maven-plugin</artifactId>
             <version>3.4.0.905</version>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>2.0.2-beta</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
     <profiles>

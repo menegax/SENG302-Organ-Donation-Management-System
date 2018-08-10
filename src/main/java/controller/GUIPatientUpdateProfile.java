@@ -7,7 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
-import service.Database;
+import service.PatientDataService;
 import utility.GlobalEnums.*;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
@@ -100,6 +100,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     private Patient after;
 
+    private UserControl userControl;
+
+    private PatientDataService patientDataService = new PatientDataService();
+
     /**
      * Initializes the profile update screen. Gets the logged in or viewed user and loads the user's profile.
      * Dropdown menus are populated. The enter key press event for saving changes is set up
@@ -156,8 +160,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
      * @param nhi the NHI of the patient to load
      */
     private void loadProfile(String nhi) {
-        try {
-            Patient patient = Database.getPatientByNhi(nhi);
+        Patient patient = patientDataService.getPatientByNhi(nhi);
+       if (patient != null) {
             target = patient;
             after = (Patient) patient.deepClone();
             populateForm(after);
@@ -186,7 +190,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 add(zipTxt);
             }};
             statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.PATIENTUPDATEPROFILE);
-        } catch (InvalidObjectException e) {
+        } else {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }
@@ -288,28 +292,25 @@ public class GUIPatientUpdateProfile extends UndoableController {
         StringBuilder invalidContent = new StringBuilder();
 
         // nhi
-        if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}",
-                nhiTxt.getText()
-                        .toUpperCase())) {
+        if (!Pattern.matches(UIRegex.NHI.getValue(), nhiTxt.getText().toUpperCase())) {
             valid = setInvalid(nhiTxt);
             invalidContent.append("NHI must be three letters followed by four numbers. ");
         }
 
-        try {
+
             // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
-            if (Database.getPatientByNhi(nhiTxt.getText()).getUuid() != target.getUuid()) {
+            if (!patientDataService.getPatientByNhi(nhiTxt.getText()).getNhiNumber().equals(target.getNhiNumber())) {
                 valid = setInvalid(nhiTxt);
-                invalidContent.append("NHI is already in use");
+                invalidContent.append("NHI is already in use\n");
             } else {
                 setValid(nhiTxt);
             }
-        } catch (InvalidObjectException e) {
-            setInvalid(nhiTxt);
-        }
+
+
+
 
         // first name
-        if (!firstnameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)+")) {
+        if (!Pattern.matches(UIRegex.FNAME.getValue(), firstnameTxt.getText())) {
             valid = setInvalid(firstnameTxt);
             invalidContent.append("First name must be letters, ., or -. ");
         } else {
@@ -317,8 +318,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
 
         // last name
-        if (!lastnameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)+")) {
+        if (!Pattern.matches(UIRegex.LNAME.getValue(), lastnameTxt.getText())) {
             valid = setInvalid(lastnameTxt);
             invalidContent.append("Last name must be letters, ., or -. ");
         } else {
@@ -326,8 +326,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
 
         //middle names
-        if (!middlenameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)*")) {
+        if (!Pattern.matches(UIRegex.MNAME.getValue(), middlenameTxt.getText())) {
             valid = setInvalid(middlenameTxt);
             invalidContent.append("Middle name(s) must be letters, ., or -.");
         } else {
@@ -335,7 +334,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
 
         // preferred name
-        if (preferrednameTxt.getText() != null && !preferrednameTxt.getText().matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)*")) {
+        if (!Pattern.matches(UIRegex.FNAME.getValue(), preferrednameTxt.getText())) {
             valid = setInvalid(preferrednameTxt);
         } else {
             setValid(preferrednameTxt);
@@ -358,12 +357,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
 
         // zip
-        if (!zipTxt.getText()
-                .equals("")) {
+        if (!zipTxt.getText().equals("")) {
             try {
-                if (zipTxt.getText()
-                        .length() != 4 && !(zipTxt.getText()
-                        .equals(""))) {
+                if (!Pattern.matches(UIRegex.ZIP.getValue(), zipTxt.getText())) {
                     valid = setInvalid(zipTxt);
                     invalidContent.append("Zip must be four digits. ");
                 } else {
@@ -378,34 +374,28 @@ public class GUIPatientUpdateProfile extends UndoableController {
             setValid(zipTxt);
         }
 
+
         // weight
-        if (weightTxt.getText() != null) {
-            if (isInvalidDouble(weightTxt.getText())) {
-                valid = setInvalid(weightTxt);
-                invalidContent.append("Weight must be a valid decimal number. ");
-            } else {
-                setValid(weightTxt);
-            }
+        if (!Pattern.matches(UIRegex.WEIGHT.getValue(), weightTxt.getText())) {
+            valid = setInvalid(weightTxt);
+            invalidContent.append("Weight must be a valid decimal number\n");
         } else {
             setValid(weightTxt);
         }
 
+
         // height
-        if (heightTxt.getText() != null) {
-            if (isInvalidDouble(heightTxt.getText())) {
-                valid = setInvalid(heightTxt);
-                invalidContent.append("Height must be a valid decimal number. ");
-            } else {
-                setValid(heightTxt);
-            }
+        if (!Pattern.matches(UIRegex.HEIGHT.getValue(), heightTxt.getText())) {
+            valid = setInvalid(heightTxt);
+            invalidContent.append("Height must be a valid decimal number\n");
         } else {
             setValid(heightTxt);
         }
 
+
         // blood group
         if (bloodGroupDD.getValue() != null) {
-            String bgStr = bloodGroupDD.getValue()
-                    .replace(' ', '_');
+            String bgStr = bloodGroupDD.getValue();
             Enum bloodgroup = BloodGroup.getEnumFromString(bgStr);
             if (bloodgroup == null) {
                 valid = setInvalid(bloodGroupDD);
@@ -419,8 +409,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         // date of birth
         if (dobDate.getValue() != null) {
-            if (dobDate.getValue()
-                    .isAfter(LocalDate.now())) {
+            if (dobDate.getValue().isAfter(LocalDate.now())) {
                 valid = setInvalid(dobDate);
                 invalidContent.append("Date of birth must be a valid date either today or earlier and must be before date of death. ");
             } else {
@@ -528,7 +517,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
             Action action = new Action(target, after);
             statesHistoryScreen.addAction(action);
-
+            patientDataService.save(after);
             userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         }
         else {

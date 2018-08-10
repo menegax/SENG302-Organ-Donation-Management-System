@@ -26,7 +26,6 @@ last update 24/07/2018
  
 # Requirements
 * JDK 1.8
-* Internet connection
  
 # Dependencies
  

@@ -4,19 +4,21 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import model.Clinician;
-import model.Medication;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 import model.Clinician;
 import model.Medication;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
-import service.Database;
+import service.AdministratorDataService;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
@@ -30,7 +32,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -42,18 +43,6 @@ public class GUIPatientProfile {
 
     @FXML
     private GridPane patientProfilePane;
-
-    @FXML
-    public Button medicationBtn;
-
-    @FXML
-    public Button proceduresButton;
-
-    @FXML
-    public Button donationsButton;
-
-    @FXML
-    public Button requirementsButton;
 
     @FXML
     private Button deleteButton;
@@ -72,9 +61,6 @@ public class GUIPatientProfile {
 
     @FXML
     private Label dateOfDeathLabel;
-
-    @FXML
-    private Label deathLocationLbl;
 
     @FXML
     private Label age;
@@ -122,16 +108,10 @@ public class GUIPatientProfile {
     private Label prefGenderLbl;
 
     @FXML
-    private Label donatingTitle;
-
-    @FXML
     private Label firstNameLbl;
 
     @FXML
     private Label firstNameValue;
-
-    @FXML
-    private GridPane details;
 
     @FXML
     private RowConstraints genderRow;
@@ -139,71 +119,58 @@ public class GUIPatientProfile {
     @FXML
     private RowConstraints firstNameRow;
 
+    @FXML
+    private ListView donationList;
+    @FXML
+    private ListView<String> medList;
+
     private ListProperty<String> donatingListProperty = new SimpleListProperty<>();
 
     private ListProperty<String> receivingListProperty = new SimpleListProperty<>();
 
-    /**
-     * A list for the organs a patient is donating
-     */
-    @FXML
-    private ListView donationList;
-
-    @FXML
-    private ListView<String> medList;
-
-    private UserControl userControl;
+    private UserControl userControl = new UserControl();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
 
-
-
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
      *
-     * @exception InvalidObjectException -
-     */
-    public void initialize() throws InvalidObjectException {
-        userControl = new UserControl();
-        Object user = null;
-        if (userControl.getLoggedInUser() instanceof Patient) {
-            if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
+     * */
+    public void initialize(){
+        Patient patient = null;
+        IPatientDataService patientDataService = new PatientDataService();
+        if (userControl.getLoggedInUser() instanceof  Patient) {
+             patient = patientDataService.getPatientByNhi(((Patient)userControl.getLoggedInUser()).getNhiNumber());
+            if (patient.getRequiredOrgans().size() == 0) {
                 receivingList.setDisable(true);
                 receivingList.setVisible(false);
                 receivingTitle.setDisable(true);
-                receivingTitle.setVisible(false);
-                /* Hide the columns that would hold the receiving listview - this results in the visible nodes filling
-                   up the whole width of the scene */
+                receivingTitle.setVisible(false); // Hide the columns that would hold the receiving list view
                 for (int i = 9; i <= 11; i++) {
-                    patientProfilePane.getColumnConstraints()
-                            .get(i)
-                            .setMaxWidth(0);
+                    patientProfilePane.getColumnConstraints().get(i).setMaxWidth(0);
                 }
             }
-
             genderDeclaration.setVisible(false);
             genderStatus.setVisible(false);
             genderRow.setMaxHeight(0);
             firstNameLbl.setVisible(false);
             firstNameValue.setVisible(false);
             firstNameRow.setMaxHeight(0);
+            deleteButton.setVisible(false);
+            deleteButton.setDisable(true);
 
-            user = userControl.getLoggedInUser();
-            deleteButton.setVisible( false );
-            deleteButton.setDisable( true );
         } else if (userControl.getLoggedInUser() instanceof Clinician) {
             deleteButton.setVisible( false );
             deleteButton.setDisable( true );
-            user = userControl.getTargetUser();
-        } else {
-            user = userControl.getTargetUser();
+            patient = patientDataService.getPatientByNhi(((Patient)userControl.getTargetUser()).getNhiNumber());
         }
         try {
-            assert user != null;
-            loadProfile(((Patient) user).getNhiNumber());
+            if (patient != null) {
+                loadProfile(patient);
+            }
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Cannot load patient profile");
@@ -214,11 +181,9 @@ public class GUIPatientProfile {
     /**
      * Sets the patient's attributes for the scene's labels
      *
-     * @param nhi the nhi of the patient to be viewed
      * @exception InvalidObjectException if the nhi of the patient does not exist in the database
      */
-    private void loadProfile(String nhi) throws InvalidObjectException {
-        Patient patient = Database.getPatientByNhi(nhi);
+    private void loadProfile(Patient patient) throws InvalidObjectException {
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
         firstNameValue.setText(patient.getFirstName());
@@ -230,7 +195,6 @@ public class GUIPatientProfile {
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         dateOfDeathLabel.setText(patient.getDeath() == null ? "Not set" : patient.getDeath()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        deathLocationLbl.setText(patient.getDeathLocation() == null ? "Not set" : patient.getDeathLocation());
         age.setText(String.valueOf(patient.getAge()));
         heightLbl.setText(String.valueOf(patient.getHeight() + " m"));
         weightLbl.setText(String.valueOf(patient.getWeight() + " kg"));
@@ -334,6 +298,7 @@ public class GUIPatientProfile {
     public void deleteProfile() {
         Patient patient = (Patient) userControl.getTargetUser();
         Action action = new Action(patient, null);
+        new AdministratorDataService().deleteUser(patient);
         for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
             if (stage instanceof UndoableStage) {
                 for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {

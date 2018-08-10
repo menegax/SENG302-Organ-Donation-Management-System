@@ -1,8 +1,10 @@
 package utility.undoRedo;
 
+import data_access.factories.DAOFactory;
+import data_access.interfaces.IUserDataAccess;
 import controller.ScreenControl;
 import model.User;
-import service.Database;
+import utility.GlobalEnums;
 
 /**
  * Represents an action (edit, add, delete) performed on a user in the application
@@ -14,7 +16,10 @@ public class Action {
     private User after;
     private boolean isExecuted;
 
-    ScreenControl screenControl = ScreenControl.getScreenControl();
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+    private IUserDataAccess dao = factory.getUserDataAccess();
 
     /**
      * Constructor for the action
@@ -44,11 +49,11 @@ public class Action {
      */
     public void execute() {
         if (after == null) {
-            Database.removeUser(current);
+            dao.deleteUser(current);
             current = null;
         } else if (before == null) {
             current = after.deepClone();
-            Database.addUser(current);
+            dao.addUser(current);
         } else {
             current.setAttributes(after);
         }
@@ -62,9 +67,9 @@ public class Action {
     public void unexecute() {
         if (after == null) {
             current = before.deepClone();
-            Database.addUser(current);
+            dao.addUser(current);
         } else if (before == null) {
-            Database.removeUser(current);
+            dao.deleteUser(current);
             current = null;
         } else {
             current.setAttributes(before);

@@ -17,8 +17,8 @@ import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +30,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIRequiredOrganDeregistrationReason {
 
     @FXML
-    private DateTimePicker dateOfDeath;
+    private DatePicker dateOfDeath;
 
     @FXML
     private Label dateOfDeathLabel;
@@ -65,27 +65,17 @@ public class GUIRequiredOrganDeregistrationReason {
     public void initialize() {
         UserControl userControl = new UserControl();
         target = (Patient) userControl.getTargetUser();
-        System.out.println("target orgs: " + target.getRequiredOrgans()); //todo rm
         populateDropdown();
         populateForm();
-        prepareHiddenForm();
-    }
-
-    private void prepareHiddenForm() {
         dateOfDeath.setDisable(true);
         dateOfDeath.setVisible(false);
-        locationDeathTxt.setDisable(true);
-        locationDeathTxt.setVisible(false);
         dateOfDeathLabel.setDisable(true);
         dateOfDeathLabel.setVisible(false);
         curedLabel.setDisable(true);
         curedLabel.setVisible(false);
         diseaseCured.setDisable(true);
         diseaseCured.setVisible(false);
-        locationDeathTxt.setDisable(true);
-        locationDeathTxt.setVisible(false);
     }
-
 
     /**
      * Populates drop down menu that represent enum data of reasons for deregistering patient required organs
@@ -93,16 +83,16 @@ public class GUIRequiredOrganDeregistrationReason {
     private void populateDropdown() {
         // Populate blood group drop down with values from the deregistration reasons enum
         List<GlobalEnums.DeregistrationReason> deregistrationReasons = new ArrayList<>();
-        if (target.getCurrentDiseases()
-                .size() < 1) {
+        if (target.getCurrentDiseases().size() < 1) {
             for (GlobalEnums.DeregistrationReason reason : GlobalEnums.DeregistrationReason.values()) {
                 if (reason != GlobalEnums.DeregistrationReason.CURED) {
                     deregistrationReasons.add(reason);
                 }
             }
-        }
-        else {
-            deregistrationReasons.addAll(Arrays.asList(GlobalEnums.DeregistrationReason.values()));
+        } else {
+            for (GlobalEnums.DeregistrationReason reason : GlobalEnums.DeregistrationReason.values()) {
+                deregistrationReasons.add(reason);
+            }
             Set<CustomMenuItem> diseaseItems = new HashSet<>();
             for (Disease disease : target.getCurrentDiseases()) {
                 if (disease.getDiseaseState() != GlobalEnums.DiseaseState.CURED) {
@@ -113,13 +103,11 @@ public class GUIRequiredOrganDeregistrationReason {
                     diseaseItems.add(menuItem);
                 }
             }
-            diseaseCured.getItems()
-                    .setAll(diseaseItems);
+            diseaseCured.getItems().setAll(diseaseItems);
         }
         ObservableList<GlobalEnums.DeregistrationReason> deregistrationReasonsOL = FXCollections.observableList(deregistrationReasons);
         reasons.setItems(deregistrationReasonsOL);
     }
-
 
     /**
      * Populates the scene controls with values from the patient object
@@ -129,10 +117,8 @@ public class GUIRequiredOrganDeregistrationReason {
         reasons.setValue(GlobalEnums.DeregistrationReason.ERROR);
     }
 
-
     /**
      * Sets the label with organ name
-     *
      * @param organ the organ being set to label
      */
     public void setOrgan(GlobalEnums.Organ organ) {
@@ -140,7 +126,6 @@ public class GUIRequiredOrganDeregistrationReason {
         pleaseSpecify.setText("Please specify a reason for removing " + organ + ": ");
         reasonTitle.setText("Deregistration of " + StringUtils.capitalize(organ.toString()));
     }
-
 
     /**
      * set the reason selected
@@ -154,42 +139,31 @@ public class GUIRequiredOrganDeregistrationReason {
             diseaseCured.setVisible(false);
             dateOfDeath.setDisable(false);
             dateOfDeath.setVisible(true);
-            locationDeathTxt.setDisable(false);
-            locationDeathTxt.setVisible(true);
             dateOfDeathLabel.setDisable(false);
             dateOfDeathLabel.setVisible(true);
-            locationDeathTxt.setDisable(false);
-            locationDeathTxt.setVisible(true);
-//            okButton.setLayoutY(169.0);
-        }
-        else if (reasons.getValue() == GlobalEnums.DeregistrationReason.CURED) {
+            okButton.setLayoutY(169.0);
+        } else if (reasons.getValue() == GlobalEnums.DeregistrationReason.CURED) {
             curedLabel.setDisable(false);
             curedLabel.setVisible(true);
             diseaseCured.setDisable(false);
             diseaseCured.setVisible(true);
             dateOfDeath.setDisable(true);
             dateOfDeath.setVisible(false);
-            locationDeathTxt.setDisable(true);
-            locationDeathTxt.setVisible(false);
             dateOfDeathLabel.setDisable(true);
             dateOfDeathLabel.setVisible(false);
-//            okButton.setLayoutY(169.0);
-        }
-        else {
+            okButton.setLayoutY(169.0);
+        } else {
             dateOfDeath.setDisable(true);
             dateOfDeath.setVisible(false);
-            locationDeathTxt.setDisable(true);
-            locationDeathTxt.setVisible(false);
             dateOfDeathLabel.setDisable(true);
             dateOfDeathLabel.setVisible(false);
             curedLabel.setDisable(true);
             curedLabel.setVisible(false);
             diseaseCured.setDisable(true);
             diseaseCured.setVisible(false);
-//            okButton.setLayoutY(100.0);
+            okButton.setLayoutY(100.0);
         }
     }
-
 
     /**
      * saves the reason why the clinician removed a organ from the patient required organs list
@@ -297,10 +271,8 @@ public class GUIRequiredOrganDeregistrationReason {
                 .remove("invalid");
     }
 
-
     /**
      * Fetches the list of diseases that have been selected within the dropdown menu
-     *
      * @return The list of disease instances that are selected
      */
     private List<Disease> getSelectedDiseases() {
@@ -316,7 +288,6 @@ public class GUIRequiredOrganDeregistrationReason {
         }
         return selected;
     }
-
 
     /**
      * Sets the diseases in the patient to cured if their name matches a name in the selected diseases list
