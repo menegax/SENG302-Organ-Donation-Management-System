@@ -2,7 +2,6 @@ package cli;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import service.Database;
 
 import java.util.logging.Level;
 
@@ -19,8 +18,8 @@ public class CLIImport implements Runnable {
     private String fileName;
 
     public void run() {
-        Database.importFromDiskPatients(fileName);
         userActions.log(Level.INFO, "Successfully imported", "Attempted to import patients");
+        //Covered in branch 40
     }
 
 }

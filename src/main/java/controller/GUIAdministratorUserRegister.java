@@ -1,5 +1,6 @@
 package controller;
 
+import data_access.factories.DAOFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -13,7 +14,9 @@ import javafx.util.StringConverter;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
-import service.Database;
+import service.AdministratorDataService;
+import service.ClinicianDataService;
+import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.undoRedo.Action;
@@ -30,8 +33,6 @@ import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
-
-import javax.xml.crypto.Data;
 
 public class GUIAdministratorUserRegister extends UndoableController {
 
@@ -80,6 +81,8 @@ public class GUIAdministratorUserRegister extends UndoableController {
 
     private UserControl userControl = new UserControl();
 
+    DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+    DAOFactory mysqlFactory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
 
     /**
      * Sets up register page GUI elements
@@ -340,8 +343,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
                         .toUpperCase())) {
             valid = setInvalid(userIdRegister);
             userActions.log(Level.WARNING, "NHI must be 3 characters followed by 4 numbers", "Attempted to register new patient");
-        }
-        else if (Database.isPatientInDb(userIdRegister.getText())) {
+        } else if (factory.getPatientDataAccess().getPatientByNhi(userIdRegister.getText()) != null) {
             // checks to see if nhi already in use
             valid = setInvalid(userIdRegister);
             userActions.log(Level.WARNING, "Patient with the given NHI already exists", "Attempted to register new patient");
@@ -395,8 +397,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
                 .matches("([A-Za-z0-9]+[-]*[_]*)+")) {
             valid = setInvalid(userIdRegister);
             error += "Invalid username.\n";
-        }
-        else if (Database.usernameUsed(userIdRegister.getText())) {
+        } else if (factory.getAdministratorDataAccess().getAdministratorByUsername(userIdRegister.getText()) != null) {
             valid = setInvalid(userIdRegister);
             error += "Username already in use.\n";
         }
@@ -471,19 +472,26 @@ public class GUIAdministratorUserRegister extends UndoableController {
         }
         if (patientButton.isSelected()) {
             LocalDate birth = birthRegister.getValue();
-            statesHistoryScreen.addAction(new Action(null, new Patient(id, firstName, middles, lastName, birth)));
+            Patient after = new Patient(id, firstName, middles, lastName, birth);
+            statesHistoryScreen.addAction(new Action(null, after));
+            new PatientDataService().save(after);
             userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
-        }
-        else if (clinicianButton.isSelected()) {
-            String region = regionRegister.getValue()
-                    .toString();
-            int staffID = Database.getNextStaffID();
-            statesHistoryScreen.addAction(new Action(null, new Clinician(staffID, firstName, middles, lastName, Region.getEnumFromString(region))));
+        } else if (clinicianButton.isSelected()) {
+            String region = regionRegister.getValue().toString();
+            int staffID = new ClinicianDataService().nextStaffId();
+            Clinician after = new Clinician(staffID, firstName, middles, lastName, Region.getEnumFromString(region));
+            statesHistoryScreen.addAction(new Action(null, after));
+            new ClinicianDataService().save(after);
             userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
-        }
-        else {
-            statesHistoryScreen.addAction(new Action(null, new Administrator(id, firstName, middles, lastName, password)));
-            userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
+        } else {
+            try {
+                Administrator after = new Administrator(id, firstName, middles, lastName, password);
+                statesHistoryScreen.addAction(new Action(null, after));
+                new AdministratorDataService().save(after);
+                userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
+            } catch (IllegalArgumentException e) {
+                userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");
+            }
         }
         statesHistoryScreen.getUndoableStage()
                 .setChangingStates(true);
