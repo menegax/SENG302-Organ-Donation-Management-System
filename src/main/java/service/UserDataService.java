@@ -55,7 +55,7 @@ public class UserDataService implements IUserDataService, Serializable {
             access.updateWaitingList(organRequests);
             deleted.forEach(u -> {
                 if (u instanceof Patient) {
-                    patientDataAccess.deletePatient((Patient) u);
+                    patientDataAccess.deletePatientByNhi(((Patient) u).getNhiNumber());
                 } else if (u instanceof Clinician) {
                     clinicianDataService.deleteClinician((Clinician) u);
                 } else {
