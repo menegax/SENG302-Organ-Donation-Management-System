@@ -76,6 +76,7 @@ public class UserDataService implements IUserDataService, Serializable {
      * Prepares the application on start up. Adds default admin and clinician to remote database
      */
     public void prepareApplication() {
+        System.setProperty("connection_type", GlobalEnums.DbType.PRODUCTION.getValue());
         AdministratorDataService administratorDataService = new AdministratorDataService();
         ClinicianDataService clinicianDataService = new ClinicianDataService();
         if (clinicianDataService.getClinician(0) == null) {

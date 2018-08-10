@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import service.UserDataService;
+import utility.GlobalEnums;
 import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;

@@ -7,6 +7,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import sun.misc.Resource;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utility.ClinicianActionRecord;
+import utility.GlobalEnums;
 import utility.PatientActionRecord;
 
 import java.io.InputStream;
@@ -32,10 +33,10 @@ public class MySqlFactory extends DAOFactory {
      */
     private MySqlFactory() {
         String connection_type = System.getProperty("connection_type");
-        if (connection_type != null && connection_type.equals(TEST.getValue())) {
-            config = new HikariConfig("/sql/HikariConfigTest.properties");
-        } else {
+        if (connection_type != null && connection_type.equals(GlobalEnums.DbType.PRODUCTION.getValue())) {
             config = new HikariConfig("/sql/HikariConfigProd.properties");
+        } else {
+            config = new HikariConfig("/sql/HikariConfigTest.properties");
         }
         ds = new HikariDataSource(config);
     }
