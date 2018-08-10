@@ -1,7 +1,7 @@
 package data_access_test;
 
-import DataAccess.DBHelper;
-import DataAccess.factories.DAOFactory;
+import data_access.DBHelper;
+import data_access.factories.DAOFactory;
 import model.Patient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

@@ -1,6 +1,5 @@
 package controller;
 
-import DataAccess.factories.DAOFactory;
 import model.*;
 import service.*;
 import com.google.gson.JsonArray;

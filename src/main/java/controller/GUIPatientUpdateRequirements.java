@@ -1,8 +1,6 @@
 package controller;
 
-import DataAccess.factories.DAOFactory;
-import DataAccess.interfaces.IClinicianDataAccess;
-import DataAccess.localDAO.ClinicianLocalDAO;
+import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

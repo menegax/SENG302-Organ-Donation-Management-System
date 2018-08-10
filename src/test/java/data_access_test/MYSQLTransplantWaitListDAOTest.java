@@ -1,8 +1,7 @@
 package data_access_test;
 
-import DataAccess.DBHelper;
-import DataAccess.factories.DAOFactory;
-import com.sun.org.apache.xpath.internal.operations.Or;
+import data_access.DBHelper;
+import data_access.factories.DAOFactory;
 import model.Patient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -13,8 +12,6 @@ import utility.SystemLogger;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 
 import static java.util.logging.Level.OFF;

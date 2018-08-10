@@ -1,16 +1,15 @@
 package service;
 
-import DataAccess.factories.DAOFactory;
-import DataAccess.interfaces.IAdministratorDataAccess;
-import DataAccess.interfaces.IClinicianDataAccess;
-import DataAccess.interfaces.IPatientDataAccess;
-import DataAccess.interfaces.IUserDataAccess;
+import data_access.factories.DAOFactory;
+import data_access.interfaces.IAdministratorDataAccess;
+import data_access.interfaces.IClinicianDataAccess;
+import data_access.interfaces.IPatientDataAccess;
+import data_access.interfaces.IUserDataAccess;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
 import service.interfaces.IAdministratorDataService;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 

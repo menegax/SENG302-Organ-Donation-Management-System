@@ -1,6 +1,6 @@
 package controller;
 
-import DataAccess.factories.DAOFactory;
+import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;

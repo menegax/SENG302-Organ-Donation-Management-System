@@ -1,6 +1,6 @@
 package cli;
-import DataAccess.factories.DAOFactory;
-import DataAccess.interfaces.IPatientDataAccess;
+import data_access.factories.DAOFactory;
+import data_access.interfaces.IPatientDataAccess;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import service.PatientDataService;

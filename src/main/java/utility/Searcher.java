@@ -1,7 +1,7 @@
 package utility;
 
 
-import DataAccess.localDAO.LocalDB;
+import data_access.localDAO.LocalDB;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;

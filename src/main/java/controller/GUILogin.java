@@ -2,10 +2,6 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 
-import DataAccess.factories.DAOFactory;
-import DataAccess.factories.MySqlFactory;
-import DataAccess.interfaces.IClinicianDataAccess;
-import DataAccess.interfaces.IPatientDataAccess;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,17 +22,13 @@ import model.Patient;
 import service.AdministratorDataService;
 import service.ClinicianDataService;
 import service.PatientDataService;
-import service.UserDataService;
 import service.interfaces.IClinicianDataService;
-import utility.GlobalEnums;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;

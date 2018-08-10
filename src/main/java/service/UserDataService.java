@@ -1,11 +1,11 @@
 package service;
 
-import DataAccess.factories.DAOFactory;
-import DataAccess.interfaces.IAdministratorDataAccess;
-import DataAccess.interfaces.IClinicianDataAccess;
-import DataAccess.interfaces.IPatientDataAccess;
-import DataAccess.interfaces.ITransplantWaitListDataAccess;
-import DataAccess.localDAO.LocalDB;
+import data_access.factories.DAOFactory;
+import data_access.interfaces.IAdministratorDataAccess;
+import data_access.interfaces.IClinicianDataAccess;
+import data_access.interfaces.IPatientDataAccess;
+import data_access.interfaces.ITransplantWaitListDataAccess;
+import data_access.localDAO.LocalDB;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;

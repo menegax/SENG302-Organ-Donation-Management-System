@@ -1,6 +1,6 @@
 package controller;
 
-import DataAccess.factories.DAOFactory;
+import data_access.factories.DAOFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -33,8 +33,6 @@ import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
-
-import javax.xml.crypto.Data;
 
 public class GUIAdministratorUserRegister extends UndoableController {
 

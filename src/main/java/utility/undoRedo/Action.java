@@ -1,7 +1,7 @@
 package utility.undoRedo;
 
-import DataAccess.factories.DAOFactory;
-import DataAccess.interfaces.IUserDataAccess;
+import data_access.factories.DAOFactory;
+import data_access.interfaces.IUserDataAccess;
 import controller.ScreenControl;
 import model.User;
 import utility.GlobalEnums;
