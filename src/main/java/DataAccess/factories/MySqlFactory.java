@@ -4,10 +4,15 @@ import DataAccess.interfaces.*;
 import DataAccess.mysqlDAO.*;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import sun.misc.Resource;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utility.ClinicianActionRecord;
 import utility.PatientActionRecord;
 
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -28,9 +33,9 @@ public class MySqlFactory extends DAOFactory {
     private MySqlFactory() {
         String connection_type = System.getProperty("connection_type");
         if (connection_type != null && connection_type.equals(TEST.getValue())) {
-            config = new HikariConfig("src/main/resources/sql/HikariConfigTest.properties"); //todo:  check in jar, apparently it wraps in class loader
+            config = new HikariConfig("/sql/HikariConfigTest.properties");
         } else {
-            config = new HikariConfig("src/main/resources/sql/HikariConfigProd.properties"); //todo:  check in jar, apparently it wraps in class loader
+            config = new HikariConfig("/sql/HikariConfigProd.properties");
         }
         ds = new HikariDataSource(config);
     }
