@@ -27,7 +27,6 @@ public class DiseaseTest {
     public static void setUp() {
         userActions.setLevel(OFF);
         SystemLogger.systemLogger.setLevel(OFF);
-        System.setProperty("connection_type", GlobalEnums.DbType.TEST.getValue());
         disease = new Disease("Aids", GlobalEnums.DiseaseState.CHRONIC);
         diseaseCarrier = new Patient("ABC1239", "Joe", null, "Bloggs", LocalDate.of(2018, 01, 01));
     }
