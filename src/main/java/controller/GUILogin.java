@@ -60,16 +60,18 @@ public class GUILogin implements TouchscreenCapable {
      */
     public void initialize() {
         // Enter key triggers log in
-        loginTouchPane = new TouchPaneController(loginPane);
         nhiLogin.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         loginPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 logIn();
             }
         });
-        loginPane.setOnZoom(this::zoomWindow);
-        loginPane.setOnRotate(this::rotateWindow);
-        loginPane.setOnScroll(this::scrollWindow);
+        if(screenControl.isTouch()) {
+            loginTouchPane = new TouchPaneController(loginPane);
+            loginPane.setOnZoom(this::zoomWindow);
+            loginPane.setOnRotate(this::rotateWindow);
+            loginPane.setOnScroll(this::scrollWindow);
+        }
 
     }
 

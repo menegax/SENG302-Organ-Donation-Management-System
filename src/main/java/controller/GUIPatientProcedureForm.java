@@ -71,10 +71,12 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
                 CheckBox checkbox = (CheckBox) ((CustomMenuItem) menuItem).getContent();
             }
         }
-        procedureTouchPane = new TouchPaneController(procedureUpdatePane);
-        procedureUpdatePane.setOnZoom(this::zoomWindow);
-        procedureUpdatePane.setOnRotate(this::rotateWindow);
-        procedureUpdatePane.setOnScroll(this::scrollWindow);
+        if(screenControl.isTouch()) {
+            procedureTouchPane = new TouchPaneController(procedureUpdatePane);
+            procedureUpdatePane.setOnZoom(this::zoomWindow);
+            procedureUpdatePane.setOnRotate(this::rotateWindow);
+            procedureUpdatePane.setOnScroll(this::scrollWindow);
+        }
     }
 
     /**

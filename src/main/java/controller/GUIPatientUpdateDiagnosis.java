@@ -109,10 +109,12 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
         }
         populateDropdown();
         populateForm();
-        diagnosisTouchPane = new TouchPaneController(diagnosisUpdatePane);
-        diagnosisUpdatePane.setOnZoom(this::zoomWindow);
-        diagnosisUpdatePane.setOnRotate(this::rotateWindow);
-        diagnosisUpdatePane.setOnScroll(this::scrollWindow);
+        if(screenControl.isTouch()) {
+            diagnosisTouchPane = new TouchPaneController(diagnosisUpdatePane);
+            diagnosisUpdatePane.setOnZoom(this::zoomWindow);
+            diagnosisUpdatePane.setOnRotate(this::rotateWindow);
+            diagnosisUpdatePane.setOnScroll(this::scrollWindow);
+        }
     }
 
     /**

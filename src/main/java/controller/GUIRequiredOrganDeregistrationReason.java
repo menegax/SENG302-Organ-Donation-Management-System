@@ -88,13 +88,15 @@ public class GUIRequiredOrganDeregistrationReason extends TargetedController imp
         curedLabel.setVisible(false);
         diseaseCured.setDisable(true);
         diseaseCured.setVisible(false);
-        deregistrationReasonTouchController = new TouchPaneController(deregistrationReasonPane);
-        deregistrationReasonPane.setOnTouchPressed(event -> {
-            deregistrationReasonPane.toFront();
-        });
-        deregistrationReasonPane.setOnZoom(this::zoomWindow);
-        deregistrationReasonPane.setOnRotate(this::rotateWindow);
-        deregistrationReasonPane.setOnScroll(this::scrollWindow);
+        if(screenControl.isTouch()) {
+            deregistrationReasonTouchController = new TouchPaneController(deregistrationReasonPane);
+            deregistrationReasonPane.setOnTouchPressed(event -> {
+                deregistrationReasonPane.toFront();
+            });
+            deregistrationReasonPane.setOnZoom(this::zoomWindow);
+            deregistrationReasonPane.setOnRotate(this::rotateWindow);
+            deregistrationReasonPane.setOnScroll(this::scrollWindow);
+        }
     }
 
     /**
