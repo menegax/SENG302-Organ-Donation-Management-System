@@ -42,7 +42,7 @@ public class GUIClinicianHistory {
 
     private ObservableList<ClinicianActionRecord> masterData = FXCollections.observableArrayList();
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
 
     /**
      * Initializes the screen and sets up the target for records as the currently logged in user

@@ -7,46 +7,24 @@ import java.util.Arrays;
  */
 public class GlobalEnums {
 
-//	public enum dbFields {
-//		FNAME("FName"), MNAMES("MName"), LNAME("LName"), STREET1("Street1"), STREET2("Street2"),
-//		SUBURB("Suburb"), REGION("Region"), ZIP("Zip"), MODIFIED("Modified"), BIRTHDATE("Birth"),
-//        CREATED("Created"), DEATHDATE("Death"), BIRTHGENDER("BirthGender"), PREFGENDER("PrefGender"),
-//        PREFNAME("PrefName"), HEIGHT("Height"), WEIGHT("Weight"), BLOODGROUP("BloodType"),
-//        DONATINGORGANS("DonatingOrgans"), RECEIVINGORGANS("ReceivingOrgans"), HOMEPHONE("HomePhone"),
-//        WORKPHONE("WorkPhone"), MOBILEPHONE("MobilePhone"), EMAIL("Email"), ECNAME("ECName"),
-//        ECRELATIONSHIP("ECRelationship"), ECHOMEPHONE("ECHomePhone"), ECWORKPHONE("ECWorkPhone"),
-//        ECMOBILEPHONE("ECMobilePhone"), ECEMAIL("ECEmail"), TIME("Time"), LEVEL("Level"),
-//        MESSAGE("Message"), ACTION("Action"), NAME("Name"), DATEDIAGNOSED("DateDiagnosed"),
-//        STATE("State"), SUMMARY("Summary"), DESCRIPTION("Description"), PROCEDUREDATE("ProDate"),
-//        AFFECTEDORGANS("AffectedOrgans"), WAITLISTORGAN("Organ");
-//
-//        private String value;
-//
-//        dbFields(final String value) {
-//            this.value = value;
-//        }
-//
-//
-//        public String getValue() {
-//            return value != null ? value : "Not set";
-//        }
-//
-//
-//        @Override
-//        public String toString() {
-//            return this.getValue() != null ? this.getValue() : "Not set";
-//        }
-//
-//
-//        public static dbFields getEnumFromString(String value) {
-//            try {
-//                return dbFields.valueOf(value.toUpperCase());
-//            }
-//            catch (IllegalArgumentException e) {
-//                return null;
-//            }
-//        }
-//	}
+    public enum DbType {
+        PRODUCTION("Production"), TEST("Test");
+
+        private String value;
+
+        DbType(final String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue();
+        }
+    }
 
 	public enum UIRegex {
 
@@ -309,7 +287,7 @@ public class GlobalEnums {
      * Enumerates all possible disease states
      */
     public enum DiseaseState {
-        CURED("cured"), CHRONIC("chronic");
+        CURED("cured"), CHRONIC("chronic"), NONE("none");
 
         private String value;
 
@@ -350,6 +328,15 @@ public class GlobalEnums {
 
         private String value;
 
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue();
+        }
+
 
         DeregistrationReason(final String value) {
             this.value = value;
@@ -386,6 +373,30 @@ public class GlobalEnums {
             } catch (IllegalArgumentException e) {
                 return null;
             }
+        }
+    }
+
+    public enum MedicationStatus {
+        CURRENT(1), HISTORY(0);
+
+        private int value;
+
+        MedicationStatus(int value) { this.value = value; }
+
+        public int getValue() {
+            return value;
+        }
+
+    }
+
+    public enum FactoryType {
+        MYSQL(1),LOCAL(1);
+        private int value;
+
+        FactoryType(int value) { this.value = value; }
+
+        public int getValue() {
+            return value;
         }
     }
 }

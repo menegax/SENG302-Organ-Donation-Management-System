@@ -12,15 +12,21 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.FINEST;
 import static utility.SystemLogger.systemLogger;
 
-public abstract class User implements Serializable {
+public abstract class User implements Serializable, Comparable<User> {
 
     private final UUID uuid = UUID.randomUUID();
 
     protected String firstName;
 
     protected List<String> middleNames;
+
+    // transient means that this property is not serialized on saving to disk
+    transient PropertyChangeSupport propertyChangeSupport;
 
     protected String lastName;
 
@@ -109,10 +115,8 @@ public abstract class User implements Serializable {
        if(propertyChangeSupport != null) {
            propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "User Modified", null, null));
        }
+//       systemLogger.log(FINEST, "User " + getUuid() + " modified");
    }
-
-    // transient means that this property is not serialized on saving to disk
-    transient PropertyChangeSupport propertyChangeSupport;
 
 
     public boolean getChanged() {
@@ -162,5 +166,10 @@ public abstract class User implements Serializable {
             propertyChangeSupport = new PropertyChangeSupport(this);
         }
         propertyChangeSupport.addPropertyChangeListener(propertyChangeListener);
+    }
+
+    @Override
+    public int compareTo(User o) {
+        return this.getNameConcatenated().compareTo(o.getNameConcatenated());
     }
 }

@@ -1,21 +1,20 @@
 package controller;
 
+import DataAccess.factories.DAOFactory;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
-import utility.StatusObservable;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import service.Database;
 import utility.GlobalEnums;
 
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.INFO;
@@ -62,20 +61,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
     @FXML
     private GridPane patientDonationsAnchorPane;
 
-    Database database = Database.getDatabase();
-
-
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     private Patient target;
 
@@ -110,7 +96,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
      * @param nhi patient NHI
      */
     private void loadProfile(String nhi) {
-        Patient patient = database.getPatientByNhi(nhi);
+        Patient patient = factory.getPatientDataAccess().getPatientByNhi(nhi);
         if (patient != null) {
             target = patient;
             populateForm(patient);
@@ -140,7 +126,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
      * @param patient patient with viewed donation
      */
     private void populateForm(Patient patient) {
-        ArrayList<GlobalEnums.Organ> organs = patient.getDonations();
+        List<GlobalEnums.Organ> organs = patient.getDonations();
         if (organs.contains(GlobalEnums.Organ.LIVER)) {
             liverCB.setSelected(true);
         }
@@ -271,6 +257,8 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
         Action action = new Action(target, after);
         statesHistoryScreen.addAction(action);
+        IPatientDataService patientDataService = new PatientDataService();
+        patientDataService.save(after);
 
         userActions.log(INFO, "Updated user donations to: " + newDonations, "Attempted to update donations");
     }

@@ -1,40 +1,31 @@
 package controller;
 
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.User;
-import service.Database;
+import service.ClinicianDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UIRegex;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
  * Controller class to control GUI Clinician updating screen.
  */
 public class GUIClinicianUpdateProfile extends UndoableController {
-
-    @FXML
-    public AnchorPane clinicianUpdateAnchorPane;
 
     @FXML
     private Label lastModifiedLbl;
@@ -64,28 +55,6 @@ public class GUIClinicianUpdateProfile extends UndoableController {
     private ChoiceBox regionDD;
 
     private Clinician target;
-
-    private StatesHistoryScreen screenHistory;
-
-    Database database = Database.getDatabase();
-
-    /**
-     * Undoes an action taken when editing a clinician
-     */
-    @FXML
-    public void undo(){
-        screenHistory.undo();
-    }
-
-    /**
-     * Redoes an action taken when editing a clinician
-     */
-    @FXML
-    public void redo(){
-        screenHistory.redo();
-    }
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
-
 
     /**
      * Initializes the clinician editing screen.
@@ -125,7 +94,8 @@ public class GUIClinicianUpdateProfile extends UndoableController {
      * @param staffId ID of clinician to load
      */
     private void loadProfile(int staffId) {
-        Clinician clinician = database.getClinicianByID(staffId);
+        ClinicianDataService dataService = new ClinicianDataService();
+        Clinician clinician = dataService.getClinician(staffId); //load from db
         if (clinician != null) {
             target = clinician;
             populateForm(clinician);
@@ -268,6 +238,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             after.userModified();
 
             Action action = new Action(target, after);
+            new ClinicianDataService().save(after);
             statesHistoryScreen.addAction(action);
         }
         else {

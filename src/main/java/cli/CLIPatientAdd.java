@@ -3,7 +3,8 @@ package cli;
 import model.Patient;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import service.Database;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,13 +34,13 @@ class CLIPatientAdd implements Runnable {
     @Option(names = {"-b", "--dateofbirth"}, required = true, description = "The date of birth of the patient (yyyy-mm-dd).")
     private LocalDate birth;
 
-    Database database = Database.getDatabase();
+    private IPatientDataService patientDataService = new PatientDataService();
 
     public void run() {
         Patient patient = new Patient(nhi, firstName, middleNames, lastName, birth);
         try {
-            database.add(patient);
-        } catch(IllegalArgumentException i){
+            patientDataService.save(patient);
+        } catch (IllegalArgumentException i) {
             userActions.log(Level.SEVERE, i.getMessage(), "attempted to add patient");
         }
     }

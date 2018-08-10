@@ -3,7 +3,8 @@ package cli;
 import model.Patient;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import service.Database;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class CLIOdms implements Runnable {
     @Option(names = {"-d", "--dev"}, hidden = true, description = "Auto adds a patient for your convenience.")
     private boolean devMode;
 
-    Database database = Database.getDatabase();
+    private IPatientDataService patientDataService = new PatientDataService();
 
     @Override
     public void run() {
@@ -45,15 +46,15 @@ public class CLIOdms implements Runnable {
     }
 
     private void prepTheApp() {
-        try{
-            database.add(new Patient("aaa1111", "David", new ArrayList<String>() {{
+        try {
+            patientDataService.save(new Patient("aaa1111", "David", new ArrayList<String>() {{
                 add("John");
             }}, "Dennison", LocalDate.of(1994, 12, 12)));
 
-            database.add(new Patient("bbb2222", "Peggy", new ArrayList<String>() {{
+            patientDataService.save(new Patient("bbb2222", "Peggy", new ArrayList<String>() {{
                 add("Jane");
             }}, "Peterson", LocalDate.of(1994, 12, 12)));
-        } catch (IllegalArgumentException i){
+        } catch (IllegalArgumentException i) {
             userActions.log(Level.WARNING, i.getMessage(), "attempted to prep the app using --dev mode");
         }
 

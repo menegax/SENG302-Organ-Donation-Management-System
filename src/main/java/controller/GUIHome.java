@@ -1,25 +1,10 @@
 package controller;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
-
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
@@ -30,7 +15,7 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
-import service.Database;
+import service.UserDataService;
 import utility.Searcher;
 import utility.StatusObservable;
 import utility.TouchPaneController;
@@ -41,6 +26,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
+
+import static java.util.logging.Level.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
 
 public class GUIHome implements Observer, TouchscreenCapable {
 
@@ -65,7 +55,6 @@ public class GUIHome implements Observer, TouchscreenCapable {
 
     private UserControl userControl = new UserControl();
 
-    private Database database = Database.getDatabase();
 
     private  enum TabName {
         PROFILE("Profile"), UPDATE("Update"), DONATIONS("Donations"), CONTACTDETAILS("Contact Details"),
@@ -252,10 +241,10 @@ public class GUIHome implements Observer, TouchscreenCapable {
      * @param title - title of the new tab
      * @param fxmlPath - path of the fxml to be loaded
      */
-    private void createTab(TabName title, String fxmlPath) throws IOException {
+    private void createTab(TabName title, String fxmlPath) {
         Tab newTab = new Tab();
         newTab.setText(title.toString());
-            newTab.setOnSelectionChanged(event -> {
+            newTab.selectedProperty().addListener(observable ->{
                 try {
                     newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
                 } catch (IOException e) {
@@ -354,11 +343,13 @@ public class GUIHome implements Observer, TouchscreenCapable {
             alert.setTitle("Unsaved changes");
             alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
                 systemLogger.log(FINE, "User trying to log out");
+                new UserDataService().save();
                 logOut();
             });
             alert.getDialogPane().lookupButton(ButtonType.NO).addEventFilter(ActionEvent.ACTION, event -> {
                 systemLogger.log(FINE, "User trying to log out");
                 logOut();
+                new UserDataService().clear();
             });
             alert.getDialogPane().lookupButton(ButtonType.CANCEL).addEventFilter(ActionEvent.ACTION, event -> {
 
@@ -378,11 +369,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         screenControl.setUpNewLogin(); // ONLY FOR SINGLE USER SUPPORT. REMOVE WHEN MULTI USER SUPPORT
         screenControl.setIsSaved(true);
         userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
-
-        // Resets all local changes
-        database.resetLocalDatabase();
-        database.loadAll();
-
+        new UserDataService().clear();
         Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
     }
 
@@ -398,22 +385,23 @@ public class GUIHome implements Observer, TouchscreenCapable {
         /* Build the menu bar with new menus and menu items */
 
         // APP
-        Menu menu1 = new Menu("App");
-        MenuItem menu1Item1 = new MenuItem("Log out");
-        menu1Item1.setAccelerator(screenControl.getLogOut());
-        menu1Item1.setOnAction(event -> {
-            attemptLogOut();
-        });
-        menu1.getItems().addAll(menu1Item1);
+//        Menu menu1 = new Menu("App");
+//        MenuItem menu1Item1 = new MenuItem("Log out");
+//        menu1Item1.setAccelerator(screenControl.getLogOut());
+//        menu1Item1.setOnAction(event -> {
+//            attemptLogOut();
+//        });
+//        menu1.getItems().addAll(menu1Item1);
 
         // FILE
         Menu menu2 = new Menu("File");
         MenuItem menu2Item1 = new MenuItem("Save");
         menu2Item1.setAccelerator(screenControl.getSave());
         menu2Item1.setOnAction(event -> {
+            UserDataService userDataService = new UserDataService();
+            userDataService.save();
             screenControl.setIsSaved(true);
-            database.updateDatabase();
-            userActions.log(INFO, "Successfully saved", "Attempted to save");
+            userActions.log(INFO, "Saved successfully", "Attempted to save");
         });
         if (userControl.getLoggedInUser() instanceof Administrator) {
             Menu subMenuImport = new Menu("Import"); // import submenu
@@ -422,7 +410,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
             menu2Item2.setOnAction(event -> {
                 File file = new FileChooser().showOpenDialog(stage);
                 if (file != null) {
-                    database.importFromDiskPatients(file.getAbsolutePath());
+                    //database.importFromDiskPatients(file.getAbsolutePath()); //TODO
                     userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
                 }
             });
@@ -430,14 +418,17 @@ public class GUIHome implements Observer, TouchscreenCapable {
             menu2Item3.setOnAction(event -> {
                 File file = new FileChooser().showOpenDialog(stage);
                 if (file != null) {
-                    database.importFromDiskPatients(file.getAbsolutePath());
+                  //  database.importFromDiskPatients(file.getAbsolutePath());
                     userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
                 }
             });
             subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
             menu2.getItems().addAll(subMenuImport);
         }
-        menu2.getItems().addAll(menu2Item1);
+        MenuItem menu2Item4 = new MenuItem("Log out");
+        menu2Item4.setAccelerator(screenControl.getLogOut());
+        menu2Item4.setOnAction(event -> attemptLogOut());
+        menu2.getItems().addAll(menu2Item1, menu2Item4);
 
         Menu menu3 = new Menu("Edit");
         MenuItem menu3Item1 = new MenuItem("Undo");
@@ -448,7 +439,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
         menu3Item2.setOnAction(event -> ((UndoableStage) stage).redo());
         menu3.getItems().addAll(menu3Item1, menu3Item2);
 
-        bar.getMenus().addAll(menu1, menu2, menu3);
+        bar.getMenus().addAll(menu2, menu3);
 
         boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless")
                 .equals("true");
@@ -470,7 +461,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
                 menuBar.getMenus()
                         .clear();
                 menuBar.getMenus()
-                        .addAll(menu1, menu2, menu3);
+                        .addAll(menu2, menu3);
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
             }
         }

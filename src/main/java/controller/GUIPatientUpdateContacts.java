@@ -1,23 +1,17 @@
 package controller;
 
+import DataAccess.factories.DAOFactory;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import model.Patient;
-import service.Database;
+import service.PatientDataService;
 import utility.GlobalEnums;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
@@ -25,7 +19,6 @@ import java.util.regex.Pattern;
 import utility.GlobalEnums.UIRegex;
 
 import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -75,11 +68,13 @@ public class GUIPatientUpdateContacts extends UndoableController {
      */
     private Patient target;
 
+    private Patient after;
+
     private UserControl userControl;
 
     private StatesHistoryScreen statesHistoryScreen;
 
-    Database database = Database.getDatabase();
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     @FXML
     private void redo() {
@@ -101,8 +96,8 @@ public class GUIPatientUpdateContacts extends UndoableController {
     public void saveContactDetails() {
         boolean valid = setPatientContactDetails();
         if (valid) {
-            database.updateDatabase();
-            screenControl.setIsSaved(false);
+            Action action = new Action(target, after);
+            statesHistoryScreen.addAction(action);
             userActions.log(INFO, "Successfully saved contact details", "Attempted to set invalid contact details");
         } else {
             userActions.log(Level.WARNING,"Failed to save contact details due to invalid fields", "Attempted to set invalid contact details");
@@ -199,9 +194,9 @@ public class GUIPatientUpdateContacts extends UndoableController {
      * @param nhi The nhi of the patient to load
      */
     private void loadProfile(String nhi) {
-
+        PatientDataService patientDataService = new PatientDataService();
         try {
-            target = database.getPatientByNhi(nhi);
+            target = patientDataService.getPatientByNhi(nhi);
         }
         catch (NullPointerException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
@@ -216,7 +211,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
     private boolean setPatientContactDetails() {
         boolean valid = true;
 
-        Patient after = (Patient) target.deepClone();
+        after = (Patient) target.deepClone();
         if (Pattern.matches(UIRegex.HOMEPHONE.getValue(), homePhoneField.getText())) {
             after.setHomePhone(homePhoneField.getText());
             setValid(homePhoneField);
@@ -308,8 +303,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
             valid = setInvalid(contactEmailAddressField);
         }
         if (valid) {
-            Action action = new Action(target, after);
-            statesHistoryScreen.addAction(action);
+
         }
         return valid;
     }

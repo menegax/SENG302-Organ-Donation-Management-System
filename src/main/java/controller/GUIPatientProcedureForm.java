@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Patient;
 import model.Procedure;
+import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.TouchPaneController;
@@ -66,16 +67,15 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
     private Procedure procedure; //The Procedure that is being edited (null in the case of adding a procedure)
     private Procedure procedureClone;
     private ScreenControl screenControl = ScreenControl.getScreenControl();
-    private UserControl userControl = new UserControl();
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
-
+    private PatientDataService patientDataService = new PatientDataService();
     private TouchPaneController procedureTouchPane;
 
     /**
      * Initial setup. Sets up undo/redo, Populates the affected organs dropdown
      */
     public void initialize() {
-        patient = (Patient) new UserControl().getTargetUser();
+        patient = patientDataService.getPatientByNhi(((Patient) new UserControl().getTargetUser()).getNhiNumber());
         patientClone = (Patient) patient.deepClone();
         setupDonations();
         for (MenuItem menuItem : affectedInput.getItems()) { //Adding organ checkboxes to the undo/redo controls

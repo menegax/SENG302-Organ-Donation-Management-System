@@ -1,83 +1,67 @@
 package model_test;
 
+import model.Disease;
+import model.Patient;
+import org.junit.*;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
+import utility.GlobalEnums;
+import utility.GlobalEnums.Organ;
+import utility.SystemLogger;
+
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 
-import model.Clinician;
-import model.Disease;
-import model.Patient;
-import org.junit.AfterClass;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import service.Database;
-import utility.GlobalEnums;
-import utility.GlobalEnums.Organ;
-
+import static java.util.logging.Level.OFF;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
-import static java.util.logging.Level.OFF;
-import static org.junit.Assert.*;
 
-public class PatientTest implements Serializable{
+public class PatientTest implements Serializable {
 
-    private static Database database;
     private static Patient testPatient; //Patient obj not within the database
 
     private static Patient testPatient1; //Patient obj not within the database
 
-    private static boolean validConnection = false;
-    
-	@BeforeClass
-	public static void setUpBeforeClass() {
-		userActions.setLevel(OFF);
-		validConnection = validateConnection();
-	}
-	
-	
-	private static boolean validateConnection() {
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection("jdbc:mysql://mysql2.csse.canterbury.ac.nz:3306/seng302-2018-team800-test?allowMultiQueries=true", "seng302-team800", "ScornsGammas5531");
-		} catch (SQLException e1) {
-			System.err.println("Failed to connect to UC database server.");
-		}
-		if (conn == null) {
-			return false;
-		}
-		return true;
-	}
-    
+    private static IPatientDataService patientDataService = new PatientDataService();
+
+    @BeforeClass
+    public static void setUpBeforeClass() {
+        userActions.setLevel(OFF);
+        SystemLogger.systemLogger.setLevel(OFF);
+        System.setProperty("connection_type", GlobalEnums.DbType.TEST.getValue());
+    }
+
     @Before
     public void setUp() {
-    	Assume.assumeTrue(validConnection);
-    	database  = Database.getDatabase();
         userActions.setLevel(Level.OFF);
         systemLogger.setLevel(Level.OFF);
         userActions.setLevel(Level.OFF);
 
-        testPatient = new Patient("ABC1234", "James", new ArrayList<String>(), "Wallace",
+        testPatient = new Patient("ABC1234", "James", new ArrayList<>(), "Wallace",
                 LocalDate.of(1970, 2, 12));
 
-        database.add(new Patient("XYZ9876", "Joe", new ArrayList<String>() {{
+        patientDataService.save(new Patient("XYZ9876", "Joe", new ArrayList<String>() {{
             add("Jane");
         }},
                 "Bloggs", LocalDate.of(1994, 12, 12)));
 
-        database.add(new Patient("DEF4567", "Bob", new ArrayList<String>(), "Bobby",
+        patientDataService.save(new Patient("DEF4567", "Bob", new ArrayList<String>(), "Bobby",
                 LocalDate.of(1994, 12, 12)));
 
         testPatient1 = new Patient("JJJ1234", "Rex", new ArrayList<String>(), "Petsberg",
-                LocalDate.of(1977, 6, 16));    }
-    
+                LocalDate.of(1977, 6, 16));
+    }
+
 
     /**
      * Test patient constructor
@@ -220,7 +204,7 @@ public class PatientTest implements Serializable{
      */
     @Test
     public void testGetAge() {
-        testPatient.setDeath(LocalDate.of(2005, 5, 12));
+        testPatient.setDeath(LocalDateTime.of(2005, 5, 12, 0, 0));
         assertEquals(35, testPatient.getAge());
     }
 
@@ -229,7 +213,7 @@ public class PatientTest implements Serializable{
      */
     @Test
     public void testGetAgeRightBeforeBirthday() {
-        testPatient.setDeath(LocalDate.of(2005, 2, 11));
+        testPatient.setDeath(LocalDateTime.of(2005, 2, 11, 0, 0));
         assertEquals(34, testPatient.getAge());
     }
 
@@ -259,14 +243,14 @@ public class PatientTest implements Serializable{
         Disease cured = new Disease("test8", GlobalEnums.DiseaseState.CURED);
 
         // Add diseases to patient
-        testPatient.setCurrentDiseases(new ArrayList<Disease>(){{
+        testPatient.setCurrentDiseases(new ArrayList<Disease>() {{
             add(noneToCured);
             add(chronicToCured);
             add(noneToChronic);
             add(none);
             add(chronic);
         }});
-        testPatient.setPastDiseases(new ArrayList<Disease>(){{
+        testPatient.setPastDiseases(new ArrayList<Disease>() {{
             add(curedToNone);
             add(curedToChronic);
             add(cured);
@@ -305,7 +289,10 @@ public class PatientTest implements Serializable{
         Patient beforePatient = givenPatient();
         Patient afterPatient = givenPatient();
         afterPatient.setFirstName("Different");
-        afterPatient.setMiddleNames(new ArrayList<String>() {{add("Middle"); add("Name");}});
+        afterPatient.setMiddleNames(new ArrayList<String>() {{
+            add("Middle");
+            add("Name");
+        }});
         beforePatient.setAttributes(afterPatient);
         assertEquals("Different", beforePatient.getFirstName());
         assertEquals("Name", beforePatient.getMiddleNames().get(1));
@@ -336,7 +323,7 @@ public class PatientTest implements Serializable{
      * Check the attributes have been set correctly upon patient obj creation
      */
     private void thenPatientHasAttributes(Patient patient) {
-        assertTrue(patient.getCREATED() != null);
+        assertNotNull(patient.getCREATED());
         assertEquals(patient.getFirstName(), "Bob");
         assertEquals(patient.getMiddleNames(), null);
         assertEquals(patient.getLastName(), "Wallace");
@@ -381,8 +368,9 @@ public class PatientTest implements Serializable{
 
     /**
      * Runs asserts that the same diseases occur in two lists irrespective of order
+     *
      * @param expectedDiseases the list of expected diseases
-     * @param actualDiseases the list of actual diseases
+     * @param actualDiseases   the list of actual diseases
      */
     private void checkSameDiseases(List<Disease> expectedDiseases, List<Disease> actualDiseases) {
         assertEquals(expectedDiseases.size(), actualDiseases.size());

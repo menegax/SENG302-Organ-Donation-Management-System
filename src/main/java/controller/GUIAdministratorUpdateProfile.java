@@ -1,19 +1,20 @@
 package controller;
 
+import DataAccess.factories.DAOFactory;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import model.Administrator;
-import model.Patient;
-import service.Database;
+import service.AdministratorDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.UIRegex;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,9 +50,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private Database database = Database.getDatabase();
-
-
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     /**
      * Initializes the administrator editing screen.
@@ -80,7 +79,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
      */
     private void loadProfile(String username) {
         try {
-            Administrator administrator = database.getAdministratorByUsername(username);
+            Administrator administrator = factory.getAdministratorDataAccess().getAdministratorByUsername(username);
             populateForm(administrator);
         }
         catch (NullPointerException e) {
@@ -182,6 +181,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
             after.userModified();
 
             Action action = new Action(target, after);
+            new AdministratorDataService().save(after);
             statesHistoryScreen.addAction(action);
 
             userActions.log(Level.INFO, "Successfully updated admin profile", "Attempted to update admin profile");
