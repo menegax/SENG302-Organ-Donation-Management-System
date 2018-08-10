@@ -1,14 +1,13 @@
 package cli;
 
+import DataAccess.factories.DAOFactory;
+import DataAccess.interfaces.IPatientDataAccess;
 import model.Patient;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import service.Database;
-
-import java.io.InvalidObjectException;
-import java.util.logging.Level;
-
-import static utility.UserActionHistory.userActions;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
+import utility.GlobalEnums;
 
 @SuppressWarnings("unused")
 @Command(name = "remove", description = "used to remove existing patients")
@@ -20,14 +19,12 @@ class CLIPatientRemove implements Runnable {
     @Option(names = {"-n", "--nhi"}, required = true, description = "The NHI number of the patient.")
     private String nhi;
 
+    private IPatientDataService patientDataService = new PatientDataService();
+    private IPatientDataAccess patientDataAccess = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL).getPatientDataAccess();
+
     public void run() {
-        try {
-            Patient patient = Database.getPatientByNhi(nhi);
-            Database.removePatient(nhi);
-            userActions.log(Level.INFO, "Successfully removed patient " + patient.getNhiNumber(), "attempted to remove patient");
-        } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, e.getMessage(), "attempted to remove patient");
-        }
+        Patient patient = patientDataService.getPatientByNhi(nhi);
+        patientDataAccess.deletePatient(patient);
     }
 
 }

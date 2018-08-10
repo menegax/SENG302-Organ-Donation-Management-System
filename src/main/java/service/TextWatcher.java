@@ -1,5 +1,7 @@
 package service;
 
+import utility.SystemLogger;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -30,10 +32,10 @@ public class TextWatcher {
                     method.invoke(classInstance,null); //invoke the method with the given class instance
                     timer.cancel(); //CANCEL TIMER THREAD!!!
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    userActions.log(Level.SEVERE, "Could not invoke method from timer", "Attempted to invoke autocomplete method");
+                    SystemLogger.systemLogger.log(Level.SEVERE, "Could not invoke method from timer", "Attempted to invoke autocomplete method");
                 }
             }
-        }, 500); // delay 500ms before executing timer task
+        }, 150); // delay 500ms before executing timer task
     }
 
     /**
