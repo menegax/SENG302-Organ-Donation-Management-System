@@ -5,19 +5,15 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
+
 import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +26,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIRequiredOrganDeregistrationReason {
 
     @FXML
-    private DatePicker dateOfDeath;
+    private DateTimePicker dateOfDeath;
 
     @FXML
     private Label dateOfDeathLabel;
@@ -52,6 +48,9 @@ public class GUIRequiredOrganDeregistrationReason {
 
     @FXML
     private MenuButton diseaseCured;
+
+    @FXML
+    private Button okButton;
 
     private GlobalEnums.Organ organ;
 
