@@ -2,8 +2,10 @@ package DataAccess.mysqlDAO;
 
 import DataAccess.factories.MySqlFactory;
 import DataAccess.interfaces.IAdministratorDataAccess;
+import DataAccess.interfaces.ILogDataAccess;
 import model.Administrator;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import utility.AdministratorActionRecord;
 import utility.ResourceManager;
 
 import java.sql.*;
@@ -15,9 +17,12 @@ import static utility.SystemLogger.systemLogger;
 public class AdministratorDAO implements IAdministratorDataAccess {
 
     private MySqlFactory mySqlFactory;
+    private ILogDataAccess<AdministratorActionRecord> administratorLogDAO;
 
     public AdministratorDAO() {
         mySqlFactory = MySqlFactory.getMySqlFactory();
+        administratorLogDAO = mySqlFactory.getAdministratorLogDataAccess();
+
     }
 
 
@@ -27,6 +32,7 @@ public class AdministratorDAO implements IAdministratorDataAccess {
             PreparedStatement preparedStatement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_ADMIN_QUERY"));
             for (Administrator administrator : administrators) {
                 preparedStatement = addUpdateParams(administrator, preparedStatement);
+                administratorLogDAO.saveLogs(administrator.getAdminActionsList(), administrator.getUsername());
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
