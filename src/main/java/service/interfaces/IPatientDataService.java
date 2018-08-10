@@ -13,8 +13,16 @@ public interface IPatientDataService {
      */
     public Patient getPatientByNhi(String nhi);
 
+    /**
+     * Save patient to local db
+     * @param patient - patient to save
+     */
     public void save(Patient patient);
 
+    /**
+     * Save a list of patients to db
+     * @param patientList - list of patients to save
+     */
     public void save(List<Patient> patientList);
 
 }

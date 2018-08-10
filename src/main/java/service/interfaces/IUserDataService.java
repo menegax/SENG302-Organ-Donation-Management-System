@@ -8,5 +8,8 @@ public interface IUserDataService {
      */
     public void save();
 
+    /**
+     * Resets and truncates local db + remote
+     */
     void clear();
 }
