@@ -8,11 +8,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.PatientDataService;
+import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums.*;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,8 +22,6 @@ import java.util.regex.Pattern;
 
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
-
-import tornadofx.control.DateTimePicker;
 
 public class GUIPatientUpdateProfile extends UndoableController {
 
@@ -161,7 +159,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
      */
     private void loadProfile(String nhi) {
         Patient patient = patientDataService.getPatientByNhi(nhi);
-       if (patient != null) {
+        if (patient != null) {
             target = patient;
             after = (Patient) patient.deepClone();
             populateForm(after);
@@ -298,15 +296,13 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
 
 
-            // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
-            if (!patientDataService.getPatientByNhi(nhiTxt.getText()).getNhiNumber().equals(target.getNhiNumber())) {
-                valid = setInvalid(nhiTxt);
-                invalidContent.append("NHI is already in use\n");
-            } else {
-                setValid(nhiTxt);
-            }
-
-
+        // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
+        if (!patientDataService.getPatientByNhi(nhiTxt.getText()).getNhiNumber().equals(target.getNhiNumber())) {
+            valid = setInvalid(nhiTxt);
+            invalidContent.append("NHI is already in use\n");
+        } else {
+            setValid(nhiTxt);
+        }
 
 
         // first name
@@ -442,7 +438,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             if (deathLocationTxt.getText().length() == 0) {
                 valid = setInvalid(deathLocationTxt);
                 invalidContent.append("Death location required if death date set");
-            } else if (!deathLocationTxt.getText().matches(Regex.DEATH_LOCATION.getValue())) {
+            } else if (!deathLocationTxt.getText().matches(UIRegex.DEATH_LOCATION.getValue())) {
                 valid = setInvalid(deathLocationTxt);
                 invalidContent.append("Incorrect death location format");
             } else {
@@ -519,8 +515,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             statesHistoryScreen.addAction(action);
             patientDataService.save(after);
             userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});
-        }
-        else {
+        } else {
             userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         }
     }

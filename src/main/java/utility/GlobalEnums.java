@@ -33,7 +33,8 @@ public class GlobalEnums {
 		NHI("[A-Z]{3}[0-9]{4}"),                 HOMEPHONE("0[0-9]{8}"),           WORKPHONE("0[0-9]{8}"),
 		MOBILEPHONE("(\\+[0-9]{11}|0[0-9]{9})"), EMAIL("([0-9|a-z|A-Z|.|_|-]+[@][a-z]+([.][a-z])+){0,254}"),
 		RELATIONSHIP("[a-z|-|A-Z]{0,30}"),        DISEASENAME("[a-z|-|A-Z]{1,50}"), ZIP("[0-9]{4}"),
-		WEIGHT("[0-9]+([.][0-9])?"),             HEIGHT("[0-9]+([.][0-9])?"),      USERNAME("[A-Z|0-9|_|-]{0,30}");
+		WEIGHT("[0-9]+([.][0-9])?"),             HEIGHT("[0-9]+([.][0-9])?"),      USERNAME("[A-Z|0-9|_|-]{0,30}"),
+        DEATH_LOCATION("^(\\d+ )?([a-zA-Z]+,? ?)+$");
 
 		private String value;
 
@@ -383,22 +384,6 @@ public class GlobalEnums {
         FactoryType(int value) { this.value = value; }
 
         public int getValue() {
-            return value;
-        }
-    }
-
-    /**
-     * Common regex expressions for validation
-     */
-    public enum Regex {
-        DEATH_LOCATION("^(\\d+ )?([a-zA-Z]+,? ?)+$");
-
-        private String value;
-        Regex(final String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
             return value;
         }
     }
