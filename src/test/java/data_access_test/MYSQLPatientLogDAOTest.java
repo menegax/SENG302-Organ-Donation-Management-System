@@ -31,7 +31,6 @@ public class MYSQLPatientLogDAOTest {
     public static void setUp() {
         userActions.setLevel(OFF);
         SystemLogger.systemLogger.setLevel(OFF);
-        System.setProperty("connection_type", GlobalEnums.DbType.TEST.getValue());
         daoFactory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
         dbHelper = new DBHelper();
     }

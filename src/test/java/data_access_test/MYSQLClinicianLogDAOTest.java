@@ -30,7 +30,6 @@ public class MYSQLClinicianLogDAOTest {
     public static void setUp() {
         userActions.setLevel(OFF);
         SystemLogger.systemLogger.setLevel(OFF);
-        System.setProperty("connection_type", DbType.TEST.getValue());
         daoFactory = DAOFactory.getDAOFactory(FactoryType.MYSQL);
         dbHelper = new DBHelper();
     }

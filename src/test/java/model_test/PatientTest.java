@@ -38,7 +38,6 @@ public class PatientTest implements Serializable {
     public static void setUpBeforeClass() {
         userActions.setLevel(OFF);
         SystemLogger.systemLogger.setLevel(OFF);
-        System.setProperty("connection_type", GlobalEnums.DbType.TEST.getValue());
     }
 
     @Before
