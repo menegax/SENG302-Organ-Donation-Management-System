@@ -20,8 +20,6 @@ import static utility.UserActionHistory.userActions;
 
 public class GUIPatientHistory {
 
-    private Patient target;
-
     @FXML
     private TableColumn<PatientActionRecord, String> timeStampColumn;
 
@@ -40,14 +38,12 @@ public class GUIPatientHistory {
     private ObservableList<PatientActionRecord> masterData = FXCollections.observableArrayList();
 
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
-
     /**
      * Initializes the patient history screen by loading all logs for the logged in patient
      */
     public void initialize() {
         UserControl userControl = new UserControl();
-        target = userControl.getLoggedInUser() instanceof Patient ? (Patient) userControl.getLoggedInUser() : null;
+        Patient target = userControl.getLoggedInUser() instanceof Patient ? (Patient) userControl.getLoggedInUser() : (Patient) userControl.getTargetUser();
         masterData.addAll(target.getUserActionsList());
         populateTable();
     }

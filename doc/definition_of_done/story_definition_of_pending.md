@@ -25,7 +25,6 @@ If a story is ready for review, it should be set to "Pending" on Agilefant.
 - Story set to **Pending**
 - Merge request has the **"WIP: "** prefix removed
 
-
 ## Persistent Features
 * Undo/redo
 * User action history

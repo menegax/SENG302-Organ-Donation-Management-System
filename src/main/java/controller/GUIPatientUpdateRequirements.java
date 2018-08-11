@@ -1,5 +1,6 @@
 package controller;
 
+import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,21 +11,23 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import javafx.scene.layout.GridPane;
 import model.Patient;
+import service.ClinicianDataService;
 import service.OrganWaitlist;
-import utility.StatusObservable;
+import service.PatientDataService;
+import service.interfaces.IClinicianDataService;
+import service.interfaces.IPatientDataService;
+import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import service.Database;
 import utility.GlobalEnums;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.*;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.INFO;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -68,13 +71,14 @@ public class GUIPatientUpdateRequirements extends UndoableController{
     @FXML
     private CheckBox connectivetissueCB;
 
-
     @FXML
     private GridPane patientRequirementsPane;
 
     private Patient target;
 
     private Patient after;
+
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     private UserControl userControl;
 
@@ -84,7 +88,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
 
     private Set<GlobalEnums.Organ> finalRequirements = new HashSet<>();
 
-//    private boolean closed = false;
+    private IClinicianDataService clinicianDataService = new ClinicianDataService();
 
     /**
      * Initializes the requirements screen by laoding in the current patient
@@ -113,11 +117,13 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      */
     private void loadProfile(String nhi) {
         try {
-            Patient patient = Database.getPatientByNhi(nhi);
-            target = patient;
-            after = (Patient) patient.deepClone();
-            populateForm(after);
-        } catch (InvalidObjectException e) {
+            Patient patient = factory.getPatientDataAccess().getPatientByNhi(nhi);
+            if (patient != null) {
+                target = patient;
+                after = (Patient) patient.deepClone();
+                populateForm(after);
+            }
+        } catch (NullPointerException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
         }
         controls = new ArrayList<Control>() {{
@@ -143,7 +149,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * @param patient currently being viewed
      */
     private void populateForm(Patient patient) {
-        ArrayList<GlobalEnums.Organ> organs = patient.getRequiredOrgans();
+        List<GlobalEnums.Organ> organs = patient.getRequiredOrgans();
         if (organs != null) {
             if (organs.contains(GlobalEnums.Organ.LIVER)) {
                 liverCB.setSelected(true);
@@ -277,6 +283,8 @@ public class GUIPatientUpdateRequirements extends UndoableController{
 
         Action action = new Action(target, after);
         statesHistoryScreen.addAction(action);
+        IPatientDataService patientDataService = new PatientDataService();
+        patientDataService.save(after);
     }
 
     /**
@@ -284,6 +292,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * reason popup for each deregistered organ
      */
     private void deregistrationReason() {
+        SystemLogger.systemLogger.log(INFO, "Patient had organ requirements deregistered. Asking for deregistration reason...");
         Set<GlobalEnums.Organ> removedOrgans = initialRequirements;
         removedOrgans.removeAll(finalRequirements);
 
@@ -291,10 +300,11 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             openReasonPopup(organ);
             after.removeRequired(organ);
         }
+
     }
 
     /**
-     * Opens the popup to select a reason for organ deregistration
+     * Opens the popup to getMedicationsByNhi a reason for organ deregistration
      * @param organ organ being validated for reason of deregistration
      */
     private void openReasonPopup(GlobalEnums.Organ organ) {
@@ -319,7 +329,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * waiting list.
      */
     private void createOrganRequests() {
-        OrganWaitlist waitlist = Database.getWaitingList();
+        OrganWaitlist waitlist = clinicianDataService.getOrganWaitList();
         Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();
         while (iter.hasNext()) {
             OrganWaitlist.OrganRequest next = iter.next();
@@ -330,6 +340,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
         for (GlobalEnums.Organ organ : after.getRequiredOrgans()) {
             waitlist.add(after, organ);
         }
+        clinicianDataService.updateOrganWaitList(waitlist);
     }
 
 }

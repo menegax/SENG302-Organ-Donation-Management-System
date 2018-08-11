@@ -14,8 +14,12 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	private SortedSet<OrganRequest> requests;
 
 	
-	OrganWaitlist() {
-		requests = new TreeSet<>();
+	public OrganWaitlist() {
+	    requests = new TreeSet<>();
+	}
+
+	public SortedSet<OrganRequest> getRequests() {
+		return requests;
 	}
 	
 	/**
@@ -25,9 +29,20 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	 * @return			- Returns true if Collection changed otherwise false.
 	 */
 	public boolean add(Patient receiver, Organ organ) {
-		return requests.add(new OrganRequest(receiver, organ));
+		OrganRequest request = new OrganRequest(receiver, organ);
+	    return requests.add(request);
 	}
-	
+
+    /**
+     * Adds a request for a organ to the waiting list.
+     * ONLY FOR USE BY THE DATABASE.
+     * @param name      - The name of the patient requesting a organ.
+     * @param organ     - The organ requested.
+     * @param date      - The date of the request.
+     * @param region    - The region of the organ request.
+     * @param nhi       - The NHI of the patient requesting a organ.
+     * @return          - Returns true if Collection changed, otherwise false.
+     */
 	public boolean add(String name, Organ organ, LocalDate date, Region region, String nhi) {
 		return requests.add(new OrganRequest(name, organ, date, region, nhi));
 	}
@@ -51,7 +66,6 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	
 	/**
 	 * A organ request for the waiting list.
-	 * @author PGLaffey
 	 */
 	public class OrganRequest implements Comparable<OrganRequest> {
 		LocalDate date;
@@ -60,15 +74,15 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		String name;
 		String nhi;
 		
-		OrganRequest(Patient receiver, Organ organ) {
+		public OrganRequest(Patient receiver, Organ organ) {
 			date = LocalDate.now();
 			region = receiver.getRegion();
 			this.organ = organ;
 			name = receiver.getNameConcatenated();
 			nhi = receiver.getNhiNumber();
 		}
-		
-		OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi) {
+
+		public OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi) {
 			this.date = date;
 			this.region = region;
 			this.organ = organ;

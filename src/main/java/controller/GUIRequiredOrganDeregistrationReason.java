@@ -13,9 +13,11 @@ import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
+
 import utility.GlobalEnums;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -190,7 +192,7 @@ public class GUIRequiredOrganDeregistrationReason {
                 userActions.log(Level.INFO, "Deregistered " + organ + " due to death on this date: " + dateOfDeath.getValue(), new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
             }
             target.setRequiredOrgans(new ArrayList());
-            target.setDeath(dateOfDeath.getValue());
+            target.setDeath(LocalDateTime.parse(dateOfDeath.getValue().toString()));
         } else if (reason == GlobalEnums.DeregistrationReason.RECEIVED) {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
         }
