@@ -228,7 +228,7 @@ public class Patient extends User {
             setBirth(birth);
         }
         if (death != null) {
-            setDeath(death);
+            setDeathDate(death);
         }
         if (street1 != null) {
             setStreet1(street1);
@@ -299,7 +299,7 @@ public class Patient extends User {
         setMiddleNames(newPatientAttributes.getMiddleNames());
         setPreferredName(newPatientAttributes.getPreferredName());
         setBirth(newPatientAttributes.getBirth());
-        setDeath(newPatientAttributes.getDeath());
+        setDeathDate(newPatientAttributes.getDeathDate());
         setDeathLocation(newPatientAttributes.getDeathLocation());
         setStreet1(newPatientAttributes.getStreet1());
         setStreet2(newPatientAttributes.getStreet2());
@@ -460,13 +460,24 @@ public class Patient extends User {
         userModified();
     }
 
-    public LocalDateTime getDeath() {
+    public LocalDateTime getDeathDate() {
         return death;
     }
 
-    public void setDeath(LocalDateTime death) {
+    public void setDeathDate(LocalDateTime death) {
         this.death = death;
         userModified();
+    }
+
+    public String getDeathLocation() {
+        return deathLocation;
+    }
+
+
+    public void setDeathLocation(String deathLocation) {
+        this.deathLocation = deathLocation;
+        userModified();
+        SystemLogger.systemLogger.log(FINEST, "Set death location for patient " + this.nhiNumber);
     }
 
     /**
@@ -777,13 +788,13 @@ public class Patient extends User {
         return nhiNumber;
     }
 
+
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
         ensureValidNhi();
         Searcher.getSearcher().removeIndex(this);
         this.nhiNumber = nhiNumber.toUpperCase();
         userModified();
     }
-
 
     public String getHomePhone() {
         return homePhone;
@@ -890,6 +901,7 @@ public class Patient extends User {
         return procedures;
     }
 
+
     public void setProcedures(List<Procedure> procedures) {
         this.procedures = procedures;
         userModified();
@@ -905,7 +917,6 @@ public class Patient extends User {
     public List<PatientActionRecord> getUserActionsList() {
         return userActionsList; //this is modifiable on purpose!
     }
-
 
     /**
      * Gets the current diseases infecting a donor
@@ -963,17 +974,6 @@ public class Patient extends User {
                 currentDiseases.remove(disease);
             }
         }
-    }
-
-    public String getDeathLocation() {
-        return deathLocation;
-    }
-
-
-    public void setDeathLocation(String deathLocation) {
-        this.deathLocation = deathLocation;
-        userModified();
-        SystemLogger.systemLogger.log(FINEST, "Set death location for patient " + this.nhiNumber);
     }
 
     public void addProcedure(Procedure procedure) {

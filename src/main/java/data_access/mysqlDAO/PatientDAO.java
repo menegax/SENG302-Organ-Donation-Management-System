@@ -253,7 +253,7 @@ public class PatientDAO implements IPatientDataAccess {
         statement.setString(5, patient.getBirth().toString());
         statement.setString(6, patient.getCREATED().toString());
         statement.setString(7, patient.getModified().toString());
-        statement.setString(8, patient.getDeath() == null ? null : patient.getDeath().toString());
+        statement.setString(8, patient.getDeathDate() == null ? null : patient.getDeathDate().toString());
         statement.setString(9, patient.getDeathLocation());
         statement.setString(10, patient.getBirthGender() == null ? null : patient.getBirthGender().toString().substring(0, 1));
         statement.setString(11, patient.getPreferredGender() == null ? null : patient.getPreferredGender().toString().substring(0, 1));

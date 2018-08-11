@@ -228,7 +228,7 @@ public class GUIRequiredOrganDeregistrationReason {
                 target.removeRequired(organ);
                 userActions.log(Level.INFO, "Deregistered " + organ + " due to death", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
             }
-            target.setDeath(dateOfDeath.getDateTimeValue());
+            target.setDeathDate(dateOfDeath.getDateTimeValue());
             target.setDeathLocation(locationDeathTxt.getText());
         }
         return valid;

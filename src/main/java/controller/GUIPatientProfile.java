@@ -190,10 +190,10 @@ public class GUIPatientProfile {
         genderDeclaration.setText("Birth Gender: ");
         genderStatus.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue());
         prefGenderLbl.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender().getValue());
-        vitalLbl1.setText(patient.getDeath() == null ? "Alive" : "Deceased");
+        vitalLbl1.setText(patient.getDeathDate() == null ? "Alive" : "Deceased");
         dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        dateOfDeathLabel.setText(patient.getDeath() == null ? "Not set" : patient.getDeath()
+        dateOfDeathLabel.setText(patient.getDeathDate() == null ? "Not set" : patient.getDeathDate()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         age.setText(String.valueOf(patient.getAge()));
         heightLbl.setText(String.valueOf(patient.getHeight() + " m"));

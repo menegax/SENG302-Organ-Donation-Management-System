@@ -233,7 +233,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             }
         }
         dobDate.setValue(patient.getBirth());
-        dateOfDeath.setDateTimeValue(patient.getDeath());
+        dateOfDeath.setDateTimeValue(patient.getDeathDate());
         deathLocationTxt.setText(patient.getDeathLocation());
         if (patient.getStreet1() != null) {
             street1Txt.setText(patient.getStreet1());
@@ -320,10 +320,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
             if (dobDate.getValue() != null) {
                 after.setBirth(dobDate.getValue());
             }
-            if (dateOfDeath.getValue() != null) {
-                after.setDeath(dateOfDeath.getDateTimeValue());
-            }
-            after.setDeathLocation(deathLocationTxt.getText());
+//            if (dateOfDeath.getValue() != null) {
+                after.setDeathDate(dateOfDeath.getDateTimeValue());
+                after.setDeathLocation(deathLocationTxt.getText());
+//            }
             after.setStreet1(street1Txt.getText());
             after.setStreet2(street2Txt.getText());
             after.setSuburb(suburbTxt.getText());
