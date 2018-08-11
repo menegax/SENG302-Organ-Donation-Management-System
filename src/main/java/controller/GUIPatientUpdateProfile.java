@@ -286,73 +286,78 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         // if all are valid
         if (valid) {
-            after.setNhiNumber(nhiTxt.getText());
-            after.setFirstName(firstnameTxt.getText());
-            after.setLastName(lastnameTxt.getText());
-
-            if (middlenameTxt.getText()
-                    .equals("")) {
-                after.setMiddleNames(new ArrayList<>());
-            } else {
-                List<String> middlenames = Arrays.asList(middlenameTxt.getText()
-                        .split(" "));
-                ArrayList<String> middles = new ArrayList<>(middlenames);
-                after.setMiddleNames(middles);
-            }
-            if (preferrednameTxt.getText() != null) {
-                after.setPreferredName(preferrednameTxt.getText());
-            }
-            if (birthGenderMaleRadio.isSelected()) {
-                after.setBirthGender(BirthGender.getEnumFromString("male"));
-            }
-            if (birthGenderFemaleRadio.isSelected()) {
-                after.setBirthGender(BirthGender.getEnumFromString("female"));
-            }
-            if (preferredGenderManRadio.isSelected()) {
-                after.setPreferredGender(PreferredGender.getEnumFromString("man"));
-            }
-            if (preferredGenderWomanRadio.isSelected()) {
-                after.setPreferredGender(PreferredGender.getEnumFromString("woman"));
-            }
-            if (preferredGenderNonBinaryRadio.isSelected()) {
-                after.setPreferredGender(PreferredGender.getEnumFromString("nonbinary"));
-            }
-            if (dobDate.getValue() != null) {
-                after.setBirth(dobDate.getValue());
-            }
-//            if (dateOfDeath.getValue() != null) {
-                after.setDeathDate(dateOfDeath.getDateTimeValue());
-                after.setDeathLocation(deathLocationTxt.getText());
-//            }
-            after.setStreet1(street1Txt.getText());
-            after.setStreet2(street2Txt.getText());
-            after.setSuburb(suburbTxt.getText());
-            if (regionDD.getValue() != null) {
-                after.setRegion(Region.getEnumFromString(regionDD.getSelectionModel()
-                        .getSelectedItem()));
-            }
-            if (zipTxt.getText() != null) {
-                after.setZip(zipTxt.getText()
-                        .equals("") ? 0 : Integer.parseInt(zipTxt.getText()));
-            }
-            if (weightTxt.getText() != null) {
-                after.setWeight(Double.parseDouble(weightTxt.getText()));
-            }
-            if (heightTxt.getText() != null) {
-                after.setHeight(Double.parseDouble(heightTxt.getText()));
-            }
-            if (bloodGroupDD.getValue() != null) {
-                after.setBloodGroup(BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
-                        .getSelectedItem()));
-            }
-
-            Action action = new Action(target, after);
-            statesHistoryScreen.addAction(action);
-            patientDataService.save(after);
+            setPatientAttributes();
             userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         } else {
             userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         }
+    }
+
+
+    private void setPatientAttributes() {
+        after.setNhiNumber(nhiTxt.getText());
+        after.setFirstName(firstnameTxt.getText());
+        after.setLastName(lastnameTxt.getText());
+
+        if (middlenameTxt.getText()
+                .equals("")) {
+            after.setMiddleNames(new ArrayList<>());
+        } else {
+            List<String> middlenames = Arrays.asList(middlenameTxt.getText()
+                    .split(" "));
+            ArrayList<String> middles = new ArrayList<>(middlenames);
+            after.setMiddleNames(middles);
+        }
+        if (preferrednameTxt.getText() != null) {
+            after.setPreferredName(preferrednameTxt.getText());
+        }
+        if (birthGenderMaleRadio.isSelected()) {
+            after.setBirthGender(BirthGender.getEnumFromString("male"));
+        }
+        if (birthGenderFemaleRadio.isSelected()) {
+            after.setBirthGender(BirthGender.getEnumFromString("female"));
+        }
+        if (preferredGenderManRadio.isSelected()) {
+            after.setPreferredGender(PreferredGender.getEnumFromString("man"));
+        }
+        if (preferredGenderWomanRadio.isSelected()) {
+            after.setPreferredGender(PreferredGender.getEnumFromString("woman"));
+        }
+        if (preferredGenderNonBinaryRadio.isSelected()) {
+            after.setPreferredGender(PreferredGender.getEnumFromString("nonbinary"));
+        }
+        if (dobDate.getValue() != null) {
+            after.setBirth(dobDate.getValue());
+        }
+
+        after.setDeathDate(dateOfDeath.getDateTimeValue());
+        after.setDeathLocation(deathLocationTxt.getText());
+
+        after.setStreet1(street1Txt.getText());
+        after.setStreet2(street2Txt.getText());
+        after.setSuburb(suburbTxt.getText());
+        if (regionDD.getValue() != null) {
+            after.setRegion(Region.getEnumFromString(regionDD.getSelectionModel()
+                    .getSelectedItem()));
+        }
+        if (zipTxt.getText() != null) {
+            after.setZip(zipTxt.getText()
+                    .equals("") ? 0 : Integer.parseInt(zipTxt.getText()));
+        }
+        if (weightTxt.getText() != null) {
+            after.setWeight(Double.parseDouble(weightTxt.getText()));
+        }
+        if (heightTxt.getText() != null) {
+            after.setHeight(Double.parseDouble(heightTxt.getText()));
+        }
+        if (bloodGroupDD.getValue() != null) {
+            after.setBloodGroup(BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
+                    .getSelectedItem()));
+        }
+
+        Action action = new Action(target, after);
+        statesHistoryScreen.addAction(action);
+        patientDataService.save(after);
     }
 
 
