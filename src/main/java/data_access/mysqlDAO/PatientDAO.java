@@ -254,18 +254,19 @@ public class PatientDAO implements IPatientDataAccess {
         statement.setString(6, patient.getCREATED().toString());
         statement.setString(7, patient.getModified().toString());
         statement.setString(8, patient.getDeath() == null ? null : patient.getDeath().toString());
-        statement.setString(9, patient.getBirthGender() == null ? null : patient.getBirthGender().toString().substring(0, 1));
-        statement.setString(10, patient.getPreferredGender() == null ? null : patient.getPreferredGender().toString().substring(0, 1));
-        statement.setString(11, patient.getPreferredName());
-        statement.setString(12, String.valueOf(patient.getHeight()));
-        statement.setString(13, String.valueOf(patient.getWeight()));
-        statement.setString(14, patient.getBloodGroup() == null ? null : patient.getBloodGroup().toString());
+        statement.setString(9, patient.getDeathLocation());
+        statement.setString(10, patient.getBirthGender() == null ? null : patient.getBirthGender().toString().substring(0, 1));
+        statement.setString(11, patient.getPreferredGender() == null ? null : patient.getPreferredGender().toString().substring(0, 1));
+        statement.setString(12, patient.getPreferredName());
+        statement.setString(13, String.valueOf(patient.getHeight()));
+        statement.setString(14, String.valueOf(patient.getWeight()));
+        statement.setString(15, patient.getBloodGroup() == null ? null : patient.getBloodGroup().toString());
         List<String> donationList = patient.getDonations().stream().map(Organ::toString).collect(Collectors.toList());
         String donations = String.join(",", donationList).toLowerCase();
-        statement.setString(15, donations);
+        statement.setString(16, donations);
         List<String> organsList = patient.getRequiredOrgans().stream().map(Organ::toString).collect(Collectors.toList());
         String organs = String.join(",", organsList).toLowerCase();
-        statement.setString(16, organs);
+        statement.setString(17, organs);
         return statement;
     }
 
@@ -300,6 +301,7 @@ public class PatientDAO implements IPatientDataAccess {
         Timestamp modified = Timestamp.valueOf(attributes.getString("Modified"));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0");
         LocalDateTime death = attributes.getString("Death") != null ? LocalDateTime.parse(attributes.getString("Death"), dtf) : null;
+        String deathLocation = attributes.getString("DeathLocation");
         String prefName = attributes.getString("PrefName");
         //map enum and organ groups
         BirthGender gender = null;
@@ -312,6 +314,7 @@ public class PatientDAO implements IPatientDataAccess {
                     (attributes.getString("PrefGender").equals("M") ? PreferredGender.MAN : PreferredGender.NONBINARY);
         }
         Patient patient = new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName);
+        patient.setDeathLocation(deathLocation);
         patient.setHeight(attributes.getDouble("Height") / 100);
         patient.setWeight(attributes.getDouble("Weight"));
         patient.setBloodGroup(attributes.getString("BloodType") != null ?
