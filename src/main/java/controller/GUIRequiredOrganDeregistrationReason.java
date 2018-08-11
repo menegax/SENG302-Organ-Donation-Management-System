@@ -75,19 +75,22 @@ public class GUIRequiredOrganDeregistrationReason {
         diseaseCured.setVisible(false);
     }
 
+
     /**
      * Populates drop down menu that represent enum data of reasons for deregistering patient required organs
      */
     private void populateDropdown() {
         // Populate blood group drop down with values from the deregistration reasons enum
         List<GlobalEnums.DeregistrationReason> deregistrationReasons = new ArrayList<>();
-        if (target.getCurrentDiseases().size() < 1) {
+        if (target.getCurrentDiseases()
+                .size() < 1) {
             for (GlobalEnums.DeregistrationReason reason : GlobalEnums.DeregistrationReason.values()) {
                 if (reason != GlobalEnums.DeregistrationReason.CURED) {
                     deregistrationReasons.add(reason);
                 }
             }
-        } else {
+        }
+        else {
             for (GlobalEnums.DeregistrationReason reason : GlobalEnums.DeregistrationReason.values()) {
                 deregistrationReasons.add(reason);
             }
@@ -101,11 +104,13 @@ public class GUIRequiredOrganDeregistrationReason {
                     diseaseItems.add(menuItem);
                 }
             }
-            diseaseCured.getItems().setAll(diseaseItems);
+            diseaseCured.getItems()
+                    .setAll(diseaseItems);
         }
         ObservableList<GlobalEnums.DeregistrationReason> deregistrationReasonsOL = FXCollections.observableList(deregistrationReasons);
         reasons.setItems(deregistrationReasonsOL);
     }
+
 
     /**
      * Populates the scene controls with values from the patient object
@@ -114,6 +119,7 @@ public class GUIRequiredOrganDeregistrationReason {
         dateOfDeath.setValue(LocalDate.now());
         reasons.setValue(GlobalEnums.DeregistrationReason.ERROR);
     }
+
 
     /**
      * Sets the label with organ name
@@ -125,6 +131,7 @@ public class GUIRequiredOrganDeregistrationReason {
         pleaseSpecify.setText("Please specify a reason for removing " + organ + ": ");
         reasonTitle.setText("Deregistration of " + StringUtils.capitalize(organ.toString()));
     }
+
 
     /**
      * set the reason selected
@@ -141,7 +148,8 @@ public class GUIRequiredOrganDeregistrationReason {
             dateOfDeathLabel.setDisable(false);
             dateOfDeathLabel.setVisible(true);
             okButton.setLayoutY(169.0);
-        } else if (reasons.getValue() == GlobalEnums.DeregistrationReason.CURED) {
+        }
+        else if (reasons.getValue() == GlobalEnums.DeregistrationReason.CURED) {
             curedLabel.setDisable(false);
             curedLabel.setVisible(true);
             diseaseCured.setDisable(false);
@@ -151,7 +159,8 @@ public class GUIRequiredOrganDeregistrationReason {
             dateOfDeathLabel.setDisable(true);
             dateOfDeathLabel.setVisible(false);
             okButton.setLayoutY(169.0);
-        } else {
+        }
+        else {
             dateOfDeath.setDisable(true);
             dateOfDeath.setVisible(false);
             dateOfDeathLabel.setDisable(true);
@@ -163,6 +172,7 @@ public class GUIRequiredOrganDeregistrationReason {
             okButton.setLayoutY(100.0);
         }
     }
+
 
     /**
      * saves the reason why the clinician removed a organ from the patient required organs list
@@ -187,7 +197,8 @@ public class GUIRequiredOrganDeregistrationReason {
         }
 
         if (valid) {
-            Stage reasonStage = (Stage) reasons.getScene().getWindow();
+            Stage reasonStage = (Stage) reasons.getScene()
+                    .getWindow();
             reasonStage.close();
         }
     }
@@ -196,37 +207,45 @@ public class GUIRequiredOrganDeregistrationReason {
     private void performErrorReasonActions() {
         userActions.log(Level.INFO,
                 "Deregistered " + organ + " due to error",
-                new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+                new String[] { "Attempted to deregister " + organ, target.getNhiNumber() });
     }
 
 
     private void performReceivedReasonActions() {
         userActions.log(Level.INFO,
                 "Deregistered " + organ + " due to successful transplant",
-                new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+                new String[] { "Attempted to deregister " + organ, target.getNhiNumber() });
     }
 
 
     private boolean validateAndPerformDiedReasonActions() {
         boolean valid = true;
-        if (dateOfDeath.getValue()
-                .isBefore(target.getBirth()) || dateOfDeath.getValue()
-                .isAfter(LocalDate.now())) {
+        if (dateOfDeath.getValue() != null) {
+            if (dateOfDeath.getValue()
+                    .isBefore(target.getBirth()) || dateOfDeath.getValue()
+                    .isAfter(LocalDate.now())) {
+                valid = setInvalid(dateOfDeath);
+            }
+            else {
+                setValid(dateOfDeath);
+            }
+        } else {
             valid = setInvalid(dateOfDeath);
-        } else {
-            setValid(dateOfDeath);
         }
-        if (!locationDeathTxt.getText().matches(GlobalEnums.UIRegex.DEATH_LOCATION.getValue())) {
+
+        if (!locationDeathTxt.getText()
+                .matches(GlobalEnums.UIRegex.DEATH_LOCATION.getValue())) {
             valid = setInvalid(locationDeathTxt);
-        } else {
+        }
+        else {
             setValid(locationDeathTxt);
         }
         if (valid) {
-            System.out.println("hey valid. organs: " + target.getRequiredOrgans());
             for (GlobalEnums.Organ organ : target.getRequiredOrgans()) {
-                System.out.println("org" + organ);
                 target.removeRequired(organ);
-                userActions.log(Level.INFO, "Deregistered " + organ + " due to death", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+                userActions.log(Level.INFO,
+                        "Deregistered " + organ + " due to death",
+                        new String[] { "Attempted to deregister " + organ, target.getNhiNumber() });
             }
             target.setDeathDate(dateOfDeath.getDateTimeValue());
             target.setDeathLocation(locationDeathTxt.getText());
@@ -243,7 +262,7 @@ public class GUIRequiredOrganDeregistrationReason {
         String diseaseCuredString = selected.size() == 0 ? "" : " Cured: " + String.join(",", selectedStrings);
         userActions.log(Level.INFO,
                 "Deregistered " + organ + " due to cure." + diseaseCuredString,
-                new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+                new String[] { "Attempted to deregister " + organ, target.getNhiNumber() });
         curePatientDiseases(selected);
     }
 
@@ -269,6 +288,7 @@ public class GUIRequiredOrganDeregistrationReason {
                 .remove("invalid");
     }
 
+
     /**
      * Fetches the list of diseases that have been selected within the dropdown menu
      *
@@ -287,6 +307,7 @@ public class GUIRequiredOrganDeregistrationReason {
         }
         return selected;
     }
+
 
     /**
      * Sets the diseases in the patient to cured if their name matches a name in the selected diseases list
