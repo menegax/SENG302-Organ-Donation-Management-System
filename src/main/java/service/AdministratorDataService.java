@@ -44,7 +44,6 @@ public class AdministratorDataService implements IAdministratorDataService {
     @Override
     public void importRecords() {
         cachedThreadPool.getThreadService().submit(() -> {
-            //List<Patient> patients = parseCSV.parse(filepath); //todo:
             IPatientDataAccess patientDataAccess = mysqlFactory.getPatientDataAccess();
             patientDataAccess.addPatientsBatch(new ArrayList<>());
         });

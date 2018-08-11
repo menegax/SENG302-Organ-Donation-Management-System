@@ -454,7 +454,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
             after.setFirstName(firstnameTxt.getText());
             after.setLastName(lastnameTxt.getText());
 
-            // todo remove these if statements because the validation was already done above. also entire setting setters can be extracted to external method
             if (middlenameTxt.getText()
                     .equals("")) {
                 after.setMiddleNames(new ArrayList<>());

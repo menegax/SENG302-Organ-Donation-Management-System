@@ -384,15 +384,6 @@ public class GUIHome implements Observer, TouchscreenCapable {
 
         /* Build the menu bar with new menus and menu items */
 
-        // APP
-//        Menu menu1 = new Menu("App");
-//        MenuItem menu1Item1 = new MenuItem("Log out");
-//        menu1Item1.setAccelerator(screenControl.getLogOut());
-//        menu1Item1.setOnAction(event -> {
-//            attemptLogOut();
-//        });
-//        menu1.getItems().addAll(menu1Item1);
-
         // FILE
         Menu menu2 = new Menu("File");
         MenuItem menu2Item1 = new MenuItem("Save");
@@ -403,28 +394,29 @@ public class GUIHome implements Observer, TouchscreenCapable {
             screenControl.setIsSaved(true);
             userActions.log(INFO, "Saved successfully", "Attempted to save");
         });
-        if (userControl.getLoggedInUser() instanceof Administrator) {
-            Menu subMenuImport = new Menu("Import"); // import submenu
-            MenuItem menu2Item2 = new MenuItem("Import patients...");
-            menu2Item2.setAccelerator(screenControl.getImportt());
-            menu2Item2.setOnAction(event -> {
-                File file = new FileChooser().showOpenDialog(stage);
-                if (file != null) {
-                    //database.importFromDiskPatients(file.getAbsolutePath()); //TODO
-                    userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
-                }
-            });
-            MenuItem menu2Item3 = new MenuItem("Import clinicians...");
-            menu2Item3.setOnAction(event -> {
-                File file = new FileChooser().showOpenDialog(stage);
-                if (file != null) {
-                  //  database.importFromDiskPatients(file.getAbsolutePath());
-                    userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
-                }
-            });
-            subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
-            menu2.getItems().addAll(subMenuImport);
-        }
+//        if (userControl.getLoggedInUser() instanceof Administrator) {
+//            Menu subMenuImport = new Menu("Import"); // import submenu
+//            MenuItem menu2Item2 = new MenuItem("Import patients...");
+//            menu2Item2.setAccelerator(screenControl.getImportt());
+//            menu2Item2.setOnAction(event -> {
+//                File file = new FileChooser().showOpenDialog(stage);
+//                if (file != null) {
+//
+////                    database.importFromDiskPatients(file.getAbsolutePath());
+//                    userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
+//                }
+//            });
+//            MenuItem menu2Item3 = new MenuItem("Import clinicians...");
+//            menu2Item3.setOnAction(event -> {
+//                File file = new FileChooser().showOpenDialog(stage);
+//                if (file != null) {
+////                    database.importFromDiskPatients(file.getAbsolutePath());
+//                    userActions.log(INFO, "Selected clinician file for import", "Attempted to find a file for import");
+//                }
+//            });
+//            subMenuImport.getItems().addAll(menu2Item2, menu2Item3);
+//            menu2.getItems().addAll(subMenuImport);
+//        }
         MenuItem menu2Item4 = new MenuItem("Log out");
         menu2Item4.setAccelerator(screenControl.getLogOut());
         menu2Item4.setOnAction(event -> attemptLogOut());
