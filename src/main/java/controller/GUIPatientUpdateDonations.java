@@ -87,7 +87,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
             target = patient;
             populateForm(patient);
         } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
+            userActions.log(Level.SEVERE, "Error loading logged in user", new String[]{"attempted to manage the donations for logged in user", ((Patient) target).getNhiNumber()});
         }
         controls = new ArrayList<Control>() {{
             add(liverCB);

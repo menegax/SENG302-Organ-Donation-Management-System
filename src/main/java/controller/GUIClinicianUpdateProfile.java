@@ -101,7 +101,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             populateForm(clinician);
         }
         catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
+            userActions.log(Level.SEVERE, "Error loading clinician profile", new String[]{"Attempted to load clinician profile", String.valueOf(((Clinician) target).getStaffID())});
         }
     }
 
@@ -251,7 +251,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             statesHistoryScreen.addAction(action);
         }
         else {
-            userActions.log(Level.WARNING, "Invalid fields", "Attempted to update clinician profile with invalid fields");
+            userActions.log(Level.WARNING, "Invalid fields", new String[]{"Attempted to update clinician profile with invalid fields", String.valueOf(((Clinician) target).getStaffID())});
         }
     }
 

@@ -154,7 +154,7 @@ public class Searcher {
             indexWriter.addDocument(createClinicianDocument(clinician));
             indexWriter.commit();
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
+            systemLogger.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
         }
     }
 
@@ -163,7 +163,7 @@ public class Searcher {
             indexWriter.addDocument(createAdminDocument(admin));
             indexWriter.commit();
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
+            systemLogger.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
         }
     }
 
@@ -177,7 +177,7 @@ public class Searcher {
             indexWriter.addDocument(createPatientDocument(patient));
             indexWriter.commit();
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
+            systemLogger.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
         }
     }
 
@@ -327,7 +327,7 @@ public class Searcher {
                     return fetchAdmin(thisDoc);
             }
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Unable to query search index.", "Attempted to retrieve document from index.");
+            systemLogger.log(Level.SEVERE, "Unable to query search index.", "Attempted to retrieve document from index.");
         }
         return null;
     }
@@ -372,7 +372,7 @@ public class Searcher {
                 }
             }
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Unable to query search index.", "Attempted to search for users.");
+            systemLogger.log(Level.SEVERE, "Unable to query search index.", "Attempted to search for users.");
         }
         return allDocs;
     }

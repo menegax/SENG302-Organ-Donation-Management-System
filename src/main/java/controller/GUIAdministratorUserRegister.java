@@ -391,16 +391,16 @@ public class GUIAdministratorUserRegister extends UndoableController {
         if (patientButton.isSelected()) {
             LocalDate birth = birthRegister.getValue();
             statesHistoryScreen.addAction(new Action(null, new Patient(id, firstName, middles, lastName, birth)));
-            userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
+            userActions.log(Level.INFO, "Successfully registered patient profile", new String[]{"Attempted to register patient profile", id});
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
             int staffID = Database.getNextStaffID();
             statesHistoryScreen.addAction(new Action(null, new Clinician(staffID, firstName, middles, lastName, Region.getEnumFromString(region))));
-            userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
+            userActions.log(Level.INFO, "Successfully registered clinician profile", new String[]{"Attempted to register clinician profile", id});
         } else {
             try {
                 statesHistoryScreen.addAction(new Action(null, new Administrator(id, firstName, middles, lastName, password)));
-                userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
+                userActions.log(Level.INFO, "Successfully registered administrator profile", new String[]{"Attempted to register administrator profile", id});
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");
             }

@@ -263,7 +263,7 @@ public class GUIPatientMedications extends UndoableController {
         }
         catch (IOException exception) {
             suggestions = null;
-            userActions.log(Level.WARNING, "Illegal characters in query");
+            userActions.log(Level.WARNING, "Illegal characters in drug suggestions query", new String[]{"Attempted to autocomplete drug search with illegal characters", ((Patient) target).getNhiNumber()});
         }
     }
 
@@ -585,7 +585,7 @@ public class GUIPatientMedications extends UndoableController {
             }
             displayIngredients(ingredients);
         } else {
-            userActions.log(Level.WARNING, "Unable to retrieve interactions", "Attempted to retrieve interactions between two medications");
+            userActions.log(Level.WARNING, "Unable to retrieve interactions", new String[]{"Attempted to retrieve interactions between two medications", ((Patient) target).getNhiNumber()});
         }
     }
 
@@ -607,11 +607,11 @@ public class GUIPatientMedications extends UndoableController {
                 displayInteractions(interaction.getInteractionsWithDurations(), selectedMedications.get(0), selectedMedications.get(1));
             }
             catch (IOException e) {
-                userActions.log(Level.WARNING, "Drug interactions not available, either this study has not been completed or" + " drugs provided don't exist.", "Attempted to view drug interactions");
+                userActions.log(Level.WARNING, "Drug interactions not available, either this study has not been completed or" + " drugs provided don't exist.", new String[]{"Attempted to view drug interactions", ((Patient) target).getNhiNumber()});
             }
         }
         else {
-            userActions.log(Level.WARNING, "Drug interactions not available. Please select 2 medications.", "Attempted to view drug interactions");
+            userActions.log(Level.WARNING, "Drug interactions not available. Please select 2 medications.", new String[]{"Attempted to view drug interactions", ((Patient) target).getNhiNumber()});
         }
     }
 

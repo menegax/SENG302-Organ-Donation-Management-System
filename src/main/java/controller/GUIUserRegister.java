@@ -233,7 +233,7 @@ public class GUIUserRegister implements TouchscreenCapable {
         }
         LocalDate birth = birthRegister.getValue();
         Database.addPatient(new Patient(id, firstName, middles, lastName, birth));
-        userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
+        userActions.log(Level.INFO, "Successfully registered patient profile", new String[]{"Attempted to register patient profile", id});
         errorMsg = "Successfully registered patient with NHI " + id;
         screenControl.setIsSaved(false);
         clearFields();

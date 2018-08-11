@@ -19,6 +19,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 
+import java.io.IOException;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -83,20 +84,15 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
             if (click.getClickCount() == 2 && waitingListTableView.getSelectionModel()
                     .getSelectedItem() != null && !openProfiles.contains(waitingListTableView.getSelectionModel()
                     .getSelectedItem())) {
-                try {
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
-                    DrugInteraction.setViewedPatient(Database.getPatientByNhi(request.getReceiverNhi()));
-                    User selectedUser = Database.getPatientByNhi(request.getReceiverNhi());
-                    GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser);
-                    controller.setTarget(selectedUser);
-                    openProfiles.add(request);
+                    try {
+                        User selectedUser = Database.getPatientByNhi(request.getReceiverNhi());
+                        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser);
+                        controller.setTarget(selectedUser);
+                        openProfiles.add(request);
+                    } catch (IOException e) {
+                        userActions.log(Level.SEVERE, "Failed to retrieve selected patient from database", new String[]{"Attempted to retrieve selected patient from database", request.getReceiverNhi()});
                     }
-                catch (Exception e) {
-                    userActions.log(Level.SEVERE,
-                            "Failed to open patient profile scene from search patients table",
-                            "attempted to open patient edit window from search patients table");
-                    new Alert(Alert.AlertType.ERROR, "Unable to open patient edit window", ButtonType.OK).show();
-                }
             }
         });
     }

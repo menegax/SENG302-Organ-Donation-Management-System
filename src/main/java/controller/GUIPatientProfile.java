@@ -189,7 +189,7 @@ public class GUIPatientProfile extends TargetedController{
             loadProfile(((Patient) target).getNhiNumber());
         }
         catch (IOException e) {
-            userActions.log(Level.SEVERE, "Cannot load patient profile");
+            userActions.log(Level.SEVERE, "Cannot load patient profile", new String[]{"Attempted to load patient profile", ((Patient) target).getNhiNumber()});
         }
     }
 

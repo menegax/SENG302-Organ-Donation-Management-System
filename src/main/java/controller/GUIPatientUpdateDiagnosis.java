@@ -254,7 +254,7 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
         try {
             d.setDateDiagnosed(diagnosisDate.getValue(), patientClone);
         } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "The diagnosis date is not valid.", "Attempted to add an invalid diagnosis date");
+            userActions.log(Level.SEVERE, "The diagnosis date is not valid.", new String[]{"Attempted to add an invalid diagnosis date", ((Patient) target).getNhiNumber()});
         }
         for (Disease disease : patientClone.getCurrentDiseases()) {
             if(disease != targetDiseaseClone && isDuplicate(disease, d)) {
@@ -330,7 +330,7 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
                 errorString += "A chronic disease can not be cured. Please remove the chronic tag and save the diagnosis" +
                         " before marking this disease as cured.\n\n";
             }
-            userActions.log(Level.WARNING, errorString, "Attempted to update diagnosis with invalid fields");
+            userActions.log(Level.WARNING, errorString, new String[]{"Attempted to update diagnosis with invalid fields", ((Patient) target).getNhiNumber()});
         }
     }
 

@@ -13,6 +13,7 @@ import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.InvalidObjectException;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,7 +72,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
             populateForm(administrator);
         }
         catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
+            userActions.log(Level.SEVERE, "Error loading logged in user", new String[]{"attempted to edit the logged in user", ((Administrator) target).getUsername()});
         }
     }
 
@@ -173,10 +174,10 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
             Action action = new Action(target, after);
             statesHistoryScreen.addAction(action);
 
-            userActions.log(Level.INFO, "Successfully updated admin profile", "Attempted to update admin profile");
+            userActions.log(Level.INFO, "Successfully updated admin profile", new String[]{"Attempted to update admin profile", ((Administrator) target).getUsername()});
         }
         else {
-            userActions.log(Level.WARNING, "Invalid fields", "Attempted to update admin profile");
+            userActions.log(Level.WARNING, "Invalid fields", new String[]{"Attempted to update admin profile", ((Administrator) target).getUsername()});
         }
     }
 
