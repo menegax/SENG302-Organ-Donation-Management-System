@@ -14,6 +14,7 @@ import utility.GlobalEnums;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -69,6 +70,8 @@ public class GUIRequiredOrganDeregistrationReason {
         dateOfDeath.setVisible(false);
         dateOfDeathLabel.setDisable(true);
         dateOfDeathLabel.setVisible(false);
+        locationDeathTxt.setDisable(true);
+        locationDeathTxt.setVisible(false);
         curedLabel.setDisable(true);
         curedLabel.setVisible(false);
         diseaseCured.setDisable(true);
@@ -91,9 +94,7 @@ public class GUIRequiredOrganDeregistrationReason {
             }
         }
         else {
-            for (GlobalEnums.DeregistrationReason reason : GlobalEnums.DeregistrationReason.values()) {
-                deregistrationReasons.add(reason);
-            }
+            deregistrationReasons.addAll(Arrays.asList(GlobalEnums.DeregistrationReason.values()));
             Set<CustomMenuItem> diseaseItems = new HashSet<>();
             for (Disease disease : target.getCurrentDiseases()) {
                 if (disease.getDiseaseState() != GlobalEnums.DiseaseState.CURED) {
@@ -147,6 +148,8 @@ public class GUIRequiredOrganDeregistrationReason {
             dateOfDeath.setVisible(true);
             dateOfDeathLabel.setDisable(false);
             dateOfDeathLabel.setVisible(true);
+            locationDeathTxt.setDisable(false);
+            locationDeathTxt.setVisible(true);
             okButton.setLayoutY(169.0);
         }
         else if (reasons.getValue() == GlobalEnums.DeregistrationReason.CURED) {
@@ -158,6 +161,8 @@ public class GUIRequiredOrganDeregistrationReason {
             dateOfDeath.setVisible(false);
             dateOfDeathLabel.setDisable(true);
             dateOfDeathLabel.setVisible(false);
+            locationDeathTxt.setDisable(true);
+            locationDeathTxt.setVisible(false);
             okButton.setLayoutY(169.0);
         }
         else {
@@ -169,6 +174,8 @@ public class GUIRequiredOrganDeregistrationReason {
             curedLabel.setVisible(false);
             diseaseCured.setDisable(true);
             diseaseCured.setVisible(false);
+            locationDeathTxt.setDisable(true);
+            locationDeathTxt.setVisible(false);
             okButton.setLayoutY(100.0);
         }
     }
@@ -220,6 +227,8 @@ public class GUIRequiredOrganDeregistrationReason {
 
     private boolean validateAndPerformDiedReasonActions() {
         boolean valid = true;
+
+        // validate death date
         if (dateOfDeath.getValue() != null) {
             if (dateOfDeath.getValue()
                     .isBefore(target.getBirth()) || dateOfDeath.getValue()
@@ -233,6 +242,7 @@ public class GUIRequiredOrganDeregistrationReason {
             valid = setInvalid(dateOfDeath);
         }
 
+        // validate death location
         if (!locationDeathTxt.getText()
                 .matches(GlobalEnums.UIRegex.DEATH_LOCATION.getValue())) {
             valid = setInvalid(locationDeathTxt);
@@ -240,6 +250,7 @@ public class GUIRequiredOrganDeregistrationReason {
         else {
             setValid(locationDeathTxt);
         }
+
         if (valid) {
             for (GlobalEnums.Organ organ : target.getRequiredOrgans()) {
                 target.removeRequired(organ);
