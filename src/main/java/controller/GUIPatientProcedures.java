@@ -207,7 +207,7 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
             selectedProcedure = pendingProceduresView.getSelectionModel().getSelectedItem();
         }
         if (selectedProcedure == null) {
-            userActions.log(Level.WARNING, "No procedure selected", "Attempted to edit a procedure");
+            userActions.log(Level.WARNING, "No procedure selected", new String[]{"Attempted to edit a procedure", ((Patient) target).getNhiNumber()});
             return;
         }
         GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target);

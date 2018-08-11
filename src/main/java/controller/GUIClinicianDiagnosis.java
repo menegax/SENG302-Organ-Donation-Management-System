@@ -313,15 +313,15 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
             pastDiseases.remove(pastDiagnosesView.getSelectionModel().getSelectedItem());
             statesHistoryScreen.addAction(new Action(target, targetClone));
             loadPastDiseases();
-            userActions.log(Level.FINE, "Successfully deleted a disease",  pastDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
+            userActions.log(Level.FINE, "Successfully deleted a disease",  new String[]{pastDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted", ((Patient) target).getNhiNumber()});
         } else if (currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
             changed = true;
             currentDiseases.remove(currentDiagnosesView.getSelectionModel().getSelectedItem());
             statesHistoryScreen.addAction(new Action(target, targetClone));
             loadCurrentDiseases();
-            userActions.log(Level.WARNING, "Successfully deleted a disease", currentDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
+            userActions.log(Level.WARNING, "Successfully deleted a disease", new String[]{currentDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted", ((Patient) target).getNhiNumber()});
         } else {
-            userActions.log(Level.WARNING, "No diagnosis selected to delete", "disease failed to be deleted");
+            userActions.log(Level.WARNING, "No diagnosis selected to delete", new String[]{"disease failed to be deleted", ((Patient) target).getNhiNumber()});
         }
         updateDiagnosesLists();
     }

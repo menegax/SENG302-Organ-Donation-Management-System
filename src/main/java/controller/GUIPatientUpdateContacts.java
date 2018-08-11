@@ -74,9 +74,9 @@ public class GUIPatientUpdateContacts extends UndoableController {
     public void saveContactDetails() {
         boolean valid = setPatientContactDetails();
         if (valid) {
-            userActions.log(INFO, "Successfully saved contact details", "Attempted to set contact details");
+            userActions.log(INFO, "Successfully saved contact details", new String[]{"Attempted to set contact details", ((Patient) target).getNhiNumber()});
         } else {
-            userActions.log(Level.WARNING,"Failed to save contact details due to invalid fields", "Attempted to set invalid contact details");
+            userActions.log(Level.WARNING,"Failed to save contact details due to invalid fields", new String[]{"Attempted to set invalid contact details", ((Patient) target).getNhiNumber()});
         }
     }
 
@@ -166,7 +166,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
             target = Database.getPatientByNhi(nhi);
         }
         catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
+            userActions.log(Level.SEVERE, "Error loading user", new String[]{"Attempted to load the contacts user", ((Patient) target).getNhiNumber()});
         }
     }
 

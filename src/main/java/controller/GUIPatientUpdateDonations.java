@@ -244,6 +244,6 @@ public class GUIPatientUpdateDonations extends UndoableController {
         Action action = new Action(target, after);
         statesHistoryScreen.addAction(action);
 
-        userActions.log(INFO, "Updated user donations to: " + newDonations, "Attempted to update donations");
+        userActions.log(INFO, "Updated user donations to: " + newDonations, new String[]{"Attempted to update donations", ((Patient) target).getNhiNumber()});
     }
 }

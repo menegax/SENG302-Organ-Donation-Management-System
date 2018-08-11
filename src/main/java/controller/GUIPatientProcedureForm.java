@@ -159,7 +159,7 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
             userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", ((Patient) target).getNhiNumber()});
             goBackToProcedures();
         } else {
-            userActions.log(Level.WARNING, "Invalid procedure inputs entered", "Attempted to edit procedure with invalid inputs");
+            userActions.log(Level.WARNING, "Invalid procedure inputs entered", new String[]{"Attempted to edit procedure with invalid inputs", ((Patient) target).getNhiNumber()});
         }
     }
 
@@ -183,7 +183,7 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
             userActions.log(Level.INFO, "Added procedure " + procedureClone.getSummary(), new String[]{"Attempted to add a procedure", patientClone.getNhiNumber()});
             goBackToProcedures();
         } else {
-            userActions.log(Level.WARNING, "Invalid inputs for procedure entered", "Attempted to create procedure with invalid inputs");
+            userActions.log(Level.WARNING, "Invalid inputs for procedure entered", new String[]{"Attempted to create procedure with invalid inputs", ((Patient) target).getNhiNumber()});
         }
     }
 
