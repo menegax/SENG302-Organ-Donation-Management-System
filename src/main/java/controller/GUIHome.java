@@ -70,6 +70,8 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     @FXML
     private Label paneTitle;
 
+    private boolean loaded = false;
+
     private TouchPaneController homePaneTouchController;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
@@ -100,13 +102,16 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
     @FXML
     public void load() {
-        StatusObservable statusObservable = StatusObservable.getInstance();
-        statusObservable.addObserver(this);
-        homePane.getProperties().put("focusArea", "true");
-        if (screenControl.isTouch()) {
-            addPaneListener();
-        } else {
-            addStageListener();
+        if (!loaded) {  // stops listeners from being added twice
+            StatusObservable statusObservable = StatusObservable.getInstance();
+            statusObservable.addObserver(this);
+            homePane.getProperties().put("focusArea", "true");
+            if (screenControl.isTouch()) {
+                addPaneListener();
+            } else {
+                addStageListener();
+            }
+            loaded = true;
         }
     }
 
