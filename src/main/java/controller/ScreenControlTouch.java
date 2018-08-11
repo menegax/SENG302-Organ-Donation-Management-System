@@ -59,8 +59,8 @@ class ScreenControlTouch extends ScreenControl {
     public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
+            Region pane = fxmlLoader.load();
             Object controller = fxmlLoader.getController();
-            Region pane = new Region();
             if (undoable) {
                 UndoableWrapper undoablePane = new UndoableWrapper(pane);
                 undoableWrappers.add(undoablePane);
@@ -69,10 +69,7 @@ class ScreenControlTouch extends ScreenControl {
                     undoablePane.setGuiHome((GUIHome) controller);
                     ((GUIHome) controller).setTarget(targetUser);
                 }
-                pane = fxmlLoader.load();
                 undoablePane.setPane((Pane) pane);
-            } else {
-                pane = fxmlLoader.load();
             }
             pane.getProperties().put("focusArea", "true");
             pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
