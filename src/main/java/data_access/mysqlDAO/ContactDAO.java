@@ -125,7 +125,7 @@ public class ContactDAO  implements IContactDataAccess {
 
 
     private String getFormattedString(String str) {
-        return str == null ? null : String.format("\'%s\'", str.replaceAll("'", "''" ));
+        return str == null ? "\"\"" : String.format("\'%s\'", str.replaceAll("'", "''" ));
     }
 
     private PreparedStatement addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException{
