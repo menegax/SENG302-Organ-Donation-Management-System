@@ -9,9 +9,7 @@ import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.PatientDataService;
 import tornadofx.control.DateTimePicker;
-import utility.GlobalEnums;
 import utility.GlobalEnums.*;
-import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -235,7 +233,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
         dobDate.setValue(patient.getBirth());
         dateOfDeath.setDateTimeValue(patient.getDeathDate());
-        deathLocationTxt.setText(patient.getDeathLocation());
+        deathLocationTxt.setText(patient.getDeathStreet());
         if (patient.getStreet1() != null) {
             street1Txt.setText(patient.getStreet1());
         }
@@ -358,7 +356,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
 
         after.setDeathDate(dateOfDeath.getDateTimeValue());
-        after.setDeathLocation(deathLocationTxt.getText());
+        after.setDeathStreet(deathLocationTxt.getText());
 
         after.setStreet1(street1Txt.getText());
         after.setCity(cityTxt.getText());

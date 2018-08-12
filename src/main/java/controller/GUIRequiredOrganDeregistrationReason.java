@@ -259,7 +259,7 @@ public class GUIRequiredOrganDeregistrationReason {
                         new String[] { "Attempted to deregister " + organ, target.getNhiNumber() });
             }
             target.setDeathDate(dateOfDeath.getDateTimeValue());
-            target.setDeathLocation(locationDeathTxt.getText());
+            target.setDeathStreet(locationDeathTxt.getText());
         }
         return valid;
     }

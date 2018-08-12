@@ -199,7 +199,7 @@ public class GUIPatientProfile {
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         dateOfDeathLabel.setText(patient.getDeathDate() == null ? "Not set" : patient.getDeathDate()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        deathLocation.setText(patient.getDeathLocation() == null ? "Not set" : patient.getDeathLocation());
+        deathLocation.setText(patient.getDeathStreet() == null ? "Not set" : patient.getDeathStreet());
         age.setText(String.valueOf(patient.getAge()));
         heightLbl.setText(String.valueOf(patient.getHeight() + " m"));
         weightLbl.setText(String.valueOf(patient.getWeight() + " kg"));

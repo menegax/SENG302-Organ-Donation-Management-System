@@ -32,7 +32,11 @@ public class Patient extends User {
 
     private LocalDateTime death;
 
-    private String deathLocation;
+    private String deathStreet;
+
+    private String deathCity;
+
+    private Region deathRegion;
 
     private BirthGender birthGender;
 
@@ -123,14 +127,14 @@ public class Patient extends User {
     }
 
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
-                   Timestamp created, Timestamp modified, LocalDateTime death, GlobalEnums.BirthGender gender,
-                   GlobalEnums.PreferredGender prefGender, String preferredName, double height, double weight,
-                   BloodGroup bloodType, List<Organ> donations, List<Organ> receiving, String street1,
-                   String city, String suburb, Region region, int zip, String homePhone, String workPhone,
-                   String mobilePhone, String emailAddress, String contactName, String contactRelationship,
-                   String contactHomePhone, String contactWorkPhone, String contactMobilePhone, String contactEmailAddress,
-                   List<PatientActionRecord> userActionsList, List<Disease> currentDiseases,
-                   List<Disease> pastDiseases, List<Medication> currentMedications,
+                   Timestamp created, Timestamp modified, LocalDateTime death, String deathStreet, String deathCity,
+                   Region deathRegion, GlobalEnums.BirthGender gender,GlobalEnums.PreferredGender prefGender,
+                   String preferredName, double height, double weight, BloodGroup bloodType, List<Organ> donations,
+                   List<Organ> receiving, String street1, String city, String suburb, Region region, int zip,
+                   String homePhone, String workPhone, String mobilePhone, String emailAddress, String contactName,
+                   String contactRelationship, String contactHomePhone, String contactWorkPhone,
+                   String contactMobilePhone, String contactEmailAddress,List<PatientActionRecord> userActionsList,
+                   List<Disease> currentDiseases, List<Disease> pastDiseases, List<Medication> currentMedications,
                    List<Medication> medicationHistory, List<Procedure> procedures) {
         super(firstName, middleNames, lastName);
         this.nhiNumber = nhiNumber;
@@ -138,6 +142,9 @@ public class Patient extends User {
         this.CREATED = created;
         this.modified = modified;
         this.death = death;
+        this.deathStreet = deathStreet;
+        this.deathCity = deathCity;
+        this.deathRegion = deathRegion;
         this.birthGender = gender;
         this.preferredGender = prefGender;
         this.preferredName = preferredName;
@@ -300,7 +307,9 @@ public class Patient extends User {
         setPreferredName(newPatientAttributes.getPreferredName());
         setBirth(newPatientAttributes.getBirth());
         setDeathDate(newPatientAttributes.getDeathDate());
-        setDeathLocation(newPatientAttributes.getDeathLocation());
+        setDeathStreet(newPatientAttributes.getDeathStreet());
+        setDeathCity(newPatientAttributes.getDeathCity());
+        setDeathRegion(newPatientAttributes.getDeathRegion());
         setStreet1(newPatientAttributes.getStreet1());
         setCity(newPatientAttributes.getCity());
         setSuburb(newPatientAttributes.getSuburb());
@@ -469,15 +478,33 @@ public class Patient extends User {
         userModified();
     }
 
-    public String getDeathLocation() {
-        return deathLocation;
+    public String getDeathStreet() {
+        return deathStreet;
     }
 
 
-    public void setDeathLocation(String deathLocation) {
-        this.deathLocation = deathLocation;
+    public void setDeathStreet(String deathStreet) {
+        this.deathStreet = deathStreet;
         userModified();
         SystemLogger.systemLogger.log(FINEST, "Set death location for patient " + this.nhiNumber);
+    }
+
+    public String getDeathCity() {
+        return deathStreet;
+    }
+
+    public void setDeathCity(String city) {
+        this.deathCity = city;
+        userModified();
+    }
+
+    public Region getDeathRegion() {
+        return deathRegion;
+    }
+
+    public void setDeathRegion(Region region) {
+        this.deathRegion = region;
+        userModified();
     }
 
     /**
