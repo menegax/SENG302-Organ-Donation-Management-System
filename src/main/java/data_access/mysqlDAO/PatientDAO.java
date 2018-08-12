@@ -11,6 +11,7 @@ import model.Patient;
 import model.Procedure;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
+import utility.ImportObservable;
 import utility.PatientActionRecord;
 import utility.ResourceManager;
 
@@ -110,6 +111,8 @@ public class PatientDAO implements IPatientDataAccess {
                     extendedInsert = statements.toString().substring(0, statements.toString().length() -1) + " " +ResourceManager.getStringForQuery("ON_DUPLICATE_UPDATE_PATIENT");
                     preparedStatement = connection.prepareStatement(extendedInsert);
                     preparedStatement.execute();
+                    ImportObservable importObservable = ImportObservable.getInstance();
+                    importObservable.setCompleted(importObservable.getCompleted() + 4000);
                     extendedQueryCount = 0;
                 }
                 extendedQueryCount++;
