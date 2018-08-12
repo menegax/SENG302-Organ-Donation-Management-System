@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="patientProfilePane" prefHeight="370.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProfile">
+<GridPane fx:id="patientProfilePane" prefHeight="370.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProfile">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="33.399993896484375" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="258.19996337890626" />
@@ -35,6 +35,10 @@
       <RowConstraints minHeight="10.0" prefHeight="44.79996337890623" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
+       <Button fx:id="deleteButton" layoutX="14.0" layoutY="344.0" mnemonicParsing="false" onAction="#deleteProfile" styleClass="delete-button" stylesheets="@../css/guiStyle.css" text="Delete Profile" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+         <GridPane.margin>
+            <Insets bottom="5.0" left="5.0" />
+         </GridPane.margin></Button>
        <ListView fx:id="medList" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="3" />
        <ListView fx:id="donationList" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="3" />
        <ListView fx:id="receivingList" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="9" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="3" />
@@ -57,12 +61,14 @@
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="127.3999755859375" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="8.800036621093739" prefWidth="10.400012207031239" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="9.399967193603516" prefWidth="120.79998779296875" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="8.800036621093739" prefWidth="10.400012207031239" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="9.399967193603516" prefWidth="120.79998779296875" />
         </columnConstraints>
         <rowConstraints>
             <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fx:id="firstNameRow" minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fx:id="genderRow" minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -99,12 +105,17 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Age:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7">
+            <Label text="Death Location:" GridPane.rowIndex="7">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Height:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="8">
+            <Label text="Age:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="8">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label text="Height:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="9">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
@@ -112,112 +123,112 @@
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Label text="Weight:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="9">
+            <Label text="Weight:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="10">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="BMI:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="10">
+            <Label text="BMI:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="11">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Blood Group:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="11">
+            <Label text="Blood Group:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="12">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Street 1:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="12">
+            <Label text="Street 1:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="13">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Street 2:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="13">
+            <Label text="Street 2:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="14">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Suburb:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="14">
+            <Label text="Suburb:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="15">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Region:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="15">
+            <Label text="Region:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="16">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Zip:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="16">
+            <Label text="Zip:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="17">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="nhiLbl" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT">
+            <Label fx:id="nhiLbl" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="genderStatus" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+            <Label fx:id="genderStatus" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="dobLbl" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="5">
+            <Label fx:id="dobLbl" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="5">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="dateOfDeathLabel" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+            <Label fx:id="dateOfDeathLabel" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="6">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="age" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="7">
+            <Label fx:id="age" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="8">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="heightLbl" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="8">
+            <Label fx:id="heightLbl" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="9">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="weightLbl" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="9">
+            <Label fx:id="weightLbl" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="10">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="bmi" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="10">
+            <Label fx:id="bmi" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="11">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="bloodGroupLbl" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="11">
+            <Label fx:id="bloodGroupLbl" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="12">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="addLbl1" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="12">
+            <Label fx:id="addLbl1" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="13">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="addLbl2" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="13">
+            <Label fx:id="addLbl2" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="14">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="addLbl3" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="14">
+            <Label fx:id="addLbl3" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="15">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="addLbl4" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="15">
+            <Label fx:id="addLbl4" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="16">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="addLbl5" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="16">
+            <Label fx:id="addLbl5" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="17">
                <font>
                   <Font size="18.0" />
                </font>
@@ -230,7 +241,7 @@
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Label fx:id="vitalLbl1" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="4">
+            <Label fx:id="vitalLbl1" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="4">
                <font>
                   <Font size="18.0" />
                </font>
@@ -240,7 +251,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="prefGenderLbl" GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <Label fx:id="prefGenderLbl" GridPane.columnIndex="3" GridPane.rowIndex="3">
                <font>
                   <Font size="18.0" />
                </font>
@@ -250,7 +261,12 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="firstNameValue" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <Label fx:id="firstNameValue" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="1">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="deathLocation" GridPane.columnIndex="3" GridPane.rowIndex="7">
                <font>
                   <Font size="18.0" />
                </font>
@@ -265,9 +281,5 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-       <Button fx:id="deleteButton" layoutX="14.0" layoutY="344.0" mnemonicParsing="false" onAction="#deleteProfile" styleClass="delete-button" stylesheets="@../css/guiStyle.css" text="Delete Profile" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-         <GridPane.margin>
-            <Insets bottom="5.0" left="5.0" />
-         </GridPane.margin></Button>
    </children>
 </GridPane>

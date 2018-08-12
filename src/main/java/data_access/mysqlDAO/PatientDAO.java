@@ -70,6 +70,7 @@ public class PatientDAO implements IPatientDataAccess {
             }
         } catch (SQLException e) {
             systemLogger.log(Level.SEVERE, "Could not save patients to MySQL database");
+            e.printStackTrace(); //todo rm
         }
     }
 
