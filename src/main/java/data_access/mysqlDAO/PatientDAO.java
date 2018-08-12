@@ -303,7 +303,12 @@ public class PatientDAO implements IPatientDataAccess {
                                            List<Disease> diseases, List<Procedure> procedures, List<Medication> medications) throws SQLException {
         String nhi = attributes.getString("Nhi");
         String fName = attributes.getString("FName");
-        ArrayList<String> mNames = new ArrayList<>(Arrays.asList(attributes.getString("MName").split(" ")));
+        ArrayList<String> mNames;
+        if (attributes.getString("MName") != null) {
+            mNames = new ArrayList<>(Arrays.asList(attributes.getString("MName").split(" ")));
+        } else {
+            mNames = new ArrayList<>();
+        }
         ArrayList<String> list = new ArrayList<>();
         for (String mName : mNames) {
             list.add(mName.replace(" ", ""));
