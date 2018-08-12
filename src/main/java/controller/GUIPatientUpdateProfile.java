@@ -9,7 +9,9 @@ import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.PatientDataService;
 import tornadofx.control.DateTimePicker;
+import utility.GlobalEnums;
 import utility.GlobalEnums.*;
+import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import static java.util.logging.Level.INFO;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateProfile extends UndoableController {
@@ -273,6 +276,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
         valid = validateLastName(valid, invalidContent);
         valid = validateMiddleNames(valid, invalidContent);
         valid = validatePreferredName(valid);
+        valid = validateStreet1(valid, invalidContent);
+        valid = validateCity(valid, invalidContent);
         valid = validateRegion(valid, invalidContent);
         valid = validateZip(valid, invalidContent);
         valid = validateWeight(valid, invalidContent);
@@ -281,14 +286,38 @@ public class GUIPatientUpdateProfile extends UndoableController {
         valid = validateBirthDate(valid, invalidContent);
         valid = validateDeathDate(valid, invalidContent);
         valid = validateDeathLocation(valid, invalidContent);
+        valid = validateDeathDetail(valid, invalidContent);
+
 
         // if all are valid
         if (valid) {
             setPatientAttributes();
-            userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});
+            userActions.log(INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         } else {
             userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         }
+    }
+
+
+    private Boolean validateStreet1(Boolean valid, StringBuilder invalidContent) {
+        if (!street1Txt.getText().matches(UIRegex.STREET.getValue())) {
+            valid = setInvalid(street1Txt);
+            invalidContent.append("Street1 must only be letters or -.");
+        } else {
+            setValid(street1Txt);
+        }
+        return valid;
+    }
+
+
+    private Boolean validateCity(Boolean valid, StringBuilder invalidContnet) {
+        if (!cityTxt.getText().matches(UIRegex.CITY.getValue())) {
+            valid = setInvalid(cityTxt);
+            invalidContnet.append("City must be letters, spaces, or -.");
+        } else {
+            setValid(cityTxt);
+        }
+        return valid;
     }
 
 
@@ -361,20 +390,18 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     private Boolean validateDeathLocation(Boolean valid, StringBuilder invalidContent) {
         // death location
-        if (deathLocationTxt.getText().length() != 0) {
-            if (!deathLocationTxt.getText().matches(UIRegex.DEATH_LOCATION.getValue())) {
-                valid = setInvalid(deathLocationTxt);
-                invalidContent.append("Incorrect death location format. ");
-            } else {
-                setValid(deathLocationTxt);
+        if (deathLocationTxt.getText() != null) {
+            if (deathLocationTxt.getText()
+                    .length() != 0) {
+                if (!deathLocationTxt.getText()
+                        .matches(UIRegex.DEATH_LOCATION.getValue())) {
+                    valid = setInvalid(deathLocationTxt);
+                    invalidContent.append("Incorrect death location format. ");
+                }
+                else {
+                    setValid(deathLocationTxt);
+                }
             }
-        }
-        else if (dateOfDeath.getValue() != null) {
-            // make sure if deathLoc set, that deathDate is also set otherwise deathLoc is invalid
-            valid = setInvalid(deathLocationTxt);
-            invalidContent.append("Death location required if death date set. ");
-        } else {
-            setValid(deathLocationTxt);
         }
         return valid;
     }
@@ -392,14 +419,39 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 setValid(dateOfDeath);
             }
         }
-        else if (deathLocationTxt.getText().length() != 0) {
-            // make sure if deathDate set, that deathLoc also set otherwise deathDate invalid
-            valid = setInvalid(dateOfDeath);
-            invalidContent.append("Death date required if death location set. ");
-        } else {
-            setValid(dateOfDeath);
-        }
         return valid;
+    }
+
+    private Boolean validateDeathDetail(Boolean valid, StringBuilder invalidContent) {
+        boolean isSettingDeath = false;
+
+        if (dateOfDeath.getValue() != null) {
+            isSettingDeath = true;
+        } else if (deathLocationTxt.getText() != null && deathLocationTxt.getText().length() != 0) {
+            isSettingDeath = true;
+        }
+
+        if (isSettingDeath) {
+            if (dateOfDeath.getValue() == null) {
+                valid = setInvalid(dateOfDeath);
+                invalidContent.append("Date of death must be set if patient deceased.");
+            }
+            if (deathLocationTxt.getText().length() == 0) {
+                valid = setInvalid(deathLocationTxt);
+                invalidContent.append("Location of death must be set if patient deceased.");
+            }
+            if (cityTxt.getText().length() == 0) {
+                valid = setInvalid(cityTxt);
+                invalidContent.append("City must be set if patient deceased.");
+            }
+            if (regionDD.getSelectionModel().getSelectedIndex() == -1) {
+                valid = setInvalid(regionDD);
+                invalidContent.append("Region must be set if patient deceased.");
+            }
+        }
+
+        return valid;
+
     }
 
 
