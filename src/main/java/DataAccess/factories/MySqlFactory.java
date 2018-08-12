@@ -88,6 +88,13 @@ public class MySqlFactory extends DAOFactory {
     }
 
     /**
+     * Returns a new MySql Required Organs data access object
+     *
+     * @return The Required Organs DAO
+     */
+    public IRequiredOrganDataAccess getRequiredOrgansDataAccess() { return new RequiredOrgansDAO(); }
+
+    /**
      * Returns a new MySql Patient data access object
      *
      * @return The Patient DAO

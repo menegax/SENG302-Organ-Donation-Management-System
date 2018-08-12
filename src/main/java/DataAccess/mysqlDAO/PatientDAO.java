@@ -31,6 +31,7 @@ public class PatientDAO implements IPatientDataAccess {
     private final IProcedureDataAccess procedureDataAccess;
     private final ITransplantWaitListDataAccess transplantWaitListDataAccess;
     private final MySqlFactory mySqlFactory;
+    private final IRequiredOrganDataAccess requiredOrgansDataAccess;
 
     public PatientDAO() {
         mySqlFactory = MySqlFactory.getMySqlFactory();
@@ -40,6 +41,7 @@ public class PatientDAO implements IPatientDataAccess {
         logDataAccess = mySqlFactory.getPatientLogDataAccess();
         procedureDataAccess = mySqlFactory.getProcedureDataAccess();
         transplantWaitListDataAccess = mySqlFactory.getTransplantWaitingListDataAccess();
+        requiredOrgansDataAccess = mySqlFactory.getRequiredOrgansDataAccess();
     }
 
     @Override
@@ -49,6 +51,9 @@ public class PatientDAO implements IPatientDataAccess {
             for (Patient patient : patients) {
                 statement = addUpdateParameters(statement, patient);
                 statement.executeUpdate();
+                for (Organ organ : patient.getRequiredOrgans().keySet()) {
+                    requiredOrgansDataAccess.updateRequiredOrgans(patient.getNhiNumber(), organ, patient.getRequiredOrgans().get(organ))
+                }
                 List<Medication> fullList = new ArrayList<>();
                 fullList.addAll(patient.getCurrentMedications());
                 fullList.addAll(patient.getMedicationHistory());
