@@ -90,6 +90,7 @@ public class PatientDAO implements IPatientDataAccess {
                     extendedInsert = statements.toString().substring(0, statements.toString().length() -1)
                             + " " +ResourceManager.getStringForQuery("ON_DUPLICATE_UPDATE_PATIENT");
                     preparedStatement = connection.prepareStatement(extendedInsert);
+                    System.out.println(extendedInsert);
                     preparedStatement.execute();
                     ImportObservable importObservable = ImportObservable.getInstance();
                     importObservable.setCompleted(importObservable.getCompleted() + 4000);
@@ -199,6 +200,7 @@ public class PatientDAO implements IPatientDataAccess {
             }
             return resultMap;
         } catch (Exception e) {
+            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Could not search patients from MYSQL DB", this);
         }return null;
     }
@@ -352,16 +354,18 @@ public class PatientDAO implements IPatientDataAccess {
         patient.setWeight(attributes.getDouble("Weight"));
         patient.setBloodGroup(attributes.getString("BloodType") != null ?
                 BloodGroup.getEnumFromString(attributes.getString("BloodType")) : null);
-        patient.setDonations(Arrays.stream(attributes.getString("DonatingOrgans").split("\\s*,\\s*"))
+        patient.setDonations(attributes.getString("DonatingOrgans") == null ? new ArrayList<>() :
+                Arrays.stream(attributes.getString("DonatingOrgans") .split("\\s*,\\s*"))
                 .map(Organ::getEnumFromString).collect(Collectors.toList()));
         //must instantiate if null
-        if (patient.getDonations().get(0) == null) {
+        if (patient.getDonations().size() > 0 && patient.getDonations().get(0) == null) {
             patient.setDonations(new ArrayList<>());
         }
-        patient.setRequiredOrgans(Arrays.stream(attributes.getString("ReceivingOrgans").split("\\s*,\\s*"))
+        patient.setRequiredOrgans(attributes.getString("ReceivingOrgans") == null ? new ArrayList<>():
+                Arrays.stream(attributes.getString("ReceivingOrgans").split("\\s*,\\s*"))
                 .map(Organ::getEnumFromString).collect(Collectors.toList()));
         //must instantiate if null
-        if (patient.getRequiredOrgans().get(0) == null) {
+        if (patient.getRequiredOrgans().size() > 0 && patient.getRequiredOrgans().get(0) == null) {
             patient.setRequiredOrgans(new ArrayList<>());
         }
         //map medications
@@ -440,7 +444,7 @@ public class PatientDAO implements IPatientDataAccess {
                 aPatient.getDeath() == null ? null : String.format("\'%s\'", aPatient.getDeath().toString()),
                 aPatient.getBirthGender() == null ? null : String.format("\'%s\'",aPatient.getBirthGender().toString().substring(0, 1)),
                 aPatient.getPreferredGender() == null ? null : String.format("\'%s\'",aPatient.getPreferredGender().toString().substring(0, 1)),
-                aPatient.getPreferredName(),
+                aPatient.getPreferredName() == null ? aPatient.getFirstName().replaceAll("'", "''"): aPatient.getPreferredName(),
                 String.valueOf(aPatient.getHeight()),
                 String.valueOf(aPatient.getWeight()),
                 aPatient.getBloodGroup() == null ? null : String.format("\'%s\'",aPatient.getBloodGroup().toString()),
