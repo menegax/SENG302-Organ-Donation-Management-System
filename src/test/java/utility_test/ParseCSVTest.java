@@ -143,7 +143,7 @@ public class ParseCSVTest {
      */
     @Test
     public void testAddressParsed() {
-        String address = String.format("%s %s %s %s", patient.getStreetNumber(), patient.getStreet2(), patient.getSuburb(), patient.getRegion());
+        String address = String.format("%s %s %s %s", patient.getStreetNumber(), patient.getCity(), patient.getSuburb(), patient.getRegion());
         Assert.assertEquals("306 Kipling Santana de ParnaÃa Northland", address);
     }
 

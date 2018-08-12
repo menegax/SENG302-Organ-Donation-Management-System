@@ -107,8 +107,9 @@ public class ContactDAO  implements IContactDataAccess {
         return String.format(ResourceManager.getStringForQuery("CONTACT_INSERT_ANOTHER"),
                 getFormattedString(patient.getNhiNumber()),
                 getFormattedString(patient.getStreetNumber()),
-                getFormattedString(patient.getStreet2()),
+                getFormattedString(patient.getStreetName()),
                 getFormattedString(patient.getSuburb()),
+                getFormattedString(patient.getCity()),
                 patient.getRegion() == null ? null : String.format("\'%s\'",patient.getRegion().getValue().replaceAll("'", "")),
                 getFormattedString(String.valueOf(patient.getZip())),
                 getFormattedString(patient.getHomePhone()),
@@ -131,21 +132,22 @@ public class ContactDAO  implements IContactDataAccess {
     private PreparedStatement addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException{
         statement.setString(1,patient.getNhiNumber());
         statement.setString(2, patient.getStreetNumber());
-        statement.setString(3, patient.getStreet2());
+        statement.setString(3, patient.getStreetName());
         statement.setString(4, patient.getSuburb());
-        statement.setString(5, patient.getRegion() == null ? null :
+        statement.setString(5, patient.getCity());
+        statement.setString(6, patient.getRegion() == null ? null :
                 patient.getRegion().getValue());
-        statement.setInt(6, patient.getZip());
-        statement.setString(7, patient.getHomePhone());
-        statement.setString(8, patient.getWorkPhone());
-        statement.setString(9, patient.getMobilePhone());
-        statement.setString(10, patient.getEmailAddress());
-        statement.setString(11, patient.getContactName());
-        statement.setString(12, patient.getContactRelationship());
-        statement.setString(13, patient.getContactHomePhone());
-        statement.setString(14, patient.getContactWorkPhone());
-        statement.setString(15, patient.getContactMobilePhone());
-        statement.setString(16, patient.getContactEmailAddress());
+        statement.setInt(7, patient.getZip());
+        statement.setString(8, patient.getHomePhone());
+        statement.setString(9, patient.getWorkPhone());
+        statement.setString(10, patient.getMobilePhone());
+        statement.setString(11, patient.getEmailAddress());
+        statement.setString(12, patient.getContactName());
+        statement.setString(13, patient.getContactRelationship());
+        statement.setString(14, patient.getContactHomePhone());
+        statement.setString(15, patient.getContactWorkPhone());
+        statement.setString(16, patient.getContactMobilePhone());
+        statement.setString(17, patient.getContactEmailAddress());
         return statement;
     }
 }

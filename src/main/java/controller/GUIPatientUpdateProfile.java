@@ -73,10 +73,13 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private TextField deathLocationTxt;
 
     @FXML
-    private TextField street1Txt;
+    private TextField streetNumberTxt;
 
     @FXML
-    private TextField street2Txt;
+    private TextField streetNameTxt;
+
+    @FXML
+    private TextField cityTxt;
 
     @FXML
     private TextField suburbTxt;
@@ -182,8 +185,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 add(preferredGenderManRadio);
                 add(preferredGenderWomanRadio);
                 add(preferredGenderNonBinaryRadio);
-                add(street1Txt);
-                add(street2Txt);
+                add(streetNumberTxt);
+                add(streetNameTxt);
+                add(cityTxt);
                 add(suburbTxt);
                 add(weightTxt);
                 add(heightTxt);
@@ -239,10 +243,13 @@ public class GUIPatientUpdateProfile extends UndoableController {
         dateOfDeath.setDateTimeValue(patient.getDeath());
         deathLocationTxt.setText(patient.getDeathLocation());
         if (patient.getStreetNumber() != null) {
-            street1Txt.setText(patient.getStreetNumber());
+            streetNumberTxt.setText(patient.getStreetNumber());
         }
-        if (patient.getStreet2() != null) {
-            street2Txt.setText(patient.getStreet2());
+        if (patient.getStreetName() != null) {
+            streetNameTxt.setText(patient.getStreetName());
+        }
+        if (patient.getCity() != null) {
+            cityTxt.setText(patient.getCity());
         }
         if (patient.getSuburb() != null) {
             suburbTxt.setText(patient.getSuburb());
@@ -498,8 +505,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 after.setDeath(dateOfDeath.getDateTimeValue());
             }
             after.setDeathLocation(deathLocationTxt.getText());
-            after.setStreetNumber(street1Txt.getText());
-            after.setStreet2(street2Txt.getText());
+            after.setStreetNumber(streetNumberTxt.getText());
+            after.setStreetName(streetNameTxt.getText());
+            after.setCity(cityTxt.getText());
             try {
                 after.setSuburb(suburbTxt.getText());
             } catch (DataFormatException e) {

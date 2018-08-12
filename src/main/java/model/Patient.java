@@ -166,7 +166,7 @@ public class Patient extends User {
                    Timestamp created, Timestamp modified, LocalDateTime death, GlobalEnums.BirthGender gender,
                    GlobalEnums.PreferredGender prefGender, String preferredName, double height, double weight,
                    BloodGroup bloodType, List<Organ> donations, List<Organ> receiving, String streetNumber,
-                   String street2, String suburb, Region region, int zip, String homePhone, String workPhone,
+                   String city, String suburb, Region region, int zip, String homePhone, String workPhone,
                    String mobilePhone, String emailAddress, String contactName, String contactRelationship,
                    String contactHomePhone, String contactWorkPhone, String contactMobilePhone, String contactEmailAddress,
                    List<PatientActionRecord> userActionsList, List<Disease> currentDiseases,
@@ -187,7 +187,7 @@ public class Patient extends User {
         this.donations = donations;
         this.requiredOrgans = receiving;
         this.streetNumber = streetNumber;
-        this.streetName = street2;
+        this.streetName = city;
         this.suburb = suburb;
         this.region = region;
         this.zip = zip;
@@ -242,7 +242,7 @@ public class Patient extends User {
      * @param birth           birth date
      * @param death           death date
      * @param street1         street 1 of address
-     * @param street2         street2 of address
+     * @param city         city of address
      * @param suburb          suburb of address
      * @param region          region of address
      * @param birthGender     gender of patient at birth
@@ -253,7 +253,7 @@ public class Patient extends User {
      * @param nhi             NHI
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
-                                 LocalDate birth, LocalDateTime death, String street1, String street2, String suburb,
+                                 LocalDate birth, LocalDateTime death, String street1, String city, String suburb,
                                  String region, String birthGender, String preferredGender, String bloodGroup,
                                  double height, double weight, String nhi) throws IllegalArgumentException, DataFormatException {
         Enum globalEnum;
@@ -279,8 +279,8 @@ public class Patient extends User {
         if (street1 != null) {
             setStreetNumber(street1);
         }
-        if (street2 != null) {
-            setStreet2(street2);
+        if (city != null) {
+            setCity(city);
         }
         if (suburb != null) {
             setSuburb(suburb);
@@ -350,7 +350,7 @@ public class Patient extends User {
         setDeath(newPatientAttributes.getDeath());
         setDeathLocation(newPatientAttributes.getDeathLocation());
         setStreetNumber(newPatientAttributes.getStreetNumber());
-        setStreet2(newPatientAttributes.getStreet2());
+        setCity(newPatientAttributes.getCity());
         try {
             setSuburb(newPatientAttributes.getSuburb());
         } catch (DataFormatException e) {
@@ -660,12 +660,12 @@ public class Patient extends User {
         userModified();
     }
 
-    public String getStreet2() {
-        return streetName;
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
     }
 
-    public void setStreet2(String street2) {
-        this.streetName = street2;
+    public void setCity(String city) {
+        this.streetName = city;
         userModified();
     }
 
@@ -1088,7 +1088,7 @@ public class Patient extends User {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
                 + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Preferred name: " + preferredName +
                 "\n" + "Gender Assigned at Birth: " + birthGender + "\n" + "Gender Identity: " + preferredGender + "\n" + "Date of birth: " + birth +
-                "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + streetNumber + "\n" + "Street2: " + streetName + "\n" + "Suburb:" + suburb +
+                "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + streetNumber + "\n" + "city: " + streetName + "\n" + "Suburb:" + suburb +
                 "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: " + height + "\n" + "Weight: "
                 + weight + "\n" + "Blood group: " + bloodGroup + "\n";
     }

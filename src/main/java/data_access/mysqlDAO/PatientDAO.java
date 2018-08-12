@@ -394,27 +394,28 @@ public class PatientDAO implements IPatientDataAccess {
         });
         //map contact info etc
         if (contacts.size() > 1) {
-            patient.setRegion(contacts.get(3) != null ? Region.getEnumFromString(contacts.get(3)) : null);
-            patient.setZip(contacts.get(4) == null ? 0 : Integer.parseInt(contacts.get(4)));
+            patient.setRegion(contacts.get(4) != null ? Region.getEnumFromString(contacts.get(4)) : null);
+            patient.setZip(contacts.get(5) == null ? 0 : Integer.parseInt(contacts.get(5)));
             patient.setCurrentDiseases(currentDiseases);
             patient.setPastDiseases(pastDiseases);
             patient.setStreetNumber(contacts.get(0));
-            patient.setStreet2(contacts.get(1));
+            patient.setStreetName(contacts.get(1));
+            patient.setCity(contacts.get(3));
             try {
                 patient.setSuburb(contacts.get(2));
             } catch (DataFormatException ignored) {
 
             }
-            patient.setHomePhone(contacts.get(5));
-            patient.setWorkPhone(contacts.get(6));
-            patient.setMobilePhone(contacts.get(7));
-            patient.setEmailAddress(contacts.get(8));
-            patient.setContactName(contacts.get(9));
-            patient.setContactRelationship(contacts.get(10));
-            patient.setContactHomePhone(contacts.get(11));
-            patient.setContactWorkPhone(contacts.get(12));
-            patient.setContactMobilePhone(contacts.get(13));
-            patient.setContactEmailAddress(contacts.get(14));
+            patient.setHomePhone(contacts.get(6));
+            patient.setWorkPhone(contacts.get(7));
+            patient.setMobilePhone(contacts.get(8));
+            patient.setEmailAddress(contacts.get(9));
+            patient.setContactName(contacts.get(10));
+            patient.setContactRelationship(contacts.get(11));
+            patient.setContactHomePhone(contacts.get(12));
+            patient.setContactWorkPhone(contacts.get(13));
+            patient.setContactMobilePhone(contacts.get(14));
+            patient.setContactEmailAddress(contacts.get(15));
             patient.setUserActionsList(logs == null ? new ArrayList<>() : logs);
             patient.setProcedures(procedures == null ? new ArrayList<>() : procedures);
         } else if (!contacts.isEmpty()) {
