@@ -106,7 +106,7 @@ public class ContactDAO  implements IContactDataAccess {
     private String getNextRecordString(Patient patient) {
         return String.format(ResourceManager.getStringForQuery("CONTACT_INSERT_ANOTHER"),
                 getFormattedString(patient.getNhiNumber()),
-                getFormattedString(patient.getStreet1()),
+                getFormattedString(patient.getStreetNumber()),
                 getFormattedString(patient.getStreet2()),
                 getFormattedString(patient.getSuburb()),
                 patient.getRegion() == null ? null : String.format("\'%s\'",patient.getRegion().getValue().replaceAll("'", "")),
@@ -130,7 +130,7 @@ public class ContactDAO  implements IContactDataAccess {
 
     private PreparedStatement addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException{
         statement.setString(1,patient.getNhiNumber());
-        statement.setString(2, patient.getStreet1());
+        statement.setString(2, patient.getStreetNumber());
         statement.setString(3, patient.getStreet2());
         statement.setString(4, patient.getSuburb());
         statement.setString(5, patient.getRegion() == null ? null :

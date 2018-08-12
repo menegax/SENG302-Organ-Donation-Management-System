@@ -68,13 +68,16 @@ public class Patient extends User {
     private BloodGroup bloodGroup;
 
     @Parsed(field = "street_number")
-    private String street1;
+    private String streetNumber;
 
     @Parsed(field = "street_name")
-    private String street2;
+    private String streetName;
 
     @Parsed(field = "neighborhood")
     private String suburb;
+
+    @Parsed(field = "city")
+    private String city;
 
     @Parsed(field = "region")
     @Convert(conversionClass = EnumConverterCSV.class)
@@ -162,7 +165,7 @@ public class Patient extends User {
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
                    Timestamp created, Timestamp modified, LocalDateTime death, GlobalEnums.BirthGender gender,
                    GlobalEnums.PreferredGender prefGender, String preferredName, double height, double weight,
-                   BloodGroup bloodType, List<Organ> donations, List<Organ> receiving, String street1,
+                   BloodGroup bloodType, List<Organ> donations, List<Organ> receiving, String streetNumber,
                    String street2, String suburb, Region region, int zip, String homePhone, String workPhone,
                    String mobilePhone, String emailAddress, String contactName, String contactRelationship,
                    String contactHomePhone, String contactWorkPhone, String contactMobilePhone, String contactEmailAddress,
@@ -183,8 +186,8 @@ public class Patient extends User {
         this.bloodGroup = bloodType;
         this.donations = donations;
         this.requiredOrgans = receiving;
-        this.street1 = street1;
-        this.street2 = street2;
+        this.streetNumber = streetNumber;
+        this.streetName = street2;
         this.suburb = suburb;
         this.region = region;
         this.zip = zip;
@@ -274,7 +277,7 @@ public class Patient extends User {
             setDeath(death);
         }
         if (street1 != null) {
-            setStreet1(street1);
+            setStreetNumber(street1);
         }
         if (street2 != null) {
             setStreet2(street2);
@@ -346,7 +349,7 @@ public class Patient extends User {
         setBirth(newPatientAttributes.getBirth());
         setDeath(newPatientAttributes.getDeath());
         setDeathLocation(newPatientAttributes.getDeathLocation());
-        setStreet1(newPatientAttributes.getStreet1());
+        setStreetNumber(newPatientAttributes.getStreetNumber());
         setStreet2(newPatientAttributes.getStreet2());
         try {
             setSuburb(newPatientAttributes.getSuburb());
@@ -648,21 +651,21 @@ public class Patient extends User {
         userModified();
     }
 
-    public String getStreet1() {
-        return street1;
+    public String getStreetNumber() {
+        return streetNumber;
     }
 
-    public void setStreet1(String street1) {
-        this.street1 = street1;
+    public void setStreetNumber(String streetNumber) {
+        this.streetNumber = streetNumber;
         userModified();
     }
 
     public String getStreet2() {
-        return street2;
+        return streetName;
     }
 
     public void setStreet2(String street2) {
-        this.street2 = street2;
+        this.streetName = street2;
         userModified();
     }
 
@@ -760,7 +763,7 @@ public class Patient extends User {
     }
 
     public String getFormattedAddress() {
-        return street1 + " " + street2 + " " + suburb + " " + region + " " + zip;
+        return streetNumber + " " + streetName + " " + suburb + " " + region + " " + zip;
     }
 
     /**
@@ -1069,11 +1072,19 @@ public class Patient extends User {
         userModified();
     }
 
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
                 + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Preferred name: " + preferredName +
                 "\n" + "Gender Assigned at Birth: " + birthGender + "\n" + "Gender Identity: " + preferredGender + "\n" + "Date of birth: " + birth +
-                "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + street1 + "\n" + "Street2: " + street2 + "\n" + "Suburb:" + suburb +
+                "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + streetNumber + "\n" + "Street2: " + streetName + "\n" + "Suburb:" + suburb +
                 "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: " + height + "\n" + "Weight: "
                 + weight + "\n" + "Blood group: " + bloodGroup + "\n";
     }

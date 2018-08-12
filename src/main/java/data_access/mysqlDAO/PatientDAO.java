@@ -399,7 +399,7 @@ public class PatientDAO implements IPatientDataAccess {
             patient.setZip(contacts.get(4) == null ? 0 : Integer.parseInt(contacts.get(4)));
             patient.setCurrentDiseases(currentDiseases);
             patient.setPastDiseases(pastDiseases);
-            patient.setStreet1(contacts.get(0));
+            patient.setStreetNumber(contacts.get(0));
             patient.setStreet2(contacts.get(1));
             try {
                 patient.setSuburb(contacts.get(2));
