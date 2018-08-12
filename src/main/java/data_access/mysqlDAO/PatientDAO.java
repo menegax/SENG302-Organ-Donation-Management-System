@@ -91,7 +91,6 @@ public class PatientDAO implements IPatientDataAccess {
                     extendedInsert = statements.toString().substring(0, statements.toString().length() -1)
                             + " " +ResourceManager.getStringForQuery("ON_DUPLICATE_UPDATE_PATIENT");
                     preparedStatement = connection.prepareStatement(extendedInsert);
-                    System.out.println(extendedInsert);
                     preparedStatement.execute();
                     importObservable.setCompleted(importObservable.getCompleted() + 2000);
                     extendedQueryCount = 0;
@@ -163,6 +162,7 @@ public class PatientDAO implements IPatientDataAccess {
             }
             return null;
         } catch (Exception e) {
+            e.printStackTrace();
            systemLogger.log(Level.SEVERE, "Could not get patient from remote db", this);
         }
         return null;

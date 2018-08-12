@@ -671,7 +671,7 @@ public class Patient extends User {
     }
 
     public void setSuburb(String suburb) throws DataFormatException {
-        if (this.suburb == null || (!suburb.equals(this.suburb))) {
+        if (suburb != null && !suburb.equals(this.suburb)) {
             for (char c : suburb.toCharArray()) {
                 if (c > 127) {
                     throw new DataFormatException("");

@@ -434,7 +434,7 @@ public class GUIHome implements TouchscreenCapable {
             menu2Item2.setOnAction(event -> {
                 File file = new FileChooser().showOpenDialog(stage);
                 if (file != null) {
-                    administratorDataService.importRecords("test.CSV");
+                    administratorDataService.importRecords("C:\\Users\\Hayden Taylor\\Downloads\\testCSV2.CSV");
                     userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
                 }
             });
