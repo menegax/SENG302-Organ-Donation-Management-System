@@ -37,6 +37,10 @@ public class ImportObservable extends Observable {
         notifyObservers();
     }
 
+    public int getCompleted() {
+        return completed;
+    }
+
     public void setTotal(int total) {
         this.total = total;
         notifyObservers();
