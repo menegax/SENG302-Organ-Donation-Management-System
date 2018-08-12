@@ -81,20 +81,42 @@ public class PatientDAO implements IPatientDataAccess {
     @Override
     public boolean addPatientsBatch(List<Patient> patient) {
         try(Connection connection = mySqlFactory.getConnectionInstance()) {
-            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_QUERY"));
-            int batchCount = 0;
-            for (int i=0; i<patient.size(); i++) {
-                statement = addUpdateParameters(statement, patient.get(i));
-                statement.addBatch();
-                if (batchCount == 4000) {
-                    statement.unwrap(JDBC4ServerPreparedStatement.class).executeBatch();
-                    statement.clearBatch();
-                    batchCount = 0;
+            connection.setAutoCommit(false);
+            int extendedQueryCount = 0;
+            StringBuilder statements = new StringBuilder("INSERT INTO tblPatients" +
+                    "  (Nhi, FName, MName, LName, Birth, Created, Modified, Death, BirthGender," +
+                    "  PrefGender, PrefName, Height, Weight, BloodType, DonatingOrgans, ReceivingOrgans)" +
+                    "  VALUES ");
+            PreparedStatement preparedStatement;
+            for (Patient aPatient : patient) {
+                List<String> donationList = aPatient.getDonations().stream().map(Organ::toString).collect(Collectors.toList());
+                String donations = String.join(",", donationList).toLowerCase();
+
+                List<String> organsList = aPatient.getRequiredOrgans() != null ? (aPatient.getRequiredOrgans().stream().map(Organ::toString).collect(Collectors.toList())) : new ArrayList<>();
+                String organs = String.join(",", organsList).toLowerCase();
+
+                String nextRecord = String.format(
+                        "(%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        aPatient.getNhiNumber(), aPatient.getFirstName(),
+                        aPatient.getMiddleNames() != null ? (aPatient.getMiddleNames().size() == 0 ? "" : String.join(" ", aPatient.getMiddleNames())) : null,
+                        aPatient.getLastName(), aPatient.getBirth().toString(),
+                        aPatient.getCREATED().toString(),
+                        aPatient.getModified().toString(),
+                        aPatient.getDeath() == null ? null : aPatient.getDeath().toString(),
+                        aPatient.getBirthGender() == null ? null : aPatient.getBirthGender().toString().substring(0, 1),
+                        aPatient.getPreferredGender() == null ? null : aPatient.getPreferredGender().toString().substring(0, 1),
+                        aPatient.getPreferredName(),
+                        String.valueOf(aPatient.getHeight()),
+                        String.valueOf(aPatient.getWeight()),
+                        aPatient.getBloodGroup() == null ? null : aPatient.getBloodGroup().toString(),
+                        donations, organs);
+                statements.append(nextRecord);
+                if (extendedQueryCount == 50) {
+                    preparedStatement = connection.prepareStatement(statements.toString());
+                    preparedStatement.addBatch();
+                    System.out.println(statements);
                 }
-                batchCount++;
-            }
-            if (batchCount != 0) {
-                statement.executeBatch();
+                extendedQueryCount++;
             }
             connection.commit();
         } catch (Exception e) {
