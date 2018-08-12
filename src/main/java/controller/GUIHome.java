@@ -105,17 +105,6 @@ public class GUIHome implements TouchscreenCapable {
             }
         };
         importObservable.addObserver(importObserver);
-        importObservable.setTotal(1000);
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                if (importObservable.getCompleted() < 1000) {
-                    importObservable.setCompleted(importObservable.getCompleted() + 1);
-                }
-            }
-        };
-        timer.schedule(task, 0, 5);
 
         horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty()
                 .addListener((observable1, oldStage, newStage) -> {

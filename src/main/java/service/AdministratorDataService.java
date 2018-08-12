@@ -12,6 +12,7 @@ import model.User;
 import service.interfaces.IAdministratorDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
+import utility.ImportObservable;
 import utility.parsing.ParseCSV;
 
 import java.io.FileNotFoundException;
@@ -51,6 +52,9 @@ public class AdministratorDataService implements IAdministratorDataService {
             try {
                 Map<ParseCSV.Result, List> patients = parseCSV.parse(new FileReader(filepath));
                 IPatientDataAccess patientDataAccess = mysqlFactory.getPatientDataAccess();
+                ImportObservable importObservable = ImportObservable.getInstance();
+                importObservable.setTotal(patients.get(ParseCSV.Result.SUCCESS).size());
+                importObservable.setCompleted(0);
                 long startTime = System.nanoTime();
                 patientDataAccess.addPatientsBatch(patients.get(ParseCSV.Result.SUCCESS));
                 long endTime = System.nanoTime();
