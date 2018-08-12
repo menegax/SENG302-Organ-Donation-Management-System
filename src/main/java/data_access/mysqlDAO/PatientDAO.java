@@ -372,7 +372,7 @@ public class PatientDAO implements IPatientDataAccess {
             patient.setCurrentDiseases(currentDiseases);
             patient.setPastDiseases(pastDiseases);
             patient.setStreet1(contacts.get(0));
-            patient.setStreet2(contacts.get(1));
+            patient.setCity(contacts.get(1));
             patient.setSuburb(contacts.get(2));
             patient.setHomePhone(contacts.get(5));
             patient.setWorkPhone(contacts.get(6));

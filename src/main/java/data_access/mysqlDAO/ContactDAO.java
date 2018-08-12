@@ -30,7 +30,7 @@ public class ContactDAO  implements IContactDataAccess {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_CONTACT_QUERY"));
             statement.setString(1,patient.getNhiNumber());
             statement.setString(2, patient.getStreet1());
-            statement.setString(3, patient.getStreet2());
+            statement.setString(3, patient.getCity());
             statement.setString(4, patient.getSuburb());
             statement.setString(5, patient.getRegion() == null ? null : patient.getRegion().getValue());
             statement.setInt(6, patient.getZip());

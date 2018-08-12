@@ -138,12 +138,12 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Street 1:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="13">
+            <Label text="Street:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="13">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Street 2:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="14">
+            <Label text="City:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="14">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
@@ -213,7 +213,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="addLbl2" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="14">
+            <Label fx:id="cityLbl" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="14">
                <font>
                   <Font size="18.0" />
                </font>
@@ -276,7 +276,7 @@
             <Insets left="50.0" top="50.0" />
          </GridPane.margin>
       </GridPane>
-      <Label fx:id="nameLbl" wrapText="true" GridPane.columnSpan="11" GridPane.halignment="CENTER">
+      <Label fx:id="nameLbl" visible="false" wrapText="true" GridPane.columnSpan="11" GridPane.halignment="CENTER">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>

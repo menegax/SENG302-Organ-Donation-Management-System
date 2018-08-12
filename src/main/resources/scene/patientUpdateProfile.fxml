@@ -15,7 +15,7 @@
 
 <?import tornadofx.control.DateTimePicker?>
 
-<GridPane fx:id="patientUpdateAnchorPane" prefHeight="489.0" prefWidth="822.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientUpdateProfile">
+<GridPane fx:id="patientUpdateAnchorPane" prefHeight="489.0" prefWidth="822.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientUpdateProfile">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="77.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="317.0" />
@@ -132,14 +132,14 @@
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <Label text="Street 1:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <Label text="Street:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <TextField fx:id="street1Txt" prefHeight="38.0" prefWidth="320.0" promptText="Street 1" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <TextField fx:id="street2Txt" prefHeight="38.0" prefWidth="320.0" promptText="Street 2" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <TextField fx:id="street1Txt" prefHeight="38.0" prefWidth="320.0" promptText="Street" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="cityTxt" prefHeight="38.0" prefWidth="320.0" promptText="City" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <TextField fx:id="suburbTxt" prefHeight="39.0" prefWidth="320.0" promptText="Suburb" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label text="Street 2:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Label text="City:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>

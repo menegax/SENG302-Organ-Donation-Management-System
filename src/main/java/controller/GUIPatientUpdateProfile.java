@@ -9,7 +9,6 @@ import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.PatientDataService;
 import tornadofx.control.DateTimePicker;
-import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateProfile extends UndoableController {
@@ -75,7 +73,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private TextField street1Txt;
 
     @FXML
-    private TextField street2Txt;
+    private TextField cityTxt;
 
     @FXML
     private TextField suburbTxt;
@@ -180,7 +178,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 add(preferredGenderWomanRadio);
                 add(preferredGenderNonBinaryRadio);
                 add(street1Txt);
-                add(street2Txt);
+                add(cityTxt);
                 add(suburbTxt);
                 add(weightTxt);
                 add(heightTxt);
@@ -238,8 +236,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
         if (patient.getStreet1() != null) {
             street1Txt.setText(patient.getStreet1());
         }
-        if (patient.getStreet2() != null) {
-            street2Txt.setText(patient.getStreet2());
+        if (patient.getCity() != null) {
+            cityTxt.setText(patient.getCity());
         }
         if (patient.getSuburb() != null) {
             suburbTxt.setText(patient.getSuburb());
@@ -334,7 +332,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         after.setDeathLocation(deathLocationTxt.getText());
 
         after.setStreet1(street1Txt.getText());
-        after.setStreet2(street2Txt.getText());
+        after.setCity(cityTxt.getText());
         after.setSuburb(suburbTxt.getText());
         if (regionDD.getValue() != null) {
             after.setRegion(Region.getEnumFromString(regionDD.getSelectionModel()

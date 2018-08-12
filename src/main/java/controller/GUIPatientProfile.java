@@ -85,7 +85,7 @@ public class GUIPatientProfile {
     private Label addLbl1;
 
     @FXML
-    private Label addLbl2;
+    private Label cityLbl; //todo
 
     @FXML
     private Label addLbl3;
@@ -208,8 +208,8 @@ public class GUIPatientProfile {
                 .getValue());
         addLbl1.setText((patient.getStreet1() == null || patient.getStreet1()
                 .length() == 0) ? "Not set" : patient.getStreet1());
-        addLbl2.setText((patient.getStreet2() == null || patient.getStreet2()
-                .length() == 0) ? "Not set" : patient.getStreet2());
+        cityLbl.setText((patient.getCity() == null || patient.getCity()
+                .length() == 0) ? "Not set" : patient.getCity());
         addLbl3.setText((patient.getSuburb() == null || patient.getStreet1()
                 .length() == 0) ? "Not set" : patient.getSuburb());
         addLbl4.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
