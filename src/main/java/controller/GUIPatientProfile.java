@@ -11,6 +11,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
+import model.Administrator;
 import model.Clinician;
 import model.Medication;
 import model.Patient;
@@ -165,9 +166,9 @@ public class GUIPatientProfile {
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
 
-        } else if (userControl.getLoggedInUser() instanceof Clinician) {
-            deleteButton.setVisible( false );
-            deleteButton.setDisable( true );
+        } else if (userControl.getLoggedInUser() instanceof Clinician || userControl.getLoggedInUser() instanceof Administrator) {
+            deleteButton.setVisible(true);
+            deleteButton.setDisable(false);
             patient = patientDataService.getPatientByNhi(((Patient)userControl.getTargetUser()).getNhiNumber());
         }
         try {
