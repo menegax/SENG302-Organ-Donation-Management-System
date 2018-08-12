@@ -28,6 +28,7 @@ import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -221,10 +222,10 @@ public class GUIPatientProfile {
         }
 
         if (patient.getRequiredOrgans() == null) {
-            patient.setRequiredOrgans(new ArrayList<>());
+            patient.setRequiredOrgans(new HashMap<>());
         }
         Collection<GlobalEnums.Organ> organsD = patient.getDonations();
-        Collection<GlobalEnums.Organ> organsR = patient.getRequiredOrgans();
+        Collection<GlobalEnums.Organ> organsR = patient.getRequiredOrgans().keySet();
         List<String> organsMappedD = organsD.stream()
                 .map(e -> StringUtils.capitalize(e.getValue()))
                 .collect(Collectors.toList());
@@ -233,10 +234,8 @@ public class GUIPatientProfile {
                 .collect(Collectors.toList());
         donatingListProperty.setValue(FXCollections.observableArrayList(organsMappedD));
         receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
-        donationList.itemsProperty()
-                .bind(donatingListProperty);
-        receivingList.itemsProperty()
-                .bind(receivingListProperty);
+        donationList.itemsProperty().bind(donatingListProperty);
+        receivingList.itemsProperty().bind(receivingListProperty);
         //Populate current medication listview
         Collection<Medication> meds = patient.getCurrentMedications();
         List<String> medsMapped = meds.stream()

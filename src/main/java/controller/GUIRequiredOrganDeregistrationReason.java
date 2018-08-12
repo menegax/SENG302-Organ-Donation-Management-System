@@ -18,10 +18,7 @@ import utility.GlobalEnums;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -188,10 +185,10 @@ public class GUIRequiredOrganDeregistrationReason {
                 confirmed = false;
                 dateOfDeath.getStyleClass().add("invalid");
             }
-            for (GlobalEnums.Organ organ : target.getRequiredOrgans()) {
+            for (GlobalEnums.Organ organ : target.getRequiredOrgans().keySet()) {
                 userActions.log(Level.INFO, "Deregistered " + organ + " due to death on this date: " + dateOfDeath.getValue(), new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
             }
-            target.setRequiredOrgans(new ArrayList());
+            target.setRequiredOrgans(new HashMap());
             target.setDeath(LocalDateTime.parse(dateOfDeath.getValue().toString()));
         } else if (reason == GlobalEnums.DeregistrationReason.RECEIVED) {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});

@@ -27,6 +27,7 @@ public class RequiredOrgansDAO implements IRequiredOrganDataAccess {
 
     @Override
     public int updateRequiredOrgans(String nhi, GlobalEnums.Organ requiredOrgan, LocalDate date) {
+        deleteAllRequiredOrgansByNhi(nhi);
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_REQUIRED_ORGANS_QUERY"));
             statement.setString(1, nhi);
@@ -67,6 +68,17 @@ public class RequiredOrgansDAO implements IRequiredOrganDataAccess {
             statement.executeUpdate();
         } catch (SQLException e) {
             systemLogger.log(Level.SEVERE, "Could not delete required organ from MYSQL DB", this);
+        }
+    }
+
+    @Override
+    public void deleteAllRequiredOrgansByNhi(String nhi) {
+        try (Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_ALL_REQUIRED_ORGANS_QUERY"));
+            statement.setString(1, nhi);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            systemLogger.log(Level.SEVERE, "Could not delete all required organs from MYSQL DB", this);
         }
     }
 }

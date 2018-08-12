@@ -151,7 +151,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * @param patient currently being viewed
      */
     private void populateForm(Patient patient) {
-        List<GlobalEnums.Organ> organs = patient.getRequiredOrgans();
+        List<GlobalEnums.Organ> organs = new ArrayList<>(patient.getRequiredOrgans().keySet());
         if (organs != null) {
             if (organs.contains(GlobalEnums.Organ.LIVER)) {
                 liverCB.setSelected(true);
@@ -339,7 +339,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
                 iter.remove();
             }
         }
-        for (GlobalEnums.Organ organ : after.getRequiredOrgans()) {
+        for (GlobalEnums.Organ organ : after.getRequiredOrgans().keySet()) {
             waitlist.add(after, organ);
         }
         clinicianDataService.updateOrganWaitList(waitlist);

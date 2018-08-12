@@ -30,4 +30,11 @@ public interface IRequiredOrganDataAccess {
      * @param nhi The nhi for the patient to remove required organs from
      */
     void deleteRequiredOrganByNhi(String nhi, GlobalEnums.Organ organ);
+
+    /**
+     * Removes all required organs of a patient
+     *
+     * @param nhi The nhi for the patient to remove all required organs from
+     */
+    void deleteAllRequiredOrgansByNhi(String nhi);
 }
