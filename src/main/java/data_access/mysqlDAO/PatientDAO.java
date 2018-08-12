@@ -77,7 +77,21 @@ public class PatientDAO implements IPatientDataAccess {
 
     @Override
     public boolean addPatientsBatch(List<Patient> patient) {
-        return false;
+        try(Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_QUERY"));
+            for (int i=0; i<patient.size(); i++) {
+                statement = addUpdateParameters(statement, patient.get(i));
+                statement.addBatch();
+                if (i % 100 == 0) {
+                    statement.executeBatch();
+                }
+            }
+            connection.commit();
+            System.out.println("completed");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
 
@@ -249,7 +263,7 @@ public class PatientDAO implements IPatientDataAccess {
     private PreparedStatement addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException {
         statement.setString(1, patient.getNhiNumber());
         statement.setString(2, patient.getFirstName());
-        statement.setString(3, patient.getMiddleNames().size() == 0 ? "" : String.join(" ", patient.getMiddleNames()));
+        statement.setString(3, patient.getMiddleNames() != null ? (patient.getMiddleNames().size() == 0 ? "" : String.join(" ", patient.getMiddleNames())) : null );
         statement.setString(4, patient.getLastName());
         statement.setString(5, patient.getBirth().toString());
         statement.setString(6, patient.getCREATED().toString());
@@ -264,7 +278,7 @@ public class PatientDAO implements IPatientDataAccess {
         List<String> donationList = patient.getDonations().stream().map(Organ::toString).collect(Collectors.toList());
         String donations = String.join(",", donationList).toLowerCase();
         statement.setString(15, donations);
-        List<String> organsList = patient.getRequiredOrgans().stream().map(Organ::toString).collect(Collectors.toList());
+        List<String> organsList = patient.getRequiredOrgans() != null ? (patient.getRequiredOrgans().stream().map(Organ::toString).collect(Collectors.toList())) : new ArrayList<>();
         String organs = String.join(",", organsList).toLowerCase();
         statement.setString(16, organs);
         return statement;

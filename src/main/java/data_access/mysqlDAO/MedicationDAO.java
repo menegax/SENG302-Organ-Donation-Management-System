@@ -3,6 +3,7 @@ package data_access.mysqlDAO;
 import data_access.interfaces.IMedicationDataAccess;
 import data_access.factories.MySqlFactory;
 import model.Medication;
+import model.Patient;
 import utility.GlobalEnums.*;
 import utility.ResourceManager;
 
@@ -73,4 +74,29 @@ public class MedicationDAO  implements IMedicationDataAccess {
             systemLogger.log(Level.SEVERE, "Could not delete medication from MYSQL DB", this);
         }
     }
+
+//    @Override
+//    public void addMedicationBatch(List<Patient> patients) {
+//        try(Connection connection = mySqlFactory.getConnectionInstance()) {
+//            connection.setAutoCommit(false);
+//            PreparedStatement preparedStatement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_MEDICATION_QUERY"));
+//            for (int i = 0; i<patients.size(); i++) {
+//                List<Medication> medications = patients.get(i).getMedicationHistory();
+//                medications.addAll(patients.get(i).getCurrentMedications());
+//                for (int j = 0; j<medications.size(); j++) {
+//                    preparedStatement.setString(1, patients.get(i).getNhiNumber());
+//                    preparedStatement.setString(2, medications.get(i).getMedicationName());
+//                    preparedStatement.setInt(3, medications.get(i).getMedicationStatus().getValue());
+//                    preparedStatement.addBatch();
+//                }
+//
+//                if (i % 1000 == 0) {
+//                    preparedStatement.executeUpdate();
+//                }
+//            }
+//            connection.commit();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

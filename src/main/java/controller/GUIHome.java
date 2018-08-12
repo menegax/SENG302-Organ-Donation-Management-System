@@ -15,7 +15,9 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
+import service.AdministratorDataService;
 import service.UserDataService;
+import service.interfaces.IAdministratorDataService;
 import utility.Searcher;
 import utility.StatusObservable;
 import utility.TouchPaneController;
@@ -54,6 +56,8 @@ public class GUIHome implements Observer, TouchscreenCapable {
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private UserControl userControl = new UserControl();
+
+    private IAdministratorDataService administratorDataService = new AdministratorDataService();
 
 
     private  enum TabName {
@@ -410,7 +414,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
             menu2Item2.setOnAction(event -> {
                 File file = new FileChooser().showOpenDialog(stage);
                 if (file != null) {
-                    //database.importFromDiskPatients(file.getAbsolutePath()); //TODO
+                    administratorDataService.importRecords("C:\\Users\\Hayden Taylor\\Downloads\\testCSV2.csv");
                     userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
                 }
             });

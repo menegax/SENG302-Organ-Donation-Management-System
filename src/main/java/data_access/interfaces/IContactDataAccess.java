@@ -2,6 +2,8 @@ package data_access.interfaces;
 
 import model.Patient;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IContactDataAccess {
@@ -28,4 +30,6 @@ public interface IContactDataAccess {
      * @param nhi The patients nhi to delete contact details from
      */
     void deleteContactByNhi(String nhi);
+
+    PreparedStatement addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException;
 }

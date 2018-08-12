@@ -12,7 +12,10 @@ import model.User;
 import service.interfaces.IAdministratorDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
+import utility.parsing.ParseCSV;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -42,11 +45,16 @@ public class AdministratorDataService implements IAdministratorDataService {
     }
 
     @Override
-    public void importRecords() {
+    public void importRecords(String filepath) {
         cachedThreadPool.getThreadService().submit(() -> {
-            //List<Patient> patients = parseCSV.parse(filepath); //todo:
-            IPatientDataAccess patientDataAccess = mysqlFactory.getPatientDataAccess();
-            patientDataAccess.addPatientsBatch(new ArrayList<>());
+            ParseCSV parseCSV = new ParseCSV();
+            try {
+                Map<ParseCSV.Result, List> patients = parseCSV.parse(new FileReader(filepath));
+                IPatientDataAccess patientDataAccess = mysqlFactory.getPatientDataAccess();
+                patientDataAccess.addPatientsBatch(patients.get(ParseCSV.Result.SUCCESS));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         });
     }
 

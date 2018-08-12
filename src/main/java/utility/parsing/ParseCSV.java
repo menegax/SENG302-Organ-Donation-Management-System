@@ -51,7 +51,8 @@ public class ParseCSV {
     }
 
 
-    public static void main(String[] argv) {
-        System.out.println(StringUtils.isAsciiPrintable("PlanÃ¡"));
+    public static void main(String[] argv) throws FileNotFoundException {
+        ParseCSV parseCSV = new ParseCSV();
+        parseCSV.parse(new FileReader("C:\\Users\\Hayden Taylor\\Downloads\\testCSV2.csv"));
     }
 }

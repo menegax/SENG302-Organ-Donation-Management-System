@@ -6,6 +6,7 @@ import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.annotations.Validate;
 import org.apache.commons.lang3.StringUtils;
 import utility.parsing.DateConverterCSV;
+import utility.parsing.DateTimeConverterCSV;
 import utility.parsing.EnumConverterCSV;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
@@ -40,7 +41,7 @@ public class Patient extends User {
     private LocalDate birth;
 
     @Parsed(field = "date_of_death")
-    @Convert(conversionClass = DateConverterCSV.class)
+    @Convert(conversionClass = DateTimeConverterCSV.class)
     private LocalDateTime death;
 
     private String deathLocation;
