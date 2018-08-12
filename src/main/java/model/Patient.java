@@ -665,7 +665,7 @@ public class Patient extends User {
     }
 
     public void setCity(String city) {
-        this.streetName = city;
+        this.city = city;
         userModified();
     }
 
