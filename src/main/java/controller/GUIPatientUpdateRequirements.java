@@ -208,6 +208,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * Save button makes sure that the current session is saved with the changes made
      */
     public void saveRequirements() {
+        finalRequirements.clear();
         if (liverCB.isSelected()) {
             after.addRequired(GlobalEnums.Organ.LIVER);
             finalRequirements.add(GlobalEnums.Organ.LIVER);
@@ -292,7 +293,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      */
     private void deregistrationReason() {
         SystemLogger.systemLogger.log(INFO, "Patient had organ requirements deregistered. Asking for deregistration reason...");
-        Set<GlobalEnums.Organ> removedOrgans = initialRequirements;
+        List<GlobalEnums.Organ> removedOrgans = target.getRequiredOrgans();
         removedOrgans.removeAll(finalRequirements);
 
         if (removedOrgans.size() == 0) {
