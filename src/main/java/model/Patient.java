@@ -31,7 +31,7 @@ import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
 
-    private final Timestamp CREATED;
+    private Timestamp CREATED;
 
     private String preferredName;
 
@@ -417,8 +417,8 @@ public class Patient extends User {
      *
      * @throws IllegalArgumentException when the nhi number given is not in the valid format
      */
-    private void ensureValidNhi() throws IllegalArgumentException {
-        if (!Pattern.matches("[A-Z]{3}[0-9]{4}", nhiNumber.toUpperCase())) {
+    private void ensureValidNhi(String nhi) throws IllegalArgumentException {
+        if (!Pattern.matches("[A-Z]{3}[0-9]{4}", nhi.toUpperCase())) {
             throw new IllegalArgumentException(
                     "NHI number " + nhiNumber.toUpperCase() + " is not in the correct format (3 letters followed by 4 numbers)");
         }

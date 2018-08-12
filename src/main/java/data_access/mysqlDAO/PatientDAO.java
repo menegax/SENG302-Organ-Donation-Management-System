@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.zip.DataFormatException;
 
 import static utility.GlobalEnums.FilterOption.*;
 import static utility.SystemLogger.systemLogger;
@@ -360,7 +361,11 @@ public class PatientDAO implements IPatientDataAccess {
             patient.setPastDiseases(pastDiseases);
             patient.setStreet1(contacts.get(0));
             patient.setStreet2(contacts.get(1));
-            patient.setSuburb(contacts.get(2));
+            try {
+                patient.setSuburb(contacts.get(2));
+            } catch (DataFormatException ignored) {
+
+            }
             patient.setHomePhone(contacts.get(5));
             patient.setWorkPhone(contacts.get(6));
             patient.setMobilePhone(contacts.get(7));

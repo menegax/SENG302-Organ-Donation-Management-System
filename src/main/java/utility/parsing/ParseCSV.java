@@ -5,7 +5,6 @@ import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
-import service.Database;
 
 import javax.xml.crypto.Data;
 import java.io.FileNotFoundException;
@@ -46,7 +45,7 @@ public class ParseCSV {
         results.put(Result.SUCCESS, pats);
         results.put(Result.FAIL, errors);
 
-        Database.getDatabase().importToDb(results.get(Result.SUCCESS));
+        //Database.getDatabase().importToDb(results.get(Result.SUCCESS));
 
         return results;
     }
