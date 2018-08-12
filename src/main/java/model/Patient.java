@@ -1072,6 +1072,10 @@ public class Patient extends User {
         userModified();
     }
 
+    public String getAddressString() {
+        return String.format("%s %s, %s", street1, street2, suburb);
+    }
+
     public String getStreetName() {
         return streetName;
     }
