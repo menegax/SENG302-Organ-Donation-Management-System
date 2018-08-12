@@ -105,7 +105,6 @@ public class PatientDAO implements IPatientDataAccess {
             }
             connection.commit();
             contactDataAccess.addContactBatch(patient);
-            importObservable.setFinished();
         } catch (Exception e) {
             e.printStackTrace();
         }

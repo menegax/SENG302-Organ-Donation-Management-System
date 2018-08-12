@@ -32,12 +32,13 @@
       <Label text="Patients imported:" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
       <TableView fx:id="resultsTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="2">
         <columns>
-          <TableColumn prefWidth="75.0" text="NHI" />
-          <TableColumn prefWidth="75.0" text="Name" />
-            <TableColumn prefWidth="75.0" text="Gender" />
-            <TableColumn prefWidth="75.0" text="Address" />
-            <TableColumn prefWidth="75.0" text="DOB" />
-            <TableColumn prefWidth="75.0" text="Blood Type" />
+          <TableColumn fx:id="nhiCol" prefWidth="75.0" text="NHI" />
+          <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="genderCol" prefWidth="75.0" text="Gender" />
+            <TableColumn fx:id="addressCol" prefWidth="75.0" text="Address" />
+            <TableColumn fx:id="regionCol" prefWidth="75.0" text="Region" />
+            <TableColumn fx:id="dobCol" prefWidth="75.0" text="DOB" />
+            <TableColumn fx:id="bloodTypeCol" prefWidth="75.0" text="Blood Type" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

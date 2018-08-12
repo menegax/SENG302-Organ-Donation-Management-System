@@ -1069,6 +1069,10 @@ public class Patient extends User {
         userModified();
     }
 
+    public String getAddressString() {
+        return String.format("%s %s, %s", street1, street2, suburb);
+    }
+
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
                 + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Preferred name: " + preferredName +

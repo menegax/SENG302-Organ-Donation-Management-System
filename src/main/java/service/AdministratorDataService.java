@@ -1,10 +1,14 @@
 package service;
 
+import controller.ScreenControl;
 import data_access.factories.DAOFactory;
 import data_access.interfaces.IAdministratorDataAccess;
 import data_access.interfaces.IClinicianDataAccess;
 import data_access.interfaces.IPatientDataAccess;
 import data_access.interfaces.IUserDataAccess;
+import data_access.localDAO.LocalDB;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -13,7 +17,9 @@ import service.interfaces.IAdministratorDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 import utility.ImportObservable;
+import utility.SystemLogger;
 import utility.parsing.ParseCSV;
+import utility.undoRedo.UndoableStage;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -21,6 +27,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
 
 public class AdministratorDataService implements IAdministratorDataService {
 
@@ -47,6 +54,7 @@ public class AdministratorDataService implements IAdministratorDataService {
 
     @Override
     public void importRecords(String filepath) {
+        //Observer observer = (o, arg) -> showImportResults();
         cachedThreadPool.getThreadService().submit(() -> {
             ParseCSV parseCSV = new ParseCSV();
             try {
@@ -57,13 +65,37 @@ public class AdministratorDataService implements IAdministratorDataService {
                 importObservable.setCompleted(0);
                 long startTime = System.nanoTime();
                 patientDataAccess.addPatientsBatch(patients.get(ParseCSV.Result.SUCCESS));
+                importObservable.setFinished();
                 long endTime = System.nanoTime();
                 long duration = (endTime - startTime);
                 System.out.println(duration);
+                LocalDB db = LocalDB.getInstance();
+                Set<Patient> imported = new HashSet<Patient>(patients.get(ParseCSV.Result.SUCCESS));
+                db.setImported(imported);
+                //Observable observable = new Observable();
+                //observable.addObserver(observer);
+                //observable.notifyObservers();
+                Platform.runLater(this::showImportResults);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    private void showImportResults() {
+        ScreenControl screenControl = ScreenControl.getScreenControl();
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/adminImportResults.fxml"));
+            UndoableStage popUpStage = new UndoableStage();
+            //Set initial popup dimensions
+            popUpStage.setWidth(900);
+            popUpStage.setHeight(600);
+            screenControl.addStage(popUpStage.getUUID(), popUpStage);
+            screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
+        } catch (Exception e) {
+            e.printStackTrace();
+            SystemLogger.systemLogger.log(Level.SEVERE, "Couldn't open import results popup");
+        }
     }
 
     @Override
@@ -147,6 +179,8 @@ public class AdministratorDataService implements IAdministratorDataService {
     @Override
     public void save(Administrator administrator) {
         IAdministratorDataAccess dataAccess = localDbFactory.getAdministratorDataAccess();
-        dataAccess.saveAdministrator(new HashSet<Administrator>(){{add(administrator);}});
+        dataAccess.saveAdministrator(new HashSet<Administrator>() {{
+            add(administrator);
+        }});
     }
 }
