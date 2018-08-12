@@ -1073,7 +1073,7 @@ public class Patient extends User {
     }
 
     public String getAddressString() {
-        return String.format("%s %s, %s", street1, street2, suburb);
+        return String.format("%s %s, %s", streetNumber, streetName, suburb);
     }
 
     public String getStreetName() {
