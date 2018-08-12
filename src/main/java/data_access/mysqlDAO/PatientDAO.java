@@ -1,5 +1,8 @@
 package data_access.mysqlDAO;
 
+import com.mysql.jdbc.JDBC4PreparedStatement;
+import com.mysql.jdbc.JDBC4ServerPreparedStatement;
+import com.mysql.jdbc.ServerPreparedStatement;
 import data_access.factories.MySqlFactory;
 import data_access.interfaces.*;
 import model.Disease;
@@ -79,15 +82,21 @@ public class PatientDAO implements IPatientDataAccess {
     public boolean addPatientsBatch(List<Patient> patient) {
         try(Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_PATIENT_QUERY"));
+            int batchCount = 0;
             for (int i=0; i<patient.size(); i++) {
                 statement = addUpdateParameters(statement, patient.get(i));
                 statement.addBatch();
-                if (i % 100 == 0) {
-                    statement.executeBatch();
+                if (batchCount == 4000) {
+                    statement.unwrap(JDBC4ServerPreparedStatement.class).executeBatch();
+                    statement.clearBatch();
+                    batchCount = 0;
                 }
+                batchCount++;
+            }
+            if (batchCount != 0) {
+                statement.executeBatch();
             }
             connection.commit();
-            System.out.println("completed");
         } catch (Exception e) {
             e.printStackTrace();
         }
