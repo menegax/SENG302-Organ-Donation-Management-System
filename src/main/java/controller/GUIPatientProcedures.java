@@ -108,7 +108,7 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
             add(pendingProceduresView);
             add(previousProceduresView);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTPROCEDURES, target);
     }
 
     /**

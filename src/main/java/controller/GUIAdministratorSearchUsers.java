@@ -72,7 +72,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         controls = new ArrayList<Control>() {{
             add(searchEntry);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS, target);
     }
 
     /**

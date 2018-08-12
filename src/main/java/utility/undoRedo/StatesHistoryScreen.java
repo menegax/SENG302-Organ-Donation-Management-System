@@ -3,6 +3,7 @@ package utility.undoRedo;
 import controller.ScreenControl;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCombination;
+import model.User;
 import utility.GlobalEnums.UndoableScreen;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryControl;
 import javafx.scene.control.*;
@@ -41,6 +42,8 @@ public class StatesHistoryScreen {
 
     private Map<Integer, List<Action>> actions = new HashMap<>();
 
+    private User target;
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private int index = 0;
@@ -50,9 +53,11 @@ public class StatesHistoryScreen {
      * Creates the list of stateHistories in its initialisation
      * @param controls list of controls on the screen (can also contain arraylists of controls)
      * @param undoableScreen the enum of the screen this StatesHistoryScreen represents
+     * @param target the target user of the screen this StatesHistoryScreen represents
      */
-    public StatesHistoryScreen(List<Control> controls, UndoableScreen undoableScreen) {
+    public StatesHistoryScreen(List<Control> controls, UndoableScreen undoableScreen, User target) {
         this.undoableScreen = undoableScreen;
+        this.target = target;
         findUndoableWrapper(controls.get(0));
         for (Object control : controls) {
             if ((control instanceof TextField)) {
@@ -449,5 +454,9 @@ public class StatesHistoryScreen {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public User getTarget(){
+        return target;
     }
 }

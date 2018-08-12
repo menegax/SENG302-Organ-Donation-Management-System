@@ -132,7 +132,7 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
             add(currentDiagnosesView);
             add(pastDiagnosesView);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANDIAGNOSIS);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANDIAGNOSIS, target);
     }
 
     /**

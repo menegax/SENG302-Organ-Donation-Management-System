@@ -1,9 +1,6 @@
 package utility.undoRedo;
 
-import controller.GUIHome;
-import controller.ScreenControl;
-import controller.UndoRedoControl;
-import controller.UndoableController;
+import controller.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Tab;
@@ -112,6 +109,7 @@ public class UndoableWrapper {
             userActions.log(Level.SEVERE, "Error loading screen", "Attempted to navigate screens during " + method);
         }
         UndoableController controller = fxmlLoader.getController();
+        controller.setTarget(statesHistoryScreens.get(index).getTarget());
         undoRedoControl.setActions(statesHistoryScreens.get(index).getActions(), controller.getStatesHistory());
         undoRedoControl.setStates(statesHistoryScreens.get(index), controller.getControls());
         undoRedoControl.setStatesHistoryScreen(controller, statesHistoryScreens.get(index));

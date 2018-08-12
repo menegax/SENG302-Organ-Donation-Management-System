@@ -169,7 +169,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 add(heightTxt);
                 add(zipTxt);
             }};
-            statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.PATIENTUPDATEPROFILE);
+            statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.PATIENTUPDATEPROFILE, target);
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "Error loading patient", new String[]{"Attempted to load patient for updating", ((Patient) target).getNhiNumber()});
         }

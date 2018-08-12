@@ -153,7 +153,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
             add(clinicianButton);
             add(administratorButton);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORUSERREGISTER);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORUSERREGISTER, target);
     }
 
     /**

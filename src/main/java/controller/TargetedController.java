@@ -11,5 +11,5 @@ public abstract class TargetedController {
         load();
     }
 
-    abstract protected void load();
+    abstract public void load();
 }

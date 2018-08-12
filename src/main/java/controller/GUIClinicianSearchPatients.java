@@ -138,7 +138,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
             add(donationFilter);
             add(valueX);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.CLINICIANSEARCHPATIENTS);
+        statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.CLINICIANSEARCHPATIENTS, target);
     }
 
     /**

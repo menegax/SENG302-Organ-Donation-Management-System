@@ -175,7 +175,7 @@ public class GUIPatientMedications extends UndoableController {
             add(pastMedications);
             add(currentMedications);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS, target);
     }
 
 

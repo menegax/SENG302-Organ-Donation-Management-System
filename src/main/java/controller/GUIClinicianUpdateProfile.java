@@ -121,7 +121,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             add(suburbTxt);
             add(regionDD);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPROFILEUPDATE);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPROFILEUPDATE, target);
     }
 
 
