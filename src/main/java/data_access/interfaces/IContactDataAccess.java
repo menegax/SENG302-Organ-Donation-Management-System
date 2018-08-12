@@ -31,5 +31,5 @@ public interface IContactDataAccess {
      */
     void deleteContactByNhi(String nhi);
 
-    PreparedStatement addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException;
+    void addContactBatch(List<Patient> patients);
 }

@@ -37,26 +37,34 @@ public class ContactDAO  implements IContactDataAccess {
         return true;
     }
 
-
-
-    public PreparedStatement addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException{
-        statement.setString(1,patient.getNhiNumber());
-        statement.setString(2, patient.getStreet1());
-        statement.setString(3, patient.getStreet2());
-        statement.setString(4, patient.getSuburb());
-        statement.setString(5, patient.getRegion() == null ? null : patient.getRegion().getValue());
-        statement.setInt(6, patient.getZip());
-        statement.setString(7, patient.getHomePhone());
-        statement.setString(8, patient.getWorkPhone());
-        statement.setString(9, patient.getMobilePhone());
-        statement.setString(10, patient.getEmailAddress());
-        statement.setString(11, patient.getContactName());
-        statement.setString(12, patient.getContactRelationship());
-        statement.setString(13, patient.getContactHomePhone());
-        statement.setString(14, patient.getContactWorkPhone());
-        statement.setString(15, patient.getContactMobilePhone());
-        statement.setString(16, patient.getContactEmailAddress());
-        return statement;
+    @Override
+    public void addContactBatch(List<Patient> patients){
+        try(Connection connection = mySqlFactory.getConnectionInstance()) {
+            connection.setAutoCommit(false);
+            int extendedQueryCount = 0;
+            StringBuilder statements = new StringBuilder(ResourceManager.getStringForQuery("BARE_INSERT_CONTACT_BATCH"));
+            PreparedStatement preparedStatement;
+            String extendedInsert;
+            for (Patient aPatient : patients) {
+                statements.append(getNextRecordString(aPatient));
+                if (extendedQueryCount == 4000 ) {
+                    extendedInsert = statements.toString().substring(0, statements.toString().length() -1)
+                            + " " +ResourceManager.getStringForQuery("ON_DUPLICATE_CONTACT_UPDATE");
+                    preparedStatement = connection.prepareStatement(extendedInsert);
+                    preparedStatement.execute();
+                    extendedQueryCount = 0;
+                }
+                extendedQueryCount++;
+            }
+            if (extendedQueryCount != 0) {
+                extendedInsert = statements.toString().substring(0, statements.toString().length() -1)
+                        + " " +ResourceManager.getStringForQuery("ON_DUPLICATE_CONTACT_UPDATE");
+                connection.prepareStatement(extendedInsert).execute();
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -90,5 +98,51 @@ public class ContactDAO  implements IContactDataAccess {
         } catch (SQLException e) {
             systemLogger.log(Level.SEVERE, "Could not delete contact from MYSQL DB", this);
         }
+    }
+
+    private String getNextRecordString(Patient patient) {
+        return String.format(ResourceManager.getStringForQuery("CONTACT_INSERT_ANOTHER"),
+                getFormattedString(patient.getNhiNumber()),
+                getFormattedString(patient.getStreet1()),
+                getFormattedString(patient.getStreet2()),
+                getFormattedString(patient.getSuburb()),
+                patient.getRegion() == null ? null : String.format("\'%s\'",patient.getRegion().getValue().replaceAll("'", "")),
+                getFormattedString(String.valueOf(patient.getZip())),
+                getFormattedString(patient.getHomePhone()),
+                getFormattedString(patient.getWorkPhone()),
+                getFormattedString(patient.getMobilePhone()),
+                getFormattedString(patient.getEmailAddress()),
+                getFormattedString(patient.getContactEmailAddress()),
+                getFormattedString(patient.getContactRelationship()),
+                getFormattedString(patient.getContactHomePhone()),
+                getFormattedString(patient.getContactWorkPhone()),
+                getFormattedString(patient.getContactMobilePhone()),
+                getFormattedString(patient.getContactEmailAddress()));
+    }
+
+
+    private String getFormattedString(String str) {
+        return str == null ? null : String.format("\'%s\'", str.replaceAll("'", "''" ));
+    }
+
+    private PreparedStatement addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException{
+        statement.setString(1,patient.getNhiNumber());
+        statement.setString(2, patient.getStreet1());
+        statement.setString(3, patient.getStreet2());
+        statement.setString(4, patient.getSuburb());
+        statement.setString(5, patient.getRegion() == null ? null :
+                patient.getRegion().getValue());
+        statement.setInt(6, patient.getZip());
+        statement.setString(7, patient.getHomePhone());
+        statement.setString(8, patient.getWorkPhone());
+        statement.setString(9, patient.getMobilePhone());
+        statement.setString(10, patient.getEmailAddress());
+        statement.setString(11, patient.getContactName());
+        statement.setString(12, patient.getContactRelationship());
+        statement.setString(13, patient.getContactHomePhone());
+        statement.setString(14, patient.getContactWorkPhone());
+        statement.setString(15, patient.getContactMobilePhone());
+        statement.setString(16, patient.getContactEmailAddress());
+        return statement;
     }
 }

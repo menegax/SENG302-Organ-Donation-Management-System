@@ -103,6 +103,7 @@ public class PatientDAO implements IPatientDataAccess {
                 connection.prepareStatement(extendedInsert).execute();
             }
             connection.commit();
+            contactDataAccess.addContactBatch(patient);
         } catch (Exception e) {
             e.printStackTrace();
         }
