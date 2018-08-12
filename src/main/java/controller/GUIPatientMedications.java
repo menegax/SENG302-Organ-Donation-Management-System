@@ -1,30 +1,23 @@
 package controller;
 
 import model.*;
-import service.APIHelper;
+import service.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import service.Database;
+import utility.CachedThreadPool;
 import utility.GlobalEnums;
-import service.TextWatcher;
-import utility.GlobalEnums;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -73,8 +66,6 @@ public class GUIPatientMedications extends UndoableController {
     private JsonObject suggestions;
 
     private boolean itemSelected = false;
-
-    Database database = Database.getDatabase();
 
     /*
      * Textfield for entering medications for adding to the currentMedications ArrayList and listView
@@ -169,6 +160,7 @@ public class GUIPatientMedications extends UndoableController {
      */
     @FXML
     public void initialize() {
+        Patient patient;
         userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
         //Register events for when an item is selected from a listView and set selection mode to multiple
@@ -179,10 +171,11 @@ public class GUIPatientMedications extends UndoableController {
         currentMedications.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
         if (user instanceof Patient) {
-            loadProfile(((Patient) user).getNhiNumber());
+            patient = (Patient)userControl.getLoggedInUser(); //get logged in patient
+            loadProfile(patient.getNhiNumber());
         } else if (user instanceof Administrator) {
-            viewedPatient = (Patient) userControl.getTargetUser();
-            loadProfile(viewedPatient.getNhiNumber());
+            patient = (Patient) userControl.getTargetUser();
+            loadProfile(patient.getNhiNumber());
         } else {
             viewedPatient = (Patient) userControl.getTargetUser();
             loadProfile(viewedPatient.getNhiNumber());
@@ -202,7 +195,8 @@ public class GUIPatientMedications extends UndoableController {
      */
     private void loadProfile(String nhi) {
         try {
-            target = database.getPatientByNhi(nhi);
+            PatientDataService patientDataService = new PatientDataService();
+            target = patientDataService.getPatientByNhi(nhi);
             after = (Patient) target.deepClone();
             if (after.getCurrentMedications() == null) {
                 after.setCurrentMedications(new ArrayList<>());
@@ -259,10 +253,10 @@ public class GUIPatientMedications extends UndoableController {
      */
     @SuppressWarnings("WeakerAccess")
     public void autoComplete() {
-        Platform.runLater(() -> { // run this on the FX thread (next available)
-            getDrugSuggestions(newMedication.getText()
-                    .trim()); //possibly able to run this on the timer thread
-            displayDrugSuggestions();//UPDATE UI
+        CachedThreadPool cachedThreadPool = CachedThreadPool.getCachedThreadPool();
+        cachedThreadPool.getThreadService().submit(() -> {
+            getDrugSuggestions(newMedication.getText().trim());
+            Platform.runLater(this::displayDrugSuggestions);
         });
     }
 
@@ -378,8 +372,7 @@ public class GUIPatientMedications extends UndoableController {
                     .toLowerCase();
 
             if (!(current.contains(medication) || history.contains(medication))) {
-                after.getCurrentMedications()
-                        .add(new Medication(medication));
+                after.getCurrentMedications().add(new Medication(medication, GlobalEnums.MedicationStatus.CURRENT));
                 statesHistoryScreen.addAction(new Action(target, after));
                 userActions.log(Level.INFO,
                         "Added medication: " + medication,
@@ -453,12 +446,10 @@ public class GUIPatientMedications extends UndoableController {
     private void moveToCurrent(ArrayList<String> medications) {
         for (String medication : medications) {
             if (history.contains(medication)) {
-                after.getMedicationHistory()
-                        .remove(history.indexOf(medication));
+                after.getMedicationHistory().remove(history.indexOf(medication));
 
                 if (!current.contains(medication)) {
-                    after.getCurrentMedications()
-                            .add(new Medication(medication));
+                    after.getCurrentMedications().add(new Medication(medication, GlobalEnums.MedicationStatus.CURRENT));
                     viewCurrentMedications();
                 }
                 userActions.log(Level.INFO,
@@ -480,12 +471,9 @@ public class GUIPatientMedications extends UndoableController {
     private void moveToHistory(ArrayList<String> medications) {
         for (String medication : medications) {
             if (current.contains(medication)) {
-                after.getCurrentMedications()
-                        .remove(current.indexOf(medication));
-
+                after.getCurrentMedications().remove(current.indexOf(medication));
                 if (!history.contains(medication)) {
-                    after.getMedicationHistory()
-                            .add(new Medication(medication));
+                    after.getMedicationHistory().add(new Medication(medication, GlobalEnums.MedicationStatus.HISTORY));
                     viewPastMedications();
                 }
                 userActions.log(Level.INFO,
@@ -627,7 +615,7 @@ public class GUIPatientMedications extends UndoableController {
             }
         }
         else {
-            userActions.log(Level.WARNING, "Drug interactions not available. Please select 2 medications.", "Attempted to view drug interactions");
+            userActions.log(Level.WARNING, "Drug interactions not available. Please getMedicationsByNhi 2 medications.", "Attempted to view drug interactions");
         }
     }
 

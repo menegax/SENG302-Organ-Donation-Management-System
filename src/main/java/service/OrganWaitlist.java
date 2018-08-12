@@ -12,17 +12,14 @@ import utility.GlobalEnums.Region;
 public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 
 	private SortedSet<OrganRequest> requests;
-	private Database database;
 
 	
 	public OrganWaitlist() {
-	    requests = new TreeSet<OrganRequest>();
+	    requests = new TreeSet<>();
 	}
 
-	private void checkDatabase() {
-		if(database == null) {
-			database = Database.getDatabase();
-		}
+	public SortedSet<OrganRequest> getRequests() {
+		return requests;
 	}
 	
 	/**
@@ -32,7 +29,6 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	 * @return			- Returns true if Collection changed otherwise false.
 	 */
 	public boolean add(Patient receiver, Organ organ) {
-		checkDatabase();
 		OrganRequest request = new OrganRequest(receiver, organ);
 	    return requests.add(request);
 	}
@@ -70,7 +66,6 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	
 	/**
 	 * A organ request for the waiting list.
-	 * @author PGLaffey
 	 */
 	public class OrganRequest implements Comparable<OrganRequest> {
 		LocalDate date;
@@ -79,15 +74,15 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		String name;
 		String nhi;
 		
-		OrganRequest(Patient receiver, Organ organ) {
+		public OrganRequest(Patient receiver, Organ organ) {
 			date = LocalDate.now();
 			region = receiver.getRegion();
 			this.organ = organ;
 			name = receiver.getNameConcatenated();
 			nhi = receiver.getNhiNumber();
 		}
-		
-		OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi) {
+
+		public OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi) {
 			this.date = date;
 			this.region = region;
 			this.organ = organ;

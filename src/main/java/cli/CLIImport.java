@@ -2,7 +2,6 @@ package cli;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import service.Database;
 import utility.parsing.ParseCSV;
 
 import java.io.FileNotFoundException;
@@ -21,8 +20,6 @@ public class CLIImport implements Runnable {
 
     @Option(names = {"-f", "--file"}, required = true, description = "the file name you wish to import i.e. import -f=doc/examples/example_patient.json")
     private String fileName;
-
-    Database database = Database.getDatabase();
 
     public void run() {
         if (fileName.endsWith(".csv")) {

@@ -4,13 +4,7 @@ import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 
-import java.sql.Time;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -172,5 +166,22 @@ public class Clinician extends User {
      */
     public List<ClinicianActionRecord> getClinicianActionsList() {
         return clinicianActionsList;
+    }
+
+    public void setClinicianActionsList(List<ClinicianActionRecord> records) {
+        clinicianActionsList = records;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Clinician)) {
+            return false;
+        }
+        return staffID == ((Clinician) obj).getStaffID();
+    }
+
+    @Override
+    public int hashCode() {
+        return String.valueOf(staffID).hashCode();
     }
 }
