@@ -16,15 +16,11 @@ import model.Clinician;
 import model.Patient;
 import model.User;
 import service.UserDataService;
-import utility.Searcher;
-import utility.StatusObservable;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
+import utility.*;
 import utility.undoRedo.UndoableStage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Observable;
 import java.util.Observer;
 
 import static java.util.logging.Level.*;
@@ -32,7 +28,7 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-public class GUIHome implements Observer, TouchscreenCapable {
+public class GUIHome implements TouchscreenCapable {
 
     @FXML
     public BorderPane homePane;
@@ -48,6 +44,9 @@ public class GUIHome implements Observer, TouchscreenCapable {
 
     @FXML
     private Label statusLbl;
+
+    @FXML
+    private ProgressBar importProgress;
 
     private TouchPaneController homeTouchPane;
 
@@ -85,8 +84,22 @@ public class GUIHome implements Observer, TouchscreenCapable {
 
     @FXML
     public void initialize() {
+        //Register observers
         StatusObservable statusObservable = StatusObservable.getInstance();
-        statusObservable.addObserver(this);
+        Observer statusObserver = (o, arg) -> statusLbl.setText(arg.toString());
+        statusObservable.addObserver(statusObserver);
+        ImportObservable importObservable = ImportObservable.getInstance();
+        Observer importObserver = (o, arg) -> {
+            double progress = Double.valueOf(arg.toString());
+            if (progress < 1.0) {
+                importProgress.setProgress(progress);
+                importProgress.setVisible(true);
+            } else {
+                importProgress.setVisible(false);
+            }
+        };
+        importObservable.addObserver(importObserver);
+
         horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty()
                 .addListener((observable1, oldStage, newStage) -> {
             setUpMenuBar((UndoableStage) newStage);
@@ -466,28 +479,6 @@ public class GUIHome implements Observer, TouchscreenCapable {
             }
         }
 
-    }
-
-
-    /**
-     * Sets the text of the status label
-     *
-     * @param text - The new text
-     */
-    private void setStatusLbl(String text) {
-        statusLbl.setText(text);
-    }
-
-
-    /**
-     * Called when the status text of the StatusObservable is set
-     *
-     * @param o   The StatusObservable instance
-     * @param arg The new status text
-     */
-    @Override
-    public void update(Observable o, Object arg) {
-        setStatusLbl(arg.toString());
     }
 
     /**
