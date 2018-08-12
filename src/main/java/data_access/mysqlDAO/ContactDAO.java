@@ -3,6 +3,7 @@ package data_access.mysqlDAO;
 import data_access.interfaces.IContactDataAccess;
 import data_access.factories.MySqlFactory;
 import model.Patient;
+import utility.ImportObservable;
 import utility.ResourceManager;
 import utility.SystemLogger;
 
@@ -53,6 +54,8 @@ public class ContactDAO  implements IContactDataAccess {
                     preparedStatement = connection.prepareStatement(extendedInsert);
                     preparedStatement.execute();
                     extendedQueryCount = 0;
+                    ImportObservable importObservable = ImportObservable.getInstance();
+                    importObservable.setCompleted(importObservable.getCompleted() + 2000);
                 }
                 extendedQueryCount++;
             }

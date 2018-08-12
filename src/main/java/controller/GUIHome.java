@@ -52,6 +52,9 @@ public class GUIHome implements TouchscreenCapable {
     @FXML
     private ProgressBar importProgress;
 
+    @FXML
+    private Label importLbl;
+
     private TouchPaneController homeTouchPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
@@ -100,8 +103,10 @@ public class GUIHome implements TouchscreenCapable {
             if (progress < 1.0) {
                 importProgress.setProgress(progress);
                 importProgress.setVisible(true);
+                importLbl.setVisible(true);
             } else {
                 importProgress.setVisible(false);
+                importLbl.setVisible(false);
             }
         };
         importObservable.addObserver(importObserver);
@@ -429,7 +434,7 @@ public class GUIHome implements TouchscreenCapable {
             menu2Item2.setOnAction(event -> {
                 File file = new FileChooser().showOpenDialog(stage);
                 if (file != null) {
-                    administratorDataService.importRecords("C:\\Users\\Hayden Taylor\\Downloads\\testCSV2.CSV");
+                    administratorDataService.importRecords("test.CSV");
                     userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
                 }
             });

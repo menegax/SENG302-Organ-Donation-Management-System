@@ -78,6 +78,7 @@ public class PatientDAO implements IPatientDataAccess {
 
     @Override
     public boolean addPatientsBatch(List<Patient> patient) {
+        ImportObservable importObservable = ImportObservable.getInstance();
         try(Connection connection = mySqlFactory.getConnectionInstance()) {
             connection.setAutoCommit(false);
             int extendedQueryCount = 0;
@@ -92,8 +93,7 @@ public class PatientDAO implements IPatientDataAccess {
                     preparedStatement = connection.prepareStatement(extendedInsert);
                     System.out.println(extendedInsert);
                     preparedStatement.execute();
-                    ImportObservable importObservable = ImportObservable.getInstance();
-                    importObservable.setCompleted(importObservable.getCompleted() + 4000);
+                    importObservable.setCompleted(importObservable.getCompleted() + 2000);
                     extendedQueryCount = 0;
                 }
                 extendedQueryCount++;
@@ -105,6 +105,7 @@ public class PatientDAO implements IPatientDataAccess {
             }
             connection.commit();
             contactDataAccess.addContactBatch(patient);
+            importObservable.setFinished();
         } catch (Exception e) {
             e.printStackTrace();
         }
