@@ -51,7 +51,11 @@ public class AdministratorDataService implements IAdministratorDataService {
             try {
                 Map<ParseCSV.Result, List> patients = parseCSV.parse(new FileReader(filepath));
                 IPatientDataAccess patientDataAccess = mysqlFactory.getPatientDataAccess();
+                long startTime = System.nanoTime();
                 patientDataAccess.addPatientsBatch(patients.get(ParseCSV.Result.SUCCESS));
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime);
+                System.out.println(duration);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

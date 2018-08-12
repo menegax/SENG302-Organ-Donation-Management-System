@@ -83,38 +83,34 @@ public class PatientDAO implements IPatientDataAccess {
         try(Connection connection = mySqlFactory.getConnectionInstance()) {
             connection.setAutoCommit(false);
             int extendedQueryCount = 0;
-            StringBuilder statements = new StringBuilder("INSERT INTO tblPatients" +
-                    "  (Nhi, FName, MName, LName, Birth, Created, Modified, Death, BirthGender," +
-                    "  PrefGender, PrefName, Height, Weight, BloodType, DonatingOrgans, ReceivingOrgans)" +
-                    "  VALUES ");
+            StringBuilder statements = new StringBuilder(ResourceManager.getStringForQuery("BARE_INSERT_PATIENT_BATCH"));
             PreparedStatement preparedStatement;
+            String extendedInsert;
             for (Patient aPatient : patient) {
                 List<String> donationList = aPatient.getDonations().stream().map(Organ::toString).collect(Collectors.toList());
                 String donations = String.join(",", donationList).toLowerCase();
-
                 List<String> organsList = aPatient.getRequiredOrgans() != null ? (aPatient.getRequiredOrgans().stream().map(Organ::toString).collect(Collectors.toList())) : new ArrayList<>();
                 String organs = String.join(",", organsList).toLowerCase();
-
-                String nextRecord = String.format(
-                        "(%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                        aPatient.getNhiNumber(), aPatient.getFirstName(),
-                        aPatient.getMiddleNames() != null ? (aPatient.getMiddleNames().size() == 0 ? "" : String.join(" ", aPatient.getMiddleNames())) : null,
-                        aPatient.getLastName(), aPatient.getBirth().toString(),
+                String nextRecord = String.format(ResourceManager.getStringForQuery("PATIENT_INSERT_ANOTHER"),
+                        aPatient.getNhiNumber(), aPatient.getFirstName().replaceAll("'", "''"),
+                        aPatient.getMiddleNames() != null ? (aPatient.getMiddleNames().size() == 0 ? "" : String.format("\'%s\'", String.join(" ", aPatient.getMiddleNames()).replaceAll("'", "''"))) : null,
+                        aPatient.getLastName().replaceAll("'", "''"), aPatient.getBirth().toString(),
                         aPatient.getCREATED().toString(),
                         aPatient.getModified().toString(),
-                        aPatient.getDeath() == null ? null : aPatient.getDeath().toString(),
-                        aPatient.getBirthGender() == null ? null : aPatient.getBirthGender().toString().substring(0, 1),
-                        aPatient.getPreferredGender() == null ? null : aPatient.getPreferredGender().toString().substring(0, 1),
+                        aPatient.getDeath() == null ? null : String.format("\'%s\'", aPatient.getDeath().toString()),
+                        aPatient.getBirthGender() == null ? null : String.format("\'%s\'",aPatient.getBirthGender().toString().substring(0, 1)),
+                        aPatient.getPreferredGender() == null ? null : String.format("\'%s\'",aPatient.getPreferredGender().toString().substring(0, 1)),
                         aPatient.getPreferredName(),
                         String.valueOf(aPatient.getHeight()),
                         String.valueOf(aPatient.getWeight()),
-                        aPatient.getBloodGroup() == null ? null : aPatient.getBloodGroup().toString(),
-                        donations, organs);
+                        aPatient.getBloodGroup() == null ? null : String.format("\'%s\'",aPatient.getBloodGroup().toString()),
+                        donations.isEmpty() ? null:String.format("\'%s\'",donations) , organs.isEmpty() ? null: String.format("\'%s\'",organs));
                 statements.append(nextRecord);
-                if (extendedQueryCount == 50) {
-                    preparedStatement = connection.prepareStatement(statements.toString());
-                    preparedStatement.addBatch();
-                    System.out.println(statements);
+                if (extendedQueryCount == 4000 ) {
+                    extendedInsert = statements.toString().substring(0, statements.toString().length() -1) + " " +ResourceManager.getStringForQuery("ON_DUPLICATE_UPDATE_PATIENT");
+                    preparedStatement = connection.prepareStatement(extendedInsert);
+                    preparedStatement.execute();
+                    extendedQueryCount = 0;
                 }
                 extendedQueryCount++;
             }
