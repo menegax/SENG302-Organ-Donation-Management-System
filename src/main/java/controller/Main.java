@@ -39,7 +39,6 @@ public class Main extends Application {
         // setup GUI
         ScreenControl screenControl = ScreenControl.getScreenControl();
 //        primaryStage.setTitle("Login");
-//        primaryStage.setResizable(false); todo implement
         screenControl.show("/scene/login.fxml", false, null, null);
 
         // add objects

@@ -160,7 +160,6 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                 homePane.addEventHandler(Event.ANY, new EventHandler<Event>() {
                     @Override
                     public void handle(Event event) {
-                        System.out.println(event.getEventType().getName());
                     }
                 });
                 homePaneTouchController = new TouchPaneController(homePane);
