@@ -290,7 +290,12 @@ public class PatientDAO implements IPatientDataAccess {
                                            List<Disease> diseases, List<Procedure> procedures, List<Medication> medications) throws SQLException {
         String nhi = attributes.getString("Nhi");
         String fName = attributes.getString("FName");
-        ArrayList<String> mNames = new ArrayList<>(Arrays.asList(attributes.getString("MName").split(" ")));
+        ArrayList<String> mNames;
+        if (attributes.getString("MName") != null) {
+            mNames = new ArrayList<>(Arrays.asList(attributes.getString("MName").split(" ")));
+        } else {
+            mNames = new ArrayList<>();
+        }
         ArrayList<String> list = new ArrayList<>();
         for (String mName : mNames) {
             list.add(mName.replace(" ", ""));
@@ -320,16 +325,20 @@ public class PatientDAO implements IPatientDataAccess {
         patient.setWeight(attributes.getDouble("Weight"));
         patient.setBloodGroup(attributes.getString("BloodType") != null ?
                 BloodGroup.getEnumFromString(attributes.getString("BloodType")) : null);
-        patient.setDonations(Arrays.stream(attributes.getString("DonatingOrgans").split("\\s*,\\s*"))
-                .map(Organ::getEnumFromString).collect(Collectors.toList()));
+        if (attributes.getString("DonatingOrgans") != null) {
+            patient.setDonations(Arrays.stream(attributes.getString("DonatingOrgans").split("\\s*,\\s*"))
+                    .map(Organ::getEnumFromString).collect(Collectors.toList()));
+        }
         //must instantiate if null
-        if (patient.getDonations().get(0) == null) {
+        if (patient.getDonations().size() == 0 || patient.getDonations().get(0) == null) {
             patient.setDonations(new ArrayList<>());
         }
-        patient.setRequiredOrgans(Arrays.stream(attributes.getString("ReceivingOrgans").split("\\s*,\\s*"))
-                .map(Organ::getEnumFromString).collect(Collectors.toList()));
+        if (attributes.getString("ReceivingOrgans") != null) {
+            patient.setRequiredOrgans(Arrays.stream(attributes.getString("ReceivingOrgans").split("\\s*,\\s*"))
+                    .map(Organ::getEnumFromString).collect(Collectors.toList()));
+        }
         //must instantiate if null
-        if (patient.getRequiredOrgans().get(0) == null) {
+        if (patient.getRequiredOrgans() == null || patient.getRequiredOrgans().size() == 0 || patient.getRequiredOrgans().get(0) == null) {
             patient.setRequiredOrgans(new ArrayList<>());
         }
         //map medications
