@@ -18,16 +18,14 @@ import model.User;
 import service.AdministratorDataService;
 import service.UserDataService;
 import service.interfaces.IAdministratorDataService;
-import utility.Searcher;
-import utility.StatusObservable;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
 import utility.*;
 import utility.undoRedo.UndoableStage;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static java.util.logging.Level.*;
 import static javafx.scene.control.Alert.AlertType.ERROR;
@@ -107,6 +105,17 @@ public class GUIHome implements TouchscreenCapable {
             }
         };
         importObservable.addObserver(importObserver);
+        importObservable.setTotal(1000);
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (importObservable.getCompleted() < 1000) {
+                    importObservable.setCompleted(importObservable.getCompleted() + 1);
+                }
+            }
+        };
+        timer.schedule(task, 0, 5);
 
         horizontalTabPane.sceneProperty().addListener((observable, oldScene, newScene) -> newScene.windowProperty()
                 .addListener((observable1, oldStage, newStage) -> {
@@ -431,7 +440,7 @@ public class GUIHome implements TouchscreenCapable {
             menu2Item2.setOnAction(event -> {
                 File file = new FileChooser().showOpenDialog(stage);
                 if (file != null) {
-                    administratorDataService.importRecords("C:\\Users\\Hayden Taylor\\Downloads\\testCSV2.csv");
+                    administratorDataService.importRecords("test.CSV");
                     userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
                 }
             });
