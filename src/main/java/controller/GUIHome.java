@@ -271,6 +271,7 @@ public class GUIHome implements TouchscreenCapable {
                     newTab.setContent(FXMLLoader.load(getClass().getResource(fxmlPath)));
                 } catch (IOException e) {
                     systemLogger.log(SEVERE, "Failed to create tab", e);
+                    e.printStackTrace(); //todo rm
                 }
             });
         horizontalTabPane.getTabs().add(newTab);
@@ -405,15 +406,6 @@ public class GUIHome implements TouchscreenCapable {
         MenuBar bar = new MenuBar();
 
         /* Build the menu bar with new menus and menu items */
-
-        // APP
-//        Menu menu1 = new Menu("App");
-//        MenuItem menu1Item1 = new MenuItem("Log out");
-//        menu1Item1.setAccelerator(screenControl.getLogOut());
-//        menu1Item1.setOnAction(event -> {
-//            attemptLogOut();
-//        });
-//        menu1.getItems().addAll(menu1Item1);
 
         // FILE
         Menu menu2 = new Menu("File");

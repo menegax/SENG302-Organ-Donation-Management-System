@@ -203,7 +203,7 @@ public class PatientTest implements Serializable {
      */
     @Test
     public void testGetAge() {
-        testPatient.setDeath(LocalDateTime.of(2005, 5, 12, 0, 0));
+        testPatient.setDeathDate(LocalDateTime.of(2005, 5, 12, 0, 0));
         assertEquals(35, testPatient.getAge());
     }
 
@@ -212,7 +212,7 @@ public class PatientTest implements Serializable {
      */
     @Test
     public void testGetAgeRightBeforeBirthday() {
-        testPatient.setDeath(LocalDateTime.of(2005, 2, 11, 0, 0));
+        testPatient.setDeathDate(LocalDateTime.of(2005, 2, 11, 0, 0));
         assertEquals(34, testPatient.getAge());
     }
 

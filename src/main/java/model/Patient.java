@@ -44,7 +44,11 @@ public class Patient extends User {
     @Convert(conversionClass = DateTimeConverterCSV.class)
     private LocalDateTime death;
 
-    private String deathLocation;
+    private String deathStreet;
+
+    private String deathCity;
+
+    private Region deathRegion;
 
     @Parsed(field = "birth_gender")
     @Validate(oneOf = {"Male", "male", "m", "Female", "female", "f"})
@@ -163,7 +167,7 @@ public class Patient extends User {
     }
 
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
-                   Timestamp created, Timestamp modified, LocalDateTime death, GlobalEnums.BirthGender gender,
+                   Timestamp created, Timestamp modified, LocalDateTime death, String deathStreet, String deathCity,Region deathRegion, GlobalEnums.BirthGender gender,
                    GlobalEnums.PreferredGender prefGender, String preferredName, double height, double weight,
                    BloodGroup bloodType, List<Organ> donations, List<Organ> receiving, String streetNumber,
                    String city, String suburb, Region region, int zip, String homePhone, String workPhone,
@@ -178,6 +182,9 @@ public class Patient extends User {
         this.CREATED = created;
         this.modified = modified;
         this.death = death;
+        this.deathStreet = deathStreet;
+        this.deathCity = deathCity;
+        this.deathRegion = deathRegion;
         this.birthGender = gender;
         this.preferredGender = prefGender;
         this.preferredName = preferredName;
@@ -275,7 +282,7 @@ public class Patient extends User {
             setBirth(birth);
         }
         if (death != null) {
-            setDeath(death);
+            setDeathDate(death);
         }
         if (street1 != null) {
             setStreetNumber(street1);
@@ -346,16 +353,16 @@ public class Patient extends User {
         setMiddleNames(newPatientAttributes.getMiddleNames());
         setPreferredName(newPatientAttributes.getPreferredName());
         setBirth(newPatientAttributes.getBirth());
-        setDeath(newPatientAttributes.getDeath());
-        setDeathLocation(newPatientAttributes.getDeathLocation());
-        setStreetNumber(newPatientAttributes.getStreetNumber());
+        setDeathDate(newPatientAttributes.getDeathDate());
+        setDeathStreet(newPatientAttributes.getDeathStreet());
+        setDeathCity(newPatientAttributes.getDeathCity());
+        setDeathRegion(newPatientAttributes.getDeathRegion());
         setCity(newPatientAttributes.getCity());
         try {
             setSuburb(newPatientAttributes.getSuburb());
         } catch (DataFormatException e) {
             userActions.log(Level.SEVERE, "","" );
-        }
-        setRegion(newPatientAttributes.getRegion());
+        }        setRegion(newPatientAttributes.getRegion());
         setBirthGender(newPatientAttributes.getBirthGender());
         setPreferredGender(newPatientAttributes.getPreferredGender());
         setBloodGroup(newPatientAttributes.getBloodGroup());
@@ -525,12 +532,40 @@ public class Patient extends User {
         userModified();
     }
 
-    public LocalDateTime getDeath() {
+    public LocalDateTime getDeathDate() {
         return death;
     }
 
-    public void setDeath(LocalDateTime death) {
+    public void setDeathDate(LocalDateTime death) {
         this.death = death;
+        userModified();
+    }
+
+    public String getDeathStreet() {
+        return deathStreet;
+    }
+
+
+    public void setDeathStreet(String deathStreet) {
+        this.deathStreet = deathStreet;
+        userModified();
+    }
+
+    public String getDeathCity() {
+        return deathCity;
+    }
+
+    public void setDeathCity(String deathCity) {
+        this.deathCity = deathCity;
+        userModified();
+    }
+
+    public Region getDeathRegion() {
+        return deathRegion;
+    }
+
+    public void setDeathRegion(Region region) {
+        this.deathRegion = region;
         userModified();
     }
 
@@ -850,6 +885,7 @@ public class Patient extends User {
         return nhiNumber;
     }
 
+
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
             ensureValidNhi(nhiNumber);
             //added for when csv parsing creates obj from default constructor
@@ -862,7 +898,6 @@ public class Patient extends User {
                 userModified();
             }
         }
-
 
 
     public String getHomePhone() {
@@ -970,6 +1005,7 @@ public class Patient extends User {
         return procedures;
     }
 
+
     public void setProcedures(List<Procedure> procedures) {
         this.procedures = procedures;
         userModified();
@@ -985,7 +1021,6 @@ public class Patient extends User {
     public List<PatientActionRecord> getUserActionsList() {
         return userActionsList; //this is modifiable on purpose!
     }
-
 
     /**
      * Gets the current diseases infecting a donor
@@ -1043,17 +1078,6 @@ public class Patient extends User {
                 currentDiseases.remove(disease);
             }
         }
-    }
-
-    public String getDeathLocation() {
-        return deathLocation;
-    }
-
-
-    public void setDeathLocation(String deathLocation) {
-        this.deathLocation = deathLocation;
-        userModified();
-        SystemLogger.systemLogger.log(FINEST, "Set death location for patient " + this.nhiNumber);
     }
 
     public void addProcedure(Procedure procedure) {

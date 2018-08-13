@@ -11,6 +11,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
+import model.Administrator;
 import model.Clinician;
 import model.Medication;
 import model.Patient;
@@ -60,6 +61,15 @@ public class GUIPatientProfile {
     private Label dateOfDeathLabel;
 
     @FXML
+    private Label deathLocation;
+
+    @FXML
+    private Label deathCity;
+
+    @FXML
+    private Label deathRegion;
+
+    @FXML
     private Label age;
 
     @FXML
@@ -78,7 +88,7 @@ public class GUIPatientProfile {
     private Label addLbl1;
 
     @FXML
-    private Label addLbl2;
+    private Label cityLbl; //todo
 
     @FXML
     private Label addLbl3;
@@ -159,9 +169,9 @@ public class GUIPatientProfile {
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
 
-        } else if (userControl.getLoggedInUser() instanceof Clinician) {
-            deleteButton.setVisible( false );
-            deleteButton.setDisable( true );
+        } else if (userControl.getLoggedInUser() instanceof Clinician || userControl.getLoggedInUser() instanceof Administrator) {
+            deleteButton.setVisible(true);
+            deleteButton.setDisable(false);
             patient = patientDataService.getPatientByNhi(((Patient)userControl.getTargetUser()).getNhiNumber());
         }
         try {
@@ -186,11 +196,15 @@ public class GUIPatientProfile {
         genderDeclaration.setText("Birth Gender: ");
         genderStatus.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue());
         prefGenderLbl.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender().getValue());
-        vitalLbl1.setText(patient.getDeath() == null ? "Alive" : "Deceased");
+        vitalLbl1.setText(patient.getDeathDate() == null ? "Alive" : "Deceased");
         dobLbl.setText(patient.getBirth()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        dateOfDeathLabel.setText(patient.getDeath() == null ? "Not set" : patient.getDeath()
+        dateOfDeathLabel.setText(patient.getDeathDate() == null ? "Not set" : patient.getDeathDate()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        deathLocation.setText(patient.getDeathStreet() == null ? "Not set" : patient.getDeathStreet());
+        deathCity.setText(patient.getDeathCity() == null ? "Not set" : patient.getDeathCity());
+        deathRegion.setText(patient.getDeathRegion() == null ? "Not set" : patient.getDeathRegion()
+                .getValue());
         age.setText(String.valueOf(patient.getAge()));
         heightLbl.setText(String.valueOf(patient.getHeight() + " m"));
         weightLbl.setText(String.valueOf(patient.getWeight() + " kg"));

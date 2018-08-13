@@ -88,6 +88,8 @@ public class GUIPatientUpdateRequirements extends UndoableController{
 
     private Set<GlobalEnums.Organ> finalRequirements = new HashSet<>();
 
+    private int totalRemoved;
+
     private IClinicianDataService clinicianDataService = new ClinicianDataService();
 
     /**
@@ -206,6 +208,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * Save button makes sure that the current session is saved with the changes made
      */
     public void saveRequirements() {
+        finalRequirements.clear();
         if (liverCB.isSelected()) {
             after.addRequired(GlobalEnums.Organ.LIVER);
             finalRequirements.add(GlobalEnums.Organ.LIVER);
@@ -279,10 +282,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             after.removeRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
         deregistrationReason();
-        createOrganRequests();
 
-        Action action = new Action(target, after);
-        statesHistoryScreen.addAction(action);
         IPatientDataService patientDataService = new PatientDataService();
         patientDataService.save(after);
     }
@@ -293,10 +293,16 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      */
     private void deregistrationReason() {
         SystemLogger.systemLogger.log(INFO, "Patient had organ requirements deregistered. Asking for deregistration reason...");
-        Set<GlobalEnums.Organ> removedOrgans = initialRequirements;
+        List<GlobalEnums.Organ> removedOrgans = target.getRequiredOrgans();
         removedOrgans.removeAll(finalRequirements);
 
+        if (removedOrgans.size() == 0) {
+            Action action = new Action(target, after);
+            statesHistoryScreen.addAction(action);
+        }
+        totalRemoved = 0;
         for (GlobalEnums.Organ organ : removedOrgans) {
+            totalRemoved += 1;
             openReasonPopup(organ);
             after.removeRequired(organ);
         }
@@ -316,31 +322,19 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             UndoableStage popUpStage = new UndoableStage();
             screenControl.addStage(popUpStage.getUUID(), popUpStage);
             screenControl.show(popUpStage.getUUID(), root);
+            popUpStage.setOnHiding(e -> {
+                totalRemoved -= 1;
+                if (totalRemoved == 0) {
+                    Action action = new Action(target, after);
+                    statesHistoryScreen.addAction(action);
+                }
+            });
         } catch (IOException e) {
             userActions.log(Level.SEVERE,
                     "Failed to open deregistration of required organ scene from required organs update scene",
                     "attempted to open deregistration of required organ reason window from required organs update scene");
             new Alert(Alert.AlertType.ERROR, "Unable to open deregistration of required organ reason window", ButtonType.OK).show();
         }
-    }
-
-    /**
-     * Creates new organ requests for updated registered organs to receive, and adds them to the organ
-     * waiting list.
-     */
-    private void createOrganRequests() {
-        OrganWaitlist waitlist = clinicianDataService.getOrganWaitList();
-        Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();
-        while (iter.hasNext()) {
-            OrganWaitlist.OrganRequest next = iter.next();
-            if (next.getReceiverNhi().equals(after.getNhiNumber())) {
-                iter.remove();
-            }
-        }
-        for (GlobalEnums.Organ organ : after.getRequiredOrgans()) {
-            waitlist.add(after, organ);
-        }
-        clinicianDataService.updateOrganWaitList(waitlist);
     }
 
 }

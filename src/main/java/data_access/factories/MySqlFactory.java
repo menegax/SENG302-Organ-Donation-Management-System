@@ -57,7 +57,7 @@ public class MySqlFactory extends DAOFactory {
         config.setAutoCommit(false);
         try {
             connection = ds.getConnection();
-            systemLogger.log(Level.INFO, "Successfully retrieved connection from pool.", MySqlFactory.class);
+            systemLogger.log(Level.FINEST, "Successfully retrieved connection from pool.", MySqlFactory.class);
         } catch (SQLException e) {
             systemLogger.log(Level.SEVERE, "Could not get connection", this);        }
         return connection;
