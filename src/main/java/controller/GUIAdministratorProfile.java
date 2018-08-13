@@ -7,8 +7,11 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Administrator;
 import model.User;
-import service.Database;
-import utility.StatusObservable;
+import service.AdministratorDataService;
+import utility.GlobalEnums;
+import utility.undoRedo.Action;
+import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableWrapper;
 
 import java.util.logging.Level;
 
@@ -33,6 +36,8 @@ public class GUIAdministratorProfile extends TargetedController{
     private UserControl userControl = UserControl.getUserControl();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private AdministratorDataService administratorDataService = new AdministratorDataService();
 
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
@@ -64,10 +69,19 @@ public class GUIAdministratorProfile extends TargetedController{
      */
     public void deleteProfile() {
         if (!((Administrator) target).getUsername().toLowerCase().equals("admin")) {
-            userActions.log(Level.INFO, "Successfully deleted admin profile", new String[]{"Attempted to delete admin profile", ((Administrator) target).getUsername()});
-            Database.deleteAdministrator((Administrator) target);
+            Administrator administrator = (Administrator) userControl.getTargetUser();
+            Action action = new Action(administrator, null);
+            new AdministratorDataService().deleteUser(administrator);
+            for (UndoableWrapper undoableWrapper : screenControl.getUndoableWrappers()) {
+                for (StatesHistoryScreen statesHistoryScreen : undoableWrapper.getStatesHistoryScreens()) {
+                    if (statesHistoryScreen.getUndoableScreen().equals(GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS)) {
+                        statesHistoryScreen.addAction(action);
+                    }
+                }
+            }
+            userActions.log(Level.INFO, "Successfully deleted admin profile", new String[]{"Attempted to delete admin profile", target.getUsername()});
             if (!((Administrator) target).getUsername().equals(((Administrator) userControl.getLoggedInUser()).getUsername())) {
-                ((Stage) adminProfilePane.getScene().getWindow()).close();
+                screenControl.closeWindow(adminProfilePane);
             }
         }
     }

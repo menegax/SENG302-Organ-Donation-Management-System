@@ -10,6 +10,7 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
 import model.Patient;
 import model.Procedure;
+import service.PatientDataService;
 import model.User;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
@@ -57,7 +58,7 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
     private Procedure procedureClone;
     private ScreenControl screenControl = ScreenControl.getScreenControl();
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
-
+    private PatientDataService patientDataService = new PatientDataService();
     private TouchPaneController procedureTouchPane;
 
     /**

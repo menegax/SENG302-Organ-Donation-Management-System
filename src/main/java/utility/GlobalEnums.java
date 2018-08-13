@@ -1,9 +1,55 @@
 package utility;
 
+import java.util.Arrays;
+
 /**
  * Enumerations for the entire app to use
  */
 public class GlobalEnums {
+
+    public enum DbType {
+        PRODUCTION("Production"), TEST("Test");
+
+        private String value;
+
+        DbType(final String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue();
+        }
+    }
+
+	public enum UIRegex {
+
+		FNAME("[a-z|A-Z|-]{1,35}"),              MNAME("[a-z|A-Z| |-]{0,70}"),     LNAME("[a-z|A-Z|-]{1,35}"),
+		STREET("[a-z|A-Z| |-|,]{0,100}"),        SUBURB("[a-z|A-Z |-]{0,100}"),    STAFFID("[0-9]{1,7}"),
+		NHI("[A-Z]{3}[0-9]{4}"),                 HOMEPHONE("0[0-9]{8}"),           WORKPHONE("0[0-9]{8}"),
+		MOBILEPHONE("(\\+[0-9]{11}|0[0-9]{9})"), EMAIL("([0-9|a-z|A-Z|.|_|-]+[@][a-z]+([.][a-z])+){0,254}"),
+		RELATIONSHIP("[a-z|-|A-Z]{0,30}"),        DISEASENAME("[a-z|-|A-Z]{1,50}"), ZIP("[0-9]{4}"),
+		WEIGHT("[0-9]+([.][0-9])?"),             HEIGHT("[0-9]+([.][0-9])?"),      USERNAME("[A-Z|0-9|_|-]{0,30}");
+
+		private String value;
+
+		UIRegex(final String value) {
+			this.value = value;
+		}
+
+        public String getValue() {
+            return value != null ? value : "Not set";
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue() != null ? this.getValue() : "Not set";
+        }
+	}
 
     public final static String NONE_ID = "None";
 
@@ -46,7 +92,7 @@ public class GlobalEnums {
 
     public enum UserTypes {
     	PATIENT("PATIENT"), CLINICIAN("CLINICIAN"), ADMIN("ADMIN");
-    	
+
         private String value;
 
         UserTypes(final String value) { this.value = value; }
@@ -54,7 +100,7 @@ public class GlobalEnums {
         public String getValue() {
             return value != null ? value : "Not set";
         }
-        
+
         public static UserTypes getEnumFromString(String value) {
             try {
                 return UserTypes.valueOf(value.toUpperCase());
@@ -64,7 +110,7 @@ public class GlobalEnums {
             }
         }
     }
-    
+
     /**
      * Enumerates all options for birth gender
      */
@@ -182,8 +228,8 @@ public class GlobalEnums {
      * Enumerates all options for blood group
      */
     public enum BloodGroup {
-        A_POSITIVE("A positive"), A_NEGATIVE("A negative"), B_POSITIVE("B positive"), B_NEGATIVE("B negative"), AB_POSITIVE("AB positive"), AB_NEGATIVE(
-                "AB negative"), O_POSITIVE("O positive"), O_NEGATIVE("O negative");
+        A_POSITIVE("A+"), A_NEGATIVE("A-"), B_POSITIVE("B+"), B_NEGATIVE("B-"), AB_POSITIVE("AB+"), AB_NEGATIVE(
+                "AB-"), O_POSITIVE("O+"), O_NEGATIVE("O-");
 
         private String value;
 
@@ -205,13 +251,9 @@ public class GlobalEnums {
 
 
         public static BloodGroup getEnumFromString(String value) {
-            try {
-                return BloodGroup.valueOf(value.toUpperCase()
-                        .replaceAll("\\s+", "_"));
-            }
-            catch (IllegalArgumentException e) {
-                return null;
-            }
+            return Arrays.stream(BloodGroup.values())
+                    .filter(v -> v.value.equals(value))
+                    .findFirst().orElseThrow(() -> new IllegalArgumentException(""));
         }
     }
 
@@ -245,7 +287,7 @@ public class GlobalEnums {
      * Enumerates all possible disease states
      */
     public enum DiseaseState {
-        CURED("cured"), CHRONIC("chronic");
+        CURED("cured"), CHRONIC("chronic"), NONE("none");
 
         private String value;
 
@@ -322,6 +364,30 @@ public class GlobalEnums {
             } catch (IllegalArgumentException e) {
                 return null;
             }
+        }
+    }
+
+    public enum MedicationStatus {
+        CURRENT(1), HISTORY(0);
+
+        private int value;
+
+        MedicationStatus(int value) { this.value = value; }
+
+        public int getValue() {
+            return value;
+        }
+
+    }
+
+    public enum FactoryType {
+        MYSQL(1),LOCAL(1);
+        private int value;
+
+        FactoryType(int value) { this.value = value; }
+
+        public int getValue() {
+            return value;
         }
     }
 }

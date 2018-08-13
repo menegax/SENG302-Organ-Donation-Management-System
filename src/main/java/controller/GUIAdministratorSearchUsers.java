@@ -2,7 +2,6 @@ package controller;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -16,9 +15,14 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
+import service.AdministratorDataService;
+import service.ClinicianDataService;
+import service.PatientDataService;
+import service.TextWatcher;
+import service.interfaces.IAdministratorDataService;
+import service.interfaces.IClinicianDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
-import utility.GlobalEnums.UserTypes;
-import utility.Searcher;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -28,6 +32,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIAdministratorSearchUsers extends UndoableController implements IWindowObserver {
@@ -41,8 +46,6 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     @FXML
     private TableColumn<User, String> columnID;
 
-    private final int NUMRESULTS = 30;
-
     @FXML
     private TextField searchEntry;
 
@@ -52,17 +55,41 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
 
     private UserControl userControl = UserControl.getUserControl();
 
-    private Searcher searcher = Searcher.getSearcher();
+    private IAdministratorDataService administratorDataService = new AdministratorDataService();
+
+    private IClinicianDataService clinicianDataService = new ClinicianDataService();
+
+    private IPatientDataService patientDataService = new PatientDataService();
 
     /**
      * Initialises the data within the table to all users
      */
     public void load() {
-        FilteredList<User> filteredData = setupTableColumnsAndData();
-        setupSearchingListener(filteredData);
+        setupTableColumnsAndData();
+        TextWatcher watcher = new TextWatcher();
+        searchEntry.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.equals(oldValue)) {
+                watcher.onTextChange(); //reset
+            }
+            try {
+                watcher.afterTextChange(GUIAdministratorSearchUsers.class.getMethod("search"), this); //start timer
+
+            } catch (NoSuchMethodException e) {
+                userActions.log(SEVERE, "No method exists for search", "Attempted to search");
+            }
+        });
         setupDoubleClickToUserEdit();
         setupRowHoverOverText();
         setupUndoRedo();
+        search();
+    }
+
+    public void search() {
+        List<User> results = administratorDataService.searchUsers(searchEntry.getText());
+        if (results != null) {
+            masterData.clear();
+            masterData.addAll(results);
+        }
     }
 
     /**
@@ -86,6 +113,17 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
             if (click.getClickCount() == 2 && selected != null && selected != userControl.getLoggedInUser()) {
                 GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
                 controller.setTarget(selected);
+                //Save user to local db
+                if (selected instanceof Patient) {
+                    Patient p = patientDataService.getPatientByNhi(((Patient) selected).getNhiNumber());
+                    patientDataService.save(p);
+                } else if (selected instanceof Clinician) {
+                    Clinician c = clinicianDataService.getClinician(((Clinician) selected).getStaffID());
+                    clinicianDataService.save(c);
+                } else {
+                    Administrator a = administratorDataService.getAdministratorByUsername(((Administrator) selected).getUsername());
+                    administratorDataService.save(a);
+                }
             }
         });
     }
@@ -99,13 +137,8 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
 
     /**
      * Sets the table columns to pull the correct data from the user objects
-     *
-     * @return a filtered list of users
      */
-    private FilteredList<User> setupTableColumnsAndData() {
-    	UserTypes[] types = new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN};
-    	masterData.clear();
-    	masterData.addAll(searcher.getDefaultResults(types, null));
+    private void setupTableColumnsAndData() {
         // initialize columns
         columnName.setCellValueFactory(d -> d.getValue()
                 .getNameConcatenated() != null ? new SimpleStringProperty(d.getValue()
@@ -126,19 +159,6 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         // wrap ObservableList in a FilteredList
         FilteredList<User> filteredData = new FilteredList<>(masterData, d -> true);
 
-        // 2. Set the filter Predicate whenever the filter changes.
-        searchEntry.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            masterData.clear();
-            List<User> results;
-            if (newValue == null || newValue.isEmpty()) {
-                results = searcher.getDefaultResults(new UserTypes[] { UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN }, null);
-            } else {
-                results = searcher.search(newValue, new UserTypes[] { UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN }, NUMRESULTS, null);
-            }
-            masterData.addAll(results);
-            filteredData.setPredicate(patient -> true);
-        });
-
         // wrap the FilteredList in a SortedList.
         SortedList<User> sortedData = new SortedList<>(filteredData);
 
@@ -148,25 +168,6 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
 
         // add sorted (and filtered) data to the table.
         userDataTable.setItems(sortedData);
-        return filteredData;
-    }
-
-    /**
-     * Sets the search textfield to listen for any changes and search for the entry on change
-     *
-     * @param filteredData the users to be filtered/searched through
-     */
-    private void setupSearchingListener(FilteredList<User> filteredData) {
-        // set the filter Predicate whenever the filter changes.
-        searchEntry.textProperty()
-                .addListener((observable, oldValue, newValue) -> filteredData.setPredicate(user -> {
-                    // If filter text is empty, display all persons.
-                    if (newValue == null || newValue.isEmpty()) {
-                        return true;
-                    }
-                    List<User> results = searcher.search(newValue, new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN}, NUMRESULTS, null);
-                    return results.contains(user);
-                }));
     }
 
     /**
@@ -201,19 +202,9 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     }
 
     /**
-     * Adds all db data via constructor
-     */
-    public GUIAdministratorSearchUsers() {
-        masterData.addAll(searcher.getDefaultResults(new UserTypes[]{UserTypes.ADMIN, UserTypes.CLINICIAN, UserTypes.PATIENT}, null));
-    }
-
-    /**
      * Refreshes the table data
      */
     private void tableRefresh() {
-        UserTypes[] types = new UserTypes[]{UserTypes.PATIENT, UserTypes.CLINICIAN, UserTypes.ADMIN};
-        masterData.clear();
-        masterData.addAll(searcher.getDefaultResults(types, null));
-        userDataTable.refresh();
+       userDataTable.refresh();
     }
 }

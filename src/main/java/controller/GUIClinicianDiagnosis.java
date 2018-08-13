@@ -10,6 +10,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import model.Disease;
 import model.Patient;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
@@ -54,9 +56,6 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
     public TableColumn<Disease, GlobalEnums.DiseaseState> currentTagsCol;
 
     @FXML
-    public Button saveButton;
-
-    @FXML
     public Button deleteButton;
 
     @FXML
@@ -67,12 +66,12 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
     /**
      * Patient's current diseases
      */
-    private ArrayList<Disease> currentDiseases;
+    private List<Disease> currentDiseases;
 
     /**
      * Patient's past diseases
      */
-    private ArrayList<Disease> pastDiseases;
+    private List<Disease> pastDiseases;
 
 
     /**
@@ -84,6 +83,8 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
 
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private IPatientDataService patientDataService = new PatientDataService();
 
 
     /**

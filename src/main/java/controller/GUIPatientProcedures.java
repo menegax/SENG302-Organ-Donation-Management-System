@@ -13,6 +13,7 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.Procedure;
+import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.undoRedo.Action;
@@ -78,6 +79,8 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
     private Patient patientClone;
 
     private UserControl userControl = UserControl.getUserControl();
+
+    private PatientDataService patientDataService = new PatientDataService();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 

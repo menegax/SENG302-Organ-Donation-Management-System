@@ -1,21 +1,20 @@
 package controller;
 
+import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
-import utility.StatusObservable;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import service.Database;
 import utility.GlobalEnums;
 
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.INFO;
@@ -62,6 +61,8 @@ public class GUIPatientUpdateDonations extends UndoableController {
     @FXML
     private GridPane patientDonationsAnchorPane;
 
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+
     /**
      * Initializes the donations screen by loading the profile of the patient logged in or viewed.
      * Sets up enter key press event to save changes
@@ -82,11 +83,11 @@ public class GUIPatientUpdateDonations extends UndoableController {
      * @param nhi patient NHI
      */
     private void loadProfile(String nhi) {
-        try {
-            Patient patient = Database.getPatientByNhi(nhi);
+        Patient patient = factory.getPatientDataAccess().getPatientByNhi(nhi);
+        if (patient != null) {
             target = patient;
             populateForm(patient);
-        } catch (InvalidObjectException e) {
+        } else {
             userActions.log(Level.SEVERE, "Error loading logged in user", new String[]{"attempted to manage the donations for logged in user", ((Patient) target).getNhiNumber()});
         }
         controls = new ArrayList<Control>() {{
@@ -112,7 +113,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
      * @param patient patient with viewed donation
      */
     private void populateForm(Patient patient) {
-        ArrayList<GlobalEnums.Organ> organs = patient.getDonations();
+        List<GlobalEnums.Organ> organs = patient.getDonations();
         if (organs.contains(GlobalEnums.Organ.LIVER)) {
             liverCB.setSelected(true);
         }
@@ -243,6 +244,8 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
         Action action = new Action(target, after);
         statesHistoryScreen.addAction(action);
+        IPatientDataService patientDataService = new PatientDataService();
+        patientDataService.save(after);
 
         userActions.log(INFO, "Updated user donations to: " + newDonations, new String[]{"Attempted to update donations", ((Patient) target).getNhiNumber()});
     }

@@ -8,10 +8,20 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import model.Clinician;
 import model.Medication;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
-import service.Database;
+import service.AdministratorDataService;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
@@ -36,18 +46,6 @@ public class GUIPatientProfile extends TargetedController{
 
     @FXML
     private GridPane patientProfilePane;
-
-    @FXML
-    public Button medicationBtn;
-
-    @FXML
-    public Button proceduresButton;
-
-    @FXML
-    public Button donationsButton;
-
-    @FXML
-    public Button requirementsButton;
 
     @FXML
     private Button deleteButton;
@@ -113,16 +111,10 @@ public class GUIPatientProfile extends TargetedController{
     private Label prefGenderLbl;
 
     @FXML
-    private Label donatingTitle;
-
-    @FXML
     private Label firstNameLbl;
 
     @FXML
     private Label firstNameValue;
-
-    @FXML
-    private GridPane details;
 
     @FXML
     private RowConstraints genderRow;
@@ -130,35 +122,32 @@ public class GUIPatientProfile extends TargetedController{
     @FXML
     private RowConstraints firstNameRow;
 
-    private ListProperty<String> donatingListProperty = new SimpleListProperty<>();
-
-    private ListProperty<String> receivingListProperty = new SimpleListProperty<>();
-
-    /**
-     * A list for the organs a patient is donating
-     */
     @FXML
     private ListView donationList;
-
     @FXML
     private ListView<String> medList;
 
     private UserControl userControl = UserControl.getUserControl();
 
+    private ListProperty<String> donatingListProperty = new SimpleListProperty<>();
+
+    private ListProperty<String> receivingListProperty = new SimpleListProperty<>();
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
-    private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
 
+private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
      */
     public void load() {
         try {
+            IPatientDataService patientDataService = new PatientDataService();
             if (userControl.getLoggedInUser() instanceof Patient) {
-                if (Database.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
+                if (patientDataService.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
                     receivingList.setDisable(true);
                     receivingList.setVisible(false);
                     receivingTitle.setDisable(true);
@@ -186,7 +175,7 @@ public class GUIPatientProfile extends TargetedController{
                 deleteButton.setDisable(true);
             }
             assert target != null;
-            loadProfile(((Patient) target).getNhiNumber());
+            loadProfile((Patient) target);
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Cannot load patient profile", new String[]{"Attempted to load patient profile", ((Patient) target).getNhiNumber()});
@@ -197,11 +186,9 @@ public class GUIPatientProfile extends TargetedController{
     /**
      * Sets the patient's attributes for the scene's labels
      *
-     * @param nhi the nhi of the patient to be viewed
      * @exception InvalidObjectException if the nhi of the patient does not exist in the database
      */
-    private void loadProfile(String nhi) throws InvalidObjectException {
-        Patient patient = Database.getPatientByNhi(nhi);
+    private void loadProfile(Patient patient) throws InvalidObjectException {
         nhiLbl.setText(patient.getNhiNumber());
         nameLbl.setText(patient.getNameConcatenated());
         firstNameValue.setText(patient.getFirstName());
@@ -315,6 +302,7 @@ public class GUIPatientProfile extends TargetedController{
      */
     public void deleteProfile() {
         Action action = new Action(target, null);
+        new AdministratorDataService().deleteUser(target);
         undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
         userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", ((Patient) target).getNhiNumber()});
         ((Stage) patientProfilePane.getScene().getWindow()).close();

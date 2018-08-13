@@ -3,7 +3,6 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,13 +15,18 @@ import javafx.util.StringConverter;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
-import service.Database;
-import utility.GlobalEnums;
+import service.AdministratorDataService;
+import service.ClinicianDataService;
+import service.PatientDataService;
+import service.UserDataService;
+import service.interfaces.IAdministratorDataService;
+import service.interfaces.IClinicianDataService;
+import service.interfaces.IPatientDataService;
+import service.interfaces.IUserDataService;
 import utility.GlobalEnums.Region;
+import utility.GlobalEnums.UIRegex;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
-import utility.StatusObservable;
-import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -34,7 +38,6 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
 import static utility.UserActionHistory.userActions;
 
 public class GUIUserRegister implements TouchscreenCapable {
@@ -60,6 +63,11 @@ public class GUIUserRegister implements TouchscreenCapable {
     private GridPane userRegisterPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private IAdministratorDataService administratorDataService = new AdministratorDataService();
+    private IPatientDataService patientDataService = new PatientDataService();
+    private IClinicianDataService clinicianDataService = new ClinicianDataService();
+    private IUserDataService userDataService = new UserDataService();
 
     private TouchPaneController registerTouchPane;
 
@@ -149,29 +157,23 @@ public class GUIUserRegister implements TouchscreenCapable {
     /**
      * Validates the name fields that are common to each account type
      *
-     * @return Whether the fields are valid
+     * @return The error messages if there are any issues with fields.
      */
     private boolean validateNames() {
         boolean valid = true;
         // first name
-        if (!firstnameRegister.getText()
-                .matches("^[-a-zA-Z]+$")) {
+        if (!Pattern.matches(UIRegex.FNAME.getValue(), firstnameRegister.getText())) {
             valid = setInvalid(firstnameRegister);
         } else {
             setValid(firstnameRegister);
         }
-
-        // middle name
-        if (!middlenameRegister.getText()
-                .matches("^([-a-zA-Z]*|[ ])*$")) {
+        if (!Pattern.matches(UIRegex.MNAME.getValue(), middlenameRegister.getText())) {
             valid = setInvalid(middlenameRegister);
         } else {
-            setValid(middlenameRegister);
+        	setValid(middlenameRegister);
         }
-
         // last name
-        if (!lastnameRegister.getText()
-                .matches("^[-a-zA-Z]+$")) {
+        if (!Pattern.matches(UIRegex.LNAME.getValue(), lastnameRegister.getText())) {
             valid = setInvalid(lastnameRegister);
         } else {
             setValid(lastnameRegister);
@@ -187,10 +189,10 @@ public class GUIUserRegister implements TouchscreenCapable {
     private boolean validatePatient() {
         boolean valid = validateNames();
         // nhi
-        if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", userIdRegister.getText().toUpperCase())) {
+        if (!Pattern.matches(UIRegex.NHI.getValue(), userIdRegister.getText().toUpperCase())) {
             valid = setInvalid(userIdRegister);
             userActions.log(Level.WARNING, "NHI must be 3 characters followed by 4 numbers", "Attempted to create patient with invalid NHI");
-        } else if (Database.isPatientInDb(userIdRegister.getText())) {
+        } else if (patientDataService.getPatientByNhi((userIdRegister.getText())) != null) {
             // checks to see if nhi already in use
             valid = setInvalid(userIdRegister);
             userActions.log(Level.WARNING, "Patient with the given NHI already exists", "Attempted to create patient with invalid NHI");
@@ -199,8 +201,8 @@ public class GUIUserRegister implements TouchscreenCapable {
         }
         // date of birth
         if (birthRegister.getValue() != null) {
-            if (birthRegister.getValue()
-                    .isAfter(LocalDate.now())) {
+            if (birthRegister.getValue().isAfter(LocalDate.now())) {
+                setInvalid(birthRegister);
                 valid = setInvalid(birthRegister);
             } else {
                 setValid(birthRegister);
@@ -232,7 +234,7 @@ public class GUIUserRegister implements TouchscreenCapable {
             middles = new ArrayList<>(middleNames);
         }
         LocalDate birth = birthRegister.getValue();
-        Database.addPatient(new Patient(id, firstName, middles, lastName, birth));
+        patientDataService.save(new Patient(id, firstName, middles, lastName, birth));
         userActions.log(Level.INFO, "Successfully registered patient profile", new String[]{"Attempted to register patient profile", id});
         errorMsg = "Successfully registered patient with NHI " + id;
         screenControl.setIsSaved(false);

@@ -1,5 +1,6 @@
 package controller;
 
+import data_access.factories.DAOFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -13,7 +14,9 @@ import javafx.util.StringConverter;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
-import service.Database;
+import service.AdministratorDataService;
+import service.ClinicianDataService;
+import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.undoRedo.Action;
@@ -70,6 +73,13 @@ public class GUIAdministratorUserRegister extends UndoableController {
 
     @FXML
     private GridPane userRegisterPane;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private UserControl userControl = new UserControl();
+
+    DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+    DAOFactory mysqlFactory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
 
     /**
      * Sets up register page GUI elements
@@ -136,11 +146,12 @@ public class GUIAdministratorUserRegister extends UndoableController {
         }));
     }
 
+
     /**
      * Sets up undo redo for this tab
      */
     private void setUpUndoRedo() {
-        controls = new ArrayList<Control>(){{
+        controls = new ArrayList<Control>() {{
             add(firstnameRegister);
             add(lastnameRegister);
             add(middlenameRegister);
@@ -156,6 +167,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
         statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORUSERREGISTER, target);
     }
 
+
     /**
      * Sets the registry fields for registering a patient
      */
@@ -169,6 +181,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
         userIdRegister.setVisible(true);
     }
 
+
     /**
      * Sets the registry fields for registering a clinician
      */
@@ -181,6 +194,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
         verifyPasswordTxt.setVisible(false);
         userIdRegister.setVisible(false);
     }
+
 
     /**
      * Sets the registry fields for registering an administrator
@@ -203,8 +217,10 @@ public class GUIAdministratorUserRegister extends UndoableController {
         firstnameRegister.clear();
         lastnameRegister.clear();
         middlenameRegister.clear();
-        birthRegister.getEditor().clear();
-        regionRegister.valueProperty().set(null);
+        birthRegister.getEditor()
+                .clear();
+        regionRegister.valueProperty()
+                .set(null);
         passwordTxt.clear();
         verifyPasswordTxt.clear();
 
@@ -216,6 +232,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
         setValid(passwordTxt);
         setValid(verifyPasswordTxt);
     }
+
 
     /**
      * Sets the date picker format to be yyyy-MM-dd
@@ -229,7 +246,8 @@ public class GUIAdministratorUserRegister extends UndoableController {
             public String toString(LocalDate date) {
                 if (date != null) {
                     return dateFormatter.format(date);
-                } else {
+                }
+                else {
                     return "";
                 }
             }
@@ -239,13 +257,15 @@ public class GUIAdministratorUserRegister extends UndoableController {
             public LocalDate fromString(String string) {
                 if (string != null && !string.isEmpty()) {
                     return LocalDate.parse(string, dateFormatter);
-                } else {
+                }
+                else {
                     return null;
                 }
             }
         };
         birthRegister.setConverter(dateConverter);
     }
+
 
     /**
      * Validates the name fields that are common to each account type
@@ -258,18 +278,21 @@ public class GUIAdministratorUserRegister extends UndoableController {
         if (!firstnameRegister.getText()
                 .matches("^[-a-zA-Z]+$")) {
             valid = setInvalid(firstnameRegister);
-        } else {
+        }
+        else {
             setValid(firstnameRegister);
         }
         // last name
         if (!lastnameRegister.getText()
                 .matches("^[-a-zA-Z]+$")) {
             valid = setInvalid(lastnameRegister);
-        } else {
+        }
+        else {
             setValid(lastnameRegister);
         }
         return valid;
     }
+
 
     /**
      * Validates the input fields for a new patient account
@@ -279,14 +302,17 @@ public class GUIAdministratorUserRegister extends UndoableController {
     private boolean validatePatient() {
         boolean valid = validateNames();
         // nhi
-        if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}", userIdRegister.getText().toUpperCase())) {
+        if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}",
+                userIdRegister.getText()
+                        .toUpperCase())) {
             valid = setInvalid(userIdRegister);
             userActions.log(Level.WARNING, "NHI must be 3 characters followed by 4 numbers", "Attempted to register new patient");
-        } else if (Database.isPatientInDb(userIdRegister.getText())) {
+        } else if (factory.getPatientDataAccess().getPatientByNhi(userIdRegister.getText()) != null) {
             // checks to see if nhi already in use
             valid = setInvalid(userIdRegister);
             userActions.log(Level.WARNING, "Patient with the given NHI already exists", "Attempted to register new patient");
-        } else {
+        }
+        else {
             setValid(userIdRegister);
         }
         // date of birth
@@ -294,14 +320,17 @@ public class GUIAdministratorUserRegister extends UndoableController {
             if (birthRegister.getValue()
                     .isAfter(LocalDate.now())) {
                 valid = setInvalid(birthRegister);
-            } else {
+            }
+            else {
                 setValid(birthRegister);
             }
-        } else {
+        }
+        else {
             valid = setInvalid(birthRegister);
         }
         return valid;
     }
+
 
     /**
      * Validates the input fields for a new clinician account
@@ -312,11 +341,13 @@ public class GUIAdministratorUserRegister extends UndoableController {
         boolean valid = validateNames();
         if (regionRegister.getValue() != null) {
             setValid(birthRegister);
-        } else {
+        }
+        else {
             valid = setInvalid(regionRegister);
         }
         return valid;
     }
+
 
     /**
      * Validates the input fields for a new administrator account
@@ -330,31 +361,38 @@ public class GUIAdministratorUserRegister extends UndoableController {
                 .matches("([A-Za-z0-9]+[-]*[_]*)+")) {
             valid = setInvalid(userIdRegister);
             error += "Invalid username.\n";
-        } else if (Database.usernameUsed(userIdRegister.getText())) {
+        } else if (factory.getAdministratorDataAccess().getAdministratorByUsername(userIdRegister.getText()) != null) {
             valid = setInvalid(userIdRegister);
             error += "Username already in use.\n";
-        } else {
+        }
+        else {
             setValid(userIdRegister);
         }
-        if (passwordTxt.getText().length() < 6) {
+        if (passwordTxt.getText()
+                .length() < 6) {
             valid = setInvalid(passwordTxt);
             error += "Password must be 6 or more characters.\n";
-        } else {
+        }
+        else {
             setValid(passwordTxt);
         }
-        if (!verifyPasswordTxt.getText().equals(passwordTxt.getText())) {
+        if (!verifyPasswordTxt.getText()
+                .equals(passwordTxt.getText())) {
             valid = setInvalid(verifyPasswordTxt);
-            if (passwordTxt.getText().length() >= 6) {
+            if (passwordTxt.getText()
+                    .length() >= 6) {
                 error += "Passwords do not match.\n";
             }
-        } else {
+        }
+        else {
             setValid(verifyPasswordTxt);
         }
         if (!valid) {
-        	userActions.log(Level.WARNING, error, "Attempted to register new administrator");
+            userActions.log(Level.WARNING, error, "Attempted to register new administrator");
         }
         return valid;
     }
+
 
     /**
      * Check users inputs for validity and registers the user patient profile
@@ -366,14 +404,20 @@ public class GUIAdministratorUserRegister extends UndoableController {
                 userActions.log(Level.WARNING, "Failed to register patient profile due to invalid fields", "Attempted to register patient profile");
                 return;
             }
-        } else if (clinicianButton.isSelected()) {
+        }
+        else if (clinicianButton.isSelected()) {
             if (!validateClinician()) {
-                userActions.log(Level.WARNING, "Failed to register clinician profile due to invalid fields", "Attempted to register clinician profile");
+                userActions.log(Level.WARNING,
+                        "Failed to register clinician profile due to invalid fields",
+                        "Attempted to register clinician profile");
                 return;
             }
-        } else {
+        }
+        else {
             if (!validateAdministrator()) {
-                userActions.log(Level.WARNING, "Failed to register administrator profile due to invalid fields", "Attempted to register administrator profile");
+                userActions.log(Level.WARNING,
+                        "Failed to register administrator profile due to invalid fields",
+                        "Attempted to register administrator profile");
                 return;
             }
         }
@@ -390,16 +434,22 @@ public class GUIAdministratorUserRegister extends UndoableController {
         }
         if (patientButton.isSelected()) {
             LocalDate birth = birthRegister.getValue();
-            statesHistoryScreen.addAction(new Action(null, new Patient(id, firstName, middles, lastName, birth)));
+            Patient after = new Patient(id, firstName, middles, lastName, birth);
+            statesHistoryScreen.addAction(new Action(null, after));
+            new PatientDataService().save(after);
             userActions.log(Level.INFO, "Successfully registered patient profile", new String[]{"Attempted to register patient profile", id});
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
-            int staffID = Database.getNextStaffID();
-            statesHistoryScreen.addAction(new Action(null, new Clinician(staffID, firstName, middles, lastName, Region.getEnumFromString(region))));
+            int staffID = new ClinicianDataService().nextStaffId();
+            Clinician after = new Clinician(staffID, firstName, middles, lastName, Region.getEnumFromString(region));
+            statesHistoryScreen.addAction(new Action(null, after));
+            new ClinicianDataService().save(after);
             userActions.log(Level.INFO, "Successfully registered clinician profile", new String[]{"Attempted to register clinician profile", id});
         } else {
             try {
-                statesHistoryScreen.addAction(new Action(null, new Administrator(id, firstName, middles, lastName, password)));
+                Administrator after = new Administrator(id, firstName, middles, lastName, password);
+                statesHistoryScreen.addAction(new Action(null, after));
+                new AdministratorDataService().save(after);
                 userActions.log(Level.INFO, "Successfully registered administrator profile", new String[]{"Attempted to register administrator profile", id});
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");

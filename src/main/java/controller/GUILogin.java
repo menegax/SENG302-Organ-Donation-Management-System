@@ -16,7 +16,12 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Administrator;
-import service.Database;
+import model.Clinician;
+import model.Patient;
+import service.AdministratorDataService;
+import service.ClinicianDataService;
+import service.PatientDataService;
+import service.interfaces.IClinicianDataService;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 
@@ -49,9 +54,14 @@ public class GUILogin implements TouchscreenCapable {
     @FXML
     private RadioButton administrator;
 
+
     private TouchPaneController loginTouchPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private PatientDataService patientDataService = new PatientDataService();
+
+    private AdministratorDataService administratorDataService = new AdministratorDataService();
 
     private UserControl userControl = UserControl.getUserControl();
 
@@ -90,14 +100,29 @@ public class GUILogin implements TouchscreenCapable {
      */
     @FXML
     public void logIn() {
-        ScreenControl screenControl = ScreenControl.getScreenControl();
         try {
             if (patient.isSelected()) {
+                //<-- Example
+                Patient patient2 = patientDataService.getPatientByNhi(nhiLogin.getText());
+                // -- >
+                if (patient2 == null) {
+                    throw new InvalidObjectException("User doesn't exist");
+                }
+                patientDataService.save(patient2);
                 userControl.addLoggedInUserToCache(Database.getPatientByNhi(nhiLogin.getText()));
+
             } else if (clinician.isSelected()) {
+                IClinicianDataService clinicianDataService = new ClinicianDataService();
+                Clinician clinician = clinicianDataService.getClinician(Integer.parseInt(nhiLogin.getText()));
+                if (clinician == null) {
+                    throw new InvalidObjectException("User doesn't exist");
+                }
+                clinicianDataService.save(clinician);
                 userControl.addLoggedInUserToCache(Database.getClinicianByID(Integer.parseInt(nhiLogin.getText())));
             } else {
                 checkAdminCredentials();
+                Administrator administrator = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
+                administratorDataService.save(administrator);
                 userControl.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
             GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, userControl.getLoggedInUser());
@@ -116,7 +141,10 @@ public class GUILogin implements TouchscreenCapable {
     }
 
     private void checkAdminCredentials() throws InvalidObjectException {
-        Administrator admin = Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
+        Administrator admin = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
+        if (admin == null) {
+            throw new InvalidObjectException("User doesn't exist");
+        }
         String hashedInput = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password.getText() + admin.getSalt());
         if (!hashedInput.equals(admin.getHashedPassword())) {
             throw new InvalidObjectException("Invalid username/password combination");

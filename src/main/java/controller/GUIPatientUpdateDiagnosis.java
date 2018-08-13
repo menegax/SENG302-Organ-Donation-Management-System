@@ -10,6 +10,9 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
 import model.Disease;
 import model.Patient;
+import model.User;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
@@ -19,6 +22,7 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import static utility.GlobalEnums.UndoableScreen.CLINICIANDIAGNOSIS;
 import static utility.UserActionHistory.userActions;
@@ -62,6 +66,8 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
+
+    private IPatientDataService patientDataService = new PatientDataService();
 
     private TouchPaneController diagnosisTouchPane;
 
@@ -199,7 +205,7 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
      */
     private boolean isValidUpdate() {
         boolean valid = true;
-        if(!diseaseNameTextField.getText().matches("[A-Z|a-z0-9.]{3,50}")) {
+        if(!Pattern.matches(GlobalEnums.UIRegex.DISEASENAME.getValue(), diseaseNameTextField.getText())) {
             valid = false;
             setInvalid(diseaseNameTextField);
         } else {
@@ -207,7 +213,7 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
             diseaseNameTextField.setText(diseaseNameTextField.getText());
         }
         try {
-            if (targetDiseaseClone.isInvalidDiagnosisDate(diagnosisDate.getValue(), patientClone)) {
+            if (targetDiseaseClone.isInvalidDiagnosisDate(diagnosisDate.getValue(), patientClone.getBirth())) {
                 valid = false;
                 setInvalid(diagnosisDate);
             } else {
@@ -252,7 +258,7 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
             }
         }
         try {
-            d.setDateDiagnosed(diagnosisDate.getValue(), patientClone);
+            d.setDateDiagnosed(diagnosisDate.getValue(), patientClone.getBirth());
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "The diagnosis date is not valid.", new String[]{"Attempted to add an invalid diagnosis date", ((Patient) target).getNhiNumber()});
         }

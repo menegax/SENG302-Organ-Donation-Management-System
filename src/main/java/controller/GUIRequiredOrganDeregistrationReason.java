@@ -18,11 +18,13 @@ import model.Disease;
 import model.Patient;
 import model.User;
 import org.apache.commons.lang3.StringUtils;
+
 import utility.GlobalEnums;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -210,7 +212,7 @@ public class GUIRequiredOrganDeregistrationReason extends TargetedController imp
                 userActions.log(Level.INFO, "Deregistered " + organ + " due to death on this date: " + dateOfDeath.getValue(), new String[]{"Attempted to deregister " + organ, ((Patient) target).getNhiNumber()});
             }
             ((Patient) target).setRequiredOrgans(new ArrayList<>());
-            ((Patient) target).setDeath(dateOfDeath.getValue());
+            ((Patient) target).setDeath(LocalDateTime.parse(dateOfDeath.getValue().toString()));
         } else if (reason == GlobalEnums.DeregistrationReason.RECEIVED) {
             userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, ((Patient) target).getNhiNumber()});
         }

@@ -7,7 +7,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
-import service.Database;
+import service.AdministratorDataService;
+import service.ClinicianDataService;
+import service.interfaces.IClinicianDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
@@ -45,6 +47,8 @@ public class GUIClinicianProfile extends TargetedController {
     private UserControl userControl = UserControl.getUserControl();
 
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
+
+    private IClinicianDataService clinicianDataService = new ClinicianDataService();
 
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
@@ -95,9 +99,9 @@ public class GUIClinicianProfile extends TargetedController {
     public void deleteProfile() {
         if (((Clinician) target).getStaffID() != 0) {
             Action action = new Action((target), null);
+            new AdministratorDataService().deleteUser(target);
             undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
             userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(((Clinician) target).getStaffID())});
-            Database.deleteClinician(((Clinician) target));
             ((Stage) clinicianProfilePane.getScene().getWindow()).close();
         }
     }
