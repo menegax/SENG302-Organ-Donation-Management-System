@@ -32,7 +32,11 @@ public class APIGoogleMaps {
     }
 
 
-    public LatLng getLatLng(String address) throws InterruptedException, ExecutionException {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        System.out.println(getLatLng("10 Runswick"));
+    }
+
+    public static LatLng getLatLng(String address) throws InterruptedException, ExecutionException {
         //todo should this be caught? or method thrown?
 
         CachedThreadPool pool = CachedThreadPool.getCachedThreadPool();
