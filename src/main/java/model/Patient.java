@@ -203,7 +203,7 @@ public class Patient extends User {
      * @param birth           birth date
      * @param death           death date
      * @param street1         street 1 of address
-     * @param city         street2 of address
+     * @param city            street2 of address
      * @param suburb          suburb of address
      * @param region          region of address
      * @param birthGender     gender of patient at birth
@@ -489,11 +489,11 @@ public class Patient extends User {
     }
 
     public String getDeathCity() {
-        return deathStreet;
+        return deathCity;
     }
 
-    public void setDeathCity(String city) {
-        this.deathCity = city;
+    public void setDeathCity(String deathCity) {
+        this.deathCity = deathCity;
         userModified();
     }
 
