@@ -28,7 +28,6 @@ public class ParseCSV {
         settings.setHeaderExtractionEnabled(true);
         List<List<String>> errors = new ArrayList<>();
         settings.setProcessorErrorHandler((e, objects, context) -> {
-            e.printStackTrace();
             List<String> rowError = new ArrayList<>();
             Arrays.asList(objects).forEach((obj) -> {
                 if (obj != null) {

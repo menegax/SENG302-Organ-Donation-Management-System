@@ -45,25 +45,6 @@ public class ParseCSVTest {
         parseCSV.parse(new FileReader(""));
     }
 
-    /**
-     * Verify the number of errors from the read
-     * @throws FileNotFoundException - file location invalid
-     */
-    @Test
-    public void testNumberErrors() throws FileNotFoundException {
-        Map results = parseCSV.parse(new FileReader("src/test/resources/parsingTestCases/Test_Case_01.csv"));
-        Assert.assertEquals(7, ((List) results.get(ParseCSV.Result.FAIL)).size());
-    }
-
-    /**
-     * Verify the number of success from the read
-     * @throws FileNotFoundException - file location invalid
-     */
-    @Test
-    public void testNumberValid() throws FileNotFoundException {
-        Map results = parseCSV.parse(new FileReader("src/test/resources/parsingTestCases/Test_Case_01.csv"));
-        Assert.assertEquals(22, ((List) results.get(ParseCSV.Result.SUCCESS)).size());
-    }
 
     /**
      * Check enums conversion of a valid row
