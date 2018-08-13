@@ -86,6 +86,7 @@ public class UserDataService implements IUserDataService, Serializable {
             systemLogger.log(INFO, "Default admin not in database. Adding default admin to database.");
             administratorDataService.save(new Administrator("admin", "John", new ArrayList<>(), "Smith", "password"));
         }
+        save();
     }
 
 

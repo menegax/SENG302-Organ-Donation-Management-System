@@ -22,7 +22,7 @@ public interface IAdministratorDataService {
     /**
      * Import records into the system
      */
-    void importRecords();
+    void importRecords(String filePath);
 
     /**
      * Search users in the db

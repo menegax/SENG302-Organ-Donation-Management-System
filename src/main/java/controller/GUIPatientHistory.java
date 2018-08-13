@@ -10,6 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import model.Patient;
+import service.PatientDataService;
 import utility.PatientActionRecord;
 
 import java.io.IOException;

@@ -64,7 +64,7 @@ public class GlobalEnums {
     public enum PreferredGender {
         MAN("Man"), WOMAN("Woman"), NONBINARY("Non-binary");
 
-        private String value;
+        public String value;
 
         PreferredGender(final String value) {
             this.value = value;
@@ -117,7 +117,7 @@ public class GlobalEnums {
     public enum BirthGender {
         MALE("Male"), FEMALE("Female");
 
-        private String value;
+        public String value;
 
 
         BirthGender(final String value) {
@@ -150,11 +150,11 @@ public class GlobalEnums {
      * Enumerates all options for region
      */
     public enum Region {
-        NORTHLAND("Northland"), AUCKLAND("Auckland"), WAIKATO("Waikato"), BAYOFPLENTY("Bay of Plenty"), GISBORNE("Gisborne"), HAWKESBAY("Hawkes Bay"), TARANAKI(
+        NORTHLAND("Northland"), AUCKLAND("Auckland"), WAIKATO("Waikato"), BAYOFPLENTY("Bay of Plenty"), GISBORNE("Gisborne"), HAWKESBAY("Hawke's Bay"), TARANAKI(
                 "Taranaki"), MANAWATU("Manawatu"), WELLINGTON("Wellington"), TASMAN("Tasman"), NELSON("Nelson"), MARLBOROUGH("Marlborough"), WESTCOAST(
                 "West Coast"), CANTERBURY("Canterbury"), OTAGO("Otago"), SOUTHLAND("Southland");
 
-        private String value;
+        public String value;
 
 
         Region(final String value) {
@@ -175,8 +175,10 @@ public class GlobalEnums {
 
         public static Region getEnumFromString(String value) {
             try {
-                return Region.valueOf(value.toUpperCase()
-                        .replaceAll("\\s+", ""));
+                if (value.length() >= 8 && value.toLowerCase().substring(0,7).equals("manawatu")){
+                    return Region.MANAWATU;
+                }
+                return Region.valueOf(value.toUpperCase().replaceAll("\\s+", ""));
             }
             catch (IllegalArgumentException e) {
                 return null;
@@ -195,7 +197,7 @@ public class GlobalEnums {
         LIVER("liver"), KIDNEY("kidney"), PANCREAS("pancreas"), HEART("heart"), LUNG("lung"), INTESTINE("intestine"), CORNEA("cornea"), MIDDLEEAR(
                 "middle ear"), SKIN("skin"), BONE("bone"), BONEMARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
 
-        private String value;
+        public String value;
 
 
         Organ(final String value) {
@@ -231,7 +233,7 @@ public class GlobalEnums {
         A_POSITIVE("A+"), A_NEGATIVE("A-"), B_POSITIVE("B+"), B_NEGATIVE("B-"), AB_POSITIVE("AB+"), AB_NEGATIVE(
                 "AB-"), O_POSITIVE("O+"), O_NEGATIVE("O-");
 
-        private String value;
+        public String value;
 
 
         BloodGroup(final String value) {

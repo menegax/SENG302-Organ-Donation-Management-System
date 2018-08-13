@@ -30,4 +30,7 @@ public interface IMedicationDataAccess {
      */
     void deleteAllMedicationsByNhi(String nhi);
 
+
+//    void addMedicationBatch(String nhi, List<Medication> medications);
+
 }
