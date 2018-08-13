@@ -249,7 +249,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         if (patient.getDeathCity() != null) {
             deathCity.setText(patient.getDeathCity());
         }
-        if (patient.getRegion() != null) {
+        if (patient.getDeathRegion() != null) {
             deathRegion.setValue(patient.getDeathRegion()
                     .getValue());
         }
@@ -336,7 +336,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
 
     private Boolean validateDeathCity(Boolean valid, StringBuilder invalidContent) {
-        if (deathCity.getText().matches(String.valueOf(UIRegex.CITY))) {
+        if (!deathCity.getText().matches(String.valueOf(UIRegex.CITY))) {
             valid = setInvalid(deathCity);
             invalidContent.append("City must be letters or -. ");
         } else {
@@ -477,7 +477,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             isSettingDeath = true;
         } else if (deathLocationTxt.getText() != null && deathLocationTxt.getText().length() != 0) {
             isSettingDeath = true;
-        } else if (deathCity.getText() != null) {
+        } else if (deathCity.getText().length() != 0) {
             isSettingDeath = true;
         } else if (deathRegion.getSelectionModel().getSelectedIndex() != -1) {
             isSettingDeath = true;
@@ -488,7 +488,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 valid = setInvalid(dateOfDeath);
                 invalidContent.append("Date required if patient deceased. ");
             }
-            if (deathLocationTxt.getText().length() == 0) {
+            if (deathLocationTxt.getText() == null || deathLocationTxt.getText().length() == 0) {
                 valid = setInvalid(deathLocationTxt);
                 invalidContent.append("Location required if patient deceased. ");
             }
