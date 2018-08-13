@@ -6,6 +6,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.*;
@@ -16,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -125,11 +127,13 @@ public class GUILogin implements TouchscreenCapable {
                 }
                 clinicianDataService.save(clinician);
                 login.addLoggedInUserToCache(clinician);
+                openMaps();
             } else {
                 checkAdminCredentials();
                 Administrator administrator = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
                 administratorDataService.save(administrator);
                 login.addLoggedInUserToCache(administrator);
+                openMaps();
             }
             Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
             UndoableStage stage = new UndoableStage();
@@ -152,6 +156,23 @@ public class GUILogin implements TouchscreenCapable {
             alert.show();
         }
 
+    }
+
+    public void openMaps() {
+        // Opens the Map
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/Map.fxml"));
+            Parent root = fxmlLoader.load();
+            System.out.println('1');
+            UndoableStage popUpStage = new UndoableStage();
+            screenControl.addStage(popUpStage.getUUID(), popUpStage);
+            screenControl.show(popUpStage.getUUID(), root);
+        } catch (IOException e) {
+            userActions.log(Level.SEVERE,
+                    "Failed to open Map",
+                    "attempted to open Map on startup");
+            new Alert(Alert.AlertType.ERROR, "Unable to open Map", ButtonType.OK).show();
+        }
     }
 
     private void checkAdminCredentials() throws InvalidObjectException {
