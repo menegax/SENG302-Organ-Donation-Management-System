@@ -109,7 +109,7 @@ public class GUILogin implements TouchscreenCapable {
                     throw new InvalidObjectException("User doesn't exist");
                 }
                 patientDataService.save(patient2);
-                userControl.addLoggedInUserToCache(Database.getPatientByNhi(nhiLogin.getText()));
+                userControl.addLoggedInUserToCache(patientDataService.getPatientByNhi(nhiLogin.getText()));
 
             } else if (clinician.isSelected()) {
                 IClinicianDataService clinicianDataService = new ClinicianDataService();
@@ -118,12 +118,12 @@ public class GUILogin implements TouchscreenCapable {
                     throw new InvalidObjectException("User doesn't exist");
                 }
                 clinicianDataService.save(clinician);
-                userControl.addLoggedInUserToCache(Database.getClinicianByID(Integer.parseInt(nhiLogin.getText())));
+                userControl.addLoggedInUserToCache(clinicianDataService.getClinician(Integer.parseInt(nhiLogin.getText())));
             } else {
                 checkAdminCredentials();
                 Administrator administrator = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
                 administratorDataService.save(administrator);
-                userControl.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
+                userControl.addLoggedInUserToCache(administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
             GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, userControl.getLoggedInUser());
             controller.setTarget(userControl.getLoggedInUser());

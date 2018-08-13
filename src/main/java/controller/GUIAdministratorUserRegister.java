@@ -74,12 +74,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
     @FXML
     private GridPane userRegisterPane;
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
-
-    private UserControl userControl = new UserControl();
-
     DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
-    DAOFactory mysqlFactory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
 
     /**
      * Sets up register page GUI elements

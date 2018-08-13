@@ -293,7 +293,7 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
             GUIClinicianDiagnosis.setChanged(true);
             targetDiseaseClone.setDiseaseName(diseaseNameTextField.getText());
             try {
-                targetDiseaseClone.setDateDiagnosed(diagnosisDate.getValue(), (Patient) target);
+                targetDiseaseClone.setDateDiagnosed(diagnosisDate.getValue(), ((Patient) target).getBirth());
             } catch (InvalidObjectException e) {
                 userActions.log(Level.SEVERE, "The date is not valid. This should never be called.");
             }

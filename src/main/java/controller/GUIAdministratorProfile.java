@@ -69,9 +69,8 @@ public class GUIAdministratorProfile extends TargetedController{
      */
     public void deleteProfile() {
         if (!((Administrator) target).getUsername().toLowerCase().equals("admin")) {
-            Administrator administrator = (Administrator) userControl.getTargetUser();
-            Action action = new Action(administrator, null);
-            new AdministratorDataService().deleteUser(administrator);
+            Action action = new Action(target, null);
+            new AdministratorDataService().deleteUser(target);
             for (UndoableWrapper undoableWrapper : screenControl.getUndoableWrappers()) {
                 for (StatesHistoryScreen statesHistoryScreen : undoableWrapper.getStatesHistoryScreens()) {
                     if (statesHistoryScreen.getUndoableScreen().equals(GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS)) {
@@ -79,7 +78,7 @@ public class GUIAdministratorProfile extends TargetedController{
                     }
                 }
             }
-            userActions.log(Level.INFO, "Successfully deleted admin profile", new String[]{"Attempted to delete admin profile", target.getUsername()});
+            userActions.log(Level.INFO, "Successfully deleted admin profile", new String[]{"Attempted to delete admin profile", ((Administrator) target).getUsername()});
             if (!((Administrator) target).getUsername().equals(((Administrator) userControl.getLoggedInUser()).getUsername())) {
                 screenControl.closeWindow(adminProfilePane);
             }
