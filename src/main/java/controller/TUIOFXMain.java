@@ -17,6 +17,7 @@ import org.tuiofx.Configuration;
 import org.tuiofx.TangibleEvent;
 import org.tuiofx.TangibleListener;
 import org.tuiofx.internal.base.GestureHandler;
+import service.UserDataService;
 import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
@@ -60,8 +61,8 @@ public class TUIOFXMain extends Application {
         screenControl.show("/scene/login.fxml", false,null, null);
         screenControl.setLoginShowing(true);
 
-        Searcher.getSearcher()
-                .createFullIndex(); // index patients for search, needs to be after importing or adding any patients
+        new UserDataService().prepareApplication();
+
         openKeyboard();
         TuioFX tuioFX = new TuioFX(stage, Configuration.pqLabs());
         tuioFX.enableMTWidgets(true);
