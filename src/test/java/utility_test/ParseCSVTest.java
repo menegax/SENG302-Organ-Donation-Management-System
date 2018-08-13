@@ -29,10 +29,10 @@ public class ParseCSVTest {
     public static void setup() {
         userActions.setLevel(Level.OFF);
         String patientRow = "\nAAG3309,Rosette,Sivior,08/27/1995,,Female,Female,A+,152,71,306,Kipling," +
-                "Santana de ParnaÃa,Whangarei,Northland,2163,NZ,NZ,03 759 5999,029 260 0739,rsivior0@biglobe.ne.jp\n";
+                "Santana de Parnaa,Whangarei,Northland,2163,NZ,NZ,03 759 5999,029 260 0739,rsivior0@biglobe.ne.jp\n";
 
         Map res = parseCSV.parse(new StringReader(header + patientRow));
-        Assert.assertEquals(((List)res.get(ParseCSV.Result.SUCCESS)).size(), 1 ); //check we get a result. Makes easier to debug in regression
+        Assert.assertEquals(1, ((List)res.get(ParseCSV.Result.SUCCESS)).size()); //check we get a result. Makes easier to debug in regression
         patient = ((Patient)((List)res.get(ParseCSV.Result.SUCCESS)).get(0));
     }
 
@@ -52,7 +52,7 @@ public class ParseCSVTest {
     @Test
     public void testNumberErrors() throws FileNotFoundException {
         Map results = parseCSV.parse(new FileReader("src/test/resources/parsingTestCases/Test_Case_01.csv"));
-        Assert.assertEquals(3, ((List) results.get(ParseCSV.Result.FAIL)).size());
+        Assert.assertEquals(7, ((List) results.get(ParseCSV.Result.FAIL)).size());
     }
 
     /**
@@ -62,7 +62,7 @@ public class ParseCSVTest {
     @Test
     public void testNumberValid() throws FileNotFoundException {
         Map results = parseCSV.parse(new FileReader("src/test/resources/parsingTestCases/Test_Case_01.csv"));
-        Assert.assertEquals(26, ((List) results.get(ParseCSV.Result.SUCCESS)).size());
+        Assert.assertEquals(22, ((List) results.get(ParseCSV.Result.SUCCESS)).size());
     }
 
     /**
@@ -71,7 +71,7 @@ public class ParseCSVTest {
     @Test
     public void testValidRowEnums(){
         String patientRow = "\nAAG3309,Rosette,Sivior,08/27/1995,,Female,Female,A+,152,71,306,Kipling," +
-                "Santana de ParnaÃa,Whangarei,Northland,2163,NZ,NZ,03 759 5999,029 260 0739,rsivior0@biglobe.ne.jp\n";
+                "Santana de Parnaa,Whangarei,Northland,2163,NZ,NZ,03 759 5999,029 260 0739,rsivior0@biglobe.ne.jp\n";
 
         Map res = parseCSV.parse(new StringReader(header + patientRow));
         Assert.assertEquals(BloodGroup.A_POSITIVE, ((Patient)((List)res.get(ParseCSV.Result.SUCCESS)).get(0)).getBloodGroup());
@@ -143,8 +143,8 @@ public class ParseCSVTest {
      */
     @Test
     public void testAddressParsed() {
-        String address = String.format("%s %s %s %s", patient.getStreetNumber(), patient.getCity(), patient.getSuburb(), patient.getRegion());
-        Assert.assertEquals("306 Kipling Santana de ParnaÃa Northland", address);
+        String address = String.format("%s %s %s %s %s", patient.getStreetNumber(), patient.getStreetName(), patient.getCity(), patient.getSuburb(), patient.getRegion());
+        Assert.assertEquals("306 Kipling Whangarei Santana de Parnaa Northland", address);
     }
 
     /**
