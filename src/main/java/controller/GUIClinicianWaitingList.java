@@ -5,15 +5,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import model.Administrator;
-import model.Clinician;
 import model.DrugInteraction;
+import model.Patient;
 import org.apache.commons.lang3.StringUtils;
-import service.Database;
+import service.ClinicianDataService;
 import service.OrganWaitlist;
+import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,10 +21,8 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import utility.undoRedo.UndoableStage;
 
-import java.io.IOException;
 import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -52,16 +48,16 @@ public class GUIClinicianWaitingList {
 
     private UserControl userControl = new UserControl();
 
-    Database database = Database.getDatabase();
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    private PatientDataService patientDataService = new PatientDataService();
 
     /**
      * Initializes waiting list screen by populating table and initializing a double click action
      * to view a patient's profile.
      */
     public void initialize() {
-    	OrganWaitlist waitingList = database.getWaitingList();
-        for (OrganWaitlist.OrganRequest request: waitingList) {
+        ClinicianDataService clinicianDataService = new ClinicianDataService();
+        OrganWaitlist organRequests = clinicianDataService.getOrganWaitList();
+        for (OrganWaitlist.OrganRequest request: organRequests) {
     		masterData.add(request);
     	}
         populateTable();
@@ -106,8 +102,12 @@ public class GUIClinicianWaitingList {
                 try {
                     userControl = new UserControl();
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
-                    DrugInteraction.setViewedPatient(database.getPatientByNhi(request.getReceiverNhi()));
-                    userControl.setTargetUser(database.getPatientByNhi(request.getReceiverNhi()));
+                    Patient patient = patientDataService.getPatientByNhi(request.getReceiverNhi());
+                    patientDataService.save(patient);
+                    userControl.setTargetUser(patient);
+                    DrugInteraction.setViewedPatient(patient);
+                    userControl.setTargetUser(patient);
+
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     Parent root = fxmlLoader.load();
                     UndoableStage popUpStage = new UndoableStage();
@@ -118,7 +118,7 @@ public class GUIClinicianWaitingList {
                     popUpStage.setOnHiding(event -> closeProfile(openProfiles.indexOf( request )));
 
                     }
-                catch (IOException e) {
+                catch (Exception e) {
                     userActions.log(Level.SEVERE,
                             "Failed to open patient profile scene from search patients table",
                             "attempted to open patient edit window from search patients table");

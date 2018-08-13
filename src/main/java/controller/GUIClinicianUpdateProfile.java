@@ -1,39 +1,31 @@
 package controller;
 
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
 import model.Clinician;
 import model.User;
-import service.Database;
+import service.ClinicianDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UIRegex;
-import utility.StatusObservable;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 /**
  * Controller class to control GUI Clinician updating screen.
  */
 public class GUIClinicianUpdateProfile extends UndoableController {
-
-    @FXML
-    public AnchorPane clinicianUpdateAnchorPane;
 
     @FXML
     private Label lastModifiedLbl;
@@ -63,28 +55,6 @@ public class GUIClinicianUpdateProfile extends UndoableController {
     private ChoiceBox regionDD;
 
     private Clinician target;
-
-    private StatesHistoryScreen screenHistory;
-
-    Database database = Database.getDatabase();
-
-    /**
-     * Undoes an action taken when editing a clinician
-     */
-    @FXML
-    public void undo(){
-        screenHistory.undo();
-    }
-
-    /**
-     * Redoes an action taken when editing a clinician
-     */
-    @FXML
-    public void redo(){
-        screenHistory.redo();
-    }
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
-
 
     /**
      * Initializes the clinician editing screen.
@@ -124,7 +94,8 @@ public class GUIClinicianUpdateProfile extends UndoableController {
      * @param staffId ID of clinician to load
      */
     private void loadProfile(int staffId) {
-        Clinician clinician = database.getClinicianByID(staffId);
+        ClinicianDataService dataService = new ClinicianDataService();
+        Clinician clinician = dataService.getClinician(staffId); //load from db
         if (clinician != null) {
             target = clinician;
             populateForm(clinician);
@@ -246,25 +217,29 @@ public class GUIClinicianUpdateProfile extends UndoableController {
         }
         // If all the fields are entered correctly
         if (valid) {
-            target.setStaffID(Integer.parseInt(staffId.getText()));
-            target.setFirstName(firstnameTxt.getText());
-            target.setLastName(lastnameTxt.getText());
+            Clinician after = (Clinician) target.deepClone();
+            after.setStaffID(Integer.parseInt(staffId.getText()));
+            after.setFirstName(firstnameTxt.getText());
+            after.setLastName(lastnameTxt.getText());
             List<String> middlenames = Arrays.asList(middlenameTxt.getText()
                     .split(" "));
             ArrayList<String> middles = new ArrayList<>(middlenames);
-            target.setMiddleNames(middles);
+            after.setMiddleNames(middles);
 
-            target.setStreet1(street1Txt.getText());
-            target.setStreet2(street2Txt.getText());
-            target.setSuburb(suburbTxt.getText());
-            target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
+            after.setStreet1(street1Txt.getText());
+            after.setStreet2(street2Txt.getText());
+            after.setSuburb(suburbTxt.getText());
+            after.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
                     .getSelectedItem()
                     .toString()));
             userActions.log(Level.INFO,
                     "Successfully updated clinician profile",
-                    new String[] { "Attempted to update clinician profile", String.valueOf(target.getStaffID()) });
-            target.userModified();
-            screenControl.setIsSaved(false);
+                    new String[] { "Attempted to update clinician profile", String.valueOf(after.getStaffID()) });
+            after.userModified();
+
+            Action action = new Action(target, after);
+            new ClinicianDataService().save(after);
+            statesHistoryScreen.addAction(action);
         }
         else {
             userActions.log(Level.WARNING, "Invalid fields", "Attempted to update clinician profile with invalid fields");

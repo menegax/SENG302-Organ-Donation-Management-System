@@ -4,13 +4,7 @@ import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 
-import java.sql.Time;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -81,13 +75,30 @@ public class Clinician extends User {
      */
     public Clinician(int staffID, String firstName, ArrayList<String> middleNames, String lastName, String street1,
     		String street2, String suburb, Region region, Timestamp modified) {
-    	super(firstName, middleNames, lastName);
+        super(firstName, middleNames, lastName);
         this.staffID = staffID;
-    	this.street1 = street1;
-    	this.street2 = street2;
-    	this.suburb = suburb;
-    	this.region = region;
-    	this.modified = modified;
+        this.street1 = street1;
+        this.street2 = street2;
+        this.suburb = suburb;
+        this.region = region;
+        this.modified = modified;
+        databaseImport();
+    }
+
+    /**
+     * Sets the attributes of the clinician to the attributes of the provided clinician
+     * @param newUserAttributes a user whose attributes this function copies
+     */
+    public void setAttributes(User newUserAttributes) {
+        Clinician newClinicianAttributes = (Clinician) newUserAttributes.deepClone();
+        setFirstName(newClinicianAttributes.getFirstName());
+        setLastName(newClinicianAttributes.getLastName());
+        setMiddleNames(newClinicianAttributes.getMiddleNames());
+        setStreet1(newClinicianAttributes.getStreet1());
+        setStreet2(newClinicianAttributes.getStreet2());
+        setSuburb(newClinicianAttributes.getSuburb());
+        setRegion(newClinicianAttributes.getRegion());
+        setStaffID(newClinicianAttributes.getStaffID());
     }
 
     public int getStaffID() {
@@ -155,5 +166,22 @@ public class Clinician extends User {
      */
     public List<ClinicianActionRecord> getClinicianActionsList() {
         return clinicianActionsList;
+    }
+
+    public void setClinicianActionsList(List<ClinicianActionRecord> records) {
+        clinicianActionsList = records;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Clinician)) {
+            return false;
+        }
+        return staffID == ((Clinician) obj).getStaffID();
+    }
+
+    @Override
+    public int hashCode() {
+        return String.valueOf(staffID).hashCode();
     }
 }

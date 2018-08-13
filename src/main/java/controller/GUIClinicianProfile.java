@@ -7,8 +7,13 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
-import service.Database;
-import utility.StatusObservable;
+import service.AdministratorDataService;
+import service.ClinicianDataService;
+import service.interfaces.IClinicianDataService;
+import utility.GlobalEnums;
+import utility.undoRedo.Action;
+import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.util.logging.Level;
 
@@ -40,8 +45,10 @@ public class GUIClinicianProfile {
     private Button deleteButton;
 
     private UserControl userControl = new UserControl();
-    
-    private Database database = Database.getDatabase();
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private IClinicianDataService clinicianDataService = new ClinicianDataService();
 
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
@@ -92,8 +99,18 @@ public class GUIClinicianProfile {
     public void deleteProfile() {
         Clinician clinician = (Clinician) userControl.getTargetUser();
         if (clinician.getStaffID() != 0) {
+            Action action = new Action(clinician, null);
+            new AdministratorDataService().deleteUser(clinician);
+            for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
+                if (stage instanceof UndoableStage) {
+                    for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
+                        if (statesHistoryScreen.getUndoableScreen().equals(GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS)) {
+                            statesHistoryScreen.addAction(action);
+                        }
+                    }
+                }
+            }
             userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(clinician.getStaffID())});
-            database.delete(clinician);
             ((Stage) clinicianProfilePane.getScene().getWindow()).close();
         }
     }

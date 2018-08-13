@@ -10,9 +10,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import model.Disease;
 import model.Patient;
-import service.Database;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
-import utility.StatusObservable;
+import utility.undoRedo.Action;
 import utility.undoRedo.UndoableStage;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -21,7 +22,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;
 
-import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -57,41 +57,27 @@ public class GUIClinicianDiagnosis extends UndoableController{
     public TableColumn<Disease, GlobalEnums.DiseaseState> currentTagsCol;
 
     @FXML
-    public Button saveButton;
-
-    @FXML
     public Button deleteButton;
 
     @FXML
     public Button addDiagnosisButton;
-
-    Database database = Database.getDatabase();
-
 
     /**
      * Patient being viewed
      */
     private static Patient target;
 
-    /**
-     * Deleted past diseases
-     */
-    private ArrayList<Disease> deletedPast = new ArrayList<>();
-
-    /**
-     * Deleted current diseases
-     */
-    private ArrayList<Disease> deletedCurrent = new ArrayList<>();
+    private static Patient targetClone;
 
     /**
      * Patient's current diseases
      */
-    private ArrayList<Disease> currentDiseases;
+    private List<Disease> currentDiseases;
 
     /**
      * Patient's past diseases
      */
-    private ArrayList<Disease> pastDiseases;
+    private List<Disease> pastDiseases;
 
 
     /**
@@ -103,6 +89,8 @@ public class GUIClinicianDiagnosis extends UndoableController{
 
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private IPatientDataService patientDataService = new PatientDataService();
 
 
     /**
@@ -123,26 +111,28 @@ public class GUIClinicianDiagnosis extends UndoableController{
     public void initialize() {
         userControl = new UserControl();
         if(userControl.getLoggedInUser() instanceof Patient) {
-            target = (Patient) userControl.getLoggedInUser();
+            target = patientDataService.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber());
+            targetClone = (Patient) target.deepClone();
             addDiagnosisButton.setVisible(false);
             addDiagnosisButton.setDisable(true);
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
         } else {
-            target = (Patient) userControl.getTargetUser();
+            target = patientDataService.getPatientByNhi(((Patient) userControl.getTargetUser()).getNhiNumber());
+            targetClone = (Patient) target.deepClone();
             addDiagnosisButton.setVisible(true);
             addDiagnosisButton.setDisable(false);
             deleteButton.setVisible(true);
             deleteButton.setDisable(false);
         }
-        if(target.getCurrentDiseases() == null) {
-            target.setCurrentDiseases(new ArrayList<>());
+        if(targetClone.getCurrentDiseases() == null) {
+            targetClone.setCurrentDiseases(new ArrayList<>());
         }
-        if(target.getPastDiseases() == null) {
-            target.setPastDiseases(new ArrayList<>());
+        if(targetClone.getPastDiseases() == null) {
+            targetClone.setPastDiseases(new ArrayList<>());
         }
-        currentDiseases = target.getCurrentDiseases();
-        pastDiseases = target.getPastDiseases();
+        currentDiseases = targetClone.getCurrentDiseases();
+        pastDiseases = targetClone.getPastDiseases();
         updateDiagnosesLists();
         if(!(userControl.getLoggedInUser() instanceof Patient)) {
             setUpDoubleClickEdit(currentDiagnosesView);
@@ -170,6 +160,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
      */
     private void setUpDoubleClickEdit(TableView<Disease> tableView) {
         UndoableStage stage = new UndoableStage();
+        //stage.setPopUp();
         tableView.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && tableView.getSelectionModel().getSelectedItem() != null) {
                 GUIPatientUpdateDiagnosis.setDisease(tableView.getSelectionModel().getSelectedItem());
@@ -198,6 +189,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
         try {
             GUIPatientUpdateDiagnosis.setIsAdd(true);
             UndoableStage stage = new UndoableStage();
+            //stage.setPopUp();
             screenControl.addStage(stage.getUUID(), stage);
             screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/patientUpdateDiagnosis.fxml")));
             stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
@@ -214,6 +206,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
      * Refreshes the tables of past and current diseases
      */
     private void tableRefresh() {
+        targetClone = (Patient) target.deepClone();
         loadCurrentDiseases();
         loadPastDiseases();
     }
@@ -223,7 +216,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
      * or the table to be in descending date order
      */
     private void loadCurrentDiseases() {
-        ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(target.getCurrentDiseases());
+        ObservableList<Disease> observableCurrentDiseases = FXCollections.observableArrayList(targetClone.getCurrentDiseases());
         setCellValues(currentDateCol, currentDiagnosisCol, currentTagsCol);
         currentDiagnosesView.setItems(observableCurrentDiseases);
         currentDiagnosesView.refresh();
@@ -241,7 +234,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
      * or the table to be in descending date order
      */
     private void loadPastDiseases() {
-        ObservableList <Disease> observablePastDiseases = FXCollections.observableArrayList( target.getPastDiseases() );
+        ObservableList <Disease> observablePastDiseases = FXCollections.observableArrayList(targetClone.getPastDiseases() );
         setCellValues(pastDateCol, pastDiagnosisCol, pastTagsCol);
         pastDiagnosesView.setItems(observablePastDiseases);
         pastDiagnosesView.refresh();
@@ -290,22 +283,6 @@ public class GUIClinicianDiagnosis extends UndoableController{
             return true;
         });
     }
-
-
-    /**
-     * Saves the current diagnoses to the database after setting the patient's past and current diagnoses to
-     * the edited lists in the screen
-     */
-    @FXML
-    public void saveDiagnoses() {
-        target.setCurrentDiseases(currentDiseases);
-        target.setPastDiseases(pastDiseases);
-        database.updateDatabase();
-        userActions.log( Level.FINE, "Successfully saved patient diseases", "Successfully saved patient " + target.getNhiNumber() + "diseases");
-        new Alert(Alert.AlertType.INFORMATION, "Local changes have been saved", ButtonType.OK).show();
-        changed = false;
-    }
-
 
     /**
      * Iterates through current and past diagnoses and moves cured and chronic diseases to their required lists.
@@ -360,16 +337,14 @@ public class GUIClinicianDiagnosis extends UndoableController{
         if (pastDiagnosesView.getSelectionModel().getSelectedItem() != null) {
             changed = true;
             pastDiseases.remove(pastDiagnosesView.getSelectionModel().getSelectedItem());
-            deletedPast.add(pastDiagnosesView.getSelectionModel().getSelectedItem());
+            statesHistoryScreen.addAction(new Action(target, targetClone));
             loadPastDiseases();
-            screenControl.setIsSaved(false);
             userActions.log(Level.FINE, "Successfully deleted a disease",  pastDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
         } else if (currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
             changed = true;
             currentDiseases.remove(currentDiagnosesView.getSelectionModel().getSelectedItem());
-            deletedCurrent.add(currentDiagnosesView.getSelectionModel().getSelectedItem());
+            statesHistoryScreen.addAction(new Action(target, targetClone));
             loadCurrentDiseases();
-            screenControl.setIsSaved(false);
             userActions.log(Level.WARNING, "Successfully deleted a disease", currentDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
         } else {
             userActions.log(Level.WARNING, "No diagnosis selected to delete", "disease failed to be deleted");

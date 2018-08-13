@@ -3,7 +3,7 @@
     <groupId>seng302</groupId>
     <artifactId>Main</artifactId>
     <packaging>jar</packaging>
-    <version>5.0</version>
+    <version>5.2</version>
     <name>Big Pharma</name>
     <url>https://eng-git.canterbury.ac.nz/SENG302-2016/team-800</url>
 
@@ -12,14 +12,50 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>libs</id>
+            <url>file://${project.basedir}/libs</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+    	<!-- https://mvnrepository.com/artifact/no.tornado/tornadofx -->
+		<dependency>
+  		    <groupId>no.tornado</groupId>
+    		<artifactId>tornadofx</artifactId>
+   			<version>1.7.16</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/no.tornado/tornadofx-controls -->
+			<dependency>
+ 		    <groupId>no.tornado</groupId>
+ 		    <artifactId>tornadofx-controls</artifactId>
+ 		    <version>1.0.6</version>
+		</dependency>
+
         <!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
+        <dependency>
+            <groupId>com.google.maps</groupId>
+            <artifactId>google-maps-services</artifactId>
+            <version>0.2.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.7.25</version>
+        </dependency>
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
             <version>8.40.12</version>
         </dependency>
-
         <dependency>
             <groupId>com.univocity</groupId>
             <artifactId>univocity-parsers</artifactId>
@@ -123,6 +159,12 @@
             <artifactId>sonar-maven-plugin</artifactId>
             <version>3.4.0.905</version>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>2.0.2-beta</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 
@@ -133,7 +175,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <sonar.host.url>http://localhost:9000/</sonar.host.url>
+                <sonar.host.url>http://csse-s302g8.canterbury.ac.nz:9000</sonar.host.url>
             </properties>
         </profile>
     </profiles>

@@ -7,8 +7,11 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Administrator;
 import model.User;
-import service.Database;
-import utility.StatusObservable;
+import service.AdministratorDataService;
+import utility.GlobalEnums;
+import utility.undoRedo.Action;
+import utility.undoRedo.StatesHistoryScreen;
+import utility.undoRedo.UndoableStage;
 
 import java.util.logging.Level;
 
@@ -33,18 +36,18 @@ public class GUIAdministratorProfile {
     private Administrator target;
 
     private UserControl userControl = new UserControl();
-    
-    private Database database = Database.getDatabase();
 
-    /**
-     * Initializes the clinician profile view screen by loading the logged in clinician's profile
-     */
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private AdministratorDataService administratorDataService = new AdministratorDataService();
+
+
     public void initialize() {
         User loggedIn = userControl.getLoggedInUser();
         if (userControl.getTargetUser() instanceof Administrator) {
-            target = (Administrator) userControl.getTargetUser();
+            target = administratorDataService.getAdministratorByUsername(((Administrator) userControl.getTargetUser()).getUsername());
         } else {
-            target = (Administrator) loggedIn;
+            target = administratorDataService.getAdministratorByUsername(((Administrator) loggedIn).getUsername());
         }
         if (target.getUsername().toLowerCase().equals("admin")) {
             deleteButton.setVisible(false);
@@ -73,8 +76,19 @@ public class GUIAdministratorProfile {
      */
     public void deleteProfile() {
         if (!target.getUsername().toLowerCase().equals("admin")) {
+            Administrator administrator = (Administrator) userControl.getTargetUser();
+            Action action = new Action(administrator, null);
+            new AdministratorDataService().deleteUser(administrator);
+            for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
+                if (stage instanceof UndoableStage) {
+                    for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
+                        if (statesHistoryScreen.getUndoableScreen().equals(GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS)) {
+                            statesHistoryScreen.addAction(action);
+                        }
+                    }
+                }
+            }
             userActions.log(Level.INFO, "Successfully deleted admin profile", new String[]{"Attempted to delete admin profile", target.getUsername()});
-            database.delete(target);
             if (!target.getUsername().equals(((Administrator) userControl.getLoggedInUser()).getUsername())) {
                 ((Stage) adminProfilePane.getScene().getWindow()).close();
             }

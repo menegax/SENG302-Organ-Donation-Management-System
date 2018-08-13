@@ -5,7 +5,6 @@ import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
-import service.Database;
 
 import javax.xml.crypto.Data;
 import java.io.FileNotFoundException;
@@ -46,13 +45,14 @@ public class ParseCSV {
         results.put(Result.SUCCESS, pats);
         results.put(Result.FAIL, errors);
 
-        Database.getDatabase().importToDb(results.get(Result.SUCCESS));
+        //Database.getDatabase().importToDb(results.get(Result.SUCCESS));
 
         return results;
     }
 
 
-    public static void main(String[] argv) {
-        System.out.println(StringUtils.isAsciiPrintable("PlanÃ¡"));
+    public static void main(String[] argv) throws FileNotFoundException {
+        ParseCSV parseCSV = new ParseCSV();
+        parseCSV.parse(new FileReader("C:\\Users\\Hayden Taylor\\Downloads\\testCSV2.csv"));
     }
 }

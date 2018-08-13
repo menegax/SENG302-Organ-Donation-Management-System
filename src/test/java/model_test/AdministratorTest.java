@@ -1,42 +1,45 @@
 package model_test;
 
 import model.Administrator;
-import org.junit.Before;
-import org.junit.Test;
-import service.Database;
 
-import java.io.IOException;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import service.AdministratorDataService;
+import service.interfaces.IAdministratorDataService;
+import utility.GlobalEnums;
+import utility.SystemLogger;
+
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.OFF;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static utility.UserActionHistory.userActions;
 
 /**
  * Tests valid and invalid actions performed on/by administrators
  */
-public class AdministratorTest {
+public class AdministratorTest implements Serializable {
 
-    private Administrator defaultAdmin;
+    private static Administrator defaultAdmin;
 
-    private Administrator nonDefaultAdmin;
+    private IAdministratorDataService dataService = new AdministratorDataService();
 
-    private Database database;
-    
-    @Before
-    public void setUp() {
-        userActions.setLevel(Level.OFF);
-        database = Database.getDatabase();
+    @BeforeClass
+    public static void setUp() {
+        userActions.setLevel(OFF);
+        SystemLogger.systemLogger.setLevel(OFF);
         defaultAdmin = new Administrator("admin", "first", new ArrayList<>(), "last", "password");
-        nonDefaultAdmin = new Administrator("newAdministrator", "first", new ArrayList<>(), "last", "password");
     }
 
-
-    @Test
-    public void testDeletingNonDefaultAdmin() {
-        givenNonDefaultAdmin();
-        whenDeletingAdmin(nonDefaultAdmin);
-        thenAdminShouldBeRemovedFromDatabase(nonDefaultAdmin);
-    }
 
 
     @Test
@@ -62,33 +65,41 @@ public class AdministratorTest {
         thenAdminFirstNameShouldntBeUpdated(defaultAdmin, "bil%y");
     }
 
+    /**
+     * Tests the setAttributes method
+     */
+    @Test
+    public void testSetAttributes() {
+        List<String> middlesNames= new ArrayList<>();
+        middlesNames.add("Middle");
+        middlesNames.add("Name");
+        Administrator beforeAdmin = new Administrator("Username", "First", new ArrayList<>(), "Last", "password");
+        Administrator afterAdmin = new Administrator("Username", "Second", middlesNames, "Last", "password");
+        beforeAdmin.setAttributes(afterAdmin);
+        assertEquals("Second", beforeAdmin.getFirstName());
+        assertEquals("Name", beforeAdmin.getMiddleNames().get(1));
+
+        // checks deep copy has occurred
+        beforeAdmin.getMiddleNames().remove(0);
+        assertEquals("Middle", afterAdmin.getMiddleNames().get(0));
+    }
+
 
     private void givenDefaultAdmin() {
         try {
-            database.getAdministratorByUsername(defaultAdmin.getUsername());
+            dataService.getAdministratorByUsername(defaultAdmin.getUsername());
         }
-        catch (IOException e) {
-            database.add(defaultAdmin);
-            assert database.getAdministrators()
-                    .contains(defaultAdmin);
+        catch (NullPointerException e) {
+            dataService.save(defaultAdmin);
+            assert dataService.getAdministratorByUsername(defaultAdmin.getUsername()) != null;
         }
     }
 
 
-    private void givenNonDefaultAdmin() {
-        try {
-            database.getAdministratorByUsername(nonDefaultAdmin.getUsername());
-        }
-        catch (IOException e) {
-            database.add(nonDefaultAdmin);
-            assert database.getAdministrators()
-                    .contains(nonDefaultAdmin);
-        }
-    }
 
 
     private void whenDeletingAdmin(Administrator administrator) {
-        database.delete(administrator);
+        dataService.deleteUser(administrator);
     }
 
 
@@ -97,22 +108,12 @@ public class AdministratorTest {
     }
 
 
-    private void thenAdminShouldBeRemovedFromDatabase(Administrator administrator) {
-        try {
-            database.getAdministratorByUsername(administrator.getUsername());
-            assert false;
-        }
-        catch (IOException e) {
-            assert true;
-        }
-    }
-
 
     private void thenAdminShouldntBeRemovedFromDatabase(Administrator administrator) {
         try {
-            database.getAdministratorByUsername(administrator.getUsername());
+            dataService.getAdministratorByUsername(administrator.getUsername());
         }
-        catch (IOException e) {
+        catch (NullPointerException e) {
             assert false;
         }
     }

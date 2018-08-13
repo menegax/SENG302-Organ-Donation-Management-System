@@ -1,15 +1,30 @@
 package model;
 
-public class Medication {
+import utility.GlobalEnums.*;
+
+import java.io.Serializable;
+
+public class Medication implements Serializable {
 
     private String medicationName;
 
-    public Medication(String name) {
+    private MedicationStatus medicationStatus;
+
+    public Medication(String name, MedicationStatus status) {
+        medicationStatus = status;
         medicationName = name;
     }
 
     public String getMedicationName() {
         return medicationName;
+    }
+
+    public MedicationStatus getMedicationStatus() {
+        return medicationStatus;
+    }
+
+    public void setMedicationStatus(MedicationStatus medicationStatus) {
+        this.medicationStatus = medicationStatus;
     }
 
     /**

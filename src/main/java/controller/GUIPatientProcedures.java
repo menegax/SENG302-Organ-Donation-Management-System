@@ -10,12 +10,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.Procedure;
+import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.StatusObservable;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableStage;
 
@@ -78,7 +81,11 @@ public class GUIPatientProcedures extends UndoableController {
 
     private Patient patient;
 
+    private Patient patientClone;
+
     private UserControl userControl;
+
+    private PatientDataService patientDataService = new PatientDataService();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -89,14 +96,16 @@ public class GUIPatientProcedures extends UndoableController {
     public void initialize() {
         userControl = new UserControl();
         if (userControl.getLoggedInUser() instanceof Patient) {
-            this.patient = (Patient) userControl.getLoggedInUser();
+            this.patient = patientDataService.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber());
+            this.patientClone = (Patient) this.patient.deepClone();
             setupTables();
             //Disable any add, edit, or delete functionality for patients
             addProcedureButton.setVisible(false);
             editProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
-        } else if (userControl.getLoggedInUser() instanceof Clinician) {
-            this.patient = (Patient) userControl.getTargetUser();
+        } else if (userControl.getLoggedInUser() instanceof Clinician || userControl.getLoggedInUser() instanceof Administrator) {
+            this.patient = patientDataService.getPatientByNhi(((Patient) userControl.getTargetUser()).getNhiNumber());
+            this.patientClone = (Patient) this.patient.deepClone();
             setupTables();
         }
         setupUndoRedo();
@@ -117,9 +126,10 @@ public class GUIPatientProcedures extends UndoableController {
      * Sets up the tables to display the patient's procedures
      */
     private void setupTables() {
+        this.patientClone = (Patient) this.patient.deepClone();
         ObservableList<Procedure> previousProcedures = FXCollections.observableArrayList();
         ObservableList<Procedure> pendingProcedures = FXCollections.observableArrayList();
-        for (Procedure procedure : patient.getProcedures()) {
+        for (Procedure procedure : patientClone.getProcedures()) {
             if (procedure.getDate().isBefore(LocalDate.now())) {
                 previousProcedures.add(procedure);
             } else {
@@ -186,6 +196,7 @@ public class GUIPatientProcedures extends UndoableController {
     public void addProcedure() {
         try {
             UndoableStage stage = new UndoableStage();
+            //stage.setPopUp();
             screenControl.addStage(stage.getUUID(), stage);
             screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/patientProcedureForm.fxml")));
             stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
@@ -216,6 +227,7 @@ public class GUIPatientProcedures extends UndoableController {
         }
         try {
             UndoableStage stage = new UndoableStage();
+            //stage.setPopUp();
             screenControl.addStage(stage.getUUID(), stage);
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
             screenControl.show(stage.getUUID(),fxmlLoader.load());
@@ -252,10 +264,9 @@ public class GUIPatientProcedures extends UndoableController {
             selectedProcedure = pendingProceduresView.getSelectionModel().getSelectedItem();
         }
         if (selectedProcedure != null) {
-            final Procedure finalProcedure = selectedProcedure;
-            patient.removeProcedure(finalProcedure);
-            screenControl.setIsSaved(false);
-            userActions.log(INFO, "Removed procedure " + finalProcedure.getSummary(), new String[]{"Attempted to remove a procedure", patient.getNhiNumber()});
+            patientClone.removeProcedure(selectedProcedure);
+            statesHistoryScreen.addAction(new Action(patient, patientClone));
+            userActions.log(INFO, "Removed procedure " + selectedProcedure.getSummary(), new String[]{"Attempted to remove a procedure", patient.getNhiNumber()});
             setupTables();
         }
     }

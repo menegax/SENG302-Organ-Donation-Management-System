@@ -1,5 +1,6 @@
 package controller;
 
+import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,20 +11,23 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
 import javafx.scene.layout.GridPane;
 import model.Patient;
+import service.ClinicianDataService;
 import service.OrganWaitlist;
-import utility.StatusObservable;
+import service.PatientDataService;
+import service.interfaces.IClinicianDataService;
+import service.interfaces.IPatientDataService;
+import utility.SystemLogger;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import service.Database;
 import utility.GlobalEnums;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.*;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.INFO;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -67,18 +71,14 @@ public class GUIPatientUpdateRequirements extends UndoableController{
     @FXML
     private CheckBox connectivetissueCB;
 
-
     @FXML
     private GridPane patientRequirementsPane;
 
-    Database database = Database.getDatabase();
-
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
     private Patient target;
+
+    private Patient after;
+
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     private UserControl userControl;
 
@@ -88,7 +88,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
 
     private Set<GlobalEnums.Organ> finalRequirements = new HashSet<>();
 
-//    private boolean closed = false;
+    private IClinicianDataService clinicianDataService = new ClinicianDataService();
 
     /**
      * Initializes the requirements screen by laoding in the current patient
@@ -116,11 +116,14 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * @param nhi of the current patient being viewed
      */
     private void loadProfile(String nhi) {
-        Patient patient = database.getPatientByNhi(nhi);
-        if (patient != null) {
-            target = patient;
-            populateForm(patient);
-        } else {
+        try {
+            Patient patient = factory.getPatientDataAccess().getPatientByNhi(nhi);
+            if (patient != null) {
+                target = patient;
+                after = (Patient) patient.deepClone();
+                populateForm(after);
+            }
+        } catch (NullPointerException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
         }
         controls = new ArrayList<Control>() {{
@@ -146,7 +149,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * @param patient currently being viewed
      */
     private void populateForm(Patient patient) {
-        ArrayList<GlobalEnums.Organ> organs = patient.getRequiredOrgans();
+        List<GlobalEnums.Organ> organs = patient.getRequiredOrgans();
         if (organs != null) {
             if (organs.contains(GlobalEnums.Organ.LIVER)) {
                 liverCB.setSelected(true);
@@ -204,80 +207,84 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      */
     public void saveRequirements() {
         if (liverCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.LIVER);
+            after.addRequired(GlobalEnums.Organ.LIVER);
             finalRequirements.add(GlobalEnums.Organ.LIVER);
         } else {
-            target.removeRequired(GlobalEnums.Organ.LIVER);
+            after.removeRequired(GlobalEnums.Organ.LIVER);
         }
         if (kidneyCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.KIDNEY);
+            after.addRequired(GlobalEnums.Organ.KIDNEY);
             finalRequirements.add(GlobalEnums.Organ.KIDNEY);
         } else {
-            target.removeRequired(GlobalEnums.Organ.KIDNEY);
+            after.removeRequired(GlobalEnums.Organ.KIDNEY);
         }
         if (pancreasCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.PANCREAS);
+            after.addRequired(GlobalEnums.Organ.PANCREAS);
             finalRequirements.add(GlobalEnums.Organ.PANCREAS);
         } else {
-            target.removeRequired(GlobalEnums.Organ.PANCREAS);
+            after.removeRequired(GlobalEnums.Organ.PANCREAS);
         }
         if (heartCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.HEART);
+            after.addRequired(GlobalEnums.Organ.HEART);
             finalRequirements.add(GlobalEnums.Organ.HEART);
         } else {
-            target.removeRequired(GlobalEnums.Organ.HEART);
+            after.removeRequired(GlobalEnums.Organ.HEART);
         }
         if (lungCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.LUNG);
+            after.addRequired(GlobalEnums.Organ.LUNG);
             finalRequirements.add(GlobalEnums.Organ.LUNG);
         } else {
-            target.removeRequired(GlobalEnums.Organ.LUNG);
+            after.removeRequired(GlobalEnums.Organ.LUNG);
         }
         if (intestineCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.INTESTINE);
+            after.addRequired(GlobalEnums.Organ.INTESTINE);
             finalRequirements.add(GlobalEnums.Organ.INTESTINE);
         } else {
-            target.removeRequired(GlobalEnums.Organ.INTESTINE);
+            after.removeRequired(GlobalEnums.Organ.INTESTINE);
         }
         if (corneaCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.CORNEA);
+            after.addRequired(GlobalEnums.Organ.CORNEA);
             finalRequirements.add(GlobalEnums.Organ.CORNEA);
         } else {
-            target.removeRequired(GlobalEnums.Organ.CORNEA);
+            after.removeRequired(GlobalEnums.Organ.CORNEA);
         }
         if (middleearCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.MIDDLEEAR);
+            after.addRequired(GlobalEnums.Organ.MIDDLEEAR);
             finalRequirements.add(GlobalEnums.Organ.MIDDLEEAR);
         } else {
-            target.removeRequired(GlobalEnums.Organ.MIDDLEEAR);
+            after.removeRequired(GlobalEnums.Organ.MIDDLEEAR);
         }
         if (skinCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.SKIN);
+            after.addRequired(GlobalEnums.Organ.SKIN);
             finalRequirements.add(GlobalEnums.Organ.SKIN);
         } else {
-            target.removeRequired(GlobalEnums.Organ.SKIN);
+            after.removeRequired(GlobalEnums.Organ.SKIN);
         }
         if (boneCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.BONE);
+            after.addRequired(GlobalEnums.Organ.BONE);
             finalRequirements.add(GlobalEnums.Organ.BONE);
         } else {
-            target.removeRequired(GlobalEnums.Organ.BONE);
+            after.removeRequired(GlobalEnums.Organ.BONE);
         }
         if (bonemarrowCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.BONEMARROW);
+            after.addRequired(GlobalEnums.Organ.BONEMARROW);
             finalRequirements.add(GlobalEnums.Organ.BONEMARROW);
         } else {
-            target.removeRequired(GlobalEnums.Organ.BONEMARROW);
+            after.removeRequired(GlobalEnums.Organ.BONEMARROW);
         }
         if (connectivetissueCB.isSelected()) {
-            target.addRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
+            after.addRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
             finalRequirements.add(GlobalEnums.Organ.CONNECTIVETISSUE);
         } else {
-            target.removeRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
+            after.removeRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
         deregistrationReason();
         createOrganRequests();
-        screenControl.setIsSaved(false);
+
+        Action action = new Action(target, after);
+        statesHistoryScreen.addAction(action);
+        IPatientDataService patientDataService = new PatientDataService();
+        patientDataService.save(after);
     }
 
     /**
@@ -285,17 +292,19 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * reason popup for each deregistered organ
      */
     private void deregistrationReason() {
+        SystemLogger.systemLogger.log(INFO, "Patient had organ requirements deregistered. Asking for deregistration reason...");
         Set<GlobalEnums.Organ> removedOrgans = initialRequirements;
         removedOrgans.removeAll(finalRequirements);
 
         for (GlobalEnums.Organ organ : removedOrgans) {
             openReasonPopup(organ);
-            target.removeRequired(organ);
+            after.removeRequired(organ);
         }
+
     }
 
     /**
-     * Opens the popup to select a reason for organ deregistration
+     * Opens the popup to getMedicationsByNhi a reason for organ deregistration
      * @param organ organ being validated for reason of deregistration
      */
     private void openReasonPopup(GlobalEnums.Organ organ) {
@@ -320,17 +329,18 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * waiting list.
      */
     private void createOrganRequests() {
-        OrganWaitlist waitlist = database.getWaitingList();
+        OrganWaitlist waitlist = clinicianDataService.getOrganWaitList();
         Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();
         while (iter.hasNext()) {
             OrganWaitlist.OrganRequest next = iter.next();
-            if (next.getReceiverNhi().equals(target.getNhiNumber())) {
+            if (next.getReceiverNhi().equals(after.getNhiNumber())) {
                 iter.remove();
             }
         }
-        for (GlobalEnums.Organ organ : target.getRequiredOrgans()) {
-            waitlist.add(target, organ);
+        for (GlobalEnums.Organ organ : after.getRequiredOrgans()) {
+            waitlist.add(after, organ);
         }
+        clinicianDataService.updateOrganWaitList(waitlist);
     }
 
 }

@@ -1,17 +1,20 @@
 package controller;
 
+import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import model.Administrator;
-import service.Database;
+import service.AdministratorDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.UIRegex;
-import utility.StatusObservable;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,9 +50,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private Database database = Database.getDatabase();
-
-
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     /**
      * Initializes the administrator editing screen.
@@ -78,10 +79,10 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
      */
     private void loadProfile(String username) {
         try {
-            Administrator administrator = database.getAdministratorByUsername(username);
+            Administrator administrator = factory.getAdministratorDataAccess().getAdministratorByUsername(username);
             populateForm(administrator);
         }
-        catch (InvalidObjectException e) {
+        catch (NullPointerException e) {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }
@@ -97,7 +98,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
             add(lastnameTxt);
             add(middlenameTxt);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPROFILEUPDATE);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORPROFILEUPDATE);
     }
 
 
@@ -161,20 +162,28 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
         }
         // If all the fields are entered correctly
         if (valid) {
-            target.setFirstName(firstnameTxt.getText());
-            target.setLastName(lastnameTxt.getText());
+
+            Administrator after = (Administrator) target.deepClone();
+
+            after.setFirstName(firstnameTxt.getText());
+            after.setLastName(lastnameTxt.getText());
+
             List<String> middlenames = Arrays.asList(middlenameTxt.getText()
                     .split(" "));
             ArrayList middles = new ArrayList();
             middles.addAll(middlenames);
-            target.setMiddleNames(middles);
+            after.setMiddleNames(middles);
             if (passwordTxt.getText()
                     .length() > 0) {
-                target.setPassword(passwordTxt.getText());
+                after.setPassword(passwordTxt.getText());
             }
 
-            target.userModified();
-            screenControl.setIsSaved(false);
+            after.userModified();
+
+            Action action = new Action(target, after);
+            new AdministratorDataService().save(after);
+            statesHistoryScreen.addAction(action);
+
             userActions.log(Level.INFO, "Successfully updated admin profile", "Attempted to update admin profile");
         }
         else {

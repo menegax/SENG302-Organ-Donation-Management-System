@@ -1,14 +1,11 @@
 package utility;
 
-import static utility.GlobalEnums.NONE_ID;
-import static utility.SystemLogger.systemLogger;
 
-import utility.GlobalEnums.*;
+import data_access.localDAO.LocalDB;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -20,15 +17,14 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.RAMDirectory;
-import service.Database;
+import utility.GlobalEnums.*;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.*;
-
-import utility.GlobalEnums.UserTypes;
-
 import java.util.logging.Level;
+
+import static utility.GlobalEnums.*;
+import static utility.SystemLogger.systemLogger;
 
 public class Searcher {
 
@@ -46,12 +42,12 @@ public class Searcher {
 
     private static Searcher instance = null;
 
-    private Database database;
+    private LocalDB database;
 
-    public Searcher() {
+    private Searcher() {
         try {
             indexWriter = initializeWriter();
-            database = Database.getDatabase();
+            database = LocalDB.getInstance();
             systemLogger.log(Level.INFO, "Successfully initialized index writer.");
         } catch (IOException e) {
             systemLogger.log(Level.SEVERE, "Failed to initialize index writer.");
@@ -68,6 +64,7 @@ public class Searcher {
     /**
      * Initializes the index writer in RAM.
      *
+     * @return The new Index Writer
      * @throws IOException Error creating a new index writer.
      */
     private IndexWriter initializeWriter() throws IOException {
@@ -77,6 +74,9 @@ public class Searcher {
 
     /**
      * Creates the index document for a patient.
+     *
+     * @param patient The patient to create the document for
+     * @return The Patient Document
      */
     private Document createPatientDocument(Patient patient) {
         Document patientDoc = new Document();
@@ -181,8 +181,8 @@ public class Searcher {
     }
 
     public void updateIndex(User user) {
-    	removeIndex(user);
-    	addIndex(user);
+        removeIndex(user);
+        addIndex(user);
     }
 
     public void removeIndex(User user) {
@@ -198,9 +198,9 @@ public class Searcher {
         try {
             indexWriter.deleteDocuments(toDel);
             indexWriter.commit();
-            UserActionHistory.userActions.log(Level.INFO, "Successfully removed user from the search index", "Attempted to remove user from the search index");
+            systemLogger.log(Level.INFO, "Successfully removed user from the search index", "Attempted to remove user from the search index");
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Unable to remove user index", "Attempted to remove user index");
+            systemLogger.log(Level.SEVERE, "Unable to remove user index", "Attempted to remove user index");
         }
     }
 
@@ -210,9 +210,9 @@ public class Searcher {
     public void clearIndex() {
         try {
             indexWriter.deleteAll();
-            UserActionHistory.userActions.log(Level.INFO, "Successfully cleared patient search index", "Attempted to delete all patients search indices");
+            systemLogger.log(Level.INFO, "Successfully cleared patient search index", "Attempted to delete all patients search indices");
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Unable to clear patient index", "Attempted to clear patient index");
+            systemLogger.log(Level.SEVERE, "Unable to clear patient index", "Attempted to clear patient index");
         }
     }
 
@@ -241,11 +241,14 @@ public class Searcher {
     }
 
     /**
-     * Returns the default set of patient search results.
+     * Returns the default list of patient search results.
      *
-     * @return The default set of patient search results.
+     * @param filter The filters to match default results on
+     * @param types  The user types to select
+     * @return The default list of patient search results.
      */
-    public List<User> getDefaultResults(UserTypes[] types, Map<FilterOption, String> filter) {
+    public Map<Integer, List<User>> getDefaultResults(UserTypes[] types, Map<FilterOption, String> filter) {
+        Map<Integer, List<User>> results = new HashMap<>();
         List<UserTypes> typesList = Arrays.asList(types);
         List<User> defaultResults = new ArrayList<>();
         if (typesList.contains(UserTypes.PATIENT)) {
@@ -271,7 +274,10 @@ public class Searcher {
         if (defaultResults.size() > 30) {
             defaultResults = new ArrayList<>(defaultResults.subList(0, NUM_RESULTS)); // truncate into size num_results
         }
-        return defaultResults;
+        results.put(0, defaultResults);
+        results.put(1, new ArrayList<>());
+        results.put(2, new ArrayList<>());
+        return results;
     }
 
     /**
@@ -279,11 +285,10 @@ public class Searcher {
      *
      * @param doc The ScoreDoc of the Patient.
      * @return The Patient object.
-     * @throws InvalidObjectException
      */
-    private Patient fetchPatient(Document doc) throws InvalidObjectException {
+    private Patient fetchPatient(Document doc) {
         String nhi = doc.get("nhi");
-        return database.getPatientByNhi(nhi);
+        return database.getPatientByNHI(nhi);
     }
 
     /**
@@ -291,11 +296,10 @@ public class Searcher {
      *
      * @param doc The ScoreDoc of the Clinician.
      * @return The Clinician object.
-     * @throws InvalidObjectException
      */
-    private Clinician fetchClinician(Document doc) throws InvalidObjectException {
-    	int staffID = Integer.valueOf(doc.get("staffid"));
-    	return database.getClinicianByID(staffID);
+    private Clinician fetchClinician(Document doc) {
+        int staffID = Integer.valueOf(doc.get("staffid"));
+        return database.getClinicianByStaffID(staffID);
     }
 
     /**
@@ -303,11 +307,10 @@ public class Searcher {
      *
      * @param doc The ScoreDoc of the Admin.
      * @return The Administrator object.
-     * @throws InvalidObjectException This does not occur.
      */
-    private Administrator fetchAdmin(Document doc) throws InvalidObjectException {
-    	String username = doc.get("username");
-    	return database.getAdministratorByUsername(username);
+    private Administrator fetchAdmin(Document doc) {
+        String username = doc.get("username");
+        return database.getAdministratorByUsername(username);
     }
 
     /**
@@ -388,17 +391,38 @@ public class Searcher {
      * @return The sorted List of ScoreDoc objects.
      */
     private List<ScoreDoc> sortScoreDocs(List<ScoreDoc> allDocs) {
-        Collections.sort(allDocs, new Comparator<ScoreDoc>() {
-            @Override
-            public int compare(ScoreDoc o1, ScoreDoc o2) {
-                int comparison = Float.compare(o2.score, o1.score);
-                if (comparison == 0) {
-                    comparison = fetchUser(o1).getNameConcatenated().compareTo(fetchUser(o2).getNameConcatenated());
-                }
-                return comparison;
+        allDocs.sort((o1, o2) -> {
+            int comparison = Float.compare(o2.score, o1.score);
+            if (comparison == 0) {
+                comparison = fetchUser(o1).getNameConcatenated().compareTo(fetchUser(o2).getNameConcatenated());
             }
+            return comparison;
         });
         return allDocs;
+    }
+
+    /**
+     * Creates the users from the ScoreDocs, adds them to a List and returns it.
+     *
+     * @param allDocs    List of ScoreDocs from the search results.
+     * @param numResults The maximum number of results wanted.
+     * @return List of the Users created from the ScoreDocs.
+     */
+    private List<User> createUsers(List<ScoreDoc> allDocs, int numResults) {
+        List<User> users = new ArrayList<>();
+        User user;
+        int docCount = 0;
+        int userCount = 0;
+        while (docCount < allDocs.size() && userCount < numResults) {
+            user = fetchUser(allDocs.get(docCount));
+            if (!users.contains(user)) {
+                if (users.add(user)) {
+                    userCount += 1;
+                }
+            }
+            docCount += 1;
+        }
+        return users;
     }
 
     /**
@@ -408,7 +432,8 @@ public class Searcher {
      * @param numResults The maximum number of search results to retrieve.
      * @return A List of User objects.
      */
-    private List<User> createUsers(List<ScoreDoc> allDocs, int numResults) {
+    @Deprecated
+    private List<User> oldCreateUsers(List<ScoreDoc> allDocs, int numResults) {
         List<User> results = new ArrayList<User>();
         User user;
         int docCount = 0;
@@ -425,18 +450,69 @@ public class Searcher {
     }
 
     /**
+     * New search method for use with the DAO database.
+     *
+     * @param searchTerm The input user search.
+     * @param types      The types of user for the search to find.
+     * @param numResults The maximum number of results of the search.
+     * @param filter     A optional filter to apply to the search.
+     * @return A Map with the distance of the results as the key and a SortedSet of the results, as User objects, as the value.
+     */
+    public Map<Integer, List<User>> search(String searchTerm, UserTypes[] types, int numResults, Map<FilterOption, String> filter) {
+        Map<Integer, List<User>> results = new HashMap<>();
+
+        String[] terms = searchTerm.split(" ");
+        List<FuzzyQuery> queries = new ArrayList<>();
+
+        queries.addAll(createQueries("nhi", terms, 0));
+        queries.addAll(createQueries("staffid", terms, 0));
+        queries.addAll(createQueries("username", terms, 0));
+
+        List<ScoreDoc> allDocs;
+        List<User> users;
+
+        int distance = 0;
+        while (distance <= 2) {
+            queries.addAll(createQueries("fName", terms, distance));
+            queries.addAll(createQueries("mName", terms, distance));
+            queries.addAll(createQueries("lName", terms, distance));
+
+            allDocs = getScoreDocs(queries, types);
+            allDocs = sortScoreDocs(allDocs);
+            users = createUsers(allDocs, numResults);
+            if (distance > 0) {
+                for (int dist = distance - 1; dist >= 0; dist--) {
+                    users.removeAll(results.get(dist));
+                }
+            }
+            if (filter != null) {
+                users = filterUsers(users, filter);
+            }
+            results.put(distance, users);
+            distance += 1;
+        }
+        return results;
+    }
+
+    /**
      * Searches the search index for the input String.
      *
      * @param input      The String to search by.
      * @param types      The types of users to be included in the search.
      * @param numResults The maximum number of search results to find.
+     * @param filter     The filters to match results on
      * @return The search results as a List of User objects.
      */
-    public List<User> search(String input, UserTypes[] types, int numResults, Map<FilterOption, String> filter) {
+    @Deprecated
+    public List<User> oldSearch(String input, UserTypes[] types, int numResults, Map<FilterOption, String> filter) {
         List<User> results = new ArrayList<>();
         if (input.isEmpty()) {
             if (filter != null) {
-                return getDefaultResults(types, filter);
+                if (numResults < getDefaultResults(types, filter).size()) {
+                    return getDefaultResults(types, filter).get(0);
+                } else {
+                    return getDefaultResults(types, filter).get(0);
+                }
             }
             return results;
         }
@@ -454,7 +530,7 @@ public class Searcher {
         List<ScoreDoc> allDocs = getScoreDocs(queries, types);
         allDocs = sortScoreDocs(allDocs);
 
-        results = createUsers(allDocs, numResults);
+        results = oldCreateUsers(allDocs, numResults);
 
         List<User> filteredResults = new ArrayList<>();
         if (filter != null) {
@@ -470,52 +546,82 @@ public class Searcher {
     }
 
     /**
+     * Filters a List of Users by set filters.
+     *
+     * @param users  SortedSet of User objects.
+     * @param filter Map of the filter to use.
+     * @return List of Users after the filter has been applied.
+     */
+    private List<User> filterUsers(List<User> users, Map<FilterOption, String> filter) {
+        List<User> filtered = new ArrayList<>();
+        for (User user : users) {
+            if (matchesFilter((Patient) user, filter)) {
+                filtered.add(user);
+            }
+        }
+        return filtered;
+    }
+
+    /**
      * Check if a patient matches the filter criteria
      *
      * @param patient - patient to check filter against
      * @param filter  - filter to use
      * @return - bool if a match
      */
-    //do not git annotate :(
-    private static boolean matchesFilter(Patient patient, Map<GlobalEnums.FilterOption, String> filter) {
+    private boolean matchesFilter(Patient patient, Map<GlobalEnums.FilterOption, String> filter) {
         if (filter == null) {
             return false;
         }
-        for(FilterOption option : filter.keySet()) {
+        for (FilterOption option : filter.keySet()) {
             if (!filter.get(option).equals(NONE_ID)) { //check each fiter entry to see if its been selected
                 switch (option) {
                     case REGION: {
                         Region region = Region.getEnumFromString(filter.get(option));
-                        if (patient.getRegion() == null || !patient.getRegion().equals(region)) { return false; }
+                        if (patient.getRegion() == null || !patient.getRegion().equals(region)) {
+                            return false;
+                        }
                         break;
                     }
                     case DONATIONS: {
                         Organ donations = Organ.getEnumFromString(filter.get(option));
-                        if (patient.getDonations() == null || !patient.getDonations().contains(donations)) { return false; }
+                        if (patient.getDonations() == null || !patient.getDonations().contains(donations)) {
+                            return false;
+                        }
                         break;
                     }
                     case REQUESTEDDONATIONS: {
                         Organ requestedOrgans = Organ.getEnumFromString(filter.get(option));
-                        if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().contains(requestedOrgans)){ return false; }
+                        if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().contains(requestedOrgans)) {
+                            return false;
+                        }
                         break;
                     }
                     case BIRTHGENDER: {
                         BirthGender birthGender = BirthGender.getEnumFromString(filter.get(option));
-                        if (patient.getBirthGender() == null || !patient.getBirthGender().equals(birthGender)){ return false; }
+                        if (patient.getBirthGender() == null || !patient.getBirthGender().equals(birthGender)) {
+                            return false;
+                        }
                         break;
                     }
                     case DONOR: {
-                        if (Boolean.valueOf(filter.get(option)).equals(true) && patient.getDonations().size() == 0) { return false; }
+                        if (Boolean.valueOf(filter.get(option)).equals(true) && patient.getDonations().size() == 0) {
+                            return false;
+                        }
                         break;
                     }
                     case RECIEVER: {
-                        if (Boolean.valueOf(filter.get(option)).equals(true) && patient.getRequiredOrgans().size() == 0) { return false; }
+                        if (Boolean.valueOf(filter.get(option)).equals(true) && patient.getRequiredOrgans().size() == 0) {
+                            return false;
+                        }
                         break;
                     }
                     case AGEUPPER:
                     case AGELOWER: {
-                        if (patient.getAge() > Integer.parseInt(filter.get(FilterOption.AGEUPPER))
-                                || patient.getAge() < Integer.parseInt(filter.get(FilterOption.AGELOWER))) { return false; }
+                        if (patient.getAge() > Double.valueOf(filter.get(FilterOption.AGEUPPER)).intValue()
+                                || patient.getAge() < Double.valueOf(filter.get(FilterOption.AGELOWER)).intValue()) {
+                            return false;
+                        }
                         break;
                     }
                 }

@@ -3,19 +3,15 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import model.Patient;
-import service.Database;
+import service.PatientDataService;
 import utility.GlobalEnums.*;
-import utility.StatusObservable;
+import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,9 +20,10 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
+
+import tornadofx.control.DateTimePicker;
 
 public class GUIPatientUpdateProfile extends UndoableController {
 
@@ -70,13 +67,19 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private DatePicker dobDate;
 
     @FXML
-    private DatePicker dateOfDeath;
+    private DateTimePicker dateOfDeath;
 
     @FXML
-    private TextField street1Txt;
+    private TextField deathLocationTxt;
 
     @FXML
-    private TextField street2Txt;
+    private TextField streetNumberTxt;
+
+    @FXML
+    private TextField streetNameTxt;
+
+    @FXML
+    private TextField cityTxt;
 
     @FXML
     private TextField suburbTxt;
@@ -98,11 +101,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     private Patient target;
 
+    private Patient after;
+
     private UserControl userControl;
 
-    Database database = Database.getDatabase();
-
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    private PatientDataService patientDataService = new PatientDataService();
 
     /**
      * Initializes the profile update screen. Gets the logged in or viewed user and loads the user's profile.
@@ -114,6 +117,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         Object user = userControl.getLoggedInUser();
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
+            disablePatientElements();
         } else if (userControl.getTargetUser() != null) {
             loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
         }
@@ -123,6 +127,12 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 saveProfileUpdater();
             }
         });
+    }
+
+
+    private void disablePatientElements() {
+        deathLocationTxt.setDisable(true);
+        dateOfDeath.setDisable(true);
     }
 
 
@@ -153,10 +163,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
      * @param nhi the NHI of the patient to load
      */
     private void loadProfile(String nhi) {
-       Patient patient = database.getPatientByNhi(nhi);
+        Patient patient = patientDataService.getPatientByNhi(nhi);
        if (patient != null) {
             target = patient;
-            populateForm(patient);
+            after = (Patient) patient.deepClone();
+            populateForm(after);
 
             controls = new ArrayList<Control>() {{
                 add(nhiTxt);
@@ -168,13 +179,15 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 add(regionDD);
                 add(dobDate);
                 add(dateOfDeath);
+                add(deathLocationTxt);
                 add(birthGenderMaleRadio);
                 add(birthGenderFemaleRadio);
                 add(preferredGenderManRadio);
                 add(preferredGenderWomanRadio);
                 add(preferredGenderNonBinaryRadio);
-                add(street1Txt);
-                add(street2Txt);
+                add(streetNumberTxt);
+                add(streetNameTxt);
+                add(cityTxt);
                 add(suburbTxt);
                 add(weightTxt);
                 add(heightTxt);
@@ -185,6 +198,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
         }
     }
+
 
     /**
      * Populates the scene controls with values from the patient object
@@ -226,12 +240,16 @@ public class GUIPatientUpdateProfile extends UndoableController {
             }
         }
         dobDate.setValue(patient.getBirth());
-        dateOfDeath.setValue(patient.getDeath());
-        if (patient.getStreet1() != null) {
-            street1Txt.setText(patient.getStreet1());
+        dateOfDeath.setDateTimeValue(patient.getDeath());
+        deathLocationTxt.setText(patient.getDeathLocation());
+        if (patient.getStreetNumber() != null) {
+            streetNumberTxt.setText(patient.getStreetNumber());
         }
-        if (patient.getStreet2() != null) {
-            street2Txt.setText(patient.getStreet2());
+        if (patient.getStreetName() != null) {
+            streetNameTxt.setText(patient.getStreetName());
+        }
+        if (patient.getCity() != null) {
+            cityTxt.setText(patient.getCity());
         }
         if (patient.getSuburb() != null) {
             suburbTxt.setText(patient.getSuburb());
@@ -273,8 +291,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
     /**
      * Sets profile changes after checking each field for validity
      */
+    @FXML
     public void saveProfileUpdater() {
-        systemLogger.log(Level.FINEST, "Setting patient profile for update...");
+        systemLogger.log(Level.FINEST, "Starting patient update method...");
         Boolean valid = true;
 
         StringBuilder invalidContent = new StringBuilder();
@@ -287,7 +306,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
 
             // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
-            if (database.getPatientByNhi(nhiTxt.getText()).getUuid()  != target.getUuid()) {
+            if (!patientDataService.getPatientByNhi(nhiTxt.getText()).getNhiNumber().equals(target.getNhiNumber())) {
                 valid = setInvalid(nhiTxt);
                 invalidContent.append("NHI is already in use\n");
             } else {
@@ -418,77 +437,108 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 setValid(dateOfDeath);
             }
         } else {
+            if (dateOfDeath.getValue() == null && deathLocationTxt.getText() != null) {
+                valid = setInvalid(dateOfDeath);
+                invalidContent.append("Death date required if death location set");
+            }
             setValid(dateOfDeath);
+        }
+
+        // death location
+        if (dateOfDeath.getValue() != null && deathLocationTxt.getText() == null) {
+            valid = setInvalid(deathLocationTxt);
+            invalidContent.append("Death location required if death date set");
+        }
+        else {
+
+            try {
+                // todo google maps validation
+//                APIGoogleMaps apiGoogleMaps = APIGoogleMaps.getInstance();
+//                LatLng latLng = apiGoogleMaps.getLatLng(deathLocationTxt.getText()); //todo make the latLng var be set to patient profile instead of string version
+                setValid(deathLocationTxt);
+            }
+            catch (Exception e) {
+                valid = setInvalid(deathLocationTxt);
+                invalidContent.append("Couldn't validate from Google. "); //todo replace with something prettier
+            }
+
         }
 
         // if all are valid
         if (valid) {
-            target.setNhiNumber(nhiTxt.getText());
-            target.setFirstName(firstnameTxt.getText());
-            target.setLastName(lastnameTxt.getText());
+            after.setNhiNumber(nhiTxt.getText());
+            after.setFirstName(firstnameTxt.getText());
+            after.setLastName(lastnameTxt.getText());
+
+            // todo remove these if statements because the validation was already done above. also entire setting setters can be extracted to external method
             if (middlenameTxt.getText()
                     .equals("")) {
-                target.setMiddleNames(new ArrayList<>());
+                after.setMiddleNames(new ArrayList<>());
             } else {
                 List<String> middlenames = Arrays.asList(middlenameTxt.getText()
                         .split(" "));
                 ArrayList<String> middles = new ArrayList<>(middlenames);
-                target.setMiddleNames(middles);
+                after.setMiddleNames(middles);
             }
             if (preferrednameTxt.getText() != null) {
-                target.setPreferredName(preferrednameTxt.getText());
+                after.setPreferredName(preferrednameTxt.getText());
             }
             if (birthGenderMaleRadio.isSelected()) {
-                target.setBirthGender((BirthGender) BirthGender.getEnumFromString("male"));
+                after.setBirthGender(BirthGender.getEnumFromString("male"));
             }
             if (birthGenderFemaleRadio.isSelected()) {
-                target.setBirthGender((BirthGender) BirthGender.getEnumFromString("female"));
+                after.setBirthGender(BirthGender.getEnumFromString("female"));
             }
             if (preferredGenderManRadio.isSelected()) {
-                target.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("man"));
+                after.setPreferredGender(PreferredGender.getEnumFromString("man"));
             }
             if (preferredGenderWomanRadio.isSelected()) {
-                target.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("woman"));
+                after.setPreferredGender(PreferredGender.getEnumFromString("woman"));
             }
             if (preferredGenderNonBinaryRadio.isSelected()) {
-                target.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("nonbinary"));
+                after.setPreferredGender(PreferredGender.getEnumFromString("nonbinary"));
             }
             if (dobDate.getValue() != null) {
-                target.setBirth(dobDate.getValue());
+                after.setBirth(dobDate.getValue());
             }
             if (dateOfDeath.getValue() != null) {
-                target.setDeath(dateOfDeath.getValue());
+                after.setDeath(dateOfDeath.getDateTimeValue());
             }
-            target.setStreet1(street1Txt.getText());
-            target.setStreet2(street2Txt.getText());
+            after.setDeathLocation(deathLocationTxt.getText());
+            after.setStreetNumber(streetNumberTxt.getText());
+            after.setStreetName(streetNameTxt.getText());
+            after.setCity(cityTxt.getText());
             try {
-                target.setSuburb(suburbTxt.getText());
+                after.setSuburb(suburbTxt.getText());
             } catch (DataFormatException e) {
                 userActions.log(Level.SEVERE, "Unable to set suburb", "attempted to update patient attributes");
             }
             if (regionDD.getValue() != null) {
-                target.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
+                after.setRegion(Region.getEnumFromString(regionDD.getSelectionModel()
                         .getSelectedItem()));
             }
             if (zipTxt.getText() != null) {
-                target.setZip(zipTxt.getText()
+                after.setZip(zipTxt.getText()
                         .equals("") ? 0 : Integer.parseInt(zipTxt.getText()));
             }
             if (weightTxt.getText() != null) {
-                target.setWeight(Double.parseDouble(weightTxt.getText()));
+                after.setWeight(Double.parseDouble(weightTxt.getText()));
             }
             if (heightTxt.getText() != null) {
-                target.setHeight(Double.parseDouble(heightTxt.getText()));
+                after.setHeight(Double.parseDouble(heightTxt.getText()));
             }
             if (bloodGroupDD.getValue() != null) {
-                target.setBloodGroup((BloodGroup) BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
+                after.setBloodGroup(BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
                         .getSelectedItem()));
             }
-            screenControl.setIsSaved(false);
-            userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", target.getNhiNumber()});
+
+            Action action = new Action(target, after);
+            statesHistoryScreen.addAction(action);
+            patientDataService.save(after);
+            userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         }
         else {
-            userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", target.getNhiNumber()});
+            userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         }
     }
 
