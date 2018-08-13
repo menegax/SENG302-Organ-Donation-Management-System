@@ -17,7 +17,6 @@ import org.tuiofx.Configuration;
 import org.tuiofx.TangibleEvent;
 import org.tuiofx.TangibleListener;
 import org.tuiofx.internal.base.GestureHandler;
-import service.Database;
 import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
@@ -60,11 +59,6 @@ public class TUIOFXMain extends Application {
         screenControl.setTouchStage(stage);
         screenControl.show("/scene/login.fxml", false,null, null);
         screenControl.setLoginShowing(true);
-
-        Database.importFromDiskPatients("./patient.json");
-        Database.importFromDiskClinicians("./clinician.json");
-        Database.importFromDiskWaitlist("./waitlist.json");
-        Database.importFromDiskAdministrators("./administrator.json");
 
         Searcher.getSearcher()
                 .createFullIndex(); // index patients for search, needs to be after importing or adding any patients
