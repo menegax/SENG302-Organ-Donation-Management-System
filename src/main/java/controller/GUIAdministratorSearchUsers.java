@@ -132,7 +132,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
      * Called when the created window from opening a profile is closed
      */
     public void windowClosed() {
-        tableRefresh();
+        search();
     }
 
     /**
