@@ -29,6 +29,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 
+import static utility.SystemLogger.systemLogger;
+
 public class AdministratorDataService implements IAdministratorDataService {
 
     private DAOFactory mysqlFactory;
@@ -54,7 +56,6 @@ public class AdministratorDataService implements IAdministratorDataService {
 
     @Override
     public void importRecords(String filepath) {
-        //Observer observer = (o, arg) -> showImportResults();
         cachedThreadPool.getThreadService().submit(() -> {
             ParseCSV parseCSV = new ParseCSV();
             try {
@@ -68,16 +69,13 @@ public class AdministratorDataService implements IAdministratorDataService {
                 importObservable.setFinished();
                 long endTime = System.nanoTime();
                 long duration = (endTime - startTime);
-                System.out.println(duration);
                 LocalDB db = LocalDB.getInstance();
                 Set<Patient> imported = new HashSet<Patient>(patients.get(ParseCSV.Result.SUCCESS));
                 db.setImported(imported);
-                //Observable observable = new Observable();
-                //observable.addObserver(observer);
-                //observable.notifyObservers();
                 Platform.runLater(this::showImportResults);
+                systemLogger.log(Level.INFO, "Time to complete import: " + duration /1000000000 + " seconds", this );
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                systemLogger.log(Level.SEVERE, "Unable to find file", this);
             }
         });
     }
@@ -94,7 +92,7 @@ public class AdministratorDataService implements IAdministratorDataService {
             screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
         } catch (Exception e) {
             e.printStackTrace();
-            SystemLogger.systemLogger.log(Level.SEVERE, "Couldn't open import results popup");
+            systemLogger.log(Level.SEVERE, "Couldn't open import results popup");
         }
     }
 
