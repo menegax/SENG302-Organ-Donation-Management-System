@@ -82,4 +82,15 @@ public class PatientLocalDAO implements IPatientDataAccess {
         throw new NotImplementedException();
     }
 
+    @Override
+    public List<Patient> getDeadPatients() {
+        List<Patient> patients = new ArrayList<>();
+        for (Patient patient : localDB.getPatients()) {
+            if (patient.getDeath() != null) {
+                patients.add(patient);
+            }
+        }
+        return patients;
+    }
+
 }

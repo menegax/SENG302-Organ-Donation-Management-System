@@ -77,4 +77,10 @@ public interface IPatientDataAccess {
      */
     void deletePatientByNhi(String nhi);
 
+
+    /**
+     *
+     */
+    List<Patient> getDeadPatients();
+
 }

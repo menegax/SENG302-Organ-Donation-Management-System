@@ -32,6 +32,7 @@ public class TextWatcher {
                     method.invoke(classInstance,null); //invoke the method with the given class instance
                     timer.cancel(); //CANCEL TIMER THREAD!!!
                 } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
                     SystemLogger.systemLogger.log(Level.SEVERE, "Could not invoke method from timer", "Attempted to invoke autocomplete method");
                 }
             }

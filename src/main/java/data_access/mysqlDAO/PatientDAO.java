@@ -73,6 +73,7 @@ public class PatientDAO implements IPatientDataAccess {
     }
 
 
+
     @Override
     public boolean addPatientsBatch(List<Patient> patient) {
         ImportObservable importObservable = ImportObservable.getInstance();
@@ -215,6 +216,23 @@ public class PatientDAO implements IPatientDataAccess {
         } catch (Exception e) {
             systemLogger.log(Level.SEVERE, "Could not delete patient", this);
         }
+    }
+
+    @Override
+    public List<Patient> getDeadPatients() {
+        try(Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_DEAD_PATIENTS"));
+            List<Patient> patients = new ArrayList<>();
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                patients.add(constructPatientObject(resultSet,
+                        new ArrayList<String>(){{add(resultSet.getString("Region"));}}));
+            }
+            return patients;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

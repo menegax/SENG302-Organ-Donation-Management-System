@@ -1,37 +1,18 @@
 package controller;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import model.Administrator;
-import model.Clinician;
-import model.DrugInteraction;
-import org.apache.commons.lang3.StringUtils;
-import service.Database;
-import service.OrganWaitlist;
-import utility.GlobalEnums;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import utility.undoRedo.UndoableStage;
+
 import model.Patient;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-
-import static java.util.logging.Level.SEVERE;
-import static utility.UserActionHistory.userActions;
 
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
@@ -55,18 +36,21 @@ public class GUIAvailibleOrgans {
 
     private ObservableList<PatientOrgan> masterData = FXCollections.observableArrayList();
 
-    private UserControl userControl = new UserControl();
+    private IPatientDataService patientDataService = new PatientDataService();
 
 
     public void initialize() {
-    	for (Patient patient : Database.getPatients()) {
+    	for (Patient patient : patientDataService.getDeadPatients()) {
     		if (patient.getDeath() != null) {
     			for (Organ organ : patient.getDonations()) {
-        			masterData.add(new PatientOrgan(patient, organ));
-    			}
-    		}
-    	}
-    	populateTable();
+                    PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
+                    if (!masterData.contains(patientOrgan)) {
+                        masterData.add(patientOrgan);
+                    }
+                }
+            }
+        }
+        populateTable();
     }
     
     /**
