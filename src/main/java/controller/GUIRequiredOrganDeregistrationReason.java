@@ -303,8 +303,11 @@ public class GUIRequiredOrganDeregistrationReason {
 
     private boolean validateDeathRegion(boolean valid) {
         // validate death region
-        if (deathRegion.getSelectionModel()
-                .getSelectedIndex() != -1) {
+        if (deathRegion.getSelectionModel().isEmpty()) {
+            System.out.println("death region not set");
+            valid = setInvalid(deathRegion);
+        } else if (!deathRegion.getSelectionModel()
+                .isEmpty()) {
             Enum region = GlobalEnums.Region.getEnumFromString(deathRegion.getSelectionModel()
                     .getSelectedItem());
             if (region == null) {
@@ -320,22 +323,30 @@ public class GUIRequiredOrganDeregistrationReason {
 
 
     private boolean validateDeathCity(boolean valid) {
-        // validate death city
-        if (!deathCity.getText()
-                .matches(String.valueOf(GlobalEnums.UIRegex.CITY))) {
+        if (deathCity.getText().length() < 1) {
+            // if not set, invalid
             valid = setInvalid(deathCity);
         }
-        else {
+        if (!deathCity.getText()
+                .matches(String.valueOf(GlobalEnums.UIRegex.CITY))) {
+            // if doesn't match regex, invalid
+            valid = setInvalid(deathCity);
+        } else {
             setValid(deathCity);
         }
+
         return valid;
     }
 
 
     private boolean validateDeathLocation(boolean valid) {
         // validate death location
-        if (!locationDeathTxt.getText()
+        if (locationDeathTxt.getText().length() < 1) {
+            // if not set, invalid
+            valid = setInvalid(locationDeathTxt);
+        } else if (!locationDeathTxt.getText()
                 .matches(GlobalEnums.UIRegex.DEATH_LOCATION.getValue())) {
+            // if doesn't match regex, invalid
             valid = setInvalid(locationDeathTxt);
         }
         else {
