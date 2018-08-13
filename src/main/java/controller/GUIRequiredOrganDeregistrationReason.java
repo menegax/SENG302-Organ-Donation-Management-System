@@ -284,13 +284,10 @@ public class GUIRequiredOrganDeregistrationReason {
         valid = validateDeathRegion(valid);
 
         if (valid) {
-            for (GlobalEnums.Organ organ : target.getRequiredOrgans()) {
-                // remove all organs because the patient is dead
-                target.removeRequired(organ);
-                userActions.log(Level.INFO,
-                        "Deregistered " + organ + " due to death",
-                        new String[] { "Attempted to deregister " + organ, target.getNhiNumber() });
-            }
+            target.getRequiredOrgans().clear();
+            userActions.log(Level.INFO,
+                        "Deregistered all organs due to death",
+                        new String[] { "Attempted to deregister all organs due to death", target.getNhiNumber() });
             target.setDeathDate(dateOfDeath.getDateTimeValue());
             target.setDeathStreet(locationDeathTxt.getText());
             target.setDeathCity(deathCity.getText());
@@ -325,9 +322,9 @@ public class GUIRequiredOrganDeregistrationReason {
     private boolean validateDeathCity(boolean valid) {
         if (deathCity.getText().length() < 1) {
             // if not set, invalid
+            System.out.println("Death city not set");
             valid = setInvalid(deathCity);
-        }
-        if (!deathCity.getText()
+        } else if (!deathCity.getText()
                 .matches(String.valueOf(GlobalEnums.UIRegex.CITY))) {
             // if doesn't match regex, invalid
             valid = setInvalid(deathCity);
@@ -342,10 +339,12 @@ public class GUIRequiredOrganDeregistrationReason {
     private boolean validateDeathLocation(boolean valid) {
         // validate death location
         if (locationDeathTxt.getText().length() < 1) {
+            System.out.println("Location not set");
             // if not set, invalid
             valid = setInvalid(locationDeathTxt);
         } else if (!locationDeathTxt.getText()
                 .matches(GlobalEnums.UIRegex.DEATH_LOCATION.getValue())) {
+            System.out.println("Location doesn't match regex");
             // if doesn't match regex, invalid
             valid = setInvalid(locationDeathTxt);
         }
