@@ -52,10 +52,16 @@
 8. Click set
 9. Expected: the patient successfully updates
 
-##Test History
+## Test History
 
-###19/07/2018 - Maree
+### 19/07/2018 - Maree
 
 Test 1: Pass
 
 Test 2: Pass
+
+### 13/08/2018 - Andrew
+
+Test 3: Pass
+
+Test 4: Pass
