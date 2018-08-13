@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import model.User;
+import service.UserDataService;
 import utility.undoRedo.UndoableWrapper;
 
 import java.io.IOException;
@@ -91,6 +92,7 @@ public class ScreenControlDesktop extends ScreenControl {
             undoableStage.getStage().close();
         }
         try {
+            new UserDataService().prepareApplication();
             FXMLLoader loginScreen = new FXMLLoader(getClass().getResource("/scene/login.fxml"));
             Stage stage = new Stage();
             stage.setScene(new Scene(loginScreen.load()));

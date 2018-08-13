@@ -83,17 +83,6 @@ public class TUIOFXMain extends Application {
         launch(args);
     }
 
-
-    /**
-     * Gets the uuid hash key used for the primary stage
-     *
-     * @return the uuid hash key used in the primary stage
-     */
-    public static UUID getUuid() {
-        return uuid;
-    }
-
-
     /**
      * Opens the Windows system on-screen keyboard.
      * This is only called on a Windows setup because touch controls are only available for a Windows system.
