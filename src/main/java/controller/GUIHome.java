@@ -113,8 +113,9 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     @FXML
     public void load() {
         if (!loaded) {  // stops listeners from being added twice
-        //Register observersStatusObservable statusObservable = StatusObservable.getInstance();
-        Observer statusObserver = (o, arg) -> statusLbl.setText(arg.toString());statusObservable.addObserver(statusObserver);
+        StatusObservable statusObservable = StatusObservable.getInstance();
+        Observer statusObserver = (o, arg) -> statusLbl.setText(arg.toString());
+        statusObservable.addObserver(statusObserver);
         ImportObservable importObservable = ImportObservable.getInstance();
         Observer importObserver = (o, arg) -> {
             double progress = Double.valueOf(arg.toString());
