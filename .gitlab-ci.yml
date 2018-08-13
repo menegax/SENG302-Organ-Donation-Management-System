@@ -14,6 +14,7 @@ recent-artifacts:
   stage: deploy
   script:
     - mvn -B clean site package
+    - mvn install:install-file -Dfile=tuiofx-all-0.10.4.jar
   artifacts:
     paths:
       - target/*.jar
@@ -25,6 +26,7 @@ release-artifacts:
   stage: deploy
   script:
     - mvn -B clean site package
+    - mvn install:install-file -Dfile=tuiofx-all-0.10.4.jar
   artifacts:
     paths:
     - target/*.jar
