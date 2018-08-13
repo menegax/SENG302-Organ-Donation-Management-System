@@ -1111,9 +1111,10 @@ public class Patient extends User {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
                 + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Preferred name: " + preferredName +
                 "\n" + "Gender Assigned at Birth: " + birthGender + "\n" + "Gender Identity: " + preferredGender + "\n" + "Date of birth: " + birth +
-                "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + streetNumber + "\n" + "city: " + streetName + "\n" + "Suburb:" + suburb +
-                "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: " + height + "\n" + "Weight: "
-                + weight + "\n" + "Blood group: " + bloodGroup + "\n";
+                "\n" + "Organs to donate: " + donations + "\n" + "Organs requested: " + requiredOrgans + "\n" + "Street1: " + streetNumber + "\n" +
+                "City: " + streetName + "\n" + "Suburb:" + suburb + "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: "
+                + death + "\n" + "Death location: " + deathStreet + "\n" + "Death city: " + deathCity + "\n" + "Death region: " + deathRegion + "\n"
+                + "Height: " + height + "\n" + "Weight: " + weight + "\n" + "Blood group: " + bloodGroup + "\n";
     }
 
 

@@ -11,6 +11,7 @@ import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums;
+import utility.SystemLogger;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -284,7 +285,7 @@ public class GUIRequiredOrganDeregistrationReason {
         valid = validateDeathRegion(valid);
 
         if (valid) {
-            target.getRequiredOrgans().clear();
+            target.setRequiredOrgans(new ArrayList<>());
             userActions.log(Level.INFO,
                         "Deregistered all organs due to death",
                         new String[] { "Attempted to deregister all organs due to death", target.getNhiNumber() });
@@ -293,6 +294,7 @@ public class GUIRequiredOrganDeregistrationReason {
             target.setDeathCity(deathCity.getText());
             target.setDeathRegion(GlobalEnums.Region.getEnumFromString(deathRegion.getSelectionModel()
                         .getSelectedItem()));
+            SystemLogger.systemLogger.log(Level.FINE, "Updated patient to:\n" + target);
         }
         return valid;
     }

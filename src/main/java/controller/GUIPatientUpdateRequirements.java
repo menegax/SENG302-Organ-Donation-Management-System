@@ -117,7 +117,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      *
      * @param nhi of the current patient being viewed
      */
-    private void loadProfile(String nhi) {
+    public void loadProfile(String nhi) {
         try {
             Patient patient = factory.getPatientDataAccess().getPatientByNhi(nhi);
             if (patient != null) {
@@ -295,6 +295,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
         SystemLogger.systemLogger.log(INFO, "Patient had organ requirements deregistered. Asking for deregistration reason...");
         List<GlobalEnums.Organ> removedOrgans = target.getRequiredOrgans();
         removedOrgans.removeAll(finalRequirements);
+        System.out.println("removed organs: " + removedOrgans); //todo rm
 
         if (removedOrgans.size() == 0) {
             Action action = new Action(target, after);
@@ -304,10 +305,25 @@ public class GUIPatientUpdateRequirements extends UndoableController{
         for (GlobalEnums.Organ organ : removedOrgans) {
             totalRemoved += 1;
             openReasonPopup(organ);
-            after.removeRequired(organ);
+//            after.removeRequired(organ);
+//            loadProfile(target.getNhiNumber());
         }
+        SystemLogger.systemLogger.log(Level.FINE, "Patient after launching deregistration reason:\n" + target);
 
     }
+
+    public void removeAfterOrgans(Collection<GlobalEnums.Organ> organsToRemoveFromPatient) {
+        for (GlobalEnums.Organ organ : organsToRemoveFromPatient) {
+            after.removeRequired(organ);
+        }
+    }
+
+    public void removeAfterOrgansAll() {
+        after.getRequiredOrgans().clear();
+    }
+
+
+
 
     /**
      * Opens the popup to getMedicationsByNhi a reason for organ deregistration
