@@ -291,60 +291,22 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5</version>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
                 <executions>
                     <execution>
-                        <phase>initialize</phase>
+                        <id>deploy-features-xml</id>
+                        <phase>deploy</phase>
                         <goals>
-                            <goal>install-file</goal>
+                            <goal>deploy-file</goal>
                         </goals>
                         <configuration>
+                            <repositoryId>lib</repositoryId>
+                            <url>file:./lib/</url>
                             <groupId>tuiofx</groupId>
                             <artifactId>tuiofx-all-0.10.4</artifactId>
                             <version>0.10.4</version>
-                            <packaging>jar</packaging>
                             <file>${project.basedir}/lib/tuiofx-all-0.10.4.jar</file>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <groupId>tuiofx</groupId>
-                            <artifactId>tuiofx-core-0.10.4</artifactId>
-                            <version>0.10.4</version>
-                            <packaging>jar</packaging>
-                            <file>${project.basedir}/lib/tuiofx-core-0.10.4.jar</file>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <groupId>libTUIO</groupId>
-                            <artifactId>libTUIO-1.0</artifactId>
-                            <version>1.0</version>
-                            <packaging>jar</packaging>
-                            <file>${project.basedir}/lib/libTUIO.jar</file>
                         </configuration>
                     </execution>
                 </executions>
