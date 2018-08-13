@@ -213,7 +213,7 @@ public class GUIPatientProfile {
                 .getValue());
         addLbl1.setText((patient.getStreetNumber() == null || patient.getStreetNumber()
                 .length() == 0) ? "Not set" : patient.getStreetNumber());
-        addLbl2.setText((patient.getCity() == null || patient.getCity()
+        addLbl5.setText((patient.getCity() == null || patient.getCity()
                 .length() == 0) ? "Not set" : patient.getCity());
         addLbl3.setText((patient.getSuburb() == null || patient.getStreetNumber()
                 .length() == 0) ? "Not set" : patient.getSuburb());

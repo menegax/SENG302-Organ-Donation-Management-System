@@ -356,11 +356,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
 
     private Boolean validateStreet1(Boolean valid, StringBuilder invalidContent) {
-        if (!street1Txt.getText().matches(UIRegex.STREET.getValue())) {
-            valid = setInvalid(street1Txt);
+        if (!streetNumberTxt.getText().matches(UIRegex.STREET.getValue())) {
+            valid = setInvalid(streetNumberTxt);
             invalidContent.append("Street1 must only be letters or -.");
         } else {
-            setValid(street1Txt);
+            setValid(streetNumberTxt);
         }
         return valid;
     }
