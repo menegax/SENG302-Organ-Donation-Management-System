@@ -24,7 +24,7 @@ public class ClinicianActionRecord implements Serializable {
      * @param message - message to display in log
      * @param targetNHI - patient whom's actions were against
      */
-    ClinicianActionRecord(Timestamp timestamp, Level level, String action, String message, String targetNHI){
+    public ClinicianActionRecord(Timestamp timestamp, Level level, String action, String message, String targetNHI){
         this.timestamp = timestamp;
         this.level = level;
         this.action = action;

@@ -125,8 +125,7 @@ public class ScreenControl {
      * @param stageName - node which is on the stage to close
      */
     void closeStage(UUID stageName) {
-        applicationStages.get(stageName)
-                .close();
+        applicationStages.get(stageName).close();
         applicationStages.remove(stageName);
         userStages.remove(new UserControl().getLoggedInUser(), stageName);
     }

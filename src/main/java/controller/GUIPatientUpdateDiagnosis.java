@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import model.User;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
@@ -27,6 +29,7 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import static utility.GlobalEnums.UndoableScreen.CLINICIANDIAGNOSIS;
 import static utility.UserActionHistory.userActions;
@@ -74,6 +77,8 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
     private ScreenControl screenControl = ScreenControl.getScreenControl();
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
+    private IPatientDataService patientDataService = new PatientDataService();
+
     private TouchPaneController diagnosisTouchPane;
 
     /**
@@ -99,7 +104,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
      */
     public void initialize() {
         userControl = new UserControl();
-        currentPatient = (Patient) userControl.getTargetUser();
+        currentPatient = patientDataService.getPatientByNhi(((Patient) userControl.getTargetUser()).getNhiNumber());
         patientClone = (Patient) currentPatient.deepClone();
         if(isAdd) {
             targetClone = new Disease(null, null);
@@ -215,7 +220,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
      */
     private boolean isValidUpdate() {
         boolean valid = true;
-        if(!diseaseNameTextField.getText().matches("[A-Z|a-z0-9.]{3,50}")) {
+        if(!Pattern.matches(GlobalEnums.UIRegex.DISEASENAME.getValue(), diseaseNameTextField.getText())) {
             valid = false;
             setInvalid(diseaseNameTextField);
         } else {
@@ -223,7 +228,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
             diseaseNameTextField.setText(diseaseNameTextField.getText());
         }
         try {
-            if (targetClone.isInvalidDiagnosisDate(diagnosisDate.getValue(), patientClone)) {
+            if (targetClone.isInvalidDiagnosisDate(diagnosisDate.getValue(), patientClone.getBirth())) {
                 valid = false;
                 setInvalid(diagnosisDate);
             } else {
@@ -268,7 +273,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
             }
         }
         try {
-            d.setDateDiagnosed(diagnosisDate.getValue(), patientClone);
+            d.setDateDiagnosed(diagnosisDate.getValue(), patientClone.getBirth());
         } catch (InvalidObjectException e) {
             userActions.log(Level.SEVERE, "The diagnosis date is not valid.", "Attempted to add an invalid diagnosis date");
         }
@@ -303,7 +308,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
             GUIClinicianDiagnosis.setChanged(true);
             targetClone.setDiseaseName(diseaseNameTextField.getText());
             try {
-                targetClone.setDateDiagnosed(diagnosisDate.getValue(), currentPatient);
+                targetClone.setDateDiagnosed(diagnosisDate.getValue(), currentPatient.getBirth());
             } catch (InvalidObjectException e) {
                 userActions.log(Level.SEVERE, "The date is not valid. This should never be called.");
             }
