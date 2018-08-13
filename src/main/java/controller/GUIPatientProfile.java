@@ -51,9 +51,6 @@ public class GUIPatientProfile {
     private Label nhiLbl;
 
     @FXML
-    private Label nameLbl;
-
-    @FXML
     public Label vitalLbl1;
 
     @FXML
@@ -185,7 +182,6 @@ public class GUIPatientProfile {
      */
     private void loadProfile(Patient patient) throws InvalidObjectException {
         nhiLbl.setText(patient.getNhiNumber());
-        nameLbl.setText(patient.getNameConcatenated());
         firstNameValue.setText(patient.getFirstName());
         genderDeclaration.setText("Birth Gender: ");
         genderStatus.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue());
