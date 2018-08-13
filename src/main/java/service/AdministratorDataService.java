@@ -9,6 +9,9 @@ import data_access.interfaces.IUserDataAccess;
 import data_access.localDAO.LocalDB;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -81,18 +84,15 @@ public class AdministratorDataService implements IAdministratorDataService {
     }
 
     private void showImportResults() {
-        ScreenControl screenControl = ScreenControl.getScreenControl();
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/adminImportResults.fxml"));
-            UndoableStage popUpStage = new UndoableStage();
-            //Set initial popup dimensions
-            popUpStage.setWidth(900);
-            popUpStage.setHeight(600);
-            screenControl.addStage(popUpStage.getUUID(), popUpStage);
-            screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
+            Parent parent = fxmlLoader.load();
+            Scene scene = new Scene(parent, 900, 600);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.show();
         } catch (Exception e) {
-            e.printStackTrace();
-            systemLogger.log(Level.SEVERE, "Couldn't open import results popup");
+            SystemLogger.systemLogger.log(Level.SEVERE, "Couldn't open import results popup");
         }
     }
 

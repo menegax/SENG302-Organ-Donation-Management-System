@@ -6,11 +6,8 @@ import model.Disease;
 import model.Medication;
 import model.Patient;
 import model.Procedure;
-import utility.GlobalEnums;
+import utility.*;
 import utility.GlobalEnums.*;
-import utility.ImportObservable;
-import utility.PatientActionRecord;
-import utility.ResourceManager;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -105,7 +102,7 @@ public class PatientDAO implements IPatientDataAccess {
             connection.commit();
             contactDataAccess.addContactBatch(patient);
         } catch (Exception e) {
-            e.printStackTrace();
+            SystemLogger.systemLogger.log(Level.SEVERE, "Could not import patient batch", this);
         }
         return true;
     }
@@ -161,7 +158,6 @@ public class PatientDAO implements IPatientDataAccess {
             }
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
            systemLogger.log(Level.SEVERE, "Could not get patient from remote db", this);
         }
         return null;
@@ -200,7 +196,6 @@ public class PatientDAO implements IPatientDataAccess {
             }
             return resultMap;
         } catch (Exception e) {
-            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Could not search patients from MYSQL DB", this);
         }return null;
     }

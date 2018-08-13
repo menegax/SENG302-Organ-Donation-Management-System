@@ -38,7 +38,6 @@ public class AdministratorLogDAO implements ILogDataAccess<AdministratorActionRe
                statement.executeUpdate();
            }
        } catch (SQLException e) {
-           e.printStackTrace();
            systemLogger.log(Level.SEVERE, "Could not save administrator logs for the username " + id + " to the MySQL database");
        }
     }

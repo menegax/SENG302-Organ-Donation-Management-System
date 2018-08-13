@@ -338,8 +338,6 @@ public class Patient extends User {
      */
     public void setAttributes(User newUserAttributes) {
 
-        //todo rework so this is open for extension @Aidan @Andrew
-
         Patient newPatientAttributes = (Patient) newUserAttributes.deepClone();
 
         setFirstName(newPatientAttributes.getFirstName());

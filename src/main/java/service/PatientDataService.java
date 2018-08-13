@@ -38,7 +38,6 @@ public class PatientDataService implements IPatientDataService {
         try {
             return patientFuture.get();
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Could not get patient fromMYSQL DB", this);
         }
         return null;

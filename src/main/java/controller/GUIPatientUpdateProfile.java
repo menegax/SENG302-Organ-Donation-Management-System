@@ -452,14 +452,13 @@ public class GUIPatientUpdateProfile extends UndoableController {
         else {
 
             try {
-                // todo google maps validation
 //                APIGoogleMaps apiGoogleMaps = APIGoogleMaps.getInstance();
-//                LatLng latLng = apiGoogleMaps.getLatLng(deathLocationTxt.getText()); //todo make the latLng var be set to patient profile instead of string version
+//                LatLng latLng = apiGoogleMaps.getLatLng(deathLocationTxt.getText());
                 setValid(deathLocationTxt);
             }
             catch (Exception e) {
                 valid = setInvalid(deathLocationTxt);
-                invalidContent.append("Couldn't validate from Google. "); //todo replace with something prettier
+                invalidContent.append("Couldn't validate from Google. ");
             }
 
         }
@@ -470,7 +469,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
             after.setFirstName(firstnameTxt.getText());
             after.setLastName(lastnameTxt.getText());
 
-            // todo remove these if statements because the validation was already done above. also entire setting setters can be extracted to external method
             if (middlenameTxt.getText()
                     .equals("")) {
                 after.setMiddleNames(new ArrayList<>());
