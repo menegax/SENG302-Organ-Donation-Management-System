@@ -225,13 +225,16 @@ public class GUIPatientProfile {
             patient.setRequiredOrgans(new HashMap<>());
         }
         Collection<GlobalEnums.Organ> organsD = patient.getDonations();
-        Collection<GlobalEnums.Organ> organsR = patient.getRequiredOrgans().keySet();
+        List<String> organsMappedR = new ArrayList<>();
+        for (GlobalEnums.Organ organ : patient.getRequiredOrgans().keySet()) {
+            organsMappedR.add(patient.getRequiredOrgans().get(organ).toString() + "    |    " + StringUtils.capitalize(organ.getValue()));
+        }
         List<String> organsMappedD = organsD.stream()
                 .map(e -> StringUtils.capitalize(e.getValue()))
                 .collect(Collectors.toList());
-        List<String> organsMappedR = organsR.stream()
-                .map(e -> StringUtils.capitalize(e.getValue()))
-                .collect(Collectors.toList());
+//        List<String> organsMappedR = organsR.stream()
+//                .map(e -> StringUtils.capitalize(e.getValue()))
+//                .collect(Collectors.toList());
         donatingListProperty.setValue(FXCollections.observableArrayList(organsMappedD));
         receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
         donationList.itemsProperty().bind(donatingListProperty);
