@@ -34,12 +34,11 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
+import service.AdministratorDataService;
 import service.UserDataService;
 import org.tuiofx.internal.gesture.TuioJFXEvent;
-import utility.Searcher;
-import utility.StatusObservable;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
+import service.interfaces.IAdministratorDataService;
+import utility.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,9 +75,17 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
     private TouchPaneController homePaneTouchController;
 
+    @FXML
+    private ProgressBar importProgress;
+
+    @FXML
+    private Label importLbl;
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private UserControl userControl = UserControl.getUserControl();
+
+    private IAdministratorDataService administratorDataService = new AdministratorDataService();
 
 
     private  enum TabName {
@@ -106,11 +113,25 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     @FXML
     public void load() {
         if (!loaded) {  // stops listeners from being added twice
-            StatusObservable statusObservable = StatusObservable.getInstance();
-            statusObservable.addObserver(this);
-            homePane.getProperties().put("focusArea", "true");
-            if (screenControl.isTouch()) {
-                addPaneListener();
+        StatusObservable statusObservable = StatusObservable.getInstance();
+        Observer statusObserver = (o, arg) -> statusLbl.setText(arg.toString());
+        statusObservable.addObserver(statusObserver);
+        ImportObservable importObservable = ImportObservable.getInstance();
+        Observer importObserver = (o, arg) -> {
+            double progress = Double.valueOf(arg.toString());
+            if (progress < 1.0) {
+                importProgress.setProgress(progress);
+                importProgress.setVisible(true);
+                importLbl.setVisible(true);
+            } else {
+                importProgress.setVisible(false);
+                importLbl.setVisible(false);
+            }
+        };
+        importObservable.addObserver(importObserver);
+        homePane.getProperties().put("focusArea", "true");
+                if (screenControl.isTouch() ) {
+            addPaneListener();
             } else {
                 addStageListener();
             }
@@ -490,9 +511,12 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                 menu2Item2.setAccelerator(screenControl.getImportt());
             }
             menu2Item2.setOnAction(event -> {
-                File file = new FileChooser().showOpenDialog(stage);
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Select CSV File");
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files (.csv)", "*.csv"));
+                File file = fileChooser.showOpenDialog(stage);
                 if (file != null) {
-                    //database.importFromDiskPatients(file.getAbsolutePath()); //TODO
+                    administratorDataService.importRecords(file.getPath());
                     userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
                 }
             });

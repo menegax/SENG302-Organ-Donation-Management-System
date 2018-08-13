@@ -1,6 +1,13 @@
 package model;
 
+import com.univocity.parsers.annotations.Convert;
+import com.univocity.parsers.annotations.EnumOptions;
+import com.univocity.parsers.annotations.Parsed;
+import com.univocity.parsers.annotations.Validate;
 import org.apache.commons.lang3.StringUtils;
+import utility.parsing.DateConverterCSV;
+import utility.parsing.DateTimeConverterCSV;
+import utility.parsing.EnumConverterCSV;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
@@ -17,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
+import java.util.zip.DataFormatException;
 
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.INFO;
@@ -24,40 +32,65 @@ import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
 
-    private final Timestamp CREATED;
+    private Timestamp CREATED;
 
     private String preferredName;
 
+    @Parsed(field = "date_of_birth")
+    @Convert(conversionClass = DateConverterCSV.class)
     private LocalDate birth;
 
+    @Parsed(field = "date_of_death")
+    @Convert(conversionClass = DateTimeConverterCSV.class)
     private LocalDateTime death;
 
     private String deathLocation;
 
+    @Parsed(field = "birth_gender")
+    @Validate(oneOf = {"Male", "male", "m", "Female", "female", "f"})
+    @EnumOptions(customElement = "value")
     private BirthGender birthGender;
 
+    @Parsed(field = "gender")
+    @Validate(oneOf = {"Male", "male", "m", "Female", "female", "f"})
+    @Convert(conversionClass = EnumConverterCSV.class)
     private PreferredGender preferredGender;
 
+    @Parsed(field = "height")
     private double height; // Height in meters
 
+    @Parsed(field = "weight")
     private double weight; // Weight in kilograms
 
+    @Parsed(field = "blood_type")
+    @Validate(oneOf = {"A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"})
+    @EnumOptions(customElement = "value")
     private BloodGroup bloodGroup;
 
-    private String street1;
+    @Parsed(field = "street_number")
+    private String streetNumber;
 
-    private String street2;
+    @Parsed(field = "street_name")
+    private String streetName;
 
+    @Parsed(field = "neighborhood")
     private String suburb;
 
+    @Parsed(field = "city")
+    private String city;
+
+    @Parsed(field = "region")
+    @Convert(conversionClass = EnumConverterCSV.class)
     private Region region;
 
+    @Parsed(field = "zip_code")
     private int zip;
 
     private List<Organ> donations;
 
     private List<Organ> requiredOrgans;
 
+    @Parsed(field = "nhi")
     private String nhiNumber;
 
     private List<Medication> currentMedications = new ArrayList<>();
@@ -66,13 +99,16 @@ public class Patient extends User {
 
     private List<Procedure> procedures = new ArrayList<>();
 
+    @Parsed(field = "home_number")
     private String homePhone;
 
+    @Parsed(field = "mobile_number")
     private String mobilePhone;
 
-    private String workPhone;
-
+    @Parsed(field = "email")
     private String emailAddress;
+
+    private String workPhone;
 
     private String contactName;
 
@@ -96,6 +132,10 @@ public class Patient extends User {
 
     private GlobalEnums.Organ removedOrgan;
 
+    public Patient() {
+        this.CREATED = new Timestamp(System.currentTimeMillis());
+        this.modified = CREATED;
+    }
 
     /**
      * Constructor for the patient class. Initializes basic attributes and adds listeners for status changes
@@ -125,8 +165,8 @@ public class Patient extends User {
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
                    Timestamp created, Timestamp modified, LocalDateTime death, GlobalEnums.BirthGender gender,
                    GlobalEnums.PreferredGender prefGender, String preferredName, double height, double weight,
-                   BloodGroup bloodType, List<Organ> donations, List<Organ> receiving, String street1,
-                   String street2, String suburb, Region region, int zip, String homePhone, String workPhone,
+                   BloodGroup bloodType, List<Organ> donations, List<Organ> receiving, String streetNumber,
+                   String city, String suburb, Region region, int zip, String homePhone, String workPhone,
                    String mobilePhone, String emailAddress, String contactName, String contactRelationship,
                    String contactHomePhone, String contactWorkPhone, String contactMobilePhone, String contactEmailAddress,
                    List<PatientActionRecord> userActionsList, List<Disease> currentDiseases,
@@ -146,8 +186,8 @@ public class Patient extends User {
         this.bloodGroup = bloodType;
         this.donations = donations;
         this.requiredOrgans = receiving;
-        this.street1 = street1;
-        this.street2 = street2;
+        this.streetNumber = streetNumber;
+        this.streetName = city;
         this.suburb = suburb;
         this.region = region;
         this.zip = zip;
@@ -167,6 +207,12 @@ public class Patient extends User {
         this.currentMedications = currentMedications;
         this.medicationHistory = medicationHistory;
         this.procedures = procedures;
+        if (this.CREATED == null) {
+            this.CREATED = new Timestamp(System.currentTimeMillis());
+            if (this.modified == null) {
+            	this.modified = CREATED;
+            }
+        }
         databaseImport();
     }
 
@@ -182,6 +228,7 @@ public class Patient extends User {
         this.birthGender = gender;
         this.preferredGender = prefGender;
         this.preferredName = preferredName;
+        this.userActionsList = new ArrayList<>();
         databaseImport();
     }
 
@@ -196,7 +243,7 @@ public class Patient extends User {
      * @param birth           birth date
      * @param death           death date
      * @param street1         street 1 of address
-     * @param street2         street2 of address
+     * @param city         city of address
      * @param suburb          suburb of address
      * @param region          region of address
      * @param birthGender     gender of patient at birth
@@ -207,9 +254,9 @@ public class Patient extends User {
      * @param nhi             NHI
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
-                                 LocalDate birth, LocalDateTime death, String street1, String street2, String suburb,
+                                 LocalDate birth, LocalDateTime death, String street1, String city, String suburb,
                                  String region, String birthGender, String preferredGender, String bloodGroup,
-                                 double height, double weight, String nhi) throws IllegalArgumentException {
+                                 double height, double weight, String nhi) throws IllegalArgumentException, DataFormatException {
         Enum globalEnum;
         Searcher.getSearcher().removeIndex(this);
         if (firstName != null) {
@@ -231,10 +278,10 @@ public class Patient extends User {
             setDeath(death);
         }
         if (street1 != null) {
-            setStreet1(street1);
+            setStreetNumber(street1);
         }
-        if (street2 != null) {
-            setStreet2(street2);
+        if (city != null) {
+            setCity(city);
         }
         if (suburb != null) {
             setSuburb(suburb);
@@ -296,8 +343,6 @@ public class Patient extends User {
      */
     public void setAttributes(User newUserAttributes) {
 
-        //todo rework so this is open for extension @Aidan @Andrew
-
         Patient newPatientAttributes = (Patient) newUserAttributes.deepClone();
 
         setFirstName(newPatientAttributes.getFirstName());
@@ -307,9 +352,13 @@ public class Patient extends User {
         setBirth(newPatientAttributes.getBirth());
         setDeath(newPatientAttributes.getDeath());
         setDeathLocation(newPatientAttributes.getDeathLocation());
-        setStreet1(newPatientAttributes.getStreet1());
-        setStreet2(newPatientAttributes.getStreet2());
-        setSuburb(newPatientAttributes.getSuburb());
+        setStreetNumber(newPatientAttributes.getStreetNumber());
+        setCity(newPatientAttributes.getCity());
+        try {
+            setSuburb(newPatientAttributes.getSuburb());
+        } catch (DataFormatException e) {
+            userActions.log(Level.SEVERE, "","" );
+        }
         setRegion(newPatientAttributes.getRegion());
         setBirthGender(newPatientAttributes.getBirthGender());
         setPreferredGender(newPatientAttributes.getPreferredGender());
@@ -375,8 +424,8 @@ public class Patient extends User {
      *
      * @throws IllegalArgumentException when the nhi number given is not in the valid format
      */
-    private void ensureValidNhi() throws IllegalArgumentException {
-        if (!Pattern.matches("[A-Z]{3}[0-9]{4}", nhiNumber.toUpperCase())) {
+    private void ensureValidNhi(String nhi) throws IllegalArgumentException {
+        if (!Pattern.matches("[A-Z]{3}[0-9]{4}", nhi.toUpperCase())) {
             throw new IllegalArgumentException(
                     "NHI number " + nhiNumber.toUpperCase() + " is not in the correct format (3 letters followed by 4 numbers)");
         }
@@ -435,17 +484,31 @@ public class Patient extends User {
 
     @Override
     public void setFirstName(String firstName) {
-        Searcher.getSearcher().removeIndex(this);
-        this.firstName = firstName;
-        if (getPreferredName() == null) {
-            setPreferredName(firstName);
+        //added for when csv parsing creates obj from default constructor
+        if (this.firstName == null) {
+            this.firstName = firstName;
         }
-        Searcher.getSearcher().addIndex(this);
-        userModified();
+        if ((!firstName.equals(this.firstName))) {
+            Searcher.getSearcher().removeIndex(this);
+            this.firstName = firstName;
+            if (getPreferredName() == null) {
+                setPreferredName(firstName);
+            }
+            Searcher.getSearcher().addIndex(this);
+            userModified();
+        }
     }
 
-    public Timestamp getCREATED() {
-        return CREATED;
+    public void setLastName(String lastName) {
+        //added for when csv parsing creates obj from default constructor
+        if (this.lastName == null) {
+            this.lastName = lastName;
+        }
+        if ((!lastName.equals(this.lastName))) {
+        	Searcher.getSearcher().removeIndex(this);
+            this.lastName = lastName;
+            Searcher.getSearcher().addIndex(this);
+        }
     }
 
     public String getPreferredName() {
@@ -508,6 +571,7 @@ public class Patient extends User {
         userModified();
     }
 
+    public Timestamp getCREATED() {return CREATED;}
     /**
      * Refreshes the status of the patient to the correct status
      * Always called after patient is modified
@@ -590,21 +654,21 @@ public class Patient extends User {
         userModified();
     }
 
-    public String getStreet1() {
-        return street1;
+    public String getStreetNumber() {
+        return streetNumber;
     }
 
-    public void setStreet1(String street1) {
-        this.street1 = street1;
+    public void setStreetNumber(String streetNumber) {
+        this.streetNumber = streetNumber;
         userModified();
     }
 
-    public String getStreet2() {
-        return street2;
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
     }
 
-    public void setStreet2(String street2) {
-        this.street2 = street2;
+    public void setCity(String city) {
+        this.city = city;
         userModified();
     }
 
@@ -612,9 +676,16 @@ public class Patient extends User {
         return suburb;
     }
 
-    public void setSuburb(String suburb) {
-        this.suburb = suburb;
-        userModified();
+    public void setSuburb(String suburb) throws DataFormatException {
+        if (suburb != null && !suburb.equals(this.suburb)) {
+            for (char c : suburb.toCharArray()) {
+                if (c > 127) {
+                    throw new DataFormatException("");
+                }
+            }
+            this.suburb = suburb;
+            userModified();
+        }
     }
 
     public Region getRegion() {
@@ -695,7 +766,7 @@ public class Patient extends User {
     }
 
     public String getFormattedAddress() {
-        return street1 + " " + street2 + " " + suburb + " " + region + " " + zip;
+        return streetNumber + " " + streetName + " " + suburb + " " + region + " " + zip;
     }
 
     /**
@@ -784,11 +855,18 @@ public class Patient extends User {
     }
 
     public void setNhiNumber(String nhiNumber) throws IllegalArgumentException {
-        ensureValidNhi();
-        Searcher.getSearcher().removeIndex(this);
-        this.nhiNumber = nhiNumber.toUpperCase();
-        userModified();
-    }
+            ensureValidNhi(nhiNumber);
+            //added for when csv parsing creates obj from default constructor
+            if (this.nhiNumber == null) {
+                this.nhiNumber = nhiNumber;
+            }
+            if (!this.nhiNumber.equals(nhiNumber.toUpperCase())) {
+                Searcher.getSearcher().removeIndex(this);
+                this.nhiNumber = nhiNumber.toUpperCase();
+                userModified();
+            }
+        }
+
 
 
     public String getHomePhone() {
@@ -997,11 +1075,23 @@ public class Patient extends User {
         userModified();
     }
 
+    public String getAddressString() {
+        return String.format("%s %s, %s", streetNumber, streetName, suburb);
+    }
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
                 + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Preferred name: " + preferredName +
                 "\n" + "Gender Assigned at Birth: " + birthGender + "\n" + "Gender Identity: " + preferredGender + "\n" + "Date of birth: " + birth +
-                "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + street1 + "\n" + "Street2: " + street2 + "\n" + "Suburb:" + suburb +
+                "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + streetNumber + "\n" + "city: " + streetName + "\n" + "Suburb:" + suburb +
                 "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: " + height + "\n" + "Weight: "
                 + weight + "\n" + "Blood group: " + bloodGroup + "\n";
     }
