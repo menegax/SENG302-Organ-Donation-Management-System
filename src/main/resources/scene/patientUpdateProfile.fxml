@@ -208,7 +208,7 @@
                   <Insets right="5.0" />
                </GridPane.margin>
             </Label>
-            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
                   <TextField fx:id="streetNumberTxt" prefHeight="40.0" prefWidth="176.0" promptText="Number" />
                   <TextField fx:id="streetNameTxt" prefHeight="38.0" prefWidth="320.0" promptText="Street Name" />
