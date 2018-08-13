@@ -27,7 +27,8 @@ public class ParseCSV {
         settings.setProcessor(rowProcessor);
         settings.setHeaderExtractionEnabled(true);
         List<List<String>> errors = new ArrayList<>();
-        settings.setProcessorErrorHandler((e , objects, context) ->{
+        settings.setProcessorErrorHandler((e, objects, context) -> {
+            e.printStackTrace();
             List<String> rowError = new ArrayList<>();
             Arrays.asList(objects).forEach((obj) -> {
                 if (obj != null) {
@@ -45,14 +46,7 @@ public class ParseCSV {
         results.put(Result.SUCCESS, pats);
         results.put(Result.FAIL, errors);
 
-        //Database.getDatabase().importToDb(results.get(Result.SUCCESS));
-
         return results;
     }
 
-
-    public static void main(String[] argv) throws FileNotFoundException {
-        ParseCSV parseCSV = new ParseCSV();
-        parseCSV.parse(new FileReader("C:\\Users\\Hayden Taylor\\Downloads\\testCSV2.csv"));
-    }
 }
