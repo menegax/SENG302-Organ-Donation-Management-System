@@ -28,7 +28,8 @@ public class ClinicianLocalDAO implements IClinicianDataAccess {
 
     @Override
     public boolean addClinician(Clinician clinician) {
-        return false;
+        localDB.storeClinician(clinician);
+        return true;
     }
 
     @Override
