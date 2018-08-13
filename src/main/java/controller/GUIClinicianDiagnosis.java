@@ -153,8 +153,9 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
         tableView.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && tableView.getSelectionModel().getSelectedItem() != null) {
                 GUIPatientUpdateDiagnosis controller = (GUIPatientUpdateDiagnosis) screenControl.show("/scene/patientUpdateDiagnosis.fxml", false,this, target);
-                controller.setDisease(tableView.getSelectionModel().getSelectedItem());
                 controller.setIsAdd(false);
+                controller.setDisease(tableView.getSelectionModel().getSelectedItem());
+                controller.setTarget(target);
             }
 
         });
@@ -168,6 +169,7 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
     private void addDiagnosis() {
         GUIPatientUpdateDiagnosis controller = (GUIPatientUpdateDiagnosis) screenControl.show("/scene/patientUpdateDiagnosis.fxml", false, this, target);
         controller.setIsAdd(true);
+        controller.setTarget(target);
     }
 
     /**

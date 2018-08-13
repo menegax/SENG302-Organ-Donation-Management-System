@@ -85,7 +85,6 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
      */
     public void setIsAdd(boolean bool) {
         isAdd = bool;
-        load();
     }
 
     /**
