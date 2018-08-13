@@ -32,6 +32,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 
+import static utility.SystemLogger.systemLogger;
+
 public class AdministratorDataService implements IAdministratorDataService {
 
     private DAOFactory mysqlFactory;
@@ -76,7 +78,7 @@ public class AdministratorDataService implements IAdministratorDataService {
                 //observable.notifyObservers();
                 Platform.runLater(this::showImportResults);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                systemLogger.log(Level.SEVERE, "Could not find import file", this);
             }
         });
     }
@@ -90,7 +92,6 @@ public class AdministratorDataService implements IAdministratorDataService {
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
-            e.printStackTrace();
             SystemLogger.systemLogger.log(Level.SEVERE, "Couldn't open import results popup");
         }
     }

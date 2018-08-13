@@ -66,7 +66,7 @@ public class ContactDAO  implements IContactDataAccess {
             }
             connection.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not add contact batch", this);
         }
     }
 

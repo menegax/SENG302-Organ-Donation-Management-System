@@ -35,7 +35,6 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
             }
             return organRequests;
         } catch (SQLException e) {
-            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Could not get transplant waiting list from MYSQL DB", this);
         }
         return null;
