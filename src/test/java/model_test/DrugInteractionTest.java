@@ -29,13 +29,9 @@ public class DrugInteractionTest {
     @BeforeClass
     public static void setUp(){
         userActions.setLevel(Level.OFF);
-        org.junit.Assume.assumeTrue(makeContactToAPI());
-    }
-
-    @Before
-    public void setLoggedInDonor() {
         patient = new Patient("abc1239", "Bob", null, "Bobby", LocalDate.of(1990,9,11));
         DrugInteraction.setViewedPatient(patient);
+        org.junit.Assume.assumeTrue(makeContactToAPI());
     }
 
     /**
