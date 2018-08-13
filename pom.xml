@@ -14,7 +14,7 @@
 
     <repositories>
         <repository>
-            <id>libs</id>
+            <id>lib</id>
             <url>file://${project.basedir}/lib</url>
         </repository>
     </repositories>
@@ -165,8 +165,6 @@
             <groupId>libTUIO</groupId>
             <artifactId>libTUIO-1.0</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/libTUIO.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>ScenicView</groupId>
@@ -193,8 +191,6 @@
             <groupId>tuiofx</groupId>
             <artifactId>tuiofx-all-0.10.4</artifactId>
             <version>0.10.4</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/tuiofx-all-0.10.4.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>tuiofx</groupId>
