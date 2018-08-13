@@ -24,8 +24,6 @@ import utility.undoRedo.UndoableStage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Observer;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static java.util.logging.Level.*;
 import static javafx.scene.control.Alert.AlertType.ERROR;
@@ -432,9 +430,12 @@ public class GUIHome implements TouchscreenCapable {
             MenuItem menu2Item2 = new MenuItem("Import patients...");
             menu2Item2.setAccelerator(screenControl.getImportt());
             menu2Item2.setOnAction(event -> {
-                File file = new FileChooser().showOpenDialog(stage);
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Select CSV File");
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files (.csv)", "*.csv"));
+                File file = fileChooser.showOpenDialog(stage);
                 if (file != null) {
-                    administratorDataService.importRecords("C:\\Users\\Hayden Taylor\\Downloads\\testCSV2.CSV");
+                    administratorDataService.importRecords(file.getPath());
                     userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
                 }
             });
