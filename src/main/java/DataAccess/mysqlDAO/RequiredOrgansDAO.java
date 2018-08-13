@@ -48,7 +48,7 @@ public class RequiredOrgansDAO implements IRequiredOrganDataAccess {
             statement.setString(1, nhi);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                GlobalEnums.Organ organ = GlobalEnums.Organ.valueOf(resultSet.getString("Organ"));
+                GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(resultSet.getString("Organ"));
                 LocalDate date = LocalDate.parse(resultSet.getString("Date"));
                 organs.put(organ, date);
             }

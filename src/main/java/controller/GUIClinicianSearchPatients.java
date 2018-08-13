@@ -205,6 +205,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
                 .getAge())));
         columnStatus.setCellValueFactory(d -> {
             Patient patient = d.getValue();
+            System.out.println(patient.getRequiredOrgans());
+            System.out.println(patient.getDonations().size());
             if (patient.getDonations().size() > 0) {
                 return new SimpleStringProperty(patient.getRequiredOrgans().size() > 0 ? "Donating & Receiving" : "Donating");
             } else if (patient.getRequiredOrgans().size() > 0) {

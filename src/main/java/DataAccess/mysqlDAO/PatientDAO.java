@@ -137,6 +137,8 @@ public class PatientDAO implements IPatientDataAccess {
             }
             return null;
         } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
            systemLogger.log(Level.SEVERE, "Could not get patient from remote db", this);
         }
         return null;
@@ -335,9 +337,6 @@ public class PatientDAO implements IPatientDataAccess {
         }
 
         //must instantiate if null
-        if (patient.getRequiredOrgans().get(0) == null) {
-            patient.setRequiredOrgans(new HashMap<>());
-        }
         //map medications
         List<Medication> currentMedication = new ArrayList<>();
         List<Medication> pastMedication = new ArrayList<>();

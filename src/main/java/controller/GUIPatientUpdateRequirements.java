@@ -151,6 +151,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * @param patient currently being viewed
      */
     private void populateForm(Patient patient) {
+        System.out.println(patient.getRequiredOrgans());
         List<GlobalEnums.Organ> organs = new ArrayList<>(patient.getRequiredOrgans().keySet());
         if (organs != null) {
             if (organs.contains(GlobalEnums.Organ.LIVER)) {
