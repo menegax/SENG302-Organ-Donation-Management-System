@@ -51,9 +51,6 @@ public class GUIPatientProfile {
     private Label nhiLbl;
 
     @FXML
-    private Label nameLbl;
-
-    @FXML
     public Label vitalLbl1;
 
     @FXML
@@ -185,7 +182,6 @@ public class GUIPatientProfile {
      */
     private void loadProfile(Patient patient) throws InvalidObjectException {
         nhiLbl.setText(patient.getNhiNumber());
-        nameLbl.setText(patient.getNameConcatenated());
         firstNameValue.setText(patient.getFirstName());
         genderDeclaration.setText("Birth Gender: ");
         genderStatus.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue());
@@ -201,11 +197,11 @@ public class GUIPatientProfile {
         bmi.setText(String.valueOf(patient.getBmi()));
         bloodGroupLbl.setText(patient.getBloodGroup() == null ? "Not set" : patient.getBloodGroup()
                 .getValue());
-        addLbl1.setText((patient.getStreet1() == null || patient.getStreet1()
-                .length() == 0) ? "Not set" : patient.getStreet1());
-        addLbl2.setText((patient.getStreet2() == null || patient.getStreet2()
-                .length() == 0) ? "Not set" : patient.getStreet2());
-        addLbl3.setText((patient.getSuburb() == null || patient.getStreet1()
+        addLbl1.setText((patient.getStreetNumber() == null || patient.getStreetNumber()
+                .length() == 0) ? "Not set" : patient.getStreetNumber());
+        addLbl2.setText((patient.getCity() == null || patient.getCity()
+                .length() == 0) ? "Not set" : patient.getCity());
+        addLbl3.setText((patient.getSuburb() == null || patient.getStreetNumber()
                 .length() == 0) ? "Not set" : patient.getSuburb());
         addLbl4.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
                 .getValue());

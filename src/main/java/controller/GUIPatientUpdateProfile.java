@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
+import java.util.zip.DataFormatException;
 
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
@@ -72,10 +73,13 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private TextField deathLocationTxt;
 
     @FXML
-    private TextField street1Txt;
+    private TextField streetNumberTxt;
 
     @FXML
-    private TextField street2Txt;
+    private TextField streetNameTxt;
+
+    @FXML
+    private TextField cityTxt;
 
     @FXML
     private TextField suburbTxt;
@@ -181,8 +185,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 add(preferredGenderManRadio);
                 add(preferredGenderWomanRadio);
                 add(preferredGenderNonBinaryRadio);
-                add(street1Txt);
-                add(street2Txt);
+                add(streetNumberTxt);
+                add(streetNameTxt);
+                add(cityTxt);
                 add(suburbTxt);
                 add(weightTxt);
                 add(heightTxt);
@@ -237,11 +242,14 @@ public class GUIPatientUpdateProfile extends UndoableController {
         dobDate.setValue(patient.getBirth());
         dateOfDeath.setDateTimeValue(patient.getDeath());
         deathLocationTxt.setText(patient.getDeathLocation());
-        if (patient.getStreet1() != null) {
-            street1Txt.setText(patient.getStreet1());
+        if (patient.getStreetNumber() != null) {
+            streetNumberTxt.setText(patient.getStreetNumber());
         }
-        if (patient.getStreet2() != null) {
-            street2Txt.setText(patient.getStreet2());
+        if (patient.getStreetName() != null) {
+            streetNameTxt.setText(patient.getStreetName());
+        }
+        if (patient.getCity() != null) {
+            cityTxt.setText(patient.getCity());
         }
         if (patient.getSuburb() != null) {
             suburbTxt.setText(patient.getSuburb());
@@ -444,14 +452,13 @@ public class GUIPatientUpdateProfile extends UndoableController {
         else {
 
             try {
-                // todo google maps validation
 //                APIGoogleMaps apiGoogleMaps = APIGoogleMaps.getInstance();
-//                LatLng latLng = apiGoogleMaps.getLatLng(deathLocationTxt.getText()); //todo make the latLng var be set to patient profile instead of string version
+//                LatLng latLng = apiGoogleMaps.getLatLng(deathLocationTxt.getText());
                 setValid(deathLocationTxt);
             }
             catch (Exception e) {
                 valid = setInvalid(deathLocationTxt);
-                invalidContent.append("Couldn't validate from Google. "); //todo replace with something prettier
+                invalidContent.append("Couldn't validate from Google. ");
             }
 
         }
@@ -462,7 +469,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
             after.setFirstName(firstnameTxt.getText());
             after.setLastName(lastnameTxt.getText());
 
-            // todo remove these if statements because the validation was already done above. also entire setting setters can be extracted to external method
             if (middlenameTxt.getText()
                     .equals("")) {
                 after.setMiddleNames(new ArrayList<>());
@@ -497,9 +503,14 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 after.setDeath(dateOfDeath.getDateTimeValue());
             }
             after.setDeathLocation(deathLocationTxt.getText());
-            after.setStreet1(street1Txt.getText());
-            after.setStreet2(street2Txt.getText());
-            after.setSuburb(suburbTxt.getText());
+            after.setStreetNumber(streetNumberTxt.getText());
+            after.setStreetName(streetNameTxt.getText());
+            after.setCity(cityTxt.getText());
+            try {
+                after.setSuburb(suburbTxt.getText());
+            } catch (DataFormatException e) {
+                userActions.log(Level.SEVERE, "Unable to set suburb", "attempted to update patient attributes");
+            }
             if (regionDD.getValue() != null) {
                 after.setRegion(Region.getEnumFromString(regionDD.getSelectionModel()
                         .getSelectedItem()));
