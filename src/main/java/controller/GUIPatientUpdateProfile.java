@@ -11,6 +11,7 @@ import service.PatientDataService;
 import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
+import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -404,8 +405,15 @@ public class GUIPatientUpdateProfile extends UndoableController {
             after.setBirth(dobDate.getValue());
         }
 
-        after.setDeathDate(dateOfDeath.getDateTimeValue());
+        if (dateOfDeath.getValue() != null) {
+            after.setDeathDate(dateOfDeath.getDateTimeValue());
+        }
         after.setDeathStreet(deathLocationTxt.getText());
+        after.setDeathCity(deathCity.getText());
+        if (deathRegion.getValue() != null) {
+            after.setDeathRegion(Region.getEnumFromString(deathRegion.getSelectionModel()
+                    .getSelectedItem()));
+        }
 
         after.setStreet1(street1Txt.getText());
         after.setCity(cityTxt.getText());
@@ -432,6 +440,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         Action action = new Action(target, after);
         statesHistoryScreen.addAction(action);
         patientDataService.save(after);
+        SystemLogger.systemLogger.log(Level.FINE, "Successfuly update patient to:\n" + after);
     }
 
 

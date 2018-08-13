@@ -486,7 +486,6 @@ public class Patient extends User {
     public void setDeathStreet(String deathStreet) {
         this.deathStreet = deathStreet;
         userModified();
-        SystemLogger.systemLogger.log(FINEST, "Set death location for patient " + this.nhiNumber);
     }
 
     public String getDeathCity() {
