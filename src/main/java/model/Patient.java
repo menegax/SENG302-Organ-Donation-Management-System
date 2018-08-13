@@ -228,6 +228,7 @@ public class Patient extends User {
         this.birthGender = gender;
         this.preferredGender = prefGender;
         this.preferredName = preferredName;
+        this.userActionsList = new ArrayList<>();
         databaseImport();
     }
 

@@ -10,6 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import model.Patient;
+import service.PatientDataService;
 import utility.PatientActionRecord;
 
 import java.io.IOException;
@@ -44,6 +45,7 @@ public class GUIPatientHistory {
     public void initialize() {
         UserControl userControl = new UserControl();
         Patient target = userControl.getLoggedInUser() instanceof Patient ? (Patient) userControl.getLoggedInUser() : (Patient) userControl.getTargetUser();
+        target = new PatientDataService().getPatientByNhi(target.getNhiNumber());
         masterData.addAll(target.getUserActionsList());
         populateTable();
     }
