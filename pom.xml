@@ -155,49 +155,14 @@
             <version>5.1.6</version>
         </dependency>
         <dependency>
-            <groupId>guava</groupId>
-            <artifactId>guava-14.0.1</artifactId>
-            <version>14.0.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/guava-14.0.1.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>libTUIO</groupId>
             <artifactId>libTUIO-1.0</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>ScenicView</groupId>
-            <artifactId>ScenicView-1.0</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ScenicView.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>slf4j</groupId>
-            <artifactId>slf4j-api-1.7.6</artifactId>
-            <version>1.7.6</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/slf4j-api-1.7.6.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>slf4j</groupId>
-            <artifactId>slf4j-simple-1.7.6</artifactId>
-            <version>1.7.6</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/slf4j-simple-1.7.6.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>tuiofx</groupId>
             <artifactId>tuiofx-all-0.10.4</artifactId>
             <version>0.10.4</version>
-        </dependency>
-        <dependency>
-            <groupId>tuiofx</groupId>
-            <artifactId>tuiofx-core-0.10.4</artifactId>
-            <version>0.10.4</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/tuiofx-core-0.10.4.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.sonarsource.scanner.maven</groupId>
@@ -307,6 +272,28 @@
                             <artifactId>tuiofx-all-0.10.4</artifactId>
                             <version>0.10.4</version>
                             <file>${project.basedir}/lib/tuiofx-all-0.10.4.jar</file>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>deploy-features-xml</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <repositoryId>lib</repositoryId>
+                            <url>file:./lib/</url>
+                            <groupId>libTUIO</groupId>
+                            <artifactId>libTUIO-1.0</artifactId>
+                            <version>1.0</version>
+                            <file>${project.basedir}/lib/libTUIO.jar</file>
                         </configuration>
                     </execution>
                 </executions>
