@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import model.User;
 import org.tuiofx.examples.demo.FXMLController;
 import org.tuiofx.internal.base.TuioFXCanvas;
+import service.UserDataService;
 import utility.undoRedo.UndoableWrapper;
 
 import java.io.IOException;
@@ -114,6 +115,7 @@ class ScreenControlTouch extends ScreenControl {
      */
     void setUpNewLogin() {
         try {
+            new UserDataService().prepareApplication();
             Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
             touchPane = new Pane();
             touchPane.getChildren().addAll(new Pane(root));

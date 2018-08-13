@@ -17,7 +17,10 @@
             <MenuBar fx:id="menuBar" />
             <HBox alignment="CENTER" prefHeight="60.0" prefWidth="1200.0" styleClass="colouredBar" stylesheets="@../css/guiStyle.css">
              <children>
-                  <Label fx:id="paneTitle" alignment="CENTER" contentDisplay="CENTER" minHeight="40.0" styleClass="colouredBarText" stylesheets="@../css/guiStyle.css" text="" />
+                  <Label fx:id="paneTitle" alignment="CENTER" contentDisplay="CENTER" minHeight="40.0" styleClass="colouredBarText" stylesheets="@../css/guiStyle.css" text="">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin></Label>
                  <Label fx:id="userNameDisplay" alignment="CENTER" contentDisplay="CENTER" minHeight="40.0" styleClass="colouredBarText" stylesheets="@../css/guiStyle.css" text="">
                      <HBox.margin>
                         <Insets />

@@ -172,7 +172,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                     setUpColouredBar(target);
                 }
                 // admin viewing admin
-                else if (target instanceof Administrator) {
+                else if (target instanceof Administrator && target != userControl.getLoggedInUser()) {
                     addTabsAdministratorAdministrator();
                     setUpColouredBar(target);
                 } else {
