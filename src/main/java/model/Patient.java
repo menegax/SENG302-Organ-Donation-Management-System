@@ -1022,7 +1022,8 @@ public class Patient extends User {
                 + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Preferred name: " + preferredName +
                 "\n" + "Gender Assigned at Birth: " + birthGender + "\n" + "Gender Identity: " + preferredGender + "\n" + "Date of birth: " + birth +
                 "\n" + "Organs to donate: " + donations + "\n" + "Street1: " + street1 + "\n" + "Street2: " + city + "\n" + "Suburb:" + suburb +
-                "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Height: " + height + "\n" + "Weight: "
+                "\n" + "Region: " + region + "\n" + "Zip: " + zip + "\n" + "Date of death: " + death + "\n" + "Death street: " + deathStreet + "\n" +
+                "Death city: " + deathCity + "\n" + "Death region: " + deathRegion + "\n" + "Height: " + height + "\n" + "Weight: "
                 + weight + "\n" + "Blood group: " + bloodGroup + "\n";
     }
 
