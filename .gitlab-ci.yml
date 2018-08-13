@@ -14,7 +14,7 @@ recent-artifacts:
   stage: deploy
   script:
     - mvn -B clean site package
-    - mvn install:install-file -Dfile=tuiofx-all-0.10.4.jar
+    - mvn install:install-file -Dfile=/lib/tuiofx-all-0.10.4.jar
   artifacts:
     paths:
       - target/*.jar
