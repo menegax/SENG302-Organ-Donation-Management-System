@@ -449,6 +449,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
                     setValid(deathLocationTxt);
                 }
             }
+        } else {
+            setValid(deathLocationTxt);
         }
         return valid;
     }
@@ -465,9 +467,27 @@ public class GUIPatientUpdateProfile extends UndoableController {
             } else {
                 setValid(dateOfDeath);
             }
+        } else {
+            setValid(dateOfDeath);
         }
         return valid;
     }
+
+    private Boolean validateBirthDate(Boolean valid, StringBuilder invalidContent) {
+        // date of birth
+        if (dobDate.getValue() != null) {
+            if (dobDate.getValue().isAfter(LocalDate.now())) {
+                valid = setInvalid(dobDate);
+                invalidContent.append("Date of birth must be a valid date either today or earlier and must be before date of death. ");
+            } else {
+                setValid(dobDate);
+            }
+        } else {
+            valid = setInvalid(dobDate);
+        }
+        return valid;
+    }
+
 
     private Boolean validateDeathDetail(Boolean valid, StringBuilder invalidContent) {
         boolean isSettingDeath = false;
@@ -504,22 +524,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         return valid;
 
-    }
-
-
-    private Boolean validateBirthDate(Boolean valid, StringBuilder invalidContent) {
-        // date of birth
-        if (dobDate.getValue() != null) {
-            if (dobDate.getValue().isAfter(LocalDate.now())) {
-                valid = setInvalid(dobDate);
-                invalidContent.append("Date of birth must be a valid date either today or earlier and must be before date of death. ");
-            } else {
-                setValid(dobDate);
-            }
-        } else {
-            valid = setInvalid(dobDate);
-        }
-        return valid;
     }
 
 
