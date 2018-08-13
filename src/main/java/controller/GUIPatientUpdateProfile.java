@@ -138,6 +138,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private void disablePatientElements() {
         deathLocationTxt.setDisable(true);
         dateOfDeath.setDisable(true);
+        deathCity.setDisable(true);
+        deathRegion.setDisable(true);
     }
 
 
