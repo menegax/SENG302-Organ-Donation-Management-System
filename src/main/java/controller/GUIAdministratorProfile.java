@@ -47,8 +47,8 @@ public class GUIAdministratorProfile extends TargetedController{
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
         } else {
-            deleteButton.setVisible(false);
-            deleteButton.setDisable(true);
+            deleteButton.setVisible(true);
+            deleteButton.setDisable(false);
         }
         loadProfile((Administrator) target);
     }
