@@ -281,19 +281,22 @@ public class PatientDAO implements IPatientDataAccess {
         statement.setString(5, patient.getBirth().toString());
         statement.setString(6, patient.getCREATED().toString());
         statement.setString(7, patient.getModified().toString());
-        statement.setString(8, patient.getDeath() == null ? null : patient.getDeath().toString());
-        statement.setString(9, patient.getBirthGender() == null ? null : patient.getBirthGender().toString().substring(0, 1));
-        statement.setString(10, patient.getPreferredGender() == null ? null : patient.getPreferredGender().toString().substring(0, 1));
-        statement.setString(11, patient.getPreferredName());
-        statement.setString(12, String.valueOf(patient.getHeight()));
-        statement.setString(13, String.valueOf(patient.getWeight()));
-        statement.setString(14, patient.getBloodGroup() == null ? null : patient.getBloodGroup().toString());
+        statement.setString(8, patient.getDeathDate() == null ? null : patient.getDeathDate().toString());
+        statement.setString(9, patient.getDeathCity());
+        statement.setString(10, patient.getDeathRegion() == null ? null : patient.getDeathRegion().getValue());
+        statement.setString(11, patient.getDeathStreet());
+        statement.setString(12, patient.getBirthGender() == null ? null : patient.getBirthGender().toString().substring(0, 1));
+        statement.setString(13, patient.getPreferredGender() == null ? null : patient.getPreferredGender().toString().substring(0, 1));
+        statement.setString(14, patient.getPreferredName());
+        statement.setString(15, String.valueOf(patient.getHeight()));
+        statement.setString(16, String.valueOf(patient.getWeight()));
+        statement.setString(17, patient.getBloodGroup() == null ? null : patient.getBloodGroup().toString());
         List<String> donationList = patient.getDonations().stream().map(Organ::toString).collect(Collectors.toList());
         String donations = String.join(",", donationList).toLowerCase();
-        statement.setString(15, donations);
+        statement.setString(18, donations);
         List<String> organsList = patient.getRequiredOrgans() != null ? (patient.getRequiredOrgans().stream().map(Organ::toString).collect(Collectors.toList())) : new ArrayList<>();
         String organs = String.join(",", organsList).toLowerCase();
-        statement.setString(16, organs);
+        statement.setString(19, organs);
         return statement;
     }
 
@@ -333,6 +336,9 @@ public class PatientDAO implements IPatientDataAccess {
         Timestamp modified = Timestamp.valueOf(attributes.getString("Modified"));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0");
         LocalDateTime death = attributes.getString("Death") != null ? LocalDateTime.parse(attributes.getString("Death"), dtf) : null;
+        Region deathRegion = attributes.getString("DeathRegion") == null ? null : Region.getEnumFromString(attributes.getString("DeathRegion"));
+        String deathCity = attributes.getString("DeathCity");
+        String deathLocation = attributes.getString("DeathStreet");
         String prefName = attributes.getString("PrefName");
         //map enum and organ groups
         BirthGender gender = null;
@@ -345,6 +351,9 @@ public class PatientDAO implements IPatientDataAccess {
                     (attributes.getString("PrefGender").equals("M") ? PreferredGender.MAN : PreferredGender.NONBINARY);
         }
         Patient patient = new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName);
+        patient.setDeathStreet(deathLocation);
+        patient.setDeathCity(deathCity);
+        patient.setDeathRegion(deathRegion);
         patient.setHeight(attributes.getDouble("Height") / 100);
         patient.setWeight(attributes.getDouble("Weight"));
         patient.setBloodGroup(attributes.getString("BloodType") != null ?
@@ -437,7 +446,10 @@ public class PatientDAO implements IPatientDataAccess {
                 aPatient.getBirth().toString(),
                 aPatient.getCREATED().toString(),
                 aPatient.getModified().toString(),
-                aPatient.getDeath() == null ? null : String.format("\'%s\'", aPatient.getDeath().toString()),
+                aPatient.getDeathDate() == null ? null : String.format("\'%s\'", aPatient.getDeathDate().toString()),
+                aPatient.getDeathCity() == null ? null : String.format("\'%s\'", aPatient.getDeathCity()),
+                aPatient.getDeathRegion() == null ? null : String.format("\'%s\'",aPatient.getDeathRegion().getValue().replaceAll("'", "")),
+                aPatient.getDeathStreet() == null ? null : String.format("\'%s\'", aPatient.getDeathStreet()),
                 aPatient.getBirthGender() == null ? null : String.format("\'%s\'",aPatient.getBirthGender().toString().substring(0, 1)),
                 aPatient.getPreferredGender() == null ? null : String.format("\'%s\'",aPatient.getPreferredGender().toString().substring(0, 1)),
                 aPatient.getPreferredName() == null ? aPatient.getFirstName().replaceAll("'", "''"): aPatient.getPreferredName(),
