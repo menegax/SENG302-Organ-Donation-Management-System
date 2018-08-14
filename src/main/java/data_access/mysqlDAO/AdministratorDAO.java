@@ -16,7 +16,7 @@ import static utility.SystemLogger.systemLogger;
 
 public class AdministratorDAO implements IAdministratorDataAccess {
 
-    private MySqlFactory mySqlFactory;
+    private final MySqlFactory mySqlFactory;
     private ILogDataAccess<AdministratorActionRecord> administratorLogDAO;
 
     public AdministratorDAO() {
@@ -64,8 +64,7 @@ public class AdministratorDAO implements IAdministratorDataAccess {
             PreparedStatement preparedStatement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_ADMIN_USERNAME"));
             preparedStatement.setString(1, username);
             List<AdministratorActionRecord> records = administratorLogDAO.getAllLogsByUserId(username);
-            Administrator a = constructAdministratorObject(preparedStatement.executeQuery(), records);
-            return a;
+            return constructAdministratorObject(preparedStatement.executeQuery(), records);
         } catch (Exception e) {
             systemLogger.log(Level.SEVERE, "Could not get administrator from MYSQL DB", this);        }
         return null;
@@ -75,7 +74,7 @@ public class AdministratorDAO implements IAdministratorDataAccess {
     public Map<Integer, List<Administrator>> searchAdministrators(String searchTerm) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             Map<Integer, List<Administrator>> resultMap = new HashMap<>();
-            for (int i = 0; i <= 2; i++) {
+            for (int i = 0; i <= 3; i++) {
                 resultMap.put(i, new ArrayList<>());
             }
             connection.setAutoCommit(false);
@@ -83,8 +82,8 @@ public class AdministratorDAO implements IAdministratorDataAccess {
             if (searchTerm.equals("")) {
                 statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_ADMINISTRATORS"));
             } else {
-                statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_ADMINISTRATORS_FUZZY"));
-                for (int i = 1; i <= 5; i++) {
+                statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_ADMINISTRATORS_SUBSTRING"));
+                for (int i = 1; i <= 4; i++) {
                     statement.setString(i, searchTerm);
                 }
             }
@@ -95,8 +94,7 @@ public class AdministratorDAO implements IAdministratorDataAccess {
                 if (searchTerm.equals("")) {
                     resultMap.get(0).add(administrator);
                 } else {
-                    Integer[] scores = new Integer[]{resultSet.getInt("UsernameMatch"), resultSet.getInt("NameMatch"), resultSet.getInt("FullNameMatch")};
-                    int score = Collections.min(Arrays.asList(scores));
+                    int score = resultSet.getInt("matchNum");
                     resultMap.get(score).add(administrator);
                 }
             }
