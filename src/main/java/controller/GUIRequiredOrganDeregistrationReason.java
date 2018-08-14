@@ -338,11 +338,15 @@ public class GUIRequiredOrganDeregistrationReason {
 
     private boolean validateDeathLocation(boolean valid) {
         // validate death location
-        if (locationDeathTxt.getText().length() < 1) {
-            // if not set, invalid
-            valid = setInvalid(locationDeathTxt);
-        } else if (!locationDeathTxt.getText()
+        
+        // death location not required to be set
+//        if (locationDeathTxt.getText().length() < 1) {
+//            // if not set, invalid
+//            valid = setInvalid(locationDeathTxt);
+//        } else
+            if (!locationDeathTxt.getText()
                 .matches(GlobalEnums.UIRegex.DEATH_LOCATION.getValue())) {
+                System.out.println("looks like loc didn't match regex");
             // if doesn't match regex, invalid
             valid = setInvalid(locationDeathTxt);
         }

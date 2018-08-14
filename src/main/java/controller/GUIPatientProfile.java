@@ -91,6 +91,9 @@ public class GUIPatientProfile {
     private Label addLbl3;
 
     @FXML
+    private Label cityLbl;
+
+    @FXML
     private Label addLbl4;
 
     @FXML
@@ -199,7 +202,7 @@ public class GUIPatientProfile {
         dateOfDeathLabel.setText(patient.getDeathDate() == null ? "Not set" : patient.getDeathDate()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         deathLocation.setText(patient.getDeathStreet() == null ? "Not set" : patient.getDeathStreet());
-        deathCity.setText(patient.getDeathCity().length() == 0 ? "Not set" : patient.getDeathCity());
+        deathCity.setText(patient.getDeathCity() == null ? "Not set" : patient.getDeathCity());
         deathRegion.setText(patient.getDeathRegion() == null ? "Not set" : patient.getDeathRegion()
                 .getValue());
         age.setText(String.valueOf(patient.getAge()));
@@ -210,8 +213,7 @@ public class GUIPatientProfile {
                 .getValue());
         addLbl1.setText((patient.getStreetNumber() == null || patient.getStreetNumber()
                 .length() == 0) ? "Not set" : patient.getStreetNumber());
-        addLbl5.setText((patient.getCity() == null || patient.getCity()
-                .length() == 0) ? "Not set" : patient.getCity());
+        addLbl5.setText((patient.getCity() == null) ? "Not set" : patient.getCity());
         addLbl3.setText((patient.getSuburb() == null || patient.getStreetNumber()
                 .length() == 0) ? "Not set" : patient.getSuburb());
         addLbl4.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
@@ -265,7 +267,7 @@ public class GUIPatientProfile {
      * @param listView    The listView that the cells being highlighted are in
      * @param isDonorList boolean for if the receiving organ is also in the donating list
      */
-    public void highlightListCell(ListView<String> listView, boolean isDonorList) {
+    private void highlightListCell(ListView<String> listView, boolean isDonorList) {
         listView.setCellFactory(column -> new ListCell<String>() {
             @Override
             protected void updateItem(String item, boolean empty) {

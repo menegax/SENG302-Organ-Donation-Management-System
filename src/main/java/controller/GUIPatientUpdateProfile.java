@@ -1,16 +1,28 @@
 package controller;
 
+import static java.util.logging.Level.INFO;
+import static utility.UserActionHistory.userActions;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.PatientDataService;
 import tornadofx.control.DateTimePicker;
-import utility.GlobalEnums;
-import utility.GlobalEnums.*;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.BloodGroup;
+import utility.GlobalEnums.PreferredGender;
+import utility.GlobalEnums.Region;
+import utility.GlobalEnums.UIRegex;
+import utility.GlobalEnums.UndoableScreen;
 import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
@@ -22,9 +34,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
-
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateProfile extends UndoableController {
 
@@ -531,10 +540,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 valid = setInvalid(dateOfDeath);
                 invalidContent.append("Date required if patient deceased. ");
             }
-            if (deathLocationTxt.getText() == null || deathLocationTxt.getText().length() == 0) {
-                valid = setInvalid(deathLocationTxt);
-                invalidContent.append("Location required if patient deceased. ");
-            }
+//            if (deathLocationTxt.getText() == null || deathLocationTxt.getText().length() == 0) {
+//                valid = setInvalid(deathLocationTxt);
+//                invalidContent.append("Location required if patient deceased. ");
+//            }
             if (deathCity.getText().length() == 0) {
                 valid = setInvalid(deathCity);
                 invalidContent.append("City required if patient deceased. ");

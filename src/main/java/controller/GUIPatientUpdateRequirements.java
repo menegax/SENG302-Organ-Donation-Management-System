@@ -1,5 +1,6 @@
 package controller;
 
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.INFO;
 import static utility.UserActionHistory.userActions;
 
@@ -319,7 +320,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * reason popup for each deregistered organ
      */
     private void deregistrationReason() {
-        SystemLogger.systemLogger.log(INFO, "Patient had organ requirements deregistered. Asking for deregistration reason...");
+        SystemLogger.systemLogger.log(FINEST, "Patient had organ requirements deregistered. Asking for deregistration reason...");
         List<GlobalEnums.Organ> removedOrgans = new ArrayList<>(target.getRequiredOrgans());
         removedOrgans.removeAll(finalRequirements);
         if (removedOrgans.size() == 0) {
@@ -332,8 +333,6 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             openReasonPopup(organ);
             after.removeRequired(organ);
         }
-        SystemLogger.systemLogger.log(Level.FINE, "Patient before launching deregistration reason:\n" + target);
-        SystemLogger.systemLogger.log(Level.FINE, "Patient after launching deregistration reason:\n" + after);
     }
 
     /**
