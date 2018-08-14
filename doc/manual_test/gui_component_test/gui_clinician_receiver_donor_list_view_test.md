@@ -40,3 +40,16 @@ Ensure that organs are listed on the donating listview: Pass
 Ensure that organs highlighted if patient is donating and receiving the same organ: Pass
 
 Ensure that donating list and receiving lists are segregated: Pass
+
+###14/08/2018 - Aidan
+
+Navigate to clinician view of patient: Pass
+
+Ensure that organs are listed on the receiving listview: Pass
+
+Ensure that organs are listed on the donating listview: Fail*  
+Organs are only listed after profile is closed and opened again
+
+Ensure that organs highlighted if patient is donating and receiving: Pass
+
+Ensure that donating list and receiving lists are segregated: Pass

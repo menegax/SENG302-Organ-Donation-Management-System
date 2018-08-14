@@ -15,7 +15,6 @@
     - Select "Clinician" radio button
     - Enter a first name, last name, middle name(s) and region
     - Click "Done" button
-    - A pop up will tell you the new clinicians "Staff ID"
     - Click "Search Users" button
     - Enter the "Staff ID" of the new clinician and ensure it is present in the search results.
 
@@ -196,3 +195,32 @@ Test 6: Pass
 Test 9: Pass
 
 Test 10: Pass
+
+### 14/08/2018 - Aidan
+
+Test 1: Pass* User registered (present in table), but search did not yield result
+
+Test 2: Pass
+
+Test 3: Pass
+
+Test 4: Pass
+
+Test 5: Fail - Clinician not deleted null pointer thrown on second clinician profile open 
+
+```
+Exception in thread "JavaFX Application Thread" java.lang.NullPointerException
+	at org.apache.lucene.index.BufferedUpdates.addTerm(BufferedUpdates.java:232)
+	at utility.Searcher.removeIndex(Searcher.java:199)
+```
+
+Test 6: Fail - Delete button not visible
+
+Test 7: Partial Pass - Can only edit a newly registered patient, not one loaded from the database 
+
+Test 8: Partial Pass - Updated name not immediately shown on clinician profile
+
+Test 9: Pass (Only tested with newly registered user)
+
+Test 10: Pass
+
