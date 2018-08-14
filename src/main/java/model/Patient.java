@@ -788,7 +788,7 @@ public class Patient extends User {
      * @return required organs of the patient
      */
     public List<Organ> getRequiredOrgans() {
-        return Collections.unmodifiableList(this.requiredOrgans);
+        return (this.requiredOrgans);
     }
 
     public void clearRequiredOrgans() {

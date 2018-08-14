@@ -66,7 +66,6 @@ public class TUIOFXMain extends Application {
 
         new UserDataService().prepareApplication();
 
-//        openKeyboard();
         TuioFX tuioFX = new TuioFX(stage, Configuration.pqLabs());
         tuioFX.enableMTWidgets(true);
         tuioFX.start();

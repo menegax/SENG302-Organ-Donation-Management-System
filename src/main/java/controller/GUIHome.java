@@ -362,6 +362,9 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                     newTab.setContent(fxmlLoader.load());
                     TargetedController targetedController = fxmlLoader.getController();
                     targetedController.setTarget(target);
+                    if (screenControl.isTouch()) {
+                        ((ScreenControlTouch) screenControl).setFonts();
+                    }
                 } catch (IOException e) {
                     systemLogger.log(SEVERE, "Failed to create tab", e);
                 }

@@ -48,8 +48,21 @@ class ScreenControlTouch extends ScreenControl {
 
     private boolean isLoginShowing;
 
+    private Map<String, Integer> fontMap = new HashMap<>();
+
     private ScreenControlTouch() {
         isLoginShowing = true;
+        populateFontMap();
+    }
+
+    /**
+     * Populates the font-map with the id and font size of nodes in the application
+     */
+    private void populateFontMap() {
+        fontMap.put("heading", 24);
+        fontMap.put("paneTitle", 24);
+        fontMap.put("userNameDisplay", 24);
+        fontMap.put("nameTxt", 24);
     }
 
     public static ScreenControlTouch getScreenControl() {
@@ -111,7 +124,7 @@ class ScreenControlTouch extends ScreenControl {
                 }
             });
             System.out.println("new pane");
-            resizeButtonFont(touchPane);
+            resizeFonts(touchPane);
             systemLogger.log(INFO, "Showing new touch stage scene");
             return controller;
         } catch (IOException e) {
@@ -134,6 +147,7 @@ class ScreenControlTouch extends ScreenControl {
             addCanvas(newScene);
             touchStage.setScene(newScene);
             setLoginShowing(true);
+            setFonts();
         } catch (IOException e) {
             systemLogger.log(SEVERE, "Failed to recreate login scene in touch application");
 
@@ -208,50 +222,34 @@ class ScreenControlTouch extends ScreenControl {
         }
     }
 
-    private void resizeButtonFont(Node node) {
-        System.out.println(node.getClass().getName());
-        if(node instanceof Button) {
-            System.out.println("button");
-            ((Button) node).setFont(Font.font(6));
-        } else if(node instanceof VBox) {
-            VBox vBox = (VBox) node;
-            for(Node vNode : vBox.getChildren()) {
-                resizeButtonFont(vNode);
-            }
-        } else if(node instanceof HBox) {
-            HBox hBox = (HBox) node;
-            for(Node hNode : hBox.getChildren()) {
-                resizeButtonFont(hNode);
-            }
-        } else if (node instanceof GridPane) {
-            GridPane gridPane = (GridPane) node;
-            for(Node gridNode : gridPane.getChildren()) {
-                resizeButtonFont(gridNode);
-            }
-        } else if(node instanceof TabPane) {
-            TabPane tabPane = (TabPane) node;
-            List<Tab> tabs = tabPane.getTabs();
-            List<Node> tabNodes = tabs.stream().map(Tab::getContent).collect(Collectors.toList());
-            for(Node tabNode : tabNodes) {
-                resizeButtonFont(tabNode);
-            }
-        } else if (node instanceof AnchorPane) {
-            AnchorPane anchorPane = (AnchorPane) node;
-            for(Node anchorNode : anchorPane.getChildren()) {
-                resizeButtonFont(anchorNode);
-            }
-        } else if (node instanceof TuioFXCanvas) {
-            TuioFXCanvas canvas = (TuioFXCanvas) node;
-            for(Node canvasNode : canvas.getChildren()) {
-                resizeButtonFont(canvasNode);
-            }
-        } else if (node instanceof Pane) {
-            Pane pane = (Pane) node;
-            for(Node paneNode : pane.getChildren()) {
-                resizeButtonFont(paneNode);
+    /**
+     * Resizes the fonts of all objects in this node
+     * @param pane the touch pane displayed currently
+     */
+    private void resizeFonts(Pane pane) {
+        if (pane != null) {
+            for (Node child : pane.getChildren()) {
+                if (child instanceof Pane) {
+                    resizeFonts((Pane) child);
+                } else if (child instanceof TabPane) {
+                    for (Tab tab : ((TabPane) child).getTabs()) {
+                        resizeFonts((Pane) tab.getContent());
+                    }
+                } else if (child.getId() == null || (!fontMap.containsKey(child.getId()))) {
+                    child.setStyle("-fx-font-size: 10px;");
+                } else {
+                    child.setStyle("-fx-font-size: " + String.valueOf(fontMap.get(child.getId())) + "px;");
+                }
             }
         }
+    }
 
+    /**
+     * Called when switching tabs with GuiHome
+     * Resizes the fonts shown
+     */
+    public void setFonts() {
+        resizeFonts(touchPane);
     }
 
 }
