@@ -177,11 +177,7 @@ public class PatientDAO implements IPatientDataAccess {
             } else {
                 statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS_SUBSTRING_FILTERED").replaceAll("%FILTER%", getFilterString(filters)));
                 for (int i = 1; i <= 4; i++) {
-                    if (i > 1) {
-                        statement.setString(i, searchTerm + "%");
-                    } else {
-                        statement.setString(i, searchTerm);
-                    }
+                    statement.setString(i, searchTerm);
                 }
             }
             ResultSet resultSet = statement.executeQuery();
