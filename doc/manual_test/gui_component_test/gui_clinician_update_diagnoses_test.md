@@ -94,4 +94,26 @@ Invalid diagnosis name entered: Fail - field not highlighted
 
 Update a diagnosis to be equal to another diagnosis: Pass
 
+###14/08/2018 - Maree
+
+Preconditions: Pass
+
+Cancel update with no changes: Pass
+
+Cancel update with changes made: Pass
+
+Make valid diagnosis updates: Pass
+
+Change past diagnosis to not cured: Pass
+
+Change current non-chronic diagnosis to cured: Pass
+
+Change current chronic diagnosis to cured: Fail - field not highlighted (NB - wrong error message shown.)
+
+Invalid diagnosis date entered: Fail - field not highlighted (NB - wrong error message shown.)
+
+Invalid diagnosis name entered: Fail - field not highlighted (NB - wrong error message shown.)
+
+Update a diagnosis to be equal to another diagnosis: Pass 
+
 
