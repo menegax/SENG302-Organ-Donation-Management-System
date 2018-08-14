@@ -15,6 +15,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
+import model.Administrator;
+import model.Clinician;
+import model.Medication;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.AdministratorDataService;
@@ -63,6 +66,15 @@ public class GUIPatientProfile extends TargetedController{
     private Label dateOfDeathLabel;
 
     @FXML
+    private Label deathLocation;
+
+    @FXML
+    private Label deathCity;
+
+    @FXML
+    private Label deathRegion;
+
+    @FXML
     private Label age;
 
     @FXML
@@ -78,19 +90,16 @@ public class GUIPatientProfile extends TargetedController{
     private Label bloodGroupLbl;
 
     @FXML
-    private Label addLbl1;
+    private Label streetLbl;
 
     @FXML
-    private Label addLbl2;
+    private Label cityLbl;
 
     @FXML
-    private Label addLbl3;
+    private Label suburbLbl;
 
     @FXML
-    private Label addLbl4;
-
-    @FXML
-    private Label addLbl5;
+    private Label regionLbl;
 
     @FXML
     private Label zipLbl;
@@ -170,9 +179,9 @@ private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
                 deleteButton.setVisible(false);
                 deleteButton.setDisable(true);
-            } else if (userControl.getLoggedInUser() instanceof Clinician) {
-                deleteButton.setVisible(false);
-                deleteButton.setDisable(true);
+            } else {
+                deleteButton.setVisible(true);
+                deleteButton.setDisable(false);
             }
             assert target != null;
             Patient patientToLoad = patientDataService.getPatientByNhi(((Patient) target).getNhiNumber());
@@ -190,60 +199,21 @@ private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
      * @exception InvalidObjectException if the nhi of the patient does not exist in the database
      */
     private void loadProfile(Patient patient) throws InvalidObjectException {
-        nhiLbl.setText(patient.getNhiNumber());
-        firstNameValue.setText(patient.getFirstName());
-        genderDeclaration.setText("Birth Gender: ");
-        genderStatus.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue());
-        prefGenderLbl.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender().getValue());
-        vitalLbl1.setText(patient.getDeath() == null ? "Alive" : "Deceased");
-        dobLbl.setText(patient.getBirth()
-                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        dateOfDeathLabel.setText(patient.getDeath() == null ? "Not set" : patient.getDeath()
-                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        age.setText(String.valueOf(patient.getAge()));
-        heightLbl.setText(String.valueOf(patient.getHeight() + " m"));
-        weightLbl.setText(String.valueOf(patient.getWeight() + " kg"));
-        bmi.setText(String.valueOf(patient.getBmi()));
-        bloodGroupLbl.setText(patient.getBloodGroup() == null ? "Not set" : patient.getBloodGroup()
-                .getValue());
-        addLbl1.setText((patient.getStreetNumber() == null || patient.getStreetNumber()
-                .length() == 0) ? "Not set" : patient.getStreetNumber());
-        addLbl2.setText((patient.getStreetName() == null || patient.getStreetName()
-                .length() == 0) ? "Not set" : patient.getStreetName());
-        addLbl3.setText((patient.getSuburb() == null || patient.getSuburb()
-                .length() == 0) ? "Not set" : patient.getSuburb());
-        addLbl4.setText((patient.getCity() == null || patient.getCity()
-                .length() == 0) ? "Not set" : patient.getCity());
-        addLbl5.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
-                .getValue());
-        if (patient.getZip() != 0) {
-            zipLbl.setText(String.valueOf(patient.getZip()));
-            while (zipLbl.getText()
-                    .length() < 4) {
-                zipLbl.setText("0" + addLbl5.getText());
-            }
-        }
-        else {
-            zipLbl.setText("Not set");
-        }
+        loadBasicDetails(patient);
+        loadDeathDetails(patient);
+        loadBodyDetails(patient);
+        loadAddressDetails(patient);
+        loadDonatingOrgans(patient);
+        loadRequiredOrgans(patient);
+        loadMedications(patient);
 
-        if (patient.getRequiredOrgans() == null) {
-            patient.setRequiredOrgans(new ArrayList<>());
-        }
-        Collection<GlobalEnums.Organ> organsD = patient.getDonations();
-        Collection<GlobalEnums.Organ> organsR = patient.getRequiredOrgans();
-        List<String> organsMappedD = organsD.stream()
-                .map(e -> StringUtils.capitalize(e.getValue()))
-                .collect(Collectors.toList());
-        List<String> organsMappedR = organsR.stream()
-                .map(e -> StringUtils.capitalize(e.getValue()))
-                .collect(Collectors.toList());
-        donatingListProperty.setValue(FXCollections.observableArrayList(organsMappedD));
-        receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
-        donationList.itemsProperty()
-                .bind(donatingListProperty);
-        receivingList.itemsProperty()
-                .bind(receivingListProperty);
+        //list view styling/highlighting
+        highlightListCell(donationList, true);
+        highlightListCell(receivingList, false);
+    }
+
+
+    private void loadMedications(Patient patient) {
         //Populate current medication listview
         Collection<Medication> meds = patient.getCurrentMedications();
         List<String> medsMapped = meds.stream()
@@ -252,9 +222,86 @@ private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
         medListProperty.setValue(FXCollections.observableArrayList(medsMapped));
         medList.itemsProperty()
                 .bind(medListProperty);
-        //         list view styling/highlighting
-        highlightListCell(donationList, true);
-        highlightListCell(receivingList, false);
+    }
+
+
+    private void loadDonatingOrgans(Patient patient) {
+        if (patient.getRequiredOrgans() == null) {
+            patient.setRequiredOrgans(new ArrayList<>());
+        }
+        Collection<GlobalEnums.Organ> organsD = patient.getDonations();
+        List<String> organsMappedD = organsD.stream()
+                .map(e -> StringUtils.capitalize(e.getValue()))
+                .collect(Collectors.toList());
+        donatingListProperty.setValue(FXCollections.observableArrayList(organsMappedD));
+        donationList.itemsProperty()
+                .bind(donatingListProperty);
+        receivingList.itemsProperty()
+                .bind(receivingListProperty);
+    }
+
+
+    private void loadRequiredOrgans(Patient patient) {
+        Collection<GlobalEnums.Organ> organsR = patient.getRequiredOrgans();
+        List<String> organsMappedR = organsR.stream()
+                .map(e -> StringUtils.capitalize(e.getValue()))
+                .collect(Collectors.toList());
+        receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
+    }
+
+
+    private void loadBodyDetails(Patient patient) {
+        age.setText(String.valueOf(patient.getAge()));
+        heightLbl.setText(String.valueOf(patient.getHeight() + " m"));
+        weightLbl.setText(String.valueOf(patient.getWeight() + " kg"));
+        bmi.setText(String.valueOf(patient.getBmi()));
+        bloodGroupLbl.setText(patient.getBloodGroup() == null ? "Not set" : patient.getBloodGroup()
+                .getValue());
+    }
+
+
+    private void loadAddressDetails(Patient patient) {
+        streetLbl.setText((patient.getStreetName() == null || patient.getStreetName()
+                .length() == 0) ? "Not set" : patient.getStreetNumber() + " " + patient.getStreetName());
+        cityLbl.setText(patient.getStreetName() == null || patient.getStreetName().length() < 1 ? "Not set" : patient.getStreetName());
+        suburbLbl.setText((patient.getSuburb() == null || patient.getSuburb()
+                .length() == 0) ? "Not set" : patient.getSuburb());
+        cityLbl.setText((patient.getCity() == null || patient.getCity()
+                .length() == 0) ? "Not set" : patient.getCity());
+        regionLbl.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
+                .getValue());
+        if (patient.getZip() != 0) {
+            zipLbl.setText(String.valueOf(patient.getZip()));
+            while (zipLbl.getText()
+                    .length() < 4) {
+                zipLbl.setText("0" + zipLbl.getText());
+            }
+        }
+        else {
+            zipLbl.setText("Not set");
+        }
+    }
+
+
+    private void loadDeathDetails(Patient patient) {
+        dateOfDeathLabel.setText(patient.getDeathDate() == null ? "Not set" : patient.getDeathDate()
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        deathLocation.setText(patient.getDeathStreet() == null || patient.getDeathStreet().length() == 0 ? "Not set" : patient.getDeathStreet());
+        deathCity.setText(patient.getDeathCity() == null || patient.getDeathCity().length() == 0 ? "Not set" : patient.getDeathCity());
+        deathRegion.setText(patient.getDeathRegion() == null ? "Not set" : patient.getDeathRegion()
+                .getValue());
+    }
+
+
+    private void loadBasicDetails(Patient patient) {
+        nhiLbl.setText(patient.getNhiNumber());
+        firstNameValue.setText(patient.getFirstName());
+        genderDeclaration.setText("Birth Gender: ");
+        genderStatus.setText(patient.getBirthGender() == null ? "Not set" : patient.getBirthGender().getValue());
+        prefGenderLbl.setText(patient.getPreferredGender() == null ? "Not set" : patient.getPreferredGender().getValue());
+        vitalLbl1.setText(patient.getDeathDate() == null ? "Alive" : "Deceased");
+        dobLbl.setText(patient.getBirth()
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
     }
 
 
@@ -265,7 +312,7 @@ private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
      * @param listView    The listView that the cells being highlighted are in
      * @param isDonorList boolean for if the receiving organ is also in the donating list
      */
-    public void highlightListCell(ListView<String> listView, boolean isDonorList) {
+    private void highlightListCell(ListView<String> listView, boolean isDonorList) {
         listView.setCellFactory(column -> new ListCell<String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -307,7 +354,7 @@ private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
         new AdministratorDataService().deleteUser(target);
         undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
         userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", ((Patient) target).getNhiNumber()});
-        ((Stage) patientProfilePane.getScene().getWindow()).close();
+        screenControl.closeWindow(patientProfilePane);
     }
 
 }

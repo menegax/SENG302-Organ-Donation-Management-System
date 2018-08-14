@@ -1,10 +1,16 @@
 package utility.undoRedo;
 
 import data_access.factories.DAOFactory;
+import data_access.interfaces.ITransplantWaitListDataAccess;
 import data_access.interfaces.IUserDataAccess;
 import controller.ScreenControl;
+import data_access.mysqlDAO.TransplantWaitingListDAO;
+import model.Patient;
 import model.User;
+import service.OrganWaitlist;
 import utility.GlobalEnums;
+
+import java.util.Iterator;
 
 /**
  * Represents an action (edit, add, delete) performed on a user in the application
@@ -20,6 +26,7 @@ public class Action {
 
     private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
     private IUserDataAccess dao = factory.getUserDataAccess();
+    private ITransplantWaitListDataAccess waitingListDAO = factory.getTransplantWaitingListDataAccess();
 
     /**
      * Constructor for the action
@@ -57,6 +64,9 @@ public class Action {
         } else {
             current.setAttributes(after);
         }
+        if (current instanceof  Patient) {
+            createOrganRequests((Patient) current);
+        }
         screenControl.setIsSaved(false);
         isExecuted = true;
     }
@@ -74,11 +84,37 @@ public class Action {
         } else {
             current.setAttributes(before);
         }
+        if (current instanceof Patient) {
+            createOrganRequests((Patient) current);
+        }
         screenControl.setIsSaved(false);
         isExecuted = false;
     }
 
     public boolean isExecuted() {
         return isExecuted;
+    }
+
+
+    /**
+     * Creates new organ requests for updated registered organs to receive, and adds them to the organ
+     * waiting list.
+     */
+    private void createOrganRequests(Patient patient) {
+        OrganWaitlist waitlist = waitingListDAO.getWaitingList();
+        if (waitlist == null) {
+            waitlist = new OrganWaitlist();
+        }
+        Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();
+        while (iter.hasNext()) {
+            OrganWaitlist.OrganRequest next = iter.next();
+            if (next.getReceiverNhi().equals(patient.getNhiNumber())) {
+                iter.remove();
+            }
+        }
+        for (GlobalEnums.Organ organ : patient.getRequiredOrgans()) {
+            waitlist.add(patient, organ);
+        }
+        waitingListDAO.updateWaitingList(waitlist);
     }
 }

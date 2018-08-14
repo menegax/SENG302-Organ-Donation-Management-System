@@ -46,6 +46,8 @@ public class GUIClinicianProfile extends TargetedController {
 
     private UserControl userControl = UserControl.getUserControl();
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
     private IClinicianDataService clinicianDataService = new ClinicianDataService();
@@ -103,7 +105,7 @@ public class GUIClinicianProfile extends TargetedController {
             new AdministratorDataService().deleteUser(target);
             undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
             userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(((Clinician) target).getStaffID())});
-            ((Stage) clinicianProfilePane.getScene().getWindow()).close();
+            screenControl.closeWindow(clinicianProfilePane);
         }
     }
 }

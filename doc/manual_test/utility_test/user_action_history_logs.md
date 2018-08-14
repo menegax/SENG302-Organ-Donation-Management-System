@@ -1,19 +1,9 @@
 # User Action History Logs Manual Test
 
-### Ensure File is Written
+### Ensure Log is Written
 1. Begin the app
 2. Perform an action
-3. Ensure a file was created containing the logs on the home directory of the user (desktop or repo)
-
-### Ensure File Appending
-1. Begin the app
-2. Perform an action
-3. Close the app
-4. View logs file
-5. Begin the app
-6. Perform an action
-7. Close the app
-8. Ensure extra actions were appended to existing file
+3. Ensure action was logged under logged in user's history
 
 ##Test History
 
@@ -22,3 +12,7 @@
 Ensure File is Written: Pass
 
 Ensure File Appending: Pass
+
+###18/04/2018 - Aidan
+
+Ensure Log is written: Pass

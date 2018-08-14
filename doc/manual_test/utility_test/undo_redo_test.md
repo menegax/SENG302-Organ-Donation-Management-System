@@ -5,13 +5,11 @@
 ##### Widgets
 
 For each in:
-1. CheckBox(Patient Profile Edit)
+1. CheckBox(Patient Update Donations)
 2. ChoiceBox(Patient Profile Edit)
 3. DatePicker(Patient Profile Edit)
-4. ListView (Medications)
-5. RadioButton (Patient Profile Edit)
-6. TableView (Diagnosis)
-7. TextField (Patient Profile Edit)  
+4. RadioButton (Patient Profile Edit)
+5. TextField (Patient Profile Edit)
 
 
 1. Navigate to a screen with that control
@@ -112,4 +110,14 @@ Repeat 1-4.
 5. Undo repeatedly until no change is observed  
 -> The screen should have navigated to the medications page then the procedures page undoing one action at a time  
 6. Redo repeatedly until no change is observed  
--> The screen should have navigated to the procedures page then to the medications undoing one action at a time  
+-> The screen should have navigated to the procedures page then to the medications undoing one action at a time
+
+### Test History
+
+#### 14/08/2018 Aidan
+
+Test each individual control: Pass
+
+Test only undo on current stage: Pass
+
+Test undo through multiple screens: Pass

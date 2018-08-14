@@ -63,3 +63,25 @@ within two characters i.e. "Fox" == "Doe" because it is two characters away.
 5. Alter the receiving organ combobox so that only patients requiring lung are presented in the table.
 6. Ensure that the `Receiver` checkbox is checked.
 7. The resulting patient(s) left in the table should be a 28 year old female receiver, requiring a lung.
+
+## Test History
+
+### 14/08/2018 - Aidan
+
+Navigate to search patients page: Pass
+
+GUI clinician search donors test: Fail Non-Functional requirements not met - too slow with no indication of current search
+
+Filter patients by age: Pass
+
+Filter patients by birth gender: Pass
+
+Filter patients by region: Pass
+
+Filter patients by donating organ: Pass
+
+Filter patients by receiving organ: Pass
+
+Filter patients by age, birth gender, donating organ and donating checkbox: Pass
+
+Filter patients by age, birth gender, receiving organ and receiving checkbox: Pass
