@@ -29,6 +29,7 @@ import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
@@ -125,13 +126,14 @@ public class GUILogin implements TouchscreenCapable {
                 }
                 clinicianDataService.save(clinician);
                 login.addLoggedInUserToCache(clinician);
-                openMaps();
+                openMap();
             } else {
+                administrator.isSelected();
                 checkAdminCredentials();
                 Administrator administrator = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
                 administratorDataService.save(administrator);
                 login.addLoggedInUserToCache(administrator);
-                openMaps();
+                openMap();
             }
             Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
             UndoableStage stage = new UndoableStage();
@@ -145,7 +147,7 @@ public class GUILogin implements TouchscreenCapable {
             alert.show();
         } catch (IOException e) {
             userActions.log(Level.WARNING, "Unable to load home page", "Attempted to log in");
-            systemLogger.log(Level.INFO, "Failed to find the .fxml file for login" + e.getStackTrace());
+            systemLogger.log(Level.INFO, "Failed to find the .fxml file for login" + Arrays.toString(e.getStackTrace()));
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
             alert.show();
         } catch (NumberFormatException e) {
@@ -156,19 +158,15 @@ public class GUILogin implements TouchscreenCapable {
 
     }
 
-    public void openMaps() {
-        // Opens the Map
+    private void openMap() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/map.fxml"));
             Parent root = fxmlLoader.load();
-            System.out.println('1');
             UndoableStage popUpStage = new UndoableStage();
             screenControl.addStage(popUpStage.getUUID(), popUpStage);
             screenControl.show(popUpStage.getUUID(), root);
         } catch (IOException e) {
-            userActions.log(Level.SEVERE,
-                    "Failed to open Map",
-                    "attempted to open Map on startup");
+            userActions.log(Level.SEVERE, "Failed to open Map", "Attempted to open Map on startup");
             new Alert(Alert.AlertType.ERROR, "Unable to open Map", ButtonType.OK).show();
         }
     }
