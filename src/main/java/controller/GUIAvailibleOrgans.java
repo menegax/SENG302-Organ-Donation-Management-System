@@ -41,7 +41,7 @@ public class GUIAvailibleOrgans {
 
     public void initialize() {
     	for (Patient patient : patientDataService.getDeadPatients()) {
-    		if (patient.getDeath() != null) {
+    		if (patient.getDeathDate() != null) {
     			for (Organ organ : patient.getDonations()) {
                     PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
                     if (!masterData.contains(patientOrgan)) {
@@ -65,7 +65,7 @@ public class GUIAvailibleOrgans {
         //TODO add death location when merged
         //locationCol.setCellValueFactory(r -> new SimpleStringProperty("Death Location"));
         deathCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
-                .getPatient().getDeath().toString()));
+                .getPatient().getDeathDate().toString()));
         //TODO add expiry countdown
         //expiryCol.setCellValueFactory(r -> new SimpleStringProperty("Expiry"));
 

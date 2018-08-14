@@ -86,7 +86,7 @@ public class PatientLocalDAO implements IPatientDataAccess {
     public List<Patient> getDeadPatients() {
         List<Patient> patients = new ArrayList<>();
         for (Patient patient : localDB.getPatients()) {
-            if (patient.getDeath() != null) {
+            if (patient.getDeathDate() != null) {
                 patients.add(patient);
             }
         }

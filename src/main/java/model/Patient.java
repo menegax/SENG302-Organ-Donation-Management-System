@@ -140,6 +140,8 @@ public class Patient extends User {
     public Patient() {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
+        this.requiredOrgans = new ArrayList<>();
+        this.donations = new ArrayList<>();
     }
 
     /**
@@ -237,6 +239,8 @@ public class Patient extends User {
         this.preferredGender = prefGender;
         this.preferredName = preferredName;
         this.userActionsList = new ArrayList<>();
+        this.requiredOrgans = new ArrayList<>();
+        this.donations = new ArrayList<>();
         databaseImport();
     }
 

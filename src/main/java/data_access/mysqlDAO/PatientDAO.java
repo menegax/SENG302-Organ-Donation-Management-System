@@ -103,6 +103,8 @@ public class PatientDAO implements IPatientDataAccess {
             connection.commit();
             contactDataAccess.addContactBatch(patient);
         } catch (Exception e) {
+
+            e.printStackTrace();
             SystemLogger.systemLogger.log(Level.SEVERE, "Could not import patient batch", this);
         }
         return true;
