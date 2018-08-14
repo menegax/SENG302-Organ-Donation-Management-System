@@ -1,10 +1,14 @@
 package controller;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ProgressBarTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
+import utility.CachedThreadPool;
 import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -14,7 +18,9 @@ import javafx.collections.transformation.SortedList;
 
 import model.Patient;
 
+
 import java.util.List;
+import java.util.Random;
 
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
@@ -35,6 +41,8 @@ public class GUIAvailibleOrgans {
     private TableColumn<PatientOrgan, String> deathCol;
     @FXML
     private TableColumn<PatientOrgan, String> expiryCol;
+    @FXML
+    private TableColumn<PatientOrgan, Double> organExpiryProgressCol;
 
     private ObservableList<PatientOrgan> masterData = FXCollections.observableArrayList();
 
@@ -69,7 +77,8 @@ public class GUIAvailibleOrgans {
         deathCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getPatient().getDeathDate().toString()));
         //TODO add expiry countdown
-        //expiryCol.setCellValueFactory(r -> new SimpleStringProperty("Expiry"));
+        organExpiryProgressCol.setCellValueFactory(new PropertyValueFactory<>("progress"));
+        organExpiryProgressCol.setCellFactory(ProgressBarTableCell.forTableColumn());
 
         // wrap ObservableList in a FilteredList
         FilteredList<PatientOrgan> filteredData = new FilteredList<>(masterData);
@@ -78,12 +87,16 @@ public class GUIAvailibleOrgans {
         SortedList<PatientOrgan> sortedData = new SortedList<>(filteredData);
 
         // bind the SortedList comparator to the TableView comparator.
-        sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
+       // sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
 
         // add sorted (and filtered) data to the table.
         availableOrgansTableView.setItems(sortedData);
         availableOrgansTableView.setVisible(true);
         tableRefresh();
+
+        for (PatientOrgan task : availableOrgansTableView.getItems()){
+            CachedThreadPool.getCachedThreadPool().getThreadService().submit(task);
+        }
     }
     
     /**
@@ -96,15 +109,21 @@ public class GUIAvailibleOrgans {
     /**
      * Simple holder for patients and organ so that it is known which organ belongs to whom.
      */
-    private class PatientOrgan {
+    private class PatientOrgan extends Task<Void> {
     	private Patient patient;
     	private Organ organ;
-    	
-    	public PatientOrgan(Patient patient, Organ organ) {
+
+        PatientOrgan(Patient patient, Organ organ) {
     		this.patient = patient;
     		this.organ = organ;
     	}
-    	
+
+        @Override
+        protected Void call() throws Exception {
+            System.out.println("test");
+            return null;
+        }
+
     	public Patient getPatient() {
     		return patient;
     	}
@@ -112,6 +131,7 @@ public class GUIAvailibleOrgans {
     	public Organ getOrgan() {
     		return organ;
     	}
+
 
     	@Override
     	public boolean equals(Object obj) {
