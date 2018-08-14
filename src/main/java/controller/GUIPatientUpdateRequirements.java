@@ -312,7 +312,7 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
      */
     private void deregistrationReason() {
         SystemLogger.systemLogger.log(FINEST, "Patient had organ requirements deregistered. Asking for deregistration reason...");
-        List<GlobalEnums.Organ> removedOrgans = new ArrayList<>(target.getRequiredOrgans());
+        List<GlobalEnums.Organ> removedOrgans = new ArrayList<>(((Patient) target).getRequiredOrgans());
         removedOrgans.removeAll(finalRequirements);
         if (removedOrgans.size() == 0) {
             Action action = new Action(target, after);
