@@ -18,8 +18,8 @@
    <children>
       <TableView fx:id="availableOrgansTableView" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="patientCol" minWidth="5.0" prefWidth="10.0" text="Patient" />
-          <TableColumn fx:id="organCol" prefWidth="118.4000244140625" text="Organ" />
+            <TableColumn fx:id="patientCol" maxWidth="3000.0" minWidth="5.0" prefWidth="10.0" text="Patient" />
+          <TableColumn fx:id="organCol" maxWidth="3500.0" prefWidth="118.4000244140625" text="Organ" />
           <TableColumn fx:id="locationCol" prefWidth="75.0" text="Location" />
             <TableColumn fx:id="deathCol" prefWidth="75.0" text="Time Of Death" />
             <TableColumn fx:id="organExpiryProgressCol" prefWidth="75.0" text="Organ Expiry Progress" />

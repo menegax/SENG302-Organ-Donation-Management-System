@@ -216,6 +216,7 @@ public class GlobalEnums {
          */
         public long getOrganLowerBoundSeconds() {
             switch (value) {
+                case "bone marrow":
                 case "lung":
                 case "heart": {
                     return numberSecondsHour * 4;
@@ -233,6 +234,9 @@ public class GlobalEnums {
                 case "skin":{
                     return numberSecondsHour * numberHoursPerDay * 3; //3 days
                 }
+                case "intestine": {
+                    return numberSecondsHour * 6;
+                }
             }
             return 0;
         }
@@ -245,8 +249,15 @@ public class GlobalEnums {
             switch (value) {
                 case "lung":
                 case "heart": {
-                    return numberSecondsHour * 6;
+                    return numberSecondsHour * 4;
                 }
+                case "bone marrow": {
+                    return numberSecondsHour * 5;
+                }
+                case "intestine":{
+                    return numberSecondsHour * 12;
+                }
+                case "liver":
                 case "pancreas": {
                     return numberSecondsHour * 24;
                 }
@@ -260,8 +271,10 @@ public class GlobalEnums {
                 case "skin":{
                     return numberSecondsHour * numberHoursPerDay * 365 * 10; //10 years
                 }
+                default:{
+                    return this.getOrganLowerBoundSeconds();
+                }
             }
-            return 0;
         }
 
 

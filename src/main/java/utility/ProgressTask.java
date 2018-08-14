@@ -1,20 +1,12 @@
 package utility;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
 import model.Patient;
 import model.PatientOrgan;
-import org.joda.time.Hours;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import static java.time.temporal.ChronoUnit.*;
 
 
@@ -26,39 +18,48 @@ public class ProgressTask extends Task<Void> {
 
     private GlobalEnums.Organ organ;
 
-    private long elapsedTime = 0;
-
-    private PatientOrgan patientOrgan;
+    private long elapsedTime;
 
     public ProgressTask(PatientOrgan patientOrgan) {
-        this.patientOrgan = patientOrgan;
         this.patient = patientOrgan.getPatient();
         this.organ = patientOrgan.getOrgan();
         this.elapsedTime = getElapsedTime();
     }
 
-    @Override
+    @Override //todo: tidy upppppppp
     protected Void call() throws Exception {
         long remainingTime = calculateRemainingTime();
-        for (int i = ((int) elapsedTime); i < remainingTime; i++) {
+        for (int i = ((int) elapsedTime); i < remainingTime && elapsedTime >= 0; i++) {
             updateProgress((1.0 * i) / organ.getOrganUpperBoundSeconds(), 1);
             updateMessage(getTimeRemaining());
-            double finalI = (1.0 * i) / organ.getOrganUpperBoundSeconds();
+            double finalI = (1.0 * i) / organ.getOrganUpperBoundSeconds(); //todo: pull out to methods
             Platform.runLater(() -> {
-                if (finalI >= 0.5){
-                    if (finalI >= 0.8) { //todo: take out to css
-                        progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.1);");
+                double ratioOfLowerUpper = organ.getOrganLowerBoundSeconds() / (double)organ.getOrganUpperBoundSeconds();
+                if (finalI >= ratioOfLowerUpper){ //has upper and lower bounds for expiry
+                    if (finalI >= ratioOfLowerUpper + ((1 - ratioOfLowerUpper)/2)) { //red if greater than ratio of lower/upper + middle point
+                        progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");//todo: take out to css
                     } else {
-                        progressBar.setStyle("-fx-accent: orange; -fx-control-inner-background: rgba(255, 255, 255, 0.1);");
+                        progressBar.setStyle("-fx-accent: orange; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
                     }
                 } else {
-                    progressBar.setStyle("-fx-accent: green; -fx-control-inner-background: rgba(255, 255, 255, 0.1);");
+                    progressBar.setStyle("-fx-accent: green; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
+                }
+                if (ratioOfLowerUpper == 1.0) { //one bound
+                    if (finalI >= 0.5) {
+                        if (finalI >= 0.8) {
+                            progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
+                        } else{
+                            progressBar.setStyle("-fx-accent: orange; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
+                        }
+                    } else {
+                        progressBar.setStyle("-fx-accent: green; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
+                    }
                 }
             });
             Thread.sleep(1000); //each loop is now 1 second
         }
         Platform.runLater(() -> {
-            progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.1);");
+            progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
         });
         this.updateProgress(1, 1);
         return null;
@@ -76,8 +77,7 @@ public class ProgressTask extends Task<Void> {
     }
 
     private long getElapsedTime() {
-        return LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - patient.getDeathDate().toEpochSecond(ZoneOffset.UTC)
-                + (organ.getOrganLowerBoundSeconds() - calculateRemainingTime());
+        return SECONDS.between(patient.getDeathDate(),LocalDateTime.now());
     }
 
     void setProgressBar(ProgressBar progressBar) {
@@ -85,9 +85,8 @@ public class ProgressTask extends Task<Void> {
     }
 
     private long calculateRemainingTime() {
-        long numberSecondsToDeath = patient.getDeathDate().toEpochSecond(ZoneOffset.UTC); //from 1900
-        long timeOfOrganExpiry = numberSecondsToDeath + organ.getOrganUpperBoundSeconds();
-        long numberSecondsToNow = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-        return timeOfOrganExpiry - numberSecondsToNow ;
+        long diff = SECONDS.between(LocalDateTime.now(), patient.getDeathDate().plusSeconds(organ.getOrganUpperBoundSeconds()));
+        return diff < 0 ? 0 : diff;
     }
+
 }
