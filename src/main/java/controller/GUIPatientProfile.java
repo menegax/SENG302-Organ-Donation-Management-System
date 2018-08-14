@@ -93,6 +93,9 @@ public class GUIPatientProfile extends TargetedController{
     private Label addLbl5;
 
     @FXML
+    private Label zipLbl;
+
+    @FXML
     private Label genderDeclaration;
 
     @FXML
@@ -172,7 +175,8 @@ private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
                 deleteButton.setDisable(true);
             }
             assert target != null;
-            loadProfile((Patient) target);
+            Patient patientToLoad = patientDataService.getPatientByNhi(((Patient) target).getNhiNumber());
+            loadProfile(patientToLoad);
         }
         catch (IOException e) {
             userActions.log(Level.SEVERE, "Cannot load patient profile", new String[]{"Attempted to load patient profile", ((Patient) target).getNhiNumber()});
@@ -204,21 +208,23 @@ private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
                 .getValue());
         addLbl1.setText((patient.getStreetNumber() == null || patient.getStreetNumber()
                 .length() == 0) ? "Not set" : patient.getStreetNumber());
-        addLbl2.setText((patient.getCity() == null || patient.getCity()
-                .length() == 0) ? "Not set" : patient.getCity());
-        addLbl3.setText((patient.getSuburb() == null || patient.getStreetNumber()
+        addLbl2.setText((patient.getStreetName() == null || patient.getStreetName()
+                .length() == 0) ? "Not set" : patient.getStreetName());
+        addLbl3.setText((patient.getSuburb() == null || patient.getSuburb()
                 .length() == 0) ? "Not set" : patient.getSuburb());
-        addLbl4.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
+        addLbl4.setText((patient.getCity() == null || patient.getCity()
+                .length() == 0) ? "Not set" : patient.getCity());
+        addLbl5.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
                 .getValue());
         if (patient.getZip() != 0) {
-            addLbl5.setText(String.valueOf(patient.getZip()));
-            while (addLbl5.getText()
+            zipLbl.setText(String.valueOf(patient.getZip()));
+            while (zipLbl.getText()
                     .length() < 4) {
-                addLbl5.setText("0" + addLbl5.getText());
+                zipLbl.setText("0" + addLbl5.getText());
             }
         }
         else {
-            addLbl5.setText("Not set");
+            zipLbl.setText("Not set");
         }
 
         if (patient.getRequiredOrgans() == null) {

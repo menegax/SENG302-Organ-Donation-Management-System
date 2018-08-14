@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="patientProfilePane" prefHeight="370.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProfile">
+<GridPane fx:id="patientProfilePane" prefHeight="370.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProfile">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="33.399993896484375" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="258.19996337890626" />
@@ -75,6 +75,7 @@
             <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
@@ -127,12 +128,12 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Street 1:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="12">
+            <Label text="Street No:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="12">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Street 2:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="13">
+            <Label text="Street Name:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="13">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
@@ -142,12 +143,12 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Region:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="15">
+            <Label text="Region:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="16">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Zip:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="16">
+            <Label text="Zip:" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="17">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
@@ -212,12 +213,12 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="addLbl4" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="15">
+            <Label fx:id="addLbl5" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="16">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="addLbl5" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="16">
+            <Label fx:id="zipLbl" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="17">
                <font>
                   <Font size="18.0" />
                </font>
@@ -255,9 +256,19 @@
                   <Font size="18.0" />
                </font>
             </Label>
+            <Label text="City:" GridPane.rowIndex="15">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="addLbl4" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="15">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
          </children>
          <GridPane.margin>
-            <Insets left="50.0" top="50.0" />
+            <Insets left="20.0" top="50.0" />
          </GridPane.margin>
       </GridPane>
       <Label fx:id="nameLbl" wrapText="true" GridPane.columnSpan="11" GridPane.halignment="CENTER">
