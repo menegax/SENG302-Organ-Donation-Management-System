@@ -78,7 +78,7 @@ public class GUIAvailibleOrgans {
                 .getPatient().getDeathDate().toString()));
         //TODO add expiry countdown
         organExpiryProgressCol.setCellValueFactory(new PropertyValueFactory<>("progress"));
-        organExpiryProgressCol.setCellFactory(ProgressBarTableCell.forTableColumn());
+        organExpiryProgressCol.setCellFactory(cb -> new ProgressBarTableCell<>());
 
         // wrap ObservableList in a FilteredList
         FilteredList<PatientOrgan> filteredData = new FilteredList<>(masterData);
@@ -120,7 +120,12 @@ public class GUIAvailibleOrgans {
 
         @Override
         protected Void call() throws Exception {
-            System.out.println("test");
+            this.updateProgress(ProgressIndicator.INDETERMINATE_PROGRESS, 1);
+            for (int i = 0; i < 100; i++) {
+                updateProgress((1.0 * i) / 100, 1);
+                Thread.sleep(100);
+            }
+            this.updateProgress(1, 1);
             return null;
         }
 
