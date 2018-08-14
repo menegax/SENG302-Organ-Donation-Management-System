@@ -20,70 +20,77 @@
 </head>
 <body>
 <div id="map"></div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTrWWBWfYPGFsHvv8sr4tkfpeubCiDIE0">
+</script>
 <script>
     // Note: This example requires that you consent to location sharing when
     // prompted by your browser. If you see the error "The Geolocation service
     // failed.", it means you probably did not give permission for the browser to
     // locate you.
-    var map, infoWindow, jsInjector, patients, geocoder;
-    function initMap() {
+    var map, geocoder, patients;
+    var markers = [];
+
+    function init() {
+        console.log("hihi");
         geocoder = new google.maps.Geocoder();
-        patients = jsInjector.getPatients();
+        console.log("asdasd");
         map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: -43.31225, lng: 172.35012},
-            zoom: 7,
+            //center: {lat: -43.31225, lng: 172.35012},
+            center: {lat: 0, lng: 0},
+            zoom: 2,
             disableDefaultUI: true,
             zoomControl: true,
             scaleControl: true,
             gestureHandling: 'cooperative'
-    });
-        console.log(patients.size());
-        for (var i = 0 ; i < patients.size() ; i++) {
-            console.log(patients.get(i).getNhiNumber());
-            console.log(patients.get(i).getStreetNumber());
-            if(patients.get(i).getStreetNumber() != null && patients.get(i).getStreetName() != null &&
-                patients.get(i).getSuburb() != null) {
-                var number = patients.get(i).getStreetNumber();
-                var street = patients.get(i).getStreetName();
-                var suburb = patients.get(i).getSuburb();
-                var address = number + " " + street + ", " + suburb;
-                var name = patients.get(i).getFirstName() + " " + patients.get(i).getLastName();
-                geocoder.geocode({'address': address}, function (results, status) {
-                    if (status == 'OK') {
-                        map.setCenter(results[0].geometry.location);
-                        var marker = new google.maps.Marker({
-                            map: map,
-                            position: results[0].geometry.location,
-                            title: name
-                        });
-                    } else {
-                        alert('Geocode was not successful for the following reason: ' + status);
-                    }
-                });
+        });
+        markerLoop(patients.size());
+    }
+
+    function markerLoop(i) {
+        if (i < 1) return;
+        addMarker(patients.get(i-1));
+        setTimeout(function() {
+            markerLoop(--i);
+        }, 700);
+    }
+    
+    function addMarker(patient) {
+        var address = patient.getStreetNumber() + " " + patient.getStreetName() + ", " + patient.getSuburb();
+        var name = patient.getNameConcatenated();
+        geocoder.geocode({'address': address}, function (results, status) {
+            if (status === 'OK') {
+                console.log('Placing marker...');
+                markers.push(new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location,
+                    title: name
+                }));
+            } else {
+                console.log('Geocode was not successful for the following reason: ' + status);
             }
-        }
+        });
+    }
 
-        infoWindow = new google.maps.InfoWindow;
+    /*infoWindow = new google.maps.InfoWindow;
 
-        // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
+    // Try HTML5 geolocation.
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
 
-                infoWindow.setPosition(pos);
-                infoWindow.setContent('Location found.');
-                infoWindow.open(map);
-                map.setCenter(pos);
-            }, function() {
-                handleLocationError(true, infoWindow, map.getCenter());
-            });
-        } else {
-            // Browser doesn't support Geolocation
-            handleLocationError(false, infoWindow, map.getCenter());
-        }
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            infoWindow.open(map);
+            map.setCenter(pos);
+        }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+        });
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
     }
 
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -92,10 +99,7 @@
             'Error: The Geolocation service failed.' :
             'Error: Your browser doesn\'t support geolocation.');
         infoWindow.open(map);
-    }
-</script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTrWWBWfYPGFsHvv8sr4tkfpeubCiDIE0&callback=initMap">
+    }*/
 </script>
 </body>
 </html>

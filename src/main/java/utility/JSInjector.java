@@ -1,18 +1,13 @@
 package utility;
 
-import data_access.localDAO.LocalDB;
 import model.Patient;
-import service.AdministratorDataService;
 import service.ClinicianDataService;
 import service.PatientDataService;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.zip.DataFormatException;
 
+//todo remove before review as currently unneeded. (Leaving it in for now incase it is needed later)
 public class JSInjector {
 
     public List<Patient> getPatients() {

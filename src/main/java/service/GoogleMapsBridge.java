@@ -2,16 +2,17 @@ package service;
 
 import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.concurrent.Worker;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import model.Patient;
 import netscape.javascript.JSObject;
 import utility.JSInjector;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -40,12 +41,18 @@ public class GoogleMapsBridge implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         webEngine1 = webViewMap1.getEngine();
 
+        List<Patient> patients = new ArrayList<>(new ClinicianDataService().searchPatients("", null, 30));
+        List<Patient> results = new ArrayList<>();
+        for (Patient p : patients) {
+            results.add(new PatientDataService().getPatientByNhi(p.getNhiNumber()));
+        }
+
         webEngine1.setJavaScriptEnabled(true);
         webEngine1.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (Worker.State.SUCCEEDED == newValue) {
                 jsBridge1 = (JSObject) webEngine1.executeScript("window");
-                jsInjector = new JSInjector();
-                jsBridge1.setMember("jsInjector", jsInjector);
+                jsBridge1.setMember("patients", results);
+                jsBridge1.call("init");
             }
         });
         webEngine1.load(Objects.requireNonNull(getClass().getClassLoader()
