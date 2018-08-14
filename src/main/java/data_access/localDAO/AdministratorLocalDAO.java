@@ -28,6 +28,7 @@ public class AdministratorLocalDAO implements IAdministratorDataAccess {
     @Override
     public void addAdministrator(Administrator administrator) {
         localDB.storeAdministrator(administrator);
+        Searcher.getSearcher().updateIndex(administrator);
     }
 
     @Override

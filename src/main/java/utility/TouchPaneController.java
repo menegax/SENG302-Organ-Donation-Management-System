@@ -116,61 +116,61 @@ public class TouchPaneController {
     }
 
     private void resizeFont(Node node, double zoomFactor) {
-        if(node instanceof Label) {
-            Label l = (Label) node;
-            l.setFont(Font.font(l.getFont().getSize() * zoomFactor));
-        } else if(node instanceof TextField) {
-            TextField t= (TextField) node;
-            t.setFont(Font.font(t.getFont().getSize() * zoomFactor));
-        } else if(node instanceof Button) {
-            Button b = (Button) node;
-            b.setFont(Font.font(b.getFont().getSize() * zoomFactor));
-        } else if(node instanceof CheckBox) {
-            CheckBox checkBox = (CheckBox) node;
-            checkBox.setFont(Font.font(checkBox.getFont().getSize() * zoomFactor));
-        } else if(node instanceof RadioButton) {
-            RadioButton rB = (RadioButton) node;
-            rB.setFont(Font.font(rB.getFont().getSize() * zoomFactor));
-        } else if(node instanceof Hyperlink) {
-            Hyperlink hyperlink = (Hyperlink) node;
-            hyperlink.setFont(Font.font(hyperlink.getFont().getSize() * zoomFactor));
-        } else if(node instanceof DatePicker) {
-            DatePicker datePicker = (DatePicker) node;
-            datePicker.getEditor().setFont(Font.font(datePicker.getEditor().getFont().getSize() * zoomFactor));
-        } else if(node instanceof TableView) {
-            TableView tableView = (TableView) node;
-            List<TableColumn> columns = tableView.getColumns();
-            for(TableColumn column : columns) {
-
-            }
-        } else if(node instanceof VBox) {
-            VBox vBox = (VBox) node;
-            for(Node vNode : vBox.getChildren()) {
-                resizeFont(vNode, zoomFactor);
-            }
-        } else if(node instanceof HBox) {
-            HBox hBox = (HBox) node;
-            for(Node hNode : hBox.getChildren()) {
-                resizeFont(hNode, zoomFactor);
-            }
-        } else if (node instanceof GridPane) {
-            GridPane gridPane = (GridPane) node;
-            for(Node gridNode : gridPane.getChildren()) {
-                resizeFont(gridNode, zoomFactor);
-            }
-        } else if(node instanceof TabPane) {
-            TabPane tabPane = (TabPane) node;
-            List<Tab> tabs = tabPane.getTabs();
-            List<Node> tabNodes = tabs.stream().map(Tab::getContent).collect(Collectors.toList());
-            for(Node tabNode : tabNodes) {
-                resizeFont(tabNode, zoomFactor);
-            }
-        } else if (node instanceof AnchorPane) {
-            AnchorPane anchorPane = (AnchorPane) node;
-            for(Node anchorNode : anchorPane.getChildren()) {
-                resizeFont(anchorNode, zoomFactor);
-            }
-        }
+//        if(node instanceof Label) {
+//            Label l = (Label) node;
+//            l.setFont(Font.font(l.getFont().getSize() * zoomFactor));
+//        } else if(node instanceof TextField) {
+//            TextField t= (TextField) node;
+//            t.setFont(Font.font(t.getFont().getSize() * zoomFactor));
+//        } else if(node instanceof Button) {
+//            Button b = (Button) node;
+//            b.setFont(Font.font(b.getFont().getSize() * zoomFactor));
+//        } else if(node instanceof CheckBox) {
+//            CheckBox checkBox = (CheckBox) node;
+//            checkBox.setFont(Font.font(checkBox.getFont().getSize() * zoomFactor));
+//        } else if(node instanceof RadioButton) {
+//            RadioButton rB = (RadioButton) node;
+//            rB.setFont(Font.font(rB.getFont().getSize() * zoomFactor));
+//        } else if(node instanceof Hyperlink) {
+//            Hyperlink hyperlink = (Hyperlink) node;
+//            hyperlink.setFont(Font.font(hyperlink.getFont().getSize() * zoomFactor));
+//        } else if(node instanceof DatePicker) {
+//            DatePicker datePicker = (DatePicker) node;
+//            datePicker.getEditor().setFont(Font.font(datePicker.getEditor().getFont().getSize() * zoomFactor));
+//        } else if(node instanceof TableView) {
+//            TableView tableView = (TableView) node;
+//            List<TableColumn> columns = tableView.getColumns();
+//            for(TableColumn column : columns) {
+//
+//            }
+//        } else if(node instanceof VBox) {
+//            VBox vBox = (VBox) node;
+//            for(Node vNode : vBox.getChildren()) {
+//                resizeFont(vNode, zoomFactor);
+//            }
+//        } else if(node instanceof HBox) {
+//            HBox hBox = (HBox) node;
+//            for(Node hNode : hBox.getChildren()) {
+//                resizeFont(hNode, zoomFactor);
+//            }
+//        } else if (node instanceof GridPane) {
+//            GridPane gridPane = (GridPane) node;
+//            for(Node gridNode : gridPane.getChildren()) {
+//                resizeFont(gridNode, zoomFactor);
+//            }
+//        } else if(node instanceof TabPane) {
+//            TabPane tabPane = (TabPane) node;
+//            List<Tab> tabs = tabPane.getTabs();
+//            List<Node> tabNodes = tabs.stream().map(Tab::getContent).collect(Collectors.toList());
+//            for(Node tabNode : tabNodes) {
+//                resizeFont(tabNode, zoomFactor);
+//            }
+//        } else if (node instanceof AnchorPane) {
+//            AnchorPane anchorPane = (AnchorPane) node;
+//            for(Node anchorNode : anchorPane.getChildren()) {
+//                resizeFont(anchorNode, zoomFactor);
+//            }
+//        }
     }
 
 }

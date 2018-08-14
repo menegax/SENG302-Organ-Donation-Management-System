@@ -63,26 +63,10 @@ public class TUIOFXMain extends Application {
 
         new UserDataService().prepareApplication();
 
-        openKeyboard();
+//        openKeyboard();
         TuioFX tuioFX = new TuioFX(stage, Configuration.pqLabs());
         tuioFX.enableMTWidgets(true);
         tuioFX.start();
-        tuioFX.addTangibleListener(new TangibleListener() {
-            @Override
-            public void tuioTangibleUpdated(TangibleEvent tangibleEvent) {
-                
-            }
-
-            @Override
-            public void tuioTangibleAdded(TangibleEvent tangibleEvent) {
-
-            }
-
-            @Override
-            public void tuioTangibleRemoved(TangibleEvent tangibleEvent) {
-
-            }
-        });
 
         stage.show();
 
@@ -97,26 +81,6 @@ public class TUIOFXMain extends Application {
         SystemLogger.setup();
         TuioFX.enableJavaFXTouchProperties();
         launch(args);
-    }
-
-    /**
-     * Opens the Windows system on-screen keyboard.
-     * This is only called on a Windows setup because touch controls are only available for a Windows system.
-     */
-    private void openKeyboard() {
-        if (System.getProperty("os.name")
-                .startsWith("Windows")) {
-            try {
-                Runtime.getRuntime()
-                        .exec("cmd /c osk");
-            }
-            catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Error");
-                alert.setContentText("System keyboard could not be opened");
-                alert.show();
-            }
-        }
     }
 
 }

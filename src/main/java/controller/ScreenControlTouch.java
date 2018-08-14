@@ -119,7 +119,9 @@ class ScreenControlTouch extends ScreenControl {
             Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
             touchPane = new Pane();
             touchPane.getChildren().addAll(new Pane(root));
-            touchStage.setScene(new Scene(touchPane));
+            Scene newScene = new Scene(touchPane);
+            addCanvas(newScene);
+            touchStage.setScene(newScene);
             setLoginShowing(true);
         } catch (IOException e) {
             systemLogger.log(SEVERE, "Failed to recreate login scene in touch application");
