@@ -69,7 +69,6 @@ public class PatientDAO implements IPatientDataAccess {
             }
         } catch (SQLException e) {
             systemLogger.log(Level.SEVERE, "Could not save patients to MySQL database");
-            e.printStackTrace(); //todo rm
         }
     }
 
@@ -98,13 +97,11 @@ public class PatientDAO implements IPatientDataAccess {
             if (extendedQueryCount != 0) {
                 extendedInsert = statements.toString().substring(0, statements.toString().length() -1)
                         + " " +ResourceManager.getStringForQuery("ON_DUPLICATE_UPDATE_PATIENT");
-                System.out.println(extendedInsert);
                 connection.prepareStatement(extendedInsert).execute();
             }
             connection.commit();
             contactDataAccess.addContactBatch(patient);
         } catch (Exception e) {
-            e.printStackTrace();
             SystemLogger.systemLogger.log(Level.SEVERE, "Could not import patient batch", this);
         }
         return true;
