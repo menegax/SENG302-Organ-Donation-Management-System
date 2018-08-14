@@ -119,7 +119,6 @@ class ScreenControlTouch extends ScreenControl {
                     parentController.windowClosed();
                 }
             });
-            System.out.println("new pane");
             resizeFonts(touchPane);
             systemLogger.log(INFO, "Showing new touch stage scene");
             return controller;

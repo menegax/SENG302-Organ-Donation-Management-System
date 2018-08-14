@@ -365,7 +365,6 @@ public class GUIRequiredOrganDeregistrationReason extends TargetedController imp
 //        } else
             if (!locationDeathTxt.getText()
                 .matches(GlobalEnums.UIRegex.DEATH_LOCATION.getValue())) {
-                System.out.println("looks like loc didn't match regex");
             // if doesn't match regex, invalid
             valid = setInvalid(locationDeathTxt);
         }
