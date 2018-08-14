@@ -50,7 +50,8 @@ public class GUIAdministratorProfile extends TargetedController{
             deleteButton.setVisible(true);
             deleteButton.setDisable(false);
         }
-        loadProfile((Administrator) target);
+        Administrator adminToLoad = administratorDataService.getAdministratorByUsername(((Administrator) target).getUsername());
+        loadProfile(adminToLoad);
     }
 
     /**
