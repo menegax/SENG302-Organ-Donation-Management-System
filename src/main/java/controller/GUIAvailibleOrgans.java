@@ -14,6 +14,8 @@ import javafx.collections.transformation.SortedList;
 
 import model.Patient;
 
+import java.util.List;
+
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
  */
@@ -40,7 +42,8 @@ public class GUIAvailibleOrgans {
 
 
     public void initialize() {
-    	for (Patient patient : patientDataService.getDeadPatients()) {
+        List<Patient> deadPatients = patientDataService.getDeadPatients();
+    	for (Patient patient : deadPatients) {
     		if (patient.getDeathDate() != null) {
     			for (Organ organ : patient.getDonations()) {
                     PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
@@ -110,5 +113,14 @@ public class GUIAvailibleOrgans {
     	public Organ getOrgan() {
     		return organ;
     	}
+
+    	@Override
+    	public boolean equals(Object obj) {
+    	    PatientOrgan patientOrgan = (PatientOrgan) obj;
+            return patientOrgan.patient.getNhiNumber().equals(this.patient.getNhiNumber()) &&
+                    patientOrgan.organ.equals(this.organ);
+
+        }
+
     }
 }
