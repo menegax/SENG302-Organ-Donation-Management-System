@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane fx:id="potentialMatchesPane" prefHeight="400.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPotentialMatchesList">
+<GridPane fx:id="potentialMatchesPane" prefHeight="400.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianPotentialMatches">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="210.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="208.0" />
@@ -24,10 +24,11 @@
    <children>
       <TableView fx:id="potentialMatchesTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="2">
          <columns>
+            <TableColumn fx:id="nhiCol" prefWidth="75.0" text="NHI" />
             <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
             <TableColumn fx:id="ageCol" prefWidth="75.0" text="Age" />
             <TableColumn fx:id="regionCol" prefWidth="75.0" text="Region" />
-            <TableColumn fx:id="locationCol" prefWidth="75.0" text="Location" />
+            <TableColumn fx:id="addressCol" prefWidth="75.0" text="Address" />
             <TableColumn fx:id="waitingTimeCol" prefWidth="75.0" text="Waiting Time" />
          </columns>
          <GridPane.margin>
