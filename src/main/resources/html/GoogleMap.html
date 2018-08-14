@@ -35,7 +35,8 @@
             disableDefaultUI: true,
             zoomControl: true,
             scaleControl: true,
-            gestureHandling: 'cooperative'
+            scrollwheel: false,
+            gestureHandling: 'greedy'
     });
         console.log(patients.size());
         for (var i = 0 ; i < patients.size() ; i++) {
