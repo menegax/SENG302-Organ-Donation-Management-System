@@ -1,5 +1,9 @@
 package utility.undoRedo;
 
+import controller.ScreenControl;
+import javafx.scene.Node;
+import javafx.scene.input.KeyCombination;
+import model.User;
 import utility.GlobalEnums.UndoableScreen;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryControl;
 import javafx.scene.control.*;
@@ -34,9 +38,13 @@ public class StatesHistoryScreen {
 
     private UndoableScreen undoableScreen;
 
-    private UndoableStage undoableStage;
+    private UndoableWrapper undoableWrapper;
 
     private Map<Integer, List<Action>> actions = new HashMap<>();
+
+    private User target;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private int index = 0;
 
@@ -45,10 +53,12 @@ public class StatesHistoryScreen {
      * Creates the list of stateHistories in its initialisation
      * @param controls list of controls on the screen (can also contain arraylists of controls)
      * @param undoableScreen the enum of the screen this StatesHistoryScreen represents
+     * @param target the target user of the screen this StatesHistoryScreen represents
      */
-    public StatesHistoryScreen(List<Control> controls, UndoableScreen undoableScreen) {
+    public StatesHistoryScreen(List<Control> controls, UndoableScreen undoableScreen, User target) {
         this.undoableScreen = undoableScreen;
-        addToUndoableStage(controls.get(0));
+        this.target = target;
+        findUndoableWrapper(controls.get(0));
         for (Object control : controls) {
             if ((control instanceof TextField)) {
                 createStateHistoriesTextField(control);
@@ -78,38 +88,76 @@ public class StatesHistoryScreen {
     }
 
     /**
-     * Adds this object to the appropriate undoableStage
-     * @param control a control on the current screen
+     * Finds the appropriate undoable wrapper for this stateshistoryscreen
+     * @param node a node on the current screen
      */
-    private void addToUndoableStage(Control control) {
-        if (control.getScene() == null) {
-            control.sceneProperty().addListener((observable, oldScene, newScene) -> {
-                if (newScene != null) {
-                    if (newScene.getWindow() == null) {
-                        newScene.windowProperty().addListener((observable2, oldStage, newStage) -> {
-                            if (newStage != null) {
-                                ((UndoableStage) newStage).addStatesHistoryScreen(this);
-                                undoableStage = (UndoableStage) newStage;
-                            }
-                        });
-                    } else {
-                        ((UndoableStage) newScene.getWindow()).addStatesHistoryScreen(this);
-                        undoableStage = (UndoableStage) newScene.getWindow();
+    private void findUndoableWrapper(Node node) {
+        if (screenControl.isTouch()) {
+            findUndoableWrapperTouch(node);
+        } else {
+            findUndoableWrapperDesktop(node);
+        }
+    }
+
+    /**
+     * Finds the appropriate undoable wrapper for this stateshistoryscreen on a touch application
+     * @param node a node on the current screen
+     */
+    private void findUndoableWrapperTouch(Node node) {
+        if (node.getParent() == null) {
+            node.parentProperty().addListener((observable, oldValue, newValue) -> {
+                if (screenControl.getUndoableWrapper(newValue) == null) {
+                    if (newValue != null) {
+                        findUndoableWrapperTouch(newValue);
                     }
-                }
-            });
-        } else if (control.getScene().getWindow() == null){
-            control.getScene().windowProperty().addListener((observable2, oldStage, newStage) -> {
-                if (newStage != null) {
-                    ((UndoableStage) newStage).addStatesHistoryScreen(this);
-                    undoableStage = (UndoableStage) newStage;
+                } else {
+                    addToUndoableWrapper(screenControl.getUndoableWrapper(newValue));
                 }
             });
         } else {
-            ((UndoableStage) control.getScene().getWindow()).addStatesHistoryScreen(this);
-            undoableStage = (UndoableStage) control.getScene().getWindow();
+            if (screenControl.getUndoableWrapper(node.getParent()) == null) {
+                findUndoableWrapperTouch(node.getParent());
+            } else {
+                addToUndoableWrapper(screenControl.getUndoableWrapper(node.getParent()));
+            }
         }
     }
+
+    /**
+     * Finds the appropriate undoable wrapper for this stateshistoryscreen on a desktop application
+     * @param node a node on the current screen
+     */
+    private void findUndoableWrapperDesktop(Node node) {
+        if (node.getScene() == null) {
+            node.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    if (newScene.getWindow() == null) {
+                        newScene.windowProperty().addListener((observable1, oldStage, newStage) -> {
+                            addToUndoableWrapper(screenControl.getUndoableWrapper(newStage));
+                        });
+                    } else {
+                        addToUndoableWrapper(screenControl.getUndoableWrapper(newScene.getWindow()));
+                    }
+                }
+            });
+        } else if (node.getScene().getWindow() == null) {
+            node.getScene().windowProperty().addListener((observable, oldStage, newStage) -> {
+                addToUndoableWrapper(screenControl.getUndoableWrapper(newStage));
+            });
+        } else {
+            addToUndoableWrapper(screenControl.getUndoableWrapper(node.getScene().getWindow()));
+        }
+    }
+
+    /**
+     * Adds this object to the appropriate undoableWrapper
+     */
+    private void addToUndoableWrapper(UndoableWrapper undoableWrapper) {
+        this.undoableWrapper = undoableWrapper;
+        undoableWrapper.addStatesHistoryScreen(this);
+    }
+
+
 
 
     /**
@@ -125,15 +173,16 @@ public class StatesHistoryScreen {
             }
         });
         ((TextField) entry).setOnKeyPressed(event -> {
-            if (KeyCodeCombination.keyCombination("Ctrl+Z").match(event)) {
+            if (screenControl.getUndo().match(event)) {
                 ((TextField) entry).getParent().requestFocus();
-                ((UndoableStage) ((TextField) entry).getScene().getWindow()).undo();
+                undoableWrapper.undo();
             }
-            else if (KeyCodeCombination.keyCombination("Ctrl+Y").match(event)) {
+            else if (screenControl.getRedo().match(event)) {
                 ((TextField) entry).getParent().requestFocus();
-                ((UndoableStage) ((TextField) entry).getScene().getWindow()).redo();
+                undoableWrapper.redo();
             }
         });
+
     }
 
 
@@ -260,7 +309,7 @@ public class StatesHistoryScreen {
      * Stores the current state of the screen
      */
     public void store() {
-        if (!undone && !redone && !undoableStage.isChangingStates()) {
+        if (!undone && !redone && !undoableWrapper.isChangingStates()) {
             index += 1;
             for (Integer key : actions.keySet()) {
                 if (key >= index) {
@@ -270,7 +319,7 @@ public class StatesHistoryScreen {
             for (StateHistoryControl stateHistory : stateHistories) {
                 stateHistory.store();
             }
-            undoableStage.store();
+            undoableWrapper.store();
         }
     }
 
@@ -392,11 +441,11 @@ public class StatesHistoryScreen {
     }
 
     /**
-     * Gets the undoable stage this statesHistoryScreen is on
-     * @return the undoableStage
+     * Gets the undoableWrapper stage this statesHistoryScreen is on
+     * @return the undoableWrapper
      */
-    public UndoableStage getUndoableStage() {
-        return undoableStage;
+    public UndoableWrapper getUndoableWrapper() {
+        return undoableWrapper;
     }
 
     public int getIndex() {
@@ -405,5 +454,9 @@ public class StatesHistoryScreen {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public User getTarget(){
+        return target;
     }
 }

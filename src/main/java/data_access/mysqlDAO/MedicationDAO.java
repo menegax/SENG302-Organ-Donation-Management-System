@@ -3,6 +3,7 @@ package data_access.mysqlDAO;
 import data_access.interfaces.IMedicationDataAccess;
 import data_access.factories.MySqlFactory;
 import model.Medication;
+import model.Patient;
 import utility.GlobalEnums.*;
 import utility.ResourceManager;
 

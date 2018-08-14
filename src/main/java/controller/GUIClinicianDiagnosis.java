@@ -14,7 +14,6 @@ import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.Action;
-import utility.undoRedo.UndoableStage;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller class for clinician viewing and editing of a patient's diagnoses.
  */
-public class GUIClinicianDiagnosis extends UndoableController{
+public class GUIClinicianDiagnosis extends UndoableController implements IWindowObserver{
 
     @FXML
     public GridPane clinicianDiagnosesPane;
@@ -62,12 +61,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
     @FXML
     public Button addDiagnosisButton;
 
-    /**
-     * Patient being viewed
-     */
-    private static Patient target;
-
-    private static Patient targetClone;
+    private Patient targetClone;
 
     /**
      * Patient's current diseases
@@ -85,7 +79,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
      */
     private static boolean changed = false; // Boolean for if there are any un-saved edits when leaving pane
 
-    private UserControl userControl;
+    private UserControl userControl = UserControl.getUserControl();
 
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
@@ -108,17 +102,14 @@ public class GUIClinicianDiagnosis extends UndoableController{
      * Double click functions to update a diagnosis are added for both current and past diseases
      */
     @FXML
-    public void initialize() {
-        userControl = new UserControl();
+    public void load() {
         if(userControl.getLoggedInUser() instanceof Patient) {
-            target = patientDataService.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber());
             targetClone = (Patient) target.deepClone();
             addDiagnosisButton.setVisible(false);
             addDiagnosisButton.setDisable(true);
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
         } else {
-            target = patientDataService.getPatientByNhi(((Patient) userControl.getTargetUser()).getNhiNumber());
             targetClone = (Patient) target.deepClone();
             addDiagnosisButton.setVisible(true);
             addDiagnosisButton.setDisable(false);
@@ -142,7 +133,7 @@ public class GUIClinicianDiagnosis extends UndoableController{
             add(currentDiagnosesView);
             add(pastDiagnosesView);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANDIAGNOSIS);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANDIAGNOSIS, target);
     }
 
     /**
@@ -159,22 +150,12 @@ public class GUIClinicianDiagnosis extends UndoableController{
      * an update.
      */
     private void setUpDoubleClickEdit(TableView<Disease> tableView) {
-        UndoableStage stage = new UndoableStage();
-        //stage.setPopUp();
         tableView.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && tableView.getSelectionModel().getSelectedItem() != null) {
-                GUIPatientUpdateDiagnosis.setDisease(tableView.getSelectionModel().getSelectedItem());
-                GUIPatientUpdateDiagnosis.setIsAdd(false);
-                screenControl.addStage(stage.getUUID(), stage);
-                stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-                try {
-                    screenControl.show(stage.getUUID(), FXMLLoader.load(getClass().getResource("/scene/patientUpdateDiagnosis.fxml")));
-                } catch (IOException e) {
-                    userActions.log(Level.SEVERE,
-                            "Failed to open diagnosis update window from the diagnoses page",
-                            "attempted to open diagnosis update window from the diagnoses page");
-                    new Alert(Alert.AlertType.ERROR, "Unable to open diagnosis update window", ButtonType.OK).show();
-                }
+                GUIPatientUpdateDiagnosis controller = (GUIPatientUpdateDiagnosis) screenControl.show("/scene/patientUpdateDiagnosis.fxml", false,this, target);
+                controller.setIsAdd(false);
+                controller.setDisease(tableView.getSelectionModel().getSelectedItem());
+                controller.setTarget(target);
             }
 
         });
@@ -186,20 +167,16 @@ public class GUIClinicianDiagnosis extends UndoableController{
      * an addition of a disease rather than an update
      */
     private void addDiagnosis() {
-        try {
-            GUIPatientUpdateDiagnosis.setIsAdd(true);
-            UndoableStage stage = new UndoableStage();
-            //stage.setPopUp();
-            screenControl.addStage(stage.getUUID(), stage);
-            screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/patientUpdateDiagnosis.fxml")));
-            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE,
-                    "Failed to open diagnosis update window from the diagnoses page",
-                    "attempted to open diagnosis update window from the diagnoses page");
-            new Alert(Alert.AlertType.ERROR, "Unable to open diagnosis update window", ButtonType.OK).show();
-        }
+        GUIPatientUpdateDiagnosis controller = (GUIPatientUpdateDiagnosis) screenControl.show("/scene/patientUpdateDiagnosis.fxml", false, this, target);
+        controller.setIsAdd(true);
+        controller.setTarget(target);
+    }
+
+    /**
+     * Called when a window created by this controller is closed
+     */
+    public void windowClosed() {
+        tableRefresh();
     }
 
     /**
@@ -339,15 +316,15 @@ public class GUIClinicianDiagnosis extends UndoableController{
             pastDiseases.remove(pastDiagnosesView.getSelectionModel().getSelectedItem());
             statesHistoryScreen.addAction(new Action(target, targetClone));
             loadPastDiseases();
-            userActions.log(Level.FINE, "Successfully deleted a disease",  pastDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
+            userActions.log(Level.FINE, "Successfully deleted a disease",  new String[]{pastDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted", ((Patient) target).getNhiNumber()});
         } else if (currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
             changed = true;
             currentDiseases.remove(currentDiagnosesView.getSelectionModel().getSelectedItem());
             statesHistoryScreen.addAction(new Action(target, targetClone));
             loadCurrentDiseases();
-            userActions.log(Level.WARNING, "Successfully deleted a disease", currentDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted");
+            userActions.log(Level.WARNING, "Successfully deleted a disease", new String[]{currentDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted", ((Patient) target).getNhiNumber()});
         } else {
-            userActions.log(Level.WARNING, "No diagnosis selected to delete", "disease failed to be deleted");
+            userActions.log(Level.WARNING, "No diagnosis selected to delete", new String[]{"disease failed to be deleted", ((Patient) target).getNhiNumber()});
         }
         updateDiagnosesLists();
     }

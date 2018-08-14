@@ -5,9 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import model.Administrator;
 import model.Clinician;
@@ -42,9 +45,6 @@ public class GUIUserRegister implements TouchscreenCapable {
     public Button doneButton;
 
     @FXML
-    private Label backButton;
-
-    @FXML
     private TextField firstnameRegister;
 
     @FXML
@@ -60,29 +60,9 @@ public class GUIUserRegister implements TouchscreenCapable {
     private TextField userIdRegister;
 
     @FXML
-    private ChoiceBox regionRegister;
-
-    @FXML
-    private PasswordField passwordTxt;
-
-    @FXML
-    private PasswordField verifyPasswordTxt;
-
-    @FXML
-    private RadioButton patientButton;
-
-    @FXML
-    private RadioButton clinicianButton;
-
-    @FXML
-    private RadioButton administratorButton;
-
-    @FXML
     private GridPane userRegisterPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
-
-    private UserControl userControl = new UserControl();
 
     private IAdministratorDataService administratorDataService = new AdministratorDataService();
     private IPatientDataService patientDataService = new PatientDataService();
@@ -101,92 +81,20 @@ public class GUIUserRegister implements TouchscreenCapable {
         userIdRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         setDateConverter();
         birthRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        regionRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        if (userControl.getLoggedInUser() instanceof Administrator) {
-            ObservableList<String> regions = FXCollections.observableArrayList();
-            for (Region region : Region.values()) {
-                regions.add(region.getValue());
-            }
-            regionRegister.setItems(regions);
-            backButton.setVisible(false);
-            backButton.setDisable(true);
-            userRegisterPane.getRowConstraints().get(0).setMaxHeight(0);
-        } else {
-            patientButton.setDisable(true);
-            patientButton.setVisible(false);
-            clinicianButton.setDisable(true);
-            clinicianButton.setVisible(false);
-            administratorButton.setDisable(true);
-            administratorButton.setVisible(false);
-        }
+
         // Enter key
         userRegisterPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 register();
             }
         });
-        registerTouchPane = new TouchPaneController(userRegisterPane);
-        userRegisterPane.setOnZoom(this::zoomWindow);
-        userRegisterPane.setOnRotate(this::rotateWindow);
-        userRegisterPane.setOnScroll(this::scrollWindow);
+        if(screenControl.isTouch()) {
+            registerTouchPane = new TouchPaneController(userRegisterPane);
+            userRegisterPane.setOnZoom(this::zoomWindow);
+            userRegisterPane.setOnRotate(this::rotateWindow);
+            userRegisterPane.setOnScroll(this::scrollWindow);
+        }
 
-    }
-
-    /**
-     * Sets the registry fields for registering a patient
-     */
-    @FXML
-    public void onSelectPatient() {
-        clearFields();
-        userIdRegister.setPromptText("NHI Number");
-        regionRegister.setVisible(false);
-        regionRegister.setDisable(true);
-        birthRegister.setVisible(true);
-        birthRegister.setDisable(false);
-        passwordTxt.setVisible(false);
-        passwordTxt.setDisable(true);
-        verifyPasswordTxt.setVisible(false);
-        verifyPasswordTxt.setDisable(true);
-        userIdRegister.setVisible(true);
-        userIdRegister.setDisable(false);
-    }
-
-    /**
-     * Sets the registry fields for registering a clinician
-     */
-    @FXML
-    public void onSelectClinician() {
-        clearFields();
-        userIdRegister.setPromptText("Staff ID");
-        regionRegister.setVisible(true);
-        regionRegister.setDisable(false);
-        birthRegister.setVisible(false);
-        birthRegister.setDisable(true);
-        passwordTxt.setVisible(false);
-        passwordTxt.setDisable(true);
-        verifyPasswordTxt.setVisible(false);
-        verifyPasswordTxt.setDisable(true);
-        userIdRegister.setVisible(false);
-        userIdRegister.setDisable(true);
-    }
-
-    /**
-     * Sets the registry fields for registering an administrator
-     */
-    @FXML
-    public void onSelectAdministrator() {
-        clearFields();
-        userIdRegister.setPromptText("Username");
-        regionRegister.setVisible(false);
-        regionRegister.setDisable(true);
-        birthRegister.setVisible(false);
-        birthRegister.setDisable(true);
-        passwordTxt.setVisible(true);
-        passwordTxt.setDisable(false);
-        verifyPasswordTxt.setVisible(true);
-        verifyPasswordTxt.setDisable(false);
-        userIdRegister.setVisible(true);
-        userIdRegister.setDisable(false);
     }
 
     /**
@@ -208,17 +116,12 @@ public class GUIUserRegister implements TouchscreenCapable {
         lastnameRegister.clear();
         middlenameRegister.clear();
         birthRegister.getEditor().clear();
-        regionRegister.valueProperty().set(null);
-        passwordTxt.clear();
-        verifyPasswordTxt.clear();
 
         setValid(userIdRegister);
         setValid(firstnameRegister);
         setValid(lastnameRegister);
         setValid(middlenameRegister);
         setValid(birthRegister);
-        setValid(passwordTxt);
-        setValid(verifyPasswordTxt);
     }
 
     /**
@@ -311,127 +214,35 @@ public class GUIUserRegister implements TouchscreenCapable {
     }
 
     /**
-     * Validates the input fields for a new clinician account
-     *
-     * @return Whether the fields are valid
-     */
-    private boolean validateClinician() {
-        boolean valid = validateNames();
-        if (regionRegister.getValue() != null) {
-            setValid(regionRegister);
-        } else {
-            valid = setInvalid(regionRegister);
-        }
-        return valid;
-    }
-
-    /**
-     * Validates the input fields for a new administrator account
-     *
-     * @return Whether the fields are valid
-     */
-    private boolean validateAdministrator() {
-        boolean valid = validateNames();
-        String error = "";
-        if (!Pattern.matches(UIRegex.USERNAME.getValue(), userIdRegister.getText().toUpperCase())) {
-            valid = setInvalid(userIdRegister);
-            error += "Invalid username. ";
-        } else if (administratorDataService.getAdministratorByUsername(userIdRegister.getText().toUpperCase()) != null) {
-            valid = setInvalid(userIdRegister);
-            error += "Username already in use. ";
-        } else {
-            setValid(userIdRegister);
-        }
-        if (passwordTxt.getText().length() < 6) {
-            valid = setInvalid(passwordTxt);
-            error += "Password must be 6 or more characters.";
-        } else {
-            setValid(passwordTxt);
-        }
-        if (!verifyPasswordTxt.getText().equals(passwordTxt.getText())) {
-            setInvalid(verifyPasswordTxt);
-            if (passwordTxt.getText().length() >= 6) {
-                error += "Passwords do not match.";
-            }
-        } else {
-            setValid(verifyPasswordTxt);
-        }
-        if (!valid) {
-            userActions.log(Level.WARNING, error, "Attempted to register administrator with invalid fields");
-        }
-        return valid;
-    }
-
-    /**
      * Check users inputs for validity and registers the user patient profile
      */
     @FXML
     public void register() {
-        if (patientButton.isSelected()) {
-            if (!validatePatient()) {
-                userActions.log(Level.WARNING, "Failed to register patient profile due to invalid fields", "Attempted to register patient profile");
-                return;
-            }
-        } else if (clinicianButton.isSelected()) {
-            if (!validateClinician()) {
-                userActions.log(Level.WARNING, "Failed to register clinician profile due to invalid fields", "Attempted to register clinician profile");
-                return;
-            }
-        } else {
-            if (!validateAdministrator()) {
-                userActions.log(Level.WARNING, "Failed to register administrator profile due to invalid fields", "Attempted to register administrator profile");
-                return;
-            }
+        if (!validatePatient()) {
+            userActions.log(Level.WARNING, "Failed to register patient profile due to invalid fields", "Attempted to register patient profile");
+            return;
         }
 
         // if all are valid
         String id = userIdRegister.getText();
         String firstName = firstnameRegister.getText();
         String lastName = lastnameRegister.getText();
-        String password = passwordTxt.getText();
         ArrayList<String> middles = new ArrayList<>();
         String errorMsg = "";
         if (!middlenameRegister.getText().equals("")) {
             List<String> middleNames = Arrays.asList(middlenameRegister.getText().split(" "));
             middles = new ArrayList<>(middleNames);
         }
-        if (patientButton.isSelected()) {
-            LocalDate birth = birthRegister.getValue();
-            List<Patient> patientToAdd = new ArrayList<>();
-            patientToAdd.add(new Patient(id, firstName, middles, lastName, birth));
-            patientDataService.save(patientToAdd);
-            if (userControl.getLoggedInUser() == null) {
-                userDataService.save();
-            }
-            userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
-            errorMsg = "Successfully registered patient with NHI " + id;
-            screenControl.setIsSaved(false);
-        } else if (clinicianButton.isSelected()) {
-            String region = regionRegister.getValue().toString();
-            int staffID = clinicianDataService.nextStaffId();
-            clinicianDataService.save(new Clinician(staffID, firstName, middles, lastName, (Region) Region.getEnumFromString(region)));
-            userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
-            errorMsg = "Successfully registered clinician with staff ID " + staffID;
-            clearFields();
-            screenControl.setIsSaved(false);
-        } else {
-            try {
-                administratorDataService.save(new Administrator(id, firstName, middles, lastName, password));
-                userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
-                errorMsg = "Successfully registered administrator with username " + id;
-                screenControl.setIsSaved(false);
-            } catch (IllegalArgumentException e) {
-                userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");
-                errorMsg = "Couldn't register administrator, this username is already in use";
-            }
-        }
+        LocalDate birth = birthRegister.getValue();
+        patientDataService.save(new Patient(id, firstName, middles, lastName, birth));
+        userActions.log(Level.INFO, "Successfully registered patient profile", new String[]{"Attempted to register patient profile", id});
+        errorMsg = "Successfully registered patient with NHI " + id;
+        screenControl.setIsSaved(false);
         clearFields();
         if (!errorMsg.equals("")) {
             userActions.log(Level.INFO, errorMsg, "Attempted to register a new user");
         }
-        if (userControl.getLoggedInUser() == null) {
-            returnToPreviousPage();
-        }
+        returnToPreviousPage();
     }
 
     /***
@@ -445,12 +256,7 @@ public class GUIUserRegister implements TouchscreenCapable {
     }
 
     private void returnToPreviousPage() {
-        try {
-            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
-            userActions.log(SEVERE, "Failed to load login", "Attempted to load login");
-        }
+        screenControl.setUpNewLogin();
     }
 
     /**

@@ -17,6 +17,7 @@ public class LocalDB {
     private Set<Clinician> clinicians;
     private Set<Administrator> administrators;
     private Set<User> deleted;
+    private Set<Patient> imported;
     private OrganWaitlist organWaitlist = null;
 
     private LocalDB() {
@@ -24,6 +25,7 @@ public class LocalDB {
         clinicians = new HashSet<>();
         administrators = new HashSet<>();
         deleted = new HashSet<>();
+        imported = new HashSet<>();
     }
 
     public static LocalDB getInstance() {
@@ -111,12 +113,24 @@ public class LocalDB {
         administrators.add(administrator);
     }
 
+    public void setImported(Set<Patient> imported) {
+        this.imported = imported;
+    }
+
+    public Set<Patient> getImported() {
+        return this.imported;
+    }
+
     public OrganWaitlist getOrganWaitlist() {
         return organWaitlist;
     }
 
     public void setOrganWaitlist(OrganWaitlist organWaitlist) {
         this.organWaitlist = organWaitlist;
+    }
+
+    public void undelete(User user) {
+        deleted.remove(user);
     }
 
     /**
@@ -127,6 +141,7 @@ public class LocalDB {
         clinicians.clear();
         administrators.clear();
         deleted.clear();
+        imported.clear();
         organWaitlist = null;
     }
 

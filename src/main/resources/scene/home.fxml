@@ -3,19 +3,24 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="homePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIHome">
+<BorderPane fx:id="homePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="800.0" prefWidth="1200.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIHome">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
             <MenuBar fx:id="menuBar" />
             <HBox alignment="CENTER" prefHeight="60.0" prefWidth="1200.0" styleClass="colouredBar" stylesheets="@../css/guiStyle.css">
              <children>
+                  <Label fx:id="paneTitle" alignment="CENTER" contentDisplay="CENTER" minHeight="40.0" styleClass="colouredBarText" stylesheets="@../css/guiStyle.css" text="">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin></Label>
                  <Label fx:id="userNameDisplay" alignment="CENTER" contentDisplay="CENTER" minHeight="40.0" styleClass="colouredBarText" stylesheets="@../css/guiStyle.css" text="">
                      <HBox.margin>
                         <Insets />
@@ -29,6 +34,8 @@
       <AnchorPane maxHeight="25.0" minHeight="25.0" style="-fx-background-color: gray;" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="statusLbl" textFill="WHITE" textOverrun="CLIP" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="4.0" />
+            <ProgressBar fx:id="importProgress" prefWidth="500.0" progress="0.0" style="-fx-accent: #5DADE2;" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0" />
+            <Label fx:id="importLbl" alignment="CENTER" prefWidth="500.0" text="Importing..." AnchorPane.bottomAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
          </children></AnchorPane>
    </bottom>
    <center>
