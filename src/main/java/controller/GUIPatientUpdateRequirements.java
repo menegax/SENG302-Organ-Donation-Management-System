@@ -1,5 +1,8 @@
 package controller;
 
+import static java.util.logging.Level.INFO;
+import static utility.UserActionHistory.userActions;
+
 import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,28 +10,24 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
-import service.ClinicianDataService;
-import service.OrganWaitlist;
 import service.PatientDataService;
-import service.interfaces.IClinicianDataService;
 import service.interfaces.IPatientDataService;
+import utility.GlobalEnums;
 import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.GlobalEnums;
 import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
-
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
 
 /**
  * This class is the controller for editing a patients required organs only accessible by the clinician
@@ -80,8 +79,6 @@ public class GUIPatientUpdateRequirements extends UndoableController{
 
     private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
-    private UserControl userControl;
-
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private Set<GlobalEnums.Organ> initialRequirements = new HashSet<>();
@@ -90,19 +87,17 @@ public class GUIPatientUpdateRequirements extends UndoableController{
 
     private int totalRemoved;
 
-    private IClinicianDataService clinicianDataService = new ClinicianDataService();
-
     /**
      * Initializes the requirements screen by laoding in the current patient
      */
     public void initialize() {
-        userControl = new UserControl();
+        UserControl userControl = new UserControl();
         Object user = userControl.getLoggedInUser();
         if (user instanceof Patient) {
             loadProfile(((Patient) user).getNhiNumber());
         }
         if (userControl.getTargetUser() != null) {
-            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
+            loadProfile(((Patient) userControl.getTargetUser()).getNhiNumber());
         }
         // Enter key triggers log in
         patientRequirementsPane.setOnKeyPressed(e -> {
@@ -156,26 +151,43 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             if (organs.contains(GlobalEnums.Organ.LIVER)) {
                 liverCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.LIVER);
+            } else {
+                liverCB.setSelected(false);
             }
             if (organs.contains(GlobalEnums.Organ.KIDNEY)) {
                 kidneyCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.KIDNEY);
             }
+            else {
+                kidneyCB.setSelected(false);
+            }
             if (organs.contains(GlobalEnums.Organ.PANCREAS)) {
                 pancreasCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.PANCREAS);
+            }
+            else {
+                pancreasCB.setSelected(false);
             }
             if (organs.contains(GlobalEnums.Organ.HEART)) {
                 heartCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.HEART);
             }
+            else {
+                heartCB.setSelected(false);
+            }
             if (organs.contains(GlobalEnums.Organ.LUNG)) {
                 lungCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.LUNG);
             }
+            else {
+                lungCB.setSelected(false);
+            }
             if (organs.contains(GlobalEnums.Organ.INTESTINE)) {
                 intestineCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.INTESTINE);
+            }
+            else {
+                intestineCB.setSelected(false);
             }
             if (organs.contains(GlobalEnums.Organ.CORNEA)) {
                 corneaCB.setSelected(true);
@@ -185,21 +197,36 @@ public class GUIPatientUpdateRequirements extends UndoableController{
                 middleearCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.MIDDLEEAR);
             }
+            else {
+                middleearCB.setSelected(false);
+            }
             if (organs.contains(GlobalEnums.Organ.SKIN)) {
                 skinCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.SKIN);
+            }
+            else {
+                skinCB.setSelected(false);
             }
             if (organs.contains(GlobalEnums.Organ.BONE)) {
                 boneCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.BONE);
             }
+            else {
+                boneCB.setSelected(false);
+            }
             if (organs.contains(GlobalEnums.Organ.BONEMARROW)) {
                 bonemarrowCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.BONEMARROW);
             }
+            else {
+                bonemarrowCB.setSelected(false);
+            }
             if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) {
                 connectivetissueCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.CONNECTIVETISSUE);
+            }
+            else {
+                connectivetissueCB.setSelected(false);
             }
         }
     }
