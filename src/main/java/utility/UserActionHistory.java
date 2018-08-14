@@ -7,6 +7,7 @@ import controller.UserControl;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
+import model.User;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Timestamp;
@@ -23,6 +24,7 @@ public class UserActionHistory {
      */
     public static final Logger userActions = Logger.getLogger(UserActionHistory.class.getName());
 
+    private static UserControl userControl = UserControl.getUserControl();
 
     /**
      * Sets up custom logger class.
@@ -37,7 +39,7 @@ public class UserActionHistory {
                 Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
 
                 // get logged in patient if it exists
-                Object loggedInUser = new UserControl().getLoggedInUser();
+                Object loggedInUser = userControl.getLoggedInUser();
 
                 // Ensure all params (resulted, attempted actions) are there
                 if (logRecord.getParameters() == null) {
@@ -60,7 +62,7 @@ public class UserActionHistory {
                 else if (loggedInUser instanceof Clinician) {
 
                     //Add a clinician record if a clinician is logged in
-                    String nhiParam = null;
+                    String nhiParam = "";
                     // Ensure all params (resulted, attempted actions) are there
                     if (logRecord.getParameters() == null) {
                         SystemLogger.systemLogger.log(SEVERE, "Failed to log user action to admin object. Ensure both resulted and attempted actions are logged");
@@ -77,6 +79,13 @@ public class UserActionHistory {
                                         StringUtils.capitalize(logRecord.getParameters()[0].toString()),
                                         StringUtils.capitalize(logRecord.getMessage()),
                                         nhiParam));
+                    } else {
+                        ((Clinician) loggedInUser).getClinicianActionsList()
+                                .add(new ClinicianActionRecord(currentTimeStamp,
+                                        logRecord.getLevel(),
+                                        StringUtils.capitalize(logRecord.getParameters()[0].toString()),
+                                        StringUtils.capitalize(logRecord.getMessage()),
+                                        nhiParam));
                     }
                 }
 
@@ -84,13 +93,20 @@ public class UserActionHistory {
                 else if (loggedInUser instanceof Administrator) {
 
                     //Add an administrator record if a administrator is logged in
-                    String targetParam;
+                    String targetParam = "";
 
                     //If there are more than 1 parameter, in which case the target ID is provided as the second parameter
                     if (logRecord.getParameters().length >= 2) {
                         targetParam = logRecord.getParameters()[1].toString()
                                 .toUpperCase();
 
+                        ((Administrator) loggedInUser).getAdminActionsList()
+                                .add(new AdministratorActionRecord(currentTimeStamp,
+                                        logRecord.getLevel(),
+                                        StringUtils.capitalize(logRecord.getParameters()[0].toString()),
+                                        StringUtils.capitalize(logRecord.getMessage()),
+                                        targetParam));
+                    } else {
                         ((Administrator) loggedInUser).getAdminActionsList()
                                 .add(new AdministratorActionRecord(currentTimeStamp,
                                         logRecord.getLevel(),

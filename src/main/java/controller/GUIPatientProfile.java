@@ -4,6 +4,10 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import model.Clinician;
+import model.Medication;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -19,10 +23,11 @@ import org.apache.commons.lang3.StringUtils;
 import service.AdministratorDataService;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -40,7 +45,7 @@ import static utility.UserActionHistory.userActions;
  * In clinician view, they can see the highlighted cell if the donating organ is also required by the patient.
  * This class loads and controls this view.
  */
-public class GUIPatientProfile {
+public class GUIPatientProfile extends TargetedController{
 
     @FXML
     private GridPane patientProfilePane;
@@ -85,19 +90,19 @@ public class GUIPatientProfile {
     private Label bloodGroupLbl;
 
     @FXML
-    private Label addLbl1;
-
-    @FXML
-    private Label addLbl3;
+    private Label streetLbl;
 
     @FXML
     private Label cityLbl;
 
     @FXML
-    private Label addLbl4;
+    private Label suburbLbl;
 
     @FXML
-    private Label addLbl5;
+    private Label regionLbl;
+
+    @FXML
+    private Label zipLbl;
 
     @FXML
     private Label genderDeclaration;
@@ -131,56 +136,59 @@ public class GUIPatientProfile {
     @FXML
     private ListView<String> medList;
 
+    private UserControl userControl = UserControl.getUserControl();
+
     private ListProperty<String> donatingListProperty = new SimpleListProperty<>();
 
     private ListProperty<String> receivingListProperty = new SimpleListProperty<>();
-
-    private UserControl userControl = new UserControl();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private ListProperty<String> medListProperty = new SimpleListProperty<>();
 
 
+
+private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
     /**
      * Initialize the controller depending on whether it is a clinician viewing the patient or a patient viewing itself
-     *
-     * */
-    public void initialize(){
-        Patient patient = null;
-        IPatientDataService patientDataService = new PatientDataService();
-        if (userControl.getLoggedInUser() instanceof  Patient) {
-             patient = patientDataService.getPatientByNhi(((Patient)userControl.getLoggedInUser()).getNhiNumber());
-            if (patient.getRequiredOrgans().size() == 0) {
-                receivingList.setDisable(true);
-                receivingList.setVisible(false);
-                receivingTitle.setDisable(true);
-                receivingTitle.setVisible(false); // Hide the columns that would hold the receiving list view
-                for (int i = 9; i <= 11; i++) {
-                    patientProfilePane.getColumnConstraints().get(i).setMaxWidth(0);
-                }
-            }
-            genderDeclaration.setVisible(false);
-            genderStatus.setVisible(false);
-            genderRow.setMaxHeight(0);
-            firstNameLbl.setVisible(false);
-            firstNameValue.setVisible(false);
-            firstNameRow.setMaxHeight(0);
-            deleteButton.setVisible(false);
-            deleteButton.setDisable(true);
-
-        } else if (userControl.getLoggedInUser() instanceof Clinician || userControl.getLoggedInUser() instanceof Administrator) {
-            deleteButton.setVisible(true);
-            deleteButton.setDisable(false);
-            patient = patientDataService.getPatientByNhi(((Patient)userControl.getTargetUser()).getNhiNumber());
-        }
+     */
+    public void load() {
         try {
-            if (patient != null) {
-                loadProfile(patient);
+            IPatientDataService patientDataService = new PatientDataService();
+            if (userControl.getLoggedInUser() instanceof Patient) {
+                if (patientDataService.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber()).getRequiredOrgans().size() == 0) {
+                    receivingList.setDisable(true);
+                    receivingList.setVisible(false);
+                    receivingTitle.setDisable(true);
+                    receivingTitle.setVisible(false);
+                /* Hide the columns that would hold the receiving listview - this results in the visible nodes filling
+                   up the whole width of the scene */
+                    for (int i = 9; i <= 11; i++) {
+                        patientProfilePane.getColumnConstraints()
+                                .get(i)
+                                .setMaxWidth(0);
+                    }
+                }
+
+                genderDeclaration.setVisible(false);
+                genderStatus.setVisible(false);
+                genderRow.setMaxHeight(0);
+                firstNameLbl.setVisible(false);
+                firstNameValue.setVisible(false);
+                firstNameRow.setMaxHeight(0);
+
+                deleteButton.setVisible(false);
+                deleteButton.setDisable(true);
+            } else {
+                deleteButton.setVisible(true);
+                deleteButton.setDisable(false);
             }
+            assert target != null;
+            Patient patientToLoad = patientDataService.getPatientByNhi(((Patient) target).getNhiNumber());
+            loadProfile(patientToLoad);
         }
         catch (IOException e) {
-            userActions.log(Level.SEVERE, "Cannot load patient profile");
+            userActions.log(Level.SEVERE, "Cannot load patient profile", new String[]{"Attempted to load patient profile", ((Patient) target).getNhiNumber()});
         }
     }
 
@@ -253,22 +261,24 @@ public class GUIPatientProfile {
 
 
     private void loadAddressDetails(Patient patient) {
-        addLbl1.setText((patient.getStreetNumber() == null || patient.getStreetNumber()
-                .length() == 0) ? "Not set" : patient.getStreetNumber());
-        cityLbl.setText(patient.getCity() == null || patient.getCity().length() < 1 ? "Not set" : patient.getCity());
-        addLbl3.setText((patient.getSuburb() == null || patient.getSuburb()
+        streetLbl.setText((patient.getStreetName() == null || patient.getStreetName()
+                .length() == 0) ? "Not set" : patient.getStreetNumber() + " " + patient.getStreetName());
+        cityLbl.setText(patient.getStreetName() == null || patient.getStreetName().length() < 1 ? "Not set" : patient.getStreetName());
+        suburbLbl.setText((patient.getSuburb() == null || patient.getSuburb()
                 .length() == 0) ? "Not set" : patient.getSuburb());
-        addLbl4.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
+        cityLbl.setText((patient.getCity() == null || patient.getCity()
+                .length() == 0) ? "Not set" : patient.getCity());
+        regionLbl.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
                 .getValue());
         if (patient.getZip() != 0) {
-            addLbl5.setText(String.valueOf(patient.getZip()));
-            while (addLbl5.getText()
+            zipLbl.setText(String.valueOf(patient.getZip()));
+            while (zipLbl.getText()
                     .length() < 4) {
-                addLbl5.setText("0" + addLbl5.getText());
+                zipLbl.setText("0" + zipLbl.getText());
             }
         }
         else {
-            addLbl5.setText("Not set");
+            zipLbl.setText("Not set");
         }
     }
 
@@ -340,20 +350,11 @@ public class GUIPatientProfile {
      * Deletes the current profile from the HashSet in Database, not from disk, not until saved
      */
     public void deleteProfile() {
-        Patient patient = (Patient) userControl.getTargetUser();
-        Action action = new Action(patient, null);
-        new AdministratorDataService().deleteUser(patient);
-        for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
-            if (stage instanceof UndoableStage) {
-                for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
-                    if (statesHistoryScreen.getUndoableScreen().equals(GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS)) {
-                        statesHistoryScreen.addAction(action);
-                    }
-                }
-            }
-        }
-        userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", patient.getNhiNumber()});
-        ((Stage) patientProfilePane.getScene().getWindow()).close();
+        Action action = new Action(target, null);
+        new AdministratorDataService().deleteUser(target);
+        undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
+        userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", ((Patient) target).getNhiNumber()});
+        screenControl.closeWindow(patientProfilePane);
     }
 
 }

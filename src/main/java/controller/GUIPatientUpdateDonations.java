@@ -63,25 +63,12 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
     private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
-    private Patient target;
-
-    private UserControl userControl;
-
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
-
     /**
      * Initializes the donations screen by loading the profile of the patient logged in or viewed.
      * Sets up enter key press event to save changes
      */
-    public void initialize() {
-        userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
-        if (user instanceof Patient) {
-            loadProfile(((Patient) user).getNhiNumber());
-        }
-        if (userControl.getTargetUser() != null) {
-            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
-        }
+    public void load() {
+        loadProfile(((Patient) target).getNhiNumber());
 
         // Enter key triggers log in
         patientDonationsAnchorPane.setOnKeyPressed(e -> {
@@ -101,7 +88,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
             target = patient;
             populateForm(patient);
         } else {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
+            userActions.log(Level.SEVERE, "Error loading logged in user", new String[]{"attempted to manage the donations for logged in user", ((Patient) target).getNhiNumber()});
         }
         controls = new ArrayList<Control>() {{
             add(liverCB);
@@ -117,7 +104,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
             add(bonemarrowCB);
             add(connectivetissueCB);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDONATIONS);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDONATIONS, target);
     }
 
 
@@ -260,6 +247,6 @@ public class GUIPatientUpdateDonations extends UndoableController {
         IPatientDataService patientDataService = new PatientDataService();
         patientDataService.save(after);
 
-        userActions.log(INFO, "Updated user donations to: " + newDonations, "Attempted to update donations");
+        userActions.log(INFO, "Updated user donations to: " + newDonations, new String[]{"Attempted to update donations", ((Patient) target).getNhiNumber()});
     }
 }

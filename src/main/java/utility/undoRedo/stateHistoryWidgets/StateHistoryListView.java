@@ -15,7 +15,7 @@ public class StateHistoryListView extends StateHistoryControl {
     public StateHistoryListView(ListView<Object> listView) {
         control = listView;
         states.add(new ArrayList<>(listView.getItems()));
-        setUpUndoableStage();
+        setUpUndoableWrapper(this.control);
     }
 
 

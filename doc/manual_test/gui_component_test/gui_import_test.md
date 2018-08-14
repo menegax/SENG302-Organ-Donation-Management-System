@@ -17,3 +17,7 @@ along with the new ones.
 ### 13/08/2018 - Hayden Taylor and Maree Palmer
 Perform clean import on clean db - pass
 Perform import on existing data in db - pass
+
+###14/08/2018 - Maree
+Perform clean import on clean db - pass
+Perform import on existing data in db - pass

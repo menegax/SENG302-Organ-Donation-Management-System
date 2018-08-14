@@ -2,43 +2,34 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import model.Patient;
 import model.Procedure;
 import service.PatientDataService;
+import model.User;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
-import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
  * Form to add and edit patient procedures only accessible by a clinician
  */
-public class GUIPatientProcedureForm implements TouchscreenCapable {
+public class GUIPatientProcedureForm extends TargetedController implements TouchscreenCapable {
 
     @FXML
     public Button doneButton;
@@ -61,7 +52,6 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
     @FXML
     public GridPane procedureUpdatePane;
 
-    private Patient patient;
     private Patient patientClone;
     private boolean isEditInstance = false;
     private Procedure procedure; //The Procedure that is being edited (null in the case of adding a procedure)
@@ -74,19 +64,20 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
     /**
      * Initial setup. Sets up undo/redo, Populates the affected organs dropdown
      */
-    public void initialize() {
-        patient = patientDataService.getPatientByNhi(((Patient) new UserControl().getTargetUser()).getNhiNumber());
-        patientClone = (Patient) patient.deepClone();
+    public void load() {
+        patientClone = (Patient) target.deepClone();
         setupDonations();
         for (MenuItem menuItem : affectedInput.getItems()) { //Adding organ checkboxes to the undo/redo controls
             if (((CustomMenuItem) menuItem).getContent() instanceof CheckBox) {
                 CheckBox checkbox = (CheckBox) ((CustomMenuItem) menuItem).getContent();
             }
         }
-        procedureTouchPane = new TouchPaneController(procedureUpdatePane);
-        procedureUpdatePane.setOnZoom(this::zoomWindow);
-        procedureUpdatePane.setOnRotate(this::rotateWindow);
-        procedureUpdatePane.setOnScroll(this::scrollWindow);
+        if(screenControl.isTouch()) {
+            procedureTouchPane = new TouchPaneController(procedureUpdatePane);
+            procedureUpdatePane.setOnZoom(this::zoomWindow);
+            procedureUpdatePane.setOnRotate(this::rotateWindow);
+            procedureUpdatePane.setOnScroll(this::scrollWindow);
+        }
     }
 
     /**
@@ -164,12 +155,12 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
             this.procedureClone.setDescription(descriptionInput.getText());
             this.procedureClone.setAffectedDonations(affectedDonations);
             this.procedureClone.setDate(dateInput.getValue());
-            Action action = new Action(patient, patientClone);
+            Action action = new Action(target, patientClone);
             undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
-            userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", patient.getNhiNumber()});
+            userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", ((Patient) target).getNhiNumber()});
             goBackToProcedures();
         } else {
-            userActions.log(Level.WARNING, "Invalid procedure inputs entered", "Attempted to edit procedure with invalid inputs");
+            userActions.log(Level.WARNING, "Invalid procedure inputs entered", new String[]{"Attempted to edit procedure with invalid inputs", ((Patient) target).getNhiNumber()});
         }
     }
 
@@ -188,12 +179,12 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
             procedureClone = new Procedure( summaryInput.getText(), descriptionInput.getText(),
                     dateInput.getValue(), affectedDonations );
             patientClone.addProcedure( procedureClone );
-            Action action = new Action(patient, patientClone);
+            Action action = new Action(target, patientClone);
             undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
             userActions.log(Level.INFO, "Added procedure " + procedureClone.getSummary(), new String[]{"Attempted to add a procedure", patientClone.getNhiNumber()});
             goBackToProcedures();
         } else {
-            userActions.log(Level.WARNING, "Invalid inputs for procedure entered", "Attempted to create procedure with invalid inputs");
+            userActions.log(Level.WARNING, "Invalid inputs for procedure entered", new String[]{"Attempted to create procedure with invalid inputs", ((Patient) target).getNhiNumber()});
         }
     }
 
@@ -208,7 +199,7 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
      */
     private Boolean validateInputs(String summary, String description, LocalDate date) {
         Boolean isValid = true;
-        if (date == null || date.isBefore(patient.getBirth())) {
+        if (date == null || date.isBefore(((Patient) target).getBirth())) {
             isValid = false;
             dateInput.setStyle("-fx-base: red;");
         }
@@ -230,7 +221,7 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
      */
     private void setupDonations() {
         ObservableList<CustomMenuItem> donations = FXCollections.observableArrayList();
-        for (Organ organ : patient.getDonations()) {
+        for (Organ organ : ((Patient) target).getDonations()) {
             CustomMenuItem organSelection = new CustomMenuItem(new CheckBox(organ.getValue()));
             organSelection.setHideOnClick(false);
             donations.add(organSelection);
@@ -247,7 +238,7 @@ public class GUIPatientProcedureForm implements TouchscreenCapable {
      * Closes the pop-up stage for the procedure form
      */
     public void goBackToProcedures() {
-        screenControl.closeStage(((UndoableStage) summaryInput.getScene().getWindow()).getUUID());
+        screenControl.closeWindow(procedureUpdatePane);
     }
 
     @Override
