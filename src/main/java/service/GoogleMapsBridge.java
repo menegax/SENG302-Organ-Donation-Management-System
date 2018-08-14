@@ -1,8 +1,10 @@
 package service;
 
 import com.sun.javafx.webkit.WebConsoleListener;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
@@ -28,6 +30,13 @@ public class GoogleMapsBridge implements Initializable{
         webEngine1 = webViewMap1.getEngine();
 
         webEngine1.setJavaScriptEnabled(true);
+        webViewMap1.setOnDragDetected(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent t) {
+                // intentionally do nothing
+            }
+        });
         webEngine1.load(getClass().getClassLoader().getResource("HTML/GoogleMap.html").toExternalForm());
 
         WebConsoleListener.setDefaultListener(new WebConsoleListener() {
