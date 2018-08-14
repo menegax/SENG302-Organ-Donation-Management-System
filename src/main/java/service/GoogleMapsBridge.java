@@ -58,5 +58,8 @@ public class GoogleMapsBridge implements Initializable {
                 System.out.println(message);
             }
         });
+
+        webViewMap1.setOnZoom(event -> webViewMap1.setZoom(webViewMap1.getZoom() * event.getZoomFactor()));
+//        webViewMap1.setOnRotate(event -> webViewMap1.setRotate(webViewMap1.getRotate() + event.getAngle() * 0.8));
     }
 }
