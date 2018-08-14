@@ -6,7 +6,6 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.*;
@@ -17,7 +16,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -161,7 +159,7 @@ public class GUILogin implements TouchscreenCapable {
     public void openMaps() {
         // Opens the Map
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/Map.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/map.fxml"));
             Parent root = fxmlLoader.load();
             System.out.println('1');
             UndoableStage popUpStage = new UndoableStage();

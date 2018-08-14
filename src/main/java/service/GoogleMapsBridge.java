@@ -7,6 +7,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -28,12 +29,11 @@ public class GoogleMapsBridge implements Initializable{
         webEngine1 = webViewMap1.getEngine();
 
         webEngine1.setJavaScriptEnabled(true);
-        webEngine1.load(getClass().getClassLoader().getResource("HTML/GoogleMap.html").toExternalForm());
+        webEngine1.load(Objects.requireNonNull(getClass().getClassLoader()
+                .getResource("HTML/GoogleMap.html"))
+                .toExternalForm());
 
-        WebConsoleListener.setDefaultListener(new WebConsoleListener() {
-            @Override
-            public void messageAdded(WebView webView, String message, int lineNumber, String sourceId) {
-            }
+        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> {
         });
     }
 }
