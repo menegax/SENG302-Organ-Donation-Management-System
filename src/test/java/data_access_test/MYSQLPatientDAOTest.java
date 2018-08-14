@@ -120,7 +120,7 @@ public class MYSQLPatientDAOTest {
     public void testPatientMatchingSearch() {
         givenPatient();
         whenPatientsSaved();
-        whenSearched("henro");
+        whenSearched("henr");
         thenSearchHasResults();
     }
 
