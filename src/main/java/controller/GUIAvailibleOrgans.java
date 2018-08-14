@@ -9,6 +9,7 @@ import javafx.scene.control.cell.ProgressBarTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
+import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums.*;
@@ -108,41 +109,5 @@ public class GUIAvailibleOrgans {
      */
     private void tableRefresh() {
         availableOrgansTableView.refresh();
-    }
-    
-    /**
-     * Simple holder for patients and organ so that it is known which organ belongs to whom.
-     */
-    public class PatientOrgan {
-    	private Patient patient;
-    	private Organ organ;
-    	private ProgressTask progressTask;
-
-        PatientOrgan(Patient patient, Organ organ) {
-    		this.patient = patient;
-    		this.organ = organ;
-    		this.progressTask = new ProgressTask(this);
-    	}
-
-    	public Patient getPatient() {
-    		return patient;
-    	}
-    	
-    	public Organ getOrgan() {
-    		return organ;
-    	}
-
-    	public ProgressTask getProgressTask() {
-            return progressTask;
-        }
-
-    	@Override
-    	public boolean equals(Object obj) {
-    	    PatientOrgan patientOrgan = (PatientOrgan) obj;
-            return patientOrgan.patient.getNhiNumber().equals(this.patient.getNhiNumber()) &&
-                    patientOrgan.organ.equals(this.organ);
-
-        }
-
     }
 }
