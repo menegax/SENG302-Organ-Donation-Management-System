@@ -401,7 +401,7 @@ public class ScreenControl {
      */
     private void removeUnsavedAsterisks() {
         for (Stage stage : applicationStages.values()) {
-            if (stage instanceof UndoableStage) {
+            if (stage instanceof UndoableStage && ((UndoableStage) stage).getGuiHome() != null) {
                 ((UndoableStage) stage).getGuiHome().removeAsterisk();
             }
         }

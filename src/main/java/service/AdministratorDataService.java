@@ -5,6 +5,12 @@ import data_access.interfaces.IAdministratorDataAccess;
 import data_access.interfaces.IClinicianDataAccess;
 import data_access.interfaces.IPatientDataAccess;
 import data_access.interfaces.IUserDataAccess;
+import data_access.localDAO.LocalDB;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -12,17 +18,25 @@ import model.User;
 import service.interfaces.IAdministratorDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
+import utility.ImportObservable;
+import utility.SystemLogger;
+import utility.parsing.ParseCSV;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+
+import static utility.SystemLogger.systemLogger;
 
 public class AdministratorDataService implements IAdministratorDataService {
 
-    private DAOFactory mysqlFactory;
-    private DAOFactory localDbFactory;
-    private CachedThreadPool cachedThreadPool;
+    private final DAOFactory mysqlFactory;
+    private final DAOFactory localDbFactory;
+    private final CachedThreadPool cachedThreadPool;
 
     public AdministratorDataService() {
         cachedThreadPool = CachedThreadPool.getCachedThreadPool();
@@ -42,12 +56,42 @@ public class AdministratorDataService implements IAdministratorDataService {
     }
 
     @Override
-    public void importRecords() {
+    public void importRecords(String filepath) {
         cachedThreadPool.getThreadService().submit(() -> {
-            //List<Patient> patients = parseCSV.parse(filepath); //todo:
-            IPatientDataAccess patientDataAccess = mysqlFactory.getPatientDataAccess();
-            patientDataAccess.addPatientsBatch(new ArrayList<>());
+            ParseCSV parseCSV = new ParseCSV();
+            try {
+                Map<ParseCSV.Result, List> patients = parseCSV.parse(new FileReader(filepath));
+                IPatientDataAccess patientDataAccess = mysqlFactory.getPatientDataAccess();
+                ImportObservable importObservable = ImportObservable.getInstance();
+                importObservable.setTotal(patients.get(ParseCSV.Result.SUCCESS).size());
+                importObservable.setCompleted(0);
+                long startTime = System.nanoTime();
+                patientDataAccess.addPatientsBatch(patients.get(ParseCSV.Result.SUCCESS));
+                importObservable.setFinished();
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime);
+                LocalDB db = LocalDB.getInstance();
+                Set<Patient> imported = new HashSet<Patient>(patients.get(ParseCSV.Result.SUCCESS));
+                db.setImported(imported);
+                Platform.runLater(this::showImportResults);
+                systemLogger.log(Level.INFO, "Time to complete import: " + duration /1000000000 + " seconds", this );
+            } catch (FileNotFoundException e) {
+                systemLogger.log(Level.SEVERE, "Unable to find file", this);
+            }
         });
+    }
+
+    private void showImportResults() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/adminImportResults.fxml"));
+            Parent parent = fxmlLoader.load();
+            Scene scene = new Scene(parent, 900, 600);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            SystemLogger.systemLogger.log(Level.SEVERE, "Couldn't open import results popup");
+        }
     }
 
     @Override
@@ -106,6 +150,7 @@ public class AdministratorDataService implements IAdministratorDataService {
         results.put(0, new ArrayList<>());
         results.put(1, new ArrayList<>());
         results.put(2, new ArrayList<>());
+        results.put(3, new ArrayList<>());
         for (Integer i : patients.keySet()) {
             results.get(i).addAll(patients.get(i));
         }
@@ -131,6 +176,8 @@ public class AdministratorDataService implements IAdministratorDataService {
     @Override
     public void save(Administrator administrator) {
         IAdministratorDataAccess dataAccess = localDbFactory.getAdministratorDataAccess();
-        dataAccess.saveAdministrator(new HashSet<Administrator>(){{add(administrator);}});
+        dataAccess.saveAdministrator(new HashSet<Administrator>() {{
+            add(administrator);
+        }});
     }
 }
