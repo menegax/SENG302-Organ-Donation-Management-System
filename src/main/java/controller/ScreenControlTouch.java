@@ -4,6 +4,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
@@ -20,6 +23,7 @@ import utility.undoRedo.UndoableWrapper;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -102,6 +106,8 @@ class ScreenControlTouch extends ScreenControl {
                     parentController.windowClosed();
                 }
             });
+            System.out.println("new pane");
+            resizeButtonFont(touchPane);
             systemLogger.log(INFO, "Showing new touch stage scene");
             return controller;
         } catch (IOException e) {
@@ -196,6 +202,52 @@ class ScreenControlTouch extends ScreenControl {
             oldRoot.setTranslateY(0.0D);
             oldRoot.getStyleClass().removeAll("root");
         }
+    }
+
+    private void resizeButtonFont(Node node) {
+        System.out.println(node.getClass().getName());
+        if(node instanceof Button) {
+            System.out.println("button");
+            ((Button) node).setFont(Font.font(6));
+        } else if(node instanceof VBox) {
+            VBox vBox = (VBox) node;
+            for(Node vNode : vBox.getChildren()) {
+                resizeButtonFont(vNode);
+            }
+        } else if(node instanceof HBox) {
+            HBox hBox = (HBox) node;
+            for(Node hNode : hBox.getChildren()) {
+                resizeButtonFont(hNode);
+            }
+        } else if (node instanceof GridPane) {
+            GridPane gridPane = (GridPane) node;
+            for(Node gridNode : gridPane.getChildren()) {
+                resizeButtonFont(gridNode);
+            }
+        } else if(node instanceof TabPane) {
+            TabPane tabPane = (TabPane) node;
+            List<Tab> tabs = tabPane.getTabs();
+            List<Node> tabNodes = tabs.stream().map(Tab::getContent).collect(Collectors.toList());
+            for(Node tabNode : tabNodes) {
+                resizeButtonFont(tabNode);
+            }
+        } else if (node instanceof AnchorPane) {
+            AnchorPane anchorPane = (AnchorPane) node;
+            for(Node anchorNode : anchorPane.getChildren()) {
+                resizeButtonFont(anchorNode);
+            }
+        } else if (node instanceof TuioFXCanvas) {
+            TuioFXCanvas canvas = (TuioFXCanvas) node;
+            for(Node canvasNode : canvas.getChildren()) {
+                resizeButtonFont(canvasNode);
+            }
+        } else if (node instanceof Pane) {
+            Pane pane = (Pane) node;
+            for(Node paneNode : pane.getChildren()) {
+                resizeButtonFont(paneNode);
+            }
+        }
+
     }
 
 }

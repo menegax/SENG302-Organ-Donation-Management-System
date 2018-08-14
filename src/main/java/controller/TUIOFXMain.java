@@ -44,6 +44,9 @@ public class TUIOFXMain extends Application {
         screenControl.setTouchStage(stage);
         screenControl.show("/scene/login.fxml", false,null, null);
         screenControl.setLoginShowing(true);
+        Application.setUserAgentStylesheet("MODENA");
+        StyleManager.getInstance().addUserAgentStylesheet("/css/guiStyle.css");
+
 
         new UserDataService().prepareApplication();
 
