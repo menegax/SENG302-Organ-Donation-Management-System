@@ -1,12 +1,15 @@
 package service;
 
 import com.sun.javafx.webkit.WebConsoleListener;
+import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import netscape.javascript.JSObject;
+import utility.JSInjector;
 
 import java.net.URL;
 import java.util.Objects;
@@ -24,6 +27,8 @@ public class GoogleMapsBridge implements Initializable {
     private WebView webViewMap1;
 
     private WebEngine webEngine1;
+    private JSObject jsBridge1;
+    private JSInjector jsInjector;
 
 
     /**
@@ -36,11 +41,22 @@ public class GoogleMapsBridge implements Initializable {
         webEngine1 = webViewMap1.getEngine();
 
         webEngine1.setJavaScriptEnabled(true);
+        webEngine1.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (Worker.State.SUCCEEDED == newValue) {
+                jsBridge1 = (JSObject) webEngine1.executeScript("window");
+                jsInjector = new JSInjector();
+                jsBridge1.setMember("jsInjector", jsInjector);
+            }
+        });
         webEngine1.load(Objects.requireNonNull(getClass().getClassLoader()
                 .getResource("html/GoogleMap.html"))
                 .toExternalForm());
 
-        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> {
+        WebConsoleListener.setDefaultListener(new WebConsoleListener() {
+            @Override
+            public void messageAdded(WebView webView, String message, int lineNumber, String sourceId) {
+                System.out.println(message);
+            }
         });
     }
 }
