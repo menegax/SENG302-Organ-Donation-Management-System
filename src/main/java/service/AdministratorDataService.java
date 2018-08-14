@@ -1,5 +1,6 @@
 package service;
 
+import controller.ScreenControl;
 import data_access.factories.DAOFactory;
 import data_access.interfaces.IAdministratorDataAccess;
 import data_access.interfaces.IClinicianDataAccess;
@@ -37,6 +38,8 @@ public class AdministratorDataService implements IAdministratorDataService {
     private final DAOFactory mysqlFactory;
     private final DAOFactory localDbFactory;
     private final CachedThreadPool cachedThreadPool;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     public AdministratorDataService() {
         cachedThreadPool = CachedThreadPool.getCachedThreadPool();
@@ -82,16 +85,7 @@ public class AdministratorDataService implements IAdministratorDataService {
     }
 
     private void showImportResults() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/adminImportResults.fxml"));
-            Parent parent = fxmlLoader.load();
-            Scene scene = new Scene(parent, 900, 600);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.show();
-        } catch (Exception e) {
-            SystemLogger.systemLogger.log(Level.SEVERE, "Couldn't open import results popup");
-        }
+        screenControl.show("/scene/adminImportResults.fxml", false, null, null);
     }
 
     @Override

@@ -33,7 +33,11 @@ public class PatientLocalDAO implements IPatientDataAccess {
 
     @Override
     public boolean addPatientsBatch(List<Patient> patient) {
-        return false;
+        for (Patient p : patient) {
+            localDB.storePatient(p);
+            Searcher.getSearcher().updateIndex(p);
+        }
+        return true;
     }
 
     @Override

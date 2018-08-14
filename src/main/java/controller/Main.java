@@ -3,6 +3,9 @@ package controller;
 import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 
+import com.sun.javafx.css.StyleManager;
+import controller.ScreenControl;
+import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -33,16 +36,12 @@ public class Main extends Application {
         // setup GUI
         System.setProperty("connection_type", GlobalEnums.DbType.PRODUCTION.getValue()); //LEAVE HERE!! production db
         ScreenControl screenControl = ScreenControl.getScreenControl();
-        primaryStage.setTitle("Login");
-        screenControl.addStage(uuid, primaryStage);
-        primaryStage.setResizable(false);
-        Parent loginScreen = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
-        screenControl.show(uuid, loginScreen);
+//        primaryStage.setTitle("Login");
+        screenControl.show("/scene/login.fxml", false, null, null);
 
         Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app...");
         new UserDataService().prepareApplication();
-        primaryStage.show();
     }
 
     public static void main(String[] args) {

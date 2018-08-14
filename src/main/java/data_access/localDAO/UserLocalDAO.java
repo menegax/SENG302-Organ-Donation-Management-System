@@ -18,6 +18,8 @@ public class UserLocalDAO implements IUserDataAccess {
     private final DAOFactory factory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
 
     public void addUser(User user) {
+        LocalDB localDB = LocalDB.getInstance();
+        localDB.undelete(user);
         if (user instanceof Patient) {
             IPatientDataAccess patientDAO = factory.getPatientDataAccess();
             patientDAO.addPatientsBatch(new ArrayList<Patient>(){{add((Patient) user);}});
