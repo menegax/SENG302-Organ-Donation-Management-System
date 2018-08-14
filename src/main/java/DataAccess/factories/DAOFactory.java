@@ -95,4 +95,10 @@ public abstract class DAOFactory {
      * @return - ITransplantWaitListDataAccess implementation
      */
     public abstract ITransplantWaitListDataAccess getTransplantWaitingListDataAccess();
+
+    /**
+     * Gets the correnct implementation of RequiredOrgansDAO
+     * @return - IRequiredOrganDataAccess implementation
+     */
+    public abstract IRequiredOrganDataAccess getRequiredOrganDataAccess();
 }
