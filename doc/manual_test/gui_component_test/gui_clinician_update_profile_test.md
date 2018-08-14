@@ -24,9 +24,9 @@
 5. Go to the profile tab
 6. Compare what was entered in the update tab to what is displayed. If there is a mismatch, the test fails. Otherwise it succeeds.
 
-##Test History
+## Test History
 
-###18/07/2018 - Maree
+### 18/07/2018 - Maree
 
 Test 1: Pass
 
