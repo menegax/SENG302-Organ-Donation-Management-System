@@ -1,16 +1,15 @@
 package controller;
 
+import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tuiofx.Configuration;
+import org.tuiofx.TuioFX;
 import service.UserDataService;
 import utility.SystemLogger;
 import utility.UserActionHistory;
-import org.tuiofx.TuioFX;
-
-import java.util.UUID;
 
 import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
