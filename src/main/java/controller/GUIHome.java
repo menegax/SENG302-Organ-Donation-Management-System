@@ -606,8 +606,10 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                 // Add the default application menu
                 bar.getMenus()
                         .add(0, tk.createDefaultApplicationMenu(screenControl.getAppName())); // set leftmost MacOS system menu
-                tk.setMenuBar(stage, bar);
-                systemLogger.log(FINER, "Set MacOS menu bar");
+                if (!screenControl.isTouch()) {
+                    tk.setMenuBar(stage, bar);
+                    systemLogger.log(FINER, "Set MacOS menu bar");
+                }
             } else {// if windows
                 menuBar.getMenus()
                         .clear();
