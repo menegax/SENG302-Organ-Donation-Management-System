@@ -211,7 +211,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="addLbl1" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="15">
+            <Label fx:id="streetLbl" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="15">
                <font>
                   <Font size="18.0" />
                </font>
@@ -221,17 +221,17 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="addLbl3" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="17">
+            <Label fx:id="suburbLbl" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="17">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="addLbl4" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="18">
+            <Label fx:id="regionLbl" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="18">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="addLbl5" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="19">
+            <Label fx:id="zipLbl" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="19">
                <font>
                   <Font size="18.0" />
                </font>
@@ -290,16 +290,6 @@
                </font>
             </Label>
             <Label fx:id="deathCity" GridPane.columnIndex="3" GridPane.rowIndex="8">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label text="City:" GridPane.rowIndex="15">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="addLbl4" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="15">
                <font>
                   <Font size="18.0" />
                </font>

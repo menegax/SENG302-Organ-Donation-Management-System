@@ -1,12 +1,17 @@
 package controller;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -167,6 +172,15 @@ class ScreenControlTouch extends ScreenControl {
     boolean closeWindow(Pane pane) {
         List<Node> nodes = new ArrayList<>(touchPane.getChildren());
         for(Node n : nodes) {
+            if (n.getId() != null && n.getId().equals("homePane")) {
+                for (Tab tab : ((TabPane) ((BorderPane) n).getCenter()).getTabs()) {
+                    if (tab.getContent() != null && (tab.getContent()).equals(pane) && !(n.equals(rootPane))) {
+                        touchPane.getChildren().remove(n);
+                        n.setVisible(false);
+                        return true;
+                    }
+                }
+            }
             if(n.equals(pane) && !(pane.equals(rootPane))) {
                 touchPane.getChildren().remove(n);
                 n.setVisible(false);

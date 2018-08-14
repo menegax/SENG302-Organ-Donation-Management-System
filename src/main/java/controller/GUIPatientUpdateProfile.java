@@ -311,7 +311,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
         valid = validateLastName(valid, invalidContent);
         valid = validateMiddleNames(valid, invalidContent);
         valid = validatePreferredName(valid);
-        valid = validateStreet1(valid, invalidContent);
+        valid = validateStreetNumber(valid, invalidContent);
+        valid = validateStreetName(valid, invalidContent);
         valid = validateCity(valid, invalidContent);
         valid = validateRegion(valid, invalidContent);
         valid = validateZip(valid, invalidContent);
@@ -364,12 +365,22 @@ public class GUIPatientUpdateProfile extends UndoableController {
     }
 
 
-    private Boolean validateStreet1(Boolean valid, StringBuilder invalidContent) {
-        if (!streetNumberTxt.getText().matches(UIRegex.STREET.getValue())) {
+    private Boolean validateStreetNumber(Boolean valid, StringBuilder invalidContent) {
+        if (!streetNumberTxt.getText().matches(UIRegex.NUMBER.getValue())) {
             valid = setInvalid(streetNumberTxt);
-            invalidContent.append("Street1 must only be letters or -.");
+            invalidContent.append("Street number must be a number under 5 characters");
         } else {
             setValid(streetNumberTxt);
+        }
+        return valid;
+    }
+
+    private Boolean validateStreetName(Boolean valid, StringBuilder invalidContent) {
+        if (!streetNameTxt.getText().matches(UIRegex.STREET.getValue())) {
+            valid = setInvalid(streetNameTxt);
+            invalidContent.append("Street name must be letters or -. ");
+        } else {
+            setValid(streetNameTxt);
         }
         return valid;
     }
