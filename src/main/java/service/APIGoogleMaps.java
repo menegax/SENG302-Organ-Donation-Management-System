@@ -14,9 +14,9 @@ public class APIGoogleMaps {
 
     private static APIGoogleMaps apiGoogleMaps = null;
 
-    private static String joshLegacyApiKey = "AIzaSyDs1-bWc2o4-NxAyMDX7xD9yxVHDcllSfc";
+    private static String kyleLegacyApiKey = "AIzaSyCTrWWBWfYPGFsHvv8sr4tkfpeubCiDIE0";
 
-    private static GeoApiContext context = new GeoApiContext.Builder().apiKey(joshLegacyApiKey)
+    private static GeoApiContext context = new GeoApiContext.Builder().apiKey(kyleLegacyApiKey)
             .build();
 
 
@@ -29,11 +29,6 @@ public class APIGoogleMaps {
             apiGoogleMaps = new APIGoogleMaps();
         }
         return apiGoogleMaps;
-    }
-
-
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
-        System.out.println(getLatLng("10 Runswick"));
     }
 
     public static LatLng getLatLng(String address) throws InterruptedException, ExecutionException {
