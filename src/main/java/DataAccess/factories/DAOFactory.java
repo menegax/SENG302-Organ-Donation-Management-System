@@ -100,5 +100,5 @@ public abstract class DAOFactory {
      * Gets the correnct implementation of RequiredOrgansDAO
      * @return - IRequiredOrganDataAccess implementation
      */
-    public abstract IRequiredOrganDataAccess getRequiredOrganDataAccess();
+    public abstract IRequiredOrganDataAccess getRequiredOrgansDataAccess();
 }
