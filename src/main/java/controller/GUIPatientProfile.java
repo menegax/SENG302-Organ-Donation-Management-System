@@ -90,19 +90,16 @@ public class GUIPatientProfile extends TargetedController{
     private Label bloodGroupLbl;
 
     @FXML
-    private Label addLbl1;
-
-    @FXML
-    private Label addLbl3;
+    private Label streetLbl;
 
     @FXML
     private Label cityLbl;
 
     @FXML
-    private Label addLbl4;
+    private Label suburbLbl;
 
     @FXML
-    private Label addLbl5;
+    private Label regionLbl;
 
     @FXML
     private Label zipLbl;
@@ -264,20 +261,20 @@ private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
 
     private void loadAddressDetails(Patient patient) {
-        addLbl1.setText((patient.getStreetNumber() == null || patient.getStreetNumber()
-                .length() == 0) ? "Not set" : patient.getStreetNumber());
+        streetLbl.setText((patient.getStreetName() == null || patient.getStreetName()
+                .length() == 0) ? "Not set" : patient.getStreetNumber() + " " + patient.getStreetName());
         cityLbl.setText(patient.getStreetName() == null || patient.getStreetName().length() < 1 ? "Not set" : patient.getStreetName());
-        addLbl3.setText((patient.getSuburb() == null || patient.getSuburb()
+        suburbLbl.setText((patient.getSuburb() == null || patient.getSuburb()
                 .length() == 0) ? "Not set" : patient.getSuburb());
-        addLbl4.setText((patient.getCity() == null || patient.getCity()
+        cityLbl.setText((patient.getCity() == null || patient.getCity()
                 .length() == 0) ? "Not set" : patient.getCity());
-        addLbl5.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
+        regionLbl.setText(patient.getRegion() == null ? "Not set" : patient.getRegion()
                 .getValue());
         if (patient.getZip() != 0) {
             zipLbl.setText(String.valueOf(patient.getZip()));
             while (zipLbl.getText()
                     .length() < 4) {
-                zipLbl.setText("0" + addLbl5.getText());
+                zipLbl.setText("0" + zipLbl.getText());
             }
         }
         else {
@@ -357,7 +354,7 @@ private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
         new AdministratorDataService().deleteUser(target);
         undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
         userActions.log(Level.INFO, "Successfully deleted patient profile", new String[]{"Attempted to delete patient profile", ((Patient) target).getNhiNumber()});
-        ((Stage) patientProfilePane.getScene().getWindow()).close();
+        screenControl.closeWindow(patientProfilePane);
     }
 
 }
