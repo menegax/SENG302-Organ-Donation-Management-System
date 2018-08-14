@@ -1116,6 +1116,11 @@ public class Patient extends User {
         return city;
     }
 
+
+    public String getDeathLocationConcat(){
+        return String.format("%s, %s, %s", deathStreet, deathCity, deathRegion);
+    }
+
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
                 + firstName + "\n" + "Middle names: " + middleNames + "\n" + "Last name: " + lastName + "\n" + "Preferred name: " + preferredName +

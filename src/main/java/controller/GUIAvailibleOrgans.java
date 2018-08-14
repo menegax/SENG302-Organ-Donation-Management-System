@@ -65,8 +65,7 @@ public class GUIAvailibleOrgans {
                 .getPatient().getNhiNumber()));
         organCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getOrgan().toString()));
-        //TODO add death location when merged
-        //locationCol.setCellValueFactory(r -> new SimpleStringProperty("Death Location"));
+        locationCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue().getPatient().getDeathLocationConcat()));
         deathCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getPatient().getDeathDate().toString()));
         //TODO add expiry countdown
