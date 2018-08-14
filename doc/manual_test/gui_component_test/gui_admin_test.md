@@ -224,3 +224,25 @@ Test 9: Pass (Only tested with newly registered user)
 
 Test 10: Pass
 
+### 23/07/2018 - Maree
+
+Test 1: Pass
+
+Test 2: Pass
+
+Test 3: Pass
+
+Test 4: Fail - stage is closed, and closes application
+
+Test 5: Fail - stage is closed, and closes application
+
+Test 6: Fail - stage is closed, and closes application
+
+Test 7: Pass
+
+Test 8: Pass
+
+Test 9: Pass
+
+Test 10: Pass
+
