@@ -293,10 +293,8 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      */
     private void deregistrationReason() {
         SystemLogger.systemLogger.log(INFO, "Patient had organ requirements deregistered. Asking for deregistration reason...");
-        List<GlobalEnums.Organ> removedOrgans = target.getRequiredOrgans();
+        List<GlobalEnums.Organ> removedOrgans = new ArrayList<>(target.getRequiredOrgans());
         removedOrgans.removeAll(finalRequirements);
-        System.out.println("removed organs: " + removedOrgans); //todo rm
-
         if (removedOrgans.size() == 0) {
             Action action = new Action(target, after);
             statesHistoryScreen.addAction(action);
@@ -305,25 +303,11 @@ public class GUIPatientUpdateRequirements extends UndoableController{
         for (GlobalEnums.Organ organ : removedOrgans) {
             totalRemoved += 1;
             openReasonPopup(organ);
-//            after.removeRequired(organ);
-//            loadProfile(target.getNhiNumber());
-        }
-        SystemLogger.systemLogger.log(Level.FINE, "Patient after launching deregistration reason:\n" + target);
-
-    }
-
-    public void removeAfterOrgans(Collection<GlobalEnums.Organ> organsToRemoveFromPatient) {
-        for (GlobalEnums.Organ organ : organsToRemoveFromPatient) {
             after.removeRequired(organ);
         }
+        SystemLogger.systemLogger.log(Level.FINE, "Patient before launching deregistration reason:\n" + target);
+        SystemLogger.systemLogger.log(Level.FINE, "Patient after launching deregistration reason:\n" + after);
     }
-
-    public void removeAfterOrgansAll() {
-        after.getRequiredOrgans().clear();
-    }
-
-
-
 
     /**
      * Opens the popup to getMedicationsByNhi a reason for organ deregistration
@@ -335,15 +319,20 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             Parent root = fxmlLoader.load();
             GUIRequiredOrganDeregistrationReason controller = fxmlLoader.getController();
             controller.setOrgan(organ);
+            controller.setTarget(after);
             UndoableStage popUpStage = new UndoableStage();
             screenControl.addStage(popUpStage.getUUID(), popUpStage);
             screenControl.show(popUpStage.getUUID(), root);
             popUpStage.setOnHiding(e -> {
                 totalRemoved -= 1;
                 if (totalRemoved == 0) {
+                    if (after.getDeathDate() != null) {
+                        after.clearRequiredOrgans();
+                    }
                     Action action = new Action(target, after);
                     statesHistoryScreen.addAction(action);
                 }
+                populateForm(after);
             });
         } catch (IOException e) {
             userActions.log(Level.SEVERE,

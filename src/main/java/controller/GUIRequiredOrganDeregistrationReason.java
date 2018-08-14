@@ -285,7 +285,7 @@ public class GUIRequiredOrganDeregistrationReason {
         valid = validateDeathRegion(valid);
 
         if (valid) {
-            target.setRequiredOrgans(new ArrayList<>());
+            target.clearRequiredOrgans();
             userActions.log(Level.INFO,
                         "Deregistered all organs due to death",
                         new String[] { "Attempted to deregister all organs due to death", target.getNhiNumber() });
@@ -303,7 +303,6 @@ public class GUIRequiredOrganDeregistrationReason {
     private boolean validateDeathRegion(boolean valid) {
         // validate death region
         if (deathRegion.getSelectionModel().isEmpty()) {
-            System.out.println("death region not set");
             valid = setInvalid(deathRegion);
         } else if (!deathRegion.getSelectionModel()
                 .isEmpty()) {
@@ -324,7 +323,6 @@ public class GUIRequiredOrganDeregistrationReason {
     private boolean validateDeathCity(boolean valid) {
         if (deathCity.getText().length() < 1) {
             // if not set, invalid
-            System.out.println("Death city not set");
             valid = setInvalid(deathCity);
         } else if (!deathCity.getText()
                 .matches(String.valueOf(GlobalEnums.UIRegex.CITY))) {
@@ -341,12 +339,10 @@ public class GUIRequiredOrganDeregistrationReason {
     private boolean validateDeathLocation(boolean valid) {
         // validate death location
         if (locationDeathTxt.getText().length() < 1) {
-            System.out.println("Location not set");
             // if not set, invalid
             valid = setInvalid(locationDeathTxt);
         } else if (!locationDeathTxt.getText()
                 .matches(GlobalEnums.UIRegex.DEATH_LOCATION.getValue())) {
-            System.out.println("Location doesn't match regex");
             // if doesn't match regex, invalid
             valid = setInvalid(locationDeathTxt);
         }
@@ -438,5 +434,10 @@ public class GUIRequiredOrganDeregistrationReason {
         for (Disease disease : selected) {
             disease.setDiseaseState(GlobalEnums.DiseaseState.CURED);
         }
+    }
+
+
+    public void setTarget(Patient newPatient) {
+        this.target = newPatient;
     }
 }

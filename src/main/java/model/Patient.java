@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
@@ -783,7 +784,12 @@ public class Patient extends User {
      * @return required organs of the patient
      */
     public List<Organ> getRequiredOrgans() {
-        return this.requiredOrgans;
+        return Collections.unmodifiableList(this.requiredOrgans); //todo check it out son
+//        return this.requiredOrgans;
+    }
+
+    public void clearRequiredOrgans() {
+        requiredOrgans.clear();
     }
 
     /**
