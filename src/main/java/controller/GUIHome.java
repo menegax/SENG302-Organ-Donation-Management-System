@@ -89,6 +89,8 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
     private IAdministratorDataService administratorDataService = new AdministratorDataService();
 
+    private Stage homeStage;
+
 
     private  enum TabName {
         PROFILE("Profile"), UPDATE("Update"), DONATIONS("Donations"), CONTACTDETAILS("Contact Details"),
@@ -108,8 +110,6 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
         }
 
     }
-
-    private Stage homeStage;
 
 
     @FXML
