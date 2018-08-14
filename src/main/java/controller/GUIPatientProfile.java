@@ -88,9 +88,6 @@ public class GUIPatientProfile {
     private Label addLbl1;
 
     @FXML
-    private Label cityLbl; //todo
-
-    @FXML
     private Label addLbl3;
 
     @FXML
@@ -202,7 +199,7 @@ public class GUIPatientProfile {
         dateOfDeathLabel.setText(patient.getDeathDate() == null ? "Not set" : patient.getDeathDate()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         deathLocation.setText(patient.getDeathStreet() == null ? "Not set" : patient.getDeathStreet());
-        deathCity.setText(patient.getDeathCity() == null ? "Not set" : patient.getDeathCity());
+        deathCity.setText(patient.getDeathCity().length() == 0 ? "Not set" : patient.getDeathCity());
         deathRegion.setText(patient.getDeathRegion() == null ? "Not set" : patient.getDeathRegion()
                 .getValue());
         age.setText(String.valueOf(patient.getAge()));
