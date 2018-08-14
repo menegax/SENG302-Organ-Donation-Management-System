@@ -35,6 +35,8 @@ import model.Clinician;
 import model.Patient;
 import model.User;
 import service.AdministratorDataService;
+import service.ClinicianDataService;
+import service.PatientDataService;
 import service.UserDataService;
 import org.tuiofx.internal.gesture.TuioJFXEvent;
 import service.interfaces.IAdministratorDataService;
@@ -329,8 +331,21 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
      * @param user the currently logged in user, or observed patient
      */
     private void setUpColouredBar(User user) {
-        user.addPropertyChangeListener(e -> userNameDisplay.setText(user.getNameConcatenated()));
-        userNameDisplay.setText(user.getNameConcatenated());
+        //Sorry this is really ugly but its needed for the property change support to work correctly :(
+        User updatedUser;
+        if (user instanceof Patient) {
+            updatedUser = new PatientDataService().getPatientByNhi(((Patient) user).getNhiNumber());
+            new PatientDataService().save((Patient) updatedUser);
+        } else if (user instanceof Clinician) {
+            updatedUser = new ClinicianDataService().getClinician(((Clinician) user).getStaffID());
+            new ClinicianDataService().save((Clinician) updatedUser);
+        } else {
+            updatedUser = administratorDataService.getAdministratorByUsername(((Administrator) user).getUsername());
+            administratorDataService.save((Administrator) updatedUser);
+        }
+
+        updatedUser.addPropertyChangeListener(e -> userNameDisplay.setText(updatedUser.getNameConcatenated()));
+        userNameDisplay.setText(updatedUser.getNameConcatenated());
     }
 
     /**
