@@ -20,7 +20,7 @@ public class GoogleMapsBridge implements Initializable{
 
     private WebEngine webEngine1;
     /**
-     * Initialises the widgets and bridge in the route planner
+     * Initialises the widgets and bridge in the google map
      * @param url Required parameter that is not used
      * @param rb Required parameter that is not used
      */
