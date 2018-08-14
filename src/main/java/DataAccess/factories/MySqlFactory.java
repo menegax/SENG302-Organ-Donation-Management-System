@@ -33,10 +33,15 @@ public class MySqlFactory extends DAOFactory {
      */
     private MySqlFactory() {
         String connection_type = System.getProperty("connection_type");
-        if (connection_type != null && connection_type.equals(GlobalEnums.DbType.PRODUCTION.getValue())) {
-            config = new HikariConfig("/sql/HikariConfigProd.properties");
-        } else {
-            config = new HikariConfig("/sql/HikariConfigTest.properties");
+        if (connection_type != null) {
+            if (connection_type.equals(GlobalEnums.DbType.PRODUCTION.getValue())) {
+                config = new HikariConfig("/sql/HikariConfigProd.properties");
+            } else if (connection_type.equals(GlobalEnums.DbType.TEST.getValue())) {
+                config = new HikariConfig("/sql/HikariConfigTest.properties");
+            } else if (connection_type.equals(GlobalEnums.DbType.STORY44.getValue())) {
+            	config = new HikariConfig("/sql/HikariConfigStory44.properties");
+            }
+            	
         }
         ds = new HikariDataSource(config);
     }
