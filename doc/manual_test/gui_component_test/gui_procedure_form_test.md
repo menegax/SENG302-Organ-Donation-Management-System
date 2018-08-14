@@ -225,3 +225,33 @@ A procedure application with a summary only containing alphabet, numbers, -, and
 A procedure application with a description only containing alphabet, numbers, -, and spaces is valid: Pass
 
 A procedure application with any selected organ as an affected donation is valid: Pass
+
+###14/08/2018 - Aidan
+
+Procedure buttons invisible for patients: Pass
+
+Procedure buttons visible for clinicians: Pass
+
+Edit and delete buttons disabled by default: Pass
+
+Precondition: Pass
+
+A null procedure application will be invalid: Pass
+
+A null summary application will be invalid: Pass
+
+A procedure application with a summary containing special character(s) will be invalid: Pass
+
+A procedure application with a description containing special character(s) will be invalid: Pass
+
+A procedure application with a date that is before the patients date of birth is invalid: Pass
+
+A procedure application with a date that is after the current date is valid: Pass
+
+A procedure application with a date that is before the current date, not before patient DOB is valid: Pass
+
+A procedure application with a summary only containing alphabet, numbers, -, and spaces is valid: Pass
+
+A procedure application with a description only containing alphabet, numbers, -, and spaces is valid: Pass
+
+A procedure application with any selected organ as an affected donation is valid: Pass

@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -23,7 +24,6 @@ import service.interfaces.IClinicianDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,7 +35,7 @@ import java.util.logging.Level;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
-public class GUIAdministratorSearchUsers extends UndoableController implements Initializable {
+public class GUIAdministratorSearchUsers extends UndoableController implements IWindowObserver {
 
     @FXML
     private TableView<User> userDataTable;
@@ -53,6 +53,8 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private UserControl userControl = UserControl.getUserControl();
+
     private IAdministratorDataService administratorDataService = new AdministratorDataService();
 
     private IClinicianDataService clinicianDataService = new ClinicianDataService();
@@ -61,12 +63,8 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
 
     /**
      * Initialises the data within the table to all users
-     *
-     * @param url URL not used
-     * @param rb  Resource bundle not used
      */
-    @FXML
-    public void initialize(URL url, ResourceBundle rb) {
+    public void load() {
         setupTableColumnsAndData();
         TextWatcher watcher = new TextWatcher();
         searchEntry.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -101,7 +99,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         controls = new ArrayList<Control>() {{
             add(searchEntry);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS, target);
     }
 
     /**
@@ -111,41 +109,30 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     private void setupDoubleClickToUserEdit() {
         // Add double-click event to rows
         userDataTable.setOnMouseClicked(click -> {
-            UserControl userControl = new UserControl();
-            User selected = userDataTable.getSelectionModel().getSelectedItem();
+        	User selected = userDataTable.getSelectionModel().getSelectedItem();
             if (click.getClickCount() == 2 && selected != null && selected != userControl.getLoggedInUser()) {
-                try {
-                    userControl.setTargetUser(selected);
-                    User user = userDataTable.getSelectionModel().getSelectedItem();
-                    //Save user to local db
-                    if (user instanceof Patient) {
-                        Patient p = patientDataService.getPatientByNhi(((Patient) user).getNhiNumber());
-                        patientDataService.save(p);
-                    } else if (user instanceof Clinician) {
-                        Clinician c = clinicianDataService.getClinician(((Clinician) user).getStaffID());
-                        clinicianDataService.save(c);
-                    } else {
-                        Administrator a = administratorDataService.getAdministratorByUsername(((Administrator) user).getUsername());
-                        administratorDataService.save(a);
-                    }
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
-                    UndoableStage popUpStage = new UndoableStage();
-                    //Set initial popup dimensions
-                    popUpStage.setWidth(1150);
-                    popUpStage.setHeight(700);
-                    screenControl.addStage(popUpStage.getUUID(), popUpStage);
-                    screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
-
-                    // When pop up is closed, rerun the search (this refreshes the modified patients
-                    popUpStage.setOnHiding(event -> Platform.runLater(this::search));
-                } catch (IOException e) {
-                    userActions.log(Level.SEVERE,
-                            "Failed to open user profile scene from search users table",
-                            "attempted to open user edit window from search users table");
-                    new Alert(Alert.AlertType.ERROR, "Unable to open user edit window", ButtonType.OK).show();
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
+                controller.setTarget(selected);
+                //Save user to local db
+                if (selected instanceof Patient) {
+                    Patient p = patientDataService.getPatientByNhi(((Patient) selected).getNhiNumber());
+                    patientDataService.save(p);
+                } else if (selected instanceof Clinician) {
+                    Clinician c = clinicianDataService.getClinician(((Clinician) selected).getStaffID());
+                    clinicianDataService.save(c);
+                } else {
+                    Administrator a = administratorDataService.getAdministratorByUsername(((Administrator) selected).getUsername());
+                    administratorDataService.save(a);
                 }
             }
         });
+    }
+
+    /**
+     * Called when the created window from opening a profile is closed
+     */
+    public void windowClosed() {
+        search();
     }
 
     /**
@@ -212,5 +199,12 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
                 }
             }
         });
+    }
+
+    /**
+     * Refreshes the table data
+     */
+    private void tableRefresh() {
+       userDataTable.refresh();
     }
 }

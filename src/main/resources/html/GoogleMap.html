@@ -25,13 +25,45 @@
     // prompted by your browser. If you see the error "The Geolocation service
     // failed.", it means you probably did not give permission for the browser to
     // locate you.
-    var map, infoWindow;
+    var map, infoWindow, jsInjector, patients, geocoder;
     function initMap() {
+        geocoder = new google.maps.Geocoder();
+        patients = jsInjector.getPatients();
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: -43.31225, lng: 172.35012},
             zoom: 7,
-            gestureHandling: 'cooperative'
-        });
+            disableDefaultUI: true,
+            zoomControl: true,
+            scaleControl: true,
+            scrollwheel: false,
+            gestureHandling: 'greedy'
+    });
+        console.log(patients.size());
+        for (var i = 0 ; i < patients.size() ; i++) {
+            console.log(patients.get(i).getNhiNumber());
+            console.log(patients.get(i).getStreetNumber());
+            if(patients.get(i).getStreetNumber() != null && patients.get(i).getStreetName() != null &&
+                patients.get(i).getSuburb() != null) {
+                var number = patients.get(i).getStreetNumber();
+                var street = patients.get(i).getStreetName();
+                var suburb = patients.get(i).getSuburb();
+                var address = number + " " + street + ", " + suburb;
+                var name = patients.get(i).getFirstName() + " " + patients.get(i).getLastName();
+                geocoder.geocode({'address': address}, function (results, status) {
+                    if (status == 'OK') {
+                        map.setCenter(results[0].geometry.location);
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location,
+                            title: name
+                        });
+                    } else {
+                        alert('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
+            }
+        }
+
         infoWindow = new google.maps.InfoWindow;
 
         // Try HTML5 geolocation.

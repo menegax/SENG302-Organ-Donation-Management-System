@@ -5,13 +5,24 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.RotateEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.ZoomEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
+import model.User;
 import org.apache.commons.lang3.StringUtils;
 import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums;
 import utility.SystemLogger;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,7 +35,7 @@ import java.util.stream.Collectors;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIRequiredOrganDeregistrationReason {
+public class GUIRequiredOrganDeregistrationReason extends TargetedController implements TouchscreenCapable{
 
     @FXML
     private DateTimePicker dateOfDeath;
@@ -61,16 +72,18 @@ public class GUIRequiredOrganDeregistrationReason {
 
     private GlobalEnums.Organ organ;
 
-    private Patient target;
+    private TouchPaneController deregistrationReasonTouchController;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    @FXML
+    private GridPane deregistrationReasonPane;
 
     /**
      * Initializes the organ deregistration screen. Gets the target patient and sets optional elements as
      * disabled and not visible.
      */
-    public void initialize() {
-        UserControl userControl = new UserControl();
-        target = (Patient) userControl.getTargetUser();
+    public void load() {
         populateDropdown();
         populateForm();
         dateOfDeath.setDisable(true);
@@ -87,6 +100,15 @@ public class GUIRequiredOrganDeregistrationReason {
         curedLabel.setVisible(false);
         diseaseCured.setDisable(true);
         diseaseCured.setVisible(false);
+        if(screenControl.isTouch()) {
+            deregistrationReasonTouchController = new TouchPaneController(deregistrationReasonPane);
+            deregistrationReasonPane.setOnTouchPressed(event -> {
+                deregistrationReasonPane.toFront();
+            });
+            deregistrationReasonPane.setOnZoom(this::zoomWindow);
+            deregistrationReasonPane.setOnRotate(this::rotateWindow);
+            deregistrationReasonPane.setOnScroll(this::scrollWindow);
+        }
     }
 
 
@@ -96,8 +118,7 @@ public class GUIRequiredOrganDeregistrationReason {
     private void populateDropdown() {
         // Populate blood group drop down with values from the deregistration reasons enum
         List<GlobalEnums.DeregistrationReason> deregistrationReasons = new ArrayList<>();
-        if (target.getCurrentDiseases()
-                .size() < 1) {
+        if (((Patient) target).getCurrentDiseases().size() < 1) {
             for (GlobalEnums.DeregistrationReason reason : GlobalEnums.DeregistrationReason.values()) {
                 if (reason != GlobalEnums.DeregistrationReason.CURED) {
                     deregistrationReasons.add(reason);
@@ -107,7 +128,7 @@ public class GUIRequiredOrganDeregistrationReason {
         else {
             deregistrationReasons.addAll(Arrays.asList(GlobalEnums.DeregistrationReason.values()));
             Set<CustomMenuItem> diseaseItems = new HashSet<>();
-            for (Disease disease : target.getCurrentDiseases()) {
+            for (Disease disease : ((Patient) target).getCurrentDiseases()) {
                 if (disease.getDiseaseState() != GlobalEnums.DiseaseState.CURED) {
                     CheckBox checkbox = new CheckBox(disease.getDiseaseName());
                     checkbox.setUserData(disease);
@@ -256,9 +277,7 @@ public class GUIRequiredOrganDeregistrationReason {
         }
 
         if (valid) {
-            Stage reasonStage = (Stage) reasons.getScene()
-                    .getWindow();
-            reasonStage.close();
+            screenControl.closeWindow(deregistrationReasonPane);
         }
     }
 
@@ -266,14 +285,14 @@ public class GUIRequiredOrganDeregistrationReason {
     private void performErrorReasonActions() {
         userActions.log(Level.INFO,
                 "Deregistered " + organ + " due to error",
-                new String[] { "Attempted to deregister " + organ, target.getNhiNumber() });
+                new String[] { "Attempted to deregister " + organ, ((Patient) target).getNhiNumber() });
     }
 
 
     private void performReceivedReasonActions() {
         userActions.log(Level.INFO,
                 "Deregistered " + organ + " due to successful transplant",
-                new String[] { "Attempted to deregister " + organ, target.getNhiNumber() });
+                new String[] { "Attempted to deregister " + organ, ((Patient) target).getNhiNumber() });
     }
 
 
@@ -285,14 +304,14 @@ public class GUIRequiredOrganDeregistrationReason {
         valid = validateDeathRegion(valid);
 
         if (valid) {
-            target.clearRequiredOrgans();
+            ((Patient) target).clearRequiredOrgans();
             userActions.log(Level.INFO,
                         "Deregistered all organs due to death",
-                        new String[] { "Attempted to deregister all organs due to death", target.getNhiNumber() });
-            target.setDeathDate(dateOfDeath.getDateTimeValue());
-            target.setDeathStreet(locationDeathTxt.getText());
-            target.setDeathCity(deathCity.getText());
-            target.setDeathRegion(GlobalEnums.Region.getEnumFromString(deathRegion.getSelectionModel()
+                        new String[] { "Attempted to deregister all organs due to death", ((Patient) target).getNhiNumber() });
+            ((Patient) target).setDeathDate(dateOfDeath.getDateTimeValue());
+            ((Patient) target).setDeathStreet(locationDeathTxt.getText());
+            ((Patient) target).setDeathCity(deathCity.getText());
+            ((Patient) target).setDeathRegion(GlobalEnums.Region.getEnumFromString(deathRegion.getSelectionModel()
                         .getSelectedItem()));
             SystemLogger.systemLogger.log(Level.FINE, "Updated patient to:\n" + target);
         }
@@ -338,7 +357,7 @@ public class GUIRequiredOrganDeregistrationReason {
 
     private boolean validateDeathLocation(boolean valid) {
         // validate death location
-        
+
         // death location not required to be set
 //        if (locationDeathTxt.getText().length() < 1) {
 //            // if not set, invalid
@@ -346,7 +365,6 @@ public class GUIRequiredOrganDeregistrationReason {
 //        } else
             if (!locationDeathTxt.getText()
                 .matches(GlobalEnums.UIRegex.DEATH_LOCATION.getValue())) {
-                System.out.println("looks like loc didn't match regex");
             // if doesn't match regex, invalid
             valid = setInvalid(locationDeathTxt);
         }
@@ -361,7 +379,7 @@ public class GUIRequiredOrganDeregistrationReason {
         // validate death date
         if (dateOfDeath.getValue() != null) {
             if (dateOfDeath.getValue()
-                    .isBefore(target.getBirth()) || dateOfDeath.getValue()
+                    .isBefore(((Patient) target).getBirth()) || dateOfDeath.getValue()
                     .isAfter(LocalDate.now())) {
                 valid = setInvalid(dateOfDeath);
             }
@@ -384,7 +402,7 @@ public class GUIRequiredOrganDeregistrationReason {
         String diseaseCuredString = selected.size() == 0 ? "" : " Cured: " + String.join(",", selectedStrings);
         userActions.log(Level.INFO,
                 "Deregistered " + organ + " due to cure." + diseaseCuredString,
-                new String[] { "Attempted to deregister " + organ, target.getNhiNumber() });
+                new String[] { "Attempted to deregister " + organ, ((Patient) target).getNhiNumber() });
         curePatientDiseases(selected);
     }
 
@@ -440,8 +458,23 @@ public class GUIRequiredOrganDeregistrationReason {
         }
     }
 
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        deregistrationReasonTouchController.zoomPane(zoomEvent);
+        zoomEvent.consume();
+    }
 
-    public void setTarget(Patient newPatient) {
-        this.target = newPatient;
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        deregistrationReasonTouchController.rotatePane(rotateEvent);
+        rotateEvent.consume();
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        if (scrollEvent.isDirect()) {
+            deregistrationReasonTouchController.scrollPane(scrollEvent);
+        }
+        scrollEvent.consume();
     }
 }

@@ -129,6 +129,10 @@ public class LocalDB {
         this.organWaitlist = organWaitlist;
     }
 
+    public void undelete(User user) {
+        deleted.remove(user);
+    }
+
     /**
      * Clears all local data from the application. Called when the user logs out without saving changes
      */

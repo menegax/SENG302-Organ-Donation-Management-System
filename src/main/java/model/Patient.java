@@ -298,32 +298,36 @@ public class Patient extends User {
             globalEnum = Region.getEnumFromString(region);
             if (globalEnum != null) {
                 setRegion((Region) globalEnum);
-            } else {
-                userActions.log(Level.WARNING, "Invalid region", "attempted to update patient attributes");
+            }
+            else {
+                userActions.log(Level.WARNING, "Invalid region", new String[]{"attempted to update patient attributes", getNhiNumber()});
             }
         }
         if (birthGender != null) {
             globalEnum = BirthGender.getEnumFromString(birthGender);
             if (globalEnum != null) {
                 setBirthGender((BirthGender) globalEnum);
-            } else {
-                userActions.log(Level.WARNING, "Invalid birth gender", "attempted to update patient attributes");
+            }
+            else {
+                userActions.log(Level.WARNING, "Invalid birth gender", new String[]{"attempted to update patient attributes", getNhiNumber()});
             }
         }
         if (preferredGender != null) {
             globalEnum = PreferredGender.getEnumFromString(preferredGender);
             if (globalEnum != null) {
                 setPreferredGender((PreferredGender) globalEnum);
-            } else {
-                userActions.log(Level.WARNING, "Invalid preferred gender", "attempted to update patient attributes");
+            }
+            else {
+                userActions.log(Level.WARNING, "Invalid preferred gender", new String[]{"attempted to update patient attributes", getNhiNumber()});
             }
         }
         if (bloodGroup != null) {
             globalEnum = BloodGroup.getEnumFromString(bloodGroup);
             if (globalEnum != null) {
                 setBloodGroup((BloodGroup) globalEnum);
-            } else {
-                userActions.log(Level.WARNING, "Invalid blood group", "attempted to update patient attributes");
+            }
+            else {
+                userActions.log(Level.WARNING, "Invalid blood group", new String[]{"attempted to update patient attributes", getNhiNumber()});
             }
         }
         if (height > 0) {
@@ -335,7 +339,7 @@ public class Patient extends User {
         if (nhi != null) {
             setNhiNumber(nhi);
         }
-        userActions.log(INFO, "Successfully updated patient " + getNhiNumber(), "attempted to update patient attributes");
+        userActions.log(Level.INFO, "Successfully updated patient " + getNhiNumber(), new String[]{"attempted to update patient attributes", getNhiNumber()});
         userModified();
         Searcher.getSearcher().addIndex(this);
     }
@@ -784,7 +788,7 @@ public class Patient extends User {
      * @return required organs of the patient
      */
     public List<Organ> getRequiredOrgans() {
-        return Collections.unmodifiableList(this.requiredOrgans);
+        return (this.requiredOrgans);
     }
 
     public void clearRequiredOrgans() {

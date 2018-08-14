@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientHistory {
+public class GUIPatientHistory extends TargetedController {
 
     @FXML
     private TableColumn<PatientActionRecord, String> timeStampColumn;
@@ -38,15 +38,11 @@ public class GUIPatientHistory {
 
     private ObservableList<PatientActionRecord> masterData = FXCollections.observableArrayList();
 
-
     /**
      * Initializes the patient history screen by loading all logs for the logged in patient
      */
-    public void initialize() {
-        UserControl userControl = new UserControl();
-        Patient target = userControl.getLoggedInUser() instanceof Patient ? (Patient) userControl.getLoggedInUser() : (Patient) userControl.getTargetUser();
-        target = new PatientDataService().getPatientByNhi(target.getNhiNumber());
-        masterData.addAll(target.getUserActionsList());
+    public void load() {
+        masterData.addAll(((Patient) target).getUserActionsList());
         populateTable();
     }
 

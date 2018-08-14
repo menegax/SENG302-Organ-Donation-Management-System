@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Class for a controller who controls an undoable screen
  */
-public abstract class UndoableController {
+public abstract class UndoableController extends TargetedController {
 
     List<Control> controls;
     StatesHistoryScreen statesHistoryScreen;

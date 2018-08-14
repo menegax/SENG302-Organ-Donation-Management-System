@@ -22,7 +22,6 @@ import utility.GlobalEnums;
 import utility.ImportObservable;
 import utility.SystemLogger;
 import utility.parsing.ParseCSV;
-import utility.undoRedo.UndoableStage;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -36,9 +35,11 @@ import static utility.SystemLogger.systemLogger;
 
 public class AdministratorDataService implements IAdministratorDataService {
 
-    private DAOFactory mysqlFactory;
-    private DAOFactory localDbFactory;
-    private CachedThreadPool cachedThreadPool;
+    private final DAOFactory mysqlFactory;
+    private final DAOFactory localDbFactory;
+    private final CachedThreadPool cachedThreadPool;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     public AdministratorDataService() {
         cachedThreadPool = CachedThreadPool.getCachedThreadPool();
@@ -84,16 +85,7 @@ public class AdministratorDataService implements IAdministratorDataService {
     }
 
     private void showImportResults() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/adminImportResults.fxml"));
-            Parent parent = fxmlLoader.load();
-            Scene scene = new Scene(parent, 900, 600);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.show();
-        } catch (Exception e) {
-            SystemLogger.systemLogger.log(Level.SEVERE, "Couldn't open import results popup");
-        }
+        screenControl.show("/scene/adminImportResults.fxml", false, null, null);
     }
 
     @Override
@@ -152,6 +144,7 @@ public class AdministratorDataService implements IAdministratorDataService {
         results.put(0, new ArrayList<>());
         results.put(1, new ArrayList<>());
         results.put(2, new ArrayList<>());
+        results.put(3, new ArrayList<>());
         for (Integer i : patients.keySet()) {
             results.get(i).addAll(patients.get(i));
         }

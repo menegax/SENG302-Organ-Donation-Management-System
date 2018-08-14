@@ -18,7 +18,7 @@ public class StateHistoryComboBox extends StateHistoryControl {
     public StateHistoryComboBox(ComboBox<String> comboBox) {
         this.control = comboBox;
         states.add(comboBox.getSelectionModel().getSelectedItem());
-        setUpUndoableStage();
+        setUpUndoableWrapper(this.control);
     }
 
 

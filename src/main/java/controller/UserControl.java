@@ -4,6 +4,7 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
+import utility.undoRedo.UndoableWrapper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,15 +15,30 @@ import static utility.SystemLogger.systemLogger;
 public class UserControl {
 
 
-    private static final Map<String, User> users = new HashMap<>();
+    private final Map<UndoableWrapper, User> users = new HashMap<>();
+    private User loggedInUser;
 
+    private static UserControl userControl;
+
+    private UserControl(){}
+
+    /**
+     * Getter to enable this to be a singleton
+     * @return the single UserControl object
+     */
+    public static UserControl getUserControl() {
+        if (userControl == null) {
+            userControl = new UserControl();
+        }
+        return userControl;
+    }
 
     /**
      * Adds entries to the map
      * @param key - key to identify the value by
      * @param value - value to store
      */
-    private void add(String key, User value) {
+    private void add(UndoableWrapper key, User value) {
         if (key != null && value != null){
             users.put(key, value);
         }
@@ -32,7 +48,7 @@ public class UserControl {
      * Remove an entry from the map
      * @param key - key value to be removed
      */
-    private void remove(String key) {
+    private void remove(UndoableWrapper key) {
         if (users.get(key) != null) {
             users.remove(key);
         }
@@ -43,7 +59,7 @@ public class UserControl {
      * @param key - key to identify the object value by
      * @return - object at the given key
      */
-    private User get(String key) {
+    private User get(UndoableWrapper key) {
         return users.get(key);
     }
 
@@ -52,7 +68,7 @@ public class UserControl {
      * @param user - user to be added
      */
     void addLoggedInUserToCache(User user) {
-        add("user_logged_in", user);
+        loggedInUser = user;
     }
 
 
@@ -61,42 +77,34 @@ public class UserControl {
      * @return - user object
      */
     public User getLoggedInUser() {
-        return get("user_logged_in");
+        return loggedInUser;
     }
 
     public boolean isUserLoggedIn() {
-        return !users.isEmpty();
+        return loggedInUser != null;
     }
 
     /**
      *  Gets the target user that is currently being viewed
      * @return - User that is being viewed
      */
-    public User getTargetUser() {
-        Object value = get("target_user");
-        if (value instanceof Patient) {
-            return (Patient) value;
-        } else if (value instanceof Clinician) {
-            return (Clinician) value;
-        } else if (value instanceof Administrator) {
-            return (Administrator) value;
-        }
-        return null;
+    public User getTargetUser(UndoableWrapper undoableWrapper) {
+        return get(undoableWrapper);
     }
 
     /**
      * Sets the user to be viewed
      * @param user - Patient object to view
      */
-    void setTargetUser(User user) {
-        add("target_user", user);
+    void setTargetUser(User user, UndoableWrapper undoableWrapper) {
+        add(undoableWrapper, user);
     }
 
     /**
      * Clears the target user record
      */
-    void clearTargetUser() {
-        remove("target_user");
+    void clearTargetUser(UndoableWrapper undoableWrapper) {
+        remove(undoableWrapper);
     }
 
     /**
@@ -119,6 +127,7 @@ public class UserControl {
     public void rmLoggedInUserCache() {
 //        remove("user_logged_in");
         users.clear();
+        loggedInUser = null;
         systemLogger.log(INFO, "All users have been logged out");
     }
 
