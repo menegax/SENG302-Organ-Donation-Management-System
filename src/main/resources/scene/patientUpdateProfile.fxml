@@ -50,6 +50,8 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label text="NHI:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
@@ -98,7 +100,19 @@
                   <Insets right="5.0" />
                </GridPane.margin>
             </Label>
-            <DateTimePicker fx:id="dateOfDeath" editable="false" prefHeight="38.0" prefWidth="902.0" promptText="Date of death" showWeekNumbers="true" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+            <TextField fx:id="deathCity" prefHeight="39.0" prefWidth="320.0" promptText="Death city" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+            <Label alignment="CENTER_RIGHT" text="Death City:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="10" GridPane.valignment="CENTER">
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+            </Label>
+            <ChoiceBox fx:id="deathRegion" prefHeight="38.0" prefWidth="527.0" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+            <Label alignment="CENTER_RIGHT" text="Death Region:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="11" GridPane.valignment="CENTER">
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+            </Label>
+            <DateTimePicker fx:id="dateOfDeath" editable="true" prefHeight="38.0" prefWidth="902.0" promptText="Date of death" showWeekNumbers="true" GridPane.columnIndex="2" GridPane.rowIndex="8" />
          </children>
       </GridPane>
       <Button fx:id="saveButtonForUpdate" mnemonicParsing="false" onAction="#saveProfileUpdater" prefHeight="39.0" prefWidth="115.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Set" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
@@ -133,13 +147,18 @@
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <TextField fx:id="cityTxt" prefHeight="38.0" prefWidth="320.0" promptText="City" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <TextField fx:id="suburbTxt" prefHeight="39.0" prefWidth="320.0" promptText="Suburb" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <Label text="City:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+            <Label text="Street:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <Label text="Suburb:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <TextField fx:id="street1Txt" prefHeight="38.0" prefWidth="320.0" promptText="Street" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="cityTxt" prefHeight="38.0" prefWidth="320.0" promptText="City" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <TextField fx:id="suburbTxt" prefHeight="39.0" prefWidth="320.0" promptText="Suburb" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Label text="City:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Label>
+            <Label text="Suburb:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
