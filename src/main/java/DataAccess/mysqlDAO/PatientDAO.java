@@ -137,8 +137,6 @@ public class PatientDAO implements IPatientDataAccess {
             }
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
            systemLogger.log(Level.SEVERE, "Could not get patient from remote db", this);
         }
         return null;

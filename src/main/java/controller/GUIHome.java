@@ -410,7 +410,7 @@ public class GUIHome implements Observer, TouchscreenCapable {
             menu2Item2.setOnAction(event -> {
                 File file = new FileChooser().showOpenDialog(stage);
                 if (file != null) {
-                    //database.importFromDiskPatients(file.getAbsolutePath()); //TODO
+                    //database.importFromDiskPatients(file.getAbsolutePath());
                     userActions.log(INFO, "Selected patient file for import", "Attempted to find a file for import");
                 }
             });
