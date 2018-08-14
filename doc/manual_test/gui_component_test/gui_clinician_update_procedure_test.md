@@ -70,4 +70,14 @@ Cancel Update Test: Pass
 
 Add Procedure: Pass
 
+###14/08/2018 - Maree
+
+Update Procedure Summary Test: Pass
+
+Update Procedure Organs Test: Pass
+
+Cancel Update Test: Pass
+
+Add Procedure: Pass (no error)
+
 
