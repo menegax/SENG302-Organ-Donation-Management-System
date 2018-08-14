@@ -69,9 +69,9 @@ public class MYSQLRequiredOrgansDAOTest {
      * Update required organs for given patient
      */
     private void whenRequiredOrganIsUpdated() {
-        daoFactory.getRequiredOrganDataAccess().updateRequiredOrgans(patient.getNhiNumber(), GlobalEnums.Organ.LIVER
+        daoFactory.getRequiredOrgansDataAccess().updateRequiredOrgans(patient.getNhiNumber(), GlobalEnums.Organ.LIVER
                 , LocalDate.of(2018, 8, 9));
-        daoFactory.getRequiredOrganDataAccess().updateRequiredOrgans(patient.getNhiNumber(), GlobalEnums.Organ.PANCREAS
+        daoFactory.getRequiredOrgansDataAccess().updateRequiredOrgans(patient.getNhiNumber(), GlobalEnums.Organ.PANCREAS
                 , LocalDate.of(2017, 12, 30));
     }
 
@@ -79,21 +79,21 @@ public class MYSQLRequiredOrgansDAOTest {
      * Deletes a required organ for a given patient
      */
     private void whenRequiredOrganIsDeleted() {
-        daoFactory.getRequiredOrganDataAccess().deleteRequiredOrganByNhi(patient.getNhiNumber(), GlobalEnums.Organ.LIVER);
+        daoFactory.getRequiredOrgansDataAccess().deleteRequiredOrganByNhi(patient.getNhiNumber(), GlobalEnums.Organ.LIVER);
     }
 
     /**
      * Deletes all required organs for a given patient
      */
     private void whenAllRequiredOrgansAreDeleted() {
-        daoFactory.getRequiredOrganDataAccess().deleteAllRequiredOrgansByNhi(patient.getNhiNumber());
+        daoFactory.getRequiredOrgansDataAccess().deleteAllRequiredOrgansByNhi(patient.getNhiNumber());
     }
 
     /**
      * Checks that the required organs are parsed correctly into the database
      */
     private void thenRequiredOrgansAreInDb() {
-        Map<GlobalEnums.Organ, LocalDate> requiredOrgans = daoFactory.getRequiredOrganDataAccess()
+        Map<GlobalEnums.Organ, LocalDate> requiredOrgans = daoFactory.getRequiredOrgansDataAccess()
                 .getRequiredOrganByNhi(patient.getNhiNumber());
         assert requiredOrgans.get(GlobalEnums.Organ.LIVER.getValue()).equals(LocalDate.of(2018,8,9));
         assert requiredOrgans.get(GlobalEnums.Organ.PANCREAS.getValue()).equals(LocalDate.of(2017,12,30));
@@ -104,7 +104,7 @@ public class MYSQLRequiredOrgansDAOTest {
      * Checks that the required organ was deleted correctly from the database
      */
     private void thenRequiredOrganIsInDb() {
-        Map<GlobalEnums.Organ, LocalDate> requiredOrgans = daoFactory.getRequiredOrganDataAccess()
+        Map<GlobalEnums.Organ, LocalDate> requiredOrgans = daoFactory.getRequiredOrgansDataAccess()
                 .getRequiredOrganByNhi(patient.getNhiNumber());
         assert requiredOrgans.get(GlobalEnums.Organ.PANCREAS.getValue()).equals(LocalDate.of(2017,12,30));
         assert requiredOrgans.size() == 1;
@@ -114,7 +114,7 @@ public class MYSQLRequiredOrgansDAOTest {
      * Checks that the required organs are all correctly deleted from the database
      */
     private void thenNoRequiredOrganIsInDb() {
-        Map<GlobalEnums.Organ, LocalDate> requiredOrgans = daoFactory.getRequiredOrganDataAccess()
+        Map<GlobalEnums.Organ, LocalDate> requiredOrgans = daoFactory.getRequiredOrgansDataAccess()
                 .getRequiredOrganByNhi(patient.getNhiNumber());
         assert requiredOrgans.size() == 0;
     }
