@@ -7,7 +7,6 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.User;
-import org.tuiofx.examples.demo.FXMLController;
 import utility.undoRedo.UndoableWrapper;
 
 import java.util.*;
@@ -17,9 +16,9 @@ import java.util.*;
  */
 public abstract class ScreenControl {
 
-    protected static ScreenControl screenControl;
+    private static ScreenControl screenControl;
 
-    private boolean macOs = System.getProperty("os.name")
+    private final boolean macOs = System.getProperty("os.name")
             .startsWith("Mac");
 
     private KeyCodeCombination logOut;
@@ -34,15 +33,13 @@ public abstract class ScreenControl {
 
     private KeyCodeCombination closeWindow;
 
-    private String appName = "Big Pharma";
-
     private static boolean isTouch;
 
     private Boolean isSaved = true;
 
-    private Map<Object, TabPane> tabs = new HashMap<>();
+    private final Map<Object, TabPane> tabs = new HashMap<>();
 
-    protected List<UndoableWrapper> undoableWrappers = new ArrayList<>();
+    final List<UndoableWrapper> undoableWrappers = new ArrayList<>();
 
     abstract void setUpNewLogin();
     abstract void removeUnsavedAsterisks();
@@ -50,7 +47,7 @@ public abstract class ScreenControl {
     abstract boolean closeWindow(Pane pane);
     abstract public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser);
 
-    protected ScreenControl() {
+    ScreenControl() {
         setUpKeyCodeCombinations();
     }
 
@@ -191,6 +188,7 @@ public abstract class ScreenControl {
 
 
     String getAppName() {
+        String appName = "Big Pharma";
         return appName;
     }
 

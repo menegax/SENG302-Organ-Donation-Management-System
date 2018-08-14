@@ -4,12 +4,12 @@ import model.User;
 
 public abstract class TargetedController {
 
-    protected User target;
+    User target;
 
     public void setTarget(User target) {
         this.target = target;
         load();
     }
 
-    abstract public void load();
+    protected abstract void load();
 }

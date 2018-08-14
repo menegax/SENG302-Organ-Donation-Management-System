@@ -1,7 +1,5 @@
 package controller;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -10,13 +8,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import model.User;
-import org.tuiofx.examples.demo.FXMLController;
 import org.tuiofx.internal.base.TuioFXCanvas;
 import service.UserDataService;
 import utility.undoRedo.UndoableWrapper;
@@ -40,7 +36,7 @@ class ScreenControlTouch extends ScreenControl {
 
     private static ScreenControlTouch screenControlTouch;
 
-    private UserControl userControl = UserControl.getUserControl();
+    private final UserControl userControl = UserControl.getUserControl();
 
     private boolean isLoginShowing;
 

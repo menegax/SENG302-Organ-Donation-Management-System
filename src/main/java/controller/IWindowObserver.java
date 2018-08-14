@@ -1,6 +1,6 @@
 package controller;
 
-public interface IWindowObserver {
+interface IWindowObserver {
 
-    public void windowClosed();
+    void windowClosed();
 }
