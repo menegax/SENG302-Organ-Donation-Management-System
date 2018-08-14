@@ -15,18 +15,6 @@
 4  The header titled "Birth Gender" is selected
 5. The list is sorted alphabetically in the opposite order
 
-### The Patient List shows only searched female birth gender
-
-1. The Search Patients screen is shown
-2. "female" is entered into the search testField
-3. Only patients with a "Female" birth gender are listed
-
-### The Patient List shows only searched male birth gender
-
-1. The Search Patients screen is shown
-2. "male" is entered into the search testField
-3. Only patients with a "Male" birth gender are listed
-
 ### Review the birth gender, preferred gender and preferred name on a patients profile
 
 1. The Search Patients screen is shown
@@ -92,6 +80,22 @@ The patient list is sorted based on birth gender: Pass
 The patient list shows only searched female birth gender: Pass
 
 The patient list shows only searched male birth gender: Pass
+
+Review the birth gender, preferred gender and preferred name on a patients profile: Pass
+
+Edit the preferred name for a patient: Pass
+
+Edit the preferred gender to Man for a patient: Pass
+
+Edit the preferred gender to Woman for a patient: Pass
+
+Edit the preferred gender to Non-binary for a patient: Pass
+
+###14/08/2018 - Aidan
+
+Precondition: Pass
+
+The patient list is sorted based on birth gender: Pass
 
 Review the birth gender, preferred gender and preferred name on a patients profile: Pass
 

@@ -53,3 +53,14 @@ Add a diagnosis already in current: Pass
 Add an invalid disease name: Pass
 
 Delete the diagnosis: Pass
+
+### 14/08/2018 - Aidan
+
+Preconditions: Pass
+
+Add a diagnosis: Fail - Null pointer exception thrown on add diagnosis popup
+```
+Caused by: java.lang.NullPointerException
+	at controller.GUIPatientUpdateDiagnosis.load(GUIPatientUpdateDiagnosis.java:97)
+```
+
