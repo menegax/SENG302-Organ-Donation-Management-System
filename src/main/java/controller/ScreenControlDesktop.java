@@ -1,31 +1,25 @@
 package controller;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import model.User;
 import service.UserDataService;
 import utility.undoRedo.UndoableWrapper;
 
 import java.io.IOException;
-import java.util.*;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.*;
-import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class ScreenControlDesktop extends ScreenControl {
     private static ScreenControlDesktop screenControl;
-    private UserControl userControl = UserControl.getUserControl();
+    private final UserControl userControl = UserControl.getUserControl();
 
     private boolean macOs = System.getProperty("os.name")
             .startsWith("Mac");

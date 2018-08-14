@@ -2,36 +2,19 @@ package controller;
 
 import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import org.tuiofx.Configuration;
-import org.tuiofx.TangibleEvent;
-import org.tuiofx.TangibleListener;
-import org.tuiofx.internal.base.GestureHandler;
+import org.tuiofx.TuioFX;
 import service.UserDataService;
-import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
-import org.tuiofx.TuioFX;
-
-import java.io.IOException;
-import java.util.UUID;
 
 import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 
 public class TUIOFXMain extends Application {
-
-    private static final UUID uuid = UUID.randomUUID();
 
     /**
      * Creates a new Stage and positions and sizes the stage to be the size of the screen boundaries
@@ -53,7 +36,7 @@ public class TUIOFXMain extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         // set up GUI
         Stage stage = setUpStage();
         ScreenControlTouch screenControl = (ScreenControlTouch) ScreenControl.getScreenControl();

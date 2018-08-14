@@ -358,7 +358,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
         newTab.setText(title.toString());
             newTab.selectedProperty().addListener(observable ->{
                 try {
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));;
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
                     newTab.setContent(fxmlLoader.load());
                     TargetedController targetedController = fxmlLoader.getController();
                     targetedController.setTarget(target);
