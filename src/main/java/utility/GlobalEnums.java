@@ -237,6 +237,9 @@ public class GlobalEnums {
                 case "intestine": {
                     return numberSecondsHour * 6;
                 }
+                case "liver": {
+                    return getOrganUpperBoundSeconds(); //get upper (no lower bound)
+                }
             }
             return 0;
         }
@@ -249,7 +252,7 @@ public class GlobalEnums {
             switch (value) {
                 case "lung":
                 case "heart": {
-                    return numberSecondsHour * 4;
+                    return numberSecondsHour * 6;
                 }
                 case "bone marrow": {
                     return numberSecondsHour * 5;

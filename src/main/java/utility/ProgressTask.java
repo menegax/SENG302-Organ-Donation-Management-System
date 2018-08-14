@@ -31,7 +31,7 @@ public class ProgressTask extends Task<Void> {
         long remainingTime = calculateRemainingTime();
         for (int i = ((int) elapsedTime); i < remainingTime && elapsedTime >= 0; i++) {
             updateProgress((1.0 * i) / organ.getOrganUpperBoundSeconds(), 1);
-            updateMessage(getTimeRemaining());
+            updateMessage(getTimeRemaining()); //in fx thread
             double finalI = (1.0 * i) / organ.getOrganUpperBoundSeconds(); //todo: pull out to methods
             Platform.runLater(() -> {
                 double ratioOfLowerUpper = organ.getOrganLowerBoundSeconds() / (double)organ.getOrganUpperBoundSeconds();
