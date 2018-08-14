@@ -1,14 +1,16 @@
 package controller;
 
-import javafx.concurrent.Task;
+import com.sun.xml.internal.bind.v2.runtime.property.ValueProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ProgressBarTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.util.Callback;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
-import utility.CachedThreadPool;
 import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -17,10 +19,11 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 
 import model.Patient;
+import utility.ProgressBarCustomTableCell;
+import utility.ProgressTask;
 
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
@@ -42,7 +45,7 @@ public class GUIAvailibleOrgans {
     @FXML
     private TableColumn<PatientOrgan, String> expiryCol;
     @FXML
-    private TableColumn<PatientOrgan, Double> organExpiryProgressCol;
+    private TableColumn<PatientOrgan, ProgressTask> organExpiryProgressCol;
 
     private ObservableList<PatientOrgan> masterData = FXCollections.observableArrayList();
 
@@ -73,12 +76,16 @@ public class GUIAvailibleOrgans {
                 .getPatient().getNhiNumber()));
         organCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getOrgan().toString()));
+
+
+
         locationCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue().getPatient().getDeathLocationConcat()));
         deathCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getPatient().getDeathDate().toString()));
         //TODO add expiry countdown
-        organExpiryProgressCol.setCellValueFactory(new PropertyValueFactory<>("progress"));
-        organExpiryProgressCol.setCellFactory(cb -> new ProgressBarTableCell<>());
+
+        organExpiryProgressCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getProgressTask()));
+        organExpiryProgressCol.setCellFactory(cb -> ProgressBarCustomTableCell.getCell(organExpiryProgressCol));
 
         // wrap ObservableList in a FilteredList
         FilteredList<PatientOrgan> filteredData = new FilteredList<>(masterData);
@@ -86,17 +93,14 @@ public class GUIAvailibleOrgans {
         // wrap the FilteredList in a SortedList.
         SortedList<PatientOrgan> sortedData = new SortedList<>(filteredData);
 
+
         // bind the SortedList comparator to the TableView comparator.
-       // sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
+        sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
 
         // add sorted (and filtered) data to the table.
         availableOrgansTableView.setItems(sortedData);
         availableOrgansTableView.setVisible(true);
         tableRefresh();
-
-        for (PatientOrgan task : availableOrgansTableView.getItems()){
-            CachedThreadPool.getCachedThreadPool().getThreadService().submit(task);
-        }
     }
     
     /**
@@ -109,25 +113,16 @@ public class GUIAvailibleOrgans {
     /**
      * Simple holder for patients and organ so that it is known which organ belongs to whom.
      */
-    private class PatientOrgan extends Task<Void> {
+    public class PatientOrgan {
     	private Patient patient;
     	private Organ organ;
+    	private ProgressTask progressTask;
 
         PatientOrgan(Patient patient, Organ organ) {
     		this.patient = patient;
     		this.organ = organ;
+    		this.progressTask = new ProgressTask(this);
     	}
-
-        @Override
-        protected Void call() throws Exception {
-            this.updateProgress(ProgressIndicator.INDETERMINATE_PROGRESS, 1);
-            for (int i = 0; i < 100; i++) {
-                updateProgress((1.0 * i) / 100, 1);
-                Thread.sleep(100);
-            }
-            this.updateProgress(1, 1);
-            return null;
-        }
 
     	public Patient getPatient() {
     		return patient;
@@ -137,6 +132,9 @@ public class GUIAvailibleOrgans {
     		return organ;
     	}
 
+    	public ProgressTask getProgressTask() {
+            return progressTask;
+        }
 
     	@Override
     	public boolean equals(Object obj) {
