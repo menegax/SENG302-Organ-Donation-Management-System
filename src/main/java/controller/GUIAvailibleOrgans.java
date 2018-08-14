@@ -122,8 +122,8 @@ public class GUIAvailibleOrgans {
                     .getSelectedItem() != null) {
                 try {
                     UserControl userControl = new UserControl();
-                    userControl.setTargetUser(availableOrgansTableView.getSelectionModel().getSelectedItem().patient);
-                    Patient patient = patientDataService.getPatientByNhi(availableOrgansTableView.getSelectionModel().getSelectedItem().patient.getNhiNumber());
+                    userControl.setTargetUser(availableOrgansTableView.getSelectionModel().getSelectedItem().getPatient());
+                    Patient patient = patientDataService.getPatientByNhi(availableOrgansTableView.getSelectionModel().getSelectedItem().getPatient().getNhiNumber());
                     patientDataService.save(patient); //save to local
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
                     UndoableStage popUpStage = new UndoableStage();

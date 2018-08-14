@@ -7,8 +7,11 @@ import javafx.scene.control.ProgressIndicator;
 import model.Patient;
 import model.PatientOrgan;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 
 public class ProgressTask extends Task<Void> {
@@ -29,9 +32,8 @@ public class ProgressTask extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
-        this.updateProgress(ProgressIndicator.INDETERMINATE_PROGRESS, 1);
         long remainingTime = calculateRemainingTime();
-        System.out.println(elapsedTime);
+        System.out.println(LocalTime.MIN.plusSeconds(remainingTime).format(DateTimeFormatter.ISO_LOCAL_TIME));
         for (int i = ((int) elapsedTime); i < remainingTime; i++) {
             updateProgress((1.0 * i) / remainingTime, 1);
             double finalI = (1.0 * i) / remainingTime;
