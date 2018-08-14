@@ -31,9 +31,7 @@
     var markers = [];
 
     function init() {
-        console.log("hihi");
         geocoder = new google.maps.Geocoder();
-        console.log("asdasd");
         map = new google.maps.Map(document.getElementById('map'), {
             //center: {lat: -43.31225, lng: 172.35012},
             center: {lat: 0, lng: 0},
@@ -41,7 +39,8 @@
             disableDefaultUI: true,
             zoomControl: true,
             scaleControl: true,
-            gestureHandling: 'cooperative'
+            scrollwheel: false,
+            gestureHandling: 'greedy'
         });
         markerLoop(patients.size());
     }
@@ -53,7 +52,7 @@
             markerLoop(--i);
         }, 700);
     }
-    
+
     function addMarker(patient) {
         var address = patient.getStreetNumber() + " " + patient.getStreetName() + ", " + patient.getSuburb();
         var name = patient.getNameConcatenated();
