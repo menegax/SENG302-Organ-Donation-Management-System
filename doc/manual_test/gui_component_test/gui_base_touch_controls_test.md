@@ -89,3 +89,23 @@ Open the system keyboard - pass
 Open the built-in keyboard - pass
 
 Open multiple built-in keyboards in multiple focus areas - pass
+
+###14/8/2018 - Kyle Lamb
+
+Zoom in on a scene - pass
+
+Zoom out on a scene - pass
+
+Rotate a scene - pass
+
+Scroll across a scene - pass
+
+Close a touch pane that is not the root pane - pass
+
+Close a touch pane that is the root pane - pass
+
+Open the system keyboard - pass
+
+Open the built-in keyboard - pass
+
+Open multiple built-in keyboards in multiple focus areas - pass
