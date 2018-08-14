@@ -23,7 +23,7 @@
           <TableColumn fx:id="locationCol" prefWidth="75.0" text="Location" />
             <TableColumn fx:id="deathCol" prefWidth="75.0" text="Time Of Death" />
             <TableColumn fx:id="organExpiryProgressCol" prefWidth="75.0" text="Organ Expiry Progress" />
-            <TableColumn fx:id="timerCol" prefWidth="75.0" text="Organ Expiry" />
+            <TableColumn fx:id="expiryCol" prefWidth="75.0" text="Organ Expiry" />
         </columns>
          <GridPane.margin>
             <Insets bottom="60.0" left="60.0" right="60.0" top="10.0" />

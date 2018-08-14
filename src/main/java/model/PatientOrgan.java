@@ -1,5 +1,6 @@
 package model;
 
+import javafx.beans.property.StringProperty;
 import utility.GlobalEnums;
 import utility.ProgressTask;
 
@@ -10,6 +11,7 @@ public class PatientOrgan {
     private Patient patient;
     private GlobalEnums.Organ organ;
     private ProgressTask progressTask;
+    private StringProperty messageProperty;
 
     public PatientOrgan(Patient patient, GlobalEnums.Organ organ) {
         this.patient = patient;
@@ -35,6 +37,13 @@ public class PatientOrgan {
 
     public long getOrganLowerBound() {
         return organ.getOrganLowerBoundSeconds();
+    }
+
+    public final StringProperty messageProperty() {
+        return messageProperty;
+    }
+    public void setMessage(StringProperty message){
+        this.messageProperty = message;
     }
 
     @Override

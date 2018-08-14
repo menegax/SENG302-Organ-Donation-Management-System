@@ -87,10 +87,10 @@ public class GUIAvailibleOrgans {
 
 
         locationCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue().getPatient().getDeathLocationConcat()));
-        deathCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
-                .getPatient().getDeathDate().toString()));
+        deathCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue().getPatient().getDeathDate().toString()));
         //TODO add expiry countdown
 
+        expiryCol.setCellValueFactory(r -> r.getValue().getProgressTask().messageProperty());
         organExpiryProgressCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getProgressTask()));
         organExpiryProgressCol.setCellFactory(cb -> ProgressBarCustomTableCell.getCell(organExpiryProgressCol));
 
