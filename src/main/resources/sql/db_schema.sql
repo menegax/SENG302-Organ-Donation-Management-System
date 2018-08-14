@@ -19,7 +19,8 @@ CREATE TABLE `tblPatients` (
   `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Modified` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `Death` timestamp NULL DEFAULT NULL,
-  `DeathLocation` varchar(75),
+  `DeathCity` varchar(75) DEFAULT NULL,
+  `DeathRegion` enum('Northland','Auckland','Waikato','Bay of Plenty','Gisborne','Hawkes Bay','Taranaki','Manawatu','Wellington','Tasman','Nelson','Marlborough','West Coast','Canterbury','Otago','Southland') DEFAULT NULL
   `BirthGender` char(1) DEFAULT NULL,
   `PrefGender` char(1) DEFAULT NULL,
   `PrefName` varchar(35) DEFAULT NULL,
@@ -78,9 +79,10 @@ CREATE TABLE `tblMedications` (
 
 CREATE TABLE `tblPatientContact` (
   `Patient` char(7) NOT NULL DEFAULT '',
-  `Street1` varchar(100) DEFAULT NULL,
-  `Street2` varchar(100) DEFAULT NULL,
+  `StreetNumber` varchar(20) DEFAULT NULL,
+  `StreetName` varchar(100) DEFAULT NULL,
   `Suburb` varchar(100) DEFAULT NULL,
+  `City` varchar(100) DEFAULT NULL,
   `Region` enum('Northland','Auckland','Waikato','Bay of Plenty','Gisborne','Hawkes Bay','Taranaki','Manawatu','Wellington','Tasman','Nelson','Marlborough','West Coast','Canterbury','Otago','Southland') DEFAULT NULL,
   `Zip` char(4) DEFAULT NULL,
   `HomePhone` varchar(15) DEFAULT NULL,
@@ -155,4 +157,3 @@ CREATE TABLE `tblProcedures` (
   PRIMARY KEY (`Patient`,`Summary`,`ProDate`),
   CONSTRAINT `tblProcedures_ibfk_1` FOREIGN KEY (`Patient`) REFERENCES `tblPatients` (`Nhi`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-

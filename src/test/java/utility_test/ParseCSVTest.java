@@ -151,7 +151,7 @@ public class ParseCSVTest {
     @Test
     public void testDatesParsed() {
         Assert.assertEquals("1995-08-27", patient.getBirth().toString());
-        Assert.assertNull(patient.getDeath());
+        Assert.assertNull(patient.getDeathDate());
     }
 
     /**
