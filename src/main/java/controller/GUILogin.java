@@ -6,7 +6,6 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.*;
@@ -17,7 +16,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -31,6 +29,7 @@ import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
@@ -127,13 +126,14 @@ public class GUILogin implements TouchscreenCapable {
                 }
                 clinicianDataService.save(clinician);
                 login.addLoggedInUserToCache(clinician);
-                openMaps();
+                openMap();
             } else {
+                administrator.isSelected();
                 checkAdminCredentials();
                 Administrator administrator = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
                 administratorDataService.save(administrator);
                 login.addLoggedInUserToCache(administrator);
-                openMaps();
+                openMap();
             }
             Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
             UndoableStage stage = new UndoableStage();
@@ -147,7 +147,7 @@ public class GUILogin implements TouchscreenCapable {
             alert.show();
         } catch (IOException e) {
             userActions.log(Level.WARNING, "Unable to load home page", "Attempted to log in");
-            systemLogger.log(Level.INFO, "Failed to find the .fxml file for login" + e.getStackTrace());
+            systemLogger.log(Level.INFO, "Failed to find the .fxml file for login" + Arrays.toString(e.getStackTrace()));
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
             alert.show();
         } catch (NumberFormatException e) {
@@ -158,19 +158,15 @@ public class GUILogin implements TouchscreenCapable {
 
     }
 
-    public void openMaps() {
-        // Opens the Map
+    private void openMap() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/Map.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/map.fxml"));
             Parent root = fxmlLoader.load();
-            System.out.println('1');
             UndoableStage popUpStage = new UndoableStage();
             screenControl.addStage(popUpStage.getUUID(), popUpStage);
             screenControl.show(popUpStage.getUUID(), root);
         } catch (IOException e) {
-            userActions.log(Level.SEVERE,
-                    "Failed to open Map",
-                    "attempted to open Map on startup");
+            userActions.log(Level.SEVERE, "Failed to open Map", "Attempted to open Map on startup");
             new Alert(Alert.AlertType.ERROR, "Unable to open Map", ButtonType.OK).show();
         }
     }
