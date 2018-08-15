@@ -17,7 +17,11 @@
             margin: 0;
             padding: 0;
         }
+
+        /*Fix font rendering on macOS*/
+        .gm-style-mtc > div, .gm-style > div, .gm-style-cc > div, .gm-style, .gm-err-message, .gm-err-title {font-family:sans-serif !important;}
     </style>
+
 </head>
 <body>
 <div id="map"></div>
