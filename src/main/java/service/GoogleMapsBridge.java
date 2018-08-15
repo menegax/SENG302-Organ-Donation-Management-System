@@ -38,6 +38,7 @@ public class GoogleMapsBridge implements Initializable {
     private Stage mapStage;
 
     private Robot robot;
+
     private JSInjector jsInjector;
 
 
@@ -61,6 +62,7 @@ public class GoogleMapsBridge implements Initializable {
             if (Worker.State.SUCCEEDED == newValue) {
                 jsBridge1 = (JSObject) webEngine1.executeScript("window");
                 jsBridge1.setMember("patients", results);
+                jsInjector = new JSInjector();
                 jsBridge1.setMember("jsInjector", jsInjector);
                 jsBridge1.call("init");
             }
@@ -73,16 +75,17 @@ public class GoogleMapsBridge implements Initializable {
 
         try {
             robot = new Robot();
-        } catch (AWTException e) {
+        }
+        catch (AWTException e) {
             e.printStackTrace();
         }
 
-//        webViewMap1.setOnZoom(event -> {
-//            webViewMap1.setZoom(webViewMap1.getZoom() * event.getZoomFactor());
-//            webViewMap1.getEngine();
-//        });
+        //        webViewMap1.setOnZoom(event -> {
+        //            webViewMap1.setZoom(webViewMap1.getZoom() * event.getZoomFactor());
+        //            webViewMap1.getEngine();
+        //        });
         webViewMap1.setOnScroll(event -> {
-            if(event.getTouchCount() == 2) {
+            if (event.getTouchCount() == 2) {
                 robot.keyPress(KeyEvent.VK_CONTROL);
             }
         });
