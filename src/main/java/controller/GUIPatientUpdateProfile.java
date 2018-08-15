@@ -533,7 +533,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             isSettingDeath = true;
         } else if (deathCity.getText().length() != 0) {
             isSettingDeath = true;
-        } else if (deathRegion.getSelectionModel().getSelectedIndex() != -1) {
+        } else if (deathRegion.getSelectionModel().getSelectedIndex() > 0) {
             isSettingDeath = true;
         }
 
@@ -550,7 +550,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 valid = setInvalid(deathCity);
                 invalidContent.append("City required if patient deceased. ");
             }
-            if (deathRegion.getSelectionModel().getSelectedIndex() == -1) {
+            if (deathRegion.getSelectionModel().getSelectedIndex() <= 0) {
                 valid = setInvalid(deathRegion);
                 invalidContent.append("Region required if patient deceased. ");
             }
@@ -628,7 +628,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private Boolean validateRegion(Boolean valid, StringBuilder invalidContent) {
         // region
         if (regionDD.getSelectionModel()
-                .getSelectedIndex() != -1) {
+                .getSelectedIndex() > 0) {
             Enum region = Region.getEnumFromString(regionDD.getSelectionModel()
                     .getSelectedItem());
             if (region == null) {
