@@ -9,7 +9,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import model.Patient;
 import netscape.javascript.JSObject;
-import utility.map.JSInjector;
+import utility.JSInjector;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
