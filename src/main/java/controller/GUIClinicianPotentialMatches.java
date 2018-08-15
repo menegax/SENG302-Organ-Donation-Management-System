@@ -14,6 +14,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.RotateEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
@@ -25,6 +28,8 @@ import service.OrganWaitlist;
 import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -35,7 +40,7 @@ import static java.lang.Math.abs;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static utility.UserActionHistory.userActions;
 
-public class GUIClinicianPotentialMatches extends TargetedController implements IWindowObserver {
+public class GUIClinicianPotentialMatches extends TargetedController implements IWindowObserver, TouchscreenCapable {
 
     public TableView<OrganWaitlist.OrganRequest> potentialMatchesTable;
     public TableColumn<OrganWaitlist.OrganRequest, String> nhiCol;
@@ -52,6 +57,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     public Text regionLabel;
     public Text deathLocationLabel;
     public Text ageLabel;
+    public GridPane potentialMatchesPane;
 
     @FXML
     private GridPane filterGrid;
@@ -80,6 +86,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     private ObservableList<OrganWaitlist.OrganRequest> observableList;
 
     private Map<FilterOption, String> filter = new HashMap<>();
+
+    private TouchPaneController matchTouchPane;
 
     /**
      * Sets the target donor and organ for this controller and loads the data accordingly
@@ -112,6 +120,11 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         setupDoubleClickToPatientEdit();
         setupAgeSliderListeners();
         setupFilterListeners();
+        matchTouchPane = new TouchPaneController(potentialMatchesPane);
+        potentialMatchesPane.setOnZoom(this::zoomWindow);
+        potentialMatchesPane.setOnRotate(this::rotateWindow);
+        potentialMatchesPane.setOnScroll(this::scrollWindow);
+        potentialMatchesPane.setOnTouchPressed(event -> potentialMatchesPane.toFront());
     }
 
     /**
@@ -346,5 +359,20 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             filter.put(FilterOption.AGELOWER, String.valueOf(rangeSlider.getLowValue()));
             filterRequests();
         });
+    }
+
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        matchTouchPane.zoomPane(zoomEvent);
+    }
+
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        matchTouchPane.rotatePane(rotateEvent);
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        matchTouchPane.scrollPane(scrollEvent);
     }
 }
