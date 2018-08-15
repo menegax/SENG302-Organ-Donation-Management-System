@@ -1,16 +1,16 @@
-package service;
+package controller;
 
 import com.sun.javafx.webkit.WebConsoleListener;
-import controller.ScreenControl;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.Stage;
 import model.Patient;
 import netscape.javascript.JSObject;
-import utility.JSInjector;
+import service.ClinicianDataService;
+import service.PatientDataService;
+import utility.MapBridge;
 import utility.SystemLogger;
 
 import java.awt.*;
@@ -26,9 +26,8 @@ import java.util.logging.Level;
  * Bridge for the Google Maps window that holds the buttons' functions
  * and the javascript bridge
  *
- * @author Joshua Meneghini
  */
-public class GoogleMapsBridge implements Initializable {
+public class GUIMap implements Initializable {
 
     @FXML
     private WebView webViewMap1;
@@ -37,11 +36,9 @@ public class GoogleMapsBridge implements Initializable {
 
     private JSObject jsBridge1;
 
-    private Stage mapStage;
-
     private Robot robot;
 
-    private JSInjector jsInjector;
+    private MapBridge mapBridge;
 
 
     /**
@@ -64,13 +61,13 @@ public class GoogleMapsBridge implements Initializable {
             if (Worker.State.SUCCEEDED == newValue) {
                 jsBridge1 = (JSObject) webEngine1.executeScript("window");
                 jsBridge1.setMember("patients", results);
-                jsInjector = new JSInjector();
-                jsBridge1.setMember("jsInjector", jsInjector);
+                mapBridge = new MapBridge();
+                jsBridge1.setMember("mapBridge", mapBridge);
                 jsBridge1.call("init");
             }
         });
         webEngine1.load(Objects.requireNonNull(getClass().getClassLoader()
-                .getResource("html/GoogleMap.html"))
+                .getResource("html/map.html"))
                 .toExternalForm());
 
         // What to do with console.log statements
@@ -80,13 +77,9 @@ public class GoogleMapsBridge implements Initializable {
             robot = new Robot();
         }
         catch (AWTException e) {
-            e.printStackTrace();
+            SystemLogger.systemLogger.log(Level.SEVERE, "Failed to initialize map bridge: " + e.toString());
         }
 
-        //        webViewMap1.setOnZoom(event -> {
-        //            webViewMap1.setZoom(webViewMap1.getZoom() * event.getZoomFactor());
-        //            webViewMap1.getEngine();
-        //        });
         webViewMap1.setOnScroll(event -> {
             if (event.getTouchCount() == 2) {
                 robot.keyPress(KeyEvent.VK_CONTROL);
