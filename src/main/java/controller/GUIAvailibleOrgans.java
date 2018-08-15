@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 import model.PatientOrgan;
+import model.User;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.ExpiryObservable;
@@ -27,7 +28,7 @@ import javafx.collections.transformation.SortedList;
 import model.Patient;
 import utility.ProgressBarCustomTableCell;
 import utility.ProgressTask;
-import utility.undoRedo.UndoableStage;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -38,7 +39,7 @@ import java.util.logging.Level;
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
  */
-public class GUIAvailibleOrgans {
+public class GUIAvailibleOrgans extends UndoableController implements IWindowObserver {
 
 	@FXML
     private GridPane availableOrgans;
@@ -61,6 +62,9 @@ public class GUIAvailibleOrgans {
 
     private IPatientDataService patientDataService = new PatientDataService();
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private UserControl userControl = UserControl.getUserControl();
 
     public void initialize() {
         List<Patient> deadPatients = patientDataService.getDeadPatients();
@@ -122,32 +126,12 @@ public class GUIAvailibleOrgans {
      * patient's profile view screen in a new window.
      */
     private void setUpDoubleClickToPatientEdit() {
-        // Add double-click event to rows
         availableOrgansTableView.setOnMouseClicked(click -> {
-            if (click.getClickCount() == 2 && availableOrgansTableView.getSelectionModel()
-                    .getSelectedItem() != null) {
-                try {
-                    UserControl userControl = new UserControl();
-                    userControl.setTargetUser(availableOrgansTableView.getSelectionModel().getSelectedItem().getPatient());
-                    Patient patient = patientDataService.getPatientByNhi(availableOrgansTableView.getSelectionModel().getSelectedItem().getPatient().getNhiNumber());
-                    patientDataService.save(patient); //save to local
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
-                    UndoableStage popUpStage = new UndoableStage();
-
-                    //Set initial popup dimensions
-                    popUpStage.setWidth(1150);
-                    popUpStage.setHeight(700);
-                    ScreenControl.getScreenControl().addStage(popUpStage.getUUID(), popUpStage);
-                    ScreenControl.getScreenControl().show(popUpStage.getUUID(), fxmlLoader.load());
-
-                    // When pop up is closed, refresh the table
-                    popUpStage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-                } catch (IOException e) {
-                    userActions.log(Level.SEVERE,
-                            "Failed to open patient profile scene from search patients table",
-                            "attempted to open patient edit window from search patients table");
-                    new Alert(Alert.AlertType.ERROR, "Unable to open patient edit window", ButtonType.OK).show();
-                }
+            if (click.getClickCount() == 2 && availableOrgansTableView.getSelectionModel().getSelectedItem() != null) {
+                Patient selected = availableOrgansTableView.getSelectionModel().getSelectedItem().getPatient();
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
+                controller.setTarget(selected);
+                patientDataService.save(patientDataService.getPatientByNhi(selected.getNhiNumber())); //save to local
             }
         });
     }
@@ -157,5 +141,15 @@ public class GUIAvailibleOrgans {
      */
     private void tableRefresh() {
         availableOrgansTableView.refresh();
+    }
+
+    @Override
+    public void windowClosed() {
+
+    }
+
+    @Override
+    protected void load() {
+
     }
 }

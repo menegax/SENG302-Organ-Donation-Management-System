@@ -244,7 +244,7 @@ public class PatientDAO implements IPatientDataAccess {
         }catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     /**
@@ -331,9 +331,14 @@ public class PatientDAO implements IPatientDataAccess {
 
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts) throws SQLException {
     	Map<GlobalEnums.Organ, LocalDate> required = new HashMap();
-    	if (attributes.getInt("hasRequired") == 1) {
-    		required.put(Organ.BONE, LocalDate.now());
-    	}
+    	try {
+            if (attributes.getInt("hasRequired") == 1) {
+                required.put(Organ.BONE, LocalDate.now());
+            }
+        } catch (SQLException ignore) {
+    	    //pass through
+        }
+
         return constructPatientObject(attributes, contacts, null, null, null, null, required);
     }
 

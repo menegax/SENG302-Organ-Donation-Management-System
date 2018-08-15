@@ -51,7 +51,7 @@ public class ProgressTask extends Task<Void> {
         double ratioOfLowerUpper = organ.getOrganLowerBoundSeconds() / (double)organ.getOrganUpperBoundSeconds();
         if (finalI >= ratioOfLowerUpper){ //has upper and lower bounds for expiry
             if (finalI >= ratioOfLowerUpper + ((1 - ratioOfLowerUpper)/2)) { //red if greater than ratio of lower/upper + middle point
-                progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5); -fx-background-color: linear-gradient(to left)");//todo: take out to css
+                progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5); -fx-background-color: linear-gradient(to left, Maroon , Maroon 50% , transparent 50%)");//todo: take out to css
             } else {
                 progressBar.setStyle("-fx-accent: orange; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
             }
