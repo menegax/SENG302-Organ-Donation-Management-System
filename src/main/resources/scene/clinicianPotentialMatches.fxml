@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -9,20 +10,19 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane fx:id="potentialMatchesPane" prefHeight="400.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianPotentialMatches">
+<GridPane fx:id="potentialMatchesPane" prefHeight="400.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianPotentialMatches">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="210.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="208.0" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints minHeight="0.80001143217087" prefHeight="10.40001735687256" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="81.60000610351562" vgrow="NEVER" />
-      <RowConstraints minHeight="8.0" prefHeight="8.0" vgrow="NEVER" />
-      <RowConstraints maxHeight="305.59999618530276" minHeight="10.0" prefHeight="286.4" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="85.59999618530273" vgrow="NEVER" />
+      <RowConstraints minHeight="8.0" prefHeight="76.00000381469725" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="27.399999999999977" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="222.1999877929687" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <TableView fx:id="potentialMatchesTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="2">
+      <TableView fx:id="potentialMatchesTable" prefHeight="239.0" prefWidth="481.0" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="2">
          <columns>
             <TableColumn fx:id="nhiCol" prefWidth="75.0" text="NHI" />
             <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
@@ -38,7 +38,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <GridPane alignment="CENTER_RIGHT" prefHeight="77.0" prefWidth="172.0" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1">
+      <GridPane alignment="CENTER_RIGHT" prefHeight="77.0" prefWidth="172.0" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES">
          <columnConstraints>
             <ColumnConstraints hgrow="NEVER" maxWidth="142.6666259765625" minWidth="10.0" prefWidth="142.6666259765625" />
             <ColumnConstraints hgrow="NEVER" maxWidth="75.33331298828125" minWidth="9.66668701171875" prefWidth="15.0" />
@@ -85,7 +85,7 @@
             <Insets right="60.0" />
          </GridPane.margin>
       </GridPane>
-      <GridPane alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <GridPane alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
          <columnConstraints>
             <ColumnConstraints hgrow="NEVER" maxWidth="142.6666259765625" minWidth="10.0" prefWidth="103.6666259765625" />
             <ColumnConstraints hgrow="NEVER" maxWidth="75.33331298828125" minWidth="6.33331298828125" prefWidth="15.0" />
@@ -127,6 +127,26 @@
                   <Font size="15.0" />
                </font>
             </Text>
+         </children>
+      </GridPane>
+      <GridPane fx:id="filterGrid" GridPane.columnSpan="2" GridPane.rowIndex="1">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="17.200018310546874" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="24.399993896484375" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="34.000006103515624" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <ComboBox fx:id="regionFilter" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <ComboBox fx:id="birthGenderFilter" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Region" wrappingWidth="147.48205262422562" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Birth Gender" wrappingWidth="147.48205262422562" GridPane.columnIndex="2" />
+            <Text fx:id="ageLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0-100" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>
