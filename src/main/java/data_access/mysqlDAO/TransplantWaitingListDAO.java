@@ -61,6 +61,7 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
                 }
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Could not update wait list in MYSQL DB", this);
         }
     }
