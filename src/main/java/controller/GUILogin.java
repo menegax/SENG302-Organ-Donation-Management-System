@@ -103,9 +103,7 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
     public void logIn() {
         try {
             if (patient.isSelected()) {
-                //<-- Example
                 Patient patient2 = patientDataService.getPatientByNhi(nhiLogin.getText());
-                // -- >
                 if (patient2 == null) {
                     throw new InvalidObjectException("User doesn't exist");
                 }
@@ -127,7 +125,6 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
                 Administrator administrator = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
                 administratorDataService.save(administrator);
                 userControl.addLoggedInUserToCache(administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
-                openMap();
             }
             GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, userControl.getLoggedInUser());
             controller.setTarget(userControl.getLoggedInUser());
