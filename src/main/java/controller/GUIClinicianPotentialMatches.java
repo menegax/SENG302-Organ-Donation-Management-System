@@ -50,7 +50,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     public Text bloodTypeLabel;
     public Text regionLabel;
     public Text deathLocationLabel;
-    public Text agelabel;
+    public Text ageLabel;
 
     @FXML
     private GridPane filterGrid;
@@ -62,11 +62,10 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     private ComboBox<String> birthGenderFilter;
 
     @FXML
-    private Text ageLabel;
+    private Text ageSliderLabel;
 
     private Organ targetOrgan;
 
-    private ObservableList<OrganWaitlist.OrganRequest> openProfiles = FXCollections.observableArrayList();
     private ObservableList<OrganWaitlist.OrganRequest> allRequests = FXCollections.observableArrayList();
 
     private Map<Region, List<Region>> adjacentRegions = new HashMap<>();
@@ -97,6 +96,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * to view a patient's profile.
      */
     public void load() {
+        allRequests.clear();
         loadRegionDistances();
         ClinicianDataService clinicianDataService = new ClinicianDataService();
         OrganWaitlist organRequests = clinicianDataService.getOrganWaitList();
@@ -139,8 +139,9 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         }
         rangeSlider.setShowTickMarks(true);
         filterGrid.add(rangeSlider, 0, 2, 3, 1);
-        rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> ageLabel.setText(String.format("%s - %s", ((int) rangeSlider.getLowValue()), String.valueOf(newValue.intValue())))));
-        rangeSlider.lowValueProperty().addListener(((observable, oldValue, newValue) -> ageLabel.setText(String.format("%s - %s", String.valueOf(newValue.intValue()), (int) rangeSlider.getHighValue()))));
+        ageSliderLabel.setText(String.format("%s - %s", ((int) rangeSlider.getLowValue()),(int) rangeSlider.getHighValue()));
+        rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> ageSliderLabel.setText(String.format("%s - %s", ((int) rangeSlider.getLowValue()), String.valueOf(newValue.intValue())))));
+        rangeSlider.lowValueProperty().addListener(((observable, oldValue, newValue) -> ageSliderLabel.setText(String.format("%s - %s", String.valueOf(newValue.intValue()), (int) rangeSlider.getHighValue()))));
     }
     /**
      * Sets the labels displayed to the requirements of the donated organ
@@ -224,8 +225,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     }
 
     /**
-     * Story 51 functionality goes here
-     * @return filtered list
+     * Filters the requests based on dropdown filters and age slider
      */
     private void filterRequests() {
         PatientDataService patientDataService = new PatientDataService();
@@ -248,15 +248,13 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         // Add double-click event to rows
         potentialMatchesTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && potentialMatchesTable.getSelectionModel()
-                    .getSelectedItem() != null && !openProfiles.contains(potentialMatchesTable.getSelectionModel()
-                    .getSelectedItem())) {
+                    .getSelectedItem() != null) {
                 OrganWaitlist.OrganRequest request = potentialMatchesTable.getSelectionModel().getSelectedItem();
                 try {
                     Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
                     patientDataService.save(selectedUser);
                     GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser);
                     controller.setTarget(selectedUser);
-                    openProfiles.add(request);
                 } catch (Exception e) {
                     userActions.log(Level.SEVERE, "Failed to retrieve selected patient from database", new String[]{"Attempted to retrieve selected patient from database", request.getReceiverNhi()});
                 }
@@ -268,6 +266,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * Called when a profile opened from this window is closed
      */
     public void windowClosed() {
+        load();
         potentialMatchesTable.refresh();
     }
 
@@ -318,6 +317,9 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         adjacentRegions.put(Region.SOUTHLAND, new ArrayList<Region>(){{ add(Region.OTAGO); add(Region.WESTCOAST); }});
     }
 
+    /**
+     * Sets the filter listeners for the potential matches list
+     */
     private void setupFilterListeners(){
         regionFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             filter.put(FilterOption.REGION, newValue);
