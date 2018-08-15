@@ -45,7 +45,7 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-public class GUIHome extends TargetedController implements Observer, TouchscreenCapable {
+public class GUIHome extends TargetedController implements Observer, TouchscreenCapable, IWindowObserver {
 
 
     @FXML
@@ -82,6 +82,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
     private IAdministratorDataService administratorDataService = new AdministratorDataService();
 
+    private Stage homeStage;
 
     private  enum TabName {
         PROFILE("Profile"), UPDATE("Update"), DONATIONS("Donations"), CONTACTDETAILS("Contact Details"),
@@ -101,8 +102,6 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
         }
 
     }
-
-    private Stage homeStage;
 
 
     @FXML
@@ -475,6 +474,13 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     }
 
     /**
+     * Called when the map shown on login is closed
+     */
+    public void windowClosed() {
+        screenControl.setMapOpen(false);
+    }
+
+    /**
      * Logs the user out of the application
      */
     private void logOut() {
@@ -492,18 +498,9 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
         // Create a new menu bar
         MenuBar bar = new MenuBar();
 
-        /* Build the menu bar with new menus and menu items */
+        Menu menu4 = null;
 
-        // APP
-        Menu menu1 = new Menu("App");
-        MenuItem menu1Item1 = new MenuItem("Log out");
-        if(!screenControl.isTouch()) {
-            menu1Item1.setAccelerator(screenControl.getLogOut());
-        }
-        menu1Item1.setOnAction(event -> {
-            attemptLogOut();
-        });
-        menu1.getItems().addAll(menu1Item1);
+        /* Build the menu bar with new menus and menu items */
 
         // FILE
         Menu menu2 = new Menu("File");
@@ -556,6 +553,13 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
             }
         });
         menu2.getItems().addAll(menu2item4);
+        MenuItem logOut = new MenuItem("Log out");
+        if(!screenControl.isTouch()) {
+            logOut.setAccelerator(screenControl.getLogOut());
+        }
+        logOut.setOnAction(event -> attemptLogOut());
+        menu2.getItems().addAll(logOut);
+
 
         Menu menu3 = new Menu("Edit");
         MenuItem menu3Item1 = new MenuItem("Undo");
@@ -582,14 +586,17 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
         });
         menu3.getItems().addAll(menu3Item1, menu3Item2);
 
+        bar.getMenus().addAll(menu2, menu3);
+
         //WINDOW
-        Menu menu4 = new Menu("Window");
-        MenuItem menu4Item1 = new MenuItem("Open Keyboard");
-        menu4Item1.setOnAction(event -> openKeyboard());
-        menu4.getItems().addAll(menu4Item1);
-
-
-        bar.getMenus().addAll(menu1, menu2, menu3, menu4);
+        if (isUserClinicianOrAdmin()) {
+            menu4 = new Menu("Window");
+            MenuItem menu4Item1 = new MenuItem("Open Map");
+            menu4Item1.setOnAction(event -> openMap());
+            menu4.getItems()
+                    .addAll(menu4Item1);
+            bar.getMenus().addAll(menu4);
+        }
 
         boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless")
                 .equals("true");
@@ -613,24 +620,30 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                 menuBar.getMenus()
                         .clear();
                 menuBar.getMenus()
-                        .addAll(menu1, menu2, menu3, menu4);
+                        .addAll(menu2, menu3, menu4);
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
             }
         }
 
     }
 
-    private void openKeyboard() {
-        if(System.getProperty("os.name")
-                .startsWith("Windows")) {
-            try {
-                Runtime.getRuntime().exec("cmd /c osk");
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Error");
-                alert.setContentText("System keyboard could not be opened");
-                alert.show();
-            }
+
+    private boolean isUserClinicianOrAdmin() {
+        if (UserControl.getUserControl().getLoggedInUser() instanceof Clinician || UserControl.getUserControl().getLoggedInUser() instanceof Administrator)
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+    private void openMap() {
+        if (!screenControl.getMapOpen()) {
+            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+            screenControl.setMapOpen(true);
+        }
+        if(screenControl.isTouch()) {
+            homePane.toFront();
         }
     }
 

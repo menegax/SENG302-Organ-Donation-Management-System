@@ -46,7 +46,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
      */
 	public boolean add(String name, Organ organ, LocalDate date, Region region, String nhi, String address) {
 		Patient patient = new PatientDataService().getPatientByNhi(nhi);
-		return requests.add(new OrganRequest(name, organ, date, region, nhi, patient.getAge(), patient.getFormattedAddress(), patient.getBloodGroup()));
+		return requests.add(new OrganRequest(name, organ, date, region, nhi, patient.getAge(), address, patient.getBloodGroup()));
 	}
 
 	/**
