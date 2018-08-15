@@ -50,6 +50,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     public Text bloodTypeLabel;
     public Text regionLabel;
     public Text deathLocationLabel;
+    public Text agelabel;
 
     @FXML
     private GridPane filterGrid;
@@ -144,6 +145,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         nhiLabel.setText(((Patient) target).getNhiNumber());
         organLabel.setText(targetOrgan.toString());
         bloodTypeLabel.setText(((Patient) target).getBloodGroup().toString());
+        ageLabel.setText(String.valueOf(((Patient) target).getAge()));
         regionLabel.setText(((Patient) target).getDeathRegion().toString());
         deathLocationLabel.setText(((Patient) target).getDeathStreet() + ", " + ((Patient) target).getDeathCity());
     }

@@ -52,6 +52,7 @@
             <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="40.0" vgrow="NEVER" />
             <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="40.0" vgrow="NEVER" />
             <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Blood Type:" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
@@ -84,6 +85,16 @@
                   <Font size="15.0" />
                </font>
             </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Age:" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Text>
+            <Text fx:id="ageLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="13" GridPane.columnIndex="3" GridPane.rowIndex="3">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Text>
          </children>
          <GridPane.margin>
             <Insets right="60.0" />
@@ -101,7 +112,7 @@
             <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Death Location:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Death Location:" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
