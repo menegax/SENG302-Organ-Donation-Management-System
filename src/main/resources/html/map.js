@@ -34,7 +34,7 @@ function addMarker(patient) {
     geocoder.geocode({'address': address}, function (results, status) {
         if (status === 'OK') {
             var organOptions = getOrganOptions(patient);
-            console.log('Placing marker...');
+            console.log('Placing marker...'); // todo change to system log with level FINEST
             var marker = new google.maps.Marker({
                 map: map,
                 position: results[0].geometry.location,
@@ -61,6 +61,7 @@ function addMarker(patient) {
             });
             markers.push(marker);
         } else {
+            // TODO change to system log with level WARN or INFO
             console.log('Geocode was not successful for the following reason: ' + status);
         }
     });
