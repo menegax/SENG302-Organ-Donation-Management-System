@@ -9,10 +9,21 @@ public class CachedThreadPool {
 
     private ExecutorService service;
 
+    /**
+     * Private constructor, adds in custom thread factory
+     */
     private CachedThreadPool() {
-        service = Executors.newCachedThreadPool(); //create once
+        service = Executors.newCachedThreadPool(r -> {
+            Thread t = new Thread(r);
+            t.setDaemon(true); //create daemon threads
+            return t;
+        }); //create once
     }
 
+    /**
+     * Get the single instance of the thread pool
+     * @return - CachedThreadPool
+     */
     public static CachedThreadPool getCachedThreadPool() {
         if (cachedThreadPool == null) {
             cachedThreadPool = new CachedThreadPool();
@@ -20,7 +31,19 @@ public class CachedThreadPool {
         return cachedThreadPool;
     }
 
+
+    /**
+     * Get the executor thread service
+     * @return - return Executor thread service
+     */
     public ExecutorService getThreadService() {
+        if (service.isShutdown()) {
+            return Executors.newCachedThreadPool(r -> {
+                Thread t = new Thread(r);
+                t.setDaemon(true); //create daemon threads
+                return t;
+            }); //create once
+        }
         return service;
     }
 

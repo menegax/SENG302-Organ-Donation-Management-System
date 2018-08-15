@@ -81,6 +81,7 @@ public class PatientDAO implements IPatientDataAccess {
     }
 
 
+
     @Override
     public boolean addPatientsBatch(List<Patient> patient) {
         ImportObservable importObservable = ImportObservable.getInstance();
@@ -227,6 +228,23 @@ public class PatientDAO implements IPatientDataAccess {
         }
     }
 
+    @Override
+    public List<Patient> getDeadPatients() {
+        try(Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_DEAD_PATIENTS"));
+            List<Patient> patients = new ArrayList<>();
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                patients.add(constructPatientObject(resultSet,
+                        new ArrayList<String>(){{add(resultSet.getString("Region"));}}));
+            }
+            return patients;
+        }catch (SQLException e) {
+            systemLogger.log(Level.SEVERE, "Could not get dead patients from MYSQL db", this);
+        }
+        return new ArrayList<>();
+    }
+
     /**
      * Builds up a filter string for searching in db
      *
@@ -311,9 +329,14 @@ public class PatientDAO implements IPatientDataAccess {
 
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts) throws SQLException {
     	Map<GlobalEnums.Organ, LocalDate> required = new HashMap();
-    	if (attributes.getInt("hasRequired") == 1) {
-    		required.put(Organ.BONE, LocalDate.now());
-    	}
+    	try {
+            if (attributes.getInt("hasRequired") == 1) {
+                required.put(Organ.BONE, LocalDate.now());
+            }
+        } catch (SQLException ignore) {
+    	    //pass through
+        }
+
         return constructPatientObject(attributes, contacts, null, null, null, null, required);
     }
 

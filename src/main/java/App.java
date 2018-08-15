@@ -13,6 +13,8 @@ public class App {
     public static void main(String[] argv) {
 
         List<String> argArrayList = Arrays.asList(argv);
+        System.setProperty("connection_type", GlobalEnums.DbType.PRODUCTION.getValue()); //LEAVE HERE!! production db
+
 
         System.setProperty("connection_type", GlobalEnums.DbType.PRODUCTION.getValue()); //LEAVE HERE!! production db
 
