@@ -30,7 +30,6 @@ public class MYSQLProcedureDAOTest {
     public static void setUp() {
         userActions.setLevel(OFF);
         SystemLogger.systemLogger.setLevel(OFF);
-        System.setProperty("connection_type", GlobalEnums.DbType.STORY44.getValue());
         daoFactory = DAOFactory.getDAOFactory(FactoryType.MYSQL);
         dbHelper = new DBHelper();
     }
