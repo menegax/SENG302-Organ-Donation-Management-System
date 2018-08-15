@@ -234,6 +234,10 @@ This means whenever we need to set on close or similar method only one method ca
 When ordering matches, we decided to use region for ordering to limit geocode use.
 To do this, we implemented a priority based on adjacent regions such that the distance between regions is based on how many regions one has to travel through between them
 
+#### Map Marker Seperation
+We decided to place a very small random shift in marker positions so that when addresses that do not have valid roads but have a valid city are geocoded, they do not lead to duplicate latlongs. 
+This means that we no longer have markers that are grouped on top of each other in the centre of that city (and thus being hard to find all markers/open markers behind them)
+
 #### Expiring Organs
 We have done more research to check the expiry times for organs such as Intestines, Bone Marrow, Connective tissue  and 
 Middle ear. We have assumed that middle ear will have an upper bound of 24 hrs (same as connective tissue) We used the following resources:

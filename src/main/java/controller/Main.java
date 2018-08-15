@@ -3,40 +3,26 @@ package controller;
 import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 
-import com.sun.javafx.css.StyleManager;
-import controller.ScreenControl;
-import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import service.UserDataService;
 import utility.GlobalEnums;
 import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
-import utility.parsing.ParseCSV;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.UUID;
-
-import static java.util.logging.Level.INFO;
-import static utility.SystemLogger.systemLogger;
 
 public class Main extends Application {
 
     private static final UUID uuid = UUID.randomUUID();
 
-
     @Override
-    public void start(Stage primaryStage) throws IOException {
-
+    public void start(Stage primaryStage) {
         // setup GUI
         System.setProperty("connection_type", GlobalEnums.DbType.STORY50.getValue()); //LEAVE HERE!! production db
+        primaryStage.setTitle("Login");
         ScreenControl screenControl = ScreenControl.getScreenControl();
-//        primaryStage.setTitle("Login");
         screenControl.show("/scene/login.fxml", false, null, null);
 
         Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients

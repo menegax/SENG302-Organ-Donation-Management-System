@@ -28,12 +28,13 @@ import utility.TouchscreenCapable;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 
-public class GUILogin implements TouchscreenCapable {
+public class GUILogin implements TouchscreenCapable, IWindowObserver {
 
     @FXML
     public GridPane loginPane;
@@ -103,9 +104,7 @@ public class GUILogin implements TouchscreenCapable {
     public void logIn() {
         try {
             if (patient.isSelected()) {
-                //<-- Example
                 Patient patient2 = patientDataService.getPatientByNhi(nhiLogin.getText());
-                // -- >
                 if (patient2 == null) {
                     throw new InvalidObjectException("User doesn't exist");
                 }
@@ -120,7 +119,9 @@ public class GUILogin implements TouchscreenCapable {
                 }
                 clinicianDataService.save(clinician);
                 userControl.addLoggedInUserToCache(clinicianDataService.getClinician(Integer.parseInt(nhiLogin.getText())));
+                openMap();
             } else {
+                administrator.isSelected();
                 checkAdminCredentials();
                 Administrator administrator = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
                 administratorDataService.save(administrator);
@@ -143,6 +144,19 @@ public class GUILogin implements TouchscreenCapable {
             alert.show();
         }
 
+    }
+
+    private void openMap() {
+        screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+        screenControl.setMapOpen(true);
+    }
+
+
+    /**
+     * Called when the map shown on login is closed
+     */
+    public void windowClosed() {
+        screenControl.setMapOpen(false);
     }
 
     private void checkAdminCredentials() throws InvalidObjectException {
