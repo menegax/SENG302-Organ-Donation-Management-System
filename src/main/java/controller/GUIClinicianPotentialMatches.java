@@ -33,6 +33,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     public TableColumn<OrganWaitlist.OrganRequest, String> addressCol;
     public TableColumn<OrganWaitlist.OrganRequest, String> waitingTimeCol;
 
+    public Label nameLabel;
+    public Label nhiLabel;
     public Label organLabel;
     public Label bloodTypeLabel;
     public Label regionLabel;
@@ -80,6 +82,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * Sets the labels displayed to the requirements of the donated organ
      */
     private void setLabels() {
+        nameLabel.setText(target.getNameConcatenated());
+        nhiLabel.setText(((Patient) target).getNhiNumber());
         organLabel.setText(targetOrgan.toString());
         bloodTypeLabel.setText(((Patient) target).getBloodGroup().toString());
         regionLabel.setText(((Patient) target).getDeathRegion().toString());
