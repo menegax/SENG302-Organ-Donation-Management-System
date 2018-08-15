@@ -65,8 +65,8 @@ function addMarker(patient) {
         if (status === 'OK') {
             validCount++;
             var organOptions = getOrganOptions(patient);
-            var randx = Math.random() * 0.1 - 0.05;
-            var randy = Math.random() * 0.1 - 0.05;
+            var randx = Math.random() * 0.02 - 0.01;
+            var randy = Math.random() * 0.02 - 0.01;
             var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat() + randx, results[0].geometry.location.lng() + randy);
             console.log('Placing marker on map');
             var marker = new google.maps.Marker({
