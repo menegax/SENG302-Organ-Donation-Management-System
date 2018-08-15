@@ -142,6 +142,8 @@ public class Patient extends User {
     public Patient() {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
+        this.requiredOrgans = new HashMap();
+        this.donations = new ArrayList<>();
     }
 
     /**
@@ -239,6 +241,8 @@ public class Patient extends User {
         this.preferredGender = prefGender;
         this.preferredName = preferredName;
         this.userActionsList = new ArrayList<>();
+        this.requiredOrgans = new HashMap<>();
+        this.donations = new ArrayList<>();
         databaseImport();
     }
 
@@ -1116,6 +1120,11 @@ public class Patient extends User {
 
     public String getCity() {
         return city;
+    }
+
+
+    public String getDeathLocationConcat(){
+        return String.format("%s, %s, %s", deathStreet, deathCity, deathRegion);
     }
 
     public String toString() {

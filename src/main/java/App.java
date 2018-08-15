@@ -2,6 +2,7 @@ import cli.CLIMain;
 import controller.Main;
 import controller.ScreenControl;
 import controller.TUIOFXMain;
+import utility.GlobalEnums;
 //import controller.TuioFXApplication;
 
 import java.util.Arrays;
@@ -12,6 +13,8 @@ public class App {
     public static void main(String[] argv) {
 
         List<String> argArrayList = Arrays.asList(argv);
+        System.setProperty("connection_type", GlobalEnums.DbType.PRODUCTION.getValue()); //LEAVE HERE!! production db
+
 
         //Launch ScreenControl here
         if (argArrayList.contains("cli")) {
