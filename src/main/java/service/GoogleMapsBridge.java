@@ -9,6 +9,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import model.Patient;
 import netscape.javascript.JSObject;
+import utility.JSInjector;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -36,6 +37,8 @@ public class GoogleMapsBridge implements Initializable {
     private Stage mapStage;
 
     private Robot robot;
+    private JSInjector jsInjector;
+
 
     /**
      * Initialises the widgets and bridge in the google map
@@ -57,6 +60,7 @@ public class GoogleMapsBridge implements Initializable {
             if (Worker.State.SUCCEEDED == newValue) {
                 jsBridge1 = (JSObject) webEngine1.executeScript("window");
                 jsBridge1.setMember("patients", results);
+                jsBridge1.setMember("jsInjector", jsInjector);
                 jsBridge1.call("init");
             }
         });
