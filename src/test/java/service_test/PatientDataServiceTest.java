@@ -31,7 +31,6 @@ public class PatientDataServiceTest {
     @SuppressWarnings("Duplicates")
     public static void setUp() {
         userActions.setLevel(OFF);
-        System.setProperty("connection_type", GlobalEnums.DbType.STORY44.getValue());
         daoFactory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
         dbHelper = new DBHelper();
         SystemLogger.systemLogger.setLevel(OFF);
