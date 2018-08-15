@@ -16,6 +16,7 @@ import javafx.util.Callback;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
+import utility.ExpiryObservable;
 import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -30,6 +31,8 @@ import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 
 /**
@@ -65,12 +68,15 @@ public class GUIAvailibleOrgans {
     		if (patient.getDeathDate() != null) {
     			for (Organ organ : patient.getDonations()) {
                     PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
-                    if (!masterData.contains(patientOrgan)) {
+                    if (!masterData.contains(patientOrgan) && !patientOrgan.isExpired()) {
                         masterData.add(patientOrgan);
                     }
                 }
             }
         }
+        ExpiryObservable.getInstance().addObserver((o, arg) -> {
+            masterData.remove(arg);
+        });
         populateTable();
     }
     

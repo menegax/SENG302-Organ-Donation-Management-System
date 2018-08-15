@@ -240,6 +240,10 @@ public class GlobalEnums {
                 case "liver": {
                     return getOrganUpperBoundSeconds(); //get upper (no lower bound)
                 }
+                case "connective tissue":{
+                    return getOrganUpperBoundSeconds(); //get upper
+                }
+
             }
             return 0;
         }
@@ -260,6 +264,7 @@ public class GlobalEnums {
                 case "intestine":{
                     return numberSecondsHour * 12;
                 }
+                case "connective tissue":
                 case "liver":
                 case "pancreas": {
                     return numberSecondsHour * 24;

@@ -12,6 +12,7 @@ public class PatientOrgan {
     private GlobalEnums.Organ organ;
     private ProgressTask progressTask;
     private StringProperty messageProperty;
+    private boolean isExpired;
 
     public PatientOrgan(Patient patient, GlobalEnums.Organ organ) {
         this.patient = patient;
@@ -30,22 +31,7 @@ public class PatientOrgan {
     public ProgressTask getProgressTask() {
         return progressTask;
     }
-
-    public long getOrganUpperBound() {
-        return organ.getOrganUpperBoundSeconds();
-    }
-
-    public long getOrganLowerBound() {
-        return organ.getOrganLowerBoundSeconds();
-    }
-
-    public final StringProperty messageProperty() {
-        return messageProperty;
-    }
-    public void setMessage(StringProperty message){
-        this.messageProperty = message;
-    }
-
+    public boolean isExpired() { return isExpired; }
     @Override
     public boolean equals(Object obj) {
         PatientOrgan patientOrgan = (PatientOrgan) obj;

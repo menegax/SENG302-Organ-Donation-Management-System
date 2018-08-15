@@ -20,51 +20,56 @@ public class ProgressTask extends Task<Void> {
 
     private long elapsedTime;
 
+    private PatientOrgan patientOrgan;
+
+
     public ProgressTask(PatientOrgan patientOrgan) {
         this.patient = patientOrgan.getPatient();
         this.organ = patientOrgan.getOrgan();
         this.elapsedTime = getElapsedTime();
+        this.patientOrgan = patientOrgan;
     }
 
-    @Override //todo: tidy upppppppp
+    @Override
     protected Void call() throws Exception {
-        long remainingTime = calculateRemainingTime();
-        for (int i = ((int) elapsedTime); i < remainingTime && elapsedTime >= 0; i++) {
-            updateProgress((1.0 * i) / organ.getOrganUpperBoundSeconds(), 1);
+        setColor(elapsedTime / organ.getOrganUpperBoundSeconds());
+        for (int i = ((int) elapsedTime); i < organ.getOrganUpperBoundSeconds(); i++) {
+            updateProgress((1.0 * i) / (double) organ.getOrganUpperBoundSeconds(), 1);
             updateMessage(getTimeRemaining()); //in fx thread
-            double finalI = (1.0 * i) / organ.getOrganUpperBoundSeconds(); //todo: pull out to methods
-            Platform.runLater(() -> {
-                double ratioOfLowerUpper = organ.getOrganLowerBoundSeconds() / (double)organ.getOrganUpperBoundSeconds();
-                if (finalI >= ratioOfLowerUpper){ //has upper and lower bounds for expiry
-                    if (finalI >= ratioOfLowerUpper + ((1 - ratioOfLowerUpper)/2)) { //red if greater than ratio of lower/upper + middle point
-                        progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");//todo: take out to css
-                    } else {
-                        progressBar.setStyle("-fx-accent: orange; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
-                    }
-                } else {
-                    progressBar.setStyle("-fx-accent: green; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
-                }
-                if (ratioOfLowerUpper == 1.0) { //one bound
-                    if (finalI >= 0.5) {
-                        if (finalI >= 0.8) {
-                            progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
-                        } else{
-                            progressBar.setStyle("-fx-accent: orange; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
-                        }
-                    } else {
-                        progressBar.setStyle("-fx-accent: green; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
-                    }
-                }
-            });
-            Thread.sleep(1000); //each loop is now 1 second
+            double finalI = (1.0 * i) / organ.getOrganUpperBoundSeconds();
+            Platform.runLater(() -> setColor(finalI));
+            Thread.sleep(2); //each loop is now 1 second
         }
-        Platform.runLater(() -> {
-            progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
-        });
+        ExpiryObservable.getInstance().setExpired(this.patientOrgan);
+        Platform.runLater(() -> progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5);"));
         this.updateProgress(1, 1);
         return null;
     }
 
+
+    public void setColor(double finalI) {
+        double ratioOfLowerUpper = organ.getOrganLowerBoundSeconds() / (double)organ.getOrganUpperBoundSeconds();
+        if (finalI >= ratioOfLowerUpper){ //has upper and lower bounds for expiry
+            if (finalI >= ratioOfLowerUpper + ((1 - ratioOfLowerUpper)/2)) { //red if greater than ratio of lower/upper + middle point
+                progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5); -fx-background-color: linear-gradient(to left)");//todo: take out to css
+            } else {
+                progressBar.setStyle("-fx-accent: orange; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
+            }
+        } else {
+            progressBar.setStyle("-fx-accent: green; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
+        }
+        if (ratioOfLowerUpper == 1.0) { //one bound
+            if (finalI >= 0.5) {
+                if (finalI >= 0.8) {
+                    progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
+                } else{
+                    progressBar.setStyle("-fx-accent: orange; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
+                }
+            } else {
+                progressBar.setStyle("-fx-accent: green; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
+            }
+        }
+    }
     private String getTimeRemaining() {
         int hours = (int) HOURS.between(LocalDateTime.now(), patient.getDeathDate().plusSeconds(organ.getOrganUpperBoundSeconds()));
         int minutes = (int) MINUTES.between(LocalDateTime.now(), patient.getDeathDate().plusSeconds(organ.getOrganUpperBoundSeconds())) - (hours * 60);
@@ -76,17 +81,15 @@ public class ProgressTask extends Task<Void> {
         return String.format("%s:%s:%s", hrs, mins, secs);
     }
 
-    private long getElapsedTime() {
+    GlobalEnums.Organ getOrgan() {
+        return this.organ;
+    }
+
+    long getElapsedTime() {
         return SECONDS.between(patient.getDeathDate(),LocalDateTime.now());
     }
 
     void setProgressBar(ProgressBar progressBar) {
         this.progressBar = progressBar;
     }
-
-    private long calculateRemainingTime() {
-        long diff = SECONDS.between(LocalDateTime.now(), patient.getDeathDate().plusSeconds(organ.getOrganUpperBoundSeconds()));
-        return diff < 0 ? 0 : diff;
-    }
-
 }
