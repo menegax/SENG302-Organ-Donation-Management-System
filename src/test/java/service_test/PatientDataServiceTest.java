@@ -31,6 +31,7 @@ public class PatientDataServiceTest {
     @SuppressWarnings("Duplicates")
     public static void setUp() {
         userActions.setLevel(OFF);
+        System.setProperty("connection_type", GlobalEnums.DbType.STORY44.getValue());
         SystemLogger.systemLogger.setLevel(OFF);
     }
 

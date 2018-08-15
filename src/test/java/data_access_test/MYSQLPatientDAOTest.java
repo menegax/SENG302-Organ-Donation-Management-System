@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.cglib.core.Local;
 import utility.GlobalEnums.*;
+import utility.GlobalEnums;
 import utility.SystemLogger;
 
 import java.time.LocalDate;
@@ -30,6 +31,7 @@ public class MYSQLPatientDAOTest {
     public static void setUp() {
         userActions.setLevel(OFF);
         SystemLogger.systemLogger.setLevel(OFF);
+        System.setProperty("connection_type", GlobalEnums.DbType.STORY44.getValue());
         daoFactory = DAOFactory.getDAOFactory(FactoryType.MYSQL);
         dbHelper = new DBHelper();
     }

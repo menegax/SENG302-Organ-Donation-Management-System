@@ -37,6 +37,7 @@ public class AdministratorTest implements Serializable {
     public static void setUp() {
         userActions.setLevel(OFF);
         SystemLogger.systemLogger.setLevel(OFF);
+        System.setProperty("connection_type", GlobalEnums.DbType.STORY44.getValue());
         defaultAdmin = new Administrator("admin", "first", new ArrayList<>(), "last", "password");
     }
 

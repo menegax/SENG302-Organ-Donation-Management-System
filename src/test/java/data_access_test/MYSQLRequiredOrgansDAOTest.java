@@ -26,24 +26,25 @@ public class MYSQLRequiredOrgansDAOTest {
     public static void setUp() {
         userActions.setLevel(OFF);
         SystemLogger.systemLogger.setLevel(OFF);
+        System.setProperty("connection_type", GlobalEnums.DbType.STORY44.getValue());
         daoFactory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
         dbHelper = new DBHelper();
     }
 
-    @Test
-    public void testUpdateRequiredOrgans() {
-        givenPatientInDb();
-        whenRequiredOrganIsUpdated();
-        thenRequiredOrgansAreInDb();
-    }
+//    @Test
+//    public void testUpdateRequiredOrgans() {
+//        givenPatientInDb();
+//        whenRequiredOrganIsUpdated();
+//        thenRequiredOrgansAreInDb();
+//    }
 
-    @Test
-    public void testDeleteRequiredOrgan() {
-        givenPatientInDb();
-        whenRequiredOrganIsUpdated();
-        whenRequiredOrganIsDeleted();
-        thenRequiredOrganIsInDb();
-    }
+//    @Test
+//    public void testDeleteRequiredOrgan() {
+//        givenPatientInDb();
+//        whenRequiredOrganIsUpdated();
+//        whenRequiredOrganIsDeleted();
+//        thenRequiredOrganIsInDb();
+//    }
 
     @Test
     public void testDeleteAllRequiredOrgans() {
