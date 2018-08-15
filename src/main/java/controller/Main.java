@@ -34,7 +34,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
 
         // setup GUI
-        System.setProperty("connection_type", GlobalEnums.DbType.PRODUCTION.getValue()); //LEAVE HERE!! production db
         ScreenControl screenControl = ScreenControl.getScreenControl();
 //        primaryStage.setTitle("Login");
         screenControl.show("/scene/login.fxml", false, null, null);
