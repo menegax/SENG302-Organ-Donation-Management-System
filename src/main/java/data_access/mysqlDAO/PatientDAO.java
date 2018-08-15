@@ -111,8 +111,6 @@ public class PatientDAO implements IPatientDataAccess {
             connection.commit();
             contactDataAccess.addContactBatch(patient);
         } catch (Exception e) {
-
-            e.printStackTrace();
             SystemLogger.systemLogger.log(Level.SEVERE, "Could not import patient batch", this);
         }
         return true;
@@ -242,7 +240,7 @@ public class PatientDAO implements IPatientDataAccess {
             }
             return patients;
         }catch (SQLException e) {
-            e.printStackTrace();
+            systemLogger.log(Level.SEVERE, "Could not get dead patients from MYSQL db", this);
         }
         return new ArrayList<>();
     }

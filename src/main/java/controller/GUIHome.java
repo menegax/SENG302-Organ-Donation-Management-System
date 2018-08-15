@@ -359,8 +359,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                         ((ScreenControlTouch) screenControl).setFonts();
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    systemLogger.log(SEVERE, "Failed to create tab", e);;
+                    systemLogger.log(SEVERE, "Failed to create tab", e);
                 }
             });
         horizontalTabPane.getTabs().add(newTab);
