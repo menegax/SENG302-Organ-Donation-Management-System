@@ -90,7 +90,7 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
     private Set<GlobalEnums.Organ> initialRequirements = new HashSet<>();
 
     private Set<GlobalEnums.Organ> finalRequirements = new HashSet<>();
-    
+
     private IClinicianDataService clinicianDataService = new ClinicianDataService();
 
     private int totalRemoved;
