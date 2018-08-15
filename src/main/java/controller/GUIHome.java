@@ -588,10 +588,9 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
         //WINDOW
         Menu menu4 = new Menu("Window");
-        MenuItem menu4Item1 = new MenuItem("Open Keyboard");
-        menu4Item1.setOnAction(event -> openKeyboard());
+        MenuItem menu4Item1 = new MenuItem("Open Map");
+        menu4Item1.setOnAction(event -> openMap());
         menu4.getItems().addAll(menu4Item1);
-
 
         bar.getMenus().addAll(menu1, menu2, menu3, menu4);
 
@@ -624,18 +623,8 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
     }
 
-    private void openKeyboard() {
-        if(System.getProperty("os.name")
-                .startsWith("Windows")) {
-            try {
-                Runtime.getRuntime().exec("cmd /c osk");
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Error");
-                alert.setContentText("System keyboard could not be opened");
-                alert.show();
-            }
-        }
+    private void openMap() {
+        screenControl.show("/scene/map.fxml", true, null, userControl.getLoggedInUser());
     }
 
 
