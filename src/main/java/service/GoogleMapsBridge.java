@@ -4,13 +4,11 @@ import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import model.Patient;
 import javafx.stage.Stage;
+import model.Patient;
 import netscape.javascript.JSObject;
-import utility.JSInjector;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,14 +27,9 @@ public class GoogleMapsBridge implements Initializable {
     @FXML
     private WebView webViewMap1;
 
-    @FXML
-    private GridPane mapPane;
-
     private WebEngine webEngine1;
 
     private JSObject jsBridge1;
-
-    private JSInjector jsInjector;
 
     private Stage mapStage;
 
