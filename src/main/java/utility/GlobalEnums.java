@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class GlobalEnums {
 
     public enum DbType {
-        PRODUCTION("Production"), TEST("Test");
+        PRODUCTION("Production"), TEST("Test"), STORY44("Story 44");
 
         private String value;
 
@@ -65,7 +65,7 @@ public class GlobalEnums {
     public enum PreferredGender {
         MAN("Man"), WOMAN("Woman"), NONBINARY("Non-binary");
 
-        public String value;
+        private String value;
 
         PreferredGender(final String value) {
             this.value = value;
@@ -118,7 +118,7 @@ public class GlobalEnums {
     public enum BirthGender {
         MALE("Male"), FEMALE("Female");
 
-        public String value;
+        private String value;
 
 
         BirthGender(final String value) {
@@ -155,7 +155,7 @@ public class GlobalEnums {
                 "Taranaki"), MANAWATU("Manawatu"), WELLINGTON("Wellington"), TASMAN("Tasman"), NELSON("Nelson"), MARLBOROUGH("Marlborough"), WESTCOAST(
                 "West Coast"), CANTERBURY("Canterbury"), OTAGO("Otago"), SOUTHLAND("Southland");
 
-        public String value;
+        private String value;
 
 
         Region(final String value) {
@@ -194,7 +194,7 @@ public class GlobalEnums {
         LIVER("liver"), KIDNEY("kidney"), PANCREAS("pancreas"), HEART("heart"), LUNG("lung"), INTESTINE("intestine"), CORNEA("cornea"), MIDDLEEAR(
                 "middle ear"), SKIN("skin"), BONE("bone"), BONEMARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
 
-        public String value;
+        private String value;
 
 
         Organ(final String value) {
@@ -230,7 +230,7 @@ public class GlobalEnums {
         A_POSITIVE("A+"), A_NEGATIVE("A-"), B_POSITIVE("B+"), B_NEGATIVE("B-"), AB_POSITIVE("AB+"), AB_NEGATIVE(
                 "AB-"), O_POSITIVE("O+"), O_NEGATIVE("O-");
 
-        public String value;
+        private String value;
 
 
         BloodGroup(final String value) {

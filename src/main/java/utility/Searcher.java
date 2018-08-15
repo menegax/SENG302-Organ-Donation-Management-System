@@ -595,7 +595,7 @@ public class Searcher {
                     }
                     case REQUESTEDDONATIONS: {
                         Organ requestedOrgans = Organ.getEnumFromString(filter.get(option));
-                        if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().contains(requestedOrgans)) {
+                        if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().containsKey(requestedOrgans)) {
                             return false;
                         }
                         break;

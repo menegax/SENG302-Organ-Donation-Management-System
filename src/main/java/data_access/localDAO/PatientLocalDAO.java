@@ -131,7 +131,7 @@ public class PatientLocalDAO implements IPatientDataAccess {
                     }
                     case REQUESTEDDONATIONS: {
                         GlobalEnums.Organ requestedOrgans = GlobalEnums.Organ.getEnumFromString(filter.get(option));
-                        if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().contains(requestedOrgans)) {
+                        if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().containsKey(requestedOrgans)) {
                             return false;
                         }
                         break;

@@ -8,14 +8,13 @@ import model.Patient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.cglib.core.Local;
 import utility.GlobalEnums.*;
+import utility.GlobalEnums;
 import utility.SystemLogger;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.logging.Level.OFF;
 import static utility.UserActionHistory.userActions;
@@ -72,8 +71,8 @@ public class MYSQLPatientDAOTest {
     }
 
     private void givenPatientRequired() {
-        List<Organ> required = new ArrayList<>();
-        required.add(Organ.CORNEA);
+        Map<Organ, LocalDate> required = new HashMap<>();
+        required.put(Organ.CORNEA, LocalDate.now());
         patient.setRequiredOrgans(required);
     }
 
