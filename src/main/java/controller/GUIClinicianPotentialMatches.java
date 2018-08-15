@@ -186,7 +186,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             return null;
         });
         addressCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue().getAddress()));
-        waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(LocalDate.now(), r.getValue().getDate()))));
+        waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(r.getValue().getDate(), LocalDate.now()))));
 
         // wrap ObservableList in a FilteredList
         //FilteredList<OrganWaitlist.OrganRequest> filteredRequests = filterRequests();
