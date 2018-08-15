@@ -9,6 +9,11 @@ import model.PatientOrgan;
 
 public class ProgressBarCustomTableCell {
 
+    /**
+     * Creates a new table cell with a progress bar bound to it and starts the service
+     * @param column - column to add the cells to
+     * @return - the new table cell with the progress bar added
+     */
     public static TableCell<PatientOrgan, ProgressTask> getCell(TableColumn<PatientOrgan, ProgressTask> column){
         ProgressBar progressBar = new ProgressBar(1.0F);
         TableCell<PatientOrgan, ProgressTask> tableCell = new TableCell<PatientOrgan, ProgressTask>() {
