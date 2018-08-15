@@ -8,6 +8,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.text.Text;
 import model.Patient;
 import org.joda.time.Days;
 import service.ClinicianDataService;
@@ -33,12 +34,12 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     public TableColumn<OrganWaitlist.OrganRequest, String> addressCol;
     public TableColumn<OrganWaitlist.OrganRequest, String> waitingTimeCol;
 
-    public Label nameLabel;
-    public Label nhiLabel;
-    public Label organLabel;
-    public Label bloodTypeLabel;
-    public Label regionLabel;
-    public Label deathLocationLabel;
+    public Text nameLabel;
+    public Text nhiLabel;
+    public Text organLabel;
+    public Text bloodTypeLabel;
+    public Text regionLabel;
+    public Text deathLocationLabel;
 
     private Organ targetOrgan;
 
