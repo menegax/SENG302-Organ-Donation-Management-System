@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -127,6 +128,10 @@ public class GUILogin implements TouchscreenCapable {
             }
             GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, userControl.getLoggedInUser());
             controller.setTarget(userControl.getLoggedInUser());
+            if(!screenControl.isTouch()) {
+                Stage stage = (Stage) loginPane.getScene().getWindow();
+                stage.close();
+            }
         } catch (InvalidObjectException e) {
             password.setText(""); //Reset password field on invalid login
             userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");

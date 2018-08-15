@@ -219,7 +219,13 @@ This means there should not be other action listeners for global or stage-level 
  on our existing log additions instead of having to set the status bar text in each controller class. The status bar is updated by 
  using setStatus within the observable StatusObservable, which notifies each of its observers.
 
-###Parsing CSV data
+#### Parsing CSV data
 When we parse CSV data to import into the database, we decided to only insert a patient if all of the fields are valid ascii, else the
 record is discarded. This is because it makes it easier to manage the data without having to perform validation checks or modifications
 when reading/writing to the database.
+
+### Sprint 6
+
+#### Screen control
+When re-engineering screen control we decided to encapsulate the stage and scene within screen control.
+This means whenever we need to set on close or similar method only one method can be called at a time as IWindowObserver doesn't differentiate based on the window that was closed
