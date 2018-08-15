@@ -64,8 +64,6 @@ public class GUIAvailibleOrgans extends UndoableController implements IWindowObs
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private UserControl userControl = UserControl.getUserControl();
-
     public void initialize() {
         List<Patient> deadPatients = patientDataService.getDeadPatients();
     	for (Patient patient : deadPatients) {
@@ -94,12 +92,10 @@ public class GUIAvailibleOrgans extends UndoableController implements IWindowObs
         organCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getOrgan().toString()));
 
-
-
         locationCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue().getPatient().getDeathLocationConcat()));
         deathCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue().getPatient().getDeathDate().toString()));
-        //TODO add expiry countdown
 
+        //expiry
         expiryCol.setCellValueFactory(r -> r.getValue().getProgressTask().messageProperty());
         organExpiryProgressCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getProgressTask()));
         organExpiryProgressCol.setCellFactory(cb -> ProgressBarCustomTableCell.getCell(organExpiryProgressCol));

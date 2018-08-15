@@ -232,20 +232,15 @@ public class GlobalEnums {
                 }
                 case "bone":
                 case "skin":{
-                    return numberSecondsHour * numberHoursPerDay * 3; //3 days
+                    return numberSecondsHour * numberHoursPerDay * 365 * 3; //3 year
                 }
                 case "intestine": {
                     return numberSecondsHour * 6;
                 }
-                case "liver": {
+                default: {
                     return getOrganUpperBoundSeconds(); //get upper (no lower bound)
                 }
-                case "connective tissue":{
-                    return getOrganUpperBoundSeconds(); //get upper
-                }
-
             }
-            return 0;
         }
 
         /**
@@ -264,6 +259,7 @@ public class GlobalEnums {
                 case "intestine":{
                     return numberSecondsHour * 12;
                 }
+                case "middle ear":
                 case "connective tissue":
                 case "liver":
                 case "pancreas": {
