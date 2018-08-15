@@ -354,6 +354,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
                     newTab.setContent(fxmlLoader.load());
                     TargetedController targetedController = fxmlLoader.getController();
+                    CachedThreadPool.getCachedThreadPool().getThreadService().shutdown(); //hot fix for now
                     targetedController.setTarget(target);
                     if (screenControl.isTouch()) {
                         ((ScreenControlTouch) screenControl).setFonts();

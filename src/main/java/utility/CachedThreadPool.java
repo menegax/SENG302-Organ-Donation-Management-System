@@ -37,6 +37,13 @@ public class CachedThreadPool {
      * @return - return Executor thread service
      */
     public ExecutorService getThreadService() {
+        if (service.isShutdown()) {
+            return Executors.newCachedThreadPool(r -> {
+                Thread t = new Thread(r);
+                t.setDaemon(true); //create daemon threads
+                return t;
+            }); //create once
+        }
         return service;
     }
 
