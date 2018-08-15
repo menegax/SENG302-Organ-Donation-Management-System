@@ -310,7 +310,11 @@ public class PatientDAO implements IPatientDataAccess {
     }
 
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts) throws SQLException {
-        return constructPatientObject(attributes, contacts, null, null, null, null, null);
+    	Map<GlobalEnums.Organ, LocalDate> required = new HashMap();
+    	if (attributes.getInt("hasRequired") == 1) {
+    		required.put(Organ.BONE, LocalDate.now());
+    	}
+        return constructPatientObject(attributes, contacts, null, null, null, null, required);
     }
 
     /**

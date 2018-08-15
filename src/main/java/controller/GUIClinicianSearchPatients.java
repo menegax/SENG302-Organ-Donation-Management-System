@@ -1,42 +1,52 @@
 package controller;
 
-import javafx.application.Platform;
+import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+
+import org.apache.commons.lang3.StringUtils;
+import org.controlsfx.control.RangeSlider;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
-import model.User;
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.RangeSlider;
 import service.ClinicianDataService;
 import service.PatientDataService;
 import service.TextWatcher;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
-import utility.GlobalEnums.*;
-import utility.SystemLogger;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.FilterOption;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.Region;
+import utility.GlobalEnums.UndoableScreen;
 import utility.undoRedo.StatesHistoryScreen;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-
-import static java.util.logging.Level.SEVERE;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianSearchPatients extends UndoableController implements IWindowObserver {
 
@@ -161,7 +171,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         patientDataTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && patientDataTable.getSelectionModel().getSelectedItem() != null) {
                 Patient selected = patientDataTable.getSelectionModel().getSelectedItem();
-                patientDataService.save(selected); //save to local
+                patientDataService.save(patientDataService.getPatientByNhi(selected.getNhiNumber())); //save to local
                 GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
                 controller.setTarget(selected);
             }
