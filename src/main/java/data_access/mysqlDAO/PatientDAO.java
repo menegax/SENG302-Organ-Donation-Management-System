@@ -8,6 +8,7 @@ import model.Patient;
 import model.Procedure;
 import utility.*;
 import org.mockito.internal.matchers.Or;
+
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 
@@ -442,11 +443,7 @@ public class PatientDAO implements IPatientDataAccess {
     private String getNextRecordString(Patient aPatient) {
         List<String> donationList = aPatient.getDonations().stream().map(Organ::toString).collect(Collectors.toList());
         String donations = String.join(",", donationList).toLowerCase();
-        List<String> organsList = aPatient.getRequiredOrgans() != null ? (aPatient.getRequiredOrgans()
-                .stream()
-                .map(Organ::toString)
-                .collect(Collectors.toList())) : new ArrayList<>();
-        String organs = String.join(",", organsList).toLowerCase();
+        
         return String.format(ResourceManager.getStringForQuery("PATIENT_INSERT_ANOTHER"),
                 aPatient.getNhiNumber(),
                 aPatient.getFirstName().replaceAll("'", "''"),
@@ -466,8 +463,7 @@ public class PatientDAO implements IPatientDataAccess {
                 String.valueOf(aPatient.getHeight()),
                 String.valueOf(aPatient.getWeight()),
                 aPatient.getBloodGroup() == null ? null : String.format("\'%s\'", aPatient.getBloodGroup().toString()),
-                donations.isEmpty() ? null : String.format("\'%s\'", donations),
-                organs.isEmpty() ? null : String.format("\'%s\'", organs));
+                donations.isEmpty() ? null : String.format("\'%s\'", donations));
     }
 
 }

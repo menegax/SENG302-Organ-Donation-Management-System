@@ -5,6 +5,7 @@ import static java.util.logging.Level.INFO;
 import static utility.UserActionHistory.userActions;
 
 import data_access.factories.DAOFactory;
+import data_access.localDAO.LocalDB;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,7 +16,10 @@ import javafx.scene.control.Control;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
+import service.ClinicianDataService;
+import service.OrganWaitlist;
 import service.PatientDataService;
+import service.interfaces.IClinicianDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.SystemLogger;
@@ -24,9 +28,12 @@ import utility.undoRedo.StatesHistoryScreen;
 import utility.GlobalEnums;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -83,6 +90,10 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
     private Set<GlobalEnums.Organ> initialRequirements = new HashSet<>();
 
     private Set<GlobalEnums.Organ> finalRequirements = new HashSet<>();
+    
+    private OrganWaitlist waitlist = LocalDB.getInstance().getOrganWaitlist();
+    
+    private IClinicianDataService clinicianDataService = new ClinicianDataService();
 
     private int totalRemoved;
 
@@ -312,14 +323,14 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
      */
     private void deregistrationReason() {
         SystemLogger.systemLogger.log(FINEST, "Patient had organ requirements deregistered. Asking for deregistration reason...");
-        List<GlobalEnums.Organ> removedOrgans = new ArrayList<>(((Patient) target).getRequiredOrgans());
-        removedOrgans.removeAll(finalRequirements);
+        Map<GlobalEnums.Organ, LocalDate> removedOrgans = new HashMap<>(((Patient) target).getRequiredOrgans());
+        removedOrgans.keySet().removeAll(finalRequirements);
         if (removedOrgans.size() == 0) {
             Action action = new Action(target, after);
             statesHistoryScreen.addAction(action);
         }
         totalRemoved = 0;
-        for (GlobalEnums.Organ organ : removedOrgans) {
+        for (GlobalEnums.Organ organ : removedOrgans.keySet()) {
             totalRemoved += 1;
             openReasonPopup(organ);
             after.removeRequired(organ);

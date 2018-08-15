@@ -204,8 +204,7 @@ private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
         loadDeathDetails(patient);
         loadBodyDetails(patient);
         loadAddressDetails(patient);
-        loadDonatingOrgans(patient);
-        loadRequiredOrgans(patient);
+        loadOrgans(patient);
         loadMedications(patient);
 
         //list view styling/highlighting
@@ -226,7 +225,7 @@ private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
     }
 
 
-    private void loadDonatingOrgans(Patient patient) {
+    private void loadOrgans(Patient patient) {
         if (patient.getRequiredOrgans() == null) {
             patient.setRequiredOrgans(new HashMap<>());
         }
@@ -238,9 +237,6 @@ private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
         List<String> organsMappedD = organsD.stream()
                 .map(e -> StringUtils.capitalize(e.getValue()))
                 .collect(Collectors.toList());
-//        List<String> organsMappedR = organsR.stream()
-//                .map(e -> StringUtils.capitalize(e.getValue()))
-//                .collect(Collectors.toList());
         donatingListProperty.setValue(FXCollections.observableArrayList(organsMappedD));
         receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
         donationList.itemsProperty().bind(donatingListProperty);

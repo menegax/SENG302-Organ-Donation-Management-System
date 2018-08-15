@@ -1,4 +1,4 @@
-package DataAccess.interfaces;
+package data_access.interfaces;
 
 import utility.GlobalEnums;
 

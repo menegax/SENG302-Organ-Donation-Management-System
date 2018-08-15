@@ -172,7 +172,7 @@ public class Patient extends User {
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
                    Timestamp created, Timestamp modified, LocalDateTime death, String deathStreet, String deathCity,Region deathRegion, GlobalEnums.BirthGender gender,
                    GlobalEnums.PreferredGender prefGender, String preferredName, double height, double weight,
-                   BloodGroup bloodType, List<Organ> donations, List<Organ> receiving, String streetNumber,
+                   BloodGroup bloodType, List<Organ> donations, Map<Organ, LocalDate> receiving, String streetNumber,
                    String city, String suburb, Region region, int zip, String homePhone, String workPhone,
                    String mobilePhone, String emailAddress, String contactName, String contactRelationship,
                    String contactHomePhone, String contactWorkPhone, String contactMobilePhone, String contactEmailAddress,
@@ -795,6 +795,7 @@ public class Patient extends User {
 
     public void clearRequiredOrgans() {
         requiredOrgans.clear();
+    }
 
     /**
      * sets the required organs of the patient to the list parsed through

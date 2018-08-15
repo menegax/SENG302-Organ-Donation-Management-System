@@ -1,7 +1,7 @@
-package DataAccess.mysqlDAO;
+package data_access.mysqlDAO;
 
-import DataAccess.factories.MySqlFactory;
-import DataAccess.interfaces.IRequiredOrganDataAccess;
+import data_access.factories.MySqlFactory;
+import data_access.interfaces.IRequiredOrganDataAccess;
 import utility.GlobalEnums;
 import utility.ResourceManager;
 
@@ -19,7 +19,7 @@ import static utility.SystemLogger.systemLogger;
 
 public class RequiredOrgansDAO implements IRequiredOrganDataAccess {
 
-    private MySqlFactory mySqlFactory;
+    private data_access.factories.MySqlFactory mySqlFactory;
 
     public RequiredOrgansDAO () {
         mySqlFactory = MySqlFactory.getMySqlFactory();
