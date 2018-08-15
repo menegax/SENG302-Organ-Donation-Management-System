@@ -1,14 +1,6 @@
 package utility;
 
-import controller.GUIHome;
 import controller.ScreenControl;
-import data_access.mysqlDAO.PatientDAO;
-import model.Patient;
-import service.ClinicianDataService;
-import service.PatientDataService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 
