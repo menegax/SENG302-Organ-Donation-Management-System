@@ -1,15 +1,14 @@
 package service;
 
-import DataAccess.factories.DAOFactory;
-import DataAccess.interfaces.IClinicianDataAccess;
-import DataAccess.interfaces.IPatientDataAccess;
+import data_access.factories.DAOFactory;
+import data_access.interfaces.IClinicianDataAccess;
+import data_access.interfaces.IPatientDataAccess;
 import model.Clinician;
 import model.Patient;
 import service.interfaces.IClinicianDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;

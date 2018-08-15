@@ -8,35 +8,53 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.RotateEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
+import model.User;
 import org.apache.commons.lang3.StringUtils;
-
+import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums;
+import utility.SystemLogger;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.time.LocalDateTime;
-import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIRequiredOrganDeregistrationReason {
+public class GUIRequiredOrganDeregistrationReason extends TargetedController implements TouchscreenCapable{
 
     @FXML
-    private DatePicker dateOfDeath;
+    private DateTimePicker dateOfDeath;
 
     @FXML
     private Label dateOfDeathLabel;
 
     @FXML
-    private ChoiceBox<GlobalEnums.DeregistrationReason> reasons;
+    private TextField locationDeathTxt;
 
     @FXML
-    private Button okButton;
+    private TextField deathCity;
+
+    @FXML
+    private ChoiceBox<String> deathRegion;
+
+    @FXML
+    private ChoiceBox<GlobalEnums.DeregistrationReason> reasons;
 
     @FXML
     private Label pleaseSpecify;
@@ -50,33 +68,50 @@ public class GUIRequiredOrganDeregistrationReason {
     @FXML
     private MenuButton diseaseCured;
 
+    @FXML
+    private Button okButton;
+
     private GlobalEnums.Organ organ;
 
-    private UserControl userControl;
+    private TouchPaneController deregistrationReasonTouchController;
 
-    private Patient target;
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     @FXML
-    private AnchorPane requiredOrganDeregistrationReasonPane;
+    private GridPane deregistrationReasonPane;
 
     /**
      * Initializes the organ deregistration screen. Gets the target patient and sets optional elements as
      * disabled and not visible.
      */
-    public void initialize() {
-        userControl = new UserControl();
-        target = (Patient) userControl.getTargetUser();
+    public void load() {
         populateDropdown();
         populateForm();
         dateOfDeath.setDisable(true);
         dateOfDeath.setVisible(false);
         dateOfDeathLabel.setDisable(true);
         dateOfDeathLabel.setVisible(false);
+        locationDeathTxt.setDisable(true);
+        locationDeathTxt.setVisible(false);
+        deathCity.setDisable(true);
+        deathCity.setVisible(false);
+        deathRegion.setDisable(true);
+        deathRegion.setVisible(false);
         curedLabel.setDisable(true);
         curedLabel.setVisible(false);
         diseaseCured.setDisable(true);
         diseaseCured.setVisible(false);
+        if(screenControl.isTouch()) {
+            deregistrationReasonTouchController = new TouchPaneController(deregistrationReasonPane);
+            deregistrationReasonPane.setOnTouchPressed(event -> {
+                deregistrationReasonPane.toFront();
+            });
+            deregistrationReasonPane.setOnZoom(this::zoomWindow);
+            deregistrationReasonPane.setOnRotate(this::rotateWindow);
+            deregistrationReasonPane.setOnScroll(this::scrollWindow);
+        }
     }
+
 
     /**
      * Populates drop down menu that represent enum data of reasons for deregistering patient required organs
@@ -84,18 +119,17 @@ public class GUIRequiredOrganDeregistrationReason {
     private void populateDropdown() {
         // Populate blood group drop down with values from the deregistration reasons enum
         List<GlobalEnums.DeregistrationReason> deregistrationReasons = new ArrayList<>();
-        if (target.getCurrentDiseases().size() < 1) {
+        if (((Patient) target).getCurrentDiseases().size() < 1) {
             for (GlobalEnums.DeregistrationReason reason : GlobalEnums.DeregistrationReason.values()) {
                 if (reason != GlobalEnums.DeregistrationReason.CURED) {
                     deregistrationReasons.add(reason);
                 }
             }
-        } else {
-            for (GlobalEnums.DeregistrationReason reason : GlobalEnums.DeregistrationReason.values()) {
-                deregistrationReasons.add(reason);
-            }
+        }
+        else {
+            deregistrationReasons.addAll(Arrays.asList(GlobalEnums.DeregistrationReason.values()));
             Set<CustomMenuItem> diseaseItems = new HashSet<>();
-            for (Disease disease : target.getCurrentDiseases()) {
+            for (Disease disease : ((Patient) target).getCurrentDiseases()) {
                 if (disease.getDiseaseState() != GlobalEnums.DiseaseState.CURED) {
                     CheckBox checkbox = new CheckBox(disease.getDiseaseName());
                     checkbox.setUserData(disease);
@@ -104,11 +138,27 @@ public class GUIRequiredOrganDeregistrationReason {
                     diseaseItems.add(menuItem);
                 }
             }
-            diseaseCured.getItems().setAll(diseaseItems);
+            diseaseCured.getItems()
+                    .setAll(diseaseItems);
         }
         ObservableList<GlobalEnums.DeregistrationReason> deregistrationReasonsOL = FXCollections.observableList(deregistrationReasons);
         reasons.setItems(deregistrationReasonsOL);
+
+        populateRegionDropdown();
+
     }
+
+
+    private void populateRegionDropdown() {
+        // Populate region drop down with values from the Regions enum
+        List<String> regions = new ArrayList<>();
+        for (GlobalEnums.Region region : GlobalEnums.Region.values()) {
+            regions.add(region.getValue());
+        }
+        ObservableList<String> regionsOL = FXCollections.observableList(regions);
+        deathRegion.setItems(regionsOL);
+    }
+
 
     /**
      * Populates the scene controls with values from the patient object
@@ -118,8 +168,10 @@ public class GUIRequiredOrganDeregistrationReason {
         reasons.setValue(GlobalEnums.DeregistrationReason.ERROR);
     }
 
+
     /**
      * Sets the label with organ name
+     *
      * @param organ the organ being set to label
      */
     public void setOrgan(GlobalEnums.Organ organ) {
@@ -128,80 +180,259 @@ public class GUIRequiredOrganDeregistrationReason {
         reasonTitle.setText("Deregistration of " + StringUtils.capitalize(organ.toString()));
     }
 
+
     /**
      * set the reason selected
      */
     @FXML
     public void reasonSelected() {
         if (reasons.getValue() == GlobalEnums.DeregistrationReason.DIED) {
-            curedLabel.setDisable(true);
-            curedLabel.setVisible(false);
-            diseaseCured.setDisable(true);
-            diseaseCured.setVisible(false);
-            dateOfDeath.setDisable(false);
-            dateOfDeath.setVisible(true);
-            dateOfDeathLabel.setDisable(false);
-            dateOfDeathLabel.setVisible(true);
-            okButton.setLayoutY(169.0);
-        } else if (reasons.getValue() == GlobalEnums.DeregistrationReason.CURED) {
-            curedLabel.setDisable(false);
-            curedLabel.setVisible(true);
-            diseaseCured.setDisable(false);
-            diseaseCured.setVisible(true);
-            dateOfDeath.setDisable(true);
-            dateOfDeath.setVisible(false);
-            dateOfDeathLabel.setDisable(true);
-            dateOfDeathLabel.setVisible(false);
-            okButton.setLayoutY(169.0);
-        } else {
-            dateOfDeath.setDisable(true);
-            dateOfDeath.setVisible(false);
-            dateOfDeathLabel.setDisable(true);
-            dateOfDeathLabel.setVisible(false);
-            curedLabel.setDisable(true);
-            curedLabel.setVisible(false);
-            diseaseCured.setDisable(true);
-            diseaseCured.setVisible(false);
-            okButton.setLayoutY(100.0);
+            prepFormForReasonDied();
+        }
+        else if (reasons.getValue() == GlobalEnums.DeregistrationReason.CURED) {
+            prepFormForReasonCured();
+        }
+        else {
+            prepFormForReasonOther();
         }
     }
+
+
+    private void prepFormForReasonOther() {
+        dateOfDeath.setDisable(true);
+        dateOfDeath.setVisible(false);
+        dateOfDeathLabel.setDisable(true);
+        dateOfDeathLabel.setVisible(false);
+        curedLabel.setDisable(true);
+        curedLabel.setVisible(false);
+        diseaseCured.setDisable(true);
+        diseaseCured.setVisible(false);
+        locationDeathTxt.setDisable(true);
+        locationDeathTxt.setVisible(false);
+        deathCity.setDisable(true);
+        deathCity.setVisible(false);
+        deathRegion.setDisable(true);
+        deathRegion.setVisible(false);
+        okButton.setLayoutY(100.0);
+    }
+
+
+    private void prepFormForReasonCured() {
+        curedLabel.setDisable(false);
+        curedLabel.setVisible(true);
+        diseaseCured.setDisable(false);
+        diseaseCured.setVisible(true);
+        dateOfDeath.setDisable(true);
+        dateOfDeath.setVisible(false);
+        dateOfDeathLabel.setDisable(true);
+        dateOfDeathLabel.setVisible(false);
+        locationDeathTxt.setDisable(true);
+        locationDeathTxt.setVisible(false);
+        deathCity.setDisable(true);
+        deathCity.setVisible(false);
+        deathRegion.setDisable(true);
+        deathRegion.setVisible(false);
+        okButton.setLayoutY(169.0);
+    }
+
+
+    private void prepFormForReasonDied() {
+        curedLabel.setDisable(true);
+        curedLabel.setVisible(false);
+        diseaseCured.setDisable(true);
+        diseaseCured.setVisible(false);
+        dateOfDeath.setDisable(false);
+        dateOfDeath.setVisible(true);
+        dateOfDeathLabel.setDisable(false);
+        dateOfDeathLabel.setVisible(true);
+        locationDeathTxt.setDisable(false);
+        locationDeathTxt.setVisible(true);
+        deathCity.setDisable(false);
+        deathCity.setVisible(true);
+        deathRegion.setDisable(false);
+        deathRegion.setVisible(true);
+        okButton.setLayoutY(169.0);
+    }
+
 
     /**
      * saves the reason why the clinician removed a organ from the patient required organs list
      */
     public void saveReason() {
-        boolean confirmed = true;
-        GlobalEnums.DeregistrationReason reason = reasons.getSelectionModel().getSelectedItem();
-        if (reason == GlobalEnums.DeregistrationReason.ERROR) {
-            userActions.log(Level.INFO, "Deregistered " + organ + " due to error", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
-        } else if (reason == GlobalEnums.DeregistrationReason.CURED) {
-            List<Disease> selected = getSelectedDiseases();
-            List<String> selectedStrings = selected.stream().map(Disease::getDiseaseName).collect(Collectors.toList());
-            String diseaseCuredString = selected.size() == 0 ? "" : " Cured: " + String.join(",", selectedStrings);
-            userActions.log(Level.INFO, "Deregistered " + organ + " due to cure." + diseaseCuredString, new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
-            curePatientDiseases(selected);
-        } else if (reason == GlobalEnums.DeregistrationReason.DIED) {
-            if (dateOfDeath.getValue().isBefore(target.getBirth()) || dateOfDeath.getValue().isAfter(LocalDate.now())) {
-                confirmed = false;
-                dateOfDeath.getStyleClass().add("invalid");
-            }
-            for (GlobalEnums.Organ organ : target.getRequiredOrgans().keySet()) {
-                userActions.log(Level.INFO, "Deregistered " + organ + " due to death on this date: " + dateOfDeath.getValue(), new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
-            }
-            target.setRequiredOrgans(new HashMap());
-            target.setDeath(LocalDateTime.parse(dateOfDeath.getValue().toString()));
-        } else if (reason == GlobalEnums.DeregistrationReason.RECEIVED) {
-            userActions.log(Level.INFO, "Deregistered " + organ + " due to successful transplant", new String[]{"Attempted to deregister " + organ, target.getNhiNumber()});
+        boolean valid = true;
+
+        switch (reasons.getSelectionModel()
+                .getSelectedItem()) {
+            case ERROR:
+                performErrorReasonActions();
+                break;
+            case CURED:
+                performCuredReasonActions();
+                break;
+            case DIED:
+                valid = validateAndPerformDiedReasonActions();
+                break;
+            case RECEIVED:
+                performReceivedReasonActions();
+                break;
         }
-        if (confirmed){
-            Stage reasonStage = (Stage)reasons.getScene().getWindow();
-            reasonStage.close();
+
+        if (valid) {
+            screenControl.closeWindow(deregistrationReasonPane);
         }
-        //GUIPatientUpdateRequirements.setClosed(true);
     }
+
+
+    private void performErrorReasonActions() {
+        userActions.log(Level.INFO,
+                "Deregistered " + organ + " due to error",
+                new String[] { "Attempted to deregister " + organ, ((Patient) target).getNhiNumber() });
+    }
+
+
+    private void performReceivedReasonActions() {
+        userActions.log(Level.INFO,
+                "Deregistered " + organ + " due to successful transplant",
+                new String[] { "Attempted to deregister " + organ, ((Patient) target).getNhiNumber() });
+    }
+
+
+    private boolean validateAndPerformDiedReasonActions() {
+        boolean valid = true;
+        valid = validateDeathDate(valid);
+        valid = validateDeathLocation(valid);
+        valid = validateDeathCity(valid);
+        valid = validateDeathRegion(valid);
+
+        if (valid) {
+            ((Patient) target).clearRequiredOrgans();
+            userActions.log(Level.INFO,
+                        "Deregistered all organs due to death",
+                        new String[] { "Attempted to deregister all organs due to death", ((Patient) target).getNhiNumber() });
+            ((Patient) target).setDeathDate(dateOfDeath.getDateTimeValue());
+            ((Patient) target).setDeathStreet(locationDeathTxt.getText());
+            ((Patient) target).setDeathCity(deathCity.getText());
+            ((Patient) target).setDeathRegion(GlobalEnums.Region.getEnumFromString(deathRegion.getSelectionModel()
+                        .getSelectedItem()));
+            SystemLogger.systemLogger.log(Level.FINE, "Updated patient to:\n" + target);
+        }
+        return valid;
+    }
+
+
+    private boolean validateDeathRegion(boolean valid) {
+        // validate death region
+        if (deathRegion.getSelectionModel().isEmpty()) {
+            valid = setInvalid(deathRegion);
+        } else if (!deathRegion.getSelectionModel()
+                .isEmpty()) {
+            Enum region = GlobalEnums.Region.getEnumFromString(deathRegion.getSelectionModel()
+                    .getSelectedItem());
+            if (region == null) {
+                valid = setInvalid(deathRegion);
+            } else {
+                setValid(deathRegion);
+            }
+        } else {
+            setValid(deathRegion);
+        }
+        return valid;
+    }
+
+
+    private boolean validateDeathCity(boolean valid) {
+        if (deathCity.getText().length() < 1) {
+            // if not set, invalid
+            valid = setInvalid(deathCity);
+        } else if (!deathCity.getText()
+                .matches(String.valueOf(GlobalEnums.UIRegex.CITY))) {
+            // if doesn't match regex, invalid
+            valid = setInvalid(deathCity);
+        } else {
+            setValid(deathCity);
+        }
+
+        return valid;
+    }
+
+
+    private boolean validateDeathLocation(boolean valid) {
+        // validate death location
+
+        // death location not required to be set
+//        if (locationDeathTxt.getText().length() < 1) {
+//            // if not set, invalid
+//            valid = setInvalid(locationDeathTxt);
+//        } else
+            if (!locationDeathTxt.getText()
+                .matches(GlobalEnums.UIRegex.DEATH_LOCATION.getValue())) {
+            // if doesn't match regex, invalid
+            valid = setInvalid(locationDeathTxt);
+        }
+        else {
+            setValid(locationDeathTxt);
+        }
+        return valid;
+    }
+
+
+    private boolean validateDeathDate(boolean valid) {
+        // validate death date
+        if (dateOfDeath.getValue() != null) {
+            if (dateOfDeath.getValue()
+                    .isBefore(((Patient) target).getBirth()) || dateOfDeath.getValue()
+                    .isAfter(LocalDate.now())) {
+                valid = setInvalid(dateOfDeath);
+            }
+            else {
+                setValid(dateOfDeath);
+            }
+        }
+        else {
+            valid = setInvalid(dateOfDeath);
+        }
+        return valid;
+    }
+
+
+    private void performCuredReasonActions() {
+        List<Disease> selected = getSelectedDiseases();
+        List<String> selectedStrings = selected.stream()
+                .map(Disease::getDiseaseName)
+                .collect(Collectors.toList());
+        String diseaseCuredString = selected.size() == 0 ? "" : " Cured: " + String.join(",", selectedStrings);
+        userActions.log(Level.INFO,
+                "Deregistered " + organ + " due to cure." + diseaseCuredString,
+                new String[] { "Attempted to deregister " + organ, ((Patient) target).getNhiNumber() });
+        curePatientDiseases(selected);
+    }
+
+
+    /***
+     * Applies the invalid class to the target control
+     * @param target The target to add the class to
+     */
+    private boolean setInvalid(Control target) {
+        target.getStyleClass()
+                .add("invalid");
+        return false;
+    }
+
+
+    /**
+     * Removes the invalid class from the target control if it has it
+     *
+     * @param target The target to remove the class from
+     */
+    private void setValid(Control target) {
+        target.getStyleClass()
+                .remove("invalid");
+    }
+
 
     /**
      * Fetches the list of diseases that have been selected within the dropdown menu
+     *
      * @return The list of disease instances that are selected
      */
     private List<Disease> getSelectedDiseases() {
@@ -218,6 +449,7 @@ public class GUIRequiredOrganDeregistrationReason {
         return selected;
     }
 
+
     /**
      * Sets the diseases in the patient to cured if their name matches a name in the selected diseases list
      */
@@ -225,5 +457,25 @@ public class GUIRequiredOrganDeregistrationReason {
         for (Disease disease : selected) {
             disease.setDiseaseState(GlobalEnums.DiseaseState.CURED);
         }
+    }
+
+    @Override
+    public void zoomWindow(ZoomEvent zoomEvent) {
+        deregistrationReasonTouchController.zoomPane(zoomEvent);
+        zoomEvent.consume();
+    }
+
+    @Override
+    public void rotateWindow(RotateEvent rotateEvent) {
+        deregistrationReasonTouchController.rotatePane(rotateEvent);
+        rotateEvent.consume();
+    }
+
+    @Override
+    public void scrollWindow(ScrollEvent scrollEvent) {
+        if (scrollEvent.isDirect()) {
+            deregistrationReasonTouchController.scrollPane(scrollEvent);
+        }
+        scrollEvent.consume();
     }
 }

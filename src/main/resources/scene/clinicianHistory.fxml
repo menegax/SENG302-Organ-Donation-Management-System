@@ -23,7 +23,7 @@
           <TableColumn fx:id="levelColumn" prefWidth="75.0" text="Level" />
             <TableColumn fx:id="actionColumn" prefWidth="75.0" text="Action" />
             <TableColumn fx:id="messageColumn" prefWidth="75.0" text="Message" />
-            <TableColumn fx:id="targetColumn" prefWidth="75.0" text="Patient" />
+            <TableColumn fx:id="targetColumn" prefWidth="75.0" text="User" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

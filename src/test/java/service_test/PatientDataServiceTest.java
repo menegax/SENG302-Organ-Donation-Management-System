@@ -1,8 +1,8 @@
 package service_test;
 
-import DataAccess.DBHelper;
-import DataAccess.factories.DAOFactory;
-import DataAccess.localDAO.LocalDB;
+import data_access.DBHelper;
+import data_access.factories.DAOFactory;
+import data_access.localDAO.LocalDB;
 import model.Patient;
 import org.junit.After;
 import org.junit.BeforeClass;

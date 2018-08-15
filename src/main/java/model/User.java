@@ -1,6 +1,10 @@
 package model;
 
+import com.univocity.parsers.annotations.Convert;
+import com.univocity.parsers.annotations.Parsed;
 import utility.Searcher;
+import utility.parsing.AsciiConverterCSV;
+import utility.parsing.DateConverterCSV;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -21,6 +25,8 @@ public abstract class User implements Serializable, Comparable<User> {
 
     private final UUID uuid = UUID.randomUUID();
 
+    @Parsed(field = "first_names")
+    @Convert(conversionClass =AsciiConverterCSV.class)
     protected String firstName;
 
     protected List<String> middleNames;
@@ -28,11 +34,15 @@ public abstract class User implements Serializable, Comparable<User> {
     // transient means that this property is not serialized on saving to disk
     transient PropertyChangeSupport propertyChangeSupport;
 
+    @Parsed(field = "last_names")
+    @Convert(conversionClass = AsciiConverterCSV.class)
     protected String lastName;
 
     private boolean changed = true;
 
     protected Timestamp modified;
+
+    public User(){}
 
     public User(String firstName, List<String> middleNames, String lastName) {
         this.firstName = firstName;
@@ -112,7 +122,7 @@ public abstract class User implements Serializable, Comparable<User> {
    public void userModified() {
        this.modified = new Timestamp(System.currentTimeMillis());
        changed = true;
-       if(propertyChangeSupport != null) {
+       if (propertyChangeSupport != null) {
            propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(this, "User Modified", null, null));
        }
 //       systemLogger.log(FINEST, "User " + getUuid() + " modified");

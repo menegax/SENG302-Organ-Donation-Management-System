@@ -1,7 +1,7 @@
 package data_access_test;
 
-import DataAccess.DBHelper;
-import DataAccess.factories.DAOFactory;
+import data_access.DBHelper;
+import data_access.factories.DAOFactory;
 import model.Disease;
 import model.Medication;
 import model.Patient;
@@ -118,7 +118,7 @@ public class MYSQLPatientDAOTest {
     public void testPatientMatchingSearch() {
         givenPatient();
         whenPatientsSaved();
-        whenSearched("henro");
+        whenSearched("henr");
         thenSearchHasResults();
     }
 

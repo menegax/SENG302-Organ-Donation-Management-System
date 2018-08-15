@@ -14,7 +14,7 @@ public class StateHistoryTableView extends StateHistoryControl {
     public StateHistoryTableView(TableView<Object> tableView) {
         this.control = tableView;
         states.add(new ArrayList<>(tableView.getItems()));
-        setUpUndoableStage();
+        setUpUndoableWrapper(this.control);
     }
 
 

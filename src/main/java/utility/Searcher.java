@@ -1,7 +1,7 @@
 package utility;
 
 
-import DataAccess.localDAO.LocalDB;
+import data_access.localDAO.LocalDB;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -152,8 +152,9 @@ public class Searcher {
         try {
             indexWriter.addDocument(createClinicianDocument(clinician));
             indexWriter.commit();
+            systemLogger.log(Level.FINER, "Added a clinician to the search index");
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
+            systemLogger.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
         }
     }
 
@@ -161,8 +162,9 @@ public class Searcher {
         try {
             indexWriter.addDocument(createAdminDocument(admin));
             indexWriter.commit();
+            systemLogger.log(Level.FINER, "Added an admin to the search index");
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
+            systemLogger.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
         }
     }
 
@@ -175,8 +177,9 @@ public class Searcher {
         try {
             indexWriter.addDocument(createPatientDocument(patient));
             indexWriter.commit();
+            systemLogger.log(Level.FINER, "Added a patient to the search index");
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
+            systemLogger.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
         }
     }
 
@@ -198,7 +201,7 @@ public class Searcher {
         try {
             indexWriter.deleteDocuments(toDel);
             indexWriter.commit();
-            systemLogger.log(Level.INFO, "Successfully removed user from the search index", "Attempted to remove user from the search index");
+            systemLogger.log(Level.FINER, "Successfully removed user from the search index", "Attempted to remove user from the search index");
         } catch (IOException e) {
             systemLogger.log(Level.SEVERE, "Unable to remove user index", "Attempted to remove user index");
         }
@@ -333,7 +336,7 @@ public class Searcher {
                     return fetchAdmin(thisDoc);
             }
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Unable to query search index.", "Attempted to retrieve document from index.");
+            systemLogger.log(Level.SEVERE, "Unable to query search index.", "Attempted to retrieve document from index.");
         }
         return null;
     }
@@ -378,7 +381,7 @@ public class Searcher {
                 }
             }
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Unable to query search index.", "Attempted to search for users.");
+            systemLogger.log(Level.SEVERE, "Unable to query search index.", "Attempted to search for users.");
         }
         return allDocs;
     }

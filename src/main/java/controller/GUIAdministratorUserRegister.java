@@ -1,6 +1,6 @@
 package controller;
 
-import DataAccess.factories.DAOFactory;
+import data_access.factories.DAOFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -34,14 +34,9 @@ import java.util.regex.Pattern;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
-import javax.xml.crypto.Data;
-
 public class GUIAdministratorUserRegister extends UndoableController {
 
     public Button doneButton;
-
-    @FXML
-    private Label backButton;
 
     @FXML
     private TextField firstnameRegister;
@@ -79,17 +74,12 @@ public class GUIAdministratorUserRegister extends UndoableController {
     @FXML
     private GridPane userRegisterPane;
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
-
-    private UserControl userControl = new UserControl();
-
     DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
-    DAOFactory mysqlFactory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
 
     /**
      * Sets up register page GUI elements
      */
-    public void initialize() {
+    public void load() {
         firstnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         lastnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         middlenameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
@@ -97,22 +87,13 @@ public class GUIAdministratorUserRegister extends UndoableController {
         setDateConverter();
         birthRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         regionRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-        if (userControl.getLoggedInUser() instanceof Administrator) {
-            ObservableList<String> regions = FXCollections.observableArrayList();
-            for (Region region : Region.values()) {
-                regions.add(region.getValue());
-            }
-            regionRegister.setItems(regions);
-            backButton.setVisible(false);
-            userRegisterPane.getRowConstraints()
-                    .get(0)
-                    .setMaxHeight(0);
+        ObservableList<String> regions = FXCollections.observableArrayList();
+        for (Region region : Region.values()) {
+            regions.add(region.getValue());
         }
-        else {
-            patientButton.setVisible(false);
-            clinicianButton.setVisible(false);
-            administratorButton.setVisible(false);
-        }
+        regionRegister.setItems(regions);
+        userRegisterPane.getRowConstraints().get(0).setMaxHeight(0);
+
         setUpUndoRedo();
         setUpButtonListeners();
 
@@ -124,53 +105,40 @@ public class GUIAdministratorUserRegister extends UndoableController {
         });
     }
 
-
     /**
      * Sets up the listeners for the radio buttons to switch controls on selection
      */
     private void setUpButtonListeners() {
-        patientButton.selectedProperty()
-                .addListener(((observable, oldValue, newValue) -> {
-                    if (!oldValue && newValue) {
-                        if (!statesHistoryScreen.getUndoableStage()
-                                .getChangingStates()) {
-                            statesHistoryScreen.getUndoableStage()
-                                    .setChangingStates(true);
-                            clearFields();
-                            statesHistoryScreen.getUndoableStage()
-                                    .setChangingStates(false);
-                        }
-                        onSelectPatient();
-                    }
-                }));
-        clinicianButton.selectedProperty()
-                .addListener(((observable, oldValue, newValue) -> {
-                    if (!oldValue && newValue) {
-                        if (!statesHistoryScreen.getUndoableStage()
-                                .getChangingStates()) {
-                            statesHistoryScreen.getUndoableStage()
-                                    .setChangingStates(true);
-                            clearFields();
-                            statesHistoryScreen.getUndoableStage()
-                                    .setChangingStates(false);
-                        }
-                        onSelectClinician();
-                    }
-                }));
-        administratorButton.selectedProperty()
-                .addListener(((observable, oldValue, newValue) -> {
-                    if (!oldValue && newValue) {
-                        if (!statesHistoryScreen.getUndoableStage()
-                                .getChangingStates()) {
-                            statesHistoryScreen.getUndoableStage()
-                                    .setChangingStates(true);
-                            clearFields();
-                            statesHistoryScreen.getUndoableStage()
-                                    .setChangingStates(false);
-                        }
-                        onSelectAdministrator();
-                    }
-                }));
+        patientButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!oldValue && newValue) {
+                if (!statesHistoryScreen.getUndoableWrapper().getChangingStates()) {
+                    statesHistoryScreen.getUndoableWrapper().setChangingStates(true);
+                    clearFields();
+                    statesHistoryScreen.getUndoableWrapper().setChangingStates(false);
+                }
+                onSelectPatient();
+            }
+        }));
+        clinicianButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!oldValue && newValue) {
+                if (!statesHistoryScreen.getUndoableWrapper().getChangingStates()) {
+                    statesHistoryScreen.getUndoableWrapper().setChangingStates(true);
+                    clearFields();
+                    statesHistoryScreen.getUndoableWrapper().setChangingStates(false);
+                }
+                onSelectClinician();
+            }
+        }));
+        administratorButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!oldValue && newValue) {
+                if (!statesHistoryScreen.getUndoableWrapper().getChangingStates()) {
+                    statesHistoryScreen.getUndoableWrapper().setChangingStates(true);
+                    clearFields();
+                    statesHistoryScreen.getUndoableWrapper().setChangingStates(false);
+                }
+                onSelectAdministrator();
+            }
+        }));
     }
 
 
@@ -191,7 +159,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
             add(clinicianButton);
             add(administratorButton);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORUSERREGISTER);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORUSERREGISTER, target);
     }
 
 
@@ -235,17 +203,6 @@ public class GUIAdministratorUserRegister extends UndoableController {
         verifyPasswordTxt.setVisible(true);
         userIdRegister.setVisible(true);
     }
-
-
-    /**
-     * Back button listener to switch to the login screen
-     */
-    @FXML
-    public void goBackToLogin() {
-        clearFields();
-        returnToPreviousPage();
-    }
-
 
     /**
      * Clears the data in the fields of the GUI
@@ -466,10 +423,8 @@ public class GUIAdministratorUserRegister extends UndoableController {
         String lastName = lastnameRegister.getText();
         String password = passwordTxt.getText();
         ArrayList<String> middles = new ArrayList<>();
-        if (!middlenameRegister.getText()
-                .equals("")) {
-            List<String> middleNames = Arrays.asList(middlenameRegister.getText()
-                    .split(" "));
+        if (!middlenameRegister.getText().equals("")) {
+            List<String> middleNames = Arrays.asList(middlenameRegister.getText().split(" "));
             middles = new ArrayList<>(middleNames);
         }
         if (patientButton.isSelected()) {
@@ -477,34 +432,28 @@ public class GUIAdministratorUserRegister extends UndoableController {
             Patient after = new Patient(id, firstName, middles, lastName, birth);
             statesHistoryScreen.addAction(new Action(null, after));
             new PatientDataService().save(after);
-            userActions.log(Level.INFO, "Successfully registered patient profile", "Attempted to register patient profile");
+            userActions.log(Level.INFO, "Successfully registered patient profile", new String[]{"Attempted to register patient profile", id});
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
             int staffID = new ClinicianDataService().nextStaffId();
             Clinician after = new Clinician(staffID, firstName, middles, lastName, Region.getEnumFromString(region));
             statesHistoryScreen.addAction(new Action(null, after));
             new ClinicianDataService().save(after);
-            userActions.log(Level.INFO, "Successfully registered clinician profile", "Attempted to register clinician profile");
+            userActions.log(Level.INFO, "Successfully registered clinician profile", new String[]{"Attempted to register clinician profile", id});
         } else {
             try {
                 Administrator after = new Administrator(id, firstName, middles, lastName, password);
                 statesHistoryScreen.addAction(new Action(null, after));
                 new AdministratorDataService().save(after);
-                userActions.log(Level.INFO, "Successfully registered administrator profile", "Attempted to register administrator profile");
+                userActions.log(Level.INFO, "Successfully registered administrator profile", new String[]{"Attempted to register administrator profile", id});
             } catch (IllegalArgumentException e) {
                 userActions.log(Level.SEVERE, "Couldn't register administrator profile due to invalid field", "Attempted to register administrator profile");
             }
         }
-        statesHistoryScreen.getUndoableStage()
-                .setChangingStates(true);
+        statesHistoryScreen.getUndoableWrapper().setChangingStates(true);
         clearFields();
-        statesHistoryScreen.getUndoableStage()
-                .setChangingStates(false);
-        if (userControl.getLoggedInUser() == null) {
-            returnToPreviousPage();
-        }
+        statesHistoryScreen.getUndoableWrapper().setChangingStates(false);
     }
-
 
     /***
      * Applies the invalid class to the target control
@@ -515,18 +464,6 @@ public class GUIAdministratorUserRegister extends UndoableController {
                 .add("invalid");
         return false;
     }
-
-
-    private void returnToPreviousPage() {
-        try {
-            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/login.fxml")));
-        }
-        catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load login").show();
-            userActions.log(SEVERE, "Failed to load login", "Attempted to load login");
-        }
-    }
-
 
     /**
      * Removes the invalid class from the target control if it has it

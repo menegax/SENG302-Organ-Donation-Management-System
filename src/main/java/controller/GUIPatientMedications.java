@@ -1,6 +1,5 @@
 package controller;
 
-import DataAccess.factories.DAOFactory;
 import model.*;
 import service.*;
 import com.google.gson.JsonArray;
@@ -38,8 +37,6 @@ public class GUIPatientMedications extends UndoableController {
     private ArrayList<String> current;
 
     private ArrayList<String> history;
-
-    private Patient target;
 
     private Patient after;
 
@@ -91,8 +88,6 @@ public class GUIPatientMedications extends UndoableController {
      */
     @FXML
     private ListView<String> medicineInformation;
-
-    private Patient viewedPatient;
 
     ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -153,17 +148,11 @@ public class GUIPatientMedications extends UndoableController {
     }
 
 
-    private UserControl userControl;
-
-
     /**
      * Initializes the Medication GUI pane, adds any medications stored for donor to current and past listViews
      */
     @FXML
-    public void initialize() {
-        Patient patient;
-        userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
+    public void load() {
         //Register events for when an item is selected from a listView and set selection mode to multiple
         currentMedications.setOnMouseClicked(event -> onSelect(currentMedications));
         pastMedications.setOnMouseClicked(event -> onSelect(pastMedications));
@@ -171,21 +160,12 @@ public class GUIPatientMedications extends UndoableController {
                 .setSelectionMode(SelectionMode.MULTIPLE);
         currentMedications.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
-        if (user instanceof Patient) {
-            patient = (Patient)userControl.getLoggedInUser(); //get logged in patient
-            loadProfile(patient.getNhiNumber());
-        } else if (user instanceof Administrator) {
-            patient = (Patient) userControl.getTargetUser();
-            loadProfile(patient.getNhiNumber());
-        } else {
-            viewedPatient = (Patient) userControl.getTargetUser();
-            loadProfile(viewedPatient.getNhiNumber());
-        }
+        loadProfile(((Patient) target).getNhiNumber());
         controls = new ArrayList<Control>() {{
             add(pastMedications);
             add(currentMedications);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTMEDICATIONS, target);
     }
 
 
@@ -274,7 +254,7 @@ public class GUIPatientMedications extends UndoableController {
         }
         catch (IOException exception) {
             suggestions = null;
-            userActions.log(Level.WARNING, "Illegal characters in query");
+            userActions.log(Level.WARNING, "Illegal characters in drug suggestions query", new String[]{"Attempted to autocomplete drug search with illegal characters", ((Patient) target).getNhiNumber()});
         }
     }
 
@@ -377,7 +357,7 @@ public class GUIPatientMedications extends UndoableController {
                 statesHistoryScreen.addAction(new Action(target, after));
                 userActions.log(Level.INFO,
                         "Added medication: " + medication,
-                        new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
+                        new String[] { "Attempted to add medication: " + medication, ((Patient) target).getNhiNumber() });
                 viewCurrentMedications();
                 newMedication.clear();
                 screenControl.setIsSaved(false);
@@ -389,13 +369,13 @@ public class GUIPatientMedications extends UndoableController {
             else {
                 userActions.log(Level.WARNING,
                         "Medication already registered",
-                        new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
+                        new String[] { "Attempted to add medication: " + medication, ((Patient) target).getNhiNumber() });
             }
         }
         else {
             userActions.log(Level.WARNING,
                     "Invalid medication registration",
-                    new String[] { "Attempted to add medication: " + medication, target.getNhiNumber() });
+                    new String[] { "Attempted to add medication: " + medication, ((Patient) target).getNhiNumber() });
         }
     }
 
@@ -422,7 +402,7 @@ public class GUIPatientMedications extends UndoableController {
                     .remove(history.indexOf(medication));
             userActions.log(Level.INFO,
                     "Deleted medication: " + medication,
-                    new String[] { "Attempted to delete medication: " + medication, target.getNhiNumber() });
+                    new String[] { "Attempted to delete medication: " + medication, ((Patient) target).getNhiNumber() });
             viewPastMedications();
         }
         else if (current.contains(medication)) {
@@ -430,7 +410,7 @@ public class GUIPatientMedications extends UndoableController {
                     .remove(current.indexOf(medication));
             userActions.log(Level.INFO,
                     "Deleted medication: " + medication,
-                    new String[] { "Attempted to delete medication: " + medication, target.getNhiNumber() });
+                    new String[] { "Attempted to delete medication: " + medication, ((Patient) target).getNhiNumber() });
 
             viewCurrentMedications();
         }
@@ -590,7 +570,7 @@ public class GUIPatientMedications extends UndoableController {
             }
             displayIngredients(ingredients);
         } else {
-            userActions.log(Level.WARNING, "Unable to retrieve interactions", "Attempted to retrieve interactions between two medications");
+            userActions.log(Level.WARNING, "Unable to retrieve interactions", new String[]{"Attempted to retrieve interactions between two medications", ((Patient) target).getNhiNumber()});
         }
     }
 
@@ -608,15 +588,15 @@ public class GUIPatientMedications extends UndoableController {
         }};
         if (selectedMedications.size() == 2) { //if two are selected
             try {
-                DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1), viewedPatient);
+                DrugInteraction interaction = new DrugInteraction(selectedMedications.get(0), selectedMedications.get(1), (Patient) target);
                 displayInteractions(interaction.getInteractionsWithDurations(), selectedMedications.get(0), selectedMedications.get(1));
             }
             catch (IOException e) {
-                userActions.log(Level.WARNING, "Drug interactions not available, either this study has not been completed or" + " drugs provided don't exist.", "Attempted to view drug interactions");
+                userActions.log(Level.WARNING, "Drug interactions not available, either this study has not been completed or" + " drugs provided don't exist.", new String[]{"Attempted to view drug interactions", ((Patient) target).getNhiNumber()});
             }
         }
         else {
-            userActions.log(Level.WARNING, "Drug interactions not available. Please getMedicationsByNhi 2 medications.", "Attempted to view drug interactions");
+            userActions.log(Level.WARNING, "Drug interactions not available. Please getMedicationsByNhi 2 medications.", new String[]{"Attempted to view drug interactions", ((Patient) target).getNhiNumber()});
         }
     }
 
