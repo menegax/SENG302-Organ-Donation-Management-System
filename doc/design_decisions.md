@@ -229,3 +229,7 @@ when reading/writing to the database.
 #### Screen control
 When re-engineering screen control we decided to encapsulate the stage and scene within screen control.
 This means whenever we need to set on close or similar method only one method can be called at a time as IWindowObserver doesn't differentiate based on the window that was closed
+
+#### Potential matches
+When ordering matches, we decided to use region for ordering to limit geocode use.
+To do this, we implemented a priority based on adjacent regions such that the distance between regions is based on how many regions one has to travel through between them
