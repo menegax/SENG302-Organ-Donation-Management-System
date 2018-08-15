@@ -60,7 +60,7 @@ public class ProgressTask extends Task<Void> {
         if (finalI >= ratioOfLowerUpper){ //has upper and lower bounds for expiry
             if (finalI >= ratioOfLowerUpper + ((1 - ratioOfLowerUpper)/2)) { //red if greater than ratio of lower/upper + middle point
                 progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5);" +
-                        "-fx-background-color: linear-gradient(to left, #f92f2e , #f92f2e " + percentage + "% , transparent 5%)");//todo: take out to css
+                        "-fx-background-color: linear-gradient(to left, #f92f2e , #f92f2e " + percentage + "% , transparent 5%)");
             } else {
                 progressBar.setStyle("-fx-accent: orange; -fx-control-inner-background: rgba(255, 255, 255, 0.5);" +
                         "-fx-background-color: linear-gradient(to left, #f92f2e , #f92f2e " + percentage + "% , transparent 5%)");
