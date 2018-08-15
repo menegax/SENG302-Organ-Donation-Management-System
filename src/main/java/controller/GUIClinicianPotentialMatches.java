@@ -75,6 +75,10 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
     private RangeSlider rangeSlider;
 
+    private List<OrganWaitlist.OrganRequest> requests;
+
+    private ObservableList<OrganWaitlist.OrganRequest> observableList;
+
     private Map<FilterOption, String> filter = new HashMap<>();
 
     /**
@@ -96,6 +100,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         loadRegionDistances();
         ClinicianDataService clinicianDataService = new ClinicianDataService();
         OrganWaitlist organRequests = clinicianDataService.getOrganWaitList();
+        requests = new ArrayList<>();
         for (OrganWaitlist.OrganRequest request: organRequests) {
             if(checkMatch(request)) {
                 allRequests.add(request);
@@ -183,7 +188,12 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(LocalDate.now(), r.getValue().getDate()))));
 
         // wrap ObservableList in a FilteredList
-        FilteredList<OrganWaitlist.OrganRequest> filteredRequests = filterRequests();
+        //FilteredList<OrganWaitlist.OrganRequest> filteredRequests = filterRequests();
+
+        observableList = FXCollections.observableList(requests);
+        FilteredList<OrganWaitlist.OrganRequest> filteredRequests = new FilteredList<>(observableList);
+
+        filterRequests();
 
         // wrap the FilteredList in a SortedList.
         SortedList<OrganWaitlist.OrganRequest> sortedRequests = new SortedList<>(filteredRequests);
@@ -202,10 +212,12 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         potentialMatchesTable.setItems(sortedRequests);
 
         regionFilter.getItems().add(GlobalEnums.NONE_ID); //for empty selection
+        regionFilter.getSelectionModel().select(0);
         for (Region region : Region.values()) { //add values to region choice box
             regionFilter.getItems().add(StringUtils.capitalize(region.getValue()));
         }
         birthGenderFilter.getItems().add(GlobalEnums.NONE_ID);
+        birthGenderFilter.getSelectionModel().select(0);
         for (BirthGender birthGender: BirthGender.values()){
             birthGenderFilter.getItems().addAll(StringUtils.capitalize(birthGender.getValue()));
         }
@@ -215,8 +227,17 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * Story 51 functionality goes here
      * @return filtered list
      */
-    private FilteredList<OrganWaitlist.OrganRequest> filterRequests() {
-        return new FilteredList<>(allRequests, d -> true);
+    private void filterRequests() {
+        PatientDataService patientDataService = new PatientDataService();
+        PatientLocalDAO localDAO = new PatientLocalDAO();
+        List<OrganWaitlist.OrganRequest> organRequests = new ArrayList<>();
+        for (OrganWaitlist.OrganRequest organRequest : allRequests) {
+            if (localDAO.matchesFilter(patientDataService.getPatientByNhi(organRequest.getReceiverNhi()), filter)) {
+                organRequests.add(organRequest);
+            }
+        }
+        observableList.setAll(organRequests);
+        potentialMatchesTable.refresh();
     }
 
     /**
@@ -297,42 +318,28 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         adjacentRegions.put(Region.SOUTHLAND, new ArrayList<Region>(){{ add(Region.OTAGO); add(Region.WESTCOAST); }});
     }
 
-
-    private void filter() {
-        List<OrganWaitlist.OrganRequest> results = new ArrayList<>();
-        PatientDataService patientDataService = new PatientDataService();
-        PatientLocalDAO localDAO = new PatientLocalDAO();
-        for (OrganWaitlist.OrganRequest organRequest : allRequests) {
-            if (localDAO.matchesFilter(patientDataService.getPatientByNhi(organRequest.getReceiverNhi()), filter)) {
-                results.add(organRequest);
-            }
-        }
-        allRequests.clear();
-        allRequests.addAll(results);
-    }
-
     private void setupFilterListeners(){
         regionFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
-            filter.replace(FilterOption.REGION, filter.get(FilterOption.REGION), newValue);
-            filter();
+            filter.put(FilterOption.REGION, newValue);
+            filterRequests();
         }));
 
         birthGenderFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
-            filter.replace(FilterOption.BIRTHGENDER, filter.get(FilterOption.BIRTHGENDER), newValue);
-            filter();
+            filter.put((FilterOption.BIRTHGENDER), newValue);
+            filterRequests();
         }));
 
         rangeSlider.onMouseReleasedProperty().addListener((observable, oldvalue, newvalue) -> {
-            filter.replace(FilterOption.AGEUPPER, String.valueOf(rangeSlider.getHighValue()));
-            filter.replace(FilterOption.AGELOWER, String.valueOf(rangeSlider.getLowValue()));
-            filter();
+            filter.put(FilterOption.AGEUPPER, String.valueOf(rangeSlider.getHighValue()));
+            filter.put(FilterOption.AGELOWER, String.valueOf(rangeSlider.getLowValue()));
+            filterRequests();
 
         });
 
         rangeSlider.setOnMouseReleased(event -> {
-            filter.replace(FilterOption.AGEUPPER, String.valueOf(rangeSlider.getHighValue()));
-            filter.replace(FilterOption.AGELOWER, String.valueOf(rangeSlider.getLowValue()));
-            filter();
+            filter.put(FilterOption.AGEUPPER, String.valueOf(rangeSlider.getHighValue()));
+            filter.put(FilterOption.AGELOWER, String.valueOf(rangeSlider.getLowValue()));
+            filterRequests();
         });
     }
 }
