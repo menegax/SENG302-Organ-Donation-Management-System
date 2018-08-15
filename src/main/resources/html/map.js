@@ -9,9 +9,8 @@ var infoWindows = [];
 function init() {
     geocoder = new google.maps.Geocoder();
     map = new google.maps.Map(document.getElementById('map'), {
-        //center: {lat: -43.31225, lng: 172.35012},
-        center: {lat: 0, lng: 0},
-        zoom: 2,
+        center: {lat: -40.59225, lng: 173.51012},
+        zoom: 6,
         disableDefaultUI: true,
         zoomControl: true,
         scaleControl: true,
