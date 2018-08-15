@@ -67,8 +67,19 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                 allRequests.add(request);
             }
         }
+        setLabels();
         populateTable();
         setupDoubleClickToPatientEdit();
+    }
+
+    /**
+     * Sets the labels displayed to the requirements of the donated organ
+     */
+    private void setLabels() {
+        organLabel.setText(targetOrgan.toString());
+        bloodTypeLabel.setText(((Patient) target).getBloodGroup().toString());
+        regionLabel.setText(((Patient) target).getDeathRegion().toString());
+        deathLocationLabel.setText(((Patient) target).getDeathStreet() + ", " + ((Patient) target).getDeathCity());
     }
 
     /**
@@ -109,8 +120,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         SortedList<OrganWaitlist.OrganRequest> sortedRequests = new SortedList<>(filteredRequests);
 
         // bind the SortedList comparator to the TableView comparator.
-        sortedRequests.setComparator(Comparator.comparing((OrganWaitlist.OrganRequest request) -> getRegionDistance(request.getRequestRegion())));
-        
+        sortedRequests.setComparator(Comparator.comparing((OrganWaitlist.OrganRequest request) -> getRegionDistance(request.getRequestRegion(), new ArrayList<>())));
+
         // add sorted (and filtered) data to the table.
         potentialMatchesTable.setItems(sortedRequests);
     }
@@ -159,15 +170,18 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * @param region the region to search from
      * @return how many steps away the region is from the target region
      */
-    private Integer getRegionDistance(Region region) {
+    private Integer getRegionDistance(Region region, List<Region> visitedRegions) {
         if (region == ((Patient) target).getRegion()) {
             return 0;
         } else {
             int minDistance = -1;
             for (Region adjacentRegion: adjacentRegions.get(region)) {
-                int distance = getRegionDistance(adjacentRegion);
-                if (minDistance == -1 || distance < minDistance) {
-                    minDistance = distance;
+                if (!visitedRegions.contains(adjacentRegion)) {
+                    visitedRegions.add(adjacentRegion);
+                    int distance = getRegionDistance(adjacentRegion, new ArrayList<>(visitedRegions));
+                    if (minDistance == -1 || distance < minDistance) {
+                        minDistance = distance;
+                    }
                 }
             }
             return minDistance + 1;
