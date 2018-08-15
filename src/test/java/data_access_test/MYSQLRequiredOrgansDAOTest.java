@@ -3,6 +3,7 @@ package data_access_test;
 import data_access.DBHelper;
 import data_access.factories.DAOFactory;
 import model.Patient;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import utility.GlobalEnums;
@@ -31,20 +32,20 @@ public class MYSQLRequiredOrgansDAOTest {
         dbHelper = new DBHelper();
     }
 
-//    @Test
-//    public void testUpdateRequiredOrgans() {
-//        givenPatientInDb();
-//        whenRequiredOrganIsUpdated();
-//        thenRequiredOrgansAreInDb();
-//    }
+    @Test
+    public void testUpdateRequiredOrgans() {
+        givenPatientInDb();
+        whenRequiredOrganIsUpdated();
+        thenRequiredOrgansAreInDb();
+    }
 
-//    @Test
-//    public void testDeleteRequiredOrgan() {
-//        givenPatientInDb();
-//        whenRequiredOrganIsUpdated();
-//        whenRequiredOrganIsDeleted();
-//        thenRequiredOrganIsInDb();
-//    }
+    @Test
+    public void testDeleteRequiredOrgan() {
+        givenPatientInDb();
+        whenRequiredOrganIsUpdated();
+        whenRequiredOrganIsDeleted();
+        thenRequiredOrganIsInDb();
+    }
 
     @Test
     public void testDeleteAllRequiredOrgans() {
@@ -96,8 +97,8 @@ public class MYSQLRequiredOrgansDAOTest {
     private void thenRequiredOrgansAreInDb() {
         Map<GlobalEnums.Organ, LocalDate> requiredOrgans = daoFactory.getRequiredOrgansDataAccess()
                 .getRequiredOrganByNhi(patient.getNhiNumber());
-        assert requiredOrgans.get(GlobalEnums.Organ.LIVER.getValue()).equals(LocalDate.of(2018,8,9));
-        assert requiredOrgans.get(GlobalEnums.Organ.PANCREAS.getValue()).equals(LocalDate.of(2017,12,30));
+        assert requiredOrgans.get(GlobalEnums.Organ.LIVER).equals(LocalDate.of(2018,8,9));
+        assert requiredOrgans.get(GlobalEnums.Organ.PANCREAS).equals(LocalDate.of(2017,12,30));
         assert requiredOrgans.size() == 2;
     }
 
@@ -107,7 +108,7 @@ public class MYSQLRequiredOrgansDAOTest {
     private void thenRequiredOrganIsInDb() {
         Map<GlobalEnums.Organ, LocalDate> requiredOrgans = daoFactory.getRequiredOrgansDataAccess()
                 .getRequiredOrganByNhi(patient.getNhiNumber());
-        assert requiredOrgans.get(GlobalEnums.Organ.PANCREAS.getValue()).equals(LocalDate.of(2017,12,30));
+        assert requiredOrgans.get(GlobalEnums.Organ.PANCREAS).equals(LocalDate.of(2017,12,30));
         assert requiredOrgans.size() == 1;
     }
 
@@ -118,5 +119,10 @@ public class MYSQLRequiredOrgansDAOTest {
         Map<GlobalEnums.Organ, LocalDate> requiredOrgans = daoFactory.getRequiredOrgansDataAccess()
                 .getRequiredOrganByNhi(patient.getNhiNumber());
         assert requiredOrgans.size() == 0;
+    }
+
+    @AfterClass
+    public static void reset() {
+        dbHelper.reset();
     }
 }
