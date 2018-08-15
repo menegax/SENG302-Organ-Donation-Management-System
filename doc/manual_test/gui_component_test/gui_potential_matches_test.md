@@ -37,3 +37,8 @@ There is a recently deceased donor to match an organ for (over 12 years old)
 2. Create a different request for the required organ (all other criteria matching)
 3. Open potential matches for the organ to donate
 -> The first request created should appear first in the table
+
+## 5. Check double click open
+1. Navigate to the potential matches screen with at l;east one potential match
+2. Double click on the first row in the table
+3. The profile of the patient clicked on should open
