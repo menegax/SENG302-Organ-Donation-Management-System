@@ -17,19 +17,27 @@
 9. The map scrolls right
 
 ###Zoom into map
-1. The user places two fingers close together on the map on the touch screen
-2. The user slides their fingers apart
+1. The user places two fingers on the map on the touch screen
+2. The user slides their fingers down
 3. The map zooms in
 
 ###Zoom out of map
-1. The user places two fingers a short distance apart on the map on the touch screen
-2. The user slides their fingers together
+1. The user places two fingers on the map on the touch screen
+2. The user slides their fingers up
 3. The map zooms out
 
 
 ##Test History
 
 ###14/08/2018 - Maree
+
+Scroll across map - pass
+
+Zoom into map - pass
+
+Zoom out of map - pass
+
+###15/08/2018 - Maree
 
 Scroll across map - pass
 

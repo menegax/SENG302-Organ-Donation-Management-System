@@ -11,6 +11,8 @@ import model.Patient;
 import netscape.javascript.JSObject;
 import utility.JSInjector;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,7 @@ public class GoogleMapsBridge implements Initializable {
 
     private Stage mapStage;
 
+    private Robot robot;
     private JSInjector jsInjector;
 
 
@@ -72,7 +75,22 @@ public class GoogleMapsBridge implements Initializable {
             }
         });
 
-        webViewMap1.setOnZoom(event -> webViewMap1.setZoom(webViewMap1.getZoom() * event.getZoomFactor()));
+        try {
+            robot = new Robot();
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+
+//        webViewMap1.setOnZoom(event -> {
+//            webViewMap1.setZoom(webViewMap1.getZoom() * event.getZoomFactor());
+//            webViewMap1.getEngine();
+//        });
+        webViewMap1.setOnScroll(event -> {
+            if(event.getTouchCount() == 2) {
+                robot.keyPress(KeyEvent.VK_CONTROL);
+            }
+        });
+        webViewMap1.setOnTouchReleased(event -> robot.keyRelease(KeyEvent.VK_CONTROL));
         //        webViewMap1.setOnRotate(event -> webViewMap1.setRotate(webViewMap1.getRotate() + event.getAngle() * 0.8));
 
         addStageListener();
