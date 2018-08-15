@@ -2,7 +2,7 @@
 // prompted by your browser. If you see the error "The Geolocation service
 // failed.", it means you probably did not give permission for the browser to
 // locate you.
-var map, geocoder, patients, jsInjector;
+var map, geocoder, patients, mapBridge;
 var markers = [];
 var infoWindows = [];
 
@@ -69,7 +69,7 @@ function addMarker(patient) {
 //Opens patient profile when the button from the infoWindow is clicked on
 function openPatientProfile(patientNhi) {
     console.log("Patient: " + patientNhi);
-    jsInjector.openPatientProfile(patientNhi);
+    mapBridge.openPatientProfile(patientNhi);
 }
 
 function getOrganOptions(patient) {
