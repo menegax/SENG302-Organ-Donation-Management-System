@@ -236,3 +236,5 @@ Middle ear. We have assumed that middle ear will have an upper bound of 24 hrs (
 http://www.nedonation.org/donation-guide/organ/acceptable-ischemic-times
 https://www.researchgate.net/post/How_should_bone_marrow_be_stored_and_how_long_can_it_be_exposed_to_a_room_temperature_environment
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5116036/
+
+We have also decided to use values of 50% time elapsed to change to yellow/orange and 80% time elapsed to change red on default. (i.e no lower - upper bound)
