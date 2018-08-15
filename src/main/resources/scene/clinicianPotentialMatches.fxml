@@ -29,7 +29,7 @@
             <TableColumn fx:id="ageCol" prefWidth="75.0" text="Age" />
             <TableColumn fx:id="regionCol" prefWidth="75.0" text="Region" />
             <TableColumn fx:id="addressCol" prefWidth="75.0" text="Address" />
-            <TableColumn fx:id="waitingTimeCol" prefWidth="75.0" text="Waiting Time" />
+            <TableColumn fx:id="waitingTimeCol" prefWidth="75.0" text="Waiting Time (Days)" />
          </columns>
          <GridPane.margin>
             <Insets bottom="60.0" left="60.0" right="60.0" />
