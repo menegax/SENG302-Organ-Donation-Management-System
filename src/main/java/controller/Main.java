@@ -3,38 +3,22 @@ package controller;
 import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 
-import com.sun.javafx.css.StyleManager;
-import controller.ScreenControl;
-import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import service.UserDataService;
 import utility.GlobalEnums;
 import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
-import utility.undoRedo.UndoableStage;
-import utility.parsing.ParseCSV;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.UUID;
-import java.util.logging.Level;
-
-import static java.util.logging.Level.INFO;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
 
 public class Main extends Application {
 
     private static final UUID uuid = UUID.randomUUID();
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) {
 
         // setup GUI
         System.setProperty("connection_type", GlobalEnums.DbType.PRODUCTION.getValue()); //LEAVE HERE!! production db
