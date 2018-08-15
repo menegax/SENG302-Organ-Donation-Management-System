@@ -115,9 +115,22 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         rangeSlider.setShowTickLabels(true);
         rangeSlider.setPadding(new Insets(10, 150, 0, 50));
         rangeSlider.setMaxWidth(10000);
-        rangeSlider.setMax(100);
-        rangeSlider.setLowValue(0);
-        rangeSlider.setHighValue(100);
+        if (((Patient) target).getAge() < 12) {
+            rangeSlider.setMin(0);
+            rangeSlider.setMax(12);
+            rangeSlider.setLowValue(0);
+            rangeSlider.setHighValue(12);
+        } else if (((Patient) target).getAge() > 27) {
+            rangeSlider.setMin(((Patient) target).getAge() - 15);
+            rangeSlider.setMax(((Patient) target).getAge() + 15);
+            rangeSlider.setLowValue(((Patient) target).getAge() - 15);
+            rangeSlider.setHighValue(((Patient) target).getAge() + 15);
+        } else {
+            rangeSlider.setMin(12);
+            rangeSlider.setMax(((Patient) target).getAge() + 15);
+            rangeSlider.setLowValue(12);
+            rangeSlider.setHighValue(((Patient) target).getAge() + 15);
+        }
         rangeSlider.setShowTickMarks(true);
         filterGrid.add(rangeSlider, 0, 2, 3, 1);
         rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> ageLabel.setText(String.format("%s - %s", ((int) rangeSlider.getLowValue()), String.valueOf(newValue.intValue())))));
@@ -295,7 +308,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         allRequests.clear();
         allRequests.addAll(results);
     }
-    
+
     private void setupFilterListeners(){
         regionFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             filter.replace(FilterOption.REGION, filter.get(FilterOption.REGION), newValue);
