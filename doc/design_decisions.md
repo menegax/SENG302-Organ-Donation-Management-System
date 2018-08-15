@@ -230,6 +230,10 @@ when reading/writing to the database.
 When re-engineering screen control we decided to encapsulate the stage and scene within screen control.
 This means whenever we need to set on close or similar method only one method can be called at a time as IWindowObserver doesn't differentiate based on the window that was closed
 
+#### Potential matches
+When ordering matches, we decided to use region for ordering to limit geocode use.
+To do this, we implemented a priority based on adjacent regions such that the distance between regions is based on how many regions one has to travel through between them
+
 ### Expiring Organs
 We have done more research to check the expiry times for organs such as Intestines, Bone Marrow, Connective tissue  and 
 Middle ear. We have assumed that middle ear will have an upper bound of 24 hrs (same as connective tissue) We used the following resources:
@@ -238,6 +242,3 @@ https://www.researchgate.net/post/How_should_bone_marrow_be_stored_and_how_long_
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5116036/
 
 We have also decided to use values of 50% time elapsed to change to yellow/orange and 80% time elapsed to change red on default. (i.e no lower - upper bound)
-#### Potential matches
-When ordering matches, we decided to use region for ordering to limit geocode use.
-To do this, we implemented a priority based on adjacent regions such that the distance between regions is based on how many regions one has to travel through between them

@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
@@ -118,6 +121,20 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 patientDataService.save(patientDataService.getPatientByNhi(selected.getNhiNumber())); //save to local
             }
         });
+    }
+
+    /**
+     * Opens the potential matches table for the selected organ
+     */
+    @FXML
+    public void viewPotentialMatches() {
+        PatientOrgan selected = availableOrgansTableView.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            userActions.log(Level.WARNING, "Please select a organ to match", "Attempted to view available matches without selecting an organ");
+        } else {
+            GUIClinicianPotentialMatches controller = (GUIClinicianPotentialMatches) screenControl.show("/scene/clinicianPotentialMatches.fxml", false, null, selected.getPatient());
+            controller.setTarget(selected.getPatient(), selected.getOrgan());
+        }
     }
 
     /**
