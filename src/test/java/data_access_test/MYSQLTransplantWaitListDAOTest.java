@@ -28,6 +28,7 @@ public class MYSQLTransplantWaitListDAOTest {
     public static void setUp() {
         userActions.setLevel(OFF);
         SystemLogger.systemLogger.setLevel(OFF);
+        System.setProperty("connection_type", GlobalEnums.DbType.STORY50.getValue());
         daoFactory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
         dbHelper = new DBHelper();
     }
@@ -62,9 +63,9 @@ public class MYSQLTransplantWaitListDAOTest {
     private void whenWaitingListIsUpdated() {
         OrganWaitlist waitinglist = new OrganWaitlist();
         waitinglist.add("Test1", GlobalEnums.Organ.LIVER, LocalDate.of(2018,9,9),
-                GlobalEnums.Region.CANTERBURY, patient.getNhiNumber());
+                GlobalEnums.Region.CANTERBURY, patient.getNhiNumber(), "14 Herbert Street, Richmond");
         waitinglist.add("Test2", GlobalEnums.Organ.LIVER, LocalDate.of(2018,9,9),
-                GlobalEnums.Region.CANTERBURY, patient.getNhiNumber());
+                GlobalEnums.Region.CANTERBURY, patient.getNhiNumber(), "14 The Drive, Richmond");
         daoFactory.getTransplantWaitingListDataAccess().updateWaitingList(waitinglist);
     }
 
