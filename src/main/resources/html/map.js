@@ -33,6 +33,7 @@ function addMarker(patient) {
     var name = patient.getNameConcatenated();
     geocoder.geocode({'address': address}, function (results, status) {
         if (status === 'OK') {
+            var organOptions = getOrganOptions(patient);
             console.log('Placing marker...');
             var marker = new google.maps.Marker({
                 map: map,
@@ -42,7 +43,9 @@ function addMarker(patient) {
             var infoWindow = new google.maps.InfoWindow({
                 content: '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() +
                 '</h5><span style="font-size: 14px">' +
-                patient.getAddressString() +
+                patient.getAddressString() + '<br><br>' +
+                organOptions.donating + '<br><br>' +
+                organOptions.receiving +
                 '</span><br><input type="button" onclick="openPatientProfile(\''+patient.getNhiNumber()+'\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
             });
             infoWindows.push(infoWindow);
@@ -67,6 +70,26 @@ function addMarker(patient) {
 function openPatientProfile(patientNhi) {
     console.log("Patient: " + patientNhi);
     jsInjector.openPatientProfile(patientNhi);
+}
+
+function getOrganOptions(patient) {
+    var donations = patient.getDonations().toString();
+    var donationStr;
+    if (donations !== '[]') {
+        donationStr = '<b>Donations:</b><br>' + donations.substring(1, donations.length - 1);
+    } else {
+        donationStr = 'No Donations';
+    }
+
+    var required = patient.getRequiredOrgans().toString();
+    var matching = required.substring(1, required.length - 1).match(/[a-z]+/g);
+    var requiredStr;
+    if (matching) {
+        requiredStr = '<b>Required:</b><br>' + matching.join(', ');
+    } else {
+        requiredStr = 'No Requirements';
+    }
+    return {donating: donationStr, receiving: requiredStr};
 }
 
 /*infoWindow = new google.maps.InfoWindow;
