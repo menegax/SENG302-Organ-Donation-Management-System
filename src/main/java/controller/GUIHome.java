@@ -643,7 +643,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
     private void openMap() {
         if (!screenControl.getMapOpen()) {
-            screenControl.show("/scene/map.fxml", true, null, userControl.getLoggedInUser());
+            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
             screenControl.setMapOpen(true);
         }
     }
