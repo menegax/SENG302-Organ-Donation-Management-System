@@ -12,6 +12,7 @@ import service.ClinicianDataService;
 import service.PatientDataService;
 import utility.MapBridge;
 import utility.SystemLogger;
+import utility.UserActionHistory;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -49,6 +50,8 @@ public class GUIMap implements Initializable {
      */
     public void initialize(URL url, ResourceBundle rb) {
         webEngine1 = webViewMap1.getEngine();
+
+        UserActionHistory.userActions.log(Level.INFO, "Loading map...", "Attempted to open map");
 
         List<Patient> patients = new ArrayList<>(new ClinicianDataService().searchPatients("", null, 30));
         List<Patient> results = new ArrayList<>();
