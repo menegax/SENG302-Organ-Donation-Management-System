@@ -28,7 +28,7 @@
     // prompted by your browser. If you see the error "The Geolocation service
     // failed.", it means you probably did not give permission for the browser to
     // locate you.
-    var map, geocoder, patients;
+    var map, geocoder, patients, jsInjector;
     var markers = [];
     var infoWindows = [];
 
@@ -56,7 +56,7 @@
     }
 
     function addMarker(patient) {
-        var address = patient.getStreetNumber() + " " + patient.getStreetName() + ", " + patient.getSuburb();
+        var address = patient.getFormattedAddress();
         var name = patient.getNameConcatenated();
         geocoder.geocode({'address': address}, function (results, status) {
             if (status === 'OK') {
@@ -70,7 +70,7 @@
                     content: '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() +
                         '</h5><span style="font-size: 14px">' +
                         patient.getAddressString() +
-                        '</span><br><input type="button" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
+                        '</span><br><input type="button" onclick="openPatientProfile()" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
                 });
                 infoWindows.push(infoWindow);
                 marker.addListener('click', function() {
@@ -88,6 +88,12 @@
                 console.log('Geocode was not successful for the following reason: ' + status);
             }
         });
+    }
+
+    //Opens patient profile when the button from the infoWindow is clicked on
+    function openPatientProfile() {
+        console.log(infoWindows.);
+        jsInjector.openPatientProfile();
     }
 
     /*infoWindow = new google.maps.InfoWindow;
