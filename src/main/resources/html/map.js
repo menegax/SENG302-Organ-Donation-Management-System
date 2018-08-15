@@ -15,7 +15,37 @@ function init() {
         scaleControl: true,
         gestureHandling: 'cooperative'
     });
+    setMapDragEnd();
     markerLoop(patients.size());
+}
+
+function setMapDragEnd() {
+    // Bounds for the World
+    var allowedBounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(-84.220892, -177.871399),
+        new google.maps.LatLng(84.889374, 179.872535));
+
+    // Listen for the dragend event
+    google.maps.event.addListener(map, 'dragend', function() {
+        if (allowedBounds.contains(map.getCenter())) return;
+
+        // Out of bounds - Move the map back within the bounds
+
+        var c = map.getCenter(),
+            x = c.lng(),
+            y = c.lat(),
+            maxX = allowedBounds.getNorthEast().lng(),
+            maxY = allowedBounds.getNorthEast().lat(),
+            minX = allowedBounds.getSouthWest().lng(),
+            minY = allowedBounds.getSouthWest().lat();
+
+        if (x < minX) x = minX;
+        if (x > maxX) x = maxX;
+        if (y < minY) y = minY;
+        if (y > maxY) y = maxY;
+
+        map.setCenter(new google.maps.LatLng(y, x));
+    });
 }
 
 function markerLoop(i) {
