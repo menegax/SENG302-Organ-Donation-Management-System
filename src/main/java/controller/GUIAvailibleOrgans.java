@@ -31,6 +31,7 @@ import utility.ProgressTask;
 
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -39,7 +40,7 @@ import java.util.logging.Level;
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
  */
-public class GUIAvailibleOrgans extends UndoableController implements IWindowObserver {
+public class GUIAvailibleOrgans extends UndoableController {
 
 	@FXML
     private GridPane availableOrgans;
@@ -64,7 +65,7 @@ public class GUIAvailibleOrgans extends UndoableController implements IWindowObs
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    public void initialize() {
+    public void load() {
         List<Patient> deadPatients = patientDataService.getDeadPatients();
     	for (Patient patient : deadPatients) {
     		if (patient.getDeathDate() != null) {
@@ -108,12 +109,13 @@ public class GUIAvailibleOrgans extends UndoableController implements IWindowObs
 
 
         // bind the SortedList comparator to the TableView comparator.
-        sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
+        sortedData.setComparator((patientOrgan1, patientOrgan2) -> {
+            return patientOrgan1.getProgressTime().toString().compareTo(patientOrgan2.getProgressTime().toString());
+        });
 
         // add sorted (and filtered) data to the table.
         availableOrgansTableView.setItems(sortedData);
         availableOrgansTableView.setVisible(true);
-        tableRefresh();
         setUpDoubleClickToPatientEdit();
     }
 
@@ -125,27 +127,10 @@ public class GUIAvailibleOrgans extends UndoableController implements IWindowObs
         availableOrgansTableView.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && availableOrgansTableView.getSelectionModel().getSelectedItem() != null) {
                 Patient selected = availableOrgansTableView.getSelectionModel().getSelectedItem().getPatient();
-                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, selected);
                 controller.setTarget(selected);
                 patientDataService.save(patientDataService.getPatientByNhi(selected.getNhiNumber())); //save to local
             }
         });
-    }
-    
-    /**
-     * Refreshes the table data
-     */
-    private void tableRefresh() {
-        availableOrgansTableView.refresh();
-    }
-
-    @Override
-    public void windowClosed() {
-
-    }
-
-    @Override
-    protected void load() {
-
     }
 }

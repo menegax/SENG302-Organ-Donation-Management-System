@@ -1,5 +1,6 @@
 package model;
 
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.StringProperty;
 import utility.GlobalEnums;
 import utility.ProgressTask;
@@ -31,6 +32,11 @@ public class PatientOrgan {
     public ProgressTask getProgressTask() {
         return progressTask;
     }
+
+    public ReadOnlyStringProperty getProgressTime() {
+        return progressTask.messageProperty();
+    }
+
     public boolean isExpired() { return isExpired; }
     @Override
     public boolean equals(Object obj) {
