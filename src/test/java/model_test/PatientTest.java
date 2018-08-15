@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.OFF;
@@ -38,6 +40,7 @@ public class PatientTest implements Serializable {
     public static void setUpBeforeClass() {
         userActions.setLevel(OFF);
         SystemLogger.systemLogger.setLevel(OFF);
+        System.setProperty("connection_type", GlobalEnums.DbType.STORY44.getValue());
     }
 
     @Before
@@ -76,12 +79,12 @@ public class PatientTest implements Serializable {
      */
     @Test
     public void testAddingOfOrgansToRequirements() {
-        ArrayList<Organ> expected = new ArrayList<Organ>();
+        Set<Organ> expected = new TreeSet<Organ>();
         expected.add(Organ.LIVER);
         expected.add(Organ.CORNEA);
         testPatient1.addRequired(Organ.LIVER);
         testPatient1.addRequired(Organ.CORNEA);
-        assertEquals(expected, testPatient1.getRequiredOrgans());
+        assertEquals(expected, testPatient1.getRequiredOrgans().keySet());
     }
 
     /**
@@ -89,12 +92,12 @@ public class PatientTest implements Serializable {
      */
     @Test
     public void testRemovingOfOrgansFromRequirements() {
-        ArrayList<Organ> expected = new ArrayList<Organ>();
+        Set<Organ> expected = new TreeSet<Organ>();
         testPatient1.addRequired(Organ.LIVER);
         testPatient1.addRequired(Organ.CORNEA);
         testPatient1.removeRequired(Organ.LIVER);
         testPatient1.removeRequired(Organ.CORNEA);
-        assertEquals(expected, testPatient1.getRequiredOrgans());
+        assertEquals(expected, testPatient1.getRequiredOrgans().keySet());
     }
 
     /**

@@ -125,4 +125,9 @@ public class LocalDatabaseFactory extends DAOFactory {
         throw new NotImplementedException();
     }
 
+	@Override
+	public IRequiredOrganDataAccess getRequiredOrgansDataAccess() {
+		throw new NotImplementedException();
+	}
+
 }

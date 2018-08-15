@@ -112,7 +112,7 @@ public class Action {
                 iter.remove();
             }
         }
-        for (GlobalEnums.Organ organ : patient.getRequiredOrgans()) {
+        for (GlobalEnums.Organ organ : patient.getRequiredOrgans().keySet()) {
             waitlist.add(patient, organ);
         }
         waitingListDAO.updateWaitingList(waitlist);
