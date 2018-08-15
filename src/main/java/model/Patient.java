@@ -829,9 +829,9 @@ public class Patient extends User {
     }
 
     /**
-     * Add organs to patient requirements list
+     * Add organs to patient requirements map, along with the current datetime
      *
-     * @param organ - organ to add to the patient required organs list
+     * @param organ - organ to add to the patient required organs map
      * @return string of message
      */
     public String addRequired(Organ organ) {
