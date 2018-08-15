@@ -3,7 +3,7 @@ last update 03/05/2018
 
 ### CLI Usage
 
-Use 
+Use:
 
 The Organ Donation Management System
 
@@ -22,3 +22,7 @@ Commands:<br>
  
  Exercise common sense when running the GUI application and any usage questions will be answered.
  
+ ### Touch Usage
+ 
+ The application is designed for a large, multi-touch table in full screen. Many touch gestures can be used. 
+ Users can drag multiple windows around the application.

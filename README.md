@@ -24,8 +24,13 @@ last update 24/07/2018
  1. Deploy the .jar file(s) using Maven
  2. Run the terminal command `java -jar <pathtojar>` to begin the application
  
+## Touch
+ 1. Deploy the .jar file(s) using Maven
+ 2. Run the terminal command `java -jar <pathtojar> touch` to begin the touch application
+ 
 # Requirements
 * JDK 1.8
+* Internet connection
  
 # Dependencies
  
@@ -40,4 +45,5 @@ last update 24/07/2018
  * TestFX
  * Sonar
  * ControlsFX
- 
+ * SimpleCSV
+ * GoogleMaps
