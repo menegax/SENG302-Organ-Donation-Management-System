@@ -827,7 +827,7 @@ public class Patient extends User {
         } else {
             donations.add(organ);
             userModified();
-            userActions.log(INFO, "Added organ " + organ + " to patient donations", "Attempted to add organ " + organ + " to patient donations");
+            userActions.log(INFO, "Added organ " + organ + " to patient donations", new String[] {"Attempted to add organ " + organ + " to patient donations", nhiNumber});
             return "Successfully added " + organ + " to donations";
         }
     }
