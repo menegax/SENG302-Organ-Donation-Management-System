@@ -42,12 +42,11 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
      * @param date      - The date of the request.
      * @param region    - The region of the organ request.
      * @param nhi       - The NHI of the patient requesting an organ.
-	 * @param age       - The age of the patient requesting an organ
-	 * @param address  - The address of the patient requesting an organ
      * @return          - Returns true if Collection changed, otherwise false.
      */
-	public boolean add(String name, Organ organ, LocalDate date, Region region, String nhi, int age, String address, GlobalEnums.BloodGroup bloodGroup) {
-		return requests.add(new OrganRequest(name, organ, date, region, nhi, age, address, bloodGroup));
+	public boolean add(String name, Organ organ, LocalDate date, Region region, String nhi) {
+		Patient patient = new PatientDataService().getPatientByNhi(nhi);
+		return requests.add(new OrganRequest(name, organ, date, region, nhi, patient.getAge(), patient.getFormattedAddress(), patient.getBloodGroup()));
 	}
 
 	/**
@@ -203,6 +202,14 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		 */
 		public GlobalEnums.BloodGroup getBloodGroup() {
 			return bloodGroup;
+		}
+
+		/**
+		 * Returns the date of the request.
+		 * @return	- The date of the request.
+		 */
+		public LocalDate getDate() {
+			return date;
 		}
 	}
 }
