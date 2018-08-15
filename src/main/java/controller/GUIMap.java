@@ -55,7 +55,7 @@ public class GUIMap implements Initializable {
 
         UserActionHistory.userActions.log(Level.INFO, "Loading map...", "Attempted to open map");
 
-        List<Patient> patients = new ArrayList<>(new ClinicianDataService().searchPatients("", null, 30));
+        List<Patient> patients = new ArrayList<>(new ClinicianDataService().searchPatients("", null, 50));
         List<Patient> results = new ArrayList<>();
         for (Patient p : patients) {
             results.add(new PatientDataService().getPatientByNhi(p.getNhiNumber()));

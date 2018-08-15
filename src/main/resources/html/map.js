@@ -5,6 +5,7 @@
 var map, geocoder, patients, mapBridge;
 var markers = [];
 var infoWindows = [];
+var validCount = 0;
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -50,6 +51,7 @@ function setMapDragEnd() {
 
 function markerLoop(i) {
     if (i < 1) return;
+    if (validCount >= 30) return;
     addMarker(patients.get(i-1));
     setTimeout(function() {
         markerLoop(--i);
@@ -61,11 +63,15 @@ function addMarker(patient) {
     var name = patient.getNameConcatenated();
     geocoder.geocode({'address': address}, function (results, status) {
         if (status === 'OK') {
+            validCount++;
             var organOptions = getOrganOptions(patient);
+            var randx = Math.random() * 0.3 - 0.05;
+            var randy = Math.random() * 0.3 - 0.05;
+            var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat() + randx, results[0].geometry.location.lng() + randy);
             console.log('Placing marker on map');
             var marker = new google.maps.Marker({
                 map: map,
-                position: results[0].geometry.location,
+                position: finalLoc,
                 title: name
             });
             var infoWindow = new google.maps.InfoWindow({
