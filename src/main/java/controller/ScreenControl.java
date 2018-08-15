@@ -41,6 +41,8 @@ public abstract class ScreenControl {
 
     final List<UndoableWrapper> undoableWrappers = new ArrayList<>();
 
+    private Boolean isMapOpen = false;
+
     abstract void setUpNewLogin();
     abstract void removeUnsavedAsterisks();
     abstract void addUnsavedAsterisks();
@@ -200,5 +202,14 @@ public abstract class ScreenControl {
         return Collections.unmodifiableList(undoableWrappers);
     }
 
+
+    public Boolean getMapOpen() {
+        return isMapOpen;
+    }
+
+
+    public void setMapOpen(Boolean mapOpen) {
+        isMapOpen = mapOpen;
+    }
 }
 

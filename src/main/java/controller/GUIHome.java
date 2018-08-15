@@ -52,7 +52,7 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-public class GUIHome extends TargetedController implements Observer, TouchscreenCapable {
+public class GUIHome extends TargetedController implements Observer, TouchscreenCapable, IWindowObserver {
 
 
     @FXML
@@ -90,7 +90,6 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     private IAdministratorDataService administratorDataService = new AdministratorDataService();
 
     private Stage homeStage;
-
 
     private  enum TabName {
         PROFILE("Profile"), UPDATE("Update"), DONATIONS("Donations"), CONTACTDETAILS("Contact Details"),
@@ -479,6 +478,13 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     }
 
     /**
+     * Called when the map shown on login is closed
+     */
+    public void windowClosed() {
+        screenControl.setMapOpen(false);
+    }
+
+    /**
      * Logs the user out of the application
      */
     private void logOut() {
@@ -624,7 +630,10 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     }
 
     private void openMap() {
-        screenControl.show("/scene/map.fxml", true, null, userControl.getLoggedInUser());
+        if (!screenControl.getMapOpen()) {
+            screenControl.show("/scene/map.fxml", true, null, userControl.getLoggedInUser());
+            screenControl.setMapOpen(true);
+        }
     }
 
 

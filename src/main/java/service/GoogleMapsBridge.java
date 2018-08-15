@@ -1,6 +1,7 @@
 package service;
 
 import com.sun.javafx.webkit.WebConsoleListener;
+import controller.ScreenControl;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -68,12 +69,7 @@ public class GoogleMapsBridge implements Initializable {
                 .getResource("html/GoogleMap.html"))
                 .toExternalForm());
 
-        WebConsoleListener.setDefaultListener(new WebConsoleListener() {
-            @Override
-            public void messageAdded(WebView webView, String message, int lineNumber, String sourceId) {
-                System.out.println(message);
-            }
-        });
+        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> System.out.println(message));
 
         try {
             robot = new Robot();
@@ -93,71 +89,6 @@ public class GoogleMapsBridge implements Initializable {
         webViewMap1.setOnTouchReleased(event -> robot.keyRelease(KeyEvent.VK_CONTROL));
         //        webViewMap1.setOnRotate(event -> webViewMap1.setRotate(webViewMap1.getRotate() + event.getAngle() * 0.8));
 
-        addStageListener();
     }
 
-
-    private void addStageListener() {
-        // The following code waits for the stage to be loaded
-        if (webViewMap1.getScene() == null) {
-            webViewMap1.sceneProperty()
-                    .addListener((observable, oldScene, newScene) -> {
-                        if (newScene != null) {
-                            if (newScene.getWindow() == null) {
-                                newScene.windowProperty()
-                                        .addListener((observable2, oldStage, newStage) -> {
-                                            if (newStage != null) {
-                                                mapStage = (Stage) newStage;
-                                                // Methods to call after initialize
-                                                setStageTitle();
-                                            }
-                                        });
-                            }
-                            else {
-                                mapStage = (Stage) newScene.getWindow();
-                                // Methods to call after initialize
-                                setStageTitle();
-                            }
-                        }
-                    });
-        }
-        else if (webViewMap1.getScene()
-                .getWindow() == null) {
-            webViewMap1.getScene()
-                    .windowProperty()
-                    .addListener((observable2, oldStage, newStage) -> {
-                        if (newStage != null) {
-                            mapStage = (Stage) newStage;
-                            // Methods to call after initialize
-                            setStageTitle();
-                        }
-                    });
-        }
-        else {
-            mapStage = (Stage) mapStage.getScene()
-                    .getWindow();
-            // Methods to call after initialize
-            setStageTitle();
-        }
-    }
-
-    // todo for touch screen page title
-//    private void addPaneListener() {
-//        mapPane.parentProperty().addListener(new ChangeListener<Parent>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Parent> observable, Parent oldValue, Parent newValue) {
-//                setPaneTitle();
-//                mapPane.parentProperty().removeListener(this);
-//            }
-//        });
-//    }
-
-
-    private void setStageTitle() {
-        mapStage.setTitle("Map");
-    }
-
-//    private void setPaneTitle() {
-//        mapPane.setText("Map");
-//    }
 }

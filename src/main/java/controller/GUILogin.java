@@ -33,7 +33,7 @@ import java.util.logging.Level;
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 
-public class GUILogin implements TouchscreenCapable {
+public class GUILogin implements TouchscreenCapable, IWindowObserver {
 
     @FXML
     public GridPane loginPane;
@@ -145,7 +145,16 @@ public class GUILogin implements TouchscreenCapable {
     }
 
     private void openMap() {
-        screenControl.show("/scene/map.fxml", true, null, userControl.getLoggedInUser());
+        screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+        screenControl.setMapOpen(true);
+    }
+
+
+    /**
+     * Called when the map shown on login is closed
+     */
+    public void windowClosed() {
+        screenControl.setMapOpen(false);
     }
 
     private void checkAdminCredentials() throws InvalidObjectException {
