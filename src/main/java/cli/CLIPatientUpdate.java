@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.util.zip.DataFormatException;
 
 import static utility.UserActionHistory.userActions;
 
@@ -88,9 +89,13 @@ public class CLIPatientUpdate implements Runnable {
     public void run() {
         Patient patient = patientDataService.getPatientByNhi(searchNhi);
         if (patient != null) {
-            patient.updateAttributes(firstName, lastName, middleNames, preferredName, birth, death, street1,
-                    street2, suburb, region, birthGender, preferredGender, bloodGroup, height, weight, nhi);
-            patientDataService.save(patient);
+            try {
+                patient.updateAttributes(firstName, lastName, middleNames, preferredName, birth, death, street1,
+                        street2, suburb, region, birthGender, preferredGender, bloodGroup, height, weight, nhi);
+                patientDataService.save(patient);
+            } catch (DataFormatException e) {
+                userActions.log(Level.SEVERE, "Unable to set suburb", "attempted to update patient attributes");
+            }
         } else {
             userActions.log(Level.SEVERE, "Patient " + searchNhi + " not found.", "attempted to update patient attributes");
         }

@@ -13,9 +13,7 @@ import utility.AdministratorActionRecord;
 
 import java.text.SimpleDateFormat;
 
-public class GUIAdminHistory {
-
-    private Administrator target;
+public class GUIAdminHistory extends TargetedController {
 
     @FXML
     private TableColumn<AdministratorActionRecord, String> timeStampColumn;
@@ -37,13 +35,13 @@ public class GUIAdminHistory {
 
     private ObservableList<AdministratorActionRecord> masterData = FXCollections.observableArrayList();
 
+    private UserControl userControl = UserControl.getUserControl();
+
     /**
      * Initializes the screen and sets up the target for records as the currently logged in user
      */
-    public void initialize() {
-        UserControl userControl = new UserControl();
-        target = userControl.getLoggedInUser() instanceof Administrator ? (Administrator) userControl.getLoggedInUser() : null;
-        masterData.addAll(target.getAdminActionsList());
+    public void load() {
+        masterData.addAll(((Administrator) target).getAdminActionsList());
         populateTable();
     }
 

@@ -3,14 +3,11 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import model.Disease;
 import model.Patient;
 import model.User;
@@ -19,12 +16,8 @@ import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
-import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 
-import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +30,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller for diagnosis update popup window.
  */
-public class GUIPatientUpdateDiagnosis extends UndoableController implements TouchscreenCapable{
+public class GUIPatientUpdateDiagnosis extends TargetedController implements TouchscreenCapable{
 
     @FXML
     private GridPane diagnosisUpdatePane;
@@ -57,22 +50,19 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
     @FXML
     public ChoiceBox tagsDD;
 
-    private UserControl userControl;
-
     /**
      * Diagnosis being updated
      */
-    private static Disease target;
-    private static Disease targetClone;
+    private Disease targetDisease;
+    private Disease targetDiseaseClone;
 
     /**
-     * Patient who the target diagnosis belongs to
+     * Patient who the targetDisease diagnosis belongs to
      */
-    private static Patient currentPatient;
-    private static Patient patientClone;
+    private Patient patientClone;
     public Label titleLabel;
 
-    private static boolean isAdd;
+    private boolean isAdd;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
@@ -85,15 +75,15 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
      * Sets the diagnosis that is being updated
      * @param disease diagnosis to update
      */
-    public static void setDisease(Disease disease) {
-        target = disease;
+    public void setDisease(Disease disease) {
+        targetDisease = disease;
     }
 
     /**
      * Sets isAdd to true if the operation is a disease addition, and false if the operation is an update
      * @param bool boolean
      */
-    public static void setIsAdd(boolean bool) {
+    public void setIsAdd(boolean bool) {
         isAdd = bool;
     }
 
@@ -102,40 +92,34 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
      * Adds dropdown for disease states.
      * Populates all editable nodes with the current disease information
      */
-    public void initialize() {
-        userControl = new UserControl();
-        currentPatient = patientDataService.getPatientByNhi(((Patient) userControl.getTargetUser()).getNhiNumber());
-        patientClone = (Patient) currentPatient.deepClone();
+    public void load() {
+        patientClone = (Patient) target.deepClone();
         if(isAdd) {
-            targetClone = new Disease(null, null);
+            targetDiseaseClone = new Disease(null, null);
         } else {
             if (patientClone.getCurrentDiseases() != null) {
                 for (Disease idisease : patientClone.getCurrentDiseases()) {
-                    if (idisease.equals(target)) {
-                        targetClone = idisease;
+                    if (idisease.equals(targetDisease)) {
+                        targetDiseaseClone = idisease;
                     }
                 }
             }
             if (patientClone.getPastDiseases() != null) {
                 for (Disease idisease : patientClone.getPastDiseases()) {
-                    if (idisease.equals(target)) {
-                        targetClone = idisease;
+                    if (idisease.equals(targetDisease)) {
+                        targetDiseaseClone = idisease;
                     }
                 }
             }
         }
         populateDropdown();
         populateForm();
-        controls = new ArrayList<Control>() {{
-            add(diseaseNameTextField);
-            add(diagnosisDate);
-            add(tagsDD);
-        }};
-        //statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEDIAGNOSIS);
-        diagnosisTouchPane = new TouchPaneController(diagnosisUpdatePane);
-        diagnosisUpdatePane.setOnZoom(this::zoomWindow);
-        diagnosisUpdatePane.setOnRotate(this::rotateWindow);
-        diagnosisUpdatePane.setOnScroll(this::scrollWindow);
+        if(screenControl.isTouch()) {
+            diagnosisTouchPane = new TouchPaneController(diagnosisUpdatePane);
+            diagnosisUpdatePane.setOnZoom(this::zoomWindow);
+            diagnosisUpdatePane.setOnRotate(this::rotateWindow);
+            diagnosisUpdatePane.setOnScroll(this::scrollWindow);
+        }
     }
 
     /**
@@ -144,16 +128,16 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
      * Sets the drop down state menu to the diagnosis' current state.
      */
     private void populateForm() {
-        if(targetClone.getDiseaseName() != null) {
-            diseaseNameTextField.setText(targetClone.getDiseaseName());
+        if(targetDiseaseClone.getDiseaseName() != null) {
+            diseaseNameTextField.setText(targetDiseaseClone.getDiseaseName());
         }
 
-        if(targetClone.getDateDiagnosed() != null) {
-            diagnosisDate.setValue(targetClone.getDateDiagnosed());
+        if(targetDiseaseClone.getDateDiagnosed() != null) {
+            diagnosisDate.setValue(targetDiseaseClone.getDateDiagnosed());
         }
 
-        if(targetClone.getDiseaseState() != null) {
-            tagsDD.setValue(targetClone.getDiseaseState().getValue());
+        if(targetDiseaseClone.getDiseaseState() != null) {
+            tagsDD.setValue(targetDiseaseClone.getDiseaseState().getValue());
         }
     }
 
@@ -175,29 +159,29 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
      * before calling the stage close method.
      */
     public void cancelUpdate() {
-        screenControl.closeStage(((UndoableStage)cancelButton.getScene().getWindow()).getUUID());
+        screenControl.closeWindow(diagnosisUpdatePane);
     }
 
     /***
-     * Applies the invalid class to the target control
-     * @param target The target to add the class to
+     * Applies the invalid class to the targetDisease control
+     * @param targetDisease The targetDisease to add the class to
      */
-    private boolean setInvalid(Control target) {
-        target.getStyleClass()
+    private boolean setInvalid(Control targetDisease) {
+        targetDisease.getStyleClass()
                 .add("invalid");
         return false;
     }
 
 
     /**
-     * Removes the invalid class from the target control if it has it
+     * Removes the invalid class from the targetDisease control if it has it
      *
-     * @param target The target to remove the class from
+     * @param targetDisease The targetDisease to remove the class from
      */
-    private void setValid(Control target) {
-        if (target.getStyleClass()
+    private void setValid(Control targetDisease) {
+        if (targetDisease.getStyleClass()
                 .contains("invalid")) {
-            target.getStyleClass()
+            targetDisease.getStyleClass()
                     .remove("invalid");
         }
     }
@@ -228,7 +212,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
             diseaseNameTextField.setText(diseaseNameTextField.getText());
         }
         try {
-            if (targetClone.isInvalidDiagnosisDate(diagnosisDate.getValue(), patientClone.getBirth())) {
+            if (targetDiseaseClone.isInvalidDiagnosisDate(diagnosisDate.getValue(), patientClone.getBirth())) {
                 valid = false;
                 setInvalid(diagnosisDate);
             } else {
@@ -240,7 +224,7 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
             setInvalid(diagnosisDate);
         }
 
-        if(targetClone.getDiseaseState() == GlobalEnums.DiseaseState.CHRONIC &&
+        if(targetDiseaseClone.getDiseaseState() == GlobalEnums.DiseaseState.CHRONIC &&
                 tagsDD.getSelectionModel().getSelectedItem().equals("cured")) {
             valid = false;
             setInvalid(tagsDD);
@@ -275,16 +259,16 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
         try {
             d.setDateDiagnosed(diagnosisDate.getValue(), patientClone.getBirth());
         } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "The diagnosis date is not valid.", "Attempted to add an invalid diagnosis date");
+            userActions.log(Level.SEVERE, "The diagnosis date is not valid.", new String[]{"Attempted to add an invalid diagnosis date", ((Patient) target).getNhiNumber()});
         }
         for (Disease disease : patientClone.getCurrentDiseases()) {
-            if(disease != targetClone && isDuplicate(disease, d)) {
+            if(disease != targetDiseaseClone && isDuplicate(disease, d)) {
                 return false;
             }
         }
 
         for (Disease disease: patientClone.getPastDiseases()) {
-            if(disease != targetClone && isDuplicate(disease, d)) {
+            if(disease != targetDiseaseClone && isDuplicate(disease, d)) {
                 return false;
             }
         }
@@ -306,35 +290,35 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
     public void completeUpdate() {
         if(isValidUpdate()) {
             GUIClinicianDiagnosis.setChanged(true);
-            targetClone.setDiseaseName(diseaseNameTextField.getText());
+            targetDiseaseClone.setDiseaseName(diseaseNameTextField.getText());
             try {
-                targetClone.setDateDiagnosed(diagnosisDate.getValue(), currentPatient.getBirth());
+                targetDiseaseClone.setDateDiagnosed(diagnosisDate.getValue(), ((Patient) target).getBirth());
             } catch (InvalidObjectException e) {
                 userActions.log(Level.SEVERE, "The date is not valid. This should never be called.");
             }
             try {
                 switch (tagsDD.getSelectionModel().getSelectedItem().toString()) {
                     case "cured":
-                        targetClone.setDiseaseState(GlobalEnums.DiseaseState.CURED);
+                        targetDiseaseClone.setDiseaseState(GlobalEnums.DiseaseState.CURED);
                         break;
                     case "chronic":
-                        targetClone.setDiseaseState(GlobalEnums.DiseaseState.CHRONIC);
+                        targetDiseaseClone.setDiseaseState(GlobalEnums.DiseaseState.CHRONIC);
                         break;
                     default:
-                        targetClone.setDiseaseState(null);
+                        targetDiseaseClone.setDiseaseState(null);
                         break;
                 }
             } catch (NullPointerException e) {
-                targetClone.setDiseaseState(null);
+                targetDiseaseClone.setDiseaseState(null);
             }
             if(isAdd) {
-                patientClone.getCurrentDiseases().add(targetClone);
+                patientClone.getCurrentDiseases().add(targetDiseaseClone);
             }
             patientClone.sortDiseases();
-            Action action = new Action(currentPatient, patientClone);
+            Action action = new Action(target, patientClone);
             undoRedoControl.addAction(action, CLINICIANDIAGNOSIS);
 
-            screenControl.closeStage(((UndoableStage)doneButton.getScene().getWindow()).getUUID());
+            screenControl.closeWindow(diagnosisUpdatePane);
         } else {
             String errorString = "Diseases must not have the same disease name and diagnosis date as another disease\n\n";
             if(diseaseNameTextField.getStyleClass().contains("invalid")) {
@@ -351,22 +335,8 @@ public class GUIPatientUpdateDiagnosis extends UndoableController implements Tou
                 errorString += "A chronic disease can not be cured. Please remove the chronic tag and save the diagnosis" +
                         " before marking this disease as cured.\n\n";
             }
-            userActions.log(Level.WARNING, errorString, "Attempted to update diagnosis with invalid fields");
+            userActions.log(Level.WARNING, errorString, new String[]{"Attempted to update diagnosis with invalid fields", ((Patient) target).getNhiNumber()});
         }
-    }
-
-    /**
-     * Redoes an action
-     */
-    public void redo() {
-        statesHistoryScreen.redo();
-    }
-
-    /**
-     * Undoes the last action
-     */
-    public void undo() {
-        statesHistoryScreen.undo();
     }
 
     @Override

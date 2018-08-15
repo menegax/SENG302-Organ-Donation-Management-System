@@ -1,44 +1,54 @@
 package controller;
 
-import javafx.application.Platform;
+import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+
+import org.apache.commons.lang3.StringUtils;
+import org.controlsfx.control.RangeSlider;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.RangeSlider;
 import service.ClinicianDataService;
 import service.PatientDataService;
 import service.TextWatcher;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
-import utility.GlobalEnums.*;
-import utility.SystemLogger;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.FilterOption;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.Region;
+import utility.GlobalEnums.UndoableScreen;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-
-import static java.util.logging.Level.SEVERE;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
-
-public class GUIClinicianSearchPatients extends UndoableController implements Initializable {
+public class GUIClinicianSearchPatients extends UndoableController implements IWindowObserver {
 
     @FXML
     private TableView<Patient> patientDataTable;
@@ -109,12 +119,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
 
     /**
      * Initialises the data within the table to all patients
-     *
-     * @param url URL not used
-     * @param rb  Resource bundle not used
      */
-    @FXML
-    public void initialize(URL url, ResourceBundle rb) {
+    public void load() {
         displayY.setText("Display all " + count + " profiles");
         setupAgeSliderListeners();
         populateDropdowns();
@@ -153,7 +159,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
             add(donationFilter);
             add(valueX);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.CLINICIANSEARCHPATIENTS);
+        statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.CLINICIANSEARCHPATIENTS, target);
     }
 
     /**
@@ -163,32 +169,20 @@ public class GUIClinicianSearchPatients extends UndoableController implements In
     private void setupDoubleClickToPatientEdit() {
         // Add double-click event to rows
         patientDataTable.setOnMouseClicked(click -> {
-            if (click.getClickCount() == 2 && patientDataTable.getSelectionModel()
-                    .getSelectedItem() != null) {
-                try {
-                    UserControl userControl = new UserControl();
-                    userControl.setTargetUser(patientDataTable.getSelectionModel().getSelectedItem());
-                    Patient patient = patientDataService.getPatientByNhi(patientDataTable.getSelectionModel().getSelectedItem().getNhiNumber());
-                    patientDataService.save(patient); //save to local
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/home.fxml"));
-                    UndoableStage popUpStage = new UndoableStage();
-
-                    //Set initial popup dimensions
-                    popUpStage.setWidth(1150);
-                    popUpStage.setHeight(700);
-                    screenControl.addStage(popUpStage.getUUID(), popUpStage);
-                    screenControl.show(popUpStage.getUUID(), fxmlLoader.load());
-
-                    // When pop up is closed, rerun the search (this refreshes the modified patients
-                    popUpStage.setOnHiding(event -> Platform.runLater(this::search));
-                } catch (IOException e) {
-                    userActions.log(Level.SEVERE,
-                            "Failed to open patient profile scene from search patients table",
-                            "attempted to open patient edit window from search patients table");
-                    new Alert(Alert.AlertType.ERROR, "Unable to open patient edit window", ButtonType.OK).show();
-                }
+            if (click.getClickCount() == 2 && patientDataTable.getSelectionModel().getSelectedItem() != null) {
+                Patient selected = patientDataTable.getSelectionModel().getSelectedItem();
+                patientDataService.save(patientDataService.getPatientByNhi(selected.getNhiNumber())); //save to local
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
+                controller.setTarget(selected);
             }
         });
+    }
+
+    /**
+     * Called when the profile window of a patient opened by this controller is closed
+     */
+    public void windowClosed() {
+        search();
     }
 
     /**

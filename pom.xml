@@ -3,7 +3,7 @@
     <groupId>seng302</groupId>
     <artifactId>Main</artifactId>
     <packaging>jar</packaging>
-    <version>5.2</version>
+    <version>6.0</version>
     <name>Big Pharma</name>
     <url>https://eng-git.canterbury.ac.nz/SENG302-2016/team-800</url>
 
@@ -14,8 +14,8 @@
 
     <repositories>
         <repository>
-            <id>libs</id>
-            <url>file://${project.basedir}/libs</url>
+            <id>lib</id>
+            <url>file://${project.basedir}/lib</url>
         </repository>
     </repositories>
 
@@ -55,6 +55,17 @@
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
             <version>8.40.12</version>
+        </dependency>
+        <dependency>
+            <groupId>com.univocity</groupId>
+            <artifactId>univocity-parsers</artifactId>
+            <version>2.7.2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.j256.simplecsv</groupId>
+            <artifactId>simplecsv</artifactId>
+            <version>2.3</version>
         </dependency>
         <dependency>
             <groupId>de.codecentric.centerdevice</groupId>
@@ -129,19 +140,29 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-    		<groupId>org.apache.lucene</groupId>
-    		<artifactId>lucene-queryparser</artifactId>
-    		<version>7.3.0</version>
-		</dependency>
-		<dependency>
- 		   <groupId>org.apache.lucene</groupId>
- 		   <artifactId>lucene-core</artifactId>
- 		   <version>7.3.0</version>
-		</dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-queryparser</artifactId>
+            <version>7.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>7.3.0</version>
+        </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>libTUIO</groupId>
+            <artifactId>libTUIO-1.0</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>tuiofx</groupId>
+            <artifactId>tuiofx-all-0.10.4</artifactId>
+            <version>0.10.4</version>
         </dependency>
         <dependency>
             <groupId>org.sonarsource.scanner.maven</groupId>
@@ -232,6 +253,50 @@
                      </goals>
                   </execution>
                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>deploy-features-xml</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <repositoryId>lib</repositoryId>
+                            <url>file:./lib/</url>
+                            <groupId>tuiofx</groupId>
+                            <artifactId>tuiofx-all-0.10.4</artifactId>
+                            <version>0.10.4</version>
+                            <file>${project.basedir}/lib/tuiofx-all-0.10.4.jar</file>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>deploy-features-xml</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <repositoryId>lib</repositoryId>
+                            <url>file:./lib/</url>
+                            <groupId>libTUIO</groupId>
+                            <artifactId>libTUIO-1.0</artifactId>
+                            <version>1.0</version>
+                            <file>${project.basedir}/lib/libTUIO.jar</file>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 </plugins>
     </build>

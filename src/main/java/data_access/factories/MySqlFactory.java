@@ -4,6 +4,7 @@ import data_access.interfaces.*;
 import data_access.mysqlDAO.*;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utility.ClinicianActionRecord;
 import utility.GlobalEnums;
@@ -27,8 +28,12 @@ public class MySqlFactory extends DAOFactory {
      */
     private MySqlFactory() {
         String connection_type = System.getProperty("connection_type");
-        if (connection_type != null && connection_type.equals(GlobalEnums.DbType.PRODUCTION.getValue())) {
-            config = new HikariConfig("/sql/HikariConfigProd.properties");
+        if (connection_type != null) {
+            if (connection_type.equals(GlobalEnums.DbType.PRODUCTION.getValue())) {
+                config = new HikariConfig("/sql/HikariConfigProd.properties");
+            } else {
+                config = new HikariConfig("/sql/HikariConfigTest.properties");
+            }
         } else {
             config = new HikariConfig("/sql/HikariConfigTest.properties");
         }
@@ -57,7 +62,7 @@ public class MySqlFactory extends DAOFactory {
         config.setAutoCommit(false);
         try {
             connection = ds.getConnection();
-            systemLogger.log(Level.INFO, "Successfully retrieved connection from pool.", MySqlFactory.class);
+            systemLogger.log(Level.FINEST, "Successfully retrieved connection from pool.", MySqlFactory.class);
         } catch (SQLException e) {
             systemLogger.log(Level.SEVERE, "Could not get connection", this);        }
         return connection;
@@ -80,6 +85,13 @@ public class MySqlFactory extends DAOFactory {
     public IDiseaseDataAccess getDiseaseDataAccess() {
         return new DiseaseDAO();
     }
+
+    /**
+     * Returns a new MySql Required Organs data access object
+     *
+     * @return The Required Organs DAO
+     */
+    public IRequiredOrganDataAccess getRequiredOrgansDataAccess() { return new RequiredOrgansDAO(); }
 
     /**
      * Returns a new MySql Patient data access object

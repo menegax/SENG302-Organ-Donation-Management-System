@@ -54,14 +54,15 @@ public class GUIClinicianUpdateProfile extends UndoableController {
     @FXML
     private ChoiceBox regionDD;
 
-    private Clinician target;
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
 
     /**
      * Initializes the clinician editing screen.
      * Populates the Region drop down menu using region enums.
      * Calls to load the clinician profile and calls to set up undo/redo functionality
      */
-    public void initialize() {
+    public void load() {
         // Populate region dropdown with values from the Regions enum
         List<String> regions = new ArrayList<>();
         for (Region region : Region.values()) {
@@ -74,15 +75,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
         regionDD.getSelectionModel()
                 .selectedIndexProperty()
                 .addListener((observable, oldValue, newValue) -> setValid(regionDD));
-        UserControl userControl = new UserControl();
-        User loggedIn = userControl.getLoggedInUser();
-        if (loggedIn instanceof Clinician) {
-            target = (Clinician) loggedIn;
-        }
-        else {
-            target = (Clinician) userControl.getTargetUser();
-        }
-        loadProfile(target.getStaffID());
+        loadProfile(((Clinician) target).getStaffID());
         setUpStateHistory();
     }
 
@@ -100,7 +93,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             target = clinician;
             populateForm(clinician);
         } else {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
+            userActions.log(Level.SEVERE, "Error loading clinician profile", new String[]{"Attempted to load clinician profile", String.valueOf(((Clinician) target).getStaffID())});
         }
     }
 
@@ -120,7 +113,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             add(suburbTxt);
             add(regionDD);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPROFILEUPDATE);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPROFILEUPDATE, target);
     }
 
 
@@ -242,7 +235,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
             statesHistoryScreen.addAction(action);
         }
         else {
-            userActions.log(Level.WARNING, "Invalid fields", "Attempted to update clinician profile with invalid fields");
+            userActions.log(Level.WARNING, "Invalid fields", new String[]{"Attempted to update clinician profile with invalid fields", String.valueOf(((Clinician) target).getStaffID())});
         }
     }
 

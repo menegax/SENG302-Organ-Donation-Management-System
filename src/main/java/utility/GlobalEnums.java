@@ -28,12 +28,13 @@ public class GlobalEnums {
 
 	public enum UIRegex {
 
-		FNAME("[a-z|A-Z|-]{1,35}"),              MNAME("[a-z|A-Z| |-]{0,70}"),     LNAME("[a-z|A-Z|-]{1,35}"),
+		FNAME("[a-z|A-Z| |-]{1,35}"),              MNAME("[a-z|A-Z| |-]{0,70}"),     LNAME("[a-z|A-Z| |-]{1,35}"),
 		STREET("[a-z|A-Z| |-|,]{0,100}"),        SUBURB("[a-z|A-Z |-]{0,100}"),    STAFFID("[0-9]{1,7}"),
 		NHI("[A-Z]{3}[0-9]{4}"),                 HOMEPHONE("0[0-9]{8}"),           WORKPHONE("0[0-9]{8}"),
 		MOBILEPHONE("(\\+[0-9]{11}|0[0-9]{9})"), EMAIL("([0-9|a-z|A-Z|.|_|-]+[@][a-z]+([.][a-z])+){0,254}"),
 		RELATIONSHIP("[a-z|-|A-Z]{0,30}"),        DISEASENAME("[a-z|-|A-Z]{1,50}"), ZIP("[0-9]{4}"),
-		WEIGHT("[0-9]+([.][0-9])?"),             HEIGHT("[0-9]+([.][0-9])?"),      USERNAME("[A-Z|0-9|_|-]{0,30}");
+		WEIGHT("[0-9]+([.][0-9]+)?"),             HEIGHT("[0-9]+([.][0-9]+)?"),      USERNAME("[A-Z|0-9|_|-]{0,30}"),
+        DEATH_LOCATION("[0-9|a-z|A-Z| |-|.]*{0,35}"), CITY("[a-z|A-Z|-| ]*{0,70}"), NUMBER("[0-9]{0,5}");
 
 		private String value;
 
@@ -150,7 +151,7 @@ public class GlobalEnums {
      * Enumerates all options for region
      */
     public enum Region {
-        NORTHLAND("Northland"), AUCKLAND("Auckland"), WAIKATO("Waikato"), BAYOFPLENTY("Bay of Plenty"), GISBORNE("Gisborne"), HAWKESBAY("Hawkes Bay"), TARANAKI(
+        NORTHLAND("Northland"), AUCKLAND("Auckland"), WAIKATO("Waikato"), BAYOFPLENTY("Bay of Plenty"), GISBORNE("Gisborne"), HAWKESBAY("Hawke's Bay"), TARANAKI(
                 "Taranaki"), MANAWATU("Manawatu"), WELLINGTON("Wellington"), TASMAN("Tasman"), NELSON("Nelson"), MARLBOROUGH("Marlborough"), WESTCOAST(
                 "West Coast"), CANTERBURY("Canterbury"), OTAGO("Otago"), SOUTHLAND("Southland");
 
@@ -175,8 +176,10 @@ public class GlobalEnums {
 
         public static Region getEnumFromString(String value) {
             try {
-                return Region.valueOf(value.toUpperCase()
-                        .replaceAll("\\s+", ""));
+                if (value.length() >= 8 && value.toLowerCase().substring(0,7).equals("manawatu")){
+                    return Region.MANAWATU;
+                }
+                return Region.valueOf(value.toUpperCase().replaceAll("\\s+", ""));
             }
             catch (IllegalArgumentException e) {
                 return null;
@@ -187,16 +190,16 @@ public class GlobalEnums {
     /**
      * Enumerates all options for organs
      */
-
-    /**
-     *
-     */
     public enum Organ {
+
         LIVER("liver"), KIDNEY("kidney"), PANCREAS("pancreas"), HEART("heart"), LUNG("lung"), INTESTINE("intestine"), CORNEA("cornea"), MIDDLEEAR(
                 "middle ear"), SKIN("skin"), BONE("bone"), BONEMARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
 
         private String value;
 
+        private final int numberSecondsHour = 3600;
+
+        private final int numberHoursPerDay = 24;
 
         Organ(final String value) {
             this.value = value;
@@ -206,6 +209,78 @@ public class GlobalEnums {
         public String getValue() {
             return value;
         }
+
+        /**
+         * Number of seconds the organs lower bound is
+         * @return - number of seconds for the lower bound
+         */
+        public long getOrganLowerBoundSeconds() {
+            switch (value) {
+                case "bone marrow":
+                case "lung":
+                case "heart": {
+                    return numberSecondsHour * 4;
+                }
+                case "pancreas": {
+                    return numberSecondsHour * 12;
+                }
+                case "kidney": {
+                    return numberSecondsHour * 48;
+                }
+                case "cornea": {
+                    return numberSecondsHour * numberHoursPerDay * 5; //5 days
+                }
+                case "bone":
+                case "skin":{
+                    return numberSecondsHour * numberHoursPerDay * 365 * 3; //3 year
+                }
+                case "intestine": {
+                    return numberSecondsHour * 6;
+                }
+                default: {
+                    return getOrganUpperBoundSeconds(); //get upper (no lower bound)
+                }
+            }
+        }
+
+        /**
+         * Number of seconds the organs upper bound is
+         * @return - number of seconds for the upper bound
+         */
+        public long getOrganUpperBoundSeconds() {
+            switch (value) {
+                case "lung":
+                case "heart": {
+                    return numberSecondsHour * 6;
+                }
+                case "bone marrow": {
+                    return numberSecondsHour * 5;
+                }
+                case "intestine":{
+                    return numberSecondsHour * 12;
+                }
+                case "middle ear":
+                case "connective tissue":
+                case "liver":
+                case "pancreas": {
+                    return numberSecondsHour * 24;
+                }
+                case "kidney": {
+                    return numberSecondsHour * 72;
+                }
+                case "cornea": {
+                    return numberSecondsHour * numberHoursPerDay * 7; //7 days
+                }
+                case "bone":
+                case "skin":{
+                    return numberSecondsHour * numberHoursPerDay * 365 * 10; //10 years
+                }
+                default:{
+                    return this.getOrganLowerBoundSeconds();
+                }
+            }
+        }
+
 
 
         @Override

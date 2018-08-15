@@ -109,3 +109,27 @@ Deregistration of Middle Ear due to death with invalid date: Pass
 Deregistration of one organ due to death should log all other requested organs as due to death: Pass
 
 After: Pass
+
+###14/08/2018 - Aidan
+
+Preconditions: Pass* (Can't add diagnosis currently)
+
+Deregistration of Heart due to an Error: Fail - Receiving listview not updated in patient profile
+
+###14/08/2018 - Maree
+
+Preconditions: Pass
+
+Deregistration of Heart due to an ERROR: Pass
+
+Deregistration of Lung due to cure with a listed disease: Pass
+
+Deregistration of Bone due to cure without listed diseases: Pass
+
+Deregistration of Cornea due to death with valid date: Pass
+
+Deregistration of Middle Ear due to death with invalid date: Pass
+
+Deregistration of one organ due to death should log all other requested organs as due to death: Pass
+
+After: Pass

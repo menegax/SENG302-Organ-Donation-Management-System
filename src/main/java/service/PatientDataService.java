@@ -7,6 +7,7 @@ import service.interfaces.IPatientDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -54,6 +55,16 @@ public class PatientDataService implements IPatientDataService {
         for (Patient patient : patients) {
             save(patient);
         }
+    }
+
+    @Override
+    public List<Patient> getDeadPatients() {
+        IPatientDataAccess patientDataAccessLocal = localDbFactory.getPatientDataAccess();
+        IPatientDataAccess patientDataAccessSQL = mysqlFactory.getPatientDataAccess();
+        List<Patient> allDeadPatients = new ArrayList<>();
+        allDeadPatients.addAll(patientDataAccessLocal.getDeadPatients());
+        allDeadPatients.addAll(patientDataAccessSQL.getDeadPatients());
+        return allDeadPatients;
     }
 
 

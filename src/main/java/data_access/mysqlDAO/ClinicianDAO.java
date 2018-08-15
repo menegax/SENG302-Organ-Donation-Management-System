@@ -17,7 +17,7 @@ import static utility.SystemLogger.systemLogger;
 
 public class ClinicianDAO implements IClinicianDataAccess {
 
-    private MySqlFactory mySqlFactory;
+    private final MySqlFactory mySqlFactory;
 
     public ClinicianDAO() {
         mySqlFactory = MySqlFactory.getMySqlFactory();
@@ -92,7 +92,7 @@ public class ClinicianDAO implements IClinicianDataAccess {
     public Map<Integer, List<Clinician>> searchClinicians(String searchTerm) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             Map<Integer, List<Clinician>> resultMap = new HashMap<>();
-            for (int i = 0; i <= 2; i++) {
+            for (int i = 0; i <= 3; i++) {
                 resultMap.put(i, new ArrayList<>());
             }
             connection.setAutoCommit(false);
@@ -100,8 +100,8 @@ public class ClinicianDAO implements IClinicianDataAccess {
             if (searchTerm.equals("")) {
                 statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_CLINICIANS"));
             } else {
-                statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_CLINICIANS_FUZZY"));
-                for (int i = 1; i <= 5; i++) {
+                statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_CLINICIANS_SUBSTRING"));
+                for (int i = 1; i <= 4; i++) {
                     statement.setString(i, searchTerm);
                 }
             }
@@ -112,8 +112,7 @@ public class ClinicianDAO implements IClinicianDataAccess {
                 if (searchTerm.equals("")) {
                     resultMap.get(0).add(clinician);
                 } else {
-                    Integer[] scores = new Integer[]{resultSet.getInt("StaffIDMatch"), resultSet.getInt("NameMatch"), resultSet.getInt("FullNameMatch")};
-                    int score = Collections.min(Arrays.asList(scores));
+                    int score = resultSet.getInt("matchNum");
                     resultMap.get(score).add(clinician);
                 }
             }
