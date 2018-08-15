@@ -20,13 +20,14 @@ import utility.ProgressTask;
 
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
  */
-public class GUIAvailableOrgans extends UndoableController {
+public class GUIAvailableOrgans extends UndoableController implements IWindowObserver{
 
     @FXML
     private TableView<PatientOrgan> availableOrgansTableView;
@@ -92,9 +93,9 @@ public class GUIAvailableOrgans extends UndoableController {
         SortedList<PatientOrgan> sortedData = new SortedList<>(filteredData);
 
 
-        // bind the SortedList comparator to the TableView comparator.
+        // bind the SortedList comparator to compare on expiry.
         sortedData.setComparator((patientOrgan1, patientOrgan2) -> {
-            return patientOrgan1.getProgressTime().toString().compareTo(patientOrgan2.getProgressTime().toString());
+            return patientOrgan2.timeRemaining().compareTo(patientOrgan1.timeRemaining());
         });
 
         // add sorted (and filtered) data to the table.
@@ -111,10 +112,17 @@ public class GUIAvailableOrgans extends UndoableController {
         availableOrgansTableView.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && availableOrgansTableView.getSelectionModel().getSelectedItem() != null) {
                 Patient selected = availableOrgansTableView.getSelectionModel().getSelectedItem().getPatient();
-                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, selected);
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
                 controller.setTarget(selected);
                 patientDataService.save(patientDataService.getPatientByNhi(selected.getNhiNumber())); //save to local
             }
         });
+    }
+
+    /**
+     * Refreshes the table when a profile opened by this controller
+     */
+    public void windowClosed() {
+        availableOrgansTableView.refresh();
     }
 }
