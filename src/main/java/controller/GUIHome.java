@@ -6,7 +6,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,14 +19,9 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.input.TouchEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.control.*;
-import javafx.scene.input.RotateEvent;
-import javafx.scene.input.ScrollEvent;
-import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Administrator;
@@ -38,7 +32,6 @@ import service.AdministratorDataService;
 import service.ClinicianDataService;
 import service.PatientDataService;
 import service.UserDataService;
-import org.tuiofx.internal.gesture.TuioJFXEvent;
 import service.interfaces.IAdministratorDataService;
 import utility.*;
 
@@ -416,7 +409,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
         createTab(TabName.UPDATE, "/scene/clinicianProfileUpdate.fxml");
         createTab(TabName.SEARCHPATIENTS, "/scene/clinicianSearchPatients.fxml");
         createTab(TabName.TRANSPLANTWAITINGLIST, "/scene/clinicianWaitingList.fxml");
-        createTab(TabName.AVAILIBLEORGANS, "/scene/clinicianAvailibleOrgans.fxml");
+        createTab(TabName.AVAILIBLEORGANS, "/scene/clinicianAvailableOrgans.fxml");
         createTab(TabName.HISTORY, "/scene/clinicianHistory.fxml");
     }
 
@@ -431,7 +424,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
         createTab(TabName.USERREGISTER, "/scene/administratorUserRegister.fxml");
         createTab(TabName.SEARCHPUSERS, "/scene/administratorSearchUsers.fxml");
         createTab(TabName.TRANSPLANTWAITINGLIST, "/scene/clinicianWaitingList.fxml");
-        createTab(TabName.AVAILIBLEORGANS, "/scene/clinicianAvailibleOrgans.fxml");
+        createTab(TabName.AVAILIBLEORGANS, "/scene/clinicianAvailableOrgans.fxml");
         createTab(TabName.HISTORY, "/scene/adminHistory.fxml");
     }
 

@@ -1,20 +1,9 @@
 package controller;
 
-import static utility.UserActionHistory.userActions;
-
-import com.sun.xml.internal.bind.v2.runtime.property.ValueProperty;
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ProgressBarTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-import javafx.util.Callback;
 import model.PatientOrgan;
-import model.User;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.ExpiryObservable;
@@ -29,20 +18,13 @@ import model.Patient;
 import utility.ProgressBarCustomTableCell;
 import utility.ProgressTask;
 
-
-import java.io.IOException;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.logging.Level;
 
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
  */
-public class GUIAvailibleOrgans extends UndoableController implements IWindowObserver {
+public class GUIAvailableOrgans extends UndoableController implements IWindowObserver {
 
-	@FXML
-    private GridPane availableOrgans;
     @FXML
     private TableView<PatientOrgan> availableOrgansTableView;
     @FXML
