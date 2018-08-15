@@ -300,7 +300,7 @@
                     <mainClass>controller.Main</mainClass>
                     <!--<bundleName>Big Pharma bundle name</bundleName>-->
                     <iconFile>/fake_icon.icns</iconFile>
-                    <!--<generateDiskImageFile>true</generateDiskImageFile>-->
+                    <!--<generateDiskImageFile>true</generateDiskImageFile> todo implement-->
                 </configuration>
                 <executions>
                     <execution>
