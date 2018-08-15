@@ -50,6 +50,7 @@ public class ActionTest {
     @BeforeClass
     public static void setup() {
         userActions.setLevel(Level.OFF);
+        System.setProperty("connection_type", GlobalEnums.DbType.STORY44.getValue());
     }
 
     /**

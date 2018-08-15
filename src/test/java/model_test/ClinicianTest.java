@@ -40,6 +40,7 @@ public class ClinicianTest implements Serializable {
     public static void setUpBeforeClass() {
         userActions.setLevel(OFF);
         SystemLogger.systemLogger.setLevel(OFF);
+        System.setProperty("connection_type", GlobalEnums.DbType.STORY44.getValue());
     }
 
 

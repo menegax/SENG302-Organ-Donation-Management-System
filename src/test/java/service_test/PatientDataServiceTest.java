@@ -21,9 +21,9 @@ import static utility.UserActionHistory.userActions;
 public class PatientDataServiceTest {
 
     private static  LocalDB localDB = LocalDB.getInstance();
-    private DAOFactory daoFactory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
+    private static DAOFactory daoFactory;
     private Patient patient;
-    private static DBHelper dbHelper = new DBHelper();
+    private static DBHelper dbHelper;
     private PatientDataService patientDataService = new PatientDataService();
 
 
@@ -31,6 +31,9 @@ public class PatientDataServiceTest {
     @SuppressWarnings("Duplicates")
     public static void setUp() {
         userActions.setLevel(OFF);
+        System.setProperty("connection_type", GlobalEnums.DbType.STORY44.getValue());
+        daoFactory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.MYSQL);
+        dbHelper = new DBHelper();
         SystemLogger.systemLogger.setLevel(OFF);
     }
 
