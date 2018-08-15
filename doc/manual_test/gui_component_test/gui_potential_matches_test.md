@@ -48,6 +48,15 @@ There is a recently deceased donor to match an organ for (over 12 years old)
 2. Attempt to view potential matches for that donation
 -> The status bar should update saying a blood group needs to be set
 
+
+### 7. Filtering
+1. Navigate to potential matches screen with at least one match.
+2. Select incorrect region from filters - Should not display any results.
+3. Select correct region from filters - Should display correct results
+4. Select correct and incorrect ages - verify results
+5. Select incorrect and correct birth gender from filters - verify results
+6. Create a combination of filters and verify results.
+
 ## Test History
 
 ### 15/08/2018 - Aidan Smith

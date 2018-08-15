@@ -39,7 +39,6 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
     public TableColumn<OrganWaitlist.OrganRequest, String> organCol;
     public TableColumn<OrganWaitlist.OrganRequest, String> regionCol;
 
-    private ObservableList<OrganWaitlist.OrganRequest> openProfiles = FXCollections.observableArrayList();
     private ObservableList<OrganWaitlist.OrganRequest> masterData = FXCollections.observableArrayList();
 
     @FXML
@@ -88,15 +87,13 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         // Add double-click event to rows
         waitingListTableView.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && waitingListTableView.getSelectionModel()
-                    .getSelectedItem() != null && !openProfiles.contains(waitingListTableView.getSelectionModel()
-                    .getSelectedItem())) {
+                    .getSelectedItem() != null) {
                     OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
                     try {
                         Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
                         patientDataService.save(selectedUser);
                         GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser);
                         controller.setTarget(selectedUser);
-                        openProfiles.add(request);
                     } catch (Exception e) {
                         userActions.log(Level.SEVERE, "Failed to retrieve selected patient from database", new String[]{"Attempted to retrieve selected patient from database", request.getReceiverNhi()});
                     }

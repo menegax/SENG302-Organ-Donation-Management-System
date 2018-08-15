@@ -1,30 +1,16 @@
 package controller;
 
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.PatientDataService;
-import service.PatientDataService;
-import utility.GlobalEnums.*;
 import tornadofx.control.DateTimePicker;
-import utility.GlobalEnums.BirthGender;
-import utility.GlobalEnums.BloodGroup;
-import utility.GlobalEnums.PreferredGender;
-import utility.GlobalEnums.Region;
-import utility.GlobalEnums.UIRegex;
-import utility.GlobalEnums.UndoableScreen;
+import utility.GlobalEnums;
+import utility.GlobalEnums.*;
 import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
@@ -36,6 +22,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
+
+import static java.util.logging.Level.INFO;
+import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateProfile extends UndoableController {
 
@@ -169,7 +158,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
         ObservableList<String> regionsOL = FXCollections.observableList(regions);
         regionDD.setItems(regionsOL);
-        deathRegion.setItems(regionsOL);
+        List<String> deathRegions = new ArrayList<>();
+        deathRegions.add(GlobalEnums.NONE_ID);
+        deathRegions.addAll(regions);
+        ObservableList<String> deathRegionsOL = FXCollections.observableList(deathRegions);
+        deathRegion.setItems(deathRegionsOL);
     }
 
     /**
@@ -338,7 +331,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     private Boolean validateDeathRegion(Boolean valid, StringBuilder invalidContent) {
         if (deathRegion.getSelectionModel()
-                .getSelectedIndex() != -1) {
+                .getSelectedIndex()  > 0) {
             Enum region = Region.getEnumFromString(deathRegion.getSelectionModel()
                     .getSelectedItem());
             if (region == null) {
@@ -540,7 +533,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             isSettingDeath = true;
         } else if (deathCity.getText().length() != 0) {
             isSettingDeath = true;
-        } else if (deathRegion.getSelectionModel().getSelectedIndex() != -1) {
+        } else if (deathRegion.getSelectionModel().getSelectedIndex() > 0) {
             isSettingDeath = true;
         }
 
@@ -557,7 +550,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 valid = setInvalid(deathCity);
                 invalidContent.append("City required if patient deceased. ");
             }
-            if (deathRegion.getSelectionModel().getSelectedIndex() == -1) {
+            if (deathRegion.getSelectionModel().getSelectedIndex() <= 0) {
                 valid = setInvalid(deathRegion);
                 invalidContent.append("Region required if patient deceased. ");
             }
@@ -635,7 +628,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private Boolean validateRegion(Boolean valid, StringBuilder invalidContent) {
         // region
         if (regionDD.getSelectionModel()
-                .getSelectedIndex() != -1) {
+                .getSelectedIndex() > 0) {
             Enum region = Region.getEnumFromString(regionDD.getSelectionModel()
                     .getSelectedItem());
             if (region == null) {

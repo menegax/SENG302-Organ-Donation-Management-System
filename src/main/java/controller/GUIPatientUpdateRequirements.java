@@ -90,9 +90,7 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
     private Set<GlobalEnums.Organ> initialRequirements = new HashSet<>();
 
     private Set<GlobalEnums.Organ> finalRequirements = new HashSet<>();
-    
-    private OrganWaitlist waitlist = LocalDB.getInstance().getOrganWaitlist();
-    
+
     private IClinicianDataService clinicianDataService = new ClinicianDataService();
 
     private int totalRemoved;
@@ -356,10 +354,6 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
             Action action = new Action(target, after);
             statesHistoryScreen.addAction(action);
         }
-        for (GlobalEnums.Organ organ : after.getRequiredOrgans().keySet()) {
-            waitlist.add(after, organ);
-        }
-        clinicianDataService.updateOrganWaitList(waitlist);
         populateForm(after);
     }
 

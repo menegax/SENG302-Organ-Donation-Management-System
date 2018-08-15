@@ -46,7 +46,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
      */
 	public boolean add(String name, Organ organ, LocalDate date, Region region, String nhi, String address) {
 		Patient patient = new PatientDataService().getPatientByNhi(nhi);
-		return requests.add(new OrganRequest(name, organ, date, region, nhi, patient.getAge(), address, patient.getBloodGroup()));
+		return requests.add(new OrganRequest(name, organ, date, region, nhi, patient.getAge(), address, patient.getBloodGroup(), patient.getBirth()));
 	}
 
 	/**
@@ -78,6 +78,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		int age;
 		String address;
 		GlobalEnums.BloodGroup bloodGroup;
+		LocalDate birth;
 		
 		public OrganRequest(Patient receiver, Organ organ) {
 			date = LocalDate.now();
@@ -86,11 +87,12 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 			name = receiver.getNameConcatenated();
 			nhi = receiver.getNhiNumber();
 			age = receiver.getAge();
+			birth = receiver.getBirth();
 			address = receiver.getAddressString();
 			bloodGroup = receiver.getBloodGroup();
 		}
 
-		public OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi, int age, String address, GlobalEnums.BloodGroup bloodGroup) {
+		public OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi, int age, String address, GlobalEnums.BloodGroup bloodGroup, LocalDate birth) {
 			this.date = date;
 			this.region = region;
 			this.organ = organ;
@@ -99,6 +101,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 			this.age = age;
 			this.address = address;
 			this.bloodGroup = bloodGroup;
+			this.birth = birth;
 		}
 		
 		/**
@@ -210,6 +213,14 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		 */
 		public LocalDate getDate() {
 			return date;
+		}
+
+		/**
+		 * Returns the birth date of the patient of the request.
+		 * @return	- The birth date of the patient requesting a organ.
+		 */
+		public LocalDate getBirth() {
+			return birth;
 		}
 	}
 }
