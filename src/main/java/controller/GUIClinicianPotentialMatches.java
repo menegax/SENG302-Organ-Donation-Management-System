@@ -243,6 +243,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     private Integer getRegionDistance(Region region, List<Region> visitedRegions) {
         if (region == ((Patient) target).getRegion()) {
             return 0;
+        } else if (region == null) {
+            return 100;
         } else {
             int minDistance = -1;
             for (Region adjacentRegion: adjacentRegions.get(region)) {
@@ -293,6 +295,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         allRequests.clear();
         allRequests.addAll(results);
     }
+    
     private void setupFilterListeners(){
         regionFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             filter.replace(FilterOption.REGION, filter.get(FilterOption.REGION), newValue);
