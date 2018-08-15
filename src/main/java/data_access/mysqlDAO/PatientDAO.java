@@ -7,6 +7,9 @@ import model.Medication;
 import model.Patient;
 import model.Procedure;
 import utility.*;
+import org.mockito.internal.matchers.Or;
+
+import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 
 import java.sql.*;
@@ -30,6 +33,7 @@ public class PatientDAO implements IPatientDataAccess {
     private final IProcedureDataAccess procedureDataAccess;
     private final ITransplantWaitListDataAccess transplantWaitListDataAccess;
     private final MySqlFactory mySqlFactory;
+    private final IRequiredOrganDataAccess requiredOrgansDataAccess;
 
     public PatientDAO() {
         mySqlFactory = MySqlFactory.getMySqlFactory();
@@ -39,6 +43,7 @@ public class PatientDAO implements IPatientDataAccess {
         logDataAccess = mySqlFactory.getPatientLogDataAccess();
         procedureDataAccess = mySqlFactory.getProcedureDataAccess();
         transplantWaitListDataAccess = mySqlFactory.getTransplantWaitingListDataAccess();
+        requiredOrgansDataAccess = mySqlFactory.getRequiredOrgansDataAccess();
     }
 
     @Override
@@ -48,6 +53,9 @@ public class PatientDAO implements IPatientDataAccess {
             for (Patient patient : patients) {
                 statement = addUpdateParameters(statement, patient);
                 statement.executeUpdate();
+                for (Organ organ : patient.getRequiredOrgans().keySet()) {
+                    requiredOrgansDataAccess.updateRequiredOrgans(patient.getNhiNumber(), organ, patient.getRequiredOrgans().get(organ));
+                }
                 List<Medication> fullList = new ArrayList<>();
                 fullList.addAll(patient.getCurrentMedications());
                 fullList.addAll(patient.getMedicationHistory());
@@ -77,7 +85,7 @@ public class PatientDAO implements IPatientDataAccess {
     @Override
     public boolean addPatientsBatch(List<Patient> patient) {
         ImportObservable importObservable = ImportObservable.getInstance();
-        try(Connection connection = mySqlFactory.getConnectionInstance()) {
+        try (Connection connection = mySqlFactory.getConnectionInstance()) {
             connection.setAutoCommit(false);
             int extendedQueryCount = 0;
             StringBuilder statements = new StringBuilder(ResourceManager.getStringForQuery("BARE_INSERT_PATIENT_BATCH"));
@@ -85,9 +93,9 @@ public class PatientDAO implements IPatientDataAccess {
             String extendedInsert;
             for (Patient aPatient : patient) {
                 statements.append(getNextRecordString(aPatient));
-                if (extendedQueryCount == 4000 ) {
-                    extendedInsert = statements.toString().substring(0, statements.toString().length() -1)
-                            + " " +ResourceManager.getStringForQuery("ON_DUPLICATE_UPDATE_PATIENT");
+                if (extendedQueryCount == 4000) {
+                    extendedInsert = statements.toString().substring(0, statements.toString().length() - 1)
+                            + " " + ResourceManager.getStringForQuery("ON_DUPLICATE_UPDATE_PATIENT");
                     preparedStatement = connection.prepareStatement(extendedInsert);
                     preparedStatement.execute();
                     importObservable.setCompleted(importObservable.getCompleted() + 2000);
@@ -96,8 +104,8 @@ public class PatientDAO implements IPatientDataAccess {
                 extendedQueryCount++;
             }
             if (extendedQueryCount != 0) {
-                extendedInsert = statements.toString().substring(0, statements.toString().length() -1)
-                        + " " +ResourceManager.getStringForQuery("ON_DUPLICATE_UPDATE_PATIENT");
+                extendedInsert = statements.toString().substring(0, statements.toString().length() - 1)
+                        + " " + ResourceManager.getStringForQuery("ON_DUPLICATE_UPDATE_PATIENT");
                 connection.prepareStatement(extendedInsert).execute();
             }
             connection.commit();
@@ -134,7 +142,7 @@ public class PatientDAO implements IPatientDataAccess {
     public boolean deletePatient(Patient patient) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENTS"));
-            for (int i = 1; i <= 6; i++) {
+            for (int i = 1; i <= 7; i++) {
                 statement.setString(i, patient.getNhiNumber());
             }
             statement.executeUpdate();
@@ -156,12 +164,13 @@ public class PatientDAO implements IPatientDataAccess {
             List<Medication> medications = medicationDataAccess.getMedicationsByNhi(nhi);
             List<String> contacts = contactDataAccess.getContactByNhi(nhi);
             List<Procedure> procedures = procedureDataAccess.getProceduresByNhi(nhi);
+            Map<Organ, LocalDate> requiredOrgans = requiredOrgansDataAccess.getRequiredOrganByNhi(nhi);
             if (patientAttributes.next()) {
-                return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, procedures, medications);
+                return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, procedures, medications, requiredOrgans);
             }
             return null;
         } catch (Exception e) {
-           systemLogger.log(Level.SEVERE, "Could not get patient from remote db", this);
+            systemLogger.log(Level.SEVERE, "Could not get patient from remote db", this);
         }
         return null;
     }
@@ -170,7 +179,7 @@ public class PatientDAO implements IPatientDataAccess {
     public Map<Integer, List<Patient>> searchPatients(String searchTerm, Map<FilterOption, String> filters, int numResults) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             Map<Integer, List<Patient>> resultMap = new HashMap<>();
-            for (int i = 0; i <= 2; i++) {
+            for (int i = 0; i <= 3; i++) {
                 resultMap.put(i, new ArrayList<>());
             }
             connection.setAutoCommit(false);
@@ -178,8 +187,8 @@ public class PatientDAO implements IPatientDataAccess {
             if (searchTerm.equals("")) {
                 statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS_FILTERED").replaceAll("%FILTER%", getFilterString(filters)));
             } else {
-                statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS_FUZZY_FILTERED").replaceAll("%FILTER%", getFilterString(filters)));
-                for (int i = 1; i <= 5; i++) {
+                statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENTS_SUBSTRING_FILTERED").replaceAll("%FILTER%", getFilterString(filters)));
+                for (int i = 1; i <= 4; i++) {
                     statement.setString(i, searchTerm);
                 }
             }
@@ -192,15 +201,15 @@ public class PatientDAO implements IPatientDataAccess {
                 if (searchTerm.equals("")) {
                     resultMap.get(0).add(patient);
                 } else {
-                    Integer[] scores = new Integer[]{resultSet.getInt("NhiMatch"), resultSet.getInt("NameMatch"), resultSet.getInt("FullNameMatch")};
-                    int score = Collections.min(Arrays.asList(scores));
+                    int score = resultSet.getInt("matchNum");
                     resultMap.get(score).add(patient);
                 }
             }
             return resultMap;
         } catch (Exception e) {
             systemLogger.log(Level.SEVERE, "Could not search patients from MYSQL DB", this);
-        }return null;
+        }
+        return null;
     }
 
     @Override
@@ -212,6 +221,7 @@ public class PatientDAO implements IPatientDataAccess {
             logDataAccess.deleteLogsByUserId(nhi);
             procedureDataAccess.deleteAllProceduresByNhi(nhi);
             transplantWaitListDataAccess.deleteRequestsByNhi(nhi);
+            requiredOrgansDataAccess.deleteAllRequiredOrgansByNhi(nhi);
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_BY_NHI"));
             statement.setString(1, nhi);
             statement.execute();
@@ -239,6 +249,7 @@ public class PatientDAO implements IPatientDataAccess {
 
     /**
      * Builds up a filter string for searching in db
+     *
      * @param filters - filters to apply to the patient data set
      * @return - string built from filters
      */
@@ -288,15 +299,16 @@ public class PatientDAO implements IPatientDataAccess {
 
     /**
      * Adds params to statement for execution
+     *
      * @param statement - statement to add params to
-     * @param patient - patient to strip params off
+     * @param patient   - patient to strip params off
      * @return - prepared statement
      * @throws SQLException - thrown if there is a type error when setting statement params
      */
     private PreparedStatement addUpdateParameters(PreparedStatement statement, Patient patient) throws SQLException {
         statement.setString(1, patient.getNhiNumber());
         statement.setString(2, patient.getFirstName());
-        statement.setString(3, patient.getMiddleNames() != null ? (patient.getMiddleNames().size() == 0 ? "" : String.join(" ", patient.getMiddleNames())) : null );
+        statement.setString(3, patient.getMiddleNames() != null ? (patient.getMiddleNames().size() == 0 ? "" : String.join(" ", patient.getMiddleNames())) : null);
         statement.setString(4, patient.getLastName());
         statement.setString(5, patient.getBirth().toString());
         statement.setString(6, patient.getCREATED().toString());
@@ -314,29 +326,32 @@ public class PatientDAO implements IPatientDataAccess {
         List<String> donationList = patient.getDonations().stream().map(Organ::toString).collect(Collectors.toList());
         String donations = String.join(",", donationList).toLowerCase();
         statement.setString(18, donations);
-        List<String> organsList = patient.getRequiredOrgans() != null ? (patient.getRequiredOrgans().stream().map(Organ::toString).collect(Collectors.toList())) : new ArrayList<>();
-        String organs = String.join(",", organsList).toLowerCase();
-        statement.setString(19, organs);
         return statement;
     }
 
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts) throws SQLException {
-        return constructPatientObject(attributes, contacts, null, null, null, null);
+    	Map<GlobalEnums.Organ, LocalDate> required = new HashMap();
+    	if (attributes.getInt("hasRequired") == 1) {
+    		required.put(Organ.BONE, LocalDate.now());
+    	}
+        return constructPatientObject(attributes, contacts, null, null, null, null, required);
     }
 
     /**
      * Constructs a full patient object
-     * @param attributes - from patient table
-     * @param contacts - from contacts table
-     * @param logs - from logs table
-     * @param diseases - from diseases table
-     * @param procedures - from procedures table
+     *
+     * @param attributes  - from patient table
+     * @param contacts    - from contacts table
+     * @param logs        - from logs table
+     * @param diseases    - from diseases table
+     * @param procedures  - from procedures table
      * @param medications - from medications table
      * @return - full patient object
      * @throws SQLException - thrown if an error occurs when getting values from result set
      */
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts, List<PatientActionRecord> logs,
-                                           List<Disease> diseases, List<Procedure> procedures, List<Medication> medications) throws SQLException {
+                                           List<Disease> diseases, List<Procedure> procedures, List<Medication> medications,
+                                           Map<Organ, LocalDate> requiredOrgans) throws SQLException {
         String nhi = attributes.getString("Nhi");
         String fName = attributes.getString("FName");
         ArrayList<String> mNames;
@@ -379,19 +394,19 @@ public class PatientDAO implements IPatientDataAccess {
         patient.setBloodGroup(attributes.getString("BloodType") != null ?
                 BloodGroup.getEnumFromString(attributes.getString("BloodType")) : null);
         patient.setDonations(attributes.getString("DonatingOrgans") == null ? new ArrayList<>() :
-                Arrays.stream(attributes.getString("DonatingOrgans") .split("\\s*,\\s*"))
-                .map(Organ::getEnumFromString).collect(Collectors.toList()));
+                Arrays.stream(attributes.getString("DonatingOrgans").split("\\s*,\\s*"))
+                        .map(Organ::getEnumFromString).collect(Collectors.toList()));
         //must instantiate if null
         if (patient.getDonations().size() > 0 && patient.getDonations().get(0) == null) {
             patient.setDonations(new ArrayList<>());
         }
-        patient.setRequiredOrgans(attributes.getString("ReceivingOrgans") == null ? new ArrayList<>():
-                Arrays.stream(attributes.getString("ReceivingOrgans").split("\\s*,\\s*"))
-                .map(Organ::getEnumFromString).collect(Collectors.toList()));
-        //must instantiate if null
-        if (patient.getRequiredOrgans().size() > 0 && patient.getRequiredOrgans().get(0) == null) {
-            patient.setRequiredOrgans(new ArrayList<>());
+        if (requiredOrgans == null) {
+            patient.setRequiredOrgans(new HashMap<>());
+        } else {
+            patient.setRequiredOrgans(requiredOrgans);
         }
+
+        //must instantiate if null
         //map medications
         List<Medication> currentMedication = new ArrayList<>();
         List<Medication> pastMedication = new ArrayList<>();
@@ -452,11 +467,7 @@ public class PatientDAO implements IPatientDataAccess {
     private String getNextRecordString(Patient aPatient) {
         List<String> donationList = aPatient.getDonations().stream().map(Organ::toString).collect(Collectors.toList());
         String donations = String.join(",", donationList).toLowerCase();
-        List<String> organsList = aPatient.getRequiredOrgans() != null ? (aPatient.getRequiredOrgans()
-                .stream()
-                .map(Organ::toString)
-                .collect(Collectors.toList())) : new ArrayList<>();
-        String organs = String.join(",", organsList).toLowerCase();
+        
         return String.format(ResourceManager.getStringForQuery("PATIENT_INSERT_ANOTHER"),
                 aPatient.getNhiNumber(),
                 aPatient.getFirstName().replaceAll("'", "''"),
@@ -475,9 +486,8 @@ public class PatientDAO implements IPatientDataAccess {
                 aPatient.getPreferredName() == null ? aPatient.getFirstName().replaceAll("'", "''"): aPatient.getPreferredName(),
                 String.valueOf(aPatient.getHeight()),
                 String.valueOf(aPatient.getWeight()),
-                aPatient.getBloodGroup() == null ? null : String.format("\'%s\'",aPatient.getBloodGroup().toString()),
-                donations.isEmpty() ? null:String.format("\'%s\'",donations) ,
-                organs.isEmpty() ? null: String.format("\'%s\'",organs));
+                aPatient.getBloodGroup() == null ? null : String.format("\'%s\'", aPatient.getBloodGroup().toString()),
+                donations.isEmpty() ? null : String.format("\'%s\'", donations));
     }
 
 }

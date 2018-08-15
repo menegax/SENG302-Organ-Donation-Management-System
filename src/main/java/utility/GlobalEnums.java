@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class GlobalEnums {
 
     public enum DbType {
-        PRODUCTION("Production"), TEST("Test");
+        PRODUCTION("Production"), TEST("Test"), STORY44("Story 44");
 
         private String value;
 
@@ -34,7 +34,7 @@ public class GlobalEnums {
 		MOBILEPHONE("(\\+[0-9]{11}|0[0-9]{9})"), EMAIL("([0-9|a-z|A-Z|.|_|-]+[@][a-z]+([.][a-z])+){0,254}"),
 		RELATIONSHIP("[a-z|-|A-Z]{0,30}"),        DISEASENAME("[a-z|-|A-Z]{1,50}"), ZIP("[0-9]{4}"),
 		WEIGHT("[0-9]+([.][0-9]+)?"),             HEIGHT("[0-9]+([.][0-9]+)?"),      USERNAME("[A-Z|0-9|_|-]{0,30}"),
-        DEATH_LOCATION("[0-9|a-z|A-Z| |-|.]*{0,35}"), CITY("[a-z|A-Z|-| ]*{0,70}");
+        DEATH_LOCATION("[0-9|a-z|A-Z| |-|.]*{0,35}"), CITY("[a-z|A-Z|-| ]*{0,70}"), NUMBER("[0-9]{0,5}");
 
 		private String value;
 
@@ -65,7 +65,7 @@ public class GlobalEnums {
     public enum PreferredGender {
         MAN("Man"), WOMAN("Woman"), NONBINARY("Non-binary");
 
-        public String value;
+        private String value;
 
         PreferredGender(final String value) {
             this.value = value;
@@ -118,7 +118,7 @@ public class GlobalEnums {
     public enum BirthGender {
         MALE("Male"), FEMALE("Female");
 
-        public String value;
+        private String value;
 
 
         BirthGender(final String value) {
@@ -155,7 +155,7 @@ public class GlobalEnums {
                 "Taranaki"), MANAWATU("Manawatu"), WELLINGTON("Wellington"), TASMAN("Tasman"), NELSON("Nelson"), MARLBOROUGH("Marlborough"), WESTCOAST(
                 "West Coast"), CANTERBURY("Canterbury"), OTAGO("Otago"), SOUTHLAND("Southland");
 
-        public String value;
+        private String value;
 
 
         Region(final String value) {
@@ -195,7 +195,7 @@ public class GlobalEnums {
         LIVER("liver"), KIDNEY("kidney"), PANCREAS("pancreas"), HEART("heart"), LUNG("lung"), INTESTINE("intestine"), CORNEA("cornea"), MIDDLEEAR(
                 "middle ear"), SKIN("skin"), BONE("bone"), BONEMARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
 
-        public String value;
+        private String value;
 
         private final int numberSecondsHour = 3600;
 
@@ -310,7 +310,7 @@ public class GlobalEnums {
         A_POSITIVE("A+"), A_NEGATIVE("A-"), B_POSITIVE("B+"), B_NEGATIVE("B-"), AB_POSITIVE("AB+"), AB_NEGATIVE(
                 "AB-"), O_POSITIVE("O+"), O_NEGATIVE("O-");
 
-        public String value;
+        private String value;
 
 
         BloodGroup(final String value) {

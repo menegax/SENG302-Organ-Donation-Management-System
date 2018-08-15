@@ -7,6 +7,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import utility.ClinicianActionRecord;
+import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.SystemLogger;
 

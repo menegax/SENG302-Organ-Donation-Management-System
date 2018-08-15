@@ -63,31 +63,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
     @FXML
     private TextField contactNameField;
 
-    /**
-     * Patient that is currently logged in
-     */
-    private Patient target;
-
     private Patient after;
-
-    private UserControl userControl;
-
-    private StatesHistoryScreen statesHistoryScreen;
-
-    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
-
-    @FXML
-    private void redo() {
-        statesHistoryScreen.redo();
-    }
-
-
-    @FXML
-    private void undo() {
-        statesHistoryScreen.undo();
-    }
-
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Saves changes to a patient's contact details by calling the Database saving method.
@@ -98,9 +74,9 @@ public class GUIPatientUpdateContacts extends UndoableController {
         if (valid) {
             Action action = new Action(target, after);
             statesHistoryScreen.addAction(action);
-            userActions.log(INFO, "Successfully saved contact details", "Attempted to set invalid contact details");
+            userActions.log(INFO, "Successfully saved contact details", new String[]{"Attempted to set contact details", ((Patient) target).getNhiNumber()});
         } else {
-            userActions.log(Level.WARNING,"Failed to save contact details due to invalid fields", "Attempted to set invalid contact details");
+            userActions.log(Level.WARNING,"Failed to save contact details due to invalid fields", new String[]{"Attempted to set invalid contact details", ((Patient) target).getNhiNumber()});
         }
     }
 
@@ -109,17 +85,9 @@ public class GUIPatientUpdateContacts extends UndoableController {
      * Initializes the contact details screen. Loads in the current patient and sets the text fields to
      * display current contact attributes.
      */
-    public void initialize() {
-        userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
-        if (user instanceof Patient) {
-            loadProfile(((Patient) user).getNhiNumber());
-            setContactFields();
-        }
-        if (userControl.getTargetUser() != null) {
-            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
-            setContactFields();
-        }
+    public void load() {
+        loadProfile(((Patient) target).getNhiNumber());
+        setContactFields();
         setupUndoRedo();
 
         // Enter key triggers log in
@@ -146,7 +114,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
             add(contactWorkPhoneField);
             add(contactEmailAddressField);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATECONTACTS);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATECONTACTS, target);
     }
 
     /**
@@ -154,35 +122,35 @@ public class GUIPatientUpdateContacts extends UndoableController {
      * The fields are left blank if no contact detail is present for that field.
      */
     private void setContactFields() {
-        if (target.getHomePhone() != null) {
-            homePhoneField.setText(target.getHomePhone());
+        if (((Patient) target).getHomePhone() != null) {
+            homePhoneField.setText(((Patient) target).getHomePhone());
         }
-        if (target.getMobilePhone() != null) {
-            mobilePhoneField.setText(target.getMobilePhone());
+        if (((Patient) target).getMobilePhone() != null) {
+            mobilePhoneField.setText(((Patient) target).getMobilePhone());
         }
-        if (target.getWorkPhone() != null) {
-            workPhoneField.setText(target.getWorkPhone());
+        if (((Patient) target).getWorkPhone() != null) {
+            workPhoneField.setText(((Patient) target).getWorkPhone());
         }
-        if (target.getEmailAddress() != null) {
-            emailAddressField.setText(target.getEmailAddress());
+        if (((Patient) target).getEmailAddress() != null) {
+            emailAddressField.setText(((Patient) target).getEmailAddress());
         }
-        if (target.getContactRelationship() != null) {
-            contactRelationshipField.setText(target.getContactRelationship());
+        if (((Patient) target).getContactRelationship() != null) {
+            contactRelationshipField.setText(((Patient) target).getContactRelationship());
         }
-        if (target.getContactName() != null) {
-            contactNameField.setText(target.getContactName());
+        if (((Patient) target).getContactName() != null) {
+            contactNameField.setText(((Patient) target).getContactName());
         }
-        if (target.getContactHomePhone() != null) {
-            contactHomePhoneField.setText(target.getContactHomePhone());
+        if (((Patient) target).getContactHomePhone() != null) {
+            contactHomePhoneField.setText(((Patient) target).getContactHomePhone());
         }
-        if (target.getContactMobilePhone() != null) {
-            contactMobilePhoneField.setText(target.getContactMobilePhone());
+        if (((Patient) target).getContactMobilePhone() != null) {
+            contactMobilePhoneField.setText(((Patient) target).getContactMobilePhone());
         }
-        if (target.getContactWorkPhone() != null) {
-            contactWorkPhoneField.setText(target.getContactWorkPhone());
+        if (((Patient) target).getContactWorkPhone() != null) {
+            contactWorkPhoneField.setText(((Patient) target).getContactWorkPhone());
         }
-        if (target.getContactEmailAddress() != null) {
-            contactEmailAddressField.setText(target.getContactEmailAddress());
+        if (((Patient) target).getContactEmailAddress() != null) {
+            contactEmailAddressField.setText(((Patient) target).getContactEmailAddress());
         }
     }
 
@@ -199,7 +167,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
             target = patientDataService.getPatientByNhi(nhi);
         }
         catch (NullPointerException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the contacts for logged in user");
+            userActions.log(Level.SEVERE, "Error loading user", new String[]{"Attempted to load the contacts user", ((Patient) target).getNhiNumber()});
         }
     }
 

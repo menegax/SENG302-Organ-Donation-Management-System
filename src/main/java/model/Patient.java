@@ -21,8 +21,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
@@ -93,7 +95,7 @@ public class Patient extends User {
 
     private List<Organ> donations;
 
-    private List<Organ> requiredOrgans;
+    private Map<Organ, LocalDate> requiredOrgans;
 
     @Parsed(field = "nhi")
     private String nhiNumber;
@@ -162,7 +164,7 @@ public class Patient extends User {
         this.nhiNumber = nhiNumber.toUpperCase();
         this.donations = new ArrayList<>();
         this.userActionsList = new ArrayList<>();
-        this.requiredOrgans = new ArrayList<>();
+        this.requiredOrgans = new HashMap<>();
         if (propertyChangeSupport == null) {
             propertyChangeSupport = new PropertyChangeSupport(this);
         }
@@ -172,7 +174,7 @@ public class Patient extends User {
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
                    Timestamp created, Timestamp modified, LocalDateTime death, String deathStreet, String deathCity,Region deathRegion, GlobalEnums.BirthGender gender,
                    GlobalEnums.PreferredGender prefGender, String preferredName, double height, double weight,
-                   BloodGroup bloodType, List<Organ> donations, List<Organ> receiving, String streetNumber,
+                   BloodGroup bloodType, List<Organ> donations, Map<Organ, LocalDate> receiving, String streetNumber,
                    String city, String suburb, Region region, int zip, String homePhone, String workPhone,
                    String mobilePhone, String emailAddress, String contactName, String contactRelationship,
                    String contactHomePhone, String contactWorkPhone, String contactMobilePhone, String contactEmailAddress,
@@ -302,32 +304,36 @@ public class Patient extends User {
             globalEnum = Region.getEnumFromString(region);
             if (globalEnum != null) {
                 setRegion((Region) globalEnum);
-            } else {
-                userActions.log(Level.WARNING, "Invalid region", "attempted to update patient attributes");
+            }
+            else {
+                userActions.log(Level.WARNING, "Invalid region", new String[]{"attempted to update patient attributes", getNhiNumber()});
             }
         }
         if (birthGender != null) {
             globalEnum = BirthGender.getEnumFromString(birthGender);
             if (globalEnum != null) {
                 setBirthGender((BirthGender) globalEnum);
-            } else {
-                userActions.log(Level.WARNING, "Invalid birth gender", "attempted to update patient attributes");
+            }
+            else {
+                userActions.log(Level.WARNING, "Invalid birth gender", new String[]{"attempted to update patient attributes", getNhiNumber()});
             }
         }
         if (preferredGender != null) {
             globalEnum = PreferredGender.getEnumFromString(preferredGender);
             if (globalEnum != null) {
                 setPreferredGender((PreferredGender) globalEnum);
-            } else {
-                userActions.log(Level.WARNING, "Invalid preferred gender", "attempted to update patient attributes");
+            }
+            else {
+                userActions.log(Level.WARNING, "Invalid preferred gender", new String[]{"attempted to update patient attributes", getNhiNumber()});
             }
         }
         if (bloodGroup != null) {
             globalEnum = BloodGroup.getEnumFromString(bloodGroup);
             if (globalEnum != null) {
                 setBloodGroup((BloodGroup) globalEnum);
-            } else {
-                userActions.log(Level.WARNING, "Invalid blood group", "attempted to update patient attributes");
+            }
+            else {
+                userActions.log(Level.WARNING, "Invalid blood group", new String[]{"attempted to update patient attributes", getNhiNumber()});
             }
         }
         if (height > 0) {
@@ -339,7 +345,7 @@ public class Patient extends User {
         if (nhi != null) {
             setNhiNumber(nhi);
         }
-        userActions.log(INFO, "Successfully updated patient " + getNhiNumber(), "attempted to update patient attributes");
+        userActions.log(Level.INFO, "Successfully updated patient " + getNhiNumber(), new String[]{"attempted to update patient attributes", getNhiNumber()});
         userModified();
         Searcher.getSearcher().addIndex(this);
     }
@@ -787,8 +793,8 @@ public class Patient extends User {
      *
      * @return required organs of the patient
      */
-    public List<Organ> getRequiredOrgans() {
-        return Collections.unmodifiableList(this.requiredOrgans);
+    public Map<Organ, LocalDate> getRequiredOrgans() {
+        return this.requiredOrgans;
     }
 
     public void clearRequiredOrgans() {
@@ -800,7 +806,7 @@ public class Patient extends User {
      *
      * @param requiredOrgans organs the patient is to receive
      */
-    public void setRequiredOrgans(List<GlobalEnums.Organ> requiredOrgans) {
+    public void setRequiredOrgans(Map<GlobalEnums.Organ, LocalDate> requiredOrgans) {
         this.requiredOrgans = requiredOrgans;
         userModified();
     }
@@ -827,21 +833,21 @@ public class Patient extends User {
     }
 
     /**
-     * Add organs to patient requirements list
+     * Add organs to patient requirements map, along with the current datetime
      *
-     * @param organ - organ to add to the patient required organs list
+     * @param organ - organ to add to the patient required organs map
      * @return string of message
      */
     public String addRequired(Organ organ) {
         if (requiredOrgans != null) {
-            if (requiredOrgans.contains(organ)) {
+            if (requiredOrgans.containsKey(organ)) {
                 return "Organ " + organ + " is already part of the patient's required organs, so was not added.";
             }
         }
         if (requiredOrgans == null) {
-            requiredOrgans = new ArrayList<>();
+            requiredOrgans = new HashMap<>();
         }
-        requiredOrgans.add(organ);
+        requiredOrgans.put(organ, LocalDate.now());
         userModified();
         userActions.log(INFO, "Added organ " + organ + " to patient required organs", "Attempted to add organ " + organ + " to patient required organs");
         return "Successfully added " + organ + " to required organs";
@@ -871,7 +877,7 @@ public class Patient extends User {
      * @return string of message
      */
     public String removeRequired(Organ organ) {
-        if (requiredOrgans.contains(organ)) {
+        if (requiredOrgans.containsKey(organ)) {
             requiredOrgans.remove(organ);
             userModified();
             setRemovedOrgan(organ);

@@ -154,7 +154,7 @@ public class Searcher {
             indexWriter.commit();
             systemLogger.log(Level.FINER, "Added a clinician to the search index");
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
+            systemLogger.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
         }
     }
 
@@ -164,7 +164,7 @@ public class Searcher {
             indexWriter.commit();
             systemLogger.log(Level.FINER, "Added an admin to the search index");
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
+            systemLogger.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
         }
     }
 
@@ -179,7 +179,7 @@ public class Searcher {
             indexWriter.commit();
             systemLogger.log(Level.FINER, "Added a patient to the search index");
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
+            systemLogger.log(Level.SEVERE, "Failure to write index", "Attempted to write patient to search index");
         }
     }
 
@@ -336,7 +336,7 @@ public class Searcher {
                     return fetchAdmin(thisDoc);
             }
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Unable to query search index.", "Attempted to retrieve document from index.");
+            systemLogger.log(Level.SEVERE, "Unable to query search index.", "Attempted to retrieve document from index.");
         }
         return null;
     }
@@ -381,7 +381,7 @@ public class Searcher {
                 }
             }
         } catch (IOException e) {
-            UserActionHistory.userActions.log(Level.SEVERE, "Unable to query search index.", "Attempted to search for users.");
+            systemLogger.log(Level.SEVERE, "Unable to query search index.", "Attempted to search for users.");
         }
         return allDocs;
     }
@@ -595,7 +595,7 @@ public class Searcher {
                     }
                     case REQUESTEDDONATIONS: {
                         Organ requestedOrgans = Organ.getEnumFromString(filter.get(option));
-                        if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().contains(requestedOrgans)) {
+                        if (patient.getRequiredOrgans() == null || !patient.getRequiredOrgans().containsKey(requestedOrgans)) {
                             return false;
                         }
                         break;
