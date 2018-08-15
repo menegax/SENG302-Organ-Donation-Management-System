@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class GlobalEnums {
 
     public enum DbType {
-        PRODUCTION("Production"), TEST("Test"), STORY44("Story 44");
+        PRODUCTION("Production"), TEST("Test"), STORY44("Story 44"), STORY50("Story 50");
 
         private String value;
 
