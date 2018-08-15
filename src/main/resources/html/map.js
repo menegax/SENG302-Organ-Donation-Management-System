@@ -12,7 +12,6 @@ function init() {
         center: {lat: -40.59225, lng: 173.51012},
         zoom: 6,
         disableDefaultUI: true,
-        zoomControl: true,
         scaleControl: true,
         gestureHandling: 'cooperative'
     });
