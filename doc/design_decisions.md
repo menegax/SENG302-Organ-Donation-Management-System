@@ -233,3 +233,12 @@ This means whenever we need to set on close or similar method only one method ca
 #### Potential matches
 When ordering matches, we decided to use region for ordering to limit geocode use.
 To do this, we implemented a priority based on adjacent regions such that the distance between regions is based on how many regions one has to travel through between them
+
+#### Expiring Organs
+We have done more research to check the expiry times for organs such as Intestines, Bone Marrow, Connective tissue  and 
+Middle ear. We have assumed that middle ear will have an upper bound of 24 hrs (same as connective tissue) We used the following resources:
+http://www.nedonation.org/donation-guide/organ/acceptable-ischemic-times
+https://www.researchgate.net/post/How_should_bone_marrow_be_stored_and_how_long_can_it_be_exposed_to_a_room_temperature_environment
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5116036/
+
+We have also decided to use values of 50% time elapsed to change to yellow/orange and 80% time elapsed to change red on default. (i.e no lower - upper bound)

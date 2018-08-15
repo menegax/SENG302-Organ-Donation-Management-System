@@ -191,11 +191,15 @@ public class GlobalEnums {
      * Enumerates all options for organs
      */
     public enum Organ {
+
         LIVER("liver"), KIDNEY("kidney"), PANCREAS("pancreas"), HEART("heart"), LUNG("lung"), INTESTINE("intestine"), CORNEA("cornea"), MIDDLEEAR(
                 "middle ear"), SKIN("skin"), BONE("bone"), BONEMARROW("bone marrow"), CONNECTIVETISSUE("connective tissue");
 
         private String value;
 
+        private final int numberSecondsHour = 3600;
+
+        private final int numberHoursPerDay = 24;
 
         Organ(final String value) {
             this.value = value;
@@ -205,6 +209,78 @@ public class GlobalEnums {
         public String getValue() {
             return value;
         }
+
+        /**
+         * Number of seconds the organs lower bound is
+         * @return - number of seconds for the lower bound
+         */
+        public long getOrganLowerBoundSeconds() {
+            switch (value) {
+                case "bone marrow":
+                case "lung":
+                case "heart": {
+                    return numberSecondsHour * 4;
+                }
+                case "pancreas": {
+                    return numberSecondsHour * 12;
+                }
+                case "kidney": {
+                    return numberSecondsHour * 48;
+                }
+                case "cornea": {
+                    return numberSecondsHour * numberHoursPerDay * 5; //5 days
+                }
+                case "bone":
+                case "skin":{
+                    return numberSecondsHour * numberHoursPerDay * 365 * 3; //3 year
+                }
+                case "intestine": {
+                    return numberSecondsHour * 6;
+                }
+                default: {
+                    return getOrganUpperBoundSeconds(); //get upper (no lower bound)
+                }
+            }
+        }
+
+        /**
+         * Number of seconds the organs upper bound is
+         * @return - number of seconds for the upper bound
+         */
+        public long getOrganUpperBoundSeconds() {
+            switch (value) {
+                case "lung":
+                case "heart": {
+                    return numberSecondsHour * 6;
+                }
+                case "bone marrow": {
+                    return numberSecondsHour * 5;
+                }
+                case "intestine":{
+                    return numberSecondsHour * 12;
+                }
+                case "middle ear":
+                case "connective tissue":
+                case "liver":
+                case "pancreas": {
+                    return numberSecondsHour * 24;
+                }
+                case "kidney": {
+                    return numberSecondsHour * 72;
+                }
+                case "cornea": {
+                    return numberSecondsHour * numberHoursPerDay * 7; //7 days
+                }
+                case "bone":
+                case "skin":{
+                    return numberSecondsHour * numberHoursPerDay * 365 * 10; //10 years
+                }
+                default:{
+                    return this.getOrganLowerBoundSeconds();
+                }
+            }
+        }
+
 
 
         @Override
