@@ -1,22 +1,20 @@
 package service;
 
 import com.sun.javafx.webkit.WebConsoleListener;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import model.Patient;
 import netscape.javascript.JSObject;
-import utility.JSInjector;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -31,17 +29,13 @@ public class GoogleMapsBridge implements Initializable {
     @FXML
     private WebView webViewMap1;
 
-    @FXML
-    private GridPane mapPane;
-
     private WebEngine webEngine1;
 
     private JSObject jsBridge1;
 
-    private JSInjector jsInjector;
-
     private Stage mapStage;
 
+    private Robot robot;
 
     /**
      * Initialises the widgets and bridge in the google map
@@ -52,16 +46,20 @@ public class GoogleMapsBridge implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         webEngine1 = webViewMap1.getEngine();
 
+        List<Patient> patients = new ArrayList<>(new ClinicianDataService().searchPatients("", null, 30));
+        List<Patient> results = new ArrayList<>();
+        for (Patient p : patients) {
+            results.add(new PatientDataService().getPatientByNhi(p.getNhiNumber()));
+        }
+
         webEngine1.setJavaScriptEnabled(true);
-        webEngine1.getLoadWorker()
-                .stateProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    if (Worker.State.SUCCEEDED == newValue) {
-                        jsBridge1 = (JSObject) webEngine1.executeScript("window");
-                        jsInjector = new JSInjector();
-                        jsBridge1.setMember("jsInjector", jsInjector);
-                    }
-                });
+        webEngine1.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (Worker.State.SUCCEEDED == newValue) {
+                jsBridge1 = (JSObject) webEngine1.executeScript("window");
+                jsBridge1.setMember("patients", results);
+                jsBridge1.call("init");
+            }
+        });
         webEngine1.load(Objects.requireNonNull(getClass().getClassLoader()
                 .getResource("html/GoogleMap.html"))
                 .toExternalForm());
@@ -73,7 +71,22 @@ public class GoogleMapsBridge implements Initializable {
             }
         });
 
-        webViewMap1.setOnZoom(event -> webViewMap1.setZoom(webViewMap1.getZoom() * event.getZoomFactor()));
+        try {
+            robot = new Robot();
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+
+//        webViewMap1.setOnZoom(event -> {
+//            webViewMap1.setZoom(webViewMap1.getZoom() * event.getZoomFactor());
+//            webViewMap1.getEngine();
+//        });
+        webViewMap1.setOnScroll(event -> {
+            if(event.getTouchCount() == 2) {
+                robot.keyPress(KeyEvent.VK_CONTROL);
+            }
+        });
+        webViewMap1.setOnTouchReleased(event -> robot.keyRelease(KeyEvent.VK_CONTROL));
         //        webViewMap1.setOnRotate(event -> webViewMap1.setRotate(webViewMap1.getRotate() + event.getAngle() * 0.8));
 
         addStageListener();
