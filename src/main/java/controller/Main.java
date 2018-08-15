@@ -20,8 +20,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         // setup GUI
+        primaryStage.setTitle("Login");
         ScreenControl screenControl = ScreenControl.getScreenControl();
-//        primaryStage.setTitle("Login");
         screenControl.show("/scene/login.fxml", false, null, null);
 
         Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients

@@ -41,6 +41,8 @@ public class GUIMap implements Initializable {
 
     private MapBridge mapBridge;
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
 
     /**
      * Initialises the widgets and bridge in the google map
@@ -84,11 +86,17 @@ public class GUIMap implements Initializable {
         }
 
         webViewMap1.setOnScroll(event -> {
-            if (event.getTouchCount() == 2) {
-                robot.keyPress(KeyEvent.VK_CONTROL);
+            if(screenControl.isTouch()) {
+                if (event.getTouchCount() == 2) {
+                    robot.keyPress(KeyEvent.VK_CONTROL);
+                }
             }
         });
-        webViewMap1.setOnTouchReleased(event -> robot.keyRelease(KeyEvent.VK_CONTROL));
+        webViewMap1.setOnTouchReleased(event -> {
+            if(screenControl.isTouch()) {
+                robot.keyRelease(KeyEvent.VK_CONTROL);
+            }
+        });
         //        webViewMap1.setOnRotate(event -> webViewMap1.setRotate(webViewMap1.getRotate() + event.getAngle() * 0.8));
 
     }

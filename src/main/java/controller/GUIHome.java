@@ -502,6 +502,8 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
         // Create a new menu bar
         MenuBar bar = new MenuBar();
 
+        Menu menu4 = null;
+
         /* Build the menu bar with new menus and menu items */
 
         // FILE
@@ -590,17 +592,14 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
         bar.getMenus().addAll(menu2, menu3);
 
-        Menu menu4 = new Menu("Window");
-        if(!screenControl.isTouch()) {
-            //WINDOW
-            if (isUserClinicianOrAdmin()) {
-
-                MenuItem menu4Item1 = new MenuItem("Open Map");
-                menu4Item1.setOnAction(event -> openMap());
-                menu4.getItems()
-                        .addAll(menu4Item1);
-                bar.getMenus().addAll(menu4);
-            }
+        //WINDOW
+        if (isUserClinicianOrAdmin()) {
+            menu4 = new Menu("Window");
+            MenuItem menu4Item1 = new MenuItem("Open Map");
+            menu4Item1.setOnAction(event -> openMap());
+            menu4.getItems()
+                    .addAll(menu4Item1);
+            bar.getMenus().addAll(menu4);
         }
 
         boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless")
@@ -646,6 +645,9 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
         if (!screenControl.getMapOpen()) {
             screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
             screenControl.setMapOpen(true);
+        }
+        if(screenControl.isTouch()) {
+            homePane.toFront();
         }
     }
 
