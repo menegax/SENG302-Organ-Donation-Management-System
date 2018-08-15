@@ -27,6 +27,7 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -163,10 +164,12 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      */
     private boolean checkMatch(OrganWaitlist.OrganRequest request) {
         boolean match = true;
+        long requestAge = ChronoUnit.YEARS.between(request.getBirth(), LocalDate.now());
+        long targetAge = ChronoUnit.YEARS.between(((Patient) target).getBirth(), ((Patient) target).getDeathDate());
         if (request.getRequestedOrgan() != targetOrgan || request.getBloodGroup() != ((Patient) target).getBloodGroup()) {
             match = false;
-        } else if ((request.getAge() < 12 && ((Patient) target).getAge() > 12) || (request.getAge() > 12 && ((Patient) target).getAge() < 12)
-                || abs(request.getAge() - ((Patient) target).getAge()) > 15) {
+        } else if (( requestAge < 12 && targetAge  > 12) || (requestAge > 12 && targetAge < 12)
+                || abs(requestAge - targetAge) > 15) {
             match = false;
         }
         return match;
