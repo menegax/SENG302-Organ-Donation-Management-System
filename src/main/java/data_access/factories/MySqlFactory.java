@@ -31,16 +31,11 @@ public class MySqlFactory extends DAOFactory {
         if (connection_type != null) {
             if (connection_type.equals(GlobalEnums.DbType.PRODUCTION.getValue())) {
                 config = new HikariConfig("/sql/HikariConfigProd.properties");
-            } else if (connection_type.equals(GlobalEnums.DbType.STORY44.getValue())) {
-            	config = new HikariConfig("/sql/HikariConfigStory44.properties");
-            } else if(connection_type.equals(GlobalEnums.DbType.STORY50.getValue())){
-                config = new HikariConfig("/sql/HikariConfigStory50.properties");
-            } else{
+            } else {
                 config = new HikariConfig("/sql/HikariConfigTest.properties");
             }
         } else {
             config = new HikariConfig("/sql/HikariConfigTest.properties");
-
         }
         ds = new HikariDataSource(config);
     }

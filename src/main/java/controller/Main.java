@@ -20,7 +20,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         // setup GUI
-        System.setProperty("connection_type", GlobalEnums.DbType.STORY50.getValue()); //LEAVE HERE!! production db
         primaryStage.setTitle("Login");
         ScreenControl screenControl = ScreenControl.getScreenControl();
         screenControl.show("/scene/login.fxml", false, null, null);
