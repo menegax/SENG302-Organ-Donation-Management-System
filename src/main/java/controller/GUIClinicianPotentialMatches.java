@@ -8,12 +8,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
@@ -58,6 +56,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     public Text deathLocationLabel;
     public Text ageLabel;
     public GridPane potentialMatchesPane;
+    public Button closeButton;
 
     @FXML
     private GridPane filterGrid;
@@ -88,6 +87,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     private Map<FilterOption, String> filter = new HashMap<>();
 
     private TouchPaneController matchTouchPane;
+
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     /**
      * Sets the target donor and organ for this controller and loads the data accordingly
@@ -120,6 +121,13 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         setupDoubleClickToPatientEdit();
         setupAgeSliderListeners();
         setupFilterListeners();
+        if(screenControl.isTouch()) {
+            closeButton.setVisible(true);
+            closeButton.setDisable(false);
+        } else {
+            closeButton.setVisible(false);
+            closeButton.setDisable(true);
+        }
         matchTouchPane = new TouchPaneController(potentialMatchesPane);
         potentialMatchesPane.setOnZoom(this::zoomWindow);
         potentialMatchesPane.setOnRotate(this::rotateWindow);
@@ -374,5 +382,9 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     @Override
     public void scrollWindow(ScrollEvent scrollEvent) {
         matchTouchPane.scrollPane(scrollEvent);
+    }
+
+    public void closeMatchWindow() {
+        screenControl.closeWindow(potentialMatchesPane);
     }
 }
