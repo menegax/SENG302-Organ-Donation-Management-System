@@ -2,7 +2,6 @@ package controller;
 
 import static utility.UserActionHistory.userActions;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,11 +15,16 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import model.Administrator;
-import service.Database;
+import model.Clinician;
+import model.Patient;
+import service.AdministratorDataService;
+import service.ClinicianDataService;
+import service.PatientDataService;
+import service.interfaces.IClinicianDataService;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
-import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -51,25 +55,34 @@ public class GUILogin implements TouchscreenCapable {
     @FXML
     private RadioButton administrator;
 
+
     private TouchPaneController loginTouchPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private PatientDataService patientDataService = new PatientDataService();
+
+    private AdministratorDataService administratorDataService = new AdministratorDataService();
+
+    private UserControl userControl = UserControl.getUserControl();
 
     /**
      * Initializes the login window by adding key binding for login on enter and an event filter on the login field
      */
     public void initialize() {
         // Enter key triggers log in
-        loginTouchPane = new TouchPaneController(loginPane);
         nhiLogin.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         loginPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 logIn();
             }
         });
-        loginPane.setOnZoom(this::zoomWindow);
-        loginPane.setOnRotate(this::rotateWindow);
-        loginPane.setOnScroll(this::scrollWindow);
+        if(screenControl.isTouch()) {
+            loginTouchPane = new TouchPaneController(loginPane);
+            loginPane.setOnZoom(this::zoomWindow);
+            loginPane.setOnRotate(this::rotateWindow);
+            loginPane.setOnScroll(this::scrollWindow);
+        }
 
     }
 
@@ -78,12 +91,7 @@ public class GUILogin implements TouchscreenCapable {
      */
     @FXML
     public void goToRegister() {
-        try {
-            screenControl.show(Main.getUuid(), FXMLLoader.load(getClass().getResource("/scene/userRegister.fxml")));
-        } catch (IOException e) {
-            new Alert((Alert.AlertType.ERROR), "Unable to load patient register").show();
-            userActions.log(SEVERE, "Failed to load patient register", "Attempted to load patient register");
-        }
+        screenControl.show("/scene/userRegister.fxml", false, null, null);
     }
 
     /**
@@ -93,31 +101,41 @@ public class GUILogin implements TouchscreenCapable {
      */
     @FXML
     public void logIn() {
-        UserControl login = new UserControl();
-        ScreenControl screenControl = ScreenControl.getScreenControl();
         try {
             if (patient.isSelected()) {
-                login.addLoggedInUserToCache(Database.getPatientByNhi(nhiLogin.getText()));
+                //<-- Example
+                Patient patient2 = patientDataService.getPatientByNhi(nhiLogin.getText());
+                // -- >
+                if (patient2 == null) {
+                    throw new InvalidObjectException("User doesn't exist");
+                }
+                patientDataService.save(patient2);
+                userControl.addLoggedInUserToCache(patientDataService.getPatientByNhi(nhiLogin.getText()));
+
             } else if (clinician.isSelected()) {
-                login.addLoggedInUserToCache(Database.getClinicianByID(Integer.parseInt(nhiLogin.getText())));
+                IClinicianDataService clinicianDataService = new ClinicianDataService();
+                Clinician clinician = clinicianDataService.getClinician(Integer.parseInt(nhiLogin.getText()));
+                if (clinician == null) {
+                    throw new InvalidObjectException("User doesn't exist");
+                }
+                clinicianDataService.save(clinician);
+                userControl.addLoggedInUserToCache(clinicianDataService.getClinician(Integer.parseInt(nhiLogin.getText())));
             } else {
                 checkAdminCredentials();
-                login.addLoggedInUserToCache(Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
+                Administrator administrator = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
+                administratorDataService.save(administrator);
+                userControl.addLoggedInUserToCache(administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
-            Parent home = FXMLLoader.load(getClass().getResource("/scene/home.fxml"));
-            UndoableStage stage = new UndoableStage();
-            screenControl.addStage(stage.getUUID(), stage);
-            screenControl.show(stage.getUUID(), home);
-            screenControl.closeStage(Main.getUuid()); // close login scene after login
+            GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, userControl.getLoggedInUser());
+            controller.setTarget(userControl.getLoggedInUser());
+            if(!screenControl.isTouch()) {
+                Stage stage = (Stage) loginPane.getScene().getWindow();
+                stage.close();
+            }
         } catch (InvalidObjectException e) {
             password.setText(""); //Reset password field on invalid login
             userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
             Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
-            alert.show();
-        } catch (IOException e) {
-            userActions.log(Level.WARNING, "Unable to load home page", "Attempted to log in");
-            systemLogger.log(Level.INFO, "Failed to find the .fxml file for login" + e.getStackTrace());
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading application scenes");
             alert.show();
         } catch (NumberFormatException e) {
             userActions.log(Level.WARNING, "Non-numeric staff IDs are not permitted", "Attempted to log in");
@@ -128,7 +146,10 @@ public class GUILogin implements TouchscreenCapable {
     }
 
     private void checkAdminCredentials() throws InvalidObjectException {
-        Administrator admin = Database.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
+        Administrator admin = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
+        if (admin == null) {
+            throw new InvalidObjectException("User doesn't exist");
+        }
         String hashedInput = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password.getText() + admin.getSalt());
         if (!hashedInput.equals(admin.getHashedPassword())) {
             throw new InvalidObjectException("Invalid username/password combination");

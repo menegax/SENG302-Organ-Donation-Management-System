@@ -10,6 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import model.Patient;
+import service.PatientDataService;
 import utility.PatientActionRecord;
 
 import java.io.IOException;
@@ -18,9 +19,7 @@ import java.text.SimpleDateFormat;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
-public class GUIPatientHistory {
-
-    private Patient target;
+public class GUIPatientHistory extends TargetedController {
 
     @FXML
     private TableColumn<PatientActionRecord, String> timeStampColumn;
@@ -39,16 +38,11 @@ public class GUIPatientHistory {
 
     private ObservableList<PatientActionRecord> masterData = FXCollections.observableArrayList();
 
-
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
-
     /**
      * Initializes the patient history screen by loading all logs for the logged in patient
      */
-    public void initialize() {
-        UserControl userControl = new UserControl();
-        target = userControl.getLoggedInUser() instanceof Patient ? (Patient) userControl.getLoggedInUser() : null;
-        masterData.addAll(target.getUserActionsList());
+    public void load() {
+        masterData.addAll(((Patient) target).getUserActionsList());
         populateTable();
     }
 

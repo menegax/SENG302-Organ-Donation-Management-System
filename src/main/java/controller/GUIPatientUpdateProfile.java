@@ -1,32 +1,41 @@
 package controller;
 
+import static java.util.logging.Level.INFO;
+import static utility.UserActionHistory.userActions;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import model.Patient;
-import service.Database;
+import service.PatientDataService;
+import service.PatientDataService;
 import utility.GlobalEnums.*;
-import utility.StatusObservable;
+import tornadofx.control.DateTimePicker;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.BloodGroup;
+import utility.GlobalEnums.PreferredGender;
+import utility.GlobalEnums.Region;
+import utility.GlobalEnums.UIRegex;
+import utility.GlobalEnums.UndoableScreen;
+import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
-
-import static java.util.logging.Level.SEVERE;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
+import java.util.zip.DataFormatException;
 
 public class GUIPatientUpdateProfile extends UndoableController {
 
@@ -70,13 +79,25 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private DatePicker dobDate;
 
     @FXML
-    private DatePicker dateOfDeath;
+    private DateTimePicker dateOfDeath;
 
     @FXML
-    private TextField street1Txt;
+    private TextField deathLocationTxt;
 
     @FXML
-    private TextField street2Txt;
+    private TextField deathCity;
+
+    @FXML
+    private ChoiceBox<String> deathRegion;
+
+    @FXML
+    private TextField streetNumberTxt;
+
+    @FXML
+    private TextField streetNameTxt;
+
+    @FXML
+    private TextField cityTxt;
 
     @FXML
     private TextField suburbTxt;
@@ -96,33 +117,36 @@ public class GUIPatientUpdateProfile extends UndoableController {
     @FXML
     private ChoiceBox<String> bloodGroupDD;
 
-    private Patient target;
-
     private Patient after;
 
-    private UserControl userControl;
+    private PatientDataService patientDataService = new PatientDataService();
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+    private UserControl userControl = UserControl.getUserControl();
 
     /**
      * Initializes the profile update screen. Gets the logged in or viewed user and loads the user's profile.
      * Dropdown menus are populated. The enter key press event for saving changes is set up
      */
-    public void initialize() {
+    public void load() {
         populateDropdowns();
-        userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
-        if (user instanceof Patient) {
-            loadProfile(((Patient) user).getNhiNumber());
-        } else if (userControl.getTargetUser() != null) {
-            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
+        if (userControl.getLoggedInUser() instanceof Patient) {
+            disablePatientElements();
         }
+        loadProfile(((Patient) target).getNhiNumber());
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveProfileUpdater();
             }
         });
+    }
+
+
+    private void disablePatientElements() {
+        deathLocationTxt.setDisable(true);
+        dateOfDeath.setDisable(true);
+        deathCity.setDisable(true);
+        deathRegion.setDisable(true);
     }
 
 
@@ -145,6 +169,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
         ObservableList<String> regionsOL = FXCollections.observableList(regions);
         regionDD.setItems(regionsOL);
+        deathRegion.setItems(regionsOL);
     }
 
     /**
@@ -153,8 +178,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
      * @param nhi the NHI of the patient to load
      */
     private void loadProfile(String nhi) {
-        try {
-            Patient patient = Database.getPatientByNhi(nhi);
+        Patient patient = patientDataService.getPatientByNhi(nhi);
+        if (patient != null) {
             target = patient;
             after = (Patient) patient.deepClone();
             populateForm(after);
@@ -169,23 +194,28 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 add(regionDD);
                 add(dobDate);
                 add(dateOfDeath);
+                add(deathLocationTxt);
+                add(deathCity);
+                add(deathRegion);
                 add(birthGenderMaleRadio);
                 add(birthGenderFemaleRadio);
                 add(preferredGenderManRadio);
                 add(preferredGenderWomanRadio);
                 add(preferredGenderNonBinaryRadio);
-                add(street1Txt);
-                add(street2Txt);
+                add(streetNumberTxt);
+                add(streetNameTxt);
+                add(cityTxt);
                 add(suburbTxt);
                 add(weightTxt);
                 add(heightTxt);
                 add(zipTxt);
             }};
-            statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.PATIENTUPDATEPROFILE);
-        } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
+            statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.PATIENTUPDATEPROFILE, target);
+        } else {
+            userActions.log(Level.SEVERE, "Error loading patient", new String[]{"Attempted to load patient for updating", ((Patient) target).getNhiNumber()});
         }
     }
+
 
     /**
      * Populates the scene controls with values from the patient object
@@ -227,12 +257,25 @@ public class GUIPatientUpdateProfile extends UndoableController {
             }
         }
         dobDate.setValue(patient.getBirth());
-        dateOfDeath.setValue(patient.getDeath());
-        if (patient.getStreet1() != null) {
-            street1Txt.setText(patient.getStreet1());
+        if (patient.getDeathDate() != null) {
+            dateOfDeath.setDateTimeValue(patient.getDeathDate());
         }
-        if (patient.getStreet2() != null) {
-            street2Txt.setText(patient.getStreet2());
+        deathLocationTxt.setText(patient.getDeathStreet());
+        if (patient.getDeathCity() != null) {
+            deathCity.setText(patient.getDeathCity());
+        }
+        if (patient.getDeathRegion() != null) {
+            deathRegion.setValue(patient.getDeathRegion()
+                    .getValue());
+        }
+        if (patient.getStreetNumber() != null) {
+            streetNumberTxt.setText(patient.getStreetNumber());
+        }
+        if (patient.getStreetName() != null) {
+            streetNameTxt.setText(patient.getStreetName());
+        }
+        if (patient.getCity() != null) {
+            cityTxt.setText(patient.getCity());
         }
         if (patient.getSuburb() != null) {
             suburbTxt.setText(patient.getSuburb());
@@ -256,85 +299,340 @@ public class GUIPatientUpdateProfile extends UndoableController {
     }
 
     /**
-     * Checks for invalidity of a double used for height or weight.
-     * Returns true if input is not a valid double or the input is a valid double with a value of less than 0.
-     *
-     * @param input String input from text field
-     * @return boolean is invalid
-     */
-    private boolean isInvalidDouble(String input) {
-        try {
-            double value = Double.parseDouble(input);
-            return (value < 0);
-        } catch (NumberFormatException e) {
-            return true;
-        }
-    }
-
-    /**
      * Sets profile changes after checking each field for validity
      */
     @FXML
     public void saveProfileUpdater() {
-        systemLogger.log(Level.FINEST, "Setting patient profile for update...");
         Boolean valid = true;
-
         StringBuilder invalidContent = new StringBuilder();
 
-        // nhi
-        if (!Pattern.matches("[A-Za-z]{3}[0-9]{4}",
-                nhiTxt.getText()
-                        .toUpperCase())) {
-            valid = setInvalid(nhiTxt);
-            invalidContent.append("NHI must be three letters followed by four numbers. ");
-        }
+        valid = validateNhi(valid, invalidContent);
+        valid = validateFirstName(valid, invalidContent);
+        valid = validateLastName(valid, invalidContent);
+        valid = validateMiddleNames(valid, invalidContent);
+        valid = validatePreferredName(valid);
+        valid = validateStreetNumber(valid, invalidContent);
+        valid = validateStreetName(valid, invalidContent);
+        valid = validateCity(valid, invalidContent);
+        valid = validateRegion(valid, invalidContent);
+        valid = validateZip(valid, invalidContent);
+        valid = validateWeight(valid, invalidContent);
+        valid = validateHeight(valid, invalidContent);
+        valid = validateBloodGroup(valid, invalidContent);
+        valid = validateBirthDate(valid, invalidContent);
+        valid = validateDeathDate(valid, invalidContent);
+        valid = validateDeathLocation(valid, invalidContent);
+        valid = validateDeathCity(valid, invalidContent);
+        valid = validateDeathRegion(valid, invalidContent);
+        valid = validateDeathDetail(valid, invalidContent);
 
-        try {
-            // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
-            if (Database.getPatientByNhi(nhiTxt.getText()).getUuid() != target.getUuid()) {
-                valid = setInvalid(nhiTxt);
-                invalidContent.append("NHI is already in use");
+        // if all are valid
+        if (valid) {
+            setPatientAttributes();
+            userActions.log(INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});
+        } else {
+            userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", after.getNhiNumber()});
+        }
+    }
+
+
+    private Boolean validateDeathRegion(Boolean valid, StringBuilder invalidContent) {
+        if (deathRegion.getSelectionModel()
+                .getSelectedIndex() != -1) {
+            Enum region = Region.getEnumFromString(deathRegion.getSelectionModel()
+                    .getSelectedItem());
+            if (region == null) {
+                valid = setInvalid(deathRegion);
+                invalidContent.append("Region must be a valid selection. ");
             } else {
-                setValid(nhiTxt);
+                setValid(deathRegion);
             }
-        } catch (InvalidObjectException e) {
-            setInvalid(nhiTxt);
-        }
-
-        // first name
-        if (!firstnameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)+")) {
-            valid = setInvalid(firstnameTxt);
-            invalidContent.append("First name must be letters, ., or -. ");
         } else {
-            setValid(firstnameTxt);
+            setValid(deathRegion);
         }
+        return valid;
+    }
 
-        // last name
-        if (!lastnameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)+")) {
-            valid = setInvalid(lastnameTxt);
-            invalidContent.append("Last name must be letters, ., or -. ");
+
+    private Boolean validateDeathCity(Boolean valid, StringBuilder invalidContent) {
+        if (!deathCity.getText().matches(String.valueOf(UIRegex.CITY))) {
+            valid = setInvalid(deathCity);
+            invalidContent.append("City must be letters or -. ");
         } else {
-            setValid(lastnameTxt);
+            setValid(deathCity);
         }
+        return valid;
+    }
 
-        //middle names
-        if (!middlenameTxt.getText()
-                .matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)*")) {
-            valid = setInvalid(middlenameTxt);
-            invalidContent.append("Middle name(s) must be letters, ., or -.");
+
+    private Boolean validateStreetNumber(Boolean valid, StringBuilder invalidContent) {
+        if (!streetNumberTxt.getText().matches(UIRegex.NUMBER.getValue())) {
+            valid = setInvalid(streetNumberTxt);
+            invalidContent.append("Street number must be a number under 5 characters");
         } else {
-            setValid(middlenameTxt);
+            setValid(streetNumberTxt);
         }
+        return valid;
+    }
 
-        // preferred name
-        if (preferrednameTxt.getText() != null && !preferrednameTxt.getText().matches("([A-Za-z]+[.]*[-]*[']*[\\s]*)*")) {
-            valid = setInvalid(preferrednameTxt);
+    private Boolean validateStreetName(Boolean valid, StringBuilder invalidContent) {
+        if (!streetNameTxt.getText().matches(UIRegex.STREET.getValue())) {
+            valid = setInvalid(streetNameTxt);
+            invalidContent.append("Street name must be letters or -. ");
         } else {
-            setValid(preferrednameTxt);
+            setValid(streetNameTxt);
+        }
+        return valid;
+    }
+
+
+    private Boolean validateCity(Boolean valid, StringBuilder invalidContnet) {
+        if (!cityTxt.getText().matches(UIRegex.CITY.getValue())) {
+            valid = setInvalid(cityTxt);
+            invalidContnet.append("City must be letters, spaces, or -.");
+        } else {
+            setValid(cityTxt);
+        }
+        return valid;
+    }
+
+
+    private void setPatientAttributes() {
+        after.setNhiNumber(nhiTxt.getText());
+        after.setFirstName(firstnameTxt.getText());
+        after.setLastName(lastnameTxt.getText());
+
+        if (middlenameTxt.getText()
+                .equals("")) {
+            after.setMiddleNames(new ArrayList<>());
+        } else {
+            List<String> middlenames = Arrays.asList(middlenameTxt.getText()
+                    .split(" "));
+            ArrayList<String> middles = new ArrayList<>(middlenames);
+            after.setMiddleNames(middles);
+        }
+        if (preferrednameTxt.getText() != null) {
+            after.setPreferredName(preferrednameTxt.getText());
+        }
+        if (birthGenderMaleRadio.isSelected()) {
+            after.setBirthGender(BirthGender.getEnumFromString("male"));
+        }
+        if (birthGenderFemaleRadio.isSelected()) {
+            after.setBirthGender(BirthGender.getEnumFromString("female"));
+        }
+        if (preferredGenderManRadio.isSelected()) {
+            after.setPreferredGender(PreferredGender.getEnumFromString("man"));
+        }
+        if (preferredGenderWomanRadio.isSelected()) {
+            after.setPreferredGender(PreferredGender.getEnumFromString("woman"));
+        }
+        if (preferredGenderNonBinaryRadio.isSelected()) {
+            after.setPreferredGender(PreferredGender.getEnumFromString("nonbinary"));
+        }
+        if (dobDate.getValue() != null) {
+            after.setBirth(dobDate.getValue());
         }
 
+        if (dateOfDeath.getValue() != null) {
+            after.setDeathDate(dateOfDeath.getDateTimeValue());
+        }
+        after.setDeathStreet(deathLocationTxt.getText());
+        after.setDeathCity(deathCity.getText());
+        if (deathRegion.getValue() != null) {
+            after.setDeathRegion(Region.getEnumFromString(deathRegion.getSelectionModel()
+                    .getSelectedItem()));
+        }
+
+        after.setStreetNumber(streetNumberTxt.getText());
+        after.setStreetName(streetNameTxt.getText());
+        after.setCity(cityTxt.getText());
+        try {
+            after.setSuburb(suburbTxt.getText());
+        } catch (DataFormatException e) {
+            userActions.log(Level.SEVERE, "Unable to set suburb", "attempted to update patient attributes");
+        }        if (regionDD.getValue() != null) {
+            after.setRegion(Region.getEnumFromString(regionDD.getSelectionModel()
+                    .getSelectedItem()));
+        }
+        if (zipTxt.getText() != null) {
+            after.setZip(zipTxt.getText()
+                    .equals("") ? 0 : Integer.parseInt(zipTxt.getText()));
+        }
+        if (weightTxt.getText() != null) {
+            after.setWeight(Double.parseDouble(weightTxt.getText()));
+        }
+        if (heightTxt.getText() != null) {
+            after.setHeight(Double.parseDouble(heightTxt.getText()));
+        }
+        if (bloodGroupDD.getValue() != null) {
+            after.setBloodGroup(BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
+                    .getSelectedItem()));
+        }
+
+        Action action = new Action(target, after);
+        statesHistoryScreen.addAction(action);
+        patientDataService.save(after);
+        SystemLogger.systemLogger.log(Level.FINE, "Successfuly update patient to:\n" + after);
+    }
+
+
+    private Boolean validateDeathLocation(Boolean valid, StringBuilder invalidContent) {
+        // death location
+        if (deathLocationTxt.getText() != null) {
+            if (deathLocationTxt.getText()
+                    .length() != 0) {
+                if (!deathLocationTxt.getText()
+                        .matches(UIRegex.DEATH_LOCATION.getValue())) {
+                    valid = setInvalid(deathLocationTxt);
+                    invalidContent.append("Incorrect death location format. ");
+                }
+                else {
+                    setValid(deathLocationTxt);
+                }
+            }
+        } else {
+            setValid(deathLocationTxt);
+        }
+        return valid;
+    }
+
+
+    private Boolean validateDeathDate(Boolean valid, StringBuilder invalidContent) {
+        // date of death
+        if (dateOfDeath.getValue() != null) {
+            if ((dobDate.getValue() != null && dateOfDeath.getValue()
+                    .isBefore(dobDate.getValue())) || dateOfDeath.getValue()
+                    .isAfter(LocalDate.now())) {
+                valid = setInvalid(dateOfDeath);
+                invalidContent.append("Date of death must be a valid date either today or earlier and must be after date of birth. ");
+            } else {
+                setValid(dateOfDeath);
+            }
+        } else {
+            setValid(dateOfDeath);
+        }
+        return valid;
+    }
+
+    private Boolean validateBirthDate(Boolean valid, StringBuilder invalidContent) {
+        // date of birth
+        if (dobDate.getValue() != null) {
+            if (dobDate.getValue().isAfter(LocalDate.now())) {
+                valid = setInvalid(dobDate);
+                invalidContent.append("Date of birth must be a valid date either today or earlier and must be before date of death. ");
+            } else {
+                setValid(dobDate);
+            }
+        } else {
+            valid = setInvalid(dobDate);
+        }
+        return valid;
+    }
+
+
+    private Boolean validateDeathDetail(Boolean valid, StringBuilder invalidContent) {
+        boolean isSettingDeath = false;
+
+        // if any of these are set then the user is trying to set a death
+        if (dateOfDeath.getValue() != null) {
+            isSettingDeath = true;
+        } else if (deathLocationTxt.getText() != null && deathLocationTxt.getText().length() != 0) {
+            isSettingDeath = true;
+        } else if (deathCity.getText().length() != 0) {
+            isSettingDeath = true;
+        } else if (deathRegion.getSelectionModel().getSelectedIndex() != -1) {
+            isSettingDeath = true;
+        }
+
+        if (isSettingDeath) {
+            if (dateOfDeath.getValue() == null) {
+                valid = setInvalid(dateOfDeath);
+                invalidContent.append("Date required if patient deceased. ");
+            }
+//            if (deathLocationTxt.getText() == null || deathLocationTxt.getText().length() == 0) {
+//                valid = setInvalid(deathLocationTxt);
+//                invalidContent.append("Location required if patient deceased. ");
+//            }
+            if (deathCity.getText().length() == 0) {
+                valid = setInvalid(deathCity);
+                invalidContent.append("City required if patient deceased. ");
+            }
+            if (deathRegion.getSelectionModel().getSelectedIndex() == -1) {
+                valid = setInvalid(deathRegion);
+                invalidContent.append("Region required if patient deceased. ");
+            }
+        }
+
+        return valid;
+
+    }
+
+
+    private Boolean validateBloodGroup(Boolean valid, StringBuilder invalidContent) {
+        // blood group
+        if (bloodGroupDD.getValue() != null) {
+            String bgStr = bloodGroupDD.getValue();
+            Enum bloodgroup = BloodGroup.getEnumFromString(bgStr);
+            if (bloodgroup == null) {
+                valid = setInvalid(bloodGroupDD);
+                invalidContent.append("Blood group must be a valid selection. ");
+            } else {
+                setValid(bloodGroupDD);
+            }
+        } else {
+            setValid(bloodGroupDD);
+        }
+        return valid;
+    }
+
+
+    private Boolean validateHeight(Boolean valid, StringBuilder invalidContent) {
+        // height
+        if (!Pattern.matches(UIRegex.HEIGHT.getValue(), heightTxt.getText())) {
+            valid = setInvalid(heightTxt);
+            invalidContent.append("Height must be a valid decimal number. ");
+        } else {
+            setValid(heightTxt);
+        }
+        return valid;
+    }
+
+
+    private Boolean validateWeight(Boolean valid, StringBuilder invalidContent) {
+        // weight
+        if (!Pattern.matches(UIRegex.WEIGHT.getValue(), weightTxt.getText())) {
+            valid = setInvalid(weightTxt);
+            invalidContent.append("Weight must be a valid decimal number. ");
+        } else {
+            setValid(weightTxt);
+        }
+        return valid;
+    }
+
+
+    private Boolean validateZip(Boolean valid, StringBuilder invalidContent) {
+        // zip
+        if (!zipTxt.getText().equals("")) {
+            try {
+                if (!Pattern.matches(UIRegex.ZIP.getValue(), zipTxt.getText())) {
+                    valid = setInvalid(zipTxt);
+                    invalidContent.append("Zip must be four digits. ");
+                } else {
+                    Integer.parseInt(zipTxt.getText());
+                    setValid(zipTxt);
+                }
+            } catch (NumberFormatException e) {
+                valid = setInvalid(zipTxt);
+                invalidContent.append("Zip must be four digits. ");
+            }
+        } else {
+            setValid(zipTxt);
+        }
+        return valid;
+    }
+
+
+    private Boolean validateRegion(Boolean valid, StringBuilder invalidContent) {
         // region
         if (regionDD.getSelectionModel()
                 .getSelectedIndex() != -1) {
@@ -349,164 +647,74 @@ public class GUIPatientUpdateProfile extends UndoableController {
         } else {
             setValid(regionDD);
         }
-
-
-        // zip
-        if (!zipTxt.getText()
-                .equals("")) {
-            try {
-                if (zipTxt.getText()
-                        .length() != 4 && !(zipTxt.getText()
-                        .equals(""))) {
-                    valid = setInvalid(zipTxt);
-                    invalidContent.append("Zip must be four digits. ");
-                } else {
-                    Integer.parseInt(zipTxt.getText());
-                    setValid(zipTxt);
-                }
-            } catch (NumberFormatException e) {
-                valid = setInvalid(zipTxt);
-                invalidContent.append("Zip must be four digits. ");
-            }
-        } else {
-            setValid(zipTxt);
-        }
-
-        // weight
-        if (weightTxt.getText() != null) {
-            if (isInvalidDouble(weightTxt.getText())) {
-                valid = setInvalid(weightTxt);
-                invalidContent.append("Weight must be a valid decimal number. ");
-            } else {
-                setValid(weightTxt);
-            }
-        } else {
-            setValid(weightTxt);
-        }
-
-        // height
-        if (heightTxt.getText() != null) {
-            if (isInvalidDouble(heightTxt.getText())) {
-                valid = setInvalid(heightTxt);
-                invalidContent.append("Height must be a valid decimal number. ");
-            } else {
-                setValid(heightTxt);
-            }
-        } else {
-            setValid(heightTxt);
-        }
-
-        // blood group
-        if (bloodGroupDD.getValue() != null) {
-            String bgStr = bloodGroupDD.getValue()
-                    .replace(' ', '_');
-            Enum bloodgroup = BloodGroup.getEnumFromString(bgStr);
-            if (bloodgroup == null) {
-                valid = setInvalid(bloodGroupDD);
-                invalidContent.append("Blood group must be a valid selection. ");
-            } else {
-                setValid(bloodGroupDD);
-            }
-        } else {
-            setValid(bloodGroupDD);
-        }
-
-        // date of birth
-        if (dobDate.getValue() != null) {
-            if (dobDate.getValue()
-                    .isAfter(LocalDate.now())) {
-                valid = setInvalid(dobDate);
-                invalidContent.append("Date of birth must be a valid date either today or earlier and must be before date of death. ");
-            } else {
-                setValid(dobDate);
-            }
-        } else {
-            valid = setInvalid(dobDate);
-        }
-
-        // date of death
-        if (dateOfDeath.getValue() != null) {
-            if ((dobDate.getValue() != null && dateOfDeath.getValue()
-                    .isBefore(dobDate.getValue())) || dateOfDeath.getValue()
-                    .isAfter(LocalDate.now())) {
-                valid = setInvalid(dateOfDeath);
-                invalidContent.append("Date of death must be a valid date either today or earlier and must be after date of birth. ");
-            } else {
-                setValid(dateOfDeath);
-            }
-        } else {
-            setValid(dateOfDeath);
-        }
-
-        // if all are valid
-        if (valid) {
-            after.setNhiNumber(nhiTxt.getText());
-            after.setFirstName(firstnameTxt.getText());
-            after.setLastName(lastnameTxt.getText());
-            if (middlenameTxt.getText()
-                    .equals("")) {
-                after.setMiddleNames(new ArrayList<>());
-            } else {
-                List<String> middlenames = Arrays.asList(middlenameTxt.getText()
-                        .split(" "));
-                ArrayList<String> middles = new ArrayList<>(middlenames);
-                after.setMiddleNames(middles);
-            }
-            if (preferrednameTxt.getText() != null) {
-                after.setPreferredName(preferrednameTxt.getText());
-            }
-            if (birthGenderMaleRadio.isSelected()) {
-                after.setBirthGender((BirthGender) BirthGender.getEnumFromString("male"));
-            }
-            if (birthGenderFemaleRadio.isSelected()) {
-                after.setBirthGender((BirthGender) BirthGender.getEnumFromString("female"));
-            }
-            if (preferredGenderManRadio.isSelected()) {
-                after.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("man"));
-            }
-            if (preferredGenderWomanRadio.isSelected()) {
-                after.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("woman"));
-            }
-            if (preferredGenderNonBinaryRadio.isSelected()) {
-                after.setPreferredGender((PreferredGender) PreferredGender.getEnumFromString("nonbinary"));
-            }
-            if (dobDate.getValue() != null) {
-                after.setBirth(dobDate.getValue());
-            }
-            if (dateOfDeath.getValue() != null) {
-                after.setDeath(dateOfDeath.getValue());
-            }
-            after.setStreet1(street1Txt.getText());
-            after.setStreet2(street2Txt.getText());
-            after.setSuburb(suburbTxt.getText());
-            if (regionDD.getValue() != null) {
-                after.setRegion((Region) Region.getEnumFromString(regionDD.getSelectionModel()
-                        .getSelectedItem()));
-            }
-            if (zipTxt.getText() != null) {
-                after.setZip(zipTxt.getText()
-                        .equals("") ? 0 : Integer.parseInt(zipTxt.getText()));
-            }
-            if (weightTxt.getText() != null) {
-                after.setWeight(Double.parseDouble(weightTxt.getText()));
-            }
-            if (heightTxt.getText() != null) {
-                after.setHeight(Double.parseDouble(heightTxt.getText()));
-            }
-            if (bloodGroupDD.getValue() != null) {
-                after.setBloodGroup((BloodGroup) BloodGroup.getEnumFromString(bloodGroupDD.getSelectionModel()
-                        .getSelectedItem()));
-            }
-
-            Action action = new Action(target, after);
-            statesHistoryScreen.addAction(action);
-
-            userActions.log(Level.INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});
-        }
-        else {
-            userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", after.getNhiNumber()});
-        }
+        return valid;
     }
+
+
+    private Boolean validatePreferredName(Boolean valid) {
+        // preferred name
+        if (!Pattern.matches(UIRegex.FNAME.getValue(), preferrednameTxt.getText())) {
+            valid = setInvalid(preferrednameTxt);
+        } else {
+            setValid(preferrednameTxt);
+        }
+        return valid;
+    }
+
+
+    private Boolean validateMiddleNames(Boolean valid, StringBuilder invalidContent) {
+        //middle names
+        if (!Pattern.matches(UIRegex.MNAME.getValue(), middlenameTxt.getText())) {
+            valid = setInvalid(middlenameTxt);
+            invalidContent.append("Middle name(s) must be letters, ., or -.");
+        } else {
+            setValid(middlenameTxt);
+        }
+        return valid;
+    }
+
+
+    private Boolean validateLastName(Boolean valid, StringBuilder invalidContent) {
+        // last name
+        if (!Pattern.matches(UIRegex.LNAME.getValue(), lastnameTxt.getText())) {
+            valid = setInvalid(lastnameTxt);
+            invalidContent.append("Last name must be letters, ., or -. ");
+        } else {
+            setValid(lastnameTxt);
+        }
+        return valid;
+    }
+
+
+    private Boolean validateFirstName(Boolean valid, StringBuilder invalidContent) {
+        // first name
+        if (!Pattern.matches(UIRegex.FNAME.getValue(), firstnameTxt.getText())) {
+            valid = setInvalid(firstnameTxt);
+            invalidContent.append("First name must be letters, ., or -. ");
+        } else {
+            setValid(firstnameTxt);
+        }
+        return valid;
+    }
+
+
+    private Boolean validateNhi(Boolean valid, StringBuilder invalidContent) {
+        // nhi
+        if (!Pattern.matches(UIRegex.NHI.getValue(), nhiTxt.getText().toUpperCase())) {
+            valid = setInvalid(nhiTxt);
+            invalidContent.append("NHI must be three letters followed by four numbers. ");
+        }
+
+        // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
+        if (!patientDataService.getPatientByNhi(nhiTxt.getText()).getNhiNumber().equals(((Patient) target).getNhiNumber())) {
+            valid = setInvalid(nhiTxt);
+            invalidContent.append("NHI is already in use. ");
+        } else {
+            setValid(nhiTxt);
+        }
+        return valid;
+    }
+
 
     /***
      * Applies the invalid class to the target control
@@ -525,11 +733,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
      * @param target The target to remove the class from
      */
     private void setValid(Control target) {
-        if (target.getStyleClass()
-                .contains("invalid")) {
-            target.getStyleClass()
-                    .remove("invalid");
-        }
+        target.getStyleClass()
+                .remove("invalid");
     }
 
 }

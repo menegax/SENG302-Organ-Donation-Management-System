@@ -1,18 +1,22 @@
 package controller;
 
+import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import model.Administrator;
-import model.Patient;
-import service.Database;
+import service.AdministratorDataService;
 import utility.GlobalEnums;
-import utility.StatusObservable;
+import utility.GlobalEnums.UIRegex;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.InvalidObjectException;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,26 +48,18 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
     @FXML
     private PasswordField passwordTxt;
 
-    private Administrator target;
-
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     /**
      * Initializes the administrator editing screen.
      * Populates the Region drop down menu using region enums.
      * Calls to load the administrator profile and calls to set up undo/redo functionality
      */
-    public void initialize() {
+    public void load() {
         // Registering a change event to clear the invalid class
-        UserControl userControl = new UserControl();
-        if (userControl.getTargetUser() instanceof Administrator) {
-            target = (Administrator) userControl.getTargetUser();
-        }
-        else {
-            target = (Administrator) userControl.getLoggedInUser();
-        }
-        loadProfile(target.getUsername());
+        loadProfile(((Administrator) target).getUsername());
         setUpStateHistory();
     }
 
@@ -76,11 +72,11 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
      */
     private void loadProfile(String username) {
         try {
-            Administrator administrator = Database.getAdministratorByUsername(username);
+            Administrator administrator = factory.getAdministratorDataAccess().getAdministratorByUsername(username);
             populateForm(administrator);
         }
-        catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to edit the logged in user");
+        catch (NullPointerException e) {
+            userActions.log(Level.SEVERE, "Error loading logged in user", new String[]{"attempted to edit the logged in user", ((Administrator) target).getUsername()});
         }
     }
 
@@ -95,7 +91,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
             add(lastnameTxt);
             add(middlenameTxt);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORPROFILEUPDATE);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORPROFILEUPDATE, target);
     }
 
 
@@ -127,23 +123,21 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
      */
     public void saveProfile() {
         Boolean valid = true;
-        if (firstnameTxt.getText()
-                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", firstnameTxt.getText())) {
+        if (!Pattern.matches(UIRegex.FNAME.getValue(), firstnameTxt.getText())) {
             valid = false;
             setInvalid(firstnameTxt);
         }
         else {
             setValid(firstnameTxt);
         }
-        if (lastnameTxt.getText()
-                .length() == 0 || !Pattern.matches("[a-z|A-Z]{1,20}", lastnameTxt.getText())) {
+        if (!Pattern.matches(UIRegex.LNAME.getValue(), lastnameTxt.getText())) {
             valid = false;
             setInvalid(lastnameTxt);
         }
         else {
             setValid(lastnameTxt);
         }
-        if (!Pattern.matches("[a-z|A-Z ]{0,50}", middlenameTxt.getText())) {
+        if (!Pattern.matches(UIRegex.MNAME.getValue(), middlenameTxt.getText())) {
             valid = false;
             setInvalid(middlenameTxt);
         }
@@ -180,12 +174,13 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
             after.userModified();
 
             Action action = new Action(target, after);
+            new AdministratorDataService().save(after);
             statesHistoryScreen.addAction(action);
 
-            userActions.log(Level.INFO, "Successfully updated admin profile", "Attempted to update admin profile");
+            userActions.log(Level.INFO, "Successfully updated admin profile", new String[]{"Attempted to update admin profile", ((Administrator) target).getUsername()});
         }
         else {
-            userActions.log(Level.WARNING, "Invalid fields", "Attempted to update admin profile");
+            userActions.log(Level.WARNING, "Invalid fields", new String[]{"Attempted to update admin profile", ((Administrator) target).getUsername()});
         }
     }
 

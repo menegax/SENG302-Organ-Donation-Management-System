@@ -1,8 +1,16 @@
 package utility.undoRedo;
 
+import data_access.factories.DAOFactory;
+import data_access.interfaces.ITransplantWaitListDataAccess;
+import data_access.interfaces.IUserDataAccess;
 import controller.ScreenControl;
+import data_access.mysqlDAO.TransplantWaitingListDAO;
+import model.Patient;
 import model.User;
-import service.Database;
+import service.OrganWaitlist;
+import utility.GlobalEnums;
+
+import java.util.Iterator;
 
 /**
  * Represents an action (edit, add, delete) performed on a user in the application
@@ -14,7 +22,11 @@ public class Action {
     private User after;
     private boolean isExecuted;
 
-    ScreenControl screenControl = ScreenControl.getScreenControl();
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+    private IUserDataAccess dao = factory.getUserDataAccess();
+    private ITransplantWaitListDataAccess waitingListDAO = factory.getTransplantWaitingListDataAccess();
 
     /**
      * Constructor for the action
@@ -44,13 +56,16 @@ public class Action {
      */
     public void execute() {
         if (after == null) {
-            Database.removeUser(current);
+            dao.deleteUser(current);
             current = null;
         } else if (before == null) {
             current = after.deepClone();
-            Database.addUser(current);
+            dao.addUser(current);
         } else {
             current.setAttributes(after);
+        }
+        if (current instanceof  Patient) {
+            createOrganRequests((Patient) current);
         }
         screenControl.setIsSaved(false);
         isExecuted = true;
@@ -62,12 +77,15 @@ public class Action {
     public void unexecute() {
         if (after == null) {
             current = before.deepClone();
-            Database.addUser(current);
+            dao.addUser(current);
         } else if (before == null) {
-            Database.removeUser(current);
+            dao.deleteUser(current);
             current = null;
         } else {
             current.setAttributes(before);
+        }
+        if (current instanceof Patient) {
+            createOrganRequests((Patient) current);
         }
         screenControl.setIsSaved(false);
         isExecuted = false;
@@ -75,5 +93,28 @@ public class Action {
 
     public boolean isExecuted() {
         return isExecuted;
+    }
+
+
+    /**
+     * Creates new organ requests for updated registered organs to receive, and adds them to the organ
+     * waiting list.
+     */
+    private void createOrganRequests(Patient patient) {
+        OrganWaitlist waitlist = waitingListDAO.getWaitingList();
+        if (waitlist == null) {
+            waitlist = new OrganWaitlist();
+        }
+        Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();
+        while (iter.hasNext()) {
+            OrganWaitlist.OrganRequest next = iter.next();
+            if (next.getReceiverNhi().equals(patient.getNhiNumber())) {
+                iter.remove();
+            }
+        }
+        for (GlobalEnums.Organ organ : patient.getRequiredOrgans().keySet()) {
+            waitlist.add(patient, organ);
+        }
+        waitingListDAO.updateWaitingList(waitlist);
     }
 }

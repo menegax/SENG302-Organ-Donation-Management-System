@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="diagnosisUpdatePane" prefHeight="318.0" prefWidth="529.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/" fx:controller="controller.GUIPatientUpdateDiagnosis">
+<GridPane fx:id="diagnosisUpdatePane" prefHeight="318.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientUpdateDiagnosis">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="17.600024414062503" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="260.7999755859375" />
@@ -55,8 +55,8 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="doneButton" mnemonicParsing="false" onAction="#completeUpdate" prefHeight="30.0" prefWidth="61.0" text="Done" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelUpdate" prefHeight="30.0" prefWidth="65.0" text="Cancel" GridPane.halignment="CENTER" />
+            <Button fx:id="doneButton" mnemonicParsing="false" onAction="#completeUpdate" prefHeight="30.0" prefWidth="125.0" text="Done" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelUpdate" prefHeight="30.0" prefWidth="109.0" text="Cancel" GridPane.halignment="CENTER" />
          </children>
       </GridPane>
    </children>

@@ -17,7 +17,7 @@ public class Administrator extends User {
 
     private String username;
 
-    private final String salt;
+    private String salt;
 
     private String password;
 
@@ -48,7 +48,28 @@ public class Administrator extends User {
         userModified();
     }
 
-    public String getUsername() {
+    /**
+     * Contructor for loading from database.
+     * @param username The username of the admin.
+     * @param fName The first name of the admin.
+     * @param mNames The middle names of the admin in a ArrayList.
+     * @param lName The last name of the admin.
+     * @param salt The salt of the password hash.
+     * @param password The hashed password of the admin.
+     * @param modified Timestamp of the last time the admin was modified.
+     */
+    public Administrator(String username, String fName, ArrayList<String> mNames, String lName, 
+    		String salt, String password, Timestamp modified, List<AdministratorActionRecord> records) {
+		super(fName, mNames, lName);
+		this.username = username;
+		this.salt = salt;
+		this.password = password;
+		this.modified = modified;
+		this.adminActionsList = records;
+		databaseImport();
+	}
+
+	public String getUsername() {
         return username;
     }
 
@@ -76,6 +97,13 @@ public class Administrator extends User {
         userModified();
     }
 
+    private void setHashedPassword(String hashedPassword) {
+        this.password = hashedPassword;
+    }
+
+    private void setSalt(String salt) {
+        this.salt = salt;
+    }
 
     /**
      * Returns the list of this admins actions. This should only be modified within UserActionHistory
@@ -96,6 +124,20 @@ public class Administrator extends User {
         setFirstName(newAdministratorAttributes.getFirstName());
         setLastName(newAdministratorAttributes.getLastName());
         setMiddleNames(newAdministratorAttributes.getMiddleNames());
-        setPassword(newAdministratorAttributes.getHashedPassword());
+        setHashedPassword(newAdministratorAttributes.getHashedPassword());
+        setSalt(newAdministratorAttributes.getSalt());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Administrator)) {
+            return false;
+        }
+        return username.toLowerCase().equals(((Administrator) obj).getUsername().toLowerCase());
+    }
+
+    @Override
+    public int hashCode() {
+        return username.toLowerCase().hashCode();
     }
 }

@@ -10,8 +10,11 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
+
+<?import tornadofx.control.DateTimePicker?>
 
 <GridPane fx:id="patientUpdateAnchorPane" prefHeight="489.0" prefWidth="822.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientUpdateProfile">
   <columnConstraints>
@@ -22,14 +25,15 @@
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="24.5999755859375" />
   </columnConstraints>
   <rowConstraints>
+    <RowConstraints />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="333.59999084472656" minHeight="10.0" prefHeight="284.00001525878906" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="333.59999084472656" minHeight="10.0" prefHeight="284.00001525878906" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="59.99998474121094" vgrow="SOMETIMES" />
       <RowConstraints minHeight="7.199999999999989" prefHeight="24.79997558593749" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <GridPane GridPane.columnSpan="2" GridPane.rowSpan="4">
+      <GridPane GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="4">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="1.5999931812286405" prefWidth="1.6000246524810784" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" prefWidth="119.99998779296874" />
@@ -46,9 +50,10 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <DatePicker fx:id="dateOfDeath" editable="false" prefHeight="38.0" prefWidth="902.0" promptText="Date of death" showWeekNumbers="true" GridPane.columnIndex="2" GridPane.rowIndex="6" />
             <Label text="NHI:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="5.0" />
@@ -70,16 +75,12 @@
                   <Insets right="5.0" />
                </GridPane.margin></Label>
             <DatePicker fx:id="dobDate" editable="false" prefHeight="38.0" prefWidth="998.0" promptText="Date of birth" showWeekNumbers="true" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-            <ChoiceBox fx:id="bloodGroupDD" prefHeight="38.0" prefWidth="1106.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-            <Label text="Date of Death:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
-               <GridPane.margin>
-                  <Insets right="5.0" />
-               </GridPane.margin></Label>
+            <ChoiceBox fx:id="bloodGroupDD" prefHeight="38.0" prefWidth="1106.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
             <Label text="Date of Birth:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <Label text="Blood Group:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="8">
+            <Label text="Blood Group:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
@@ -88,10 +89,34 @@
                   <Insets right="5.0" />
                </GridPane.margin></Label>
             <TextField fx:id="preferrednameTxt" prefHeight="40.0" prefWidth="320.0" promptText="Preferred Name" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <TextField fx:id="deathLocationTxt" prefHeight="39.0" prefWidth="320.0" promptText="Death location" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+            <Label alignment="CENTER_RIGHT" text="Death Location:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+            </Label>
+            <Label text="Date of Death:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="8">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </Label>
+            <TextField fx:id="deathCity" prefHeight="39.0" prefWidth="320.0" promptText="Death city" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+            <Label alignment="CENTER_RIGHT" text="Death City:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="10" GridPane.valignment="CENTER">
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+            </Label>
+            <ChoiceBox fx:id="deathRegion" prefHeight="38.0" prefWidth="527.0" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+            <Label alignment="CENTER_RIGHT" text="Death Region:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="11" GridPane.valignment="CENTER">
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+            </Label>
+            <DateTimePicker fx:id="dateOfDeath" editable="true" prefHeight="38.0" prefWidth="902.0" promptText="Date of death" showWeekNumbers="true" GridPane.columnIndex="2" GridPane.rowIndex="8" />
          </children>
       </GridPane>
-      <Button fx:id="saveButtonForUpdate" mnemonicParsing="false" onAction="#saveProfileUpdater" prefHeight="39.0" prefWidth="115.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Set" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-      <Label fx:id="lastModifiedLbl" prefHeight="18.0" prefWidth="283.0" text="Last Modified:" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+      <Button fx:id="saveButtonForUpdate" mnemonicParsing="false" onAction="#saveProfileUpdater" prefHeight="39.0" prefWidth="115.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Set" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+      <Label fx:id="lastModifiedLbl" prefHeight="18.0" prefWidth="283.0" text="Last Modified:" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>
@@ -99,7 +124,7 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <GridPane prefWidth="338.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowSpan="4">
+      <GridPane prefWidth="338.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="4">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" prefWidth="4.000023460388185" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="106.800048828125" />
@@ -122,14 +147,14 @@
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <Label text="Street 1:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <Label text="Street:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <TextField fx:id="street1Txt" prefHeight="38.0" prefWidth="320.0" promptText="Street 1" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <TextField fx:id="street2Txt" prefHeight="38.0" prefWidth="320.0" promptText="Street 2" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <TextField fx:id="street1Txt" prefHeight="38.0" prefWidth="320.0" promptText="Street" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="cityTxt" prefHeight="38.0" prefWidth="320.0" promptText="City" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <TextField fx:id="suburbTxt" prefHeight="39.0" prefWidth="320.0" promptText="Suburb" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label text="Street 2:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Label text="City:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
@@ -197,6 +222,17 @@
                   <RadioButton fx:id="birthGenderFemaleRadio" mnemonicParsing="false" prefHeight="46.0" prefWidth="110.0" text="Female" toggleGroup="$birthGenderRadioButtons" GridPane.columnIndex="1" />
                </children>
             </GridPane>
+            <Label text="Street:" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </Label>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <children>
+                  <TextField fx:id="streetNumberTxt" prefHeight="40.0" prefWidth="176.0" promptText="Number" />
+                  <TextField fx:id="streetNameTxt" prefHeight="38.0" prefWidth="320.0" promptText="Street Name" />
+               </children>
+            </HBox>
          </children>
       </GridPane>
    </children>

@@ -53,22 +53,22 @@ public class Disease implements Serializable {
      * Checks a diagnosis date is not after the current date or before the patient's birth date.
      * Returns true if invalid, false otherwise
      * @param date date to set as diagnosis date
-     * @param patient patient to check for birth date validity
+     * @param birthDate birth date of patient
      * @return boolean invalid date
      */
-    public boolean isInvalidDiagnosisDate(LocalDate date, Patient patient) {
-        return (date.isAfter(LocalDate.now()) || date.isBefore(patient.getBirth()));
+    public boolean isInvalidDiagnosisDate(LocalDate date, LocalDate birthDate) {
+        return (date.isAfter(LocalDate.now()) || date.isBefore(birthDate));
     }
 
     /**
      *  Sets the diagnosed date of the disease. Throws an InvalidObjectException when the date is either in the
      *  future or before the patient was born.
      * @param date - date to set as the diagnosed date
-     * @param patient patient to
+     * @param birthDate patient birth date
      * @throws InvalidObjectException invalid date
      */
-    public void setDateDiagnosed(LocalDate date, Patient patient) throws InvalidObjectException {
-        if (isInvalidDiagnosisDate(date, patient)){
+    public void setDateDiagnosed(LocalDate date, LocalDate birthDate) throws InvalidObjectException {
+        if (isInvalidDiagnosisDate(date, birthDate)){
             throw new InvalidObjectException("Invalid date provided");
         }
         dateDiagnosed = date;

@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -14,12 +13,11 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.Procedure;
+import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -34,7 +32,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller class for the Patient procedures screen
  */
-public class GUIPatientProcedures extends UndoableController {
+public class GUIPatientProcedures extends UndoableController implements IWindowObserver{
 
     @FXML
     public AnchorPane patientProceduresPane;
@@ -78,11 +76,11 @@ public class GUIPatientProcedures extends UndoableController {
     @FXML
     public Button deleteProcedureButton;
 
-    private Patient patient;
-
     private Patient patientClone;
 
-    private UserControl userControl;
+    private UserControl userControl = UserControl.getUserControl();
+
+    private PatientDataService patientDataService = new PatientDataService();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -90,19 +88,16 @@ public class GUIPatientProcedures extends UndoableController {
     /**
      * Sets the TableViews to the appropriate procedures for the current patient
      */
-    public void initialize() {
-        userControl = new UserControl();
+    public void load() {
         if (userControl.getLoggedInUser() instanceof Patient) {
-            this.patient = (Patient) userControl.getLoggedInUser();
-            this.patientClone = (Patient) this.patient.deepClone();
+            this.patientClone = (Patient) this.target.deepClone();
             setupTables();
             //Disable any add, edit, or delete functionality for patients
             addProcedureButton.setVisible(false);
             editProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);
         } else if (userControl.getLoggedInUser() instanceof Clinician || userControl.getLoggedInUser() instanceof Administrator) {
-            this.patient = (Patient) userControl.getTargetUser();
-            this.patientClone = (Patient) this.patient.deepClone();
+            this.patientClone = (Patient) this.target.deepClone();
             setupTables();
         }
         setupUndoRedo();
@@ -116,14 +111,14 @@ public class GUIPatientProcedures extends UndoableController {
             add(pendingProceduresView);
             add(previousProceduresView);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTPROCEDURES, target);
     }
 
     /**
      * Sets up the tables to display the patient's procedures
      */
     private void setupTables() {
-        this.patientClone = (Patient) this.patient.deepClone();
+        this.patientClone = (Patient) this.target.deepClone();
         ObservableList<Procedure> previousProcedures = FXCollections.observableArrayList();
         ObservableList<Procedure> pendingProcedures = FXCollections.observableArrayList();
         for (Procedure procedure : patientClone.getProcedures()) {
@@ -191,19 +186,15 @@ public class GUIPatientProcedures extends UndoableController {
      */
     @FXML
     public void addProcedure() {
-        try {
-            UndoableStage stage = new UndoableStage();
-            //stage.setPopUp();
-            screenControl.addStage(stage.getUUID(), stage);
-            screenControl.show(stage.getUUID(),FXMLLoader.load(getClass().getResource("/scene/patientProcedureForm.fxml")));
-            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE,
-                    "Failed to open add procedure popup from patient procedures",
-                    "Attempted to open add procedure popup from patient procedures");
-            new Alert(Alert.AlertType.ERROR, "Unable to open add procedure window", ButtonType.OK).show();
-        }
+        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target);
+        controller.setTarget(target);
+    }
+
+    /**
+     * Called when the add/edit procedure window is closed
+     */
+    public void windowClosed() {
+        tableRefresh();
     }
 
     /**
@@ -219,26 +210,12 @@ public class GUIPatientProcedures extends UndoableController {
             selectedProcedure = pendingProceduresView.getSelectionModel().getSelectedItem();
         }
         if (selectedProcedure == null) {
-            userActions.log(Level.WARNING, "No procedure selected", "Attempted to edit a procedure");
+            userActions.log(Level.WARNING, "No procedure selected", new String[]{"Attempted to edit a procedure", ((Patient) target).getNhiNumber()});
             return;
         }
-        try {
-            UndoableStage stage = new UndoableStage();
-            //stage.setPopUp();
-            screenControl.addStage(stage.getUUID(), stage);
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/patientProcedureForm.fxml"));
-            screenControl.show(stage.getUUID(),fxmlLoader.load());
-            GUIPatientProcedureForm controller = fxmlLoader.getController();
-            controller.setupEditing(selectedProcedure);
-            systemLogger.log(Level.FINE, "set up event");
-            stage.setOnHiding(event -> Platform.runLater(this::tableRefresh));
-        }
-        catch (IOException e) {
-            userActions.log(Level.SEVERE,
-                    "Failed to load edit procedure scene from patient procedures popup",
-                    "Attempted to load edit procedure scene from patient procedures popup");
-            new Alert(Alert.AlertType.ERROR, "Unable to load procedures page", ButtonType.OK).show();
-        }
+        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target);
+        controller.setTarget(target);
+        controller.setupEditing(selectedProcedure);
     }
 
     /**
@@ -262,8 +239,8 @@ public class GUIPatientProcedures extends UndoableController {
         }
         if (selectedProcedure != null) {
             patientClone.removeProcedure(selectedProcedure);
-            statesHistoryScreen.addAction(new Action(patient, patientClone));
-            userActions.log(INFO, "Removed procedure " + selectedProcedure.getSummary(), new String[]{"Attempted to remove a procedure", patient.getNhiNumber()});
+            statesHistoryScreen.addAction(new Action(target, patientClone));
+            userActions.log(INFO, "Removed procedure " + selectedProcedure.getSummary(), new String[]{"Attempted to remove a procedure", ((Patient) target).getNhiNumber()});
             setupTables();
         }
     }

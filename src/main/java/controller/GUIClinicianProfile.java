@@ -7,18 +7,19 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
-import service.Database;
+import service.AdministratorDataService;
+import service.ClinicianDataService;
+import service.interfaces.IClinicianDataService;
 import utility.GlobalEnums;
-import utility.StatusObservable;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.undoRedo.UndoableStage;
+import utility.undoRedo.UndoableWrapper;
 
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIClinicianProfile {
+public class GUIClinicianProfile extends TargetedController {
     @FXML
     private GridPane clinicianProfilePane;
 
@@ -43,21 +44,26 @@ public class GUIClinicianProfile {
     @FXML
     private Button deleteButton;
 
-    private UserControl userControl = new UserControl();
+    private UserControl userControl = UserControl.getUserControl();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
+
+    private IClinicianDataService clinicianDataService = new ClinicianDataService();
 
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
-    public void initialize() {
+    public void load() {
+        Clinician clinicianToLoad = clinicianDataService.getClinician(((Clinician) target).getStaffID());
         if (userControl.getLoggedInUser() instanceof Clinician) {
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);
-            loadProfile(((Clinician) userControl.getLoggedInUser()));
+            loadProfile(clinicianToLoad);
         } else if (userControl.getLoggedInUser() instanceof Administrator) {
-            loadProfile(((Clinician) userControl.getTargetUser()));
-            if (((Clinician) userControl.getTargetUser()).getStaffID() == 0) {
+            loadProfile(clinicianToLoad);
+            if (((Clinician) target).getStaffID() == 0) {
                 deleteButton.setVisible(false);
                 deleteButton.setDisable(true);
             }
@@ -94,21 +100,12 @@ public class GUIClinicianProfile {
      * Deletes the current profile from the HashSet in Database, not from disk, not until saved
      */
     public void deleteProfile() {
-        Clinician clinician = (Clinician) userControl.getTargetUser();
-        if (clinician.getStaffID() != 0) {
-            Action action = new Action(clinician, null);
-            for (Stage stage : screenControl.getUsersStages(userControl.getLoggedInUser())) {
-                if (stage instanceof UndoableStage) {
-                    for (StatesHistoryScreen statesHistoryScreen : ((UndoableStage) stage).getStatesHistoryScreens()) {
-                        if (statesHistoryScreen.getUndoableScreen().equals(GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS)) {
-                            statesHistoryScreen.addAction(action);
-                        }
-                    }
-                }
-            }
-            userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(clinician.getStaffID())});
-            Database.deleteClinician(clinician);
-            ((Stage) clinicianProfilePane.getScene().getWindow()).close();
+        if (((Clinician) target).getStaffID() != 0) {
+            Action action = new Action((target), null);
+            new AdministratorDataService().deleteUser(target);
+            undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
+            userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(((Clinician) target).getStaffID())});
+            screenControl.closeWindow(clinicianProfilePane);
         }
     }
 }

@@ -1,36 +1,46 @@
 package controller;
 
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static utility.UserActionHistory.userActions;
+
+import data_access.factories.DAOFactory;
+import data_access.localDAO.LocalDB;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.input.KeyCode;
 import javafx.scene.control.Control;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
+import service.ClinicianDataService;
 import service.OrganWaitlist;
-import utility.StatusObservable;
+import service.PatientDataService;
+import service.interfaces.IClinicianDataService;
+import service.interfaces.IPatientDataService;
+import utility.GlobalEnums;
+import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import service.Database;
 import utility.GlobalEnums;
-import utility.undoRedo.UndoableStage;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
-
-import static utility.UserActionHistory.userActions;
 
 /**
  * This class is the controller for editing a patients required organs only accessible by the clinician
  */
-public class GUIPatientUpdateRequirements extends UndoableController{
+public class GUIPatientUpdateRequirements extends UndoableController implements IWindowObserver {
 
     @FXML
     private CheckBox liverCB;
@@ -68,36 +78,30 @@ public class GUIPatientUpdateRequirements extends UndoableController{
     @FXML
     private CheckBox connectivetissueCB;
 
-
     @FXML
     private GridPane patientRequirementsPane;
 
-    private Patient target;
-
     private Patient after;
 
-    private UserControl userControl;
+    private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private Set<GlobalEnums.Organ> initialRequirements = new HashSet<>();
 
     private Set<GlobalEnums.Organ> finalRequirements = new HashSet<>();
+    
+    private OrganWaitlist waitlist = LocalDB.getInstance().getOrganWaitlist();
+    
+    private IClinicianDataService clinicianDataService = new ClinicianDataService();
 
-//    private boolean closed = false;
+    private int totalRemoved;
 
     /**
-     * Initializes the requirements screen by laoding in the current patient
+     * Initializes the requirements screen by loading in the current patient
      */
-    public void initialize() {
-        userControl = new UserControl();
-        Object user = userControl.getLoggedInUser();
-        if (user instanceof Patient) {
-            loadProfile(((Patient) user).getNhiNumber());
-        }
-        if (userControl.getTargetUser() != null) {
-            loadProfile(((Patient)userControl.getTargetUser()).getNhiNumber());
-        }
+    public void load() {
+        loadProfile(((Patient) target).getNhiNumber());
         // Enter key triggers log in
         patientRequirementsPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -111,14 +115,16 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      *
      * @param nhi of the current patient being viewed
      */
-    private void loadProfile(String nhi) {
+    public void loadProfile(String nhi) {
         try {
-            Patient patient = Database.getPatientByNhi(nhi);
-            target = patient;
-            after = (Patient) patient.deepClone();
-            populateForm(after);
-        } catch (InvalidObjectException e) {
-            userActions.log(Level.SEVERE, "Error loading logged in user", "attempted to manage the donations for logged in user");
+            Patient patient = factory.getPatientDataAccess().getPatientByNhi(nhi);
+            if (patient != null) {
+                target = patient;
+                after = (Patient) patient.deepClone();
+                populateForm(after);
+            }
+        } catch (NullPointerException e) {
+            userActions.log(Level.SEVERE, "Error loading logged in user", new String[]{"attempted to manage the donations for logged in user", ((Patient) target).getNhiNumber()});
         }
         controls = new ArrayList<Control>() {{
             add(liverCB);
@@ -134,7 +140,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             add(bonemarrowCB);
             add(connectivetissueCB);
         }};
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEREQUIREMENTS);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.PATIENTUPDATEREQUIREMENTS, target);
     }
 
     /**
@@ -143,31 +149,48 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * @param patient currently being viewed
      */
     private void populateForm(Patient patient) {
-        ArrayList<GlobalEnums.Organ> organs = patient.getRequiredOrgans();
+        List<GlobalEnums.Organ> organs = new ArrayList<>(patient.getRequiredOrgans().keySet());
         if (organs != null) {
             if (organs.contains(GlobalEnums.Organ.LIVER)) {
                 liverCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.LIVER);
+            } else {
+                liverCB.setSelected(false);
             }
             if (organs.contains(GlobalEnums.Organ.KIDNEY)) {
                 kidneyCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.KIDNEY);
             }
+            else {
+                kidneyCB.setSelected(false);
+            }
             if (organs.contains(GlobalEnums.Organ.PANCREAS)) {
                 pancreasCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.PANCREAS);
+            }
+            else {
+                pancreasCB.setSelected(false);
             }
             if (organs.contains(GlobalEnums.Organ.HEART)) {
                 heartCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.HEART);
             }
+            else {
+                heartCB.setSelected(false);
+            }
             if (organs.contains(GlobalEnums.Organ.LUNG)) {
                 lungCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.LUNG);
             }
+            else {
+                lungCB.setSelected(false);
+            }
             if (organs.contains(GlobalEnums.Organ.INTESTINE)) {
                 intestineCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.INTESTINE);
+            }
+            else {
+                intestineCB.setSelected(false);
             }
             if (organs.contains(GlobalEnums.Organ.CORNEA)) {
                 corneaCB.setSelected(true);
@@ -177,21 +200,36 @@ public class GUIPatientUpdateRequirements extends UndoableController{
                 middleearCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.MIDDLEEAR);
             }
+            else {
+                middleearCB.setSelected(false);
+            }
             if (organs.contains(GlobalEnums.Organ.SKIN)) {
                 skinCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.SKIN);
+            }
+            else {
+                skinCB.setSelected(false);
             }
             if (organs.contains(GlobalEnums.Organ.BONE)) {
                 boneCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.BONE);
             }
+            else {
+                boneCB.setSelected(false);
+            }
             if (organs.contains(GlobalEnums.Organ.BONEMARROW)) {
                 bonemarrowCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.BONEMARROW);
             }
+            else {
+                bonemarrowCB.setSelected(false);
+            }
             if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) {
                 connectivetissueCB.setSelected(true);
                 initialRequirements.add(GlobalEnums.Organ.CONNECTIVETISSUE);
+            }
+            else {
+                connectivetissueCB.setSelected(false);
             }
         }
     }
@@ -200,6 +238,7 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * Save button makes sure that the current session is saved with the changes made
      */
     public void saveRequirements() {
+        finalRequirements.clear();
         if (liverCB.isSelected()) {
             after.addRequired(GlobalEnums.Organ.LIVER);
             finalRequirements.add(GlobalEnums.Organ.LIVER);
@@ -273,10 +312,9 @@ public class GUIPatientUpdateRequirements extends UndoableController{
             after.removeRequired(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
         deregistrationReason();
-        createOrganRequests();
 
-        Action action = new Action(target, after);
-        statesHistoryScreen.addAction(action);
+        IPatientDataService patientDataService = new PatientDataService();
+        patientDataService.save(after);
     }
 
     /**
@@ -284,52 +322,45 @@ public class GUIPatientUpdateRequirements extends UndoableController{
      * reason popup for each deregistered organ
      */
     private void deregistrationReason() {
-        Set<GlobalEnums.Organ> removedOrgans = initialRequirements;
-        removedOrgans.removeAll(finalRequirements);
-
-        for (GlobalEnums.Organ organ : removedOrgans) {
+        SystemLogger.systemLogger.log(FINEST, "Patient had organ requirements deregistered. Asking for deregistration reason...");
+        Map<GlobalEnums.Organ, LocalDate> removedOrgans = new HashMap<>(((Patient) target).getRequiredOrgans());
+        removedOrgans.keySet().removeAll(finalRequirements);
+        if (removedOrgans.size() == 0) {
+            Action action = new Action(target, after);
+            statesHistoryScreen.addAction(action);
+        }
+        totalRemoved = 0;
+        for (GlobalEnums.Organ organ : removedOrgans.keySet()) {
+            totalRemoved += 1;
             openReasonPopup(organ);
             after.removeRequired(organ);
         }
     }
 
     /**
-     * Opens the popup to select a reason for organ deregistration
+     * Opens the popup to getMedicationsByNhi a reason for organ deregistration
      * @param organ organ being validated for reason of deregistration
      */
     private void openReasonPopup(GlobalEnums.Organ organ) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scene/deregistrationReason.fxml"));
-            Parent root = fxmlLoader.load();
-            GUIRequiredOrganDeregistrationReason controller = fxmlLoader.getController();
-            controller.setOrgan(organ);
-            UndoableStage popUpStage = new UndoableStage();
-            screenControl.addStage(popUpStage.getUUID(), popUpStage);
-            screenControl.show(popUpStage.getUUID(), root);
-        } catch (IOException e) {
-            userActions.log(Level.SEVERE,
-                    "Failed to open deregistration of required organ scene from required organs update scene",
-                    "attempted to open deregistration of required organ reason window from required organs update scene");
-            new Alert(Alert.AlertType.ERROR, "Unable to open deregistration of required organ reason window", ButtonType.OK).show();
-        }
+        GUIRequiredOrganDeregistrationReason controller = (GUIRequiredOrganDeregistrationReason) screenControl.show("/scene/deregistrationReason.fxml", false,this, target);
+        controller.setOrgan(organ);
+        controller.setTarget(after);
     }
 
-    /**
-     * Creates new organ requests for updated registered organs to receive, and adds them to the organ
-     * waiting list.
-     */
-    private void createOrganRequests() {
-        OrganWaitlist waitlist = Database.getWaitingList();
-        Iterator<OrganWaitlist.OrganRequest> iter = waitlist.iterator();
-        while (iter.hasNext()) {
-            OrganWaitlist.OrganRequest next = iter.next();
-            if (next.getReceiverNhi().equals(after.getNhiNumber())) {
-                iter.remove();
+    public void windowClosed(){
+        totalRemoved -= 1;
+        if (totalRemoved == 0) {
+            if (after.getDeathDate() != null) {
+                after.clearRequiredOrgans();
             }
+            Action action = new Action(target, after);
+            statesHistoryScreen.addAction(action);
         }
-        for (GlobalEnums.Organ organ : after.getRequiredOrgans()) {
+        for (GlobalEnums.Organ organ : after.getRequiredOrgans().keySet()) {
             waitlist.add(after, organ);
         }
+        clinicianDataService.updateOrganWaitList(waitlist);
+        populateForm(after);
     }
 
 }

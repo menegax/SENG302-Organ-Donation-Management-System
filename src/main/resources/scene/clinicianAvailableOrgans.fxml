@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane fx:id="availableOrgans" prefHeight="391.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAvailableOrgans">
+  <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="56.79999580383301" vgrow="NEVER" />
+      <RowConstraints minHeight="0.80001143217087" prefHeight="333.00000419616697" vgrow="NEVER" />
+  </rowConstraints>
+   <children>
+      <TableView fx:id="availableOrgansTableView" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="patientCol" maxWidth="3000.0" minWidth="5.0" prefWidth="10.0" text="Patient" />
+          <TableColumn fx:id="organCol" maxWidth="3500.0" prefWidth="118.4000244140625" text="Organ" />
+          <TableColumn fx:id="locationCol" prefWidth="75.0" text="Location" />
+            <TableColumn fx:id="deathCol" prefWidth="75.0" text="Time Of Death" />
+            <TableColumn fx:id="organExpiryProgressCol" prefWidth="75.0" text="Organ Expiry Progress" />
+            <TableColumn fx:id="expiryCol" prefWidth="75.0" text="Organ Expiry" />
+        </columns>
+         <GridPane.margin>
+            <Insets bottom="60.0" left="60.0" right="60.0" top="10.0" />
+         </GridPane.margin>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+   </children>
+</GridPane>

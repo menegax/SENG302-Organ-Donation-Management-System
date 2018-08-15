@@ -18,9 +18,7 @@ import java.text.SimpleDateFormat;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
-public class GUIClinicianHistory {
-
-    private Clinician target;
+public class GUIClinicianHistory extends TargetedController{
 
     @FXML
     private TableColumn<ClinicianActionRecord, String> timeStampColumn;
@@ -42,15 +40,13 @@ public class GUIClinicianHistory {
 
     private ObservableList<ClinicianActionRecord> masterData = FXCollections.observableArrayList();
 
-    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
 
     /**
      * Initializes the screen and sets up the target for records as the currently logged in user
      */
-    public void initialize() {
-        UserControl userControl = new UserControl();
-        target = userControl.getLoggedInUser() instanceof Clinician ? (Clinician) userControl.getLoggedInUser() : null;
-        masterData.addAll(target.getClinicianActionsList());
+    public void load() {
+        masterData.addAll(((Clinician) target).getClinicianActionsList());
         populateTable();
     }
 

@@ -41,5 +41,15 @@ GUI ingredients history test: Pass
 
 GUI clear ingredients test: Pass
 
+###14/08/2018 - Aidan
+
+Navigate to the medications page: Pass
+
+GUI ingredients show on select test: Pass
+
+GUI ingredients history test: Pass
+
+GUI clear ingredients test: Pass
+
 
 
