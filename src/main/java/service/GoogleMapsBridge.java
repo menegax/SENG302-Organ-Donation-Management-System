@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import model.Patient;
 import netscape.javascript.JSObject;
 import utility.JSInjector;
+import utility.SystemLogger;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 /**
  * Bridge for the Google Maps window that holds the buttons' functions
@@ -71,7 +73,8 @@ public class GoogleMapsBridge implements Initializable {
                 .getResource("html/GoogleMap.html"))
                 .toExternalForm());
 
-        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> System.out.println(message));
+        // What to do with console.log statements
+        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
 
         try {
             robot = new Robot();
