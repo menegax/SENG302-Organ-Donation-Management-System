@@ -6,6 +6,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import model.Patient;
+import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 
@@ -36,15 +37,16 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
     /**
      * Adds a request for a organ to the waiting list.
      * ONLY FOR USE BY THE DATABASE.
-     * @param name      - The name of the patient requesting a organ.
+     * @param name      - The name of the patient requesting an organ.
      * @param organ     - The organ requested.
      * @param date      - The date of the request.
      * @param region    - The region of the organ request.
-     * @param nhi       - The NHI of the patient requesting a organ.
+     * @param nhi       - The NHI of the patient requesting an organ.
      * @return          - Returns true if Collection changed, otherwise false.
      */
-	public boolean add(String name, Organ organ, LocalDate date, Region region, String nhi) {
-		return requests.add(new OrganRequest(name, organ, date, region, nhi));
+	public boolean add(String name, Organ organ, LocalDate date, Region region, String nhi, String address) {
+		Patient patient = new PatientDataService().getPatientByNhi(nhi);
+		return requests.add(new OrganRequest(name, organ, date, region, nhi, patient.getAge(), patient.getFormattedAddress(), patient.getBloodGroup()));
 	}
 
 	/**
@@ -73,6 +75,9 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		Organ organ;
 		String name;
 		String nhi;
+		int age;
+		String address;
+		GlobalEnums.BloodGroup bloodGroup;
 		
 		public OrganRequest(Patient receiver, Organ organ) {
 			date = LocalDate.now();
@@ -80,14 +85,20 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 			this.organ = organ;
 			name = receiver.getNameConcatenated();
 			nhi = receiver.getNhiNumber();
+			age = receiver.getAge();
+			address = receiver.getAddressString();
+			bloodGroup = receiver.getBloodGroup();
 		}
 
-		public OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi) {
+		public OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi, int age, String address, GlobalEnums.BloodGroup bloodGroup) {
 			this.date = date;
 			this.region = region;
 			this.organ = organ;
 			this.name = name;
 			this.nhi = nhi;
+			this.age = age;
+			this.address = address;
+			this.bloodGroup = bloodGroup;
 		}
 		
 		/**
@@ -167,6 +178,38 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		 */
 		public String getReceiverNhi() {
 			return nhi;
+		}
+
+		/**
+		 * Returns the age of the patient of the request.
+		 * @return	- The age of the patient requesting a organ.
+		 */
+		public int getAge() {
+			return age;
+		}
+
+		/**
+		 * Returns the address of the patient of the request.
+		 * @return	- The address of the patient requesting a organ.
+		 */
+		public String getAddress() {
+			return address;
+		}
+
+		/**
+		 * Returns the bloodGroup of the patient of the request.
+		 * @return	- The bloodGroup of the patient requesting a organ.
+		 */
+		public GlobalEnums.BloodGroup getBloodGroup() {
+			return bloodGroup;
+		}
+
+		/**
+		 * Returns the date of the request.
+		 * @return	- The date of the request.
+		 */
+		public LocalDate getDate() {
+			return date;
 		}
 	}
 }

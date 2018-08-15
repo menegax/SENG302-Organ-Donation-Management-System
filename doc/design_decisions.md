@@ -238,3 +238,6 @@ https://www.researchgate.net/post/How_should_bone_marrow_be_stored_and_how_long_
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5116036/
 
 We have also decided to use values of 50% time elapsed to change to yellow/orange and 80% time elapsed to change red on default. (i.e no lower - upper bound)
+#### Potential matches
+When ordering matches, we decided to use region for ordering to limit geocode use.
+To do this, we implemented a priority based on adjacent regions such that the distance between regions is based on how many regions one has to travel through between them
