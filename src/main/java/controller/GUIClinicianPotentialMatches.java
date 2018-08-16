@@ -3,6 +3,8 @@ package controller;
 import data_access.factories.MySqlFactory;
 import data_access.interfaces.IPatientDataAccess;
 import data_access.localDAO.PatientLocalDAO;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -90,6 +92,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private SortedList<OrganWaitlist.OrganRequest>  sortedRequests;
+
     /**
      * Sets the target donor and organ for this controller and loads the data accordingly
      * @param donor the donating patient
@@ -128,6 +132,10 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             potentialMatchesPane.setOnScroll(this::scrollWindow);
             potentialMatchesPane.setOnTouchPressed(event -> potentialMatchesPane.toFront());
         }
+
+        sortedRequests.comparatorProperty().unbind();
+        sortedRequests.comparatorProperty().bind(potentialMatchesTable.comparatorProperty());
+
     }
 
     /**
@@ -216,18 +224,21 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         filterRequests();
 
         // wrap the FilteredList in a SortedList.
-        SortedList<OrganWaitlist.OrganRequest> sortedRequests = new SortedList<>(filteredRequests);
+        sortedRequests = new SortedList<>(filteredRequests);
 
         // bind the SortedList comparator to the TableView comparator.
-        sortedRequests.setComparator((request1, request2) -> {
-             if (request1.getDate().isBefore(request2.getDate())) {
-                 return -1;
-             } else if (request2.getDate().isBefore(request1.getDate())) {
-                 return 1;
-             } else {
-                 return (getRegionDistance(request1.getRequestRegion(), new ArrayList<>())).compareTo((getRegionDistance(request2.getRequestRegion(), new ArrayList<>())));
-             }
-        });
+        Comparator<OrganWaitlist.OrganRequest> newComparetor = (request1, request2) -> {
+            if (request1.getDate().isBefore(request2.getDate())) {
+                return -1;
+            } else if (request2.getDate().isBefore(request1.getDate())) {
+                return 1;
+            } else {
+                return (getRegionDistance(request1.getRequestRegion(), new ArrayList<>())).compareTo((getRegionDistance(request2.getRequestRegion(), new ArrayList<>())));
+            }
+        };
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectProperty = new SimpleObjectProperty<>(newComparetor);
+
+        sortedRequests.comparatorProperty().bind(objectProperty);
         // add sorted (and filtered) data to the table.
         potentialMatchesTable.setItems(sortedRequests);
 
