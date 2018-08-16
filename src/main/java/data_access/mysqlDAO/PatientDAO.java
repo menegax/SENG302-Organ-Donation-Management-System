@@ -278,7 +278,7 @@ public class PatientDAO implements IPatientDataAccess {
                         break;
                     case RECIEVER:
                         if (Boolean.valueOf(filters.get(RECIEVER))) {
-                            query.append("ReceivingOrgans <> '' AND ");
+                            query.append("EXISTS (SELECT * FROM tblRequiredOrgans o WHERE o.Patient = P.NHI) AND ");
                         }
                         break;
                     case DONATIONS:
