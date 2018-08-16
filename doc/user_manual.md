@@ -27,14 +27,14 @@ Exercise common sense when running the GUI application and any usage questions w
 The application is designed for a large, multi-touch table in full screen. Many touch gestures can be used. 
 Users can drag multiple windows around the application.
 
-####General controls
+#### General controls
 Zoom - Two-finger pinch
 
 Rotate - Two-finger twist (circular motion)
 
 Scroll - One finger drag
 
-####Map controls
+#### Map controls
 Zoom - Two-finger drag
 
 Scroll - One finger drag
