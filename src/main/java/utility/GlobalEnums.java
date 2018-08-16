@@ -34,7 +34,7 @@ public class GlobalEnums {
 		MOBILEPHONE("(\\+[0-9]{11}|0[0-9]{9})"), EMAIL("([0-9|a-z|A-Z|.|_|-]+[@][a-z]+([.][a-z])+){0,254}"),
 		RELATIONSHIP("[a-z|-|A-Z]{0,30}"),        DISEASENAME("[a-z|-|A-Z]{1,50}"), ZIP("[0-9]{4}"),
 		WEIGHT("[0-9]+([.][0-9]+)?"),             HEIGHT("[0-9]+([.][0-9]+)?"),      USERNAME("[A-Z|0-9|_|-]{0,30}"),
-        DEATH_LOCATION("[0-9|a-z|A-Z| |-|.]*{0,35}"), CITY("[a-z|A-Z|-| ]*{0,70}"), NUMBER("[0-9]{0,5}");
+        DEATH_LOCATION("[0-9|a-z|A-Z| |-|.]{0,35}"), CITY("[a-z|A-Z|-| ]{0,70}"), NUMBER("[0-9]{0,5}");
 
 		private String value;
 
