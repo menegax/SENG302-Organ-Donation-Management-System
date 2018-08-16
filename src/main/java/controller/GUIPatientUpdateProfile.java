@@ -371,7 +371,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private Boolean validateStreetName(Boolean valid, StringBuilder invalidContent) {
         if (!streetNameTxt.getText().matches(UIRegex.STREET.getValue())) {
             valid = setInvalid(streetNameTxt);
-            invalidContent.append("Street name must be letters or -. ");
+            invalidContent.append("Street name can start with a number and may have letters or -. ");
         } else {
             setValid(streetNameTxt);
         }
@@ -542,10 +542,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 valid = setInvalid(dateOfDeath);
                 invalidContent.append("Date required if patient deceased. ");
             }
-//            if (deathLocationTxt.getText() == null || deathLocationTxt.getText().length() == 0) {
-//                valid = setInvalid(deathLocationTxt);
-//                invalidContent.append("Location required if patient deceased. ");
-//            }
             if (deathCity.getText().length() == 0) {
                 valid = setInvalid(deathCity);
                 invalidContent.append("City required if patient deceased. ");

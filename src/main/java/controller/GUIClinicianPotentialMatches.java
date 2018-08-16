@@ -121,11 +121,13 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         setupDoubleClickToPatientEdit();
         setupAgeSliderListeners();
         setupFilterListeners();
-        matchTouchPane = new TouchPaneController(potentialMatchesPane);
-        potentialMatchesPane.setOnZoom(this::zoomWindow);
-        potentialMatchesPane.setOnRotate(this::rotateWindow);
-        potentialMatchesPane.setOnScroll(this::scrollWindow);
-        potentialMatchesPane.setOnTouchPressed(event -> potentialMatchesPane.toFront());
+        if(screenControl.isTouch()) {
+            matchTouchPane = new TouchPaneController(potentialMatchesPane);
+            potentialMatchesPane.setOnZoom(this::zoomWindow);
+            potentialMatchesPane.setOnRotate(this::rotateWindow);
+            potentialMatchesPane.setOnScroll(this::scrollWindow);
+            potentialMatchesPane.setOnTouchPressed(event -> potentialMatchesPane.toFront());
+        }
     }
 
     /**
