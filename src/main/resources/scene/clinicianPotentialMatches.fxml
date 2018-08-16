@@ -27,7 +27,7 @@
       <RowConstraints maxHeight="69.0" minHeight="32.0" prefHeight="32.0" />
    </rowConstraints>
    <children>
-      <TableView fx:id="potentialMatchesTable" prefHeight="300.0" prefWidth="678.0" GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.rowSpan="2">
+      <TableView fx:id="potentialMatchesTable" onSort="#onSort" prefHeight="300.0" prefWidth="678.0" GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.rowSpan="2">
          <columns>
             <TableColumn fx:id="nhiCol" prefWidth="75.0" text="NHI" />
             <TableColumn fx:id="nameCol" prefWidth="131.6666259765625" text="Name" />
