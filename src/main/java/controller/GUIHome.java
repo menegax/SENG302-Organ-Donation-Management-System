@@ -470,6 +470,9 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
             });
             alert.showAndWait();
         } else {
+            if(screenControl.isTouch()) {
+                screenControl.setMapOpen(false);
+            }
             logOut();
         }
     }
