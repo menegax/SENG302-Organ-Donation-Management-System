@@ -179,6 +179,9 @@ public class GlobalEnums {
                 if (value.length() >= 8 && value.toLowerCase().substring(0,7).equals("manawatu")){
                     return Region.MANAWATU;
                 }
+                if (value.toLowerCase().equals("hawke's bay")) {
+                    return Region.HAWKESBAY;
+                }
                 return Region.valueOf(value.toUpperCase().replaceAll("\\s+", ""));
             }
             catch (IllegalArgumentException e) {

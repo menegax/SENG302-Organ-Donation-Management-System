@@ -542,10 +542,6 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 valid = setInvalid(dateOfDeath);
                 invalidContent.append("Date required if patient deceased. ");
             }
-//            if (deathLocationTxt.getText() == null || deathLocationTxt.getText().length() == 0) {
-//                valid = setInvalid(deathLocationTxt);
-//                invalidContent.append("Location required if patient deceased. ");
-//            }
             if (deathCity.getText().length() == 0) {
                 valid = setInvalid(deathCity);
                 invalidContent.append("City required if patient deceased. ");
