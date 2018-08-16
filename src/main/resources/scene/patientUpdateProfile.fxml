@@ -90,7 +90,7 @@
                </GridPane.margin></Label>
             <TextField fx:id="preferrednameTxt" prefHeight="40.0" prefWidth="320.0" promptText="Preferred Name" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <TextField fx:id="deathLocationTxt" prefHeight="39.0" prefWidth="320.0" promptText="Death location" GridPane.columnIndex="2" GridPane.rowIndex="9" />
-            <Label alignment="CENTER_RIGHT" text="Death Location:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
+            <Label alignment="CENTER_RIGHT" text="Death Street:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                <padding>
                   <Insets right="5.0" />
                </padding>

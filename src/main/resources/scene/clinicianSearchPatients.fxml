@@ -110,7 +110,7 @@
                   <Font size="36.0" />
                </font>
             </CheckBox>
-            <CheckBox fx:id="isRecieverCheckbox" mnemonicParsing="false" text="Reciever" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <CheckBox fx:id="isRecieverCheckbox" mnemonicParsing="false" text="Receiver" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets top="15.0" />
                </GridPane.margin></CheckBox>

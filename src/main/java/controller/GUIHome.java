@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
 
 import static java.util.logging.Level.*;
 import static javafx.scene.control.Alert.AlertType.ERROR;
@@ -469,6 +470,9 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
             });
             alert.showAndWait();
         } else {
+            if(screenControl.isTouch()) {
+                screenControl.setMapOpen(false);
+            }
             logOut();
         }
     }
@@ -595,6 +599,11 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
             menu4Item1.setOnAction(event -> openMap());
             menu4.getItems()
                     .addAll(menu4Item1);
+            if(screenControl.isTouch()) {
+                MenuItem menu4item2 = new MenuItem("Open Keyboard");
+                menu4item2.setOnAction(event -> openKeyboard());
+                menu4.getItems().addAll(menu4item2);
+            }
             bar.getMenus().addAll(menu4);
         }
 
@@ -627,6 +636,24 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
     }
 
+    /**
+     * Opens OS keyboard for Windows systems
+     */
+    private void openKeyboard() {
+        if(System.getProperty("os.name")
+                .startsWith("Windows")) {
+            try {
+                Runtime.getRuntime().exec("cmd /c osk");
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("Error");
+                alert.setContentText("System keyboard could not be opened");
+                alert.show();
+            }
+        } else {
+            SystemLogger.systemLogger.log(Level.INFO, "System keyboard can not be opened on non-Windows system", this);
+        }
+    }
 
     private boolean isUserClinicianOrAdmin() {
         if (UserControl.getUserControl().getLoggedInUser() instanceof Clinician || UserControl.getUserControl().getLoggedInUser() instanceof Administrator)
@@ -636,7 +663,9 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
         return false;
     }
 
-
+    /**
+     * Opens new map instance if a map is not visible
+     */
     private void openMap() {
         if (!screenControl.getMapOpen()) {
             screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());

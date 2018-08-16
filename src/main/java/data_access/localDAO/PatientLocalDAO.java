@@ -108,7 +108,7 @@ public class PatientLocalDAO implements IPatientDataAccess {
      * @param filter  - filter to use
      * @return - bool if a match
      */
-    private boolean matchesFilter(Patient patient, Map<GlobalEnums.FilterOption, String> filter) {
+    public boolean matchesFilter(Patient patient, Map<GlobalEnums.FilterOption, String> filter) {
         if (filter == null) {
             return false;
         }
