@@ -3,6 +3,7 @@ package controller;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.Callback;
@@ -66,24 +67,37 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
 
 
     public void load() {
+        masterData.clear();
+        CachedThreadPool.getCachedThreadPool().getThreadService().shutdown();
         List<Patient> deadPatients = patientDataService.getDeadPatients();
         for (Patient patient : deadPatients) {
             if (patient.getDeathDate() != null) {
                 for (Organ organ : patient.getDonations()) {
                     PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
-                    if (!masterData.contains(patientOrgan) && !patientOrgan.isExpired()) {
-                        masterData.add(patientOrgan);
+                    if (!masterData.contains(patientOrgan)) {
+                        if (patientOrgan.timeRemaining() < 0) {
+                            masterData.add(patientOrgan);
+                        }
                     }
                 }
             }
         }
-        ExpiryObservable.getInstance()
-                .addObserver((o, arg) -> masterData.remove(arg));
+        ExpiryObservable.getInstance().addObserver((o, arg) -> masterData.remove(arg));
         populateTable();
-        sortedData.comparatorProperty().unbind();
-        sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
     }
 
+    @FXML
+    public void onSort(Event event) {
+        Comparator<PatientOrgan> test = (o1, o2) -> Long.compare(o2.timeRemaining(), o1.timeRemaining());
+        ObjectProperty<Comparator<? super PatientOrgan>> test1 = new SimpleObjectProperty<>(test);
+        sortedData.comparatorProperty().unbind();
+        if (availableOrgansTableView.getSortOrder().size() == 0) {
+            sortedData.comparatorProperty().bind(test1);
+            availableOrgansTableView.setSortPolicy(param -> true);
+        } else {
+            sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
+        }
+    }
 
     /**
      * Populates waiting list table with all patients waiting to receive an organ
@@ -172,6 +186,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
      * Refreshes the table when a profile opened by this controller
      */
     public void windowClosed() {
+        load();
         availableOrgansTableView.refresh();
     }
 }

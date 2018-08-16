@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -20,6 +21,7 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
+import model.PatientOrgan;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.RangeSlider;
 import org.joda.time.Days;
@@ -133,9 +135,6 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             potentialMatchesPane.setOnTouchPressed(event -> potentialMatchesPane.toFront());
         }
 
-        sortedRequests.comparatorProperty().unbind();
-        sortedRequests.comparatorProperty().bind(potentialMatchesTable.comparatorProperty());
-
     }
 
     /**
@@ -168,6 +167,29 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> ageSliderLabel.setText(String.format("%s - %s", ((int) rangeSlider.getLowValue()), String.valueOf(newValue.intValue())))));
         rangeSlider.lowValueProperty().addListener(((observable, oldValue, newValue) -> ageSliderLabel.setText(String.format("%s - %s", String.valueOf(newValue.intValue()), (int) rangeSlider.getHighValue()))));
     }
+
+    @FXML
+    public void onSort(Event event) {
+        // bind the SortedList comparator to the TableView comparator.
+        Comparator<OrganWaitlist.OrganRequest> newComparetor = (request1, request2) -> {
+            if (request2.getDate().isBefore(request1.getDate())) {
+                return -1;
+            } else if (request1.getDate().isBefore(request2.getDate())) {
+                return 1;
+            } else {
+                return (getRegionDistance(request2.getRequestRegion(), new ArrayList<>())).compareTo((getRegionDistance(request1.getRequestRegion(), new ArrayList<>())));
+            }
+        };
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectProperty = new SimpleObjectProperty<>(newComparetor);
+        sortedRequests.comparatorProperty().unbind();
+        if (potentialMatchesTable.getSortOrder().size() == 0) {
+            sortedRequests.comparatorProperty().bind(objectProperty);
+            potentialMatchesTable.setSortPolicy(param -> true);
+        } else {
+            sortedRequests.comparatorProperty().bind(potentialMatchesTable.comparatorProperty());
+        }
+    }
+
     /**
      * Sets the labels displayed to the requirements of the donated organ
      */
