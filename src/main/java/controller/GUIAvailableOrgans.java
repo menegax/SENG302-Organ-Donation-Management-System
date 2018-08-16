@@ -1,8 +1,11 @@
 package controller;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.util.Callback;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
@@ -55,6 +58,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
 
     private ObservableList<PatientOrgan> masterData = FXCollections.observableArrayList();
 
+    private SortedList<PatientOrgan> sortedData;
+
     private IPatientDataService patientDataService = new PatientDataService();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
@@ -76,6 +81,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         }
         ExpiryObservable.getInstance().addObserver((o, arg) -> masterData.remove(arg));
         populateTable();
+        sortedData.comparatorProperty().unbind();
+        sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
     }
 
 
@@ -111,13 +118,12 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         FilteredList<PatientOrgan> filteredData = new FilteredList<>(masterData);
 
         // wrap the FilteredList in a SortedList.
-        SortedList<PatientOrgan> sortedData = new SortedList<>(filteredData);
+        sortedData = new SortedList<>(filteredData);
 
-        // bind the SortedList comparator to compare on expiry.
-        sortedData.setComparator((patientOrgan1, patientOrgan2) -> {
-            return patientOrgan2.timeRemaining()
-                    .compareTo(patientOrgan1.timeRemaining());
-        });
+        Comparator<PatientOrgan> test = (o1, o2) -> Long.compare(o2.timeRemaining(), o1.timeRemaining());
+        ObjectProperty<Comparator<? super PatientOrgan>> test1 = new SimpleObjectProperty<>(test);
+
+        sortedData.comparatorProperty().bind(test1);
 
         // add sorted (and filtered) data to the table.
         availableOrgansTableView.setItems(sortedData);
