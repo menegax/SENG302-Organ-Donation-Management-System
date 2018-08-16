@@ -61,6 +61,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
 
 
     public void load() {
+        masterData.clear();
+        CachedThreadPool.getCachedThreadPool().getThreadService().shutdown();
         List<Patient> deadPatients = patientDataService.getDeadPatients();
         for (Patient patient : deadPatients) {
             if (patient.getDeathDate() != null) {
@@ -72,8 +74,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 }
             }
         }
-        ExpiryObservable.getInstance()
-                .addObserver((o, arg) -> masterData.remove(arg));
+        ExpiryObservable.getInstance().addObserver((o, arg) -> masterData.remove(arg));
         populateTable();
     }
 
@@ -166,6 +167,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
      * Refreshes the table when a profile opened by this controller
      */
     public void windowClosed() {
+        load();
         availableOrgansTableView.refresh();
     }
 }
