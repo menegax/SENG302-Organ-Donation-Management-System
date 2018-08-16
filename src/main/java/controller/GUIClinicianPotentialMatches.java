@@ -124,15 +124,15 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         if(screenControl.isTouch()) {
             closeButton.setVisible(true);
             closeButton.setDisable(false);
+            matchTouchPane = new TouchPaneController(potentialMatchesPane);
+            potentialMatchesPane.setOnZoom(this::zoomWindow);
+            potentialMatchesPane.setOnRotate(this::rotateWindow);
+            potentialMatchesPane.setOnScroll(this::scrollWindow);
+            potentialMatchesPane.setOnTouchPressed(event -> potentialMatchesPane.toFront());
         } else {
             closeButton.setVisible(false);
             closeButton.setDisable(true);
         }
-        matchTouchPane = new TouchPaneController(potentialMatchesPane);
-        potentialMatchesPane.setOnZoom(this::zoomWindow);
-        potentialMatchesPane.setOnRotate(this::rotateWindow);
-        potentialMatchesPane.setOnScroll(this::scrollWindow);
-        potentialMatchesPane.setOnTouchPressed(event -> potentialMatchesPane.toFront());
     }
 
     /**
