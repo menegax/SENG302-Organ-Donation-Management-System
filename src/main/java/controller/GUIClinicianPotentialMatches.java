@@ -121,13 +121,6 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         setupDoubleClickToPatientEdit();
         setupAgeSliderListeners();
         setupFilterListeners();
-        if(screenControl.isTouch()) {
-            closeButton.setVisible(true);
-            closeButton.setDisable(false);
-        } else {
-            closeButton.setVisible(false);
-            closeButton.setDisable(true);
-        }
         matchTouchPane = new TouchPaneController(potentialMatchesPane);
         potentialMatchesPane.setOnZoom(this::zoomWindow);
         potentialMatchesPane.setOnRotate(this::rotateWindow);
@@ -160,7 +153,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             rangeSlider.setHighValue(((Patient) target).getAge() + 15);
         }
         rangeSlider.setShowTickMarks(true);
-        filterGrid.add(rangeSlider, 0, 2, 3, 1);
+        filterGrid.add(rangeSlider, 1, 3, 3, 1);
         ageSliderLabel.setText(String.format("%s - %s", ((int) rangeSlider.getLowValue()),(int) rangeSlider.getHighValue()));
         rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> ageSliderLabel.setText(String.format("%s - %s", ((int) rangeSlider.getLowValue()), String.valueOf(newValue.intValue())))));
         rangeSlider.lowValueProperty().addListener(((observable, oldValue, newValue) -> ageSliderLabel.setText(String.format("%s - %s", String.valueOf(newValue.intValue()), (int) rangeSlider.getHighValue()))));
@@ -384,6 +377,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         matchTouchPane.scrollPane(scrollEvent);
     }
 
+    @FXML
     public void closeMatchWindow() {
         screenControl.closeWindow(potentialMatchesPane);
     }
