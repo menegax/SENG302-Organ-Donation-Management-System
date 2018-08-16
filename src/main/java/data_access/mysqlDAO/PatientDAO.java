@@ -285,7 +285,7 @@ public class PatientDAO implements IPatientDataAccess {
                         query.append(String.format("FIND_IN_SET('%s', DonatingOrgans) > 0 AND ", filters.get(DONATIONS)));
                         break;
                     case REQUESTEDDONATIONS:
-                        query.append(String.format("FIND_IN_SET('%s', ReceivingOrgans) > 0 AND ", filters.get(REQUESTEDDONATIONS)));
+                        query.append(String.format("EXISTS (SELECT * FROM tblRequiredOrgans o WHERE o.Organ = '%s' AND o.Patient = P.NHI) AND ", filters.get(REQUESTEDDONATIONS)));
                         break;
                 }
             }
