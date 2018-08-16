@@ -371,7 +371,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private Boolean validateStreetName(Boolean valid, StringBuilder invalidContent) {
         if (!streetNameTxt.getText().matches(UIRegex.STREET.getValue())) {
             valid = setInvalid(streetNameTxt);
-            invalidContent.append("Street name must be letters or -. ");
+            invalidContent.append("Street name can start with a number and may have letters or -. ");
         } else {
             setValid(streetNameTxt);
         }
