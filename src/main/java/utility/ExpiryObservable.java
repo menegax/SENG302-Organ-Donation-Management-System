@@ -19,7 +19,7 @@ public class ExpiryObservable extends Observable {
     public static ExpiryObservable getInstance() {
         if (instance == null) {
             instance = new ExpiryObservable();
-        }
+        };
         return instance;
     }
 

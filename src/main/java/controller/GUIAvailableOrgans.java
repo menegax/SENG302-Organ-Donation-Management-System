@@ -65,6 +65,9 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    public GUIAvailableOrgans() {
+        ExpiryObservable.getInstance().addObserver((o, arg) -> masterData.remove(arg));
+    }
 
     public void load() {
         masterData.clear();
@@ -82,7 +85,6 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 }
             }
         }
-        ExpiryObservable.getInstance().addObserver((o, arg) -> masterData.remove(arg));
         populateTable();
     }
 

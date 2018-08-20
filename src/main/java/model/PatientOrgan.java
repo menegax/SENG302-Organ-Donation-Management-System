@@ -1,13 +1,9 @@
 package model;
 
-import javafx.beans.property.ReadOnlyStringProperty;
-import javafx.beans.property.StringProperty;
 import utility.GlobalEnums;
 import utility.ProgressTask;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
@@ -19,7 +15,6 @@ public class PatientOrgan {
     private GlobalEnums.Organ organ;
     private ProgressTask progressTask;
     private Long timeRemaining;
-    private boolean isExpired;
 
     public PatientOrgan(Patient patient, GlobalEnums.Organ organ) {
         this.patient = patient;
@@ -44,7 +39,6 @@ public class PatientOrgan {
         return timeRemaining;
     }
 
-    public boolean isExpired() { return isExpired; }
     @Override
     public boolean equals(Object obj) {
         PatientOrgan patientOrgan = (PatientOrgan) obj;
