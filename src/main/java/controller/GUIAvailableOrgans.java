@@ -70,8 +70,13 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     }
 
     public void load() {
+        for (PatientOrgan po : masterData) {
+            po.getProgressTask().setInterrupted();
+        }
         masterData.clear();
-        CachedThreadPool.getCachedThreadPool().getThreadService().shutdown();
+        CachedThreadPool.getCachedThreadPool().getThreadService().shutdownNow();
+        int numThreads = Thread.getAllStackTraces().keySet().size();
+        System.out.println(numThreads);
         List<Patient> deadPatients = patientDataService.getDeadPatients();
         for (Patient patient : deadPatients) {
             if (patient.getDeathDate() != null) {
