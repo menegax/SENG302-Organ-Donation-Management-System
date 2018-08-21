@@ -35,7 +35,7 @@ public class GUIMap implements Initializable {
 
     private WebEngine webEngine;
 
-    private JSObject jsBridge;
+    public static JSObject jsBridge; //todo make private
 
     private Robot robot;
 
@@ -97,7 +97,6 @@ public class GUIMap implements Initializable {
         });
     }
 
-
     @NotNull
     private List<Patient> getInitialPatients() {
         List<Patient> patients = new ArrayList<>(new ClinicianDataService().searchPatients("", null, 50));
@@ -106,15 +105,6 @@ public class GUIMap implements Initializable {
             results.add(new PatientDataService().getPatientByNhi(p.getNhiNumber()));
         }
         return results;
-    }
-
-    /**
-     * Sets the map web engine to use a list of patients
-     *
-     * @param patients the patients to load into the map
-     */
-    public void setPatients(List<Patient> patients) {
-        jsBridge.call("setPatients", patients);
     }
 
 }

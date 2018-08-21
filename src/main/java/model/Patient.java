@@ -139,6 +139,10 @@ public class Patient extends User {
 
     private GlobalEnums.Organ removedOrgan;
 
+
+    /**
+     * Used only for importing. Don't use elsewhere.
+     */
     public Patient() {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
