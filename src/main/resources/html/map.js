@@ -125,3 +125,14 @@ function getOrganOptions(patient) {
     }
     return {donating: donationStr, receiving: requiredStr};
 }
+
+function setPatients(newPatients) {
+
+    markers.forEach(function(marker) {
+        marker.setMap(null);
+    });
+    markers = [];
+
+    patients = newPatients;
+    markerLoop(patients.size());
+}

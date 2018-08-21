@@ -5,6 +5,8 @@ import controller.ScreenControl;
 import model.Patient;
 import service.PatientDataService;
 
+import java.util.ArrayList;
+
 /**
  * Provides the map javascript access to the java codebase
  */
@@ -22,5 +24,6 @@ public class MapBridge {
         GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, patient);
         controller.setTarget(patient);
     }
+
 
 }
