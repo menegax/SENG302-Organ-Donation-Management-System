@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
+<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="274.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="235.0" />
@@ -26,6 +26,7 @@
       <RowConstraints maxHeight="161.59999389648436" minHeight="60.0" prefHeight="150.39999694824218" vgrow="NEVER" />
       <RowConstraints maxHeight="78.00001220703126" minHeight="37.399993896484375" prefHeight="37.399993896484375" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="362.79998779296875" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
        <TableView fx:id="patientDataTable" GridPane.columnSpan="3" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS">
@@ -40,7 +41,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
          <GridPane.margin>
-            <Insets bottom="60.0" left="60.0" right="60.0" />
+            <Insets left="60.0" right="60.0" />
          </GridPane.margin>
        </TableView>
       <GridPane GridPane.columnSpan="3" GridPane.rowIndex="2">
@@ -165,6 +166,11 @@
          </GridPane.margin>
       </GridPane>
       <Button fx:id="resetButton" mnemonicParsing="false" onAction="#clearFilterOptions" prefHeight="30.0" prefWidth="118.0" text="Reset Search" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets right="60.0" />
+         </GridPane.margin>
+      </Button>
+      <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="118.0" text="View on Map" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
          <GridPane.margin>
             <Insets right="60.0" />
          </GridPane.margin>

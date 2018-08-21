@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="availableOrgans" prefHeight="391.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAvailableOrgans">
+<GridPane fx:id="availableOrgans" prefHeight="391.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAvailableOrgans">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="60.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -17,6 +17,7 @@
   <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="56.79999580383301" vgrow="NEVER" />
       <RowConstraints minHeight="0.80001143217087" prefHeight="333.00000419616697" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
       <TableView fx:id="availableOrgansTableView" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
@@ -29,12 +30,13 @@
             <TableColumn fx:id="expiryCol" prefWidth="75.0" text="Organ Expiry" />
         </columns>
          <GridPane.margin>
-            <Insets bottom="60.0" top="10.0" />
+            <Insets top="10.0" />
          </GridPane.margin>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Button mnemonicParsing="false" onAction="#viewPotentialMatches" text="View Potential Matches" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
+      <Button mnemonicParsing="false" onAction="#viewPotentialMatches" text="View Potential Matches" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+      <Button mnemonicParsing="false" prefWidth="139.5" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
    </children>
 </GridPane>
