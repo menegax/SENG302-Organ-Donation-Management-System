@@ -186,7 +186,7 @@
             <Insets bottom="20.0" left="60.0" />
          </GridPane.margin>
       </Button>
-      <Button minHeight="-Infinity" mnemonicParsing="false" prefHeight="31.0" prefWidth="109.0" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+      <Button minHeight="-Infinity" onAction="#viewOnMap" mnemonicParsing="false" prefHeight="31.0" prefWidth="109.0" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets bottom="20.0" right="60.0" />
          </GridPane.margin>

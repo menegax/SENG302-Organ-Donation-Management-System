@@ -18,10 +18,8 @@ import utility.UserActionHistory;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 
 /**
@@ -42,7 +40,6 @@ public class GUIMap implements Initializable {
     private MapBridge mapBridge;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
-
 
     /**
      * Initialises the widgets and bridge in the google map
@@ -106,5 +103,4 @@ public class GUIMap implements Initializable {
         }
         return results;
     }
-
 }

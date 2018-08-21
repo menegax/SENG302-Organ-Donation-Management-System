@@ -27,7 +27,7 @@
             <Insets left="60.0" right="60.0" />
          </GridPane.margin>
       </TableView>
-      <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="118.0" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+      <Button mnemonicParsing="false" onAction="#viewOnMap" prefHeight="30.0" prefWidth="118.0" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets right="60.0" />
          </GridPane.margin>

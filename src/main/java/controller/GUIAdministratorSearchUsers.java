@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -31,8 +32,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
+import java.util.zip.DataFormatException;
 
+import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class GUIAdministratorSearchUsers extends UndoableController implements IWindowObserver {
@@ -206,5 +210,29 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
      */
     private void tableRefresh() {
        userDataTable.refresh();
+    }
+
+    @FXML
+    public void viewOnMap() throws DataFormatException {
+
+        // todo rework
+
+        Patient josh = new Patient();
+        josh.setCity("Christchurch");
+        josh.setRegion(GlobalEnums.Region.CANTERBURY);
+        josh.setSuburb("Ilam");
+        josh.setStreetNumber("10");
+        josh.setStreetName("name");
+        ArrayList<Patient> patients = new ArrayList<>();
+        patients.add(josh);
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
+                , ButtonType.YES, ButtonType.NO);
+        alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
+            statesHistoryScreen.getUndoableWrapper().getGuiHome().openMap();
+            GUIMap.jsBridge.call("setPatients", patients);
+            screenControl.setMapOpen(true);
+        });
+        alert.showAndWait();
     }
 }

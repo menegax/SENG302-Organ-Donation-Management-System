@@ -69,7 +69,7 @@
             <Insets right="60.0" />
          </GridPane.margin>
       </GridPane>
-      <Button mnemonicParsing="false" prefWidth="119.0" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+      <Button mnemonicParsing="false" onAction="#viewOnMap" prefWidth="119.0" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets right="60.0" />
          </GridPane.margin>

@@ -1,5 +1,6 @@
 package controller;
 
+import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
@@ -14,7 +15,8 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.zip.DataFormatException;
 
-import javafx.scene.control.Button;
+import javafx.event.ActionEvent;
+import javafx.scene.control.*;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.RangeSlider;
 
@@ -25,22 +27,13 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
 import service.ClinicianDataService;
 import service.PatientDataService;
 import service.TextWatcher;
+import service.UserDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 import utility.GlobalEnums.BirthGender;
@@ -509,7 +502,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         });
     }
 
-
     @FXML
     public void viewOnMap() throws DataFormatException {
 
@@ -524,7 +516,13 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         ArrayList<Patient> patients = new ArrayList<>();
         patients.add(josh);
 
-        GUIMap.jsBridge.call("setPatients", patients);
-
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
+                , ButtonType.YES, ButtonType.NO);
+        alert.show();
+        alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
+            statesHistoryScreen.getUndoableWrapper().getGuiHome().openMap();
+            GUIMap.jsBridge.call("setPatients", patients);
+            screenControl.setMapOpen(true);
+        });
     }
 }

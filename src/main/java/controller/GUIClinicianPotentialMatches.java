@@ -37,9 +37,12 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.zip.DataFormatException;
 
 import static java.lang.Math.abs;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static java.util.logging.Level.FINE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianPotentialMatches extends TargetedController implements IWindowObserver, TouchscreenCapable {
@@ -415,5 +418,28 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     @FXML
     public void closeMatchWindow() {
         screenControl.closeWindow(potentialMatchesPane);
+    }
+
+    @FXML
+    public void viewOnMap() throws DataFormatException {
+
+        // todo rework
+        // todo duplicated work
+
+        Patient josh = new Patient();
+        josh.setCity("Christchurch");
+        josh.setRegion(Region.CANTERBURY);
+        josh.setSuburb("Ilam");
+        josh.setStreetNumber("10");
+        josh.setStreetName("name");
+        ArrayList<Patient> patients = new ArrayList<>();
+        patients.add(josh);
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
+                , ButtonType.YES, ButtonType.NO);
+        alert.show();
+        alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
+            GUIMap.jsBridge.call("setPatients", patients);
+        });
     }
 }
