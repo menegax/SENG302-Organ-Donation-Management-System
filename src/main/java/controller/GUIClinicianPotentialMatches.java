@@ -212,7 +212,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         boolean match = true;
         long requestAge = ChronoUnit.DAYS.between(request.getBirth(), LocalDate.now());
         long targetAge = ChronoUnit.DAYS.between(((Patient) target).getBirth(), ((Patient) target).getDeathDate());
-        if (request.getRequestedOrgan() != targetOrgan || request.getBloodGroup() != ((Patient) target).getBloodGroup()) {
+        if (request.getRequestedOrgan() != targetOrgan || request.getBloodGroup() != ((Patient) target).getBloodGroup() || request.getReceiver().getDeathDate() != null) {
             match = false;
         } else if (( requestAge < 4383 && targetAge  > 4383) || (requestAge > 4383 && targetAge < 4383)
                 || abs(requestAge - targetAge) > 5478.75) {
