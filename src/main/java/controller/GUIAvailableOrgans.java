@@ -32,6 +32,8 @@ import static utility.UserActionHistory.userActions;
  */
 public class GUIAvailableOrgans extends UndoableController implements IWindowObserver {
 
+    private final float NUM_ROWS_PER_PAGE = 20;
+
     @FXML
     private TableView<PatientOrgan> availableOrgansTableView;
 
@@ -56,6 +58,9 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     private ObservableList<PatientOrgan> masterData = FXCollections.observableArrayList();
 
     private SortedList<PatientOrgan> sortedData;
+
+    @FXML
+    private Pagination pagination;
 
     private IPatientDataService patientDataService = new PatientDataService();
 
@@ -175,6 +180,16 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         availableOrgansTableView.setItems(sortedData);
         availableOrgansTableView.setVisible(true);
         setUpDoubleClickToPatientEdit();
+        pagination.setPageCount(getPageCount());
+    }
+
+
+    /**
+     * Gets the page count to show
+     * @return - page count for the pagination
+     */
+    private int getPageCount(){
+        return Math.round(masterData.size()/NUM_ROWS_PER_PAGE);
     }
 
 
