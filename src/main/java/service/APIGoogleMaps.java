@@ -1,7 +1,5 @@
 package service;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.errors.ApiException;
@@ -33,8 +31,6 @@ public class APIGoogleMaps {
     public LatLng geocodeAddress(String address) throws InterruptedException, ApiException, IOException {
         GeocodingResult[] results = GeocodingApi.geocode(context, address)
                 .await();
-        Gson gson = new GsonBuilder().setPrettyPrinting()
-                .create();
         return results[0].geometry.location;
     }
 

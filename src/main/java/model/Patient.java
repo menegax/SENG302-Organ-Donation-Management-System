@@ -746,11 +746,6 @@ public class Patient extends User {
         }
     }
 
-
-    public static void main(String[] args) throws InterruptedException, ApiException, IOException {
-        APIGoogleMaps.getApiGoogleMaps().geocodeAddress("1600 Pennsylvania Ave");
-    }
-
     public Region getRegion() {
         return region;
     }
@@ -771,9 +766,9 @@ public class Patient extends User {
         userModified();
     }
 
-    public LatLng getCurrentLocation() {
+    public LatLng getCurrentLocation() throws InterruptedException, ApiException, IOException {
         if (currentLocation == null) {
-
+            APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
         }
         return currentLocation;
     }
