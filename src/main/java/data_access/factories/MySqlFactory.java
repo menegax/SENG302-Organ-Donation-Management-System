@@ -30,12 +30,12 @@ public class MySqlFactory extends DAOFactory {
         String connection_type = System.getProperty("connection_type");
         if (connection_type != null) {
             if (connection_type.equals(GlobalEnums.DbType.PRODUCTION.getValue())) {
-                config = new HikariConfig("/sql/HikariConfigProd.properties");
+                config = new HikariConfig("/sql/HikariConfigProdPatrick.properties");
             } else {
-                config = new HikariConfig("/sql/HikariConfigTest.properties");
+                config = new HikariConfig("/sql/HikariConfigTestPatrick.properties");
             }
         } else {
-            config = new HikariConfig("/sql/HikariConfigTest.properties");
+            config = new HikariConfig("/sql/HikariConfigTestPatrick.properties");
         }
         ds = new HikariDataSource(config);
     }
