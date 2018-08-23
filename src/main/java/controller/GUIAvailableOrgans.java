@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import model.PatientOrgan;
 import service.PatientDataService;
@@ -32,6 +33,8 @@ import static utility.UserActionHistory.userActions;
  */
 public class GUIAvailableOrgans extends UndoableController implements IWindowObserver {
 
+    private final float NUM_ROWS_PER_PAGE = 2;
+
     @FXML
     private TableView<PatientOrgan> availableOrgansTableView;
 
@@ -56,6 +59,9 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     private ObservableList<PatientOrgan> masterData = FXCollections.observableArrayList();
 
     private SortedList<PatientOrgan> sortedData;
+
+    @FXML
+    private Pagination pagination;
 
     private IPatientDataService patientDataService = new PatientDataService();
 
@@ -174,6 +180,29 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         availableOrgansTableView.setItems(sortedData);
         availableOrgansTableView.setVisible(true);
         setUpDoubleClickToPatientEdit();
+        pagination.setPageCount(getPageCount());
+        System.out.println(getPageCount());
+        pagination.currentPageIndexProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!newValue.equals(oldValue)) {
+                updateTable(newValue.intValue());
+            }
+        }));
+    }
+
+
+
+    private void updateTable(int index) {
+        if ((int) NUM_ROWS_PER_PAGE * index + 20 > sortedData.size()) {
+            availableOrgansTableView.setItems(FXCollections.observableArrayList(sortedData.subList((int) NUM_ROWS_PER_PAGE * index, sortedData.size() - 1)));
+
+        }
+    }
+    /**
+     * Gets the page count to show
+     * @return - page count for the pagination
+     */
+    private int getPageCount(){
+        return (int) Math.ceil((float)masterData.size()/NUM_ROWS_PER_PAGE);
     }
 
 
