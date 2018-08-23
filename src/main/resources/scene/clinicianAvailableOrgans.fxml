@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="availableOrgans" prefHeight="391.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAvailableOrgans">
+<GridPane fx:id="availableOrgans" prefHeight="391.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAvailableOrgans">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="60.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -19,7 +19,7 @@
       <RowConstraints minHeight="0.80001143217087" prefHeight="333.00000419616697" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <TableView fx:id="availableOrgansTableView" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
+      <TableView fx:id="availableOrgansTableView" onSort="#onSort" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="patientCol" maxWidth="3000.0" minWidth="5.0" prefWidth="10.0" text="Patient" />
           <TableColumn fx:id="organCol" maxWidth="3500.0" prefWidth="118.4000244140625" text="Organ" />

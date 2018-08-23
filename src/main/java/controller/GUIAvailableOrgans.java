@@ -95,14 +95,38 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
 
     @FXML
     public void onSort(Event event) {
-        Comparator<PatientOrgan> test = (o1, o2) -> Long.compare(o2.timeRemaining(), o1.timeRemaining());
-        ObjectProperty<Comparator<? super PatientOrgan>> test1 = new SimpleObjectProperty<>(test);
-        sortedData.comparatorProperty().unbind();
-        if (availableOrgansTableView.getSortOrder().size() == 0) {
-            sortedData.comparatorProperty().bind(test1);
+        //Create ascending and descending comparators
+        Comparator<PatientOrgan> comparatorAscending = (o1, o2) -> Long.compare(o2.timeRemaining(), o1.timeRemaining());
+        Comparator<PatientOrgan> comparatorDescending = Comparator.comparingLong(PatientOrgan::timeRemaining);
+        ObjectProperty<Comparator<? super PatientOrgan>> objectPropertyAsc = new SimpleObjectProperty<>(comparatorAscending);
+        ObjectProperty<Comparator<? super PatientOrgan>> objectPropertyDesc = new SimpleObjectProperty<>(comparatorDescending);
+        sortedData.comparatorProperty().unbind(); //Clear the current comparator property
+        if (availableOrgansTableView.getSortOrder().size() == 0) { //Called after the third consecutive click on a table column header
+            sortedData.comparatorProperty().bind(objectPropertyAsc);
             availableOrgansTableView.setSortPolicy(param -> true);
         } else {
-            sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
+            boolean sortingByExpiry = false;
+            boolean isAscending = true;
+            ObservableList<TableColumn<PatientOrgan, ?>> sortPolicies = availableOrgansTableView.getSortOrder();
+            //Search the sort policies to see if any of the tablecolumns being sorted is either the progress bar or expiry time
+            for (TableColumn<PatientOrgan, ?> tableColumn : sortPolicies) {
+                if (tableColumn.getId().equals("expiryCol") || tableColumn.getId().equals("organExpiryProgressCol")) {
+                    sortingByExpiry = true;
+                    //Get the sort order of the table column
+                    isAscending = tableColumn.getSortType() == TableColumn.SortType.ASCENDING;
+                }
+            }
+            if (sortingByExpiry) {
+                //Apply correct comparator
+                if (isAscending) {
+                    sortedData.comparatorProperty().bind(objectPropertyAsc);
+                } else {
+                    sortedData.comparatorProperty().bind(objectPropertyDesc);
+                }
+            } else { //Apply default table comparator
+                sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
+            }
+            availableOrgansTableView.setSortPolicy(param -> true);
         }
     }
 
