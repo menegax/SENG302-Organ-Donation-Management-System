@@ -56,6 +56,9 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     @FXML
     private TableColumn<PatientOrgan, ProgressTask> organExpiryProgressCol;
 
+    @FXML
+    private Button potentialMatchesBtn;
+
     private ObservableList<PatientOrgan> masterData = FXCollections.observableArrayList();
 
     private SortedList<PatientOrgan> sortedData;
@@ -77,7 +80,6 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         }
         masterData.clear();
         CachedThreadPool.getCachedThreadPool().getThreadService().shutdownNow();
-        int numThreads = Thread.getAllStackTraces().keySet().size();
         List<Patient> deadPatients = patientDataService.getDeadPatients();
         for (Patient patient : deadPatients) {
             if (patient.getDeathDate() != null) {
@@ -179,6 +181,13 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         // add sorted (and filtered) data to the table.
         availableOrgansTableView.setItems(sortedData);
         availableOrgansTableView.setVisible(true);
+        availableOrgansTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                potentialMatchesBtn.setDisable(false);
+            } else {
+                potentialMatchesBtn.setDisable(true);
+            }
+        });
         setUpDoubleClickToPatientEdit();
         pagination.setPageCount(getPageCount());
         System.out.println(getPageCount());
