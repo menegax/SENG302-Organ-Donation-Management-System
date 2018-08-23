@@ -171,7 +171,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     @FXML
     public void onSort(Event event) {
         // bind the SortedList comparator to the TableView comparator.
-        Comparator<OrganWaitlist.OrganRequest> newComparetor = (request1, request2) -> {
+        Comparator<OrganWaitlist.OrganRequest> comparatorAsc = (request1, request2) -> {
             if (request2.getDate().isBefore(request1.getDate())) {
                 return -1;
             } else if (request1.getDate().isBefore(request2.getDate())) {
@@ -180,13 +180,35 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                 return (getRegionDistance(request2.getRequestRegion(), new ArrayList<>())).compareTo((getRegionDistance(request1.getRequestRegion(), new ArrayList<>())));
             }
         };
-        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectProperty = new SimpleObjectProperty<>(newComparetor);
+        Comparator<OrganWaitlist.OrganRequest> comparatorDesc = comparatorAsc.reversed();
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectPropertyAsc = new SimpleObjectProperty<>(comparatorAsc);
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectPropertyDesc = new SimpleObjectProperty<>(comparatorDesc);
         sortedRequests.comparatorProperty().unbind();
         if (potentialMatchesTable.getSortOrder().size() == 0) {
-            sortedRequests.comparatorProperty().bind(objectProperty);
+            sortedRequests.comparatorProperty().bind(objectPropertyAsc);
             potentialMatchesTable.setSortPolicy(param -> true);
         } else {
-            sortedRequests.comparatorProperty().bind(potentialMatchesTable.comparatorProperty());
+            boolean sortingByExpiry = false;
+            boolean isAscending = true;
+            ObservableList<TableColumn<OrganWaitlist.OrganRequest, ?>> sortPolicies = potentialMatchesTable.getSortOrder();
+            //Search the sort policies to see if any of the tablecolumns being sorted is either the progress bar or expiry time
+            for (TableColumn<OrganWaitlist.OrganRequest, ?> tableColumn : sortPolicies) {
+                if (tableColumn.getId().equals("expiryCol") || tableColumn.getId().equals("organExpiryProgressCol")) {
+                    sortingByExpiry = true;
+                    //Get the sort order of the table column
+                    isAscending = tableColumn.getSortType() == TableColumn.SortType.ASCENDING;
+                }
+            }
+            if (sortingByExpiry) {
+                //Apply correct comparator
+                if (isAscending) {
+                    sortedRequests.comparatorProperty().bind(objectPropertyAsc);
+                } else {
+                    sortedRequests.comparatorProperty().bind(objectPropertyDesc);
+                }
+            } else { //Apply default table comparator
+                sortedRequests.comparatorProperty().bind(potentialMatchesTable.comparatorProperty());
+            }
         }
     }
 

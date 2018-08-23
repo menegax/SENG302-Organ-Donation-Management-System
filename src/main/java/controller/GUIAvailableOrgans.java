@@ -3,10 +3,8 @@ package controller;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.util.Callback;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
@@ -23,8 +21,6 @@ import model.Patient;
 import utility.ProgressBarCustomTableCell;
 import utility.ProgressTask;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
@@ -93,8 +89,14 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         populateTable();
     }
 
+    /**
+     * Called whenever the onSort TableView event is fired.
+     * Overrides the sorting comparator when appropriate (i.e when the table is being sorted based on the expiry col or
+     * progress bar col. Whenever one of these columns are being sorted on, the items in the table are sorted based on
+     * the timeRemaining attribute.
+     */
     @FXML
-    public void onSort(Event event) {
+    public void onSort() {
         //Create ascending and descending comparators
         Comparator<PatientOrgan> comparatorAscending = (o1, o2) -> Long.compare(o2.timeRemaining(), o1.timeRemaining());
         Comparator<PatientOrgan> comparatorDescending = Comparator.comparingLong(PatientOrgan::timeRemaining);
