@@ -1,11 +1,13 @@
 package model;
 
+import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
 import com.univocity.parsers.annotations.Convert;
 import com.univocity.parsers.annotations.EnumOptions;
 import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.annotations.Validate;
 import org.apache.commons.lang3.StringUtils;
+import service.APIGoogleMaps;
 import utility.parsing.DateConverterCSV;
 import utility.parsing.DateTimeConverterCSV;
 import utility.parsing.EnumConverterCSV;
@@ -16,6 +18,7 @@ import utility.Searcher;
 import utility.SystemLogger;
 
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -743,6 +746,11 @@ public class Patient extends User {
         }
     }
 
+
+    public static void main(String[] args) throws InterruptedException, ApiException, IOException {
+        APIGoogleMaps.getApiGoogleMaps().geocodeAddress("1600 Pennsylvania Ave");
+    }
+
     public Region getRegion() {
         return region;
     }
@@ -764,6 +772,9 @@ public class Patient extends User {
     }
 
     public LatLng getCurrentLocation() {
+        if (currentLocation == null) {
+
+        }
         return currentLocation;
     }
 
