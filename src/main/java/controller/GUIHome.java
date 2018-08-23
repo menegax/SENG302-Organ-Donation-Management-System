@@ -1,5 +1,7 @@
 package controller;
 
+import TUIO.TuioCursor;
+import TUIO.TuioTime;
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -28,6 +30,8 @@ import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
+import org.tuiofx.internal.gesture.TuioJFXEvent;
+import org.tuiofx.internal.gesture.TuioTouchPoint;
 import service.AdministratorDataService;
 import service.ClinicianDataService;
 import service.PatientDataService;
@@ -185,8 +189,14 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
                 homePane.setOnTouchPressed(event -> {
                     homePane.toFront();
+                    homePaneTouchController.convertEvent(event);
                 });
-                homePane.setOnZoom(this::zoomWindow);
+                homePane.setOnTouchMoved(event -> {
+                    homePaneTouchController.convertEvent(event);
+                });
+                homePane.setOnZoom(zoomEvent -> {
+                    zoomWindow(zoomEvent);
+                });
                 homePane.setOnRotate(this::rotateWindow);
                 homePane.setOnScroll(this::scrollWindow);
             }

@@ -1,5 +1,8 @@
 package utility;
 
+import TUIO.TuioCursor;
+import TUIO.TuioTime;
+import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -8,18 +11,20 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
-import javafx.scene.input.RotateEvent;
-import javafx.scene.input.ScrollEvent;
-import javafx.scene.input.TouchEvent;
-import javafx.scene.input.ZoomEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Window;
+import org.tuiofx.Configuration;
+import org.tuiofx.examples.demo.touchpointdata.TouchPointDataController;
+import org.tuiofx.internal.base.GestureHandler;
+import org.tuiofx.internal.gesture.TuioJFXEvent;
+import org.tuiofx.internal.gesture.TuioTouchPoint;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +37,9 @@ public class TouchPaneController {
      * Pane to perform touch operations on
      */
     private final Pane pane;
+    private Map<Integer, TuioTouchPoint> touchMap = new HashMap<>();
+    private GestureHandler gestureHandler;
+
 
     private javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 
@@ -41,7 +49,53 @@ public class TouchPaneController {
      */
     public TouchPaneController(Pane pane) {
         this.pane = pane;
+        gestureHandler = new GestureHandler(Configuration.debug());
 //        this.pane.getProperties().put("focusArea", "true");
+    }
+
+    public void convertEvent(TouchEvent event) {
+        System.out.println(event);
+        TouchPoint point = event.getTouchPoint();
+        if(event.getEventType().getName().equals("TOUCH_PRESSED")){
+            addTouchPoint(point, event);
+        } else if (event.getEventType().getName().equals("TOUCH_MOVED")) {
+            updateTouchPoint(point, event);
+        } else if (event.getEventType().getName().equals("TOUCH_RELEASED")) {
+            releaseTouchPoint(point);
+        }
+        event.consume();
+    }
+
+    private void addTouchPoint(TouchPoint point, TouchEvent event) {
+        TuioTouchPoint touchPoint = convertToTUIO(point, TuioTouchPoint.State.STARTED);
+        touchPoint.setTargetNode(event.getTarget());
+        touchPoint.setCurrentTargetNode(event.getTarget());
+        gestureHandler.touchesBegan(touchPoint);
+        touchMap.put(point.getId(), touchPoint);
+    }
+
+    private void updateTouchPoint(TouchPoint point, TouchEvent event) {
+        int id = point.getId();
+        TuioTouchPoint touchPoint = touchMap.get(id);
+        if(touchPoint.getState().equals(TuioTouchPoint.State.STARTED)) {
+            TuioTouchPoint newTouchPoint = convertToTUIO(point, TuioTouchPoint.State.MOVED);
+            touchMap.replace(point.getId(), touchPoint, newTouchPoint);
+        } else {
+            touchPoint.update(event.getTarget(), point.getSceneX(), point.getSceneY());
+        }
+        touchPoint = touchMap.get(id);
+        gestureHandler.touchesMove(touchPoint);
+    }
+
+    private void releaseTouchPoint(TouchPoint point) {
+        TuioTouchPoint touchPoint = convertToTUIO(point, TuioTouchPoint.State.ENDED);
+        gestureHandler.touchesEnd(touchPoint);
+        touchMap.remove(point.getId());
+    }
+
+    private TuioTouchPoint convertToTUIO(TouchPoint point, TuioTouchPoint.State state) {
+        TuioCursor cursor = new TuioCursor(new TuioTime(), 0, 0, 0, 0);
+        return new TuioTouchPoint(cursor, point.getScreenX(), point.getScreenY(), point.getSceneX(), point.getSceneY(), state);
     }
 
     /**
@@ -49,9 +103,7 @@ public class TouchPaneController {
      * @param zoomEvent zoom event
      */
     public void zoomPane(ZoomEvent zoomEvent) {
-        pane.toFront();
-        pane.setScaleX(pane.getScaleX() * zoomEvent.getZoomFactor());
-        pane.setScaleY(pane.getScaleY() * zoomEvent.getZoomFactor());
+
     }
 
     /**
@@ -59,8 +111,7 @@ public class TouchPaneController {
      * @param rotateEvent rotate event
      */
     public void rotatePane(RotateEvent rotateEvent) {
-        pane.toFront();
-        pane.setRotate(pane.getRotate() + rotateEvent.getAngle() * 0.8);
+
     }
 
     /**
@@ -69,26 +120,7 @@ public class TouchPaneController {
      * @param scrollEvent scroll event
      */
     public void scrollPane(ScrollEvent scrollEvent) {
-        pane.toFront();
-        if(!outOfBoundsX()) {
-            pane.setTranslateX(pane.getTranslateX() + scrollEvent.getDeltaX());
-        } else {
-            if(pane.getTranslateX() < 0) {
-                pane.setTranslateX(bounds.getMaxX() - pane.getWidth() / 2 + scrollEvent.getDeltaX());
-            } else {
-                pane.setTranslateX(-1 * pane.getWidth() / 2 + scrollEvent.getDeltaX());
-            }
-        }
 
-        if(!outOfBoundsY()) {
-            pane.setTranslateY(pane.getTranslateY() + scrollEvent.getDeltaY());
-        } else {
-            if(pane.getTranslateY() < 0) {
-                pane.setTranslateY(bounds.getMaxY() - pane.getHeight() / 2 + scrollEvent.getDeltaY());
-            } else {
-                pane.setTranslateY(-1 * pane.getHeight() / 2 + 200 + scrollEvent.getDeltaY());
-            }
-        }
     }
 
 
