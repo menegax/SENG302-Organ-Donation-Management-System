@@ -1,5 +1,6 @@
 package model_test;
 
+import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
 import model.Disease;
 import model.Patient;
@@ -10,6 +11,7 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.SystemLogger;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -310,7 +312,7 @@ public class PatientTest implements Serializable {
      * Ensures the current location Lat and Lng is reset whenever the patient's address is reset
      */
     @Test
-    public void resetCurrentLocation() throws DataFormatException {
+    public void resetCurrentLocation() throws DataFormatException, InterruptedException, ApiException, IOException {
         testPatient.setCurrentLocation(new LatLng(-43.525650, 172.639847)); // set to UC
         testPatient.setStreetNumber("10");
         assertNull(testPatient.getCurrentLocation());

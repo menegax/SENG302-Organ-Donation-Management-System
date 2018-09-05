@@ -587,7 +587,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         alert.getDialogPane()
                 .lookupButton(ButtonType.YES)
                 .addEventFilter(ActionEvent.ACTION, event -> {
-                    GUIMap.jsBridge.call("setPatients", patients);
+                    GUIMap.jsBridge.setMember("patients", patients);
+                    GUIMap.jsBridge.call("setPatients");
                 });
     }
 }

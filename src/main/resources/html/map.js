@@ -102,6 +102,7 @@ function addMarker(patient) {
 
 //Opens patient profile when the button from the infoWindow is clicked on
 function openPatientProfile(patientNhi) {
+    console.log("AYYY");
     console.log("Patient: " + patientNhi);
     mapBridge.openPatientProfile(patientNhi);
 }
@@ -126,13 +127,13 @@ function getOrganOptions(patient) {
     return {donating: donationStr, receiving: requiredStr};
 }
 
-function setPatients(newPatients) {
+function setPatients() {
+    validCount = 0;
 
     markers.forEach(function(marker) {
         marker.setMap(null);
     });
     markers = [];
 
-    patients = newPatients;
     markerLoop(patients.size());
 }

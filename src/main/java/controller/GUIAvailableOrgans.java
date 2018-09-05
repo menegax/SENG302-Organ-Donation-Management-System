@@ -200,21 +200,20 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
 
         // todo rework
 
-        Patient josh = new Patient();
-        josh.setCity("Christchurch");
-        josh.setRegion(Region.CANTERBURY);
-        josh.setSuburb("Ilam");
-        josh.setStreetNumber("10");
-        josh.setStreetName("name");
-        ArrayList<Patient> patients = new ArrayList<>();
-        patients.add(josh);
+        List<Patient> patients = new ArrayList<>();
+
+        for (int i = 0; i < masterData.size(); i++) {
+            patients.add(masterData.get(i).getPatient());
+            System.out.println(masterData.get(i).getPatient());
+        }
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
                 , ButtonType.YES, ButtonType.NO);
         alert.show();
         alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
             statesHistoryScreen.getUndoableWrapper().getGuiHome().openMap();
-            GUIMap.jsBridge.call("setPatients", patients);
+            GUIMap.jsBridge.setMember("patients", patients);
+            GUIMap.jsBridge.call("setPatients");
             screenControl.setMapOpen(true);
         });
     }

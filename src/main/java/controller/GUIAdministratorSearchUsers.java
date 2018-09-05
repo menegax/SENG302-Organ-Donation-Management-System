@@ -237,25 +237,23 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
 
         // todo rework
 
-        Patient josh = new Patient();
-        josh.setCity("Christchurch");
-        josh.setRegion(GlobalEnums.Region.CANTERBURY);
-        josh.setSuburb("Ilam");
-        josh.setStreetNumber("10");
-        josh.setStreetName("name");
-        ArrayList<Patient> patients = new ArrayList<>();
-        patients.add(josh);
+        List<Patient> patients = new ArrayList<>();
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?", ButtonType.YES, ButtonType.NO);
-        alert.getDialogPane()
-                .lookupButton(ButtonType.YES)
-                .addEventFilter(ActionEvent.ACTION, event -> {
-                    statesHistoryScreen.getUndoableWrapper()
-                            .getGuiHome()
-                            .openMap();
-                    GUIMap.jsBridge.call("setPatients", patients);
-                    screenControl.setMapOpen(true);
-                });
-        alert.showAndWait();
+        for (int i = 0; i < masterData.size(); i++) {
+            if (masterData.get(i) instanceof Patient) {
+                patients.add(patientDataService.getPatientByNhi(((Patient) masterData.get(i)).getNhiNumber()));
+                System.out.println(patientDataService.getPatientByNhi(((Patient) masterData.get(i)).getNhiNumber()));
+            }
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
+                , ButtonType.YES, ButtonType.NO);
+        alert.show();
+        alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
+            statesHistoryScreen.getUndoableWrapper().getGuiHome().openMap();
+            GUIMap.jsBridge.setMember("patients", patients);
+            GUIMap.jsBridge.call("setPatients");
+            screenControl.setMapOpen(true);
+        });
     }
 }
