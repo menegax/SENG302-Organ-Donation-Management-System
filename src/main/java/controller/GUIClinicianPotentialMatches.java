@@ -568,15 +568,16 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
     private UserControl userControl = UserControl.getUserControl();
 
+    /**
+     * View patients from table on the map
+     * Sets the patients list in the JavaScript to custom set
+     * Opens the map and loads
+     */
     @FXML
-    public void viewOnMap() throws DataFormatException {
-        // todo duplicated work
-        // todo rework
-
+    public void viewOnMap() {
         List<Patient> patients = new ArrayList<>();
         for (int i = 0; i < observableList.size(); i++) {
             patients.add(patientDataService.getPatientByNhi(observableList.get(i).getReceiverNhi()));
-            System.out.println(patientDataService.getPatientByNhi(observableList.get(i).getReceiverNhi()).getFormattedAddress());
         }
 
         Alert alert;

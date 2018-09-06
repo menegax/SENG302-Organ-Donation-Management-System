@@ -231,12 +231,13 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         userDataTable.refresh();
     }
 
-
+    /**
+     * View patients from table on the map
+     * Sets the patients list in the JavaScript to custom set
+     * Opens the map and loads
+     */
     @FXML
-    public void viewOnMap() throws DataFormatException {
-
-        // todo rework
-
+    public void viewOnMap() {
         List<Patient> patients = new ArrayList<>();
 
         for (int i = 0; i < masterData.size(); i++) {

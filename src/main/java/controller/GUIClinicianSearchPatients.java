@@ -503,10 +503,13 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         });
     }
 
+    /**
+     * View patients from table on the map
+     * Sets the patients list in the JavaScript to custom set
+     * Opens the map and loads
+     */
     @FXML
-    public void viewOnMap() throws DataFormatException {
-        // todo rework
-
+    public void viewOnMap() {
         List<Patient> patients = new ArrayList<>();
 
         for (int i = 0; i < masterData.size(); i++) {
@@ -527,7 +530,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
             screenControl.setIsCustomSetMap(true);
             statesHistoryScreen.getUndoableWrapper().getGuiHome().openMap();
-            System.out.println(patients.size());
             GUIMap.jsBridge.setMember("patients", patients);
             GUIMap.jsBridge.call("setPatients");
             screenControl.setMapOpen(true);

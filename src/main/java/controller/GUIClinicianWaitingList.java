@@ -209,14 +209,16 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
 
     private UserControl userControl = UserControl.getUserControl();
 
+    /**
+     * View patients from table on the map
+     * Sets the patients list in the JavaScript to custom set
+     * Opens the map and loads
+     */
     @FXML
-    public void viewOnMap() throws DataFormatException {
-        // todo rework
-
+    public void viewOnMap() {
         List<Patient> patients = new ArrayList<>();
         for (int i = 0; i < masterData.size(); i++) {
             patients.add(patientDataService.getPatientByNhi(masterData.get(i).getReceiverNhi()));
-            System.out.println(patientDataService.getPatientByNhi(masterData.get(i).getReceiverNhi()).getFormattedAddress());
         }
 
         Alert alert;

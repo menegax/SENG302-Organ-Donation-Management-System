@@ -33,7 +33,7 @@ public class GUIMap implements Initializable {
 
     private WebEngine webEngine;
 
-    public static JSObject jsBridge; //todo make private
+    public static JSObject jsBridge;
 
     private Robot robot;
 
