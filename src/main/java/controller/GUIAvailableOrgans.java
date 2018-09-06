@@ -195,6 +195,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         availableOrgansTableView.refresh();
     }
 
+    private UserControl userControl = UserControl.getUserControl();
+
     @FXML
     public void viewOnMap() throws DataFormatException {
 
@@ -207,11 +209,23 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
             System.out.println(masterData.get(i).getPatient());
         }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
-                , ButtonType.YES, ButtonType.NO);
-        alert.show();
-        alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
-            statesHistoryScreen.getUndoableWrapper().getGuiHome().openMap();
+        Alert alert;
+        if (screenControl.getMapOpen()) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
+                    , ButtonType.OK, ButtonType.NO);
+            alert.show();
+        } else {
+            alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
+                    , ButtonType.OK);
+            alert.show();
+        }
+
+        alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
+            screenControl.setIsCustomSetMap(true);
+            if (!screenControl.getMapOpen()) {
+                screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+                screenControl.setMapOpen(true);
+            }
             GUIMap.jsBridge.setMember("patients", patients);
             GUIMap.jsBridge.call("setPatients");
             screenControl.setMapOpen(true);

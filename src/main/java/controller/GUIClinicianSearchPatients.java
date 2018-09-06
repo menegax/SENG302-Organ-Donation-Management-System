@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.zip.DataFormatException;
 
@@ -504,21 +505,29 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
 
     @FXML
     public void viewOnMap() throws DataFormatException {
-
         // todo rework
 
         List<Patient> patients = new ArrayList<>();
 
         for (int i = 0; i < masterData.size(); i++) {
             patients.add(patientDataService.getPatientByNhi(masterData.get(i).getNhiNumber()));
-            System.out.println(patientDataService.getPatientByNhi(masterData.get(i).getNhiNumber()).getFormattedAddress());
         }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
-                , ButtonType.YES, ButtonType.NO);
-        alert.show();
-        alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
+        Alert alert;
+        if (screenControl.getMapOpen()) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
+                    , ButtonType.OK, ButtonType.NO);
+            alert.show();
+        } else {
+            alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
+                    , ButtonType.OK);
+            alert.show();
+        }
+
+        alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
+            screenControl.setIsCustomSetMap(true);
             statesHistoryScreen.getUndoableWrapper().getGuiHome().openMap();
+            System.out.println(patients.size());
             GUIMap.jsBridge.setMember("patients", patients);
             GUIMap.jsBridge.call("setPatients");
             screenControl.setMapOpen(true);

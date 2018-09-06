@@ -25,6 +25,7 @@ import javafx.collections.transformation.SortedList;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.zip.DataFormatException;
 
@@ -204,25 +205,39 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         waitingListTableView.refresh();
     }
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private UserControl userControl = UserControl.getUserControl();
+
     @FXML
     public void viewOnMap() throws DataFormatException {
-
         // todo rework
 
-        Patient josh = new Patient();
-        josh.setCity("Christchurch");
-        josh.setRegion(Region.CANTERBURY);
-        josh.setSuburb("Ilam");
-        josh.setStreetNumber("10");
-        josh.setStreetName("name");
-        ArrayList<Patient> patients = new ArrayList<>();
-        patients.add(josh);
+        List<Patient> patients = new ArrayList<>();
+        for (int i = 0; i < masterData.size(); i++) {
+            patients.add(patientDataService.getPatientByNhi(masterData.get(i).getReceiverNhi()));
+            System.out.println(patientDataService.getPatientByNhi(masterData.get(i).getReceiverNhi()).getFormattedAddress());
+        }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
-                , ButtonType.YES, ButtonType.NO);
-        alert.show();
-        alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
-            GUIMap.jsBridge.call("setPatients", patients);
+        Alert alert;
+        if (screenControl.getMapOpen()) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
+                    , ButtonType.OK, ButtonType.NO);
+            alert.show();
+        } else {
+            alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
+                    , ButtonType.OK);
+            alert.show();
+        }
+
+        alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
+            screenControl.setIsCustomSetMap(true);
+            if (!screenControl.getMapOpen()) {
+                screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+                screenControl.setMapOpen(true);
+            }
+            GUIMap.jsBridge.setMember("patients", patients);
+            GUIMap.jsBridge.call("setPatients");
         });
     }
 }

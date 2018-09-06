@@ -242,14 +242,22 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         for (int i = 0; i < masterData.size(); i++) {
             if (masterData.get(i) instanceof Patient) {
                 patients.add(patientDataService.getPatientByNhi(((Patient) masterData.get(i)).getNhiNumber()));
-                System.out.println(patientDataService.getPatientByNhi(((Patient) masterData.get(i)).getNhiNumber()));
             }
         }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
-                , ButtonType.YES, ButtonType.NO);
-        alert.show();
-        alert.getDialogPane().lookupButton(ButtonType.YES).addEventFilter(ActionEvent.ACTION, event -> {
+        Alert alert;
+        if (screenControl.getMapOpen()) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
+                    , ButtonType.OK, ButtonType.NO);
+            alert.show();
+        } else {
+            alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
+                    , ButtonType.OK);
+            alert.show();
+        }
+
+        alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
+            screenControl.setIsCustomSetMap(true);
             statesHistoryScreen.getUndoableWrapper().getGuiHome().openMap();
             GUIMap.jsBridge.setMember("patients", patients);
             GUIMap.jsBridge.call("setPatients");

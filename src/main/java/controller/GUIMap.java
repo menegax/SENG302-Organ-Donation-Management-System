@@ -52,7 +52,12 @@ public class GUIMap implements Initializable {
 
         UserActionHistory.userActions.log(Level.INFO, "Loading map...", "Attempted to open map");
 
-        List<Patient> results = getInitialPatients();
+        List<Patient> results;
+        if (!screenControl.getIsCustomSetMap()) {
+             results = getInitialPatients();
+        } else {
+            results = new ArrayList<>();
+        }
 
         webEngine.setJavaScriptEnabled(true);
         webEngine.getLoadWorker()
