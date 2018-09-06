@@ -46,6 +46,51 @@
 4. Tap on open profile
 5. Expected: The patient profile should open
 
+### Test 7 - 'View on map' button clinician search patients
+
+1. Log in as a clinician
+2. Go to search patients
+3. Filter search to search for 26 year old males in Wellington
+3. Select 'View on map' button
+4. Select 'OK' on the popup that opens up
+5. Expected: The map should re-populte with the patients in the table
+
+### Test 8 - 'View on map' button clinician transplant waiting list
+
+1. Log in as a clinician
+2. Go to transplant waiting list
+3. Select 'View on map' button
+4. Select 'OK' on the popup that opens up
+5. Expected: The map should re-populte with the patients in the table
+
+### Test 9 - 'View on map' button clinician available organs
+
+1. Log in as a clinician
+2. Go to available organs
+3. Select 'View on map' button
+4. Select 'OK' on the popup that opens up
+5. Expected: The map should re-populte with the patients in the table
+
+### Test 10 - 'View on map' button
+
+1. Log in as a clinician
+2. Go to available organs
+3. Select an organ
+4. select 'View potential matches'
+5. Select 'View on map' button
+6. Select 'OK' on the popup that opens up
+7. Expected: The map should re-populte with the patients in the table
+
+### Test 11 - 'View on map' button administrator search patients
+
+1. Log in as an admin
+2. Go to search patients
+3. Select 'View on map' button
+4. Select 'OK' on the popup that opens up
+5. Select 'View on map' button once again
+6. Select 'OK' on the popup that opens up
+6. Expected: The map should be populted with the patients in the table
+
 ## Test History
 
 ### 15/8/18 - Andrew
