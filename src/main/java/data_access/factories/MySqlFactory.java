@@ -32,10 +32,10 @@ public class MySqlFactory extends DAOFactory {
             if (connection_type.equals(GlobalEnums.DbType.PRODUCTION.getValue())) {
                 config = new HikariConfig("/sql/HikariConfigProdPatrick.properties");
             } else {
-                config = new HikariConfig("/sql/HikariConfigTestPatrick.properties");
+                config = new HikariConfig("/sql/HikariConfigTest.properties");
             }
         } else {
-            config = new HikariConfig("/sql/HikariConfigTestPatrick.properties");
+            config = new HikariConfig("/sql/HikariConfigTest.properties");
         }
         ds = new HikariDataSource(config);
     }
