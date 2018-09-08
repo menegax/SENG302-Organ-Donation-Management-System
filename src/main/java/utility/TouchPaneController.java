@@ -2,22 +2,11 @@ package utility;
 
 import TUIO.TuioCursor;
 import TUIO.TuioTime;
-import javafx.event.Event;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Window;
 import org.tuiofx.Configuration;
-import org.tuiofx.examples.demo.touchpointdata.TouchPointDataController;
 import org.tuiofx.internal.base.GestureHandler;
 import org.tuiofx.internal.gesture.TuioJFXEvent;
 import org.tuiofx.internal.gesture.TuioTouchPoint;
@@ -26,6 +15,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.*;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +29,8 @@ public class TouchPaneController {
     private final Pane pane;
     private Map<Integer, TuioTouchPoint> touchMap = new HashMap<>();
     private GestureHandler gestureHandler;
+    private final Predicate<InputEvent> isContinuationState;
+    private final Predicate<InputEvent> stopContinuationState;
 
 
     private javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
@@ -49,19 +41,34 @@ public class TouchPaneController {
      */
     public TouchPaneController(Pane pane) {
         this.pane = pane;
-        gestureHandler = new GestureHandler(Configuration.debug());
+        gestureHandler = new GestureHandler(Configuration.debug().toBuilder().setShowCursor(true).build());
 //        this.pane.getProperties().put("focusArea", "true");
+        this.isContinuationState = (event) -> {
+            if (event.getEventType() == ZoomEvent.ZOOM) {
+                return true;
+            } else if (event.getEventType() == TouchEvent.TOUCH_MOVED) {
+                return true;
+            } else if (event.getEventType() == RotateEvent.ROTATE) {
+                return true;
+            } else if (event.getEventType() == ScrollEvent.SCROLL) {
+                return true;
+            } else {
+                return event.getEventType() == MouseEvent.MOUSE_DRAGGED;
+            }
+        };
+        this.stopContinuationState = this.isContinuationState::test;
     }
 
     public void convertEvent(TouchEvent event) {
-        System.out.println(event);
         TouchPoint point = event.getTouchPoint();
-        if(event.getEventType().getName().equals("TOUCH_PRESSED")){
-            addTouchPoint(point, event);
-        } else if (event.getEventType().getName().equals("TOUCH_MOVED")) {
-            updateTouchPoint(point, event);
-        } else if (event.getEventType().getName().equals("TOUCH_RELEASED")) {
-            releaseTouchPoint(point);
+        if(!this.stopContinuationState.test(event) && event.getTouchCount() <= 10) {
+            if (event.getEventType().getName().equals("TOUCH_PRESSED")) {
+                addTouchPoint(point, event);
+            } else if (event.getEventType().getName().equals("TOUCH_MOVED")) {
+                updateTouchPoint(point, event);
+            } else if (event.getEventType().getName().equals("TOUCH_RELEASED")) {
+                releaseTouchPoint(point);
+            }
         }
         event.consume();
     }

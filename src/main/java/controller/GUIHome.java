@@ -190,9 +190,15 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                 homePane.setOnTouchPressed(event -> {
                     homePane.toFront();
                     homePaneTouchController.convertEvent(event);
+                    System.out.println("pre press consume");
+                    event.consume();
+                    System.out.println("post press consume");
                 });
                 homePane.setOnTouchMoved(event -> {
                     homePaneTouchController.convertEvent(event);
+                    System.out.println("pre move consume");
+                    event.consume();
+                    System.out.println("post move consume");
                 });
                 homePane.setOnZoom(zoomEvent -> {
                     zoomWindow(zoomEvent);

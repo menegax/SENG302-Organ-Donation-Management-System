@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.tuiofx.Configuration;
 import org.tuiofx.TuioFX;
 import service.UserDataService;
@@ -49,11 +50,17 @@ public class TUIOFXMain extends Application {
 
         new UserDataService().prepareApplication();
 
-        TuioFX tuioFX = new TuioFX(stage, Configuration.pqLabs());
+        TuioFX tuioFX = new TuioFX(stage, Configuration.debug());
         tuioFX.enableMTWidgets(true);
         tuioFX.start();
 
         stage.show();
+
+//        Stage frontStage = setUpStage();
+//        frontStage.initStyle(StageStyle.TRANSPARENT);
+//        frontStage.toFront();
+//        frontStage.show();
+
 
         stage.setOnCloseRequest(event -> System.exit(0));
 

@@ -92,6 +92,7 @@ class ScreenControlTouch extends ScreenControl {
             }
             pane.getProperties().put("focusArea", "true");
             pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
+            addCanvas(pane.getScene());
             List<Node> panes;
             if(isLoginShowing) {
                 panes = new ArrayList<>();
