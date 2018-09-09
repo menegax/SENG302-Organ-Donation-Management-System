@@ -304,7 +304,7 @@ public class GUIPatientProfile extends TargetedController {
 			@Override
 			protected void updateItem(String item, boolean empty) {
 				super.updateItem(item, empty);
-				if (userControl.getLoggedInUser() instanceof Clinician) {
+				if (!(userControl.getLoggedInUser() instanceof Patient)) {
 					if (isDonorList) {
 						setListInvalidStyle(item, receivingListProperty);
 					} else {

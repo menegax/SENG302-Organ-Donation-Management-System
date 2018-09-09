@@ -41,10 +41,13 @@ public class PatientOrgan {
 
     @Override
     public boolean equals(Object obj) {
-        PatientOrgan patientOrgan = (PatientOrgan) obj;
-        return patientOrgan.patient.getNhiNumber().equals(this.patient.getNhiNumber()) &&
-                patientOrgan.organ.equals(this.organ);
-
+        if (obj != null) {
+            PatientOrgan patientOrgan = (PatientOrgan) obj;
+            return patientOrgan.patient.getNhiNumber().equals(this.patient.getNhiNumber()) &&
+                    patientOrgan.organ.equals(this.organ);
+        } else {
+            return false;
+        }
     }
 
 }
