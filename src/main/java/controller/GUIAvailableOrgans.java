@@ -61,6 +61,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
 
     private ObservableList<PatientOrgan> masterData = FXCollections.observableArrayList();
 
+    private ObservableList<PatientOrgan> filterData = FXCollections.observableArrayList();
+
     private SortedList<PatientOrgan> sortedData;
 
     @FXML
@@ -72,12 +74,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
 
     public GUIAvailableOrgans() {
         ExpiryObservable.getInstance().addObserver((o, arg) -> {
-            try {
-                masterData.remove(arg);
-                availableOrgansTableView.refresh();
-            } catch (Exception e) {
-                System.out.println("saf");
-            }
+            filterData.remove(arg);
+            masterData.remove(arg);
         });
     }
 
@@ -213,7 +211,6 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 x.getProgressTask().setInterrupted();
             }
         });
-        System.out.println(masterData.size());
         if ((int) NUM_ROWS_PER_PAGE * (index + 1) < masterData.size()) {
             endIndex = (int) NUM_ROWS_PER_PAGE * (index + 1);
             numberToDisplay = (int)NUM_ROWS_PER_PAGE;
@@ -221,7 +218,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
             endIndex = masterData.size();
             numberToDisplay = ((int) NUM_ROWS_PER_PAGE * (index + 1) )% masterData.size();
         }
-        sortedData =  new SortedList<>(FXCollections.observableArrayList(masterData.subList(endIndex - numberToDisplay, endIndex)));
+        filterData = FXCollections.observableArrayList(masterData.subList(endIndex - numberToDisplay, endIndex));
+        sortedData =  new SortedList<>(filterData);
         sortedData.forEach(PatientOrgan::startTask);
         availableOrgansTableView.setItems(sortedData);
     }
