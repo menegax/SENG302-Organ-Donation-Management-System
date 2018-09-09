@@ -105,16 +105,9 @@ class ScreenControlTouch extends ScreenControl {
             Region root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
             touchPane = new Pane(root);
             touchPane.getChildren().addAll(panes);
-//            if(touchScene == null) {
-//                touchScene = new Scene(touchPane);
-//            } else {
-//                touchScene.setRoot(root);
-//            }
-//            touchStage.setScene(touchScene);
             Scene newScene = new Scene(touchPane);
             touchStage.setScene(newScene);
             addCanvas(newScene);
-//            newScene.getRoot().getProperties().put("focusArea", "true");
             pane.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue && parentController != null) {
                     parentController.windowClosed();
@@ -207,7 +200,7 @@ class ScreenControlTouch extends ScreenControl {
     }
 
     private void addCanvas(Scene scene) {
-        if(!(scene.getRoot() instanceof TuioFXCanvas)) {
+        if(scene != null && !(scene.getRoot() instanceof TuioFXCanvas)) {
             TuioFXCanvas tuioFXCanvas = new TuioFXCanvas();
             Region oldRoot = (Region) scene.getRoot();
             tuioFXCanvas.getChildren().addAll(oldRoot);

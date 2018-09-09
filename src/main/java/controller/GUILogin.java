@@ -23,6 +23,7 @@ import service.AdministratorDataService;
 import service.ClinicianDataService;
 import service.PatientDataService;
 import service.interfaces.IClinicianDataService;
+import utility.MultiTouchHandler;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 
@@ -67,6 +68,8 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
 
     private UserControl userControl = UserControl.getUserControl();
 
+    private MultiTouchHandler touchHandler;
+
     /**
      * Initializes the login window by adding key binding for login on enter and an event filter on the login field
      */
@@ -79,10 +82,12 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
             }
         });
         if(screenControl.isTouch()) {
-            loginTouchPane = new TouchPaneController(loginPane);
-            loginPane.setOnZoom(this::zoomWindow);
-            loginPane.setOnRotate(this::rotateWindow);
-            loginPane.setOnScroll(this::scrollWindow);
+//            loginTouchPane = new TouchPaneController(loginPane);
+//            loginPane.setOnZoom(this::zoomWindow);
+//            loginPane.setOnRotate(this::rotateWindow);
+//            loginPane.setOnScroll(this::scrollWindow);
+            touchHandler = new MultiTouchHandler();
+            touchHandler.initialiseHandler(loginPane);
         }
 
     }
