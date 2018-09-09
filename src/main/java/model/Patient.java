@@ -768,7 +768,7 @@ public class Patient extends User {
 
     public LatLng getCurrentLocation() throws InterruptedException, ApiException, IOException {
         if (currentLocation == null) {
-            APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
+            this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
         }
         return currentLocation;
     }
