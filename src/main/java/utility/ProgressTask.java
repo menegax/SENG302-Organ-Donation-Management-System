@@ -41,14 +41,18 @@ public class ProgressTask extends Task<Void> {
     @Override
     protected Void call() throws Exception {
         setColor(elapsedTime / organ.getOrganUpperBoundSeconds());
-        for (int i = ((int) elapsedTime); i < organ.getOrganUpperBoundSeconds() && !interrupted; i++) {
+        int i;
+        for (i = ((int) elapsedTime) ; i < organ.getOrganUpperBoundSeconds() && !interrupted; i++) {
             updateProgress((1.0 * i) / (double) organ.getOrganUpperBoundSeconds(), 1);
             updateMessage(getTimeRemaining()); //in fx thread
             double finalI = (1.0 * i) / organ.getOrganUpperBoundSeconds();
             Platform.runLater(() -> setColor(finalI));
-            Thread.sleep(1000); //each loop is now 1 second
+            Thread.sleep(2); //each loop is now 1 second
         }
-        ExpiryObservable.getInstance().setExpired(this.patientOrgan);
+        System.out.println(i + " " + organ.getOrganUpperBoundSeconds());
+        if (i >= organ.getOrganUpperBoundSeconds()) {
+            ExpiryObservable.getInstance().setExpired(this.patientOrgan);
+        }
         return null;
     }
 

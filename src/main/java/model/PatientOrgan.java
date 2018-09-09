@@ -19,7 +19,6 @@ public class PatientOrgan {
     public PatientOrgan(Patient patient, GlobalEnums.Organ organ) {
         this.patient = patient;
         this.organ = organ;
-        this.progressTask = new ProgressTask(this);
         this.timeRemaining = SECONDS.between(patient.getDeathDate().plusSeconds(organ.getOrganUpperBoundSeconds()), LocalDateTime.now());
     }
 
@@ -37,6 +36,10 @@ public class PatientOrgan {
 
     public Long timeRemaining() {
         return timeRemaining;
+    }
+
+    public void startTask(){
+        this.progressTask = new ProgressTask(this);
     }
 
     @Override

@@ -33,7 +33,7 @@ import static utility.UserActionHistory.userActions;
  */
 public class GUIAvailableOrgans extends UndoableController implements IWindowObserver {
 
-    private final float NUM_ROWS_PER_PAGE = 2;
+    private final float NUM_ROWS_PER_PAGE = 10;
 
     @FXML
     private TableView<PatientOrgan> availableOrgansTableView;
@@ -68,7 +68,14 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     public GUIAvailableOrgans() {
-        ExpiryObservable.getInstance().addObserver((o, arg) -> masterData.remove(arg));
+        ExpiryObservable.getInstance().addObserver((o, arg) -> {
+            try {
+                masterData.remove(arg);
+                availableOrgansTableView.refresh();
+            } catch (Exception e) {
+                System.out.println("saf");
+            }
+        });
     }
 
     public void load() {
@@ -77,8 +84,6 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         }
         masterData.clear();
         CachedThreadPool.getCachedThreadPool().getThreadService().shutdownNow();
-        int numThreads = Thread.getAllStackTraces().keySet().size();
-        System.out.println(numThreads);
         List<Patient> deadPatients = patientDataService.getDeadPatients();
         for (Patient patient : deadPatients) {
             if (patient.getDeathDate() != null) {
@@ -142,6 +147,13 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
      * Populates waiting list table with all patients waiting to receive an organ
      */
     private void populateTable() {
+        // wrap ObservableList in a FilteredList
+        FilteredList<PatientOrgan> filteredData = new FilteredList<>(masterData);
+
+        // wrap the FilteredList in a SortedList.
+        sortedData = new SortedList<>(filteredData);
+
+        updateTable(0);
         // initialize columns
         patientCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getPatient()
@@ -159,18 +171,10 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 .toString()));
 
         //expiry
-        expiryCol.setCellValueFactory(r -> r.getValue()
-                .getProgressTask()
-                .messageProperty());
+        expiryCol.setCellValueFactory(r -> r.getValue().getProgressTask().messageProperty());
         organExpiryProgressCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()
                 .getProgressTask()));
         organExpiryProgressCol.setCellFactory(cb -> ProgressBarCustomTableCell.getCell(organExpiryProgressCol));
-
-        // wrap ObservableList in a FilteredList
-        FilteredList<PatientOrgan> filteredData = new FilteredList<>(masterData);
-
-        // wrap the FilteredList in a SortedList.
-        sortedData = new SortedList<>(filteredData);
 
         Comparator<PatientOrgan> test = (o1, o2) -> Long.compare(o2.timeRemaining(), o1.timeRemaining());
         ObjectProperty<Comparator<? super PatientOrgan>> test1 = new SimpleObjectProperty<>(test);
@@ -182,7 +186,6 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         availableOrgansTableView.setVisible(true);
         setUpDoubleClickToPatientEdit();
         pagination.setPageCount(getPageCount());
-        System.out.println(getPageCount());
         pagination.currentPageIndexProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 updateTable(newValue.intValue());
@@ -193,10 +196,24 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
 
 
     private void updateTable(int index) {
-        if ((int) NUM_ROWS_PER_PAGE * index + 20 > sortedData.size()) {
-            availableOrgansTableView.setItems(FXCollections.observableArrayList(sortedData.subList((int) NUM_ROWS_PER_PAGE * index, sortedData.size() - 1)));
-
+        int endIndex;
+        int numberToDisplay;
+        sortedData.forEach(x -> {
+            if (x.getProgressTask() != null) {
+                x.getProgressTask().setInterrupted();
+            }
+        });
+        System.out.println(masterData.size());
+        if ((int) NUM_ROWS_PER_PAGE * (index + 1) < masterData.size()) {
+            endIndex = (int) NUM_ROWS_PER_PAGE * (index + 1);
+            numberToDisplay = (int)NUM_ROWS_PER_PAGE;
+        } else {
+            endIndex = masterData.size();
+            numberToDisplay = ((int) NUM_ROWS_PER_PAGE * (index + 1) )% masterData.size();
         }
+        sortedData =  new SortedList<>(FXCollections.observableArrayList(masterData.subList(endIndex - numberToDisplay, endIndex)));
+        sortedData.forEach(PatientOrgan::startTask);
+        availableOrgansTableView.setItems(sortedData);
     }
     /**
      * Gets the page count to show
