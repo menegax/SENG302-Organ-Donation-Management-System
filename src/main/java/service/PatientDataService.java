@@ -23,6 +23,7 @@ import static utility.SystemLogger.systemLogger;
 public class PatientDataService implements IPatientDataService {
 
     private DAOFactory mysqlFactory = DAOFactory.getDAOFactory(FactoryType.MYSQL);
+
     private DAOFactory localDbFactory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
 
 

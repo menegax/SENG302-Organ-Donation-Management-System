@@ -1,0 +1,10 @@
+# GUI Login Test
+
+### Test 1
+1. Given a patient is in the db and is deceased (has a death date)
+2. When attempting to log in as that patient
+3. Then logging in fails and an appropriate error message is displayed
+    
+### 10/09/2018 - Andrew Spearman
+
+Test 1: pass
