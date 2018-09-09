@@ -99,6 +99,11 @@ public class GUIMap implements Initializable {
         });
     }
 
+
+    /**
+     * Gets a collection of initial patients from the search results to auto-populate the map on startup
+     * @return the results of the default search
+     */
     @NotNull
     private List<Patient> getInitialPatients() {
         List<Patient> patients = new ArrayList<>(new ClinicianDataService().searchPatients("", null, 50));
