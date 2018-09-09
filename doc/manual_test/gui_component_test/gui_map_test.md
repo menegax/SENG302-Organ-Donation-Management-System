@@ -94,6 +94,18 @@
 
 ## Test History
 
+### 09/09/18 - Joshua
+
+Test 7: PASS
+
+Test 8: PASS
+
+Test 9: PASS
+
+Test 10: PASS
+
+Test 11: PASS
+
 ### 15/8/18 - Andrew
 
 Test 1: Pass
