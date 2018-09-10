@@ -26,7 +26,7 @@ public class PatientTest implements Serializable {
 
     private static Patient testPatient1; //Patient obj not within the database
 
-    private static IPatientDataService patientDataService = new PatientDataService();
+    private static final IPatientDataService patientDataService = new PatientDataService();
 
     @BeforeClass
     public static void setUpBeforeClass() {
@@ -97,31 +97,14 @@ public class PatientTest implements Serializable {
      */
     @Test
     public void testUpdateDonationsMultiCorrectAdd() {
-        ArrayList<String> addDonations = new ArrayList<String>() {{
-            add("liver");
-            add("lung");
+        Map<Organ, String> addDonations = new HashMap<Organ, String>() {{
+            put(Organ.LIVER, null);
+            put(Organ.LUNG, null);
         }};
         testPatient.updateDonations(addDonations, null);
-        ArrayList<Organ> expected = new ArrayList<Organ>() {{
-            add(Organ.LIVER);
-            add(Organ.LUNG);
-        }};
-        assertEquals(expected, testPatient.getDonations());
-    }
-
-    /**
-     * Add a list containing at least one invalid organ,
-     * expect only liver to be added to donations
-     */
-    @Test
-    public void testUpdateDonationsAddContainInvalid() {
-        ArrayList<String> addDonations = new ArrayList<String>() {{
-            add("liver");
-            add("test");
-        }};
-        testPatient.updateDonations(addDonations, null);
-        ArrayList<Organ> expected = new ArrayList<Organ>() {{
-            add(Organ.LIVER);
+        Map<Organ, String> expected = new HashMap<Organ, String>() {{
+            put(Organ.LIVER, null);
+            put(Organ.LUNG, null);
         }};
         assertEquals(expected, testPatient.getDonations());
     }
@@ -133,30 +116,13 @@ public class PatientTest implements Serializable {
     @Test
     public void testUpdateDonationsRmValid() {
         addDonationsToPatient();
-        ArrayList<String> rmDonations = new ArrayList<String>() {{
-            add("liver");
+        Map<Organ, String> rmDonations = new HashMap<Organ, String>() {{
+            put(Organ.LIVER, null);
         }};
         testPatient.updateDonations(null, rmDonations);
-        ArrayList<Organ> expected = new ArrayList<Organ>() {{
-            add(Organ.LUNG);
+        Map<Organ, String> expected = new HashMap<Organ, String>() {{
+            put(Organ.LUNG, null);
         }};
-        assertEquals(expected, testPatient.getDonations());
-        resetDonationsPatient();
-    }
-
-    /**
-     * Add a list containing at least one invalid organ
-     * expect only liver to be in donations
-     */
-    @Test
-    public void testUpdateDonationsRmInvalid() {
-        testPatient.addDonation(Organ.LIVER);
-        ArrayList<String> rmDonations = new ArrayList<String>() {{
-            add("liver");
-            add("test");
-        }};
-        testPatient.updateDonations(null, rmDonations);
-        ArrayList<Organ> expected = new ArrayList<>();
         assertEquals(expected, testPatient.getDonations());
         resetDonationsPatient();
     }
@@ -168,7 +134,7 @@ public class PatientTest implements Serializable {
     @Test
     public void testUpdateDonationsAddRmNull() {
         testPatient.updateDonations(null, null);
-        ArrayList<Organ> expected = new ArrayList<>();
+        Map<Organ, String> expected = new HashMap<>();
         assertEquals(expected, testPatient.getDonations());
     }
 

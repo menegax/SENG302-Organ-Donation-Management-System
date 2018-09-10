@@ -9,13 +9,15 @@ import utility.ResourceManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
 public class DonatingOrgansDAO implements IDonationsDataAccess {
 
-    private data_access.factories.MySqlFactory mySqlFactory;
+    private final data_access.factories.MySqlFactory mySqlFactory;
 
 
     public DonatingOrgansDAO() {
@@ -38,26 +40,24 @@ public class DonatingOrgansDAO implements IDonationsDataAccess {
         return 0;
     }
 
-
-    // todo
     @Override
     public Map<GlobalEnums.Organ, String> getDonatingOrgansByDonorNhi(String donorNhi) {
-        //        try (Connection connection1 = mySqlFactory.getConnectionInstance()) {
-        //            Map<GlobalEnums.Organ, String> organs = new HashMap<>();
-        //            PreparedStatement statement = connection1.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_DONATING_ORGANS_QUERY"));
-        //            statement.setString(1, donorNhi);
-        //            ResultSet resultSet = statement.executeQuery();
-        //            while (resultSet.next()) {
-        //                GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(resultSet.getString("Organ"));
-        //                String receiverNhi = resultSet.getString("Recipient");
-        //                organs.put(organ, receiverNhi);
-        //            }
-        //            return organs;
-        //        }
-        //        catch (SQLException e) {
-        //            systemLogger.log(Level.SEVERE, "Could not get donating organs from MYSQL DB", this);
-        //        }
-        return null;
+        try (Connection connection1 = mySqlFactory.getConnectionInstance()) {
+            Map<GlobalEnums.Organ, String> organs = new HashMap<>();
+            PreparedStatement statement = connection1.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_DONATING_ORGANS_QUERY"));
+            statement.setString(1, donorNhi);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(resultSet.getString("Organ"));
+                String receiverNhi = resultSet.getString("Recipient");
+                organs.put(organ, receiverNhi);
+            }
+            return organs;
+        }
+        catch (SQLException e) {
+            systemLogger.log(Level.SEVERE, "Could not get donating organs from MYSQL DB", this);
+            return null;
+        }
     }
 
 

@@ -8,6 +8,8 @@ import service.interfaces.IPatientDataService;
 import utility.GlobalEnums.Organ;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -48,11 +50,7 @@ public class CLIPatientDonations implements Runnable {
 
     private void displayPatientDonations(Patient patient) {
         Set<Organ> donations = patient.getDonations().keySet();
-        if (donations == null) {
-            userActions.log(Level.WARNING, "No donations registered for patient: " + patient.getNameConcatenated(), "attempted to display patient donations");
-        } else {
-            userActions.log(Level.INFO, donations.toString(), "attempted to display patient donations");
-        }
+        userActions.log(Level.INFO, donations.toString(), "attempted to display patient donations");
     }
 
     public void run() {
@@ -61,7 +59,11 @@ public class CLIPatientDonations implements Runnable {
             if (donationsRequested) {
                 displayPatientDonations(patient);
             } else {
-                patient.updateDonations(newDonations, rmDonations);
+                Map<Organ, String> newDonationMap = new HashMap<>();
+                newDonations.forEach(s -> newDonationMap.put(Organ.getEnumFromString(s), null));
+                Map<Organ, String> rmDonationMap = new HashMap<>();
+                rmDonations.forEach(s -> rmDonationMap.put(Organ.getEnumFromString(s), null));
+                patient.updateDonations(newDonationMap, rmDonationMap);
                 patientDataService.save(patient);
             }
         } else {

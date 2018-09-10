@@ -139,7 +139,7 @@ public class Patient extends User {
     public Patient() {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
-        this.requiredOrgans = new HashMap();
+        this.requiredOrgans = new HashMap<>();
         this.donations = new HashMap<>();
     }
 
@@ -402,30 +402,20 @@ public class Patient extends User {
     /**
      * Update the organ donations list of the patient
      *
-     * @param newDonations - list of organs to add
-     * @param rmDonations  - list of organs to remove
+     * @param newDonations - map of organs to add
+     * @param rmDonations  - map of organs to remove
      */
-    public void updateDonations(ArrayList<String> newDonations, ArrayList<String> rmDonations) {
+    public void updateDonations(Map<Organ, String> newDonations, Map<Organ, String> rmDonations) {
         if (newDonations != null) {
-            for (String organ : newDonations) {
-                Organ organEnum = Organ.getEnumFromString(organ); //null if invalid
-                if (organEnum == null) {
-                    userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to patient donations");
-                } else {
-                    userActions.log(INFO, addDonation(organEnum), "attempted to update patient donations");
-                    userModified();
-                }
+            for (Organ organ : newDonations.keySet()) {
+                userActions.log(INFO, addDonation(organ), "attempted to update patient donations");
+                userModified();
             }
         }
         if (rmDonations != null) {
-            for (String organ : rmDonations) {
-                Organ organEnum = Organ.getEnumFromString(organ);
-                if (organEnum == null) {
-                    userActions.log(Level.SEVERE, "Invalid organ \"" + organ + "\" given and not removed", "attempted to remove from patient donations");
-                } else {
-                    userActions.log(INFO, removeDonation(organEnum), "attempted to remove from patient donations");
-                    userModified();
-                }
+            for (Organ organ : rmDonations.keySet()) {
+                userActions.log(INFO, removeDonation(organ), "attempted to remove from patient donations");
+                userModified();
             }
         }
     }
