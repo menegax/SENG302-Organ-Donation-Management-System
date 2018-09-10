@@ -8,7 +8,7 @@ import service.interfaces.IPatientDataService;
 import utility.GlobalEnums.Organ;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -47,7 +47,7 @@ public class CLIPatientDonations implements Runnable {
     private ArrayList<String> rmDonations;
 
     private void displayPatientDonations(Patient patient) {
-        List<Organ> donations = patient.getDonations();
+        Set<Organ> donations = patient.getDonations().keySet();
         if (donations == null) {
             userActions.log(Level.WARNING, "No donations registered for patient: " + patient.getNameConcatenated(), "attempted to display patient donations");
         } else {

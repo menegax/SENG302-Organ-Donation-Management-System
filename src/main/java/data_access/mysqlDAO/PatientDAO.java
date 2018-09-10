@@ -7,9 +7,7 @@ import model.Medication;
 import model.Patient;
 import model.Procedure;
 import utility.*;
-import org.mockito.internal.matchers.Or;
 
-import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 
 import java.sql.*;
@@ -18,7 +16,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 
 import static utility.GlobalEnums.FilterOption.*;
@@ -72,7 +69,7 @@ public class PatientDAO implements IPatientDataAccess {
                                     .get(organ));
                 }
 
-                for (Organ organ : patient.getDonations().keySet()) { //todo switch to key set once donations is a HashMap
+                for (Organ organ : patient.getDonations().keySet()) {
                     donatingOrgansDataAccess.updateDonatingOrgans(patient.getNhiNumber(),
                             organ,
                             patient.getDonations()
@@ -199,7 +196,7 @@ public class PatientDAO implements IPatientDataAccess {
             Map<Organ, LocalDate> requiredOrgans = requiredOrgansDataAccess.getRequiredOrganByNhi(nhi);
             Map<Organ, String> donatingOrgans = donatingOrgansDataAccess.getDonatingOrgansByDonorNhi(nhi);
             if (patientAttributes.next()) {
-                return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, procedures, medications, requiredOrgans);
+                return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, procedures, medications, requiredOrgans, donatingOrgans);
             }
             return null;
         }
@@ -401,19 +398,12 @@ public class PatientDAO implements IPatientDataAccess {
         statement.setString(17,
                 patient.getBloodGroup() == null ? null : patient.getBloodGroup()
                         .toString());
-        List<String> donationList = patient.getDonations()
-                .stream()
-                .map(Organ::toString)
-                .collect(Collectors.toList());
-        String donations = String.join(",", donationList)
-                .toLowerCase();
-        statement.setString(18, donations);
         return statement;
     }
 
 
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts) throws SQLException {
-        Map<GlobalEnums.Organ, LocalDate> required = new HashMap();
+        Map<GlobalEnums.Organ, LocalDate> required = new HashMap<>();
         try {
             if (attributes.getInt("hasRequired") == 1) {
                 required.put(Organ.BONE, LocalDate.now());
@@ -423,10 +413,10 @@ public class PatientDAO implements IPatientDataAccess {
             // pass through
         }
 
-        Map<GlobalEnums.Organ, LocalDate> donations = new HashMap();
+        Map<GlobalEnums.Organ, String> donations = new HashMap<>();
         try {
-            if (attributes.getInt("hasDonations") == 1) { //todo impl hasDonations
-                required.put(Organ.BONE, LocalDate.now());
+            if (attributes.getInt("hasDonations") == 1) {
+                required.put(Organ.BONE, null);
             }
         }
         catch (SQLException ignore) {
@@ -497,15 +487,12 @@ public class PatientDAO implements IPatientDataAccess {
         patient.setHeight(attributes.getDouble("Height") / 100);
         patient.setWeight(attributes.getDouble("Weight"));
         patient.setBloodGroup(attributes.getString("BloodType") != null ? BloodGroup.getEnumFromString(attributes.getString("BloodType")) : null);
-        patient.setDonations(attributes.getString("DonatingOrgans") == null ? new ArrayList<>() : Arrays.stream(attributes.getString("DonatingOrgans")
-                .split("\\s*,\\s*"))
-                .map(Organ::getEnumFromString)
-                .collect(Collectors.toList()));
+        patient.setDonations(donatingOrgans);
         //must instantiate if null
         if (patient.getDonations()
                 .size() > 0 && patient.getDonations()
                 .get(0) == null) {
-            patient.setDonations(new ArrayList<>());
+            patient.setDonations(new HashMap<>());
         }
 
         if (requiredOrgans == null) {
@@ -589,13 +576,6 @@ public class PatientDAO implements IPatientDataAccess {
 
 
     private String getNextRecordString(Patient aPatient) {
-        List<String> donationList = aPatient.getDonations()
-                .stream()
-                .map(Organ::toString)
-                .collect(Collectors.toList());
-        String donations = String.join(",", donationList)
-                .toLowerCase();
-
         return String.format(ResourceManager.getStringForQuery("PATIENT_INSERT_ANOTHER"),
                 aPatient.getNhiNumber(),
                 aPatient.getFirstName()
@@ -635,8 +615,7 @@ public class PatientDAO implements IPatientDataAccess {
                 String.valueOf(aPatient.getWeight()),
                 aPatient.getBloodGroup() == null ? null : String.format("\'%s\'",
                         aPatient.getBloodGroup()
-                                .toString()),
-                donations.isEmpty() ? null : String.format("\'%s\'", donations));
+                                .toString()));
     }
 
 }

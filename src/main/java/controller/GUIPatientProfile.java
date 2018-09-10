@@ -8,26 +8,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import model.Clinician;
 import model.Medication;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.stage.Stage;
-import model.Administrator;
-import model.Clinician;
-import model.Medication;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.AdministratorDataService;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
-import service.PatientDataService;
-import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.Action;
-import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -155,47 +142,40 @@ public class GUIPatientProfile extends TargetedController {
 	 * patient or a patient viewing itself
 	 */
 	public void load() {
-		try {
-			IPatientDataService patientDataService = new PatientDataService();
-			if (userControl.getLoggedInUser() instanceof Patient) {
-				if (patientDataService.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber())
-						.getRequiredOrgans().size() == 0) {
-					receivingList.setDisable(true);
-					receivingList.setVisible(false);
-					receivingTitle.setDisable(true);
-					receivingTitle.setVisible(false);
-					/*
-					 * Hide the columns that would hold the receiving listview - this results in the
-					 * visible nodes filling up the whole width of the scene
-					 */
-					for (int i = 9; i <= 11; i++) {
-						patientProfilePane.getColumnConstraints().get(i).setMaxWidth(0);
-					}
+		IPatientDataService patientDataService = new PatientDataService();
+		if (userControl.getLoggedInUser() instanceof Patient) {
+			if (patientDataService.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber())
+					.getRequiredOrgans().size() == 0) {
+				receivingList.setDisable(true);
+				receivingList.setVisible(false);
+				receivingTitle.setDisable(true);
+				receivingTitle.setVisible(false);
+				/*
+				 * Hide the columns that would hold the receiving listview - this results in the
+				 * visible nodes filling up the whole width of the scene
+				 */
+				for (int i = 9; i <= 11; i++) {
+					patientProfilePane.getColumnConstraints().get(i).setMaxWidth(0);
 				}
-
-				genderDeclaration.setVisible(false);
-				genderStatus.setVisible(false);
-				genderRow.setMaxHeight(0);
-				firstNameLbl.setVisible(false);
-				firstNameValue.setVisible(false);
-				firstNameRow.setMaxHeight(0);
-
-				deleteButton.setVisible(false);
-				deleteButton.setDisable(true);
-			} else {
-				deleteButton.setVisible(true);
-				deleteButton.setDisable(false);
 			}
-			assert target != null;
-			Patient patientToLoad = patientDataService.getPatientByNhi(((Patient) target).getNhiNumber());
-			patientDataService.save(patientToLoad);
-			;
-			loadProfile(patientToLoad);
 
-		} catch (IOException e) {
-			userActions.log(Level.SEVERE, "Cannot load patient profile",
-					new String[] { "Attempted to load patient profile", ((Patient) target).getNhiNumber() });
+			genderDeclaration.setVisible(false);
+			genderStatus.setVisible(false);
+			genderRow.setMaxHeight(0);
+			firstNameLbl.setVisible(false);
+			firstNameValue.setVisible(false);
+			firstNameRow.setMaxHeight(0);
+
+			deleteButton.setVisible(false);
+			deleteButton.setDisable(true);
+		} else {
+			deleteButton.setVisible(true);
+			deleteButton.setDisable(false);
 		}
+		assert target != null;
+		Patient patientToLoad = patientDataService.getPatientByNhi(((Patient) target).getNhiNumber());
+		patientDataService.save(patientToLoad);
+		loadProfile(patientToLoad);
 	}
 
 	/**
@@ -204,7 +184,7 @@ public class GUIPatientProfile extends TargetedController {
 	 * @exception InvalidObjectException
 	 *                if the nhi of the patient does not exist in the database
 	 */
-	private void loadProfile(Patient patient) throws InvalidObjectException {
+	private void loadProfile(Patient patient) {
 		loadBasicDetails(patient);
 		loadDeathDetails(patient);
 		loadBodyDetails(patient);
@@ -229,7 +209,7 @@ public class GUIPatientProfile extends TargetedController {
 		if (patient.getRequiredOrgans() == null) {
 			patient.setRequiredOrgans(new HashMap<>());
 		}
-		Collection<GlobalEnums.Organ> organsD = patient.getDonations();
+		Collection<GlobalEnums.Organ> organsD = patient.getDonations().keySet();
 		List<String> organsMappedR = new ArrayList<>();
 		for (GlobalEnums.Organ organ : patient.getRequiredOrgans().keySet()) {
 			organsMappedR.add(patient.getRequiredOrgans().get(organ).toString() + "    |    "

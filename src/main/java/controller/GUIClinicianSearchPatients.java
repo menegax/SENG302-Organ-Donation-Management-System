@@ -229,7 +229,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         patientDataTable.setItems(sortedData);
     }
 
-    public void search() {
+    private void search() {
         List<Patient> results = clinicianDataService.searchPatients(searchEntry.getText(), filter, numResults);
         masterData.clear();
         masterData.addAll(results);
@@ -314,7 +314,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
                     setTooltip(tooltip);
                 } else {
                     StringBuilder tooltipText = new StringBuilder(patient.getNameConcatenated() + ". Donations: ");
-                    for (Organ organ : patient.getDonations()) {
+                    for (Organ organ : patient.getDonations().keySet()) {
                         tooltipText.append(organ)
                                 .append(", ");
                     }

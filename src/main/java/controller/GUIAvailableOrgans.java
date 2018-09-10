@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.util.Callback;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
@@ -23,8 +22,6 @@ import model.Patient;
 import utility.ProgressBarCustomTableCell;
 import utility.ProgressTask;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
@@ -72,7 +69,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         List<Patient> deadPatients = patientDataService.getDeadPatients();
         for (Patient patient : deadPatients) {
             if (patient.getDeathDate() != null) {
-                for (Organ organ : patient.getDonations()) {
+                for (Organ organ : patient.getDonations().keySet()) {
                     PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
                     if (!masterData.contains(patientOrgan)) {
                         if (patientOrgan.timeRemaining() < 0) {

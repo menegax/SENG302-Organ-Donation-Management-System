@@ -12,7 +12,6 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.PatientActionRecord;
 import utility.Searcher;
-import utility.SystemLogger;
 
 import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
@@ -22,14 +21,12 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
 
-import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.INFO;
 import static utility.UserActionHistory.userActions;
 
@@ -93,7 +90,7 @@ public class Patient extends User {
     @Parsed(field = "zip_code")
     private int zip;
 
-    private List<Organ> donations;
+    private Map<Organ, String> donations;
 
     private Map<Organ, LocalDate> requiredOrgans;
 
@@ -143,7 +140,7 @@ public class Patient extends User {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
         this.requiredOrgans = new HashMap();
-        this.donations = new ArrayList<>();
+        this.donations = new HashMap<>();
     }
 
     /**
@@ -162,7 +159,7 @@ public class Patient extends User {
         this.preferredName = firstName;
         this.birth = date;
         this.nhiNumber = nhiNumber.toUpperCase();
-        this.donations = new ArrayList<>();
+        this.donations = new HashMap<>();
         this.userActionsList = new ArrayList<>();
         this.requiredOrgans = new HashMap<>();
         if (propertyChangeSupport == null) {
@@ -174,7 +171,7 @@ public class Patient extends User {
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
                    Timestamp created, Timestamp modified, LocalDateTime death, String deathStreet, String deathCity,Region deathRegion, GlobalEnums.BirthGender gender,
                    GlobalEnums.PreferredGender prefGender, String preferredName, double height, double weight,
-                   BloodGroup bloodType, List<Organ> donations, Map<Organ, LocalDate> receiving, String streetNumber,
+                   BloodGroup bloodType, HashMap<Organ, String> donations, Map<Organ, LocalDate> receiving, String streetNumber,
                    String city, String suburb, Region region, int zip, String homePhone, String workPhone,
                    String mobilePhone, String emailAddress, String contactName, String contactRelationship,
                    String contactHomePhone, String contactWorkPhone, String contactMobilePhone, String contactEmailAddress,
@@ -242,7 +239,7 @@ public class Patient extends User {
         this.preferredName = preferredName;
         this.userActionsList = new ArrayList<>();
         this.requiredOrgans = new HashMap<>();
-        this.donations = new ArrayList<>();
+        this.donations = new HashMap<>();
         databaseImport();
     }
 
@@ -482,8 +479,8 @@ public class Patient extends User {
         return concatName.toString();
     }
 
-    public List<Organ> getDonations() {
-        return donations == null ? new ArrayList<>() : donations;
+    public Map<Organ, String> getDonations() {
+        return donations == null ? new HashMap<>() : donations;
     }
 
     /**
@@ -491,7 +488,7 @@ public class Patient extends User {
      *
      * @param donations The donations being set to the patient donations array list
      */
-    public void setDonations(List<Organ> donations) {
+    public void setDonations(Map<Organ, String> donations) {
         this.donations = donations;
         userModified();
     }
@@ -822,10 +819,10 @@ public class Patient extends User {
      * @return string of message
      */
     public String addDonation(Organ organ) {
-        if (donations.contains(organ)) {
+        if (donations.keySet().contains(organ)) {
             return "Organ " + organ + " is already part of the patient's donations, so was not added.";
         } else {
-            donations.add(organ);
+            donations.put(organ, null);
             userModified();
             userActions.log(INFO, "Added organ " + organ + " to patient donations", new String[] {"Attempted to add organ " + organ + " to patient donations", nhiNumber});
             return "Successfully added " + organ + " to donations";
@@ -860,7 +857,7 @@ public class Patient extends User {
      * @return string of message
      */
     public String removeDonation(Organ organ) {
-        if (donations.contains(organ)) {
+        if (donations.keySet().contains(organ)) {
             donations.remove(organ);
             userModified();
             userActions.log(INFO, "Removed " + organ + " from patient donations", "Attempted to remove donation from a patient");

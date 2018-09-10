@@ -1,16 +1,12 @@
 package controller;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -25,12 +21,8 @@ import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
@@ -84,7 +76,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         search();
     }
 
-    public void search() {
+    private void search() {
         List<User> results = administratorDataService.searchUsers(searchEntry.getText());
         if (results != null) {
             masterData.clear();
@@ -189,7 +181,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
                 } else {
                     Patient patient = (Patient) user;
                     StringBuilder tooltipText = new StringBuilder(patient.getNameConcatenated() + ". Donations: ");
-                    for (GlobalEnums.Organ organ : patient.getDonations()) {
+                    for (GlobalEnums.Organ organ : patient.getDonations().keySet()) {
                         tooltipText.append(organ)
                                 .append(", ");
                     }

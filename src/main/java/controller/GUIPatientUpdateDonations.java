@@ -7,14 +7,12 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
-import service.PatientDataService;
-import service.interfaces.IPatientDataService;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.GlobalEnums;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.INFO;
@@ -113,7 +111,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
      * @param patient patient with viewed donation
      */
     private void populateForm(Patient patient) {
-        List<GlobalEnums.Organ> organs = patient.getDonations();
+        Set<GlobalEnums.Organ> organs = patient.getDonations().keySet();
         if (organs.contains(GlobalEnums.Organ.LIVER)) {
             liverCB.setSelected(true);
         }

@@ -11,7 +11,6 @@ import javafx.scene.layout.GridPane;
 import model.Patient;
 import model.Procedure;
 import service.PatientDataService;
-import model.User;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.TouchPaneController;
@@ -221,7 +220,7 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
      */
     private void setupDonations() {
         ObservableList<CustomMenuItem> donations = FXCollections.observableArrayList();
-        for (Organ organ : ((Patient) target).getDonations()) {
+        for (Organ organ : ((Patient) target).getDonations().keySet()) {
             CustomMenuItem organSelection = new CustomMenuItem(new CheckBox(organ.getValue()));
             organSelection.setHideOnClick(false);
             donations.add(organSelection);

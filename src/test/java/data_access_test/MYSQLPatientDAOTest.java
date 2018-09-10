@@ -8,9 +8,7 @@ import model.Patient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.cglib.core.Local;
 import utility.GlobalEnums.*;
-import utility.GlobalEnums;
 import utility.SystemLogger;
 
 import java.time.LocalDate;
@@ -65,8 +63,8 @@ public class MYSQLPatientDAOTest {
     }
 
     private void givenPatientDonations() {
-        List<Organ> donations = new ArrayList<>();
-        donations.add(Organ.LIVER);
+        Map<Organ, String> donations = new HashMap<>();
+        donations.put(Organ.LIVER, null);
         patient.setDonations(donations);
     }
 

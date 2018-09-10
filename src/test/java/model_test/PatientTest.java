@@ -10,21 +10,13 @@ import utility.GlobalEnums.Organ;
 import utility.SystemLogger;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.OFF;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
@@ -56,10 +48,10 @@ public class PatientTest implements Serializable {
         }},
                 "Bloggs", LocalDate.of(1994, 12, 12)));
 
-        patientDataService.save(new Patient("DEF4567", "Bob", new ArrayList<String>(), "Bobby",
+        patientDataService.save(new Patient("DEF4567", "Bob", new ArrayList<>(), "Bobby",
                 LocalDate.of(1994, 12, 12)));
 
-        testPatient1 = new Patient("JJJ1234", "Rex", new ArrayList<String>(), "Petsberg",
+        testPatient1 = new Patient("JJJ1234", "Rex", new ArrayList<>(), "Petsberg",
                 LocalDate.of(1977, 6, 16));
     }
 
@@ -78,7 +70,7 @@ public class PatientTest implements Serializable {
      */
     @Test
     public void testAddingOfOrgansToRequirements() {
-        Set<Organ> expected = new TreeSet<Organ>();
+        Set<Organ> expected = new TreeSet<>();
         expected.add(Organ.LIVER);
         expected.add(Organ.CORNEA);
         testPatient1.addRequired(Organ.LIVER);
@@ -91,7 +83,7 @@ public class PatientTest implements Serializable {
      */
     @Test
     public void testRemovingOfOrgansFromRequirements() {
-        Set<Organ> expected = new TreeSet<Organ>();
+        Set<Organ> expected = new TreeSet<>();
         testPatient1.addRequired(Organ.LIVER);
         testPatient1.addRequired(Organ.CORNEA);
         testPatient1.removeRequired(Organ.LIVER);
@@ -326,7 +318,7 @@ public class PatientTest implements Serializable {
     private void thenPatientHasAttributes(Patient patient) {
         assertNotNull(patient.getCREATED());
         assertEquals(patient.getFirstName(), "Bob");
-        assertEquals(patient.getMiddleNames(), null);
+        assertNull(patient.getMiddleNames());
         assertEquals(patient.getLastName(), "Wallace");
         assertEquals(patient.getBirth(), LocalDate.of(1995, 12, 31));
     }
@@ -343,7 +335,7 @@ public class PatientTest implements Serializable {
      * Helper method for testUpdateDonationsRmValid reset donations list
      */
     private void resetDonationsPatient() {
-        testPatient.setDonations(new ArrayList<>()); //set to empty
+        testPatient.setDonations(new HashMap<>()); //set to empty
     }
 
     /**
