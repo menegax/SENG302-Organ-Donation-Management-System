@@ -99,7 +99,6 @@ public class Patient extends User {
 
     private LatLng currentLocation;
 
-
     private List<Organ> donations;
 
     private Map<Organ, LocalDate> requiredOrgans;
@@ -782,6 +781,7 @@ public class Patient extends User {
      * Clears the current latitude and longitude coordinates of the patient
      */
     private void clearCurrentLocation() {
+        this.currentLocation = null;
         currentLocation = null;
     }
 

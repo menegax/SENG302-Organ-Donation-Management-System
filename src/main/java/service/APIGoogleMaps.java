@@ -46,7 +46,11 @@ public class APIGoogleMaps {
     public LatLng geocodeAddress(String address) throws InterruptedException, ApiException, IOException {
         GeocodingResult[] results = GeocodingApi.geocode(context, address)
                 .await();
-        return results[0].geometry.location;
+        if (results.length > 0) {
+            return results[0].geometry.location;
+        } else {
+            return null;
+        }
     }
 
 }

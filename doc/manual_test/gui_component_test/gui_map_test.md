@@ -90,7 +90,7 @@
 4. Select 'OK' on the popup that opens up
 5. Select 'View on map' button once again
 6. Select 'OK' on the popup that opens up
-6. Expected: The map should be populted with the patients in the table. These include patients with the following Nhi's: ANM8474, CTH2080, DMR2101, EQV5740, FUZ3183, KJD8772
+6. Expected: The map should be populated with the patients in the table. These include patients with the following Nhi's: ANM8474, CTH2080, DMR2101, EQV5740, FUZ3183, KJD8772
 
 ## Test History
 
