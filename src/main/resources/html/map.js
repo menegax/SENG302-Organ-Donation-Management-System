@@ -20,6 +20,9 @@ function init() {
     markerLoop(patients.size());
 }
 
+/**
+ * Sets the viewable area of the map
+ */
 function setMapDragEnd() {
     // Bounds for the World
     var allowedBounds = new google.maps.LatLngBounds(
@@ -58,6 +61,10 @@ function markerLoop(i) {
     }, 700);
 }
 
+/**
+ * Adds a marker to the map
+ * @param patient
+ */
 function addMarker(patient) {
     var address = patient.getFormattedAddress();
     var name = patient.getNameConcatenated();
@@ -100,12 +107,18 @@ function addMarker(patient) {
     });
 }
 
-//Opens patient profile when the button from the infoWindow is clicked on
+/**
+ * Opens patient profile when the button from the infoWindow is clicked on
+ */
 function openPatientProfile(patientNhi) {
-    console.log("Patient: " + patientNhi);
     mapBridge.openPatientProfile(patientNhi);
 }
 
+/**
+ * Returns the donations and requirements from the patient object
+ * @param patient
+ * @returns {{donating: string, receiving: string}}
+ */
 function getOrganOptions(patient) {
     var donations = patient.getDonations().toString();
     var donationStr;
@@ -124,4 +137,15 @@ function getOrganOptions(patient) {
         requiredStr = 'No Requirements';
     }
     return {donating: donationStr, receiving: requiredStr};
+}
+
+function setPatients() {
+    validCount = 0;
+
+    markers.forEach(function(marker) {
+        marker.setMap(null);
+    });
+    markers = [];
+
+    markerLoop(patients.size());
 }

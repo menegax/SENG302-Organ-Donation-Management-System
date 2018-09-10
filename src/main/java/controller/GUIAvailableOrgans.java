@@ -3,6 +3,7 @@ package controller;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -25,10 +26,14 @@ import utility.ProgressTask;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.zip.DataFormatException;
 
+import static java.util.logging.Level.FINE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -188,5 +193,43 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     public void windowClosed() {
         load();
         availableOrgansTableView.refresh();
+    }
+
+    private UserControl userControl = UserControl.getUserControl();
+
+    /**
+     * View patients from table on the map
+     * Sets the patients list in the JavaScript to custom set
+     * Opens the map and loads
+     */
+    @FXML
+    public void viewOnMap() {
+        List<Patient> patients = new ArrayList<>();
+
+        for (int i = 0; i < masterData.size(); i++) {
+            patients.add(masterData.get(i).getPatient());
+        }
+
+        Alert alert;
+        if (screenControl.getMapOpen()) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
+                    , ButtonType.OK, ButtonType.NO);
+            alert.show();
+        } else {
+            alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
+                    , ButtonType.OK);
+            alert.show();
+        }
+
+        alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
+            screenControl.setIsCustomSetMap(true);
+            if (!screenControl.getMapOpen()) {
+                screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+                screenControl.setMapOpen(true);
+            }
+            GUIMap.jsBridge.setMember("patients", patients);
+            GUIMap.jsBridge.call("setPatients");
+            screenControl.setMapOpen(true);
+        });
     }
 }
