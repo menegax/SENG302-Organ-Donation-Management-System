@@ -612,7 +612,10 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
         if (isUserClinicianOrAdmin()) {
             menu4 = new Menu("Window");
             MenuItem menu4Item1 = new MenuItem("Open Map");
-            menu4Item1.setOnAction(event -> openMap());
+            menu4Item1.setOnAction(event -> {
+                screenControl.setIsCustomSetMap(false);
+                openMap();
+            });
             menu4.getItems()
                     .addAll(menu4Item1);
             if(screenControl.isTouch()) {
@@ -682,7 +685,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     /**
      * Opens new map instance if a map is not visible
      */
-    private void openMap() {
+    public void openMap() {
         if (!screenControl.getMapOpen()) {
             screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
             screenControl.setMapOpen(true);

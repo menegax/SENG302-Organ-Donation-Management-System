@@ -43,6 +43,8 @@ public abstract class ScreenControl {
 
     private Boolean isMapOpen = false;
 
+    private Boolean isCustomSetMap = false;
+
     abstract void setUpNewLogin();
     abstract void removeUnsavedAsterisks();
     abstract void addUnsavedAsterisks();
@@ -207,9 +209,12 @@ public abstract class ScreenControl {
         return isMapOpen;
     }
 
-
     public void setMapOpen(Boolean mapOpen) {
         isMapOpen = mapOpen;
     }
+
+    public Boolean getIsCustomSetMap() { return isCustomSetMap; }
+
+    public void setIsCustomSetMap(Boolean customSet) { isCustomSetMap = customSet; }
 }
 
