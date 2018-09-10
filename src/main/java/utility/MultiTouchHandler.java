@@ -15,12 +15,25 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Handler class to deal with multiple users interacting with the application via touch events
+ * Handler class to deal with multiple users interacting with the application via touch events.
+ * If a single pane isn't at 3 yet, but there are 10 touches on screen, no more gestures will be registered due to
+ * hardware limitations.
+ * Tap brings into focus
+ * Tap - left click
+ * Tap and hold - right click on release
+ * One finger drag - move pane
+ * Two finger pinch - zoom
+ * Two finger rotate - rotate
  */
 public class MultiTouchHandler {
 
     private Pane rootPane;
+    /**
+     * List of touch events on the pane. Max of three events per pane.
+     */
     private List<CustomTouchEvent> touches = new ArrayList<>();
+
+    private int MAXTOUCHESPERPANE = 3;
 
     /**
      * Initialises a new MultiTouchHandler instance
@@ -57,6 +70,7 @@ public class MultiTouchHandler {
         Point2D coordinates = new Point2D(event.getTouchPoint().getScreenX(), event.getTouchPoint().getScreenY());
         touchEvent.setCoordinates(coordinates);
 
+        //Assign id based on what touches are registered in the current pane
         CustomTouchEvent previousEvent = null;
         for (CustomTouchEvent customTouchEvent : touches) {
             if (customTouchEvent.getId() == touchEvent.getId()) {
