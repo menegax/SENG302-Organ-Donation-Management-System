@@ -78,10 +78,49 @@ public class MultiTouchHandler {
             }
         }
 
-        if(previousEvent == null || !(isNegligableMovement(touchEvent, previousEvent) && touchEvent.getId() <= 10)) {
+        if (previousEvent == null && touchEvent.getId() <= 10 && event.getEventType().equals(TouchEvent.TOUCH_PRESSED)) {
+            setPaneFocused();
             this.touches.add(touchEvent);
             System.out.println(touchEvent.getId() + ", " + touchEvent.getCoordinates());
+        } else {
+            if (event.getEventType().equals(TouchEvent.TOUCH_RELEASED)) {
+                checkLeftClick();
+                this.touches.remove(previousEvent);
+            } else if (event.getEventType().equals(TouchEvent.TOUCH_MOVED) && !(isNegligableMovement(touchEvent, previousEvent))) {
+                processEventMovement();
+            } else {
+                checkRightClick();
+            }
         }
+    }
+
+    /**
+     * Brings the pane of this touch handler to the front
+     */
+    private void setPaneFocused() {
+
+    }
+
+    /**
+     * Evaluates whether the current states of the touch events meet right click requirements
+     */
+    private void checkRightClick() {
+
+    }
+
+    /**
+     * Evaluates whether the current states of touch events meet left click requirements
+     */
+    private void checkLeftClick() {
+
+    }
+
+    /**
+     * Checks what type of movement the touch events represent
+     *  and performs the appropriate actions
+     */
+    private void processEventMovement() {
+
     }
 
     /**
