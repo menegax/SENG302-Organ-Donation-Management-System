@@ -89,12 +89,11 @@ public class MultiTouchHandler {
         }
 
         if (previousEvent == null && touchEvent.getId() <= 10 &&
-                touches.length < MAXTOUCHESPERPANE && event.getEventType().equals(TouchEvent.TOUCH_PRESSED)) {
+                notMaxTouches() && event.getEventType().equals(TouchEvent.TOUCH_PRESSED)) {
             setPaneFocused();
             addTouchEvent(touchEvent);
-            System.out.println(touchEvent.getId() + ", " + touchEvent.getCoordinates());
         } else {
-            if (event.getEventType().equals(TouchEvent.TOUCH_RELEASED)) {
+            if (previousEvent != null && event.getEventType().equals(TouchEvent.TOUCH_RELEASED)) {
                 checkLeftClick();
                 touches[findIndexOfTouchEvent(touchEvent.getId())] = null;
             } else if (previousEvent != null && event.getEventType().equals(TouchEvent.TOUCH_MOVED) && !(isNegligableMovement(touchEvent, previousEvent))) {
@@ -103,6 +102,19 @@ public class MultiTouchHandler {
                 checkRightClick();
             }
         }
+    }
+
+    /**
+     * Returns true if any index of the touches array is null (i.e. not all touches are used)
+     * @return boolean max touches made
+     */
+    private boolean notMaxTouches() {
+        for(int i = 0; i < MAXTOUCHESPERPANE; i++) {
+            if (touches[i] == null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
