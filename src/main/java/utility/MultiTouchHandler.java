@@ -1,7 +1,9 @@
 package utility;
 
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
@@ -45,6 +47,8 @@ public class MultiTouchHandler {
     //todo check against screen resolution
     private final double ZOOMFACTOR = 0.005;
 
+    private boolean isScroll = false;
+
 
     /**
      * List of touch events on the pane.
@@ -67,7 +71,9 @@ public class MultiTouchHandler {
     public void initialiseHandler(Pane rootPane) {
         this.rootPane = rootPane;
 
-        rootPane.addEventFilter(TouchEvent.ANY, this::handleTouch);
+        rootPane.addEventFilter(TouchEvent.ANY, event -> {
+            handleTouch(event);
+        });
         rootPane.addEventFilter(ZoomEvent.ANY, Event::consume);
         rootPane.addEventFilter(RotateEvent.ANY, Event::consume);
 //        rootPane.addEventFilter(ScrollEvent.ANY, Event::consume);
@@ -181,7 +187,8 @@ public class MultiTouchHandler {
      */
     private void processOneTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
         System.out.println(currentEvent.getTarget().getClass());
-        if (!(currentEvent.getTarget() instanceof ListView) && !(currentEvent.getTarget() instanceof TableView)) {
+        System.out.println((currentEvent.getTarget().getClass().equals(TableColumn.class)));
+        if (!(currentEvent.getTarget().getClass().equals(TableColumn.class))) {
             executeTranslate(previousEvent, currentEvent);
         } else {
             executeScroll(previousEvent, currentEvent);
