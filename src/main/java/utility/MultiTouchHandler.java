@@ -166,11 +166,26 @@ public class MultiTouchHandler {
             }
         }
         if (numberOfTouches == 1) {
-
+            processOneTouchMovement(currentEvent);
         } else if (numberOfTouches == 2) {
             processTwoTouchMovement(previousEvent, currentEvent);
         }
     }
+
+    private void processOneTouchMovement(CustomTouchEvent currentEvent) {
+        System.out.println("one toooooouch");
+        System.out.println("origin: " + currentEvent.getOriginCoordinates() + ", new: " + currentEvent.getCoordinates());
+        Point2D delta = currentEvent.getOriginCoordinates().subtract(currentEvent.getCoordinates());
+        System.out.println("delta: " + delta);
+        executeTranslate(currentEvent.getCoordinates());
+//        currentEvent.setOriginCoordinates(currentEvent.getCoordinates());
+    }
+
+    private void executeTranslate(Point2D delta) {
+        rootPane.setTranslateX(delta.getX() - rootPane.getTranslateX());
+        rootPane.setTranslateY(delta.getY() - rootPane.getTranslateY());
+    }
+
 
     /**
      * Finds the best fit for a two touch movement and executes it
