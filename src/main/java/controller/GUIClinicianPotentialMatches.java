@@ -244,12 +244,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             }
             potentialMatchesTable.setSortPolicy(param -> true);
         }
-        else {
-            sortedRequests.comparatorProperty()
-                    .bind(potentialMatchesTable.comparatorProperty());
-        }
     }
-
 
     /**
      * Sets the labels displayed to the requirements of the donated organ

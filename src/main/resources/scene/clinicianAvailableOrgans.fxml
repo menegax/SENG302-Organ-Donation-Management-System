@@ -38,7 +38,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Button disable="true" mnemonicParsing="false" onAction="#viewPotentialMatches" text="View Potential Matches" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+      <Button disable="true" fx:id="potentialMatchesBtn" mnemonicParsing="false" onAction="#viewPotentialMatches" text="View Potential Matches" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
        <Button mnemonicParsing="false" onAction="#viewOnMap" prefWidth="139.5" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
    </children>
 </GridPane>
