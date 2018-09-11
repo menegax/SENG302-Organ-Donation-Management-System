@@ -502,8 +502,6 @@ public class PatientDAO implements IPatientDataAccess {
         else {
             patient.setRequiredOrgans(requiredOrgans);
         }
-
-        //todo hey
         if (donatingOrgans == null) {
             patient.setDonations(new HashMap<>());
         }
