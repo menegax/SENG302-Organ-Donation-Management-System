@@ -1,5 +1,6 @@
 package utility;
 
+import javafx.event.EventTarget;
 import javafx.geometry.Point2D;
 
 /**
@@ -10,12 +11,14 @@ class CustomTouchEvent {
 
     private int id;
     private Point2D coordinates;
+    private EventTarget target;
 
     /**
      * Creates a new CustomTouchEvent with the root pane given
      */
-    public CustomTouchEvent(int id) {
+    public CustomTouchEvent(int id, EventTarget target) {
         this.id = id;
+        this.target = target;
     }
 
     public Point2D getCoordinates() {
@@ -26,8 +29,13 @@ class CustomTouchEvent {
         this.coordinates = coordinates;
     }
 
+
     public int getId() {
         return id;
+    }
+
+    public EventTarget getTarget() {
+        return target;
     }
 
     @Override

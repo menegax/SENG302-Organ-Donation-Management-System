@@ -54,7 +54,8 @@ public class GUIMap implements Initializable {
 
         List<Patient> results;
         if (!screenControl.getIsCustomSetMap()) {
-             results = getInitialPatients();
+//             results = getInitialPatients();
+            results = new ArrayList<>();
         } else {
             results = new ArrayList<>();
         }
@@ -85,18 +86,18 @@ public class GUIMap implements Initializable {
             SystemLogger.systemLogger.log(Level.SEVERE, "Failed to initialize map bridge: " + e.toString());
         }
 
-        webViewMap1.setOnScroll(event -> {
-            if (screenControl.isTouch()) {
-                if (event.getTouchCount() == 2) {
-                    robot.keyPress(KeyEvent.VK_CONTROL);
-                }
-            }
-        });
-        webViewMap1.setOnTouchReleased(event -> {
-            if (screenControl.isTouch()) {
-                robot.keyRelease(KeyEvent.VK_CONTROL);
-            }
-        });
+//        webViewMap1.setOnScroll(event -> {
+//            if (screenControl.isTouch()) {
+//                if (event.getTouchCount() == 2) {
+//                    robot.keyPress(KeyEvent.VK_CONTROL);
+//                }
+//            }
+//        });
+//        webViewMap1.setOnTouchReleased(event -> {
+//            if (screenControl.isTouch()) {
+//                robot.keyRelease(KeyEvent.VK_CONTROL);
+//            }
+//        });
     }
 
 

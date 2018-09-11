@@ -24,7 +24,6 @@ import service.ClinicianDataService;
 import service.PatientDataService;
 import service.interfaces.IClinicianDataService;
 import utility.MultiTouchHandler;
-import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 
 import java.io.IOException;
@@ -35,7 +34,7 @@ import java.util.logging.Level;
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 
-public class GUILogin implements TouchscreenCapable, IWindowObserver {
+public class GUILogin implements IWindowObserver {
 
     @FXML
     public GridPane loginPane;
@@ -56,9 +55,6 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
 
     @FXML
     private RadioButton administrator;
-
-
-    private TouchPaneController loginTouchPane;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -82,10 +78,6 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
             }
         });
         if(screenControl.isTouch()) {
-//            loginTouchPane = new TouchPaneController(loginPane);
-//            loginPane.setOnZoom(this::zoomWindow);
-//            loginPane.setOnRotate(this::rotateWindow);
-//            loginPane.setOnScroll(this::scrollWindow);
             touchHandler = new MultiTouchHandler();
             touchHandler.initialiseHandler(loginPane);
         }
@@ -192,23 +184,6 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
         } else {
             nhiLogin.setPromptText("Username");
             password.setDisable(false);
-        }
-    }
-
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        loginTouchPane.zoomPane(zoomEvent);
-    }
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        loginTouchPane.rotatePane(rotateEvent);
-    }
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        if(scrollEvent.isDirect()) {
-            loginTouchPane.scrollPane(scrollEvent);
         }
     }
 

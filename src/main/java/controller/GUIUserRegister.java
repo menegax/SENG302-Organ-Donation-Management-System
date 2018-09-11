@@ -25,7 +25,7 @@ import service.interfaces.IPatientDataService;
 import service.interfaces.IUserDataService;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UIRegex;
-import utility.TouchPaneController;
+import utility.MultiTouchHandler;
 import utility.TouchscreenCapable;
 
 import java.io.IOException;
@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
-public class GUIUserRegister implements TouchscreenCapable {
+public class GUIUserRegister {
 
     public Button doneButton;
 
@@ -68,8 +68,8 @@ public class GUIUserRegister implements TouchscreenCapable {
     private IPatientDataService patientDataService = new PatientDataService();
     private IClinicianDataService clinicianDataService = new ClinicianDataService();
     private IUserDataService userDataService = new UserDataService();
+    private MultiTouchHandler touchHandler;
 
-    private TouchPaneController registerTouchPane;
 
     /**
      * Sets up register page GUI elements
@@ -89,10 +89,8 @@ public class GUIUserRegister implements TouchscreenCapable {
             }
         });
         if(screenControl.isTouch()) {
-            registerTouchPane = new TouchPaneController(userRegisterPane);
-            userRegisterPane.setOnZoom(this::zoomWindow);
-            userRegisterPane.setOnRotate(this::rotateWindow);
-            userRegisterPane.setOnScroll(this::scrollWindow);
+            touchHandler = new MultiTouchHandler();
+            touchHandler.initialiseHandler(userRegisterPane);
         }
 
     }
@@ -269,22 +267,6 @@ public class GUIUserRegister implements TouchscreenCapable {
                 .remove("invalid");
     }
 
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        registerTouchPane.zoomPane(zoomEvent);
-    }
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        registerTouchPane.rotatePane(rotateEvent);
-    }
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        if(scrollEvent.isDirect()) {
-            registerTouchPane.scrollPane(scrollEvent);
-        }
-    }
 
 
 }
