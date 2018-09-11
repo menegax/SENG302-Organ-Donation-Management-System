@@ -62,13 +62,14 @@ public class PatientDAO implements IPatientDataAccess {
             for (Patient patient : patients) {
                 statement = addUpdateParameters(statement, patient);
                 statement.executeUpdate();
+
                 for (Organ organ : patient.getRequiredOrgans().keySet()) {
                     requiredOrgansDataAccess.updateRequiredOrgans(patient.getNhiNumber(),
                             organ,
                             patient.getRequiredOrgans()
                                     .get(organ));
                 }
-
+                donatingOrgansDataAccess.deleteAllDonatingOrganByNhi(patient.getNhiNumber());
                 for (Organ organ : patient.getDonations().keySet()) {
                     donatingOrgansDataAccess.updateDonatingOrgans(patient.getNhiNumber(),
                             organ,

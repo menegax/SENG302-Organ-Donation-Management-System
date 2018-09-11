@@ -16,7 +16,7 @@ public interface IDonationsDataAccess {
 
     void deleteDonatingOrganByNhi(String donorNhi, GlobalEnums.Organ organ);
 
-//    void deleteAllRequiredOrgansByNhi(String donorNhi); //todo rm if not needed
+    void deleteAllDonatingOrganByNhi(String donorNhi);
 }
 
 

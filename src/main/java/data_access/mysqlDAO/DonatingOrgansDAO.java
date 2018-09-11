@@ -95,4 +95,15 @@ public class DonatingOrgansDAO implements IDonationsDataAccess {
             systemLogger.log(Level.SEVERE, "Could not delete donating organ from MYSQL DB", this);
         }
     }
+
+    @Override
+    public void deleteAllDonatingOrganByNhi(String donorNhi) {
+        try (Connection connection = mySqlFactory.getConnectionInstance()) {
+            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_ALL_DONATING_ORGANS"));
+            statement.setString(1, donorNhi);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            systemLogger.log(Level.SEVERE, "Could not delete all donating organs from MYSQL DB", this);
+        }
+    }
 }
