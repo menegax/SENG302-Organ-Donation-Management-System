@@ -43,7 +43,7 @@ public class MultiTouchHandler {
     private final double DEGREES135 = Math.PI - DEGREES45;
 
     //todo check against screen resolution
-    private final double ZOOMFACTOR = 0.0001;
+    private final double ZOOMFACTOR = 0.005;
 
 
     /**
@@ -170,6 +170,7 @@ public class MultiTouchHandler {
         } else if (numberOfTouches == 2) {
             processTwoTouchMovement(previousEvent, currentEvent);
         }
+        touches[findIndexOfTouchEvent(previousEvent.getId())] = currentEvent;
     }
 
     /**
@@ -195,6 +196,7 @@ public class MultiTouchHandler {
                 double distance = (Math.cos(angle))*displacement;
                 executeZoom(distance);
             }
+
         } else {
             systemLogger.log(Level.SEVERE, "Two touch movement processed with less than two touches", "Attempted to process a two touch movement with less than two touches");
             throw new NullPointerException();
@@ -239,8 +241,13 @@ public class MultiTouchHandler {
 //        if (distance < 0) {
 //            distance = -1 / distance;
 //        }
-        rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
-        rootPane.setScaleY(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+        if (rootPane.getScaleX() > 0.25 && rootPane.getScaleY() > 0.25) {
+            rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+            rootPane.setScaleY(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+        } else if (distance > 0) {
+            rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+            rootPane.setScaleY(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+        }
     }
 
     /**
