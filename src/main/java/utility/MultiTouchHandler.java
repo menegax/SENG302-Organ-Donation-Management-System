@@ -39,8 +39,10 @@ public class MultiTouchHandler {
      */
     private int MAXTOUCHESPERPANE = 2;
 
-    private final double DEGREES45 = Math.PI / 2;
+    private final double DEGREES45 = Math.PI / 4;
     private final double DEGREES135 = Math.PI - DEGREES45;
+    private final double DEGREES180 = Math.PI;
+    private final double RADS2DEGREES = 180 / Math.PI;
 
     //todo check against screen resolution
     private final double ZOOMFACTOR = 0.005;
@@ -189,10 +191,11 @@ public class MultiTouchHandler {
         }
         if (stationaryPoint != null) {
             double angle = calculateAngle(stationaryPoint.getCoordinates(), previousEvent.getCoordinates(), currentEvent.getCoordinates());
+            double displacement = calculateDisplacement(previousEvent.getCoordinates(), currentEvent.getCoordinates());
             if (Math.abs(angle) > DEGREES45 && Math.abs(angle) <= DEGREES135) {
-
+                double rotatedAngle = calculateAngle(previousEvent.getCoordinates(), stationaryPoint.getCoordinates(), currentEvent.getCoordinates());
+                executeRotate(DEGREES180 - rotatedAngle);
             } else {
-                double displacement = calculateDisplacement(previousEvent.getCoordinates(), currentEvent.getCoordinates());
                 double distance = (Math.cos(angle))*displacement;
                 executeZoom(distance);
             }
@@ -238,9 +241,6 @@ public class MultiTouchHandler {
      * @param distance the distance moved by the touch gesture in the relevant direction
      */
     private void executeZoom(double distance) {
-//        if (distance < 0) {
-//            distance = -1 / distance;
-//        }
         if (rootPane.getScaleX() > 0.25 && rootPane.getScaleY() > 0.25) {
             rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
             rootPane.setScaleY(rootPane.getScaleX() + (distance * ZOOMFACTOR));
@@ -248,6 +248,14 @@ public class MultiTouchHandler {
             rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
             rootPane.setScaleY(rootPane.getScaleX() + (distance * ZOOMFACTOR));
         }
+    }
+
+    /**
+     * Executes a rotate on the pane to the amount specified by the angle given
+     * @param angle the angle to rotate given in radians
+     */
+    private void executeRotate(double angle) {
+        rootPane.setRotate(rootPane.getRotate() + angle * RADS2DEGREES);
     }
 
     /**
