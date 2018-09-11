@@ -1,6 +1,8 @@
 package utility;
 
 import javafx.event.Event;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableView;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TouchEvent;
@@ -8,9 +10,7 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.Pane;
 
 import javafx.geometry.Point2D;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,12 +67,10 @@ public class MultiTouchHandler {
     public void initialiseHandler(Pane rootPane) {
         this.rootPane = rootPane;
 
-        rootPane.addEventFilter(TouchEvent.ANY, event -> {
-            handleTouch(event);
-        });
+        rootPane.addEventFilter(TouchEvent.ANY, this::handleTouch);
         rootPane.addEventFilter(ZoomEvent.ANY, Event::consume);
         rootPane.addEventFilter(RotateEvent.ANY, Event::consume);
-        rootPane.addEventFilter(ScrollEvent.ANY, Event::consume);
+//        rootPane.addEventFilter(ScrollEvent.ANY, Event::consume);
     }
 
     /**
@@ -80,7 +78,7 @@ public class MultiTouchHandler {
      * @param event touch event
      */
     private void handleTouch(TouchEvent event) {
-        CustomTouchEvent touchEvent = new CustomTouchEvent(event.getTouchPoint().getId());
+        CustomTouchEvent touchEvent = new CustomTouchEvent(event.getTouchPoint().getId(), event.getTarget());
         Point2D coordinates = new Point2D(event.getTouchPoint().getScreenX(), event.getTouchPoint().getScreenY());
         touchEvent.setCoordinates(coordinates);
 
@@ -138,7 +136,7 @@ public class MultiTouchHandler {
      * Brings the pane of this touch handler to the front
      */
     private void setPaneFocused() {
-
+        rootPane.toFront();
     }
 
     /**
@@ -182,7 +180,15 @@ public class MultiTouchHandler {
      * @param currentEvent current event
      */
     private void processOneTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
-        executeTranslate(previousEvent, currentEvent);
+        System.out.println(currentEvent.getTarget().getClass());
+        if (!(currentEvent.getTarget() instanceof ListView) && !(currentEvent.getTarget() instanceof TableView)) {
+            executeTranslate(previousEvent, currentEvent);
+        } else {
+            executeScroll(previousEvent, currentEvent);
+        }
+    }
+
+    private void executeScroll(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
     }
 
     /**
