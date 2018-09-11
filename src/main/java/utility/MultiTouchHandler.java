@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Handler class to deal with multiple users interacting with the application via touch events.
@@ -27,13 +29,22 @@ import java.util.Set;
  */
 public class MultiTouchHandler {
 
+    private Logger systemLogger = SystemLogger.systemLogger;
+
     private Pane rootPane;
+
+    private int MAXTOUCHESPERPANE = 2;
+
+    private final double DEGREES45 = Math.PI / 2;
+    private final double DEGREES135 = Math.PI - DEGREES45;
+
+    //todo check against screen resolution
+    private final double ZOOMFACTOR = 0.0001;
+
     /**
      * List of touch events on the pane. Max of three events per pane.
      */
-    private List<CustomTouchEvent> touches = new ArrayList<>();
-
-    private int MAXTOUCHESPERPANE = 3;
+    private CustomTouchEvent[] touches = new CustomTouchEvent[MAXTOUCHESPERPANE];
 
     /**
      * Initialises a new MultiTouchHandler instance
@@ -50,7 +61,7 @@ public class MultiTouchHandler {
         this.rootPane = rootPane;
 
         rootPane.addEventFilter(TouchEvent.ANY, event -> {
-            if(touches.size() == 0) {
+            if(touches.length == 0) {
                 handleSingleTouch(event);
             } else {
                 handleMultipleTouches(event);
@@ -72,26 +83,38 @@ public class MultiTouchHandler {
 
         //Assign id based on what touches are registered in the current pane
         CustomTouchEvent previousEvent = null;
-        for (CustomTouchEvent customTouchEvent : touches) {
-            if (customTouchEvent.getId() == touchEvent.getId()) {
-                previousEvent = customTouchEvent;
-            }
+        if (findIndexOfTouchEvent(touchEvent.getId()) != -1) {
+            previousEvent = touches[findIndexOfTouchEvent(touchEvent.getId())];
         }
 
         if (previousEvent == null && touchEvent.getId() <= 10 && event.getEventType().equals(TouchEvent.TOUCH_PRESSED)) {
             setPaneFocused();
-            this.touches.add(touchEvent);
+            addTouchEvent(touchEvent);
             System.out.println(touchEvent.getId() + ", " + touchEvent.getCoordinates());
         } else {
             if (event.getEventType().equals(TouchEvent.TOUCH_RELEASED)) {
                 checkLeftClick();
-                this.touches.remove(previousEvent);
+                touches[findIndexOfTouchEvent(touchEvent.getId())] = null;
             } else if (event.getEventType().equals(TouchEvent.TOUCH_MOVED) && !(isNegligableMovement(touchEvent, previousEvent))) {
-                processEventMovement();
+                processEventMovement(previousEvent, touchEvent);
             } else {
                 checkRightClick();
             }
         }
+    }
+
+    /**
+     * Finds the index of a touch event with the same id as the provided id
+     * @param id the id of the touch event to find
+     * @return the index of the event in the touches array or -1 if not found
+     */
+    private int findIndexOfTouchEvent(int id) {
+        for (int i = 0; i < MAXTOUCHESPERPANE; i++) {
+            if (touches[i] != null && touches[i].getId() == id) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -117,10 +140,93 @@ public class MultiTouchHandler {
 
     /**
      * Checks what type of movement the touch events represent
-     *  and performs the appropriate actions
+     * and performs the appropriate actions
+     * @param previousEvent the previous touch event before movement
+     * @param currentEvent the current touch event after movement
      */
-    private void processEventMovement() {
+    private void processEventMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
+        int numberOfTouches = 0;
+        for (CustomTouchEvent touchEvent : touches) {
+            if (touchEvent != null) {
+                numberOfTouches += 1;
+            }
+        }
+        if (numberOfTouches == 1) {
 
+        } else if (numberOfTouches == 2) {
+            processTwoTouchMovement(previousEvent, currentEvent);
+        }
+    }
+
+    /**
+     * Finds the best fit for a two touch movement and executes it
+     * @param previousEvent the previous touch event before movement
+     * @param currentEvent the current touch event after movement
+     * @throws NullPointerException should not occur (less than two touches)
+     */
+    private void processTwoTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) throws NullPointerException {
+        int movingPointIndex = findIndexOfTouchEvent(currentEvent.getId());
+        CustomTouchEvent stationaryPoint = null;
+        for (int i = 0; i < MAXTOUCHESPERPANE; i++) {
+            if (touches[i] != null && i != movingPointIndex) {
+                stationaryPoint = touches[i];
+            }
+        }
+        if (stationaryPoint != null) {
+            double angle = calculateAngle(stationaryPoint.getCoordinates(), previousEvent.getCoordinates(), currentEvent.getCoordinates());
+            if (Math.abs(angle) > DEGREES45 && Math.abs(angle) <= DEGREES135) {
+
+            } else {
+                double displacement = calculateDisplacement(previousEvent.getCoordinates(), currentEvent.getCoordinates());
+                double distance = (Math.cos(angle))*displacement;
+                executeZoom(distance);
+            }
+        } else {
+            systemLogger.log(Level.SEVERE, "Two touch movement processed with less than two touches", "Attempted to process a two touch movement with less than two touches");
+            throw new NullPointerException();
+        }
+    }
+
+    /**
+     * Calculates the angle centering on the second parameter
+     * Gives angle in radians from -pi to pi (-ve anti-clockwise)
+     * @param stationaryPoint the point to draw the angle from
+     * @param previousPoint the point at the centre of the angle
+     * @param currentPoint the point to draw the angle to
+     * @return the angle between the point
+     */
+    private double calculateAngle(Point2D stationaryPoint, Point2D previousPoint, Point2D currentPoint) {
+        double p2s = calculateDisplacement(previousPoint, stationaryPoint);
+        double p2c = calculateDisplacement(previousPoint, currentPoint);
+        double s2c = calculateDisplacement(stationaryPoint, currentPoint);
+        double angle = Math.PI - Math.acos((Math.pow(p2s, 2) + Math.pow(p2c, 2) - Math.pow(s2c, 2)) / (2 * p2s * p2c));
+        if ((currentPoint.getX() - stationaryPoint.getX()) * (previousPoint.getY() - stationaryPoint.getY()) - (currentPoint.getY() - stationaryPoint.getY())*(previousPoint.getX() - stationaryPoint.getX()) >= 0) {
+            return angle;
+        } else {
+            return -angle;
+        }
+    }
+
+    /**
+     * Returns the scalar displacement between two points
+     * @param start the first point
+     * @param end the second point to calculate the displacement to
+     * @return the displacement between the two points
+     */
+    private double calculateDisplacement(Point2D start, Point2D end) {
+        return Math.sqrt(Math.pow(start.getX() - end.getX(), 2) + Math.pow(start.getY() - end.getY(), 2));
+    }
+
+    /**
+     * executes a zoom action proportional to the provide distance
+     * @param distance the distance moved by the touch gesture in the relevant direction
+     */
+    private void executeZoom(double distance) {
+//        if (distance < 0) {
+//            distance = -1 / distance;
+//        }
+        rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+        rootPane.setScaleY(rootPane.getScaleX() + (distance * ZOOMFACTOR));
     }
 
     /**
@@ -143,10 +249,22 @@ public class MultiTouchHandler {
         CustomTouchEvent touchEvent = new CustomTouchEvent(rootPane, event.getTouchPoint().getId());
         Point2D coordinates = new Point2D(event.getTouchPoint().getScreenX(), event.getTouchPoint().getScreenY());
         touchEvent.setCoordinates(coordinates);
-        this.touches.add(touchEvent);
+        addTouchEvent(touchEvent);
         System.out.println(touchEvent.getId());
         System.out.println(touchEvent.getCoordinates());
     }
 
+    /**
+     * Adds a touch event to the array at the first null index
+     * @param touchEvent the touch event to add to the touches array
+     */
+    private void addTouchEvent(CustomTouchEvent touchEvent) {
+        for (int i = 0; i < MAXTOUCHESPERPANE; i++) {
+            if (touches[i] == null) {
+                this.touches[i] = touchEvent;
+                i = MAXTOUCHESPERPANE;
+            }
+        }
+    }
 
 }
