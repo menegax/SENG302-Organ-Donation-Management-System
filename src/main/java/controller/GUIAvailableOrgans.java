@@ -4,7 +4,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import model.PatientOrgan;
 import service.PatientDataService;
@@ -15,7 +14,6 @@ import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 
 import model.Patient;
@@ -147,6 +145,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
        updateTable(pagination.getCurrentPageIndex());
     }
 
+
     /**
      * Populates waiting list table with all patients waiting to receive an organ
      */
@@ -179,11 +178,6 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         organExpiryProgressCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getProgressTask()));
         organExpiryProgressCol.setCellFactory(cb -> ProgressBarCustomTableCell.getCell(organExpiryProgressCol));
 
-        Comparator<PatientOrgan> test = (o1, o2) -> Long.compare(o2.timeRemaining(), o1.timeRemaining());
-        ObjectProperty<Comparator<? super PatientOrgan>> test1 = new SimpleObjectProperty<>(test);
-
-        sortedData.comparatorProperty().bind(test1);
-
         // add sorted (and filtered) data to the table.
         availableOrgansTableView.setItems(filterData);
         availableOrgansTableView.setVisible(true);
@@ -204,7 +198,6 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     }
 
 
-
     private void updateTable(int index) {
         int endIndex;
         int numberToDisplay;
@@ -223,8 +216,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         filterData.clear();
         filterData.addAll(FXCollections.observableArrayList(sortedData.subList(endIndex - numberToDisplay, endIndex)));
         filterData.forEach(PatientOrgan::startTask);
-       // availableOrgansTableView.setItems(filterData);
     }
+
     /**
      * Gets the page count to show
      * @return - page count for the pagination
