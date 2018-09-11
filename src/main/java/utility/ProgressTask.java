@@ -47,7 +47,7 @@ public class ProgressTask extends Task<Void> {
             updateMessage(getTimeRemaining()); //in fx thread
             double finalI = (1.0 * i) / organ.getOrganUpperBoundSeconds();
             Platform.runLater(() -> setColor(finalI));
-            Thread.sleep(2); //each loop is now 1 second
+            Thread.sleep(1000); //each loop is now 1 second
         }
         if (i >= organ.getOrganUpperBoundSeconds()) {
             ExpiryObservable.getInstance().setExpired(this.patientOrgan);

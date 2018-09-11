@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -70,10 +71,17 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    /**
+     * Adds organ expiry observable
+     */
     public GUIAvailableOrgans() {
         ExpiryObservable.getInstance().addObserver((o, arg) -> {
             filterData.remove(arg);
             masterData.remove(arg);
+            onSort(); //grab any new records to replace the missing
+            Platform.runLater(() -> {
+                pagination.setPageCount(getPageCount()); //re-update the page count
+            });
         });
     }
 
@@ -131,13 +139,12 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 }
             }
             if (sortingByExpiry) {
-                //Apply correct comparator
-                if (isAscending) {
-                    sortedData.comparatorProperty().bind(objectPropertyAsc);
-                } else {
+                if (!isAscending) {
                     sortedData.comparatorProperty().bind(objectPropertyDesc);
+                } else {
+                    sortedData.comparatorProperty().bind(objectPropertyAsc);
                 }
-            } else { //Apply default table comparator
+            } else {
                 sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
             }
             availableOrgansTableView.setSortPolicy(param -> true);
@@ -198,9 +205,14 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     }
 
 
+    /**
+     * Updates the page items on the current page
+     * @param index - index of the page number we are looking at
+     */
     private void updateTable(int index) {
         int endIndex;
         int numberToDisplay;
+        //kill all tasks on previous page
         filterData.forEach(x -> {
             if (x.getProgressTask() != null) {
                 x.getProgressTask().setInterrupted();
@@ -211,10 +223,11 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
             numberToDisplay = (int)NUM_ROWS_PER_PAGE;
         } else {
             endIndex = sortedData.size();
-            numberToDisplay = (int) (masterData.size() % NUM_ROWS_PER_PAGE);
+            numberToDisplay = (int) (masterData.size() % NUM_ROWS_PER_PAGE); //remaining items
         }
         filterData.clear();
         filterData.addAll(FXCollections.observableArrayList(sortedData.subList(endIndex - numberToDisplay, endIndex)));
+        //start the progress tasks on current page
         filterData.forEach(PatientOrgan::startTask);
     }
 
