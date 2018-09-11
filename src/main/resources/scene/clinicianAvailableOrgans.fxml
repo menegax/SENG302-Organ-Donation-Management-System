@@ -17,7 +17,7 @@
   </columnConstraints>
   <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="56.79999580383301" vgrow="NEVER" />
-      <RowConstraints minHeight="0.80001143217087" prefHeight="283.20001220703125" vgrow="NEVER" />
+      <RowConstraints minHeight="0.80001143217087" prefHeight="333.00000419616697" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="64.79998779296875" vgrow="NEVER" />
   </rowConstraints>
    <children>
@@ -32,12 +32,13 @@
             <TableColumn fx:id="expiryCol" prefWidth="75.0" text="Organ Expiry" />
         </columns>
          <GridPane.margin>
-            <Insets bottom="10.0" top="10.0" />
+            <Insets top="10.0" />
          </GridPane.margin>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Button fx:id="potentialMatchesBtn" disable="true" mnemonicParsing="false" onAction="#viewPotentialMatches" text="View Potential Matches" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
+      <Button disable="true" mnemonicParsing="false" onAction="#viewPotentialMatches" text="View Potential Matches" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+       <Button mnemonicParsing="false" onAction="#viewOnMap" prefWidth="139.5" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
    </children>
 </GridPane>
