@@ -182,7 +182,6 @@ public class MultiTouchHandler {
      * @param currentEvent current event
      */
     private void processOneTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
-        System.out.println(currentEvent.getTarget().getClass());
         if (!(currentEvent.getTarget() instanceof ListView) && !(currentEvent.getTarget() instanceof TableView)) {
             executeTranslate(previousEvent, currentEvent);
         } else {
