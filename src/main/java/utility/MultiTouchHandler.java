@@ -1,7 +1,6 @@
 package utility;
 
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TouchEvent;
@@ -10,9 +9,7 @@ import javafx.scene.layout.Pane;
 
 import javafx.geometry.Point2D;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Handler class to deal with multiple users interacting with the application via touch events.
@@ -27,12 +24,19 @@ import java.util.Set;
  */
 public class MultiTouchHandler {
 
-    private Pane rootPane;
     /**
-     * List of touch events on the pane. Max of three events per pane.
+     * Root pane handled
+     */
+    private Pane rootPane;
+
+    /**
+     * List of touch events on the pane.
      */
     private List<CustomTouchEvent> touches = new ArrayList<>();
 
+    /**
+     * Max number of touch events allowed on the root pane
+     */
     private int MAXTOUCHESPERPANE = 3;
 
     /**
@@ -50,11 +54,11 @@ public class MultiTouchHandler {
         this.rootPane = rootPane;
 
         rootPane.addEventFilter(TouchEvent.ANY, event -> {
-            if(touches.size() == 0) {
-                handleSingleTouch(event);
-            } else {
-                handleMultipleTouches(event);
-            }
+//            if(touches.size() == 0) {
+//                handleSingleTouch(event);
+//            } else {
+                handleTouch(event);
+//            }
         });
         rootPane.addEventFilter(ZoomEvent.ANY, Event::consume);
         rootPane.addEventFilter(RotateEvent.ANY, Event::consume);
@@ -65,33 +69,43 @@ public class MultiTouchHandler {
      *
      * @param event touch event
      */
-    private void handleMultipleTouches(TouchEvent event) {
-        CustomTouchEvent touchEvent = new CustomTouchEvent(rootPane, event.getTouchPoint().getId());
+    private void handleTouch(TouchEvent event) {
+        CustomTouchEvent touchEvent = new CustomTouchEvent(event.getTouchPoint().getId());
         Point2D coordinates = new Point2D(event.getTouchPoint().getScreenX(), event.getTouchPoint().getScreenY());
         touchEvent.setCoordinates(coordinates);
 
         //Assign id based on what touches are registered in the current pane
-        CustomTouchEvent previousEvent = null;
-        for (CustomTouchEvent customTouchEvent : touches) {
-            if (customTouchEvent.getId() == touchEvent.getId()) {
-                previousEvent = customTouchEvent;
-            }
-        }
+        CustomTouchEvent previousEvent = getPreviousTouchEvent(touchEvent);
 
-        if (previousEvent == null && touchEvent.getId() <= 10 && event.getEventType().equals(TouchEvent.TOUCH_PRESSED)) {
+        if (previousEvent == null && touchEvent.getId() <= 10 &&
+                touches.size() < MAXTOUCHESPERPANE && event.getEventType().equals(TouchEvent.TOUCH_PRESSED)) {
             setPaneFocused();
             this.touches.add(touchEvent);
-            System.out.println(touchEvent.getId() + ", " + touchEvent.getCoordinates());
         } else {
             if (event.getEventType().equals(TouchEvent.TOUCH_RELEASED)) {
                 checkLeftClick();
                 this.touches.remove(previousEvent);
-            } else if (event.getEventType().equals(TouchEvent.TOUCH_MOVED) && !(isNegligableMovement(touchEvent, previousEvent))) {
+            } else if (previousEvent != null && event.getEventType().equals(TouchEvent.TOUCH_MOVED) && !(isNegligableMovement(touchEvent, previousEvent))) {
                 processEventMovement();
             } else {
                 checkRightClick();
             }
         }
+    }
+
+    /**
+     * Returns the touchevent in touches with the same id as the new touchevent. Returns null if no previous touch
+     * with the same id exists.
+     * @param touchEvent new touch event
+     * @return CustomTouchEvent previous touch event
+     */
+    private CustomTouchEvent getPreviousTouchEvent(CustomTouchEvent touchEvent) {
+        for (CustomTouchEvent customTouchEvent : touches) {
+            if (customTouchEvent.getId() == touchEvent.getId()) {
+                return customTouchEvent;
+            }
+        }
+        return null;
     }
 
     /**
@@ -133,19 +147,6 @@ public class MultiTouchHandler {
     private boolean isNegligableMovement(CustomTouchEvent newEvent, CustomTouchEvent oldEvent) {
         Point2D delta = newEvent.getCoordinates().subtract(oldEvent.getCoordinates());
         return Math.sqrt(delta.getX() * delta.getX() + delta.getY() * delta.getY()) < 2;
-    }
-
-    /**
-     * Handles a single new touch point
-     * @param event touch event
-     */
-    private void handleSingleTouch(TouchEvent event) {
-        CustomTouchEvent touchEvent = new CustomTouchEvent(rootPane, event.getTouchPoint().getId());
-        Point2D coordinates = new Point2D(event.getTouchPoint().getScreenX(), event.getTouchPoint().getScreenY());
-        touchEvent.setCoordinates(coordinates);
-        this.touches.add(touchEvent);
-        System.out.println(touchEvent.getId());
-        System.out.println(touchEvent.getCoordinates());
     }
 
 

@@ -1,9 +1,6 @@
 package utility;
 
 import javafx.geometry.Point2D;
-import javafx.scene.layout.Pane;
-
-import java.util.UUID;
 
 /**
  * Custom touch event for multi-touch functionality in one pane.
@@ -12,15 +9,12 @@ import java.util.UUID;
 class CustomTouchEvent {
 
     private int id;
-    private Pane touchedPane;
     private Point2D coordinates;
 
     /**
      * Creates a new CustomTouchEvent with the root pane given
-     * @param pane root pane
      */
-    public CustomTouchEvent(Pane pane, int id) {
-        touchedPane = pane;
+    public CustomTouchEvent(int id) {
         this.id = id;
     }
 
