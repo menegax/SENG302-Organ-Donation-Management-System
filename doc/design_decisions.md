@@ -252,4 +252,6 @@ We have also decided to use values of 50% time elapsed to change to yellow/orang
 ## Sprint 7
 
 #### Google Maps Geocoding
-The `APIGoogleMaps` is designed as a singleton to reduce load on the API. 
+The `APIGoogleMaps` is designed as a singleton to reduce load on the API.
+
+ 

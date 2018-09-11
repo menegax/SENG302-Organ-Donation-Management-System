@@ -1,7 +1,9 @@
 package controller;
 
-import data_access.factories.MySqlFactory;
-import data_access.interfaces.IPatientDataAccess;
+import static java.lang.Math.abs;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static utility.UserActionHistory.userActions;
+
 import data_access.localDAO.PatientLocalDAO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -14,36 +16,39 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
-import model.PatientOrgan;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.RangeSlider;
-import org.joda.time.Days;
 import service.ClinicianDataService;
 import service.OrganWaitlist;
 import service.PatientDataService;
 import utility.GlobalEnums;
-import utility.GlobalEnums.*;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.FilterOption;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.Region;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
-import java.util.zip.DataFormatException;
-
-import static java.lang.Math.abs;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static java.util.logging.Level.FINE;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianPotentialMatches extends TargetedController implements IWindowObserver, TouchscreenCapable {
 
@@ -60,6 +65,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     public TableColumn<OrganWaitlist.OrganRequest, String> addressCol;
 
     public TableColumn<OrganWaitlist.OrganRequest, String> waitingTimeCol;
+
+    public TableColumn<OrganWaitlist.OrganRequest, String> travelTimeCol;
 
     public Text nameLabel;
 
@@ -268,6 +275,20 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
 
     /**
+     * Calculates the travel time from the current location of the donating patient to a
+     *
+     * Uses statue miles (as opposed to nautical miles)
+     * @param potentialMatch
+     * @return the travel time
+     */
+    private double calculateHeloTravelTime(Patient potentialMatch) {
+        return 0.0;
+
+        //todo aab2072 aaj6027
+    }
+
+
+    /**
      * Populates the potential matches table with the potential matches in the right order
      */
     private void populateTable() {
@@ -290,6 +311,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                 .getAddress()));
         waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(r.getValue()
                 .getDate(), LocalDate.now()))));
+        travelTimeCol.setCellValueFactory(r -> new SimpleStringProperty("tbd")); //todo
+
 
         // wrap ObservableList in a FilteredList
         //FilteredList<OrganWaitlist.OrganRequest> filteredRequests = filterRequests();
@@ -576,8 +599,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     @FXML
     public void viewOnMap() {
         List<Patient> patients = new ArrayList<>();
-        for (int i = 0; i < observableList.size(); i++) {
-            patients.add(patientDataService.getPatientByNhi(observableList.get(i).getReceiverNhi()));
+        for (OrganWaitlist.OrganRequest anObservableList : observableList) {
+            patients.add(patientDataService.getPatientByNhi(anObservableList.getReceiverNhi()));
         }
 
         Alert alert;

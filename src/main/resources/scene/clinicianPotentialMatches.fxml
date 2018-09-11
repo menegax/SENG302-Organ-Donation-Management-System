@@ -11,10 +11,10 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane fx:id="potentialMatchesPane" prefHeight="600.0" prefWidth="800.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianPotentialMatches">
+<GridPane fx:id="potentialMatchesPane" prefHeight="725.0" prefWidth="951.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianPotentialMatches">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="210.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="208.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="501.0" minWidth="10.0" prefWidth="443.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="441.0" minWidth="10.0" prefWidth="441.0" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints maxHeight="104.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
@@ -27,14 +27,15 @@
       <RowConstraints maxHeight="69.0" minHeight="32.0" prefHeight="32.0" />
    </rowConstraints>
    <children>
-      <TableView fx:id="potentialMatchesTable" onSort="#onSort" prefHeight="300.0" prefWidth="678.0" GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.rowSpan="2">
+      <TableView fx:id="potentialMatchesTable" onSort="#onSort" prefHeight="340.0" prefWidth="827.0" GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.rowSpan="2">
          <columns>
-            <TableColumn fx:id="nhiCol" prefWidth="75.0" text="NHI" />
-            <TableColumn fx:id="nameCol" prefWidth="131.6666259765625" text="Name" />
-            <TableColumn fx:id="ageCol" prefWidth="64.3333740234375" text="Age" />
-            <TableColumn fx:id="regionCol" prefWidth="95.33331298828125" text="Region" />
-            <TableColumn fx:id="addressCol" prefWidth="154.0" text="Address" />
-            <TableColumn fx:id="waitingTimeCol" prefWidth="159.0" text="Waiting Time (Days)" />
+            <TableColumn fx:id="nhiCol" editable="false" prefWidth="75.0" text="NHI" />
+            <TableColumn fx:id="nameCol" editable="false" prefWidth="131.6666259765625" text="Name" />
+            <TableColumn fx:id="ageCol" editable="false" prefWidth="64.3333740234375" text="Age" />
+            <TableColumn fx:id="regionCol" editable="false" prefWidth="95.33331298828125" text="Region" />
+            <TableColumn fx:id="addressCol" editable="false" prefWidth="154.0" text="Address" />
+            <TableColumn fx:id="waitingTimeCol" editable="false" prefWidth="141.0" text="Waiting Time (days)" />
+            <TableColumn fx:id="travelTimeCol" editable="false" prefWidth="177.0" text="Travel Time (min)" />
          </columns>
          <GridPane.margin>
             <Insets bottom="60.0" left="60.0" right="60.0" />
@@ -186,7 +187,7 @@
             <Insets bottom="20.0" left="60.0" />
          </GridPane.margin>
       </Button>
-      <Button minHeight="-Infinity" onAction="#viewOnMap" mnemonicParsing="false" prefHeight="31.0" prefWidth="109.0" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+      <Button minHeight="-Infinity" mnemonicParsing="false" onAction="#viewOnMap" prefHeight="31.0" prefWidth="109.0" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets bottom="20.0" right="60.0" />
          </GridPane.margin>
