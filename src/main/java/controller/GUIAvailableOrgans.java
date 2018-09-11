@@ -144,6 +144,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
             }
             availableOrgansTableView.setSortPolicy(param -> true);
         }
+       updateTable(pagination.getCurrentPageIndex());
     }
 
     /**
@@ -152,7 +153,6 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     private void populateTable() {
         sortedData = new SortedList<>(masterData);
         onSort();
-        updateTable(0);
         // initialize columns
         patientCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getPatient()
@@ -170,7 +170,12 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 .toString()));
 
         //expiry
-        expiryCol.setCellValueFactory(r -> r.getValue().getProgressTask().messageProperty());
+        expiryCol.setCellValueFactory(r -> {
+            if (r.getValue().getProgressTask() == null) {
+                return null;
+            }
+            return r.getValue().getProgressTask().messageProperty();
+        });
         organExpiryProgressCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getProgressTask()));
         organExpiryProgressCol.setCellFactory(cb -> ProgressBarCustomTableCell.getCell(organExpiryProgressCol));
 
@@ -208,16 +213,17 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 x.getProgressTask().setInterrupted();
             }
         });
-        if ((int) NUM_ROWS_PER_PAGE * (index + 1) < masterData.size()) {
+        if ((int) NUM_ROWS_PER_PAGE * (index + 1) <= masterData.size()) {
             endIndex = (int) NUM_ROWS_PER_PAGE * (index + 1);
             numberToDisplay = (int)NUM_ROWS_PER_PAGE;
         } else {
             endIndex = sortedData.size();
-            numberToDisplay = ((int) NUM_ROWS_PER_PAGE * (index + 1) )% masterData.size();
+            numberToDisplay = (int) (masterData.size() % NUM_ROWS_PER_PAGE);
         }
-        filterData = FXCollections.observableArrayList(sortedData.subList(endIndex - numberToDisplay, endIndex));
+        filterData.clear();
+        filterData.addAll(FXCollections.observableArrayList(sortedData.subList(endIndex - numberToDisplay, endIndex)));
         filterData.forEach(PatientOrgan::startTask);
-        availableOrgansTableView.setItems(filterData);
+       // availableOrgansTableView.setItems(filterData);
     }
     /**
      * Gets the page count to show

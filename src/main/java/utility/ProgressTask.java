@@ -49,7 +49,6 @@ public class ProgressTask extends Task<Void> {
             Platform.runLater(() -> setColor(finalI));
             Thread.sleep(2); //each loop is now 1 second
         }
-        System.out.println(i + " " + organ.getOrganUpperBoundSeconds());
         if (i >= organ.getOrganUpperBoundSeconds()) {
             ExpiryObservable.getInstance().setExpired(this.patientOrgan);
         }
