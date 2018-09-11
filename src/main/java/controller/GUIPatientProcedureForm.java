@@ -14,8 +14,7 @@ import service.PatientDataService;
 import model.User;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
+import utility.MultiTouchHandler;
 import utility.undoRedo.Action;
 
 import java.time.LocalDate;
@@ -29,7 +28,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Form to add and edit patient procedures only accessible by a clinician
  */
-public class GUIPatientProcedureForm extends TargetedController implements TouchscreenCapable {
+public class GUIPatientProcedureForm extends TargetedController {
 
     @FXML
     public Button doneButton;
@@ -59,7 +58,7 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
     private ScreenControl screenControl = ScreenControl.getScreenControl();
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
     private PatientDataService patientDataService = new PatientDataService();
-    private TouchPaneController procedureTouchPane;
+    private MultiTouchHandler touchHandler;
 
     /**
      * Initial setup. Sets up undo/redo, Populates the affected organs dropdown
@@ -73,10 +72,8 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
             }
         }
         if(screenControl.isTouch()) {
-            procedureTouchPane = new TouchPaneController(procedureUpdatePane);
-            procedureUpdatePane.setOnZoom(this::zoomWindow);
-            procedureUpdatePane.setOnRotate(this::rotateWindow);
-            procedureUpdatePane.setOnScroll(this::scrollWindow);
+            touchHandler = new MultiTouchHandler();
+            touchHandler.initialiseHandler(procedureUpdatePane);
         }
     }
 
@@ -239,23 +236,6 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
      */
     public void goBackToProcedures() {
         screenControl.closeWindow(procedureUpdatePane);
-    }
-
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        procedureTouchPane.zoomPane(zoomEvent);
-    }
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        procedureTouchPane.rotatePane(rotateEvent);
-    }
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        if(scrollEvent.isDirect()) {
-            procedureTouchPane.scrollPane(scrollEvent);
-        }
     }
 
 }

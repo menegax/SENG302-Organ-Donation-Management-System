@@ -50,7 +50,7 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-public class GUIHome extends TargetedController implements Observer, TouchscreenCapable, IWindowObserver {
+public class GUIHome extends TargetedController implements Observer, IWindowObserver {
 
 
     @FXML
@@ -73,8 +73,6 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
     private boolean loaded = false;
 
-    private TouchPaneController homePaneTouchController;
-
     @FXML
     private ProgressBar importProgress;
 
@@ -88,6 +86,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     private IAdministratorDataService administratorDataService = new AdministratorDataService();
 
     private Stage homeStage;
+    private MultiTouchHandler touchHandler;
 
     private  enum TabName {
         PROFILE("Profile"), UPDATE("Update"), DONATIONS("Donations"), CONTACTDETAILS("Contact Details"),
@@ -180,31 +179,8 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                 }
             }
             if(screenControl.isTouch()) {
-                homePane.addEventHandler(Event.ANY, new EventHandler<Event>() {
-                    @Override
-                    public void handle(Event event) {
-                    }
-                });
-                homePaneTouchController = new TouchPaneController(homePane);
-
-                homePane.setOnTouchPressed(event -> {
-                    homePane.toFront();
-                    homePaneTouchController.convertEvent(event);
-                    System.out.println("pre press consume");
-                    event.consume();
-                    System.out.println("post press consume");
-                });
-                homePane.setOnTouchMoved(event -> {
-                    homePaneTouchController.convertEvent(event);
-                    System.out.println("pre move consume");
-                    event.consume();
-                    System.out.println("post move consume");
-                });
-                homePane.setOnZoom(zoomEvent -> {
-                    zoomWindow(zoomEvent);
-                });
-                homePane.setOnRotate(this::rotateWindow);
-                homePane.setOnScroll(this::scrollWindow);
+                touchHandler = new MultiTouchHandler();
+                touchHandler.initialiseHandler(homePane);
             }
         } catch (IOException e) {
             new Alert(ERROR, "Unable to load home").show();
@@ -723,32 +699,6 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     void addAsterisk() {
         if (!userNameDisplay.getText().contains("*")) {
             userNameDisplay.setText(userNameDisplay.getText() + "*");
-        }
-    }
-
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        if(zoomEvent.getSource().equals(homePane)) {
-            homePaneTouchController.zoomPane(zoomEvent);
-            zoomEvent.consume();
-        }
-    }
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        if(rotateEvent.getSource().equals(homePane)) {
-            homePaneTouchController.rotatePane(rotateEvent);
-            rotateEvent.consume();
-        }
-    }
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        if(scrollEvent.getSource().equals(homePane)) {
-            if (scrollEvent.isDirect()) {
-                homePaneTouchController.scrollPane(scrollEvent);
-            }
-            scrollEvent.consume();
         }
     }
 

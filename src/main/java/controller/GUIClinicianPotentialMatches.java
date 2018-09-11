@@ -30,7 +30,7 @@ import service.OrganWaitlist;
 import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
-import utility.TouchPaneController;
+import utility.MultiTouchHandler;
 import utility.TouchscreenCapable;
 
 import java.time.LocalDate;
@@ -45,7 +45,7 @@ import static java.util.logging.Level.FINE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-public class GUIClinicianPotentialMatches extends TargetedController implements IWindowObserver, TouchscreenCapable {
+public class GUIClinicianPotentialMatches extends TargetedController implements IWindowObserver {
 
     public TableView<OrganWaitlist.OrganRequest> potentialMatchesTable;
 
@@ -107,11 +107,11 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
     private Map<FilterOption, String> filter = new HashMap<>();
 
-    private TouchPaneController matchTouchPane;
-
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private SortedList<OrganWaitlist.OrganRequest> sortedRequests;
+
+    private MultiTouchHandler touchHandler;
 
 
     /**
@@ -148,11 +148,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         setupAgeSliderListeners();
         setupFilterListeners();
         if (screenControl.isTouch()) {
-            matchTouchPane = new TouchPaneController(potentialMatchesPane);
-            potentialMatchesPane.setOnZoom(this::zoomWindow);
-            potentialMatchesPane.setOnRotate(this::rotateWindow);
-            potentialMatchesPane.setOnScroll(this::scrollWindow);
-            potentialMatchesPane.setOnTouchPressed(event -> potentialMatchesPane.toFront());
+            touchHandler = new MultiTouchHandler();
+            touchHandler.initialiseHandler(potentialMatchesPane);
         }
 
     }
@@ -542,23 +539,6 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         });
     }
 
-
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        matchTouchPane.zoomPane(zoomEvent);
-    }
-
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        matchTouchPane.rotatePane(rotateEvent);
-    }
-
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        matchTouchPane.scrollPane(scrollEvent);
-    }
 
 
     @FXML

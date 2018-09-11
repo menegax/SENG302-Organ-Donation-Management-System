@@ -15,13 +15,13 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Patient;
 import utility.GlobalEnums;
-import utility.TouchPaneController;
+import utility.MultiTouchHandler;
 import utility.TouchscreenCapable;
 
 import java.time.LocalDate;
 import java.util.Set;
 
-public class GUIAdministratorImportResults implements TouchscreenCapable {
+public class GUIAdministratorImportResults {
     @FXML
     private GridPane adminImportResultsPane;
 
@@ -53,7 +53,8 @@ public class GUIAdministratorImportResults implements TouchscreenCapable {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private TouchPaneController adminImportTouch;
+
+    private MultiTouchHandler touchHandler;
 
     public void initialize() {
         nhiCol.setCellValueFactory(new PropertyValueFactory<>("nhiNumber"));
@@ -68,11 +69,8 @@ public class GUIAdministratorImportResults implements TouchscreenCapable {
         tableData = FXCollections.observableArrayList(patients);
         resultsTable.setItems(tableData);
         if(screenControl.isTouch()) {
-            adminImportTouch = new TouchPaneController(adminImportResultsPane);
-            adminImportResultsPane.setOnTouchPressed(event -> adminImportResultsPane.toFront());
-            adminImportResultsPane.setOnZoom(this::zoomWindow);
-            adminImportResultsPane.setOnRotate(this::rotateWindow);
-            adminImportResultsPane.setOnScroll(this::scrollWindow);
+            touchHandler = new MultiTouchHandler();
+            touchHandler.initialiseHandler(adminImportResultsPane);
         }
     }
 
@@ -83,18 +81,4 @@ public class GUIAdministratorImportResults implements TouchscreenCapable {
         screenControl.closeWindow(adminImportResultsPane);
     }
 
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        adminImportTouch.zoomPane(zoomEvent);
-    }
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        adminImportTouch.rotatePane(rotateEvent);
-    }
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        adminImportTouch.scrollPane(scrollEvent);
-    }
 }

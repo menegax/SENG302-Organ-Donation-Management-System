@@ -14,7 +14,7 @@ import model.User;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
-import utility.TouchPaneController;
+import utility.MultiTouchHandler;
 import utility.TouchscreenCapable;
 import utility.undoRedo.Action;
 
@@ -30,7 +30,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Controller for diagnosis update popup window.
  */
-public class GUIPatientUpdateDiagnosis extends TargetedController implements TouchscreenCapable{
+public class GUIPatientUpdateDiagnosis extends TargetedController {
 
     @FXML
     private GridPane diagnosisUpdatePane;
@@ -69,7 +69,7 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
 
     private IPatientDataService patientDataService = new PatientDataService();
 
-    private TouchPaneController diagnosisTouchPane;
+    private MultiTouchHandler touchHandler;
 
     /**
      * Sets the diagnosis that is being updated
@@ -115,10 +115,8 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
         populateDropdown();
         populateForm();
         if(screenControl.isTouch()) {
-            diagnosisTouchPane = new TouchPaneController(diagnosisUpdatePane);
-            diagnosisUpdatePane.setOnZoom(this::zoomWindow);
-            diagnosisUpdatePane.setOnRotate(this::rotateWindow);
-            diagnosisUpdatePane.setOnScroll(this::scrollWindow);
+            touchHandler = new MultiTouchHandler();
+            touchHandler.initialiseHandler(diagnosisUpdatePane);
         }
     }
 
@@ -339,20 +337,4 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
         }
     }
 
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        diagnosisTouchPane.zoomPane(zoomEvent);
-    }
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        diagnosisTouchPane.rotatePane(rotateEvent);
-    }
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        if(scrollEvent.isDirect()) {
-            diagnosisTouchPane.scrollPane(scrollEvent);
-        }
-    }
 }

@@ -51,6 +51,8 @@ public class MultiTouchHandler {
      */
     private CustomTouchEvent[] touches = new CustomTouchEvent[MAXTOUCHESPERPANE];
 
+    private Point2D[] originCoordinates = new Point2D[MAXTOUCHESPERPANE];
+
     /**
      * Initialises a new MultiTouchHandler instance
      */
@@ -95,6 +97,7 @@ public class MultiTouchHandler {
         } else {
             if (previousEvent != null && event.getEventType().equals(TouchEvent.TOUCH_RELEASED)) {
                 checkLeftClick();
+                originCoordinates[findIndexOfTouchEvent(touchEvent.getId())] = null;
                 touches[findIndexOfTouchEvent(touchEvent.getId())] = null;
             } else if (previousEvent != null && event.getEventType().equals(TouchEvent.TOUCH_MOVED) && !(isNegligableMovement(touchEvent, previousEvent))) {
                 processEventMovement(previousEvent, touchEvent);
@@ -166,25 +169,31 @@ public class MultiTouchHandler {
             }
         }
         if (numberOfTouches == 1) {
-            processOneTouchMovement(currentEvent);
+            processOneTouchMovement(previousEvent, currentEvent);
         } else if (numberOfTouches == 2) {
             processTwoTouchMovement(previousEvent, currentEvent);
         }
         touches[findIndexOfTouchEvent(previousEvent.getId())] = currentEvent;
     }
 
-    private void processOneTouchMovement(CustomTouchEvent currentEvent) {
-        System.out.println("one toooooouch");
-        System.out.println("origin: " + currentEvent.getOriginCoordinates() + ", new: " + currentEvent.getCoordinates());
-        Point2D delta = currentEvent.getOriginCoordinates().subtract(currentEvent.getCoordinates());
-        System.out.println("delta: " + delta);
-        executeTranslate(currentEvent.getCoordinates());
-//        currentEvent.setOriginCoordinates(currentEvent.getCoordinates());
+    /**
+     * Processes single touch events to translate or scroll on the pane
+     * @param previousEvent previous event
+     * @param currentEvent current event
+     */
+    private void processOneTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
+        executeTranslate(previousEvent, currentEvent);
     }
 
-    private void executeTranslate(Point2D delta) {
-        rootPane.setTranslateX(delta.getX() - rootPane.getTranslateX());
-        rootPane.setTranslateY(delta.getY() - rootPane.getTranslateY());
+    /**
+     * Translates the pane by the difference in coordinates between the current and previous event
+     * @param previousEvent previous event
+     * @param currentEvent current event
+     */
+    private void executeTranslate(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
+        Point2D delta = currentEvent.getCoordinates().subtract(previousEvent.getCoordinates());
+        rootPane.setTranslateX(rootPane.getTranslateX() + delta.getX());
+        rootPane.setTranslateY(rootPane.getTranslateY() + delta.getY());
     }
 
 
@@ -286,6 +295,7 @@ public class MultiTouchHandler {
         for (int i = 0; i < MAXTOUCHESPERPANE; i++) {
             if (touches[i] == null) {
                 this.touches[i] = touchEvent;
+                this.originCoordinates[i] = touchEvent.getCoordinates();
                 i = MAXTOUCHESPERPANE;
             }
         }
