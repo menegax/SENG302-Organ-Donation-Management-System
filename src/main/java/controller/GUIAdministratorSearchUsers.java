@@ -76,7 +76,8 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         search();
     }
 
-    private void search() {
+    @SuppressWarnings("WeakerAccess")
+    public void search() {
         List<User> results = administratorDataService.searchUsers(searchEntry.getText());
         if (results != null) {
             masterData.clear();
