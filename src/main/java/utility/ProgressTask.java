@@ -55,6 +55,9 @@ public class ProgressTask extends Task<Void> {
         return null;
     }
 
+    /**
+     * Set the task to interrupted. Will stop counting task
+     */
     public void setInterrupted() {
         this.interrupted = true;
     }
