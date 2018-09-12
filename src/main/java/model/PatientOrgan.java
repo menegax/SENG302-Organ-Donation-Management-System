@@ -1,13 +1,9 @@
 package model;
 
-import javafx.beans.property.ReadOnlyStringProperty;
-import javafx.beans.property.StringProperty;
 import utility.GlobalEnums;
 import utility.ProgressTask;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
@@ -19,12 +15,10 @@ public class PatientOrgan {
     private GlobalEnums.Organ organ;
     private ProgressTask progressTask;
     private Long timeRemaining;
-    private boolean isExpired;
 
     public PatientOrgan(Patient patient, GlobalEnums.Organ organ) {
         this.patient = patient;
         this.organ = organ;
-        this.progressTask = new ProgressTask(this);
         this.timeRemaining = SECONDS.between(patient.getDeathDate().plusSeconds(organ.getOrganUpperBoundSeconds()), LocalDateTime.now());
     }
 
@@ -44,13 +38,19 @@ public class PatientOrgan {
         return timeRemaining;
     }
 
-    public boolean isExpired() { return isExpired; }
+    public void startTask(){
+        this.progressTask = new ProgressTask(this);
+    }
+
     @Override
     public boolean equals(Object obj) {
-        PatientOrgan patientOrgan = (PatientOrgan) obj;
-        return patientOrgan.patient.getNhiNumber().equals(this.patient.getNhiNumber()) &&
-                patientOrgan.organ.equals(this.organ);
-
+        if (obj != null) {
+            PatientOrgan patientOrgan = (PatientOrgan) obj;
+            return patientOrgan.patient.getNhiNumber().equals(this.patient.getNhiNumber()) &&
+                    patientOrgan.organ.equals(this.organ);
+        } else {
+            return false;
+        }
     }
 
 }

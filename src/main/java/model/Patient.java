@@ -1148,7 +1148,21 @@ public class Patient extends User {
     }
 
     public String getAddressString() {
-        return String.format("%s %s, %s", streetNumber, streetName, suburb);
+        String addressString = "";
+        if (streetNumber != null) {
+            addressString += streetNumber + " ";
+        }
+        if (streetName != null) {
+            addressString += streetName;
+        }
+        if (suburb != null) {
+            if (addressString.length() != 0) {
+                addressString += ", " + suburb;
+            } else {
+                addressString += suburb;
+            }
+        }
+        return addressString;
     }
 
     public String getStreetName() {
@@ -1161,7 +1175,25 @@ public class Patient extends User {
     }
 
     public String getDeathLocationConcat(){
-        return String.format("%s, %s, %s", deathStreet, deathCity, deathRegion);
+        String addressString = "";
+        if (deathStreet != null) {
+            addressString += deathStreet;
+        }
+        if (deathCity != null) {
+            if (addressString.length() != 0) {
+                addressString += ", " + deathCity;
+            } else {
+                addressString += deathCity;
+            }
+        }
+        if (deathRegion != null) {
+            if (addressString.length() != 0) {
+                addressString += ", " + deathRegion;
+            } else {
+                addressString += deathRegion;
+            }
+        }
+        return addressString;
     }
 
 
