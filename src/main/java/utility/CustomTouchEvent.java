@@ -3,6 +3,8 @@ package utility;
 import javafx.event.EventTarget;
 import javafx.geometry.Point2D;
 
+import java.sql.Timestamp;
+
 /**
  * Custom touch event for multi-touch functionality in one pane.
  * Each touch event has a random, unique UUID for identification
@@ -12,6 +14,7 @@ class CustomTouchEvent {
     private int id;
     private Point2D coordinates;
     private EventTarget target;
+    private long eventTime;
 
     /**
      * Creates a new CustomTouchEvent with the root pane given
@@ -36,6 +39,14 @@ class CustomTouchEvent {
 
     public EventTarget getTarget() {
         return target;
+    }
+
+    public long getEventTime() {
+        return eventTime;
+    }
+
+    public void setEventTime(long eventTime) {
+        this.eventTime = eventTime;
     }
 
     @Override

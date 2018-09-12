@@ -46,6 +46,10 @@ public class MultiTouchHandler {
     private final double DEGREES135 = Math.PI - DEGREES45;
     private final double DEGREES180 = Math.PI;
     private final double RADS2DEGREES = 180 / Math.PI;
+    private Point2D velocity;
+    private Point2D acceleration;
+
+    //velocity from previous -> current
 
     private Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
@@ -92,6 +96,8 @@ public class MultiTouchHandler {
         CustomTouchEvent touchEvent = new CustomTouchEvent(event.getTouchPoint().getId(), event.getTarget());
         Point2D coordinates = new Point2D(event.getTouchPoint().getScreenX(), event.getTouchPoint().getScreenY());
         touchEvent.setCoordinates(coordinates);
+        //nano is 10^-9
+        touchEvent.setEventTime(System.nanoTime());
 
         //Assign id based on what touches are registered in the current pane
         CustomTouchEvent previousEvent = null;
@@ -208,8 +214,12 @@ public class MultiTouchHandler {
      */
     private void executeTranslate(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
         Point2D delta = currentEvent.getCoordinates().subtract(previousEvent.getCoordinates());
-        rootPane.setTranslateX(rootPane.getTranslateX() + delta.getX());
-        rootPane.setTranslateY(rootPane.getTranslateY() + delta.getY());
+//        if(!outOfBoundsX()) {
+            rootPane.setTranslateX(rootPane.getTranslateX() + delta.getX());
+//        }
+//        if(!outOfBoundsY()) {
+            rootPane.setTranslateY(rootPane.getTranslateY() + delta.getY());
+//        }
     }
 
 
@@ -321,6 +331,28 @@ public class MultiTouchHandler {
                 i = MAXTOUCHESPERPANE;
             }
         }
+    }
+
+    /**
+     * Returns true if the pane is out of bounds of the stage.
+     * Buffers of half the pane width and the pane width for positive and negative translations respectively
+     * are given to minimise risk of pane stopping off screen.
+     * @return boolean out of bounds
+     */
+    private boolean outOfBoundsX() {
+        return rootPane.getTranslateX() > screenBounds.getMaxX() - rootPane.getWidth() / 2 ||
+                rootPane.getTranslateX() <= screenBounds.getMaxX() * -1 + rootPane.getWidth() / 2;
+    }
+
+    /**
+     * Returns true if the pane is out of bounds of the stage.
+     * Buffers of half the pane height and the pane height for positive and negative translations respectively
+     * are given to minimise risk of pane stopping off screen.
+     * @return boolean out of bounds
+     */
+    private boolean outOfBoundsY() {
+        return rootPane.getTranslateY() > screenBounds.getMaxY() - rootPane.getHeight() / 2 ||
+                rootPane.getTranslateY() <= screenBounds.getMaxY() * -1 + rootPane.getHeight() / 2;
     }
 
 }
