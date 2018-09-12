@@ -238,8 +238,7 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
                         }
                     });
         } else {
-            homeStage = (Stage) homePane.getScene()
-                    .getWindow();
+            homeStage = (Stage) homePane.getScene().getWindow();
             // Methods to call after initialize
             setUpMenuBar(homeStage);
             screenControl.addTab(homeStage, horizontalTabPane);
@@ -585,33 +584,36 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
         bar.getMenus().addAll(menu2, menu3);
 
         //WINDOW
+        menu4 = new Menu("Window");
         if (isUserClinicianOrAdmin()) {
-            menu4 = new Menu("Window");
             MenuItem menu4Item1 = new MenuItem("Open Map");
             menu4Item1.setOnAction(event -> {
                 screenControl.setIsCustomSetMap(false);
                 openMap();
             });
-            menu4.getItems()
-                    .addAll(menu4Item1);
+            menu4.getItems().addAll(menu4Item1);
             if(screenControl.isTouch()) {
                 MenuItem menu4item2 = new MenuItem("Open Keyboard");
                 menu4item2.setOnAction(event -> openKeyboard());
                 menu4.getItems().addAll(menu4item2);
             }
-            bar.getMenus().addAll(menu4);
         }
+        MenuItem menu4item3 = new MenuItem("Refresh");
+        menu4item3.setOnAction(event -> refresh());
+        if(!screenControl.isTouch()) {
+            menu4item3.setAccelerator(screenControl.getRefresh());
+        }
+        menu4.getItems().addAll(menu4item3);
+        bar.getMenus().addAll(menu4);
 
-        boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless")
-                .equals("true");
+        boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless").equals("true");
         // Use the menu bar for primary stage
         if (!headless) { // make sure it isn't testing
             if (screenControl.isMacOs()) {
                 // Get the toolkit THIS IS MAC OS ONLY
                 MenuToolkit tk = MenuToolkit.toolkit();
 
-                menuBar.getMenus()
-                        .clear();
+                menuBar.getMenus().clear();
 
                 // Add the default application menu
                 bar.getMenus()
@@ -621,14 +623,11 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
                     systemLogger.log(FINER, "Set MacOS menu bar");
                 }
             } else {// if windows
-                menuBar.getMenus()
-                        .clear();
-                menuBar.getMenus()
-                        .addAll(menu2, menu3, menu4);
+                menuBar.getMenus().clear();
+                menuBar.getMenus().addAll(menu2, menu3, menu4);
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
             }
         }
-
     }
 
     /**
@@ -669,6 +668,21 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
         if(screenControl.isTouch()) {
             homePane.toFront();
         }
+    }
+
+    /**
+     * Refreshes the current tab shown
+     */
+    private void refresh() {
+        int selectedIndex = horizontalTabPane.getSelectionModel().getSelectedIndex();
+        if (horizontalTabPane.getSelectionModel().getSelectedIndex() != 0) {
+            horizontalTabPane.getSelectionModel().select(0);
+            horizontalTabPane.getSelectionModel().select(selectedIndex);
+        } else {
+            horizontalTabPane.getSelectionModel().select(1);
+            horizontalTabPane.getSelectionModel().select(selectedIndex);
+        }
+        userActions.log(Level.INFO, "Refreshed current tab", "Attempted to refresh current tab");
     }
 
 

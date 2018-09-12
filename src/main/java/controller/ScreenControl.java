@@ -33,6 +33,8 @@ public abstract class ScreenControl {
 
     private KeyCodeCombination closeWindow;
 
+    private KeyCodeCombination refresh;
+
     private static boolean isTouch;
 
     private Boolean isSaved = true;
@@ -147,6 +149,7 @@ public abstract class ScreenControl {
             undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.META_DOWN);
             redo = new KeyCodeCombination(KeyCode.Z, KeyCombination.SHIFT_DOWN, KeyCombination.META_DOWN);
             closeWindow = new KeyCodeCombination(KeyCode.W, KeyCombination.META_DOWN);
+            refresh = new KeyCodeCombination(KeyCode.R, KeyCombination.META_DOWN);
         }
         else { // Windows or Linux
             logOut = new KeyCodeCombination(KeyCode.Q, KeyCombination.ALT_DOWN, KeyCombination.CONTROL_DOWN);
@@ -155,6 +158,7 @@ public abstract class ScreenControl {
             undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
             redo = new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN);
             closeWindow = new KeyCodeCombination(KeyCode.W, KeyCombination.CONTROL_DOWN);
+            refresh = new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN);
         }
     }
 
@@ -180,6 +184,7 @@ public abstract class ScreenControl {
 
     public KeyCodeCombination getCloseWindow() { return closeWindow; }
 
+    public KeyCodeCombination getRefresh() { return refresh; }
 
     KeyCodeCombination getLogOut() {
         return logOut;
