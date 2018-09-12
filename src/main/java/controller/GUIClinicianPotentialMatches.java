@@ -198,35 +198,50 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     @FXML
     public void onSort(Event event) {
         // bind the SortedList comparator to the TableView comparator.
-        Comparator<OrganWaitlist.OrganRequest> newComparetor = (request1, request2) -> {
-            if (request2.getDate()
-                    .isBefore(request1.getDate())) {
+        Comparator<OrganWaitlist.OrganRequest> defaultComparator = (request1, request2) -> {
+            if (request1.getDate().isBefore(request2.getDate())) {
                 return -1;
-            }
-            else if (request1.getDate()
-                    .isBefore(request2.getDate())) {
+            } else if (request2.getDate().isBefore(request1.getDate())) {
                 return 1;
-            }
-            else {
-                return (getRegionDistance(request2.getRequestRegion(), new ArrayList<>())).compareTo((getRegionDistance(request1.getRequestRegion(),
-                        new ArrayList<>())));
+            } else {
+                return (getRegionDistance(request1.getRequestRegion(), new ArrayList<>())).compareTo((getRegionDistance(request2.getRequestRegion(), new ArrayList<>())));
             }
         };
-        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectProperty = new SimpleObjectProperty<>(newComparetor);
-        sortedRequests.comparatorProperty()
-                .unbind();
-        if (potentialMatchesTable.getSortOrder()
-                .size() == 0) {
-            sortedRequests.comparatorProperty()
-                    .bind(objectProperty);
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> defaultObjectProperty = new SimpleObjectProperty<>(defaultComparator);
+
+        Comparator<OrganWaitlist.OrganRequest> waitTimeComparator = Comparator.comparing(OrganWaitlist.OrganRequest::getDate);
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> waitTimeObjectPropertyAsc = new SimpleObjectProperty<>(waitTimeComparator);
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> waitTimeObjectPropertyDesc = new SimpleObjectProperty<>(waitTimeComparator.reversed());
+
+        sortedRequests.comparatorProperty().unbind();
+        if (potentialMatchesTable.getSortOrder().size() == 0) {
+            sortedRequests.comparatorProperty().bind(defaultObjectProperty);
+            potentialMatchesTable.setSortPolicy(param -> true);
+        } else {
+            boolean sortingByWaitingTime = false;
+            boolean isAscending = true;
+            ObservableList<TableColumn<OrganWaitlist.OrganRequest, ?>> sortPolicies = potentialMatchesTable.getSortOrder();
+            //Search the sort policies to see if any of the tablecolumns being sorted is the waiting time column
+            for (TableColumn<OrganWaitlist.OrganRequest, ?> tableColumn : sortPolicies) {
+                if (tableColumn.getId().equals("waitingTimeCol")) {
+                    sortingByWaitingTime = true;
+                    //Get the sort order of the table column
+                    isAscending = tableColumn.getSortType() == TableColumn.SortType.ASCENDING;
+                }
+            }
+            if (sortingByWaitingTime) {
+                //Apply correct comparator
+                if (isAscending) {
+                    sortedRequests.comparatorProperty().bind(waitTimeObjectPropertyAsc);
+                } else {
+                    sortedRequests.comparatorProperty().bind(waitTimeObjectPropertyDesc);
+                }
+            } else { //Apply default table comparator
+                sortedRequests.comparatorProperty().bind(potentialMatchesTable.comparatorProperty());
+            }
             potentialMatchesTable.setSortPolicy(param -> true);
         }
-        else {
-            sortedRequests.comparatorProperty()
-                    .bind(potentialMatchesTable.comparatorProperty());
-        }
     }
-
 
     /**
      * Sets the labels displayed to the requirements of the donated organ
@@ -254,7 +269,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         boolean match = true;
         long requestAge = ChronoUnit.DAYS.between(request.getBirth(), LocalDate.now());
         long targetAge = ChronoUnit.DAYS.between(((Patient) target).getBirth(), ((Patient) target).getDeathDate());
-        if (request.getRequestedOrgan() != targetOrgan || request.getBloodGroup() != ((Patient) target).getBloodGroup()) {
+        if (request.getRequestedOrgan() != targetOrgan || request.getBloodGroup() != ((Patient) target).getBloodGroup() || request.getReceiver().getDeathDate() != null) {
             match = false;
         }
         else if ((requestAge < 4383 && targetAge > 4383) || (requestAge > 4383 && targetAge < 4383) || abs(requestAge - targetAge) > 5478.75) {
@@ -300,9 +315,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         sortedRequests = new SortedList<>(filteredRequests);
 
         // bind the SortedList comparator to the TableView comparator.
-        Comparator<OrganWaitlist.OrganRequest> newComparetor = (request1, request2) -> {
-            if (request1.getDate()
-                    .isBefore(request2.getDate())) {
+        Comparator<OrganWaitlist.OrganRequest> newComparator = (request1, request2) -> {
+            if (request1.getDate().isBefore(request2.getDate())) {
                 return -1;
             }
             else if (request2.getDate()
@@ -314,7 +328,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                         new ArrayList<>())));
             }
         };
-        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectProperty = new SimpleObjectProperty<>(newComparetor);
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectProperty = new SimpleObjectProperty<>(newComparator);
 
         sortedRequests.comparatorProperty()
                 .bind(objectProperty);
@@ -400,7 +414,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * @return how many steps away the region is from the target region
      */
     private Integer getRegionDistance(Region region, List<Region> visitedRegions) {
-        if (region == ((Patient) target).getRegion()) {
+        // Found region
+        if (region == ((Patient) target).getDeathRegion()) {
             return 0;
         }
         else if (region == null) {
@@ -408,6 +423,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         }
         else {
             int minDistance = -1;
+            // Keep looking in adjacent regions
             for (Region adjacentRegion : adjacentRegions.get(region)) {
                 if (!visitedRegions.contains(adjacentRegion)) {
                     visitedRegions.add(adjacentRegion);
@@ -417,7 +433,12 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                     }
                 }
             }
-            return minDistance + 1;
+            // No new regions to visit
+            if (minDistance == -1) {
+                return 100;
+            } else {
+                return minDistance + 1;
+            }
         }
     }
 

@@ -1,7 +1,9 @@
 package utility;
 
 import javafx.event.Event;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
@@ -10,6 +12,7 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.Pane;
 
 import javafx.geometry.Point2D;
+import javafx.stage.Screen;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,11 +42,21 @@ public class MultiTouchHandler {
      */
     private int MAXTOUCHESPERPANE = 2;
 
-    private final double DEGREES45 = Math.PI / 2;
+    private final double DEGREES45 = Math.PI / 4;
     private final double DEGREES135 = Math.PI - DEGREES45;
+    private final double DEGREES180 = Math.PI;
+    private final double RADS2DEGREES = 180 / Math.PI;
+    private Point2D velocity;
+    private Point2D acceleration;
 
-    //todo check against screen resolution
-    private final double ZOOMFACTOR = 0.005;
+    //velocity from previous -> current
+
+    private Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+    private final double ZOOMFACTOR = 1/((screenBounds.getWidth()/screenBounds.getHeight())*100);
+
+
+    private boolean isScroll = false;
 
 
     /**
@@ -67,7 +80,9 @@ public class MultiTouchHandler {
     public void initialiseHandler(Pane rootPane) {
         this.rootPane = rootPane;
 
-        rootPane.addEventFilter(TouchEvent.ANY, this::handleTouch);
+        rootPane.addEventFilter(TouchEvent.ANY, event -> {
+            handleTouch(event);
+        });
         rootPane.addEventFilter(ZoomEvent.ANY, Event::consume);
         rootPane.addEventFilter(RotateEvent.ANY, Event::consume);
 //        rootPane.addEventFilter(ScrollEvent.ANY, Event::consume);
@@ -81,6 +96,8 @@ public class MultiTouchHandler {
         CustomTouchEvent touchEvent = new CustomTouchEvent(event.getTouchPoint().getId(), event.getTarget());
         Point2D coordinates = new Point2D(event.getTouchPoint().getScreenX(), event.getTouchPoint().getScreenY());
         touchEvent.setCoordinates(coordinates);
+        //nano is 10^-9
+        touchEvent.setEventTime(System.nanoTime());
 
         //Assign id based on what touches are registered in the current pane
         CustomTouchEvent previousEvent = null;
@@ -180,7 +197,6 @@ public class MultiTouchHandler {
      * @param currentEvent current event
      */
     private void processOneTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
-        System.out.println(currentEvent.getTarget().getClass());
         if (!(currentEvent.getTarget() instanceof ListView) && !(currentEvent.getTarget() instanceof TableView)) {
             executeTranslate(previousEvent, currentEvent);
         } else {
@@ -198,8 +214,12 @@ public class MultiTouchHandler {
      */
     private void executeTranslate(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
         Point2D delta = currentEvent.getCoordinates().subtract(previousEvent.getCoordinates());
-        rootPane.setTranslateX(rootPane.getTranslateX() + delta.getX());
-        rootPane.setTranslateY(rootPane.getTranslateY() + delta.getY());
+//        if(!outOfBoundsX()) {
+            rootPane.setTranslateX(rootPane.getTranslateX() + delta.getX());
+//        }
+//        if(!outOfBoundsY()) {
+            rootPane.setTranslateY(rootPane.getTranslateY() + delta.getY());
+//        }
     }
 
 
@@ -219,10 +239,11 @@ public class MultiTouchHandler {
         }
         if (stationaryPoint != null) {
             double angle = calculateAngle(stationaryPoint.getCoordinates(), previousEvent.getCoordinates(), currentEvent.getCoordinates());
+            double displacement = calculateDisplacement(previousEvent.getCoordinates(), currentEvent.getCoordinates());
             if (Math.abs(angle) > DEGREES45 && Math.abs(angle) <= DEGREES135) {
-
+                double rotatedAngle = calculateAngle(previousEvent.getCoordinates(), stationaryPoint.getCoordinates(), currentEvent.getCoordinates());
+                executeRotate(DEGREES180 - rotatedAngle);
             } else {
-                double displacement = calculateDisplacement(previousEvent.getCoordinates(), currentEvent.getCoordinates());
                 double distance = (Math.cos(angle))*displacement;
                 executeZoom(distance);
             }
@@ -268,16 +289,21 @@ public class MultiTouchHandler {
      * @param distance the distance moved by the touch gesture in the relevant direction
      */
     private void executeZoom(double distance) {
-//        if (distance < 0) {
-//            distance = -1 / distance;
-//        }
         if (rootPane.getScaleX() > 0.25 && rootPane.getScaleY() > 0.25) {
             rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
-            rootPane.setScaleY(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+            rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
         } else if (distance > 0) {
             rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
-            rootPane.setScaleY(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+            rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
         }
+    }
+
+    /**
+     * Executes a rotate on the pane to the amount specified by the angle given
+     * @param angle the angle to rotate given in radians
+     */
+    private void executeRotate(double angle) {
+        rootPane.setRotate(rootPane.getRotate() + angle * RADS2DEGREES);
     }
 
     /**
@@ -305,6 +331,28 @@ public class MultiTouchHandler {
                 i = MAXTOUCHESPERPANE;
             }
         }
+    }
+
+    /**
+     * Returns true if the pane is out of bounds of the stage.
+     * Buffers of half the pane width and the pane width for positive and negative translations respectively
+     * are given to minimise risk of pane stopping off screen.
+     * @return boolean out of bounds
+     */
+    private boolean outOfBoundsX() {
+        return rootPane.getTranslateX() > screenBounds.getMaxX() - rootPane.getWidth() / 2 ||
+                rootPane.getTranslateX() <= screenBounds.getMaxX() * -1 + rootPane.getWidth() / 2;
+    }
+
+    /**
+     * Returns true if the pane is out of bounds of the stage.
+     * Buffers of half the pane height and the pane height for positive and negative translations respectively
+     * are given to minimise risk of pane stopping off screen.
+     * @return boolean out of bounds
+     */
+    private boolean outOfBoundsY() {
+        return rootPane.getTranslateY() > screenBounds.getMaxY() - rootPane.getHeight() / 2 ||
+                rootPane.getTranslateY() <= screenBounds.getMaxY() * -1 + rootPane.getHeight() / 2;
     }
 
 }
