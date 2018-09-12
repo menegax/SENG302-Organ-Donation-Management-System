@@ -262,6 +262,11 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      */
     private boolean checkMatch(OrganWaitlist.OrganRequest request) {
         boolean match = true;
+        Patient potentialReceiver = patientDataService.getPatientByNhi(request.getReceiverNhi());
+        //Do not match against patients that have no address or region
+        if (potentialReceiver.getRegion() == null || (potentialReceiver.getStreetNumber() == null && potentialReceiver.getStreetName() == null)) {
+            return false;
+        }
         long requestAge = ChronoUnit.DAYS.between(request.getBirth(), LocalDate.now());
         long targetAge = ChronoUnit.DAYS.between(((Patient) target).getBirth(), ((Patient) target).getDeathDate());
         if (request.getRequestedOrgan() != targetOrgan || request.getBloodGroup() != ((Patient) target).getBloodGroup()) {
