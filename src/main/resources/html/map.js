@@ -23,7 +23,7 @@ function init() {
 
 
 var setUpTouchEvents = function() {
-    map.addEventListener("handlezoom", handleZoom, false);
+    //map.addEventListener("handlezoom", handleZoom, false);
 };
 
 
