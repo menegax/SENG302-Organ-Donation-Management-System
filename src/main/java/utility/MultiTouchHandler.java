@@ -1,6 +1,7 @@
 package utility;
 
 import javafx.event.Event;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.input.RotateEvent;
@@ -10,6 +11,7 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.Pane;
 
 import javafx.geometry.Point2D;
+import javafx.stage.Screen;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,8 +46,10 @@ public class MultiTouchHandler {
     private final double DEGREES180 = Math.PI;
     private final double RADS2DEGREES = 180 / Math.PI;
 
-    //todo check against screen resolution
-    private final double ZOOMFACTOR = 0.005;
+    private Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+    private final double ZOOMFACTOR = 1/((screenBounds.getWidth()/screenBounds.getHeight())*100);
+
 
 
     /**
@@ -272,10 +276,10 @@ public class MultiTouchHandler {
     private void executeZoom(double distance) {
         if (rootPane.getScaleX() > 0.25 && rootPane.getScaleY() > 0.25) {
             rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
-            rootPane.setScaleY(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+            rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
         } else if (distance > 0) {
             rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
-            rootPane.setScaleY(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+            rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
         }
     }
 
