@@ -46,8 +46,10 @@ public class MultiTouchHandler {
     private final double DEGREES135 = Math.PI - DEGREES45;
     private final double DEGREES180 = Math.PI;
     private final double RADS2DEGREES = 180 / Math.PI;
-    private Point2D velocity;
-    private Point2D acceleration;
+    private Point2D velocity = new Point2D(0, 0);
+    //deceleration shizz
+    private final double DECELERATION = 1;
+    private final double SLEEPTIME = 0.03;
 
     //velocity from previous -> current
 
@@ -107,6 +109,7 @@ public class MultiTouchHandler {
 
         if (previousEvent == null && touchEvent.getId() <= 10 &&
                 notMaxTouches() && event.getEventType().equals(TouchEvent.TOUCH_PRESSED)) {
+            velocity = new Point2D(0, 0);
             setPaneFocused();
             addTouchEvent(touchEvent);
         } else {
@@ -114,12 +117,39 @@ public class MultiTouchHandler {
                 checkLeftClick();
                 originCoordinates[findIndexOfTouchEvent(touchEvent.getId())] = null;
                 touches[findIndexOfTouchEvent(touchEvent.getId())] = null;
+//                processPaneMomentum();
             } else if (previousEvent != null && event.getEventType().equals(TouchEvent.TOUCH_MOVED) && !(isNegligableMovement(touchEvent, previousEvent))) {
                 processEventMovement(previousEvent, touchEvent);
             } else {
                 checkRightClick();
             }
         }
+    }
+
+    private void processPaneMomentum() {
+        System.out.println("hereeeee");
+        double newVelX;
+        double newVelY;
+        while (velocity.getX() > 0 || velocity.getY() > 0) {
+            System.out.println("X vel: " + velocity.getX() + ", Y vel:" + velocity.getY());
+            rootPane.setTranslateX(rootPane.getTranslateX() + (velocity.getX() * SLEEPTIME));
+            rootPane.setTranslateY(rootPane.getTranslateY() + (velocity.getY() * SLEEPTIME));
+            newVelX = 0;
+            newVelY = 0;
+            if (velocity.getX() > 0) {
+                newVelX = velocity.getX() - (DECELERATION * SLEEPTIME);
+            }
+            if (velocity.getY() > 0) {
+                newVelY = velocity.getY() - (DECELERATION * SLEEPTIME);
+            }
+            velocity = new Point2D(newVelX, newVelY);
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+                velocity = new Point2D(0, 0);
+            }
+        }
+        System.out.println(rootPane.getTranslateX() + ", " + rootPane.getTranslateY());
     }
 
     /**
@@ -214,6 +244,9 @@ public class MultiTouchHandler {
      */
     private void executeTranslate(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
         Point2D delta = currentEvent.getCoordinates().subtract(previousEvent.getCoordinates());
+        long timeDiff = currentEvent.getEventTime() - previousEvent.getEventTime();
+        velocity = new Point2D(delta.getX() / (timeDiff * Math.pow(10, -6)), delta.getY() / (timeDiff * Math.pow(10, -6)));
+        //fix this shite
 //        if(!outOfBoundsX()) {
             rootPane.setTranslateX(rootPane.getTranslateX() + delta.getX());
 //        }
