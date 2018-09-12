@@ -74,6 +74,9 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     @FXML
     private Text ageSliderLabel;
 
+    @FXML
+    private Button assignOrganButton;
+
     private Organ targetOrgan;
 
     private ObservableList<OrganWaitlist.OrganRequest> allRequests = FXCollections.observableArrayList();
@@ -377,6 +380,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * Sets the filter listeners for the potential matches list
      */
     private void setupFilterListeners(){
+        assignOrganButton.setDisable(true);
         regionFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
             filter.put(FilterOption.REGION, newValue);
             filterRequests();
@@ -399,6 +403,13 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             filter.put(FilterOption.AGELOWER, String.valueOf(rangeSlider.getLowValue()));
             filterRequests();
         });
+        potentialMatchesTable.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                assignOrganButton.setDisable(false);
+            } else {
+                assignOrganButton.setDisable(true);
+            }
+        }));
     }
 
     /**

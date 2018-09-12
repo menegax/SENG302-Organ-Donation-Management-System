@@ -185,7 +185,7 @@
             <Insets bottom="20.0" left="20.0" right="60.0" />
          </GridPane.margin>
       </Button>
-      <Button mnemonicParsing="false" onAction="#assignOrganToPatient" prefHeight="30.0" prefWidth="110.0" text="Assign Organ" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+      <Button fx:id="assignOrganButton" mnemonicParsing="false" onAction="#assignOrganToPatient" prefHeight="30.0" prefWidth="110.0" text="Assign Organ" GridPane.halignment="LEFT" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets bottom="20.0" left="60.0" />
          </GridPane.margin>
