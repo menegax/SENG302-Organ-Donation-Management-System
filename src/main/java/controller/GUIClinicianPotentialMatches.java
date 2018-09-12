@@ -96,6 +96,10 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
     private SortedList<OrganWaitlist.OrganRequest>  sortedRequests;
 
+    private ClinicianDataService clinicianDataService;
+
+    private OrganWaitlist organWaitList;
+
     /**
      * Sets the target donor and organ for this controller and loads the data accordingly
      * @param donor the donating patient
@@ -114,10 +118,10 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     public void load() {
         allRequests.clear();
         loadRegionDistances();
-        ClinicianDataService clinicianDataService = new ClinicianDataService();
-        OrganWaitlist organRequests = clinicianDataService.getOrganWaitList();
+        clinicianDataService = new ClinicianDataService();
+        organWaitList = clinicianDataService.getOrganWaitList();
         requests = new ArrayList<>();
-        for (OrganWaitlist.OrganRequest request: organRequests) {
+        for (OrganWaitlist.OrganRequest request: organWaitList) {
             if(checkMatch(request)) {
                 allRequests.add(request);
             }
@@ -395,6 +399,18 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             filter.put(FilterOption.AGELOWER, String.valueOf(rangeSlider.getLowValue()));
             filterRequests();
         });
+    }
+
+    /**
+     * Assigns the target patients donating organ to the selected receiver. Also removed organ from waitlist
+     */
+    public void assignOrganToPatient(){
+        OrganWaitlist.OrganRequest selectedRequest = potentialMatchesTable.getSelectionModel().getSelectedItem();
+        Patient organReceiver = patientDataService.getPatientByNhi(selectedRequest.getReceiverNhi());
+        Map<Organ, String> patientDonations = ((Patient) target).getDonations();
+        patientDonations.put(targetOrgan, organReceiver.getNhiNumber());
+        organWaitList.getRequests().remove(selectedRequest);
+        clinicianDataService.updateOrganWaitList(organWaitList);
     }
 
     @Override

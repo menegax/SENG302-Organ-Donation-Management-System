@@ -1,6 +1,7 @@
 package service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -69,7 +70,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	/**
 	 * A organ request for the waiting list.
 	 */
-	public class OrganRequest implements Comparable<OrganRequest> {
+	public class OrganRequest implements Comparable<OrganRequest>{
 		LocalDate date;
 		Region region;
 		Organ organ;
@@ -103,7 +104,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 			this.bloodGroup = bloodGroup;
 			this.birth = birth;
 		}
-		
+
 		/**
 		 * Override of equals method, to enable checking for duplicates.
 		 * @param other	- The object to compare for equality.
@@ -139,6 +140,9 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		public int compareTo(OrganRequest o) {
 			if (date.isBefore(o.getRequestDate())) {
 				return -1;
+			}
+			if (this.getReceiverNhi().equals(o.getReceiverNhi()) && this.getRequestedOrgan().equals(o.getRequestedOrgan())){
+				return 0;
 			}
 			return 1;
 		}
