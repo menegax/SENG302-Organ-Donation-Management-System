@@ -18,8 +18,21 @@ function init() {
     });
     setMapDragEnd();
     markerLoop(patients.size());
+    setUpTouchEvents();
 }
 
+
+var setUpTouchEvents = function() {
+    map.addEventListener("handlezoom", handleZoom, false);
+};
+
+
+var handleZoom = function(event) {
+    event.preventDefault();
+    if (event.targetTouches.length === 2) {
+        console.log("2 touches");
+    }
+};
 /**
  * Sets the viewable area of the map
  */

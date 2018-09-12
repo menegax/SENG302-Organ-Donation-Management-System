@@ -92,7 +92,7 @@ public class GUIMap implements Initializable {
 //                    robot.keyPress(KeyEvent.VK_CONTROL);
 //                }
 //            }
-//        });
+//       });
 //        webViewMap1.setOnTouchReleased(event -> {
 //            if (screenControl.isTouch()) {
 //                robot.keyRelease(KeyEvent.VK_CONTROL);
