@@ -4,6 +4,7 @@ import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
@@ -14,6 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.geometry.Point2D;
 import javafx.stage.Screen;
 
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -235,25 +237,13 @@ public class MultiTouchHandler {
     /**
      * Checks whether the target of the touch event can be scrolled or not
      * @param target the object which the touch event occurred on
-     * @return whether that object can be scolled or not
+     * @return whether that object can be scrolled or not
      */
     private boolean scrollable(EventTarget target) {
-        if (target instanceof ListView) {
+        if (target instanceof ListView || target instanceof ListCell || target instanceof TableView || target instanceof TableColumn || target instanceof TableRow || target instanceof TableCell) {
             return true;
-        } else if (target instanceof ListCell) {
-            return true;
-        } else if (target instanceof TableView) {
-            return true;
-        } else if (target instanceof TableColumn) {
-            return true;
-        } else if (target instanceof TableCell) {
-            return true;
-        } else if (target instanceof TableRow) {
-            return true;
-        } else if (target instanceof LabeledText) {
-            return ((LabeledText) target).getParent() instanceof TableCell || ((LabeledText) target).getParent() instanceof ListCell;
         } else {
-            return false;
+            return (target instanceof LabeledText) && ((((LabeledText) target).getParent() instanceof TableCell || ((LabeledText) target).getParent() instanceof ListCell));
         }
     }
 
