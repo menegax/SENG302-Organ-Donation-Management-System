@@ -45,6 +45,7 @@ import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -127,6 +128,18 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     public final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
 
     /**
+     *  0         1
+     *   X ---- X
+     *   .      .
+     *   .      .
+     *   X ---- X
+     *  2         3
+     *
+     * Map of boundaries on NZ. Keys are corner indexes (refer to top image)
+     */
+    private HashMap<Integer, LatLng> boundsOfNz = new HashMap<>();
+
+    /**
      * Sets the target donor and organ for this controller and loads the data accordingly
      *
      * @param donor the donating patient
@@ -144,6 +157,10 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * to view a patient's profile.
      */
     public void load() {
+        boundsOfNz.put(0, new LatLng(-34.386058, 166.848052));
+        boundsOfNz.put(2, new LatLng(-47.058964, 164.456064));
+        boundsOfNz.put(1, new LatLng(-34.073159, 179.323815));
+        boundsOfNz.put(3, new LatLng(-46.494633, 179.932955));
         allRequests.clear();
         loadRegionDistances();
         ClinicianDataService clinicianDataService = new ClinicianDataService();
@@ -298,31 +315,50 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         long refuelTime = 1800;
         double maxTravelDistanceStatuteKilometers = 460; //on one tank of gas
         long heloTravelSpeedKmh = 260;
+        double metersPerKm = 1000 / (double)3600;
+
+        LatLng donorLocation;
+        LatLng receiverLocation;
 
         // calculate distance between donating organ and receiving patient
         try {
             // calculate total travel time
-            LatLng donorLocation = ((Patient) target).getCurrentLocation();
-            LatLng receiverLocation = potentialMatch.getCurrentLocation();
+            donorLocation = ((Patient) target).getCurrentLocation();
+            receiverLocation = potentialMatch.getCurrentLocation();
+        } catch (Exception e) {
+            systemLogger.log(Level.WARNING, "Unable to calculate distance to potential receiver");
+            return -1;
+        }
+
+        boolean receiverInNz = isInNz(receiverLocation);
+        boolean donorInNz = isInNz(donorLocation);
+        if (receiverInNz && donorInNz) {
             double distance = calculateDistanceInKilometer(donorLocation.lat, donorLocation.lng, receiverLocation.lat, receiverLocation.lng);
-            System.out.println("distance: " + distance); //todo rm
-            double totalTravelTime = distance / heloTravelSpeedKmh;
+            long totalTravelTime = (long) Math.ceil((distance * 1000 )/ (heloTravelSpeedKmh * metersPerKm)); //time to travel in seconds
 
             // calculate total refuel time
-            int numRefuels = (int) Math.ceil(maxTravelDistanceStatuteKilometers % distance);
+            int numRefuels = (int) Math.ceil(distance / maxTravelDistanceStatuteKilometers);
             double totalRefuelTime = refuelTime * numRefuels;
 
             System.out.println("total travel time: " + (long) Math.ceil(organLoadTime + totalTravelTime + totalRefuelTime + organUnloadtime)); //todo rm
             return (long) Math.ceil(organLoadTime + totalTravelTime + totalRefuelTime + organUnloadtime);
         }
-        catch (Exception e) {
-            systemLogger.log(Level.WARNING, "Unable to calculate distance to potential receiver");
-            return -1;
-        }
-
+        return -1;
         //todo aab2072 aaj6027
     }
 
+
+    /**
+     * Checks given latlng is wirhin nz
+     * @param latLng - latng to check if it is within NZ
+     * @return - true if latlng is in nz
+     */
+    private boolean isInNz(LatLng latLng) {
+        return latLng.lat > boundsOfNz.get(2).lat && latLng.lat < boundsOfNz.get(1).lat
+                && latLng.lng < boundsOfNz.get(1).lng && latLng.lng > boundsOfNz.get(2).lng;
+
+//        return true; //todo
+    }
 
     /**
      * Calculates the distance between two points
@@ -346,6 +382,19 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     }
 
 
+    private String getTravelTimeToTravel(OrganWaitlist.OrganRequest request){
+        for (OrganWaitlist.OrganRequest x : allRequests) {
+            if (x.getReceiverNhi().equals(request.getReceiverNhi())) {
+                long totalSecs = calculateTotalHeloTravelTime(patientDataService.getPatientByNhi(request.getReceiverNhi()));
+                System.out.println(totalSecs);
+                int hours = (int)(totalSecs / 3600L);
+                int minutes = (int)((totalSecs % 3600L) / 60L);
+                int seconds = (int) (totalSecs % 60L);
+                return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+            }
+        }
+        return ""; //todo
+    }
     /**
      * Populates the potential matches table with the potential matches in the right order
      */
@@ -369,10 +418,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                 .getAddress()));
         waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(r.getValue()
                 .getDate(), LocalDate.now()))));
-        travelTimeCol.setCellValueFactory(r -> {
-            String value = String.valueOf(calculateTotalHeloTravelTime(patientDataService.getPatientByNhi(r.getValue().getReceiverNhi())));
-            return new SimpleStringProperty(value);
-        }); //todo
+        travelTimeCol.setCellValueFactory(r -> { return new SimpleStringProperty(getTravelTimeToTravel(r.getValue()));}); //todo
 
 
         // wrap ObservableList in a FilteredList
