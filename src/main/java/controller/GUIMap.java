@@ -49,9 +49,10 @@ public class GUIMap implements Initializable {
      */
     public void initialize(URL url, ResourceBundle rb) {
         webEngine = webViewMap1.getEngine();
-
+        System.out.println(webEngine.getUserAgent());
+        webEngine.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_2 like Mac OS X) AppleWebKit/603.2.4 (KHTML, like Gecko) FxiOS/7.5b3349 Mobile/14F89 Safari/603.2.4");
         UserActionHistory.userActions.log(Level.INFO, "Loading map...", "Attempted to open map");
-
+        System.out.println(webEngine.getUserAgent());
         List<Patient> results;
         if (!screenControl.getIsCustomSetMap()) {
 //             results = getInitialPatients();

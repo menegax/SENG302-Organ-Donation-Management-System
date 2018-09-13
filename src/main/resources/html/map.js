@@ -18,21 +18,15 @@ function init() {
     });
     setMapDragEnd();
     markerLoop(patients.size());
-    setUpTouchEvents();
 }
 
+navigator.__defineGetter__('userAgent', function () {
+    return "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_2 like Mac OS X) AppleWebKit/603.2.4 (KHTML, like Gecko) FxiOS/7.5b3349 Mobile/14F89 Safari/603.2.4";
+});
+navigator.__defineGetter__('appName', function () {
+    return "Netscape"
+});
 
-var setUpTouchEvents = function() {
-    map.addListener(handleZoom);
-};
-
-
-var handleZoom = function(event) {
-    event.preventDefault();
-    if (event.targetTouches.length === 2) {
-        console.log("2 touches");
-    }
-};
 /**
  * Sets the viewable area of the map
  */

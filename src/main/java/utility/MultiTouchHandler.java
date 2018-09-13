@@ -1,10 +1,10 @@
 package utility;
 
+import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.event.Event;
+import javafx.event.EventTarget;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TouchEvent;
@@ -267,14 +267,34 @@ public class MultiTouchHandler {
      * @param currentEvent current event
      */
     private void processOneTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
-        if (!(currentEvent.getTarget() instanceof ListView) && !(currentEvent.getTarget() instanceof TableView)) {
+        if (!scrollable(currentEvent.getTarget())) {
             executeTranslate(previousEvent, currentEvent);
-        } else {
-            executeScroll(previousEvent, currentEvent);
         }
     }
 
-    private void executeScroll(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
+    /**
+     * Checks whether the target of the touch event can be scrolled or not
+     * @param target the object which the touch event occurred on
+     * @return whether that object can be scolled or not
+     */
+    private boolean scrollable(EventTarget target) {
+        if (target instanceof ListView) {
+            return true;
+        } else if (target instanceof ListCell) {
+            return true;
+        } else if (target instanceof TableView) {
+            return true;
+        } else if (target instanceof TableColumn) {
+            return true;
+        } else if (target instanceof TableCell) {
+            return true;
+        } else if (target instanceof TableRow) {
+            return true;
+        } else if (target instanceof LabeledText) {
+            return ((LabeledText) target).getParent() instanceof TableCell || ((LabeledText) target).getParent() instanceof ListCell;
+        } else {
+            return false;
+        }
     }
 
     /**

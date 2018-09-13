@@ -219,6 +219,9 @@ public class GUIPatientProfile extends TargetedController {
 		Collection<Medication> meds = patient.getCurrentMedications();
 		List<String> medsMapped = meds.stream().map(Medication::getMedicationName).collect(Collectors.toList());
 		medListProperty.setValue(FXCollections.observableArrayList(medsMapped));
+		if (medListProperty.getValue().size() == 0) {
+		    medListProperty.setValue(FXCollections.observableArrayList(""));
+        }
 		medList.itemsProperty().bind(medListProperty);
 	}
 
@@ -236,9 +239,14 @@ public class GUIPatientProfile extends TargetedController {
 				.collect(Collectors.toList());
 		donatingListProperty.setValue(FXCollections.observableArrayList(organsMappedD));
 		receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
+        if (donatingListProperty.getValue().size() == 0) {
+            donatingListProperty.setValue(FXCollections.observableArrayList(""));
+        }
+        if (receivingListProperty.getValue().size() == 0) {
+            receivingListProperty.setValue(FXCollections.observableArrayList(""));
+        }
 		donationList.itemsProperty().bind(donatingListProperty);
 		receivingList.itemsProperty().bind(receivingListProperty);
-		receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
 	}
 
 	private void loadBodyDetails(Patient patient) {
@@ -311,21 +319,19 @@ public class GUIPatientProfile extends TargetedController {
 						setListInvalidStyle(item, donatingListProperty);
 					}
 				} else {
-					this.setStyle("-fx-background-color: WHITE");
 					this.setText(item);
 				}
 			}
 
 			private void setListInvalidStyle(String item, ListProperty<String> listProperty) {
-				this.setStyle("-fx-background-color: WHITE");
 				this.setText(item);
-				if (item != null) {
+				if (item != null && !item.equals("")) {
 					String[] itemArray = item.split(" ");
 					String organ = itemArray[itemArray.length - 1];
 					for (String listItem : listProperty) {
 						if (listItem.contains(organ)) {
 							this.getStyleClass().add("invalid");
-							this.setStyle("-fx-background-color: #e6b3b3");
+							this.setStyle("-fx-background-color: #ff0000");
 						}
 					}
 				}
