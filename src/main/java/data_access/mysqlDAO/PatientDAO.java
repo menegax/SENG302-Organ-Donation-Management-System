@@ -329,7 +329,7 @@ public class PatientDAO implements IPatientDataAccess {
                         break;
                     case DONOR:
                         if (Boolean.valueOf(filters.get(DONOR))) {
-                            query.append("DonatingOrgans <> '' AND ");
+                            query.append("EXISTS (SELECT * FROM tblPatientDonations o WHERE o.donor = P.NHI) AND ");
                         }
                         break;
                     case RECIEVER:
@@ -338,7 +338,7 @@ public class PatientDAO implements IPatientDataAccess {
                         }
                         break;
                     case DONATIONS:
-                        query.append(String.format("FIND_IN_SET('%s', DonatingOrgans) > 0 AND ", filters.get(DONATIONS)));
+                        query.append(String.format("EXISTS (SELECT * FROM tblPatientDonations o WHERE o.Organ = '%s' AND o.donor = P.NHI) AND ", filters.get(DONATIONS)));
                         break;
                     case REQUESTEDDONATIONS:
                         query.append(String.format("EXISTS (SELECT * FROM tblRequiredOrgans o WHERE o.Organ = '%s' AND o.Patient = P.NHI) AND ",
@@ -417,7 +417,7 @@ public class PatientDAO implements IPatientDataAccess {
         Map<GlobalEnums.Organ, String> donations = new HashMap<>();
         try {
             if (attributes.getInt("hasDonations") == 1) {
-                required.put(Organ.BONE, null);
+                donations.put(Organ.BONE, null);
             }
         }
         catch (SQLException ignore) {
