@@ -207,14 +207,25 @@ public class GUIPatientProfile extends TargetedController {
 		if (patient.getRequiredOrgans() == null) {
 			patient.setRequiredOrgans(new HashMap<>());
 		}
-		Collection<GlobalEnums.Organ> organsD = patient.getDonations().keySet();
+		if (patient.getDonations() == null) {
+			patient.setDonations(new HashMap<>());
+		}
+		List<String> organsMappedD = new ArrayList<>();
 		List<String> organsMappedR = new ArrayList<>();
 		for (GlobalEnums.Organ organ : patient.getRequiredOrgans().keySet()) {
-			organsMappedR.add(patient.getRequiredOrgans().get(organ).toString() + "    |    "
-					+ StringUtils.capitalize(organ.getValue()));
+			organsMappedR.add(StringUtils.capitalize(organ.getValue()) + "    |    "
+					+ patient.getRequiredOrgans().get(organ).toString());
 		}
-		List<String> organsMappedD = organsD.stream().map(e -> StringUtils.capitalize(e.getValue()))
-				.collect(Collectors.toList());
+		for (GlobalEnums.Organ organ : patient.getDonations().keySet()) {
+			if (patient.getDonations().get(organ) == null) {
+				organsMappedD.add(StringUtils.capitalize(organ.getValue()) + "    |    --");
+			} else {
+				organsMappedD.add(StringUtils.capitalize(organ.getValue()) + "    |    " +
+						patient.getDonations().get(organ));
+			}
+		}
+//		List<String> organsMappedD = organsD.stream().map(e -> StringUtils.capitalize(e.getValue()))
+//				.collect(Collectors.toList());
 		donatingListProperty.setValue(FXCollections.observableArrayList(organsMappedD));
 		receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
 		donationList.itemsProperty().bind(donatingListProperty);
@@ -302,7 +313,7 @@ public class GUIPatientProfile extends TargetedController {
 				this.setText(item);
 				if (item != null) {
 					String[] itemArray = item.split(" ");
-					String organ = itemArray[itemArray.length - 1];
+					String organ = itemArray[0];
 					for (String listItem : listProperty) {
 						if (listItem.contains(organ)) {
 							this.getStyleClass().add("invalid");
