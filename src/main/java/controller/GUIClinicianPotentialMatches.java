@@ -290,7 +290,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * @param potentialMatch the patient potentially receiving the organ
      * @return the travel time
      */
-    private long calculateTotalHeloTravelTime(Patient potentialMatch) {
+    public long calculateTotalHeloTravelTime(Patient potentialMatch) {
 
         //constants using kilometers and seconds
         long organLoadTime = 1800;
@@ -303,14 +303,16 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         try {
             // calculate total travel time
             LatLng donorLocation = ((Patient) target).getCurrentLocation();
-            LatLng receiverLocation = ((Patient) target).getCurrentLocation();
+            LatLng receiverLocation = potentialMatch.getCurrentLocation();
             double distance = calculateDistanceInKilometer(donorLocation.lat, donorLocation.lng, receiverLocation.lat, receiverLocation.lng);
+            System.out.println("distance: " + distance); //todo rm
             double totalTravelTime = distance / heloTravelSpeedKmh;
 
             // calculate total refuel time
             int numRefuels = (int) Math.ceil(maxTravelDistanceStatuteKilometers % distance);
             double totalRefuelTime = refuelTime * numRefuels;
 
+            System.out.println("total travel time: " + (long) Math.ceil(organLoadTime + totalTravelTime + totalRefuelTime + organUnloadtime)); //todo rm
             return (long) Math.ceil(organLoadTime + totalTravelTime + totalRefuelTime + organUnloadtime);
         }
         catch (Exception e) {
@@ -367,7 +369,10 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                 .getAddress()));
         waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(r.getValue()
                 .getDate(), LocalDate.now()))));
-        travelTimeCol.setCellValueFactory(r -> new SimpleStringProperty("tbd")); //todo
+        travelTimeCol.setCellValueFactory(r -> {
+            String value = String.valueOf(calculateTotalHeloTravelTime(patientDataService.getPatientByNhi(r.getValue().getReceiverNhi())));
+            return new SimpleStringProperty(value);
+        }); //todo
 
 
         // wrap ObservableList in a FilteredList

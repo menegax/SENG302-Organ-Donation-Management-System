@@ -79,6 +79,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		String address;
 		GlobalEnums.BloodGroup bloodGroup;
 		LocalDate birth;
+
 		
 		public OrganRequest(Patient receiver, Organ organ) {
 			date = LocalDate.now();
