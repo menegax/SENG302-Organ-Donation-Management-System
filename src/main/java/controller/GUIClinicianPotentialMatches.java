@@ -120,6 +120,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
     private SortedList<OrganWaitlist.OrganRequest> sortedRequests;
 
+    public final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
 
     /**
      * Sets the target donor and organ for this controller and loads the data accordingly
@@ -290,6 +291,21 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         return 0.0;
 
         //todo aab2072 aaj6027
+    }
+
+
+    public int calculateDistanceInKilometer(double userLat, double userLng,
+                                            double venueLat, double venueLng) {
+
+        double latDistance = Math.toRadians(userLat - venueLat);
+        double lngDistance = Math.toRadians(userLng - venueLng);
+
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(userLat)) * Math.cos(Math.toRadians(venueLat))
+                * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return (int) (Math.round(AVERAGE_RADIUS_OF_EARTH_KM * c));
     }
 
 
