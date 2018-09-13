@@ -2,8 +2,11 @@ package controller;
 
 import static java.lang.Math.abs;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.LatLng;
 import data_access.localDAO.PatientLocalDAO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -41,6 +44,7 @@ import utility.GlobalEnums.Region;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -283,19 +287,50 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     /**
      * Calculates the travel time from the current location of the donating patient to a
      *
-     * Uses statue miles (as opposed to nautical miles)
-     * @param potentialMatch
+     * @param potentialMatch the patient potentially receiving the organ
      * @return the travel time
      */
-    private double calculateHeloTravelTime(Patient potentialMatch) {
-        return 0.0;
+    private long calculateTotalHeloTravelTime(Patient potentialMatch) {
+
+        //constants using kilometers and seconds
+        long organLoadTime = 1800;
+        long organUnloadtime = 1800;
+        long refuelTime = 1800;
+        double maxTravelDistanceStatuteKilometers = 460; //on one tank of gas
+        long heloTravelSpeedKmh = 260;
+
+        // calculate distance between donating organ and receiving patient
+        try {
+            // calculate total travel time
+            LatLng donorLocation = ((Patient) target).getCurrentLocation();
+            LatLng receiverLocation = ((Patient) target).getCurrentLocation();
+            double distance = calculateDistanceInKilometer(donorLocation.lat, donorLocation.lng, receiverLocation.lat, receiverLocation.lng);
+            double totalTravelTime = distance / heloTravelSpeedKmh;
+
+            // calculate total refuel time
+            int numRefuels = (int) Math.ceil(maxTravelDistanceStatuteKilometers % distance);
+            double totalRefuelTime = refuelTime * numRefuels;
+
+            return (long) Math.ceil(organLoadTime + totalTravelTime + totalRefuelTime + organUnloadtime);
+        }
+        catch (Exception e) {
+            systemLogger.log(Level.WARNING, "Unable to calculate distance to potential receiver");
+            return -1;
+        }
 
         //todo aab2072 aaj6027
     }
 
 
-    public int calculateDistanceInKilometer(double userLat, double userLng,
-                                            double venueLat, double venueLng) {
+    /**
+     * Calculates the distance between two points
+     * @param userLat the first lat
+     * @param userLng the first lng
+     * @param venueLat the second lat
+     * @param venueLng the second lng
+     * @return the distance between the two in kilometers
+     */
+    private double calculateDistanceInKilometer(double userLat, double userLng, double venueLat, double venueLng) {
 
         double latDistance = Math.toRadians(userLat - venueLat);
         double lngDistance = Math.toRadians(userLng - venueLng);
@@ -305,7 +340,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                 * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        return (int) (Math.round(AVERAGE_RADIUS_OF_EARTH_KM * c));
+        return (double) (Math.round(AVERAGE_RADIUS_OF_EARTH_KM * c));
     }
 
 
