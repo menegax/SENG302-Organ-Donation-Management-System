@@ -9,6 +9,7 @@ import javafx.scene.layout.*;
 import model.Clinician;
 import model.Medication;
 import model.Patient;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import service.AdministratorDataService;
 import service.PatientDataService;
@@ -19,10 +20,7 @@ import utility.undoRedo.Action;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -100,7 +98,7 @@ public class GUIPatientProfile extends TargetedController {
 	private Label genderStatus;
 
 	@FXML
-	private ListView receivingList;
+	private ListView<String> receivingList;
 
 	@FXML
 	private Label receivingTitle;
@@ -121,7 +119,7 @@ public class GUIPatientProfile extends TargetedController {
 	private RowConstraints firstNameRow;
 
 	@FXML
-	private ListView donationList;
+	private ListView<String> donationList;
 	@FXML
 	private ListView<String> medList;
 
@@ -280,14 +278,14 @@ public class GUIPatientProfile extends TargetedController {
 	 * @param listView
 	 *            The listView that the cells being highlighted are in
 	 * @param isDonorList
-	 *            boolean for if the receiving organ is also in the donating list
+	 *            boolean for if the list is the donating list or not
 	 */
 	private void highlightListCell(ListView<String> listView, boolean isDonorList) {
 		listView.setCellFactory(column -> new ListCell<String>() {
 			@Override
 			protected void updateItem(String item, boolean empty) {
 				super.updateItem(item, empty);
-				if (userControl.getLoggedInUser() instanceof Clinician) {
+				if (!(userControl.getLoggedInUser() instanceof Patient)) {
 					if (isDonorList) {
 						setListInvalidStyle(item, receivingListProperty);
 					} else {
@@ -299,14 +297,18 @@ public class GUIPatientProfile extends TargetedController {
 				}
 			}
 
-			private void setListInvalidStyle(String item, ListProperty<String> receivingListProperty) {
-				if (receivingListProperty.contains(item)) {
-					this.getStyleClass().add("invalid");
-					this.setStyle("-fx-background-color: #e6b3b3");
-					this.setText(item);
-				} else {
-					this.setStyle("-fx-background-color: WHITE");
-					this.setText(item);
+			private void setListInvalidStyle(String item, ListProperty<String> listProperty) {
+				this.setStyle("-fx-background-color: WHITE");
+				this.setText(item);
+				if (item != null) {
+					String[] itemArray = item.split(" ");
+					String organ = itemArray[itemArray.length - 1];
+					for (String listItem : listProperty) {
+						if (listItem.contains(organ)) {
+							this.getStyleClass().add("invalid");
+							this.setStyle("-fx-background-color: #e6b3b3");
+						}
+					}
 				}
 			}
 		});

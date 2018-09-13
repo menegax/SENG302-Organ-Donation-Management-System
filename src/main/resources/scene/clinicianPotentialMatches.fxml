@@ -116,7 +116,7 @@
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Region:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Death Region:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
@@ -177,12 +177,17 @@
             <Text fx:id="ageSliderLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0-100" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
          </children>
       </GridPane>
-      <Button fx:id="closeButton" alignment="CENTER" mnemonicParsing="false" onAction="#closeMatchWindow" prefHeight="30.0" prefWidth="109.0" text="Close" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+      <Button fx:id="closeButton" alignment="CENTER" mnemonicParsing="false" onAction="#closeMatchWindow" prefHeight="30.0" prefWidth="109.0" text="Close" GridPane.halignment="LEFT" GridPane.rowIndex="6">
          <font>
             <Font size="15.0" />
          </font>
          <GridPane.margin>
-            <Insets bottom="20.0" left="20.0" right="60.0" />
+            <Insets bottom="20.0" left="60.0" />
+         </GridPane.margin>
+      </Button>
+      <Button minHeight="-Infinity" onAction="#viewOnMap" mnemonicParsing="false" prefHeight="31.0" prefWidth="109.0" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets bottom="20.0" right="60.0" />
          </GridPane.margin>
       </Button>
       <Button fx:id="assignOrganButton" mnemonicParsing="false" onAction="#assignOrganToPatient" prefHeight="30.0" prefWidth="110.0" text="Assign Organ" GridPane.halignment="LEFT" GridPane.rowIndex="6">

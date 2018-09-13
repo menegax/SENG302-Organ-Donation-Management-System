@@ -37,29 +37,46 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.zip.DataFormatException;
 
 import static java.lang.Math.abs;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static java.util.logging.Level.FINE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianPotentialMatches extends TargetedController implements IWindowObserver, TouchscreenCapable {
 
     public TableView<OrganWaitlist.OrganRequest> potentialMatchesTable;
+
     public TableColumn<OrganWaitlist.OrganRequest, String> nhiCol;
+
     public TableColumn<OrganWaitlist.OrganRequest, String> nameCol;
+
     public TableColumn<OrganWaitlist.OrganRequest, String> ageCol;
+
     public TableColumn<OrganWaitlist.OrganRequest, String> regionCol;
+
     public TableColumn<OrganWaitlist.OrganRequest, String> addressCol;
+
     public TableColumn<OrganWaitlist.OrganRequest, String> waitingTimeCol;
 
     public Text nameLabel;
+
     public Text nhiLabel;
+
     public Text organLabel;
+
     public Text bloodTypeLabel;
+
     public Text regionLabel;
+
     public Text deathLocationLabel;
+
     public Text ageLabel;
+
     public GridPane potentialMatchesPane;
+
     public Button closeButton;
 
     @FXML
@@ -97,7 +114,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
-    private SortedList<OrganWaitlist.OrganRequest>  sortedRequests;
+    private SortedList<OrganWaitlist.OrganRequest> sortedRequests;
 
     private ClinicianDataService clinicianDataService;
 
@@ -105,6 +122,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
     /**
      * Sets the target donor and organ for this controller and loads the data accordingly
+     *
      * @param donor the donating patient
      * @param organ the organ they are donating
      */
@@ -113,6 +131,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         targetOrgan = organ;
         load();
     }
+
 
     /**
      * Initializes matches list screen by populating table and initializing a double click action
@@ -134,7 +153,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         setupDoubleClickToPatientEdit();
         setupAgeSliderListeners();
         setupFilterListeners();
-        if(screenControl.isTouch()) {
+        if (screenControl.isTouch()) {
             matchTouchPane = new TouchPaneController(potentialMatchesPane);
             potentialMatchesPane.setOnZoom(this::zoomWindow);
             potentialMatchesPane.setOnRotate(this::rotateWindow);
@@ -143,6 +162,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         }
 
     }
+
 
     /**
      * Adds listener to the age label to update when slider is moved
@@ -157,12 +177,14 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             rangeSlider.setMax(12);
             rangeSlider.setLowValue(0);
             rangeSlider.setHighValue(12);
-        } else if (((Patient) target).getAge() > 27) {
+        }
+        else if (((Patient) target).getAge() > 27) {
             rangeSlider.setMin(((Patient) target).getAge() - 15);
             rangeSlider.setMax(((Patient) target).getAge() + 15);
             rangeSlider.setLowValue(((Patient) target).getAge() - 15);
             rangeSlider.setHighValue(((Patient) target).getAge() + 15);
-        } else {
+        }
+        else {
             rangeSlider.setMin(12);
             rangeSlider.setMax(((Patient) target).getAge() + 15);
             rangeSlider.setLowValue(12);
@@ -170,30 +192,63 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         }
         rangeSlider.setShowTickMarks(true);
         filterGrid.add(rangeSlider, 1, 3, 3, 1);
-        ageSliderLabel.setText(String.format("%s - %s", ((int) rangeSlider.getLowValue()),(int) rangeSlider.getHighValue()));
-        rangeSlider.highValueProperty().addListener(((observable, oldValue, newValue) -> ageSliderLabel.setText(String.format("%s - %s", ((int) rangeSlider.getLowValue()), String.valueOf(newValue.intValue())))));
-        rangeSlider.lowValueProperty().addListener(((observable, oldValue, newValue) -> ageSliderLabel.setText(String.format("%s - %s", String.valueOf(newValue.intValue()), (int) rangeSlider.getHighValue()))));
+        ageSliderLabel.setText(String.format("%s - %s", ((int) rangeSlider.getLowValue()), (int) rangeSlider.getHighValue()));
+        rangeSlider.highValueProperty()
+                .addListener(((observable, oldValue, newValue) -> ageSliderLabel.setText(String.format("%s - %s",
+                        ((int) rangeSlider.getLowValue()),
+                        String.valueOf(newValue.intValue())))));
+        rangeSlider.lowValueProperty()
+                .addListener(((observable, oldValue, newValue) -> ageSliderLabel.setText(String.format("%s - %s",
+                        String.valueOf(newValue.intValue()),
+                        (int) rangeSlider.getHighValue()))));
     }
+
 
     @FXML
     public void onSort(Event event) {
         // bind the SortedList comparator to the TableView comparator.
-        Comparator<OrganWaitlist.OrganRequest> newComparetor = (request1, request2) -> {
-            if (request2.getDate().isBefore(request1.getDate())) {
+        Comparator<OrganWaitlist.OrganRequest> defaultComparator = (request1, request2) -> {
+            if (request1.getDate().isBefore(request2.getDate())) {
                 return -1;
-            } else if (request1.getDate().isBefore(request2.getDate())) {
+            } else if (request2.getDate().isBefore(request1.getDate())) {
                 return 1;
             } else {
-                return (getRegionDistance(request2.getRequestRegion(), new ArrayList<>())).compareTo((getRegionDistance(request1.getRequestRegion(), new ArrayList<>())));
+                return (getRegionDistance(request1.getRequestRegion(), new ArrayList<>())).compareTo((getRegionDistance(request2.getRequestRegion(), new ArrayList<>())));
             }
         };
-        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectProperty = new SimpleObjectProperty<>(newComparetor);
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> defaultObjectProperty = new SimpleObjectProperty<>(defaultComparator);
+
+        Comparator<OrganWaitlist.OrganRequest> waitTimeComparator = Comparator.comparing(OrganWaitlist.OrganRequest::getDate);
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> waitTimeObjectPropertyAsc = new SimpleObjectProperty<>(waitTimeComparator);
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> waitTimeObjectPropertyDesc = new SimpleObjectProperty<>(waitTimeComparator.reversed());
+
         sortedRequests.comparatorProperty().unbind();
         if (potentialMatchesTable.getSortOrder().size() == 0) {
-            sortedRequests.comparatorProperty().bind(objectProperty);
+            sortedRequests.comparatorProperty().bind(defaultObjectProperty);
             potentialMatchesTable.setSortPolicy(param -> true);
         } else {
-            sortedRequests.comparatorProperty().bind(potentialMatchesTable.comparatorProperty());
+            boolean sortingByWaitingTime = false;
+            boolean isAscending = true;
+            ObservableList<TableColumn<OrganWaitlist.OrganRequest, ?>> sortPolicies = potentialMatchesTable.getSortOrder();
+            //Search the sort policies to see if any of the tablecolumns being sorted is the waiting time column
+            for (TableColumn<OrganWaitlist.OrganRequest, ?> tableColumn : sortPolicies) {
+                if (tableColumn.getId().equals("waitingTimeCol")) {
+                    sortingByWaitingTime = true;
+                    //Get the sort order of the table column
+                    isAscending = tableColumn.getSortType() == TableColumn.SortType.ASCENDING;
+                }
+            }
+            if (sortingByWaitingTime) {
+                //Apply correct comparator
+                if (isAscending) {
+                    sortedRequests.comparatorProperty().bind(waitTimeObjectPropertyAsc);
+                } else {
+                    sortedRequests.comparatorProperty().bind(waitTimeObjectPropertyDesc);
+                }
+            } else { //Apply default table comparator
+                sortedRequests.comparatorProperty().bind(potentialMatchesTable.comparatorProperty());
+            }
+            potentialMatchesTable.setSortPolicy(param -> true);
         }
     }
 
@@ -204,14 +259,18 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         nameLabel.setText(target.getNameConcatenated());
         nhiLabel.setText(((Patient) target).getNhiNumber());
         organLabel.setText(targetOrgan.toString());
-        bloodTypeLabel.setText(((Patient) target).getBloodGroup().toString());
+        bloodTypeLabel.setText(((Patient) target).getBloodGroup()
+                .toString());
         ageLabel.setText(String.valueOf(((Patient) target).getAge()));
-        regionLabel.setText(((Patient) target).getDeathRegion().toString());
+        regionLabel.setText(((Patient) target).getDeathRegion()
+                .toString());
         deathLocationLabel.setText(((Patient) target).getDeathStreet() + ", " + ((Patient) target).getDeathCity());
     }
 
+
     /**
      * Checks that the provided request matches the organ being donated
+     *
      * @param request the potential match
      * @return whether the match is valid or not
      */
@@ -219,30 +278,39 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         boolean match = true;
         long requestAge = ChronoUnit.DAYS.between(request.getBirth(), LocalDate.now());
         long targetAge = ChronoUnit.DAYS.between(((Patient) target).getBirth(), ((Patient) target).getDeathDate());
-        if (request.getRequestedOrgan() != targetOrgan || request.getBloodGroup() != ((Patient) target).getBloodGroup()) {
+        if (request.getRequestedOrgan() != targetOrgan || request.getBloodGroup() != ((Patient) target).getBloodGroup() || request.getReceiver().getDeathDate() != null) {
             match = false;
-        } else if (( requestAge < 4383 && targetAge  > 4383) || (requestAge > 4383 && targetAge < 4383)
-                || abs(requestAge - targetAge) > 5478.75) {
+        }
+        else if ((requestAge < 4383 && targetAge > 4383) || (requestAge > 4383 && targetAge < 4383) || abs(requestAge - targetAge) > 5478.75) {
             match = false;
         }
         return match;
     }
 
+
     /**
      * Populates the potential matches table with the potential matches in the right order
      */
     private void populateTable() {
-        nhiCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue().getReceiverNhi()));
-        nameCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue().getReceiverName()));
-        ageCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(r.getValue().getAge())));
+        nhiCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
+                .getReceiverNhi()));
+        nameCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
+                .getReceiverName()));
+        ageCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(r.getValue()
+                .getAge())));
         regionCol.setCellValueFactory(r -> {
-            if (r.getValue().getRequestRegion() != null) {
-                return new SimpleStringProperty(r.getValue().getRequestRegion().toString());
+            if (r.getValue()
+                    .getRequestRegion() != null) {
+                return new SimpleStringProperty(r.getValue()
+                        .getRequestRegion()
+                        .toString());
             }
             return null;
         });
-        addressCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue().getAddress()));
-        waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(r.getValue().getDate(), LocalDate.now()))));
+        addressCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
+                .getAddress()));
+        waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(r.getValue()
+                .getDate(), LocalDate.now()))));
 
         // wrap ObservableList in a FilteredList
         //FilteredList<OrganWaitlist.OrganRequest> filteredRequests = filterRequests();
@@ -256,32 +324,44 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         sortedRequests = new SortedList<>(filteredRequests);
 
         // bind the SortedList comparator to the TableView comparator.
-        Comparator<OrganWaitlist.OrganRequest> newComparetor = (request1, request2) -> {
+        Comparator<OrganWaitlist.OrganRequest> newComparator = (request1, request2) -> {
             if (request1.getDate().isBefore(request2.getDate())) {
                 return -1;
-            } else if (request2.getDate().isBefore(request1.getDate())) {
+            }
+            else if (request2.getDate()
+                    .isBefore(request1.getDate())) {
                 return 1;
-            } else {
-                return (getRegionDistance(request1.getRequestRegion(), new ArrayList<>())).compareTo((getRegionDistance(request2.getRequestRegion(), new ArrayList<>())));
+            }
+            else {
+                return (getRegionDistance(request1.getRequestRegion(), new ArrayList<>())).compareTo((getRegionDistance(request2.getRequestRegion(),
+                        new ArrayList<>())));
             }
         };
-        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectProperty = new SimpleObjectProperty<>(newComparetor);
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectProperty = new SimpleObjectProperty<>(newComparator);
 
-        sortedRequests.comparatorProperty().bind(objectProperty);
+        sortedRequests.comparatorProperty()
+                .bind(objectProperty);
         // add sorted (and filtered) data to the table.
         potentialMatchesTable.setItems(sortedRequests);
 
-        regionFilter.getItems().add(GlobalEnums.NONE_ID); //for empty selection
-        regionFilter.getSelectionModel().select(0);
+        regionFilter.getItems()
+                .add(GlobalEnums.NONE_ID); //for empty selection
+        regionFilter.getSelectionModel()
+                .select(0);
         for (Region region : Region.values()) { //add values to region choice box
-            regionFilter.getItems().add(StringUtils.capitalize(region.getValue()));
+            regionFilter.getItems()
+                    .add(StringUtils.capitalize(region.getValue()));
         }
-        birthGenderFilter.getItems().add(GlobalEnums.NONE_ID);
-        birthGenderFilter.getSelectionModel().select(0);
-        for (BirthGender birthGender: BirthGender.values()){
-            birthGenderFilter.getItems().addAll(StringUtils.capitalize(birthGender.getValue()));
+        birthGenderFilter.getItems()
+                .add(GlobalEnums.NONE_ID);
+        birthGenderFilter.getSelectionModel()
+                .select(0);
+        for (BirthGender birthGender : BirthGender.values()) {
+            birthGenderFilter.getItems()
+                    .addAll(StringUtils.capitalize(birthGender.getValue()));
         }
     }
+
 
     /**
      * Filters the requests based on dropdown filters and age slider
@@ -299,6 +379,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         potentialMatchesTable.refresh();
     }
 
+
     /**
      * Sets up double-click functionality for each row to open a patient profile update, ensures no duplicate profiles
      */
@@ -308,18 +389,23 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         potentialMatchesTable.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && potentialMatchesTable.getSelectionModel()
                     .getSelectedItem() != null) {
-                OrganWaitlist.OrganRequest request = potentialMatchesTable.getSelectionModel().getSelectedItem();
+                OrganWaitlist.OrganRequest request = potentialMatchesTable.getSelectionModel()
+                        .getSelectedItem();
                 try {
                     Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
                     patientDataService.save(selectedUser);
                     GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser);
                     controller.setTarget(selectedUser);
-                } catch (Exception e) {
-                    userActions.log(Level.SEVERE, "Failed to retrieve selected patient from database", new String[]{"Attempted to retrieve selected patient from database", request.getReceiverNhi()});
+                }
+                catch (Exception e) {
+                    userActions.log(Level.SEVERE,
+                            "Failed to retrieve selected patient from database",
+                            new String[] { "Attempted to retrieve selected patient from database", request.getReceiverNhi() });
                 }
             }
         });
     }
+
 
     /**
      * Called when a profile opened from this window is closed
@@ -329,19 +415,25 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         potentialMatchesTable.refresh();
     }
 
+
     /**
      * Gets the lowest amount of adjacent regions traversed between provided and target region
+     *
      * @param region the region to search from
      * @return how many steps away the region is from the target region
      */
     private Integer getRegionDistance(Region region, List<Region> visitedRegions) {
-        if (region == ((Patient) target).getRegion()) {
+        // Found region
+        if (region == ((Patient) target).getDeathRegion()) {
             return 0;
-        } else if (region == null) {
+        }
+        else if (region == null) {
             return 100;
-        } else {
+        }
+        else {
             int minDistance = -1;
-            for (Region adjacentRegion: adjacentRegions.get(region)) {
+            // Keep looking in adjacent regions
+            for (Region adjacentRegion : adjacentRegions.get(region)) {
                 if (!visitedRegions.contains(adjacentRegion)) {
                     visitedRegions.add(adjacentRegion);
                     int distance = getRegionDistance(adjacentRegion, new ArrayList<>(visitedRegions));
@@ -350,31 +442,101 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                     }
                 }
             }
-            return minDistance + 1;
+            // No new regions to visit
+            if (minDistance == -1) {
+                return 100;
+            } else {
+                return minDistance + 1;
+            }
         }
     }
+
 
     /**
      * Loads into the region distances map regions adjacent to key region
      */
     private void loadRegionDistances() {
-        adjacentRegions.put(Region.NORTHLAND, new ArrayList<Region>(){{ add(Region.AUCKLAND); }});
-        adjacentRegions.put(Region.AUCKLAND, new ArrayList<Region>(){{ add(Region.NORTHLAND); add(Region.WAIKATO); }});
-        adjacentRegions.put(Region.WAIKATO, new ArrayList<Region>(){{ add(Region.AUCKLAND); add(Region.BAYOFPLENTY); add(Region.TARANAKI); add(Region.MANAWATU); add(Region.HAWKESBAY); }});
-        adjacentRegions.put(Region.BAYOFPLENTY, new ArrayList<Region>(){{ add(Region.WAIKATO); add(Region.GISBORNE); add(Region.HAWKESBAY); }});
-        adjacentRegions.put(Region.GISBORNE, new ArrayList<Region>(){{ add(Region.BAYOFPLENTY); add(Region.HAWKESBAY); }});
-        adjacentRegions.put(Region.TARANAKI, new ArrayList<Region>(){{ add(Region.WAIKATO); add(Region.MANAWATU); }});
-        adjacentRegions.put(Region.MANAWATU, new ArrayList<Region>(){{ add(Region.WAIKATO); add(Region.TARANAKI); add(Region.HAWKESBAY); add(Region.WELLINGTON); }});
-        adjacentRegions.put(Region.HAWKESBAY, new ArrayList<Region>(){{ add(Region.WAIKATO); add(Region.BAYOFPLENTY); add(Region.GISBORNE); add(Region.MANAWATU); }});
-        adjacentRegions.put(Region.WELLINGTON, new ArrayList<Region>(){{ add(Region.MANAWATU); add(Region.MARLBOROUGH); }});
-        adjacentRegions.put(Region.TASMAN, new ArrayList<Region>(){{ add(Region.NELSON); add(Region.MARLBOROUGH); add(Region.WESTCOAST); }});
-        adjacentRegions.put(Region.NELSON, new ArrayList<Region>(){{ add(Region.TASMAN); add(Region.MARLBOROUGH); }});
-        adjacentRegions.put(Region.MARLBOROUGH, new ArrayList<Region>(){{ add(Region.WELLINGTON); add(Region.NELSON); add(Region.TASMAN); add(Region.CANTERBURY); }});
-        adjacentRegions.put(Region.WESTCOAST, new ArrayList<Region>(){{ add(Region.TASMAN); add(Region.CANTERBURY); add(Region.OTAGO); add(Region.SOUTHLAND); }});
-        adjacentRegions.put(Region.CANTERBURY, new ArrayList<Region>(){{ add(Region.MARLBOROUGH); add(Region.TASMAN); add(Region.WESTCOAST); add(Region.OTAGO); }});
-        adjacentRegions.put(Region.OTAGO, new ArrayList<Region>(){{ add(Region.CANTERBURY); add(Region.WESTCOAST); add(Region.SOUTHLAND); }});
-        adjacentRegions.put(Region.SOUTHLAND, new ArrayList<Region>(){{ add(Region.OTAGO); add(Region.WESTCOAST); }});
+        adjacentRegions.put(Region.NORTHLAND, new ArrayList<Region>() {{
+            add(Region.AUCKLAND);
+        }});
+        adjacentRegions.put(Region.AUCKLAND, new ArrayList<Region>() {{
+            add(Region.NORTHLAND);
+            add(Region.WAIKATO);
+        }});
+        adjacentRegions.put(Region.WAIKATO, new ArrayList<Region>() {{
+            add(Region.AUCKLAND);
+            add(Region.BAYOFPLENTY);
+            add(Region.TARANAKI);
+            add(Region.MANAWATU);
+            add(Region.HAWKESBAY);
+        }});
+        adjacentRegions.put(Region.BAYOFPLENTY, new ArrayList<Region>() {{
+            add(Region.WAIKATO);
+            add(Region.GISBORNE);
+            add(Region.HAWKESBAY);
+        }});
+        adjacentRegions.put(Region.GISBORNE, new ArrayList<Region>() {{
+            add(Region.BAYOFPLENTY);
+            add(Region.HAWKESBAY);
+        }});
+        adjacentRegions.put(Region.TARANAKI, new ArrayList<Region>() {{
+            add(Region.WAIKATO);
+            add(Region.MANAWATU);
+        }});
+        adjacentRegions.put(Region.MANAWATU, new ArrayList<Region>() {{
+            add(Region.WAIKATO);
+            add(Region.TARANAKI);
+            add(Region.HAWKESBAY);
+            add(Region.WELLINGTON);
+        }});
+        adjacentRegions.put(Region.HAWKESBAY, new ArrayList<Region>() {{
+            add(Region.WAIKATO);
+            add(Region.BAYOFPLENTY);
+            add(Region.GISBORNE);
+            add(Region.MANAWATU);
+        }});
+        adjacentRegions.put(Region.WELLINGTON, new ArrayList<Region>() {{
+            add(Region.MANAWATU);
+            add(Region.MARLBOROUGH);
+        }});
+        adjacentRegions.put(Region.TASMAN, new ArrayList<Region>() {{
+            add(Region.NELSON);
+            add(Region.MARLBOROUGH);
+            add(Region.WESTCOAST);
+        }});
+        adjacentRegions.put(Region.NELSON, new ArrayList<Region>() {{
+            add(Region.TASMAN);
+            add(Region.MARLBOROUGH);
+        }});
+        adjacentRegions.put(Region.MARLBOROUGH, new ArrayList<Region>() {{
+            add(Region.WELLINGTON);
+            add(Region.NELSON);
+            add(Region.TASMAN);
+            add(Region.CANTERBURY);
+        }});
+        adjacentRegions.put(Region.WESTCOAST, new ArrayList<Region>() {{
+            add(Region.TASMAN);
+            add(Region.CANTERBURY);
+            add(Region.OTAGO);
+            add(Region.SOUTHLAND);
+        }});
+        adjacentRegions.put(Region.CANTERBURY, new ArrayList<Region>() {{
+            add(Region.MARLBOROUGH);
+            add(Region.TASMAN);
+            add(Region.WESTCOAST);
+            add(Region.OTAGO);
+        }});
+        adjacentRegions.put(Region.OTAGO, new ArrayList<Region>() {{
+            add(Region.CANTERBURY);
+            add(Region.WESTCOAST);
+            add(Region.SOUTHLAND);
+        }});
+        adjacentRegions.put(Region.SOUTHLAND, new ArrayList<Region>() {{
+            add(Region.OTAGO);
+            add(Region.WESTCOAST);
+        }});
     }
+
 
     /**
      * Sets the filter listeners for the potential matches list
@@ -386,17 +548,19 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             filterRequests();
         }));
 
-        birthGenderFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
-            filter.put((FilterOption.BIRTHGENDER), newValue);
-            filterRequests();
-        }));
+        birthGenderFilter.valueProperty()
+                .addListener(((observable, oldValue, newValue) -> {
+                    filter.put((FilterOption.BIRTHGENDER), newValue);
+                    filterRequests();
+                }));
 
-        rangeSlider.onMouseReleasedProperty().addListener((observable, oldvalue, newvalue) -> {
-            filter.put(FilterOption.AGEUPPER, String.valueOf(rangeSlider.getHighValue()));
-            filter.put(FilterOption.AGELOWER, String.valueOf(rangeSlider.getLowValue()));
-            filterRequests();
+        rangeSlider.onMouseReleasedProperty()
+                .addListener((observable, oldvalue, newvalue) -> {
+                    filter.put(FilterOption.AGEUPPER, String.valueOf(rangeSlider.getHighValue()));
+                    filter.put(FilterOption.AGELOWER, String.valueOf(rangeSlider.getLowValue()));
+                    filterRequests();
 
-        });
+                });
 
         rangeSlider.setOnMouseReleased(event -> {
             filter.put(FilterOption.AGEUPPER, String.valueOf(rangeSlider.getHighValue()));
@@ -424,23 +588,64 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         clinicianDataService.updateOrganWaitList(organWaitList);
     }
 
+
     @Override
     public void zoomWindow(ZoomEvent zoomEvent) {
         matchTouchPane.zoomPane(zoomEvent);
     }
+
 
     @Override
     public void rotateWindow(RotateEvent rotateEvent) {
         matchTouchPane.rotatePane(rotateEvent);
     }
 
+
     @Override
     public void scrollWindow(ScrollEvent scrollEvent) {
         matchTouchPane.scrollPane(scrollEvent);
     }
 
+
     @FXML
     public void closeMatchWindow() {
         screenControl.closeWindow(potentialMatchesPane);
+    }
+
+    private UserControl userControl = UserControl.getUserControl();
+
+    /**
+     * View patients from table on the map
+     * Sets the patients list in the JavaScript to custom set
+     * Opens the map and loads
+     */
+    @FXML
+    public void viewOnMap() {
+        List<Patient> patients = new ArrayList<>();
+        for (int i = 0; i < observableList.size(); i++) {
+            patients.add(patientDataService.getPatientByNhi(observableList.get(i).getReceiverNhi()));
+        }
+
+        Alert alert;
+        if (screenControl.getMapOpen()) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
+                    , ButtonType.OK, ButtonType.NO);
+            alert.show();
+        } else {
+            alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
+                    , ButtonType.OK);
+            alert.show();
+        }
+
+        alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
+            screenControl.setIsCustomSetMap(true);
+            if (!screenControl.getMapOpen()) {
+                screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+                screenControl.setMapOpen(true);
+            }
+            GUIMap.jsBridge.setMember("patients", patients);
+            GUIMap.jsBridge.call("setPatients");
+            screenControl.setMapOpen(true);
+        });
     }
 }

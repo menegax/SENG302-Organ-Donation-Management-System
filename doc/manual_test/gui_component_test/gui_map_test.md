@@ -46,7 +46,65 @@
 4. Tap on open profile
 5. Expected: The patient profile should open
 
+### Test 7 - 'View on map' button clinician search patients
+
+1. Log in as a clinician
+2. Go to search patients
+3. Filter search to search for 26 year old males in Wellington
+3. Select 'View on map' button
+4. Select 'OK' on the popup that opens up
+5. Expected: The map should re-populte with the patients in the table. These include patients with the following Nhi's: BRK3714, CGC2343, JLP9988, PXB9300, GLB4745, JBS0871, JAC2680, ETD6078, ADB1975
+
+### Test 8 - 'View on map' button clinician transplant waiting list
+
+1. Log in as a clinician
+2. Go to transplant waiting list
+3. Select 'View on map' button
+4. Select 'OK' on the popup that opens up
+5. Expected: The map should re-populte with the patients in the table. These include patients with the following Nhi's: AKY4149, AAJ3628
+
+### Test 9 - 'View on map' button clinician available organs
+
+1. Log in as a clinician
+2. Go to available organs
+3. Select 'View on map' button
+4. Select 'OK' on the popup that opens up
+5. Expected: The map should re-populte with the patients in the table. These include patients with the following Nhi's: AAB2072
+
+### Test 10 - 'View on map' button clinician potential matches
+
+1. Log in as a clinician
+2. Go to available organs
+3. Select an organ
+4. select 'View potential matches'
+5. Select 'View on map' button
+6. Select 'OK' on the popup that opens up
+7. Expected: The map should re-populte with the patients in the table. These include patients with the following Nhi's: AKY4149
+
+### Test 11 - 'View on map' button administrator search patients
+
+1. Log in as an admin
+2. Go to search patients
+3. In the search box enter 'lanny'
+3. Select 'View on map' button
+4. Select 'OK' on the popup that opens up
+5. Select 'View on map' button once again
+6. Select 'OK' on the popup that opens up
+6. Expected: The map should be populated with the patients in the table. These include patients with the following Nhi's: ANM8474, CTH2080, DMR2101, EQV5740, FUZ3183, KJD8772
+
 ## Test History
+
+### 09/09/18 - Joshua
+
+Test 7: PASS
+
+Test 8: PASS
+
+Test 9: PASS
+
+Test 10: PASS
+
+Test 11: PASS
 
 ### 15/8/18 - Andrew
 
