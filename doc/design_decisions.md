@@ -253,3 +253,6 @@ We have also decided to use values of 50% time elapsed to change to yellow/orang
 
 #### Google Maps Geocoding
 The `APIGoogleMaps` is designed as a singleton to reduce load on the API. 
+
+### Organ Limit Per Page (Available Organs)
+The number of organs to be displayed per page is a maximum of 10.

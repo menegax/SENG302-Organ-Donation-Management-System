@@ -117,7 +117,7 @@
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Region:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Death Region:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
