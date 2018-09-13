@@ -1,6 +1,7 @@
 package utility;
 
 import javafx.event.Event;
+import javafx.event.EventTarget;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
@@ -197,14 +198,26 @@ public class MultiTouchHandler {
      * @param currentEvent current event
      */
     private void processOneTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
-        if (!(currentEvent.getTarget() instanceof ListView) && !(currentEvent.getTarget() instanceof TableView)) {
+        if (!scrollable(currentEvent.getTarget())) {
             executeTranslate(previousEvent, currentEvent);
         } else {
+            System.out.println("here");
             executeScroll(previousEvent, currentEvent);
         }
     }
 
+    private boolean scrollable(EventTarget target) {
+        if (target instanceof ListView) {
+            return true;
+        } else if (target instanceof TableView) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void executeScroll(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
+        
     }
 
     /**

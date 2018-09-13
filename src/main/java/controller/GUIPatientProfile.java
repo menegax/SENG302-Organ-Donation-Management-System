@@ -311,13 +311,11 @@ public class GUIPatientProfile extends TargetedController {
 						setListInvalidStyle(item, donatingListProperty);
 					}
 				} else {
-					this.setStyle("-fx-background-color: WHITE");
 					this.setText(item);
 				}
 			}
 
 			private void setListInvalidStyle(String item, ListProperty<String> listProperty) {
-				this.setStyle("-fx-background-color: WHITE");
 				this.setText(item);
 				if (item != null) {
 					String[] itemArray = item.split(" ");
@@ -325,7 +323,7 @@ public class GUIPatientProfile extends TargetedController {
 					for (String listItem : listProperty) {
 						if (listItem.contains(organ)) {
 							this.getStyleClass().add("invalid");
-							this.setStyle("-fx-background-color: #e6b3b3");
+							this.setStyle("-fx-background-color: #ff0000");
 						}
 					}
 				}
