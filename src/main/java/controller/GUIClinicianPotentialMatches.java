@@ -354,10 +354,10 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * @return - true if latlng is in nz
      */
     private boolean isInNz(LatLng latLng) {
-        return latLng.lat > boundsOfNz.get(2).lat && latLng.lat < boundsOfNz.get(1).lat
-                && latLng.lng < boundsOfNz.get(1).lng && latLng.lng > boundsOfNz.get(2).lng;
+//        return latLng.lat > boundsOfNz.get(2).lat && latLng.lat < boundsOfNz.get(1).lat
+//                && latLng.lng < boundsOfNz.get(1).lng && latLng.lng > boundsOfNz.get(2).lng;
 
-//        return true; //todo
+        return true; //todo - organ waitlist not updated correctly when changing address on patient profile...
     }
 
     /**
