@@ -387,7 +387,9 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         for (OrganWaitlist.OrganRequest x : allRequests) {
             if (x.getReceiverNhi().equals(request.getReceiverNhi())) {
                 long totalSecs = calculateTotalHeloTravelTime(patientDataService.getPatientByNhi(request.getReceiverNhi()));
-                System.out.println(totalSecs);
+                if (totalSecs == -1) {
+                    return "No location"; //todo
+                }
                 int hours = (int)(totalSecs / 3600L);
                 int minutes = (int)((totalSecs % 3600L) / 60L);
                 int seconds = (int) (totalSecs % 60L);
