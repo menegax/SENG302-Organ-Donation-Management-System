@@ -31,6 +31,7 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
+import model.PatientOrgan;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.RangeSlider;
 import service.ClinicianDataService;
@@ -86,6 +87,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
     public Text ageLabel;
 
+    public Text expiryTimeLabel;
+
     public GridPane potentialMatchesPane;
 
     public Button closeButton;
@@ -103,6 +106,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     private Text ageSliderLabel;
 
     private Organ targetOrgan;
+
+    private PatientOrgan targetPatientOrgan;
 
     private ObservableList<OrganWaitlist.OrganRequest> allRequests = FXCollections.observableArrayList();
 
@@ -128,13 +133,12 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
     /**
      * Sets the target donor and organ for this controller and loads the data accordingly
-     *
-     * @param donor the donating patient
-     * @param organ the organ they are donating
+     * @param patientOrgan the selected patient organ object from the available organs
      */
-    public void setTarget(Patient donor, Organ organ) {
-        target = donor;
-        targetOrgan = organ;
+    public void setTarget(PatientOrgan patientOrgan) {
+        target = patientOrgan.getPatient();
+        targetOrgan = patientOrgan.getOrgan();
+        targetPatientOrgan = patientOrgan;
         load();
     }
 
@@ -213,7 +217,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     @FXML
     public void onSort(Event event) {
         // bind the SortedList comparator to the TableView comparator.
-        Comparator<OrganWaitlist.OrganRequest> newComparetor = (request1, request2) -> {
+        Comparator<OrganWaitlist.OrganRequest> newComparator = (request1, request2) -> {
             if (request2.getDate()
                     .isBefore(request1.getDate())) {
                 return -1;
@@ -227,7 +231,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                         new ArrayList<>())));
             }
         };
-        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectProperty = new SimpleObjectProperty<>(newComparetor);
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectProperty = new SimpleObjectProperty<>(newComparator);
         sortedRequests.comparatorProperty()
                 .unbind();
         if (potentialMatchesTable.getSortOrder()
@@ -256,6 +260,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         regionLabel.setText(((Patient) target).getDeathRegion()
                 .toString());
         deathLocationLabel.setText(((Patient) target).getDeathStreet() + ", " + ((Patient) target).getDeathCity());
+        expiryTimeLabel.textProperty().bind(targetPatientOrgan.getProgressTask().messageProperty());
     }
 
 
