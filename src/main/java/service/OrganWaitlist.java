@@ -10,6 +10,7 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 
+//TODO: region is coupled with this class. need to update waitlist when patient address is updated
 public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 
 	private SortedSet<OrganRequest> requests;
