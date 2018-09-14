@@ -33,6 +33,7 @@ import javafx.scene.text.Text;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.RangeSlider;
+import service.APIGoogleMaps;
 import service.ClinicianDataService;
 import service.OrganWaitlist;
 import service.PatientDataService;
@@ -323,7 +324,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         // calculate distance between donating organ and receiving patient
         try {
             // calculate total travel time
-            donorLocation = ((Patient) target).getCurrentLocation();
+            donorLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(((Patient) target).getDeathLocationConcat());
             receiverLocation = potentialMatch.getCurrentLocation();
         } catch (Exception e) {
             systemLogger.log(Level.WARNING, "Unable to calculate distance to potential receiver");
@@ -354,10 +355,10 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * @return - true if latlng is in nz
      */
     private boolean isInNz(LatLng latLng) {
-//        return latLng.lat > boundsOfNz.get(2).lat && latLng.lat < boundsOfNz.get(1).lat
-//                && latLng.lng < boundsOfNz.get(1).lng && latLng.lng > boundsOfNz.get(2).lng;
+        return latLng.lat > boundsOfNz.get(2).lat && latLng.lat < boundsOfNz.get(1).lat
+                && latLng.lng < boundsOfNz.get(1).lng && latLng.lng > boundsOfNz.get(2).lng;
 
-        return true; //todo - organ waitlist not updated correctly when changing address on patient profile...
+        //return true; //todo - organ waitlist not updated correctly when changing address on patient profile...
     }
 
     /**
@@ -393,7 +394,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                 return String.format("%02d:%02d:%02d", hours, minutes, seconds);
             }
         }
-        return ""; //todo
+        return "No location"; //todo
     }
     /**
      * Populates the potential matches table with the potential matches in the right order
