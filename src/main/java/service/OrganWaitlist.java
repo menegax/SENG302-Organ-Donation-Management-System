@@ -10,7 +10,6 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 
-//TODO: region is coupled with this class. need to update waitlist when patient address is updated
 public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 
 	private SortedSet<OrganRequest> requests;
@@ -80,8 +79,8 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		String address;
 		GlobalEnums.BloodGroup bloodGroup;
 		LocalDate birth;
+		Patient receiver;
 
-		
 		public OrganRequest(Patient receiver, Organ organ) {
 			date = LocalDate.now();
 			region = receiver.getRegion();
@@ -92,6 +91,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 			birth = receiver.getBirth();
 			address = receiver.getAddressString();
 			bloodGroup = receiver.getBloodGroup();
+			this.receiver = receiver;
 		}
 
 		public OrganRequest(String name, Organ organ, LocalDate date, Region region, String nhi, int age, String address, GlobalEnums.BloodGroup bloodGroup, LocalDate birth) {
@@ -104,6 +104,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 			this.address = address;
 			this.bloodGroup = bloodGroup;
 			this.birth = birth;
+			this.receiver = new PatientDataService().getPatientByNhi(nhi);
 		}
 		
 		/**
@@ -223,6 +224,14 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		 */
 		public LocalDate getBirth() {
 			return birth;
+		}
+
+		/**
+		 * Gets the patient who made this request
+		 * @return the patient this request refers to
+		 */
+		public Patient getReceiver() {
+			return receiver;
 		}
 	}
 }
