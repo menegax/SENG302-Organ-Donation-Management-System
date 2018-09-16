@@ -52,6 +52,22 @@
 8. Click set
 9. Expected: the patient successfully updates
 
+### Test 5
+1. Log in as patient
+2. Go to the update profile tab
+3. Remove any location data (not death location) if it exists in the fields
+4. Click set
+5. Expected: a warning dialog shows warning donation ineligibility
+
+### Test 6
+1. Log in as patient
+2. Go to the update profile tab
+3. Remove any location data (not death location) if it exists in the fields
+4. Add a valid zip
+5. Click set
+6. Expected: a warning dialog shows warning donation ineligibility 
+7. Repeat steps 4-6 for region, suburb, city, street name and street number; clicking OK for each warning dialog.
+
 ## Test History
 
 ### 19/07/2018 - Maree
@@ -65,8 +81,15 @@ Test 2: Pass
 Test 3: Pass
 
 Test 4: Pass
-###14/08/2018 - Aidan
+
+### 14/08/2018 - Aidan
 
 Test 1: Pass
 
 Test 2: Pass
+
+### 16/09/2018 - Andrew
+
+Test 5: Pass
+
+Test 6: Pass
