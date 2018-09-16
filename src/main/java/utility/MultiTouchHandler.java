@@ -147,23 +147,22 @@ public class MultiTouchHandler {
                 double newVelY;
                 moving = true;
                 while (velocity.getX() != 0 || velocity.getY() != 0) {
-                    System.out.println("X vel: " + velocity.getX() + ", Y vel:" + velocity.getY());
                     if (!outOfBoundsX()) {
                         rootPane.setTranslateX(rootPane.getTranslateX() + (velocity.getX() * SLEEPTIME));
                     } else {
                         if(velocity.getX() > 0) {
-                            rootPane.setTranslateX(screenBounds.getMinX() - rootPane.getWidth() * 3 / 4 + 1);
+                            rootPane.setTranslateX(screenBounds.getMinX() - rootPane.getWidth() / 2 + 1);
                         } else {
-                            rootPane.setTranslateX(screenBounds.getMaxX() - rootPane.getWidth() / 4);
+                            rootPane.setTranslateX(screenBounds.getMaxX() - rootPane.getWidth() / 2);
                         }
                     }
                     if (!outOfBoundsY()) {
                         rootPane.setTranslateY(rootPane.getTranslateY() + (velocity.getY() * SLEEPTIME));
                     } else {
                         if(velocity.getY() > 0) {
-                            rootPane.setTranslateY(screenBounds.getMinY() - rootPane.getHeight() * 3 / 4 + 1);
+                            rootPane.setTranslateY(screenBounds.getMinY() - rootPane.getHeight() / 2 + 1);
                         } else {
-                            rootPane.setTranslateY(screenBounds.getMaxY() - rootPane.getHeight() / 4);
+                            rootPane.setTranslateY(screenBounds.getMaxY() - rootPane.getHeight() / 2);
                         }
                     }
                     newVelX = 0;
@@ -433,8 +432,8 @@ public class MultiTouchHandler {
      * @return boolean out of bounds
      */
     private boolean outOfBoundsX() {
-        return rootPane.getTranslateX() > screenBounds.getMaxX() - rootPane.getWidth() / 4 ||
-                rootPane.getTranslateX() <= screenBounds.getMinX() - rootPane.getWidth() * 3 / 4;
+        return rootPane.getTranslateX() > screenBounds.getMaxX() - rootPane.getWidth() / 2 ||
+                rootPane.getTranslateX() <= screenBounds.getMinX() - rootPane.getWidth() / 2;
     }
 
     /**
@@ -444,8 +443,8 @@ public class MultiTouchHandler {
      * @return boolean out of bounds
      */
     private boolean outOfBoundsY() {
-        return rootPane.getTranslateY() > screenBounds.getMaxY() - rootPane.getHeight() / 4 ||
-                rootPane.getTranslateY() <= screenBounds.getMinY() - rootPane.getHeight() * 3 / 4;
+        return rootPane.getTranslateY() > screenBounds.getMaxY() - rootPane.getHeight() / 2 ||
+                rootPane.getTranslateY() <= screenBounds.getMinY() - rootPane.getHeight() / 2;
     }
 
 }
