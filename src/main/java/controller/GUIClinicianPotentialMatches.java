@@ -322,7 +322,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * @param potentialMatch the patient potentially receiving the organ
      * @return the travel time
      */
-    public long calculateTotalHeloTravelTime(Patient potentialMatch) {
+    private long calculateTotalHeloTravelTime(Patient potentialMatch) {
 
         //constants using kilometers and seconds
         long organLoadTime = 1800;
@@ -435,7 +435,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                 .getAddress()));
         waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(r.getValue()
                 .getDate(), LocalDate.now()))));
-        travelTimeCol.setCellValueFactory(r -> { return new SimpleStringProperty(getTravelTimeToTravel(r.getValue()));}); //todo
+        travelTimeCol.setCellValueFactory(r -> new SimpleStringProperty(getTravelTimeToTravel(r.getValue()))); //todo
 
 
         // wrap ObservableList in a FilteredList
