@@ -58,9 +58,9 @@ public class ScreenControlDesktop extends ScreenControl {
             }
             stage.setScene(scene);
             stage.show();
-            if (parentController != null) {
-                stage.setOnHiding(event -> parentController.windowClosed());
-            }
+//            if (parentController != null) {
+                stage.setOnHiding(event -> parentController.windowClosed()); //todo uncomment the null check @Andrew @Aidan?
+//            }
             systemLogger.log(Level.INFO, "Showing new desktop stage");
             return controller;
         } catch (IOException e) {

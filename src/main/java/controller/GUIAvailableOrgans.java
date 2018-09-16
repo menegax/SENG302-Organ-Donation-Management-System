@@ -304,8 +304,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     public void viewOnMap() {
         List<Patient> patients = new ArrayList<>();
 
-        for (int i = 0; i < masterData.size(); i++) {
-            patients.add(masterData.get(i).getPatient());
+        for (PatientOrgan aMasterData : masterData) {
+            patients.add(aMasterData.getPatient());
         }
 
         Alert alert;

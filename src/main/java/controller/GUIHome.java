@@ -481,6 +481,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
      * Called when the map shown on login is closed
      */
     public void windowClosed() {
+        System.out.println("setting map open false");
         screenControl.setMapOpen(false);
     }
 
@@ -669,7 +670,9 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     /**
      * Opens new map instance if a map is not visible
      */
-    public void openMap() {
+    void openMap() {
+
+        System.out.println("opening map...? isMapOpen: " + screenControl.getMapOpen());
         if (!screenControl.getMapOpen()) {
             screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
             screenControl.setMapOpen(true);

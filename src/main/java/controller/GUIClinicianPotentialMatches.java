@@ -735,6 +735,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         for (OrganWaitlist.OrganRequest anObservableList : observableList) {
             patients.add(patientDataService.getPatientByNhi(anObservableList.getReceiverNhi()));
         }
+        System.out.println("patients: " + patients); //todo rm
 
         Alert alert;
         if (screenControl.getMapOpen()) {
@@ -743,7 +744,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             alert.show();
         } else {
             alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
-                    , ButtonType.OK);
+                    , ButtonType.OK); //todo this probably isn't necessary
             alert.show();
         }
 
