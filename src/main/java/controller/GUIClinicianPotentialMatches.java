@@ -18,12 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
@@ -37,13 +32,12 @@ import service.APIGoogleMaps;
 import service.ClinicianDataService;
 import service.OrganWaitlist;
 import service.PatientDataService;
-import utility.GlobalEnums;
+import utility.*;
 import utility.GlobalEnums.BirthGender;
 import utility.GlobalEnums.FilterOption;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
+
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -149,7 +143,10 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     public void setTarget(PatientOrgan patientOrgan) {
         target = patientOrgan.getPatient();
         targetOrgan = patientOrgan.getOrgan();
-        targetPatientOrgan = patientOrgan;
+        targetPatientOrgan = new PatientOrgan((Patient) target, targetOrgan);
+        targetPatientOrgan.startTask();
+        targetPatientOrgan.getProgressTask().setProgressBar(new ProgressBar()); //dummy progress task
+        CachedThreadPool.getCachedThreadPool().getThreadService().submit(targetPatientOrgan.getProgressTask());
         load();
     }
 
