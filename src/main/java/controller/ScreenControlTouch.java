@@ -241,4 +241,13 @@ class ScreenControlTouch extends ScreenControl {
         resizeFonts(touchPane);
     }
 
+    public void centerPanes() {
+        for(Node pane : touchPane.getChildren()) {
+            if(pane instanceof Pane) {
+                pane.setTranslateX(0);
+                pane.setTranslateY(0);
+            }
+        }
+    }
+
 }

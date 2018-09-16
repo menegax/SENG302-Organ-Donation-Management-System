@@ -221,5 +221,7 @@ public abstract class ScreenControl {
     public Boolean getIsCustomSetMap() { return isCustomSetMap; }
 
     public void setIsCustomSetMap(Boolean customSet) { isCustomSetMap = customSet; }
+
+    public abstract void centerPanes();
 }
 

@@ -596,6 +596,10 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
                 MenuItem menu4item2 = new MenuItem("Open Keyboard");
                 menu4item2.setOnAction(event -> openKeyboard());
                 menu4.getItems().addAll(menu4item2);
+
+                MenuItem menu4itemCentre = new MenuItem("Re-center Panes");
+                menu4itemCentre.setOnAction(event -> screenControl.centerPanes());
+                menu4.getItems().addAll(menu4itemCentre);
             }
         }
         MenuItem menu4item3 = new MenuItem("Refresh");

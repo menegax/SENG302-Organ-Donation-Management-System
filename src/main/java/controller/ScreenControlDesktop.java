@@ -35,6 +35,11 @@ public class ScreenControlDesktop extends ScreenControl {
         return screenControl;
     }
 
+    @Override
+    public void centerPanes() {
+        //do nothing
+    }
+
     /**
      * shows the fxml (screen)
      * @param fxml the fxml to display
