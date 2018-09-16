@@ -305,7 +305,7 @@ public class GUIRequiredOrganDeregistrationReason extends TargetedController imp
         valid = validateDeathRegion(valid);
 
         if (valid) {
-            ((Patient) target).clearRequiredOrgans();
+            //((Patient) target).clearRequiredOrgans();
             userActions.log(Level.INFO,
                         "Deregistered all organs due to death",
                         new String[] { "Attempted to deregister all organs due to death", ((Patient) target).getNhiNumber() });

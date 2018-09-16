@@ -238,7 +238,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         patientDataTable.setItems(sortedData);
     }
 
-    private void search() {
+    @SuppressWarnings("WeakerAccess")
+    public void search() {
         List<Patient> results = clinicianDataService.searchPatients(searchEntry.getText(), filter, numResults);
         masterData.clear();
         masterData.addAll(results);

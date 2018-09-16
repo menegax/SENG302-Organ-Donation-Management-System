@@ -7,6 +7,7 @@ import com.univocity.parsers.annotations.EnumOptions;
 import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.annotations.Validate;
 import org.apache.commons.lang3.StringUtils;
+import org.mockito.cglib.core.Local;
 import service.APIGoogleMaps;
 import utility.parsing.DateConverterCSV;
 import utility.parsing.DateTimeConverterCSV;
@@ -98,7 +99,7 @@ public class Patient extends User {
 
     private Map<Organ, String> donations;
 
-    private Map<Organ, LocalDate> requiredOrgans;
+    private Map<Organ, OrganReceival> requiredOrgans;
 
     @Parsed(field = "nhi")
     private String nhiNumber;
@@ -181,7 +182,7 @@ public class Patient extends User {
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
                    Timestamp created, Timestamp modified, LocalDateTime death, String deathStreet, String deathCity,Region deathRegion, GlobalEnums.BirthGender gender,
                    GlobalEnums.PreferredGender prefGender, String preferredName, double height, double weight,
-                   BloodGroup bloodType, HashMap<Organ, String> donations, Map<Organ, LocalDate> receiving, String streetNumber,
+                   BloodGroup bloodType, HashMap<Organ, String> donations, Map<Organ, OrganReceival> receiving, String streetNumber,
                    String city, String suburb, Region region, int zip, String homePhone, String workPhone,
                    String mobilePhone, String emailAddress, String contactName, String contactRelationship,
                    String contactHomePhone, String contactWorkPhone, String contactMobilePhone, String contactEmailAddress,
@@ -813,11 +814,11 @@ public class Patient extends User {
     }
 
     /**
-     * gets the current requred organs of the patient
+     * gets the current required organs of the patient
      *
      * @return required organs of the patient
      */
-    public Map<Organ, LocalDate> getRequiredOrgans() {
+    public Map<Organ, OrganReceival> getRequiredOrgans() {
         return this.requiredOrgans;
     }
 
@@ -830,7 +831,7 @@ public class Patient extends User {
      *
      * @param requiredOrgans organs the patient is to receive
      */
-    public void setRequiredOrgans(Map<GlobalEnums.Organ, LocalDate> requiredOrgans) {
+    public void setRequiredOrgans(Map<GlobalEnums.Organ, OrganReceival> requiredOrgans) {
         this.requiredOrgans = requiredOrgans;
         userModified();
     }
@@ -871,8 +872,8 @@ public class Patient extends User {
         if (requiredOrgans == null) {
             requiredOrgans = new HashMap<>();
         }
-        requiredOrgans.put(organ, LocalDate.now());
-        userModified();
+        OrganReceival organReceival = new OrganReceival(LocalDate.now());
+        requiredOrgans.put(organ, organReceival);
         userActions.log(INFO, "Added organ " + organ + " to patient required organs", "Attempted to add organ " + organ + " to patient required organs");
         return "Successfully added " + organ + " to required organs";
     }

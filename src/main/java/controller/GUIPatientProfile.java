@@ -213,14 +213,16 @@ public class GUIPatientProfile extends TargetedController {
 		List<String> organsMappedD = new ArrayList<>();
 		List<String> organsMappedR = new ArrayList<>();
 		for (GlobalEnums.Organ organ : patient.getRequiredOrgans().keySet()) {
-			organsMappedR.add(StringUtils.capitalize(organ.getValue()) + "    |    "
-					+ patient.getRequiredOrgans().get(organ).toString());
+			String donor = patient.getRequiredOrgans().get(organ).getDonorNhi() == null ? "--" : patient.getRequiredOrgans().get(organ).getDonorNhi();
+			organsMappedR.add(StringUtils.capitalize(organ.getValue()) + " | "
+					+ patient.getRequiredOrgans().get(organ).getRegisteredOn().toString() + " | "
+					+ donor);
 		}
 		for (GlobalEnums.Organ organ : patient.getDonations().keySet()) {
 			if (patient.getDonations().get(organ) == null) {
-				organsMappedD.add(StringUtils.capitalize(organ.getValue()) + "    |    --");
+				organsMappedD.add(StringUtils.capitalize(organ.getValue()) + " | --");
 			} else {
-				organsMappedD.add(StringUtils.capitalize(organ.getValue()) + "    |    " +
+				organsMappedD.add(StringUtils.capitalize(organ.getValue()) + " | " +
 						patient.getDonations().get(organ));
 			}
 		}
