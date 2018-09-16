@@ -14,7 +14,7 @@ with open('C:/Users/Hayden Taylor/Downloads/testCSV2.csv', 'rt', encoding="utf8"
         for row in spamreader:
             try:
                 row[10] = addresses[i][0].split(" ")[0] #street no
-                row[11] = ' '.join(addresses[i][0].split(" ")) #street address
+                row[11] = ' '.join(addresses[i][0].split(" ")[1:]) #street address
                 row[14] = addresses[i][3] #suburb
                 row[13] = addresses[i][1] #city
                 row[15] = addresses[i][2] #zip
@@ -27,5 +27,4 @@ with open('C:/Users/Hayden Taylor/Downloads/patients.csv', 'w', encoding="utf8")
     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
     for patient in patients:
         wr.writerow(patient)
-print(patients[0:10])
 
