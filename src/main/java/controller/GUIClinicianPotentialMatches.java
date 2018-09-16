@@ -5,7 +5,6 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
 import data_access.localDAO.PatientLocalDAO;
 import javafx.beans.property.ObjectProperty;
@@ -46,8 +45,6 @@ import utility.GlobalEnums.Region;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 
-import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -328,7 +325,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * @param potentialMatch the patient potentially receiving the organ
      * @return the travel time
      */
-    public long calculateTotalHeloTravelTime(Patient potentialMatch) {
+    private long calculateTotalHeloTravelTime(Patient potentialMatch) {
 
         //constants using kilometers and seconds
         long organLoadTime = 1800;
@@ -441,7 +438,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                 .getAddress()));
         waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(r.getValue()
                 .getDate(), LocalDate.now()))));
-        travelTimeCol.setCellValueFactory(r -> { return new SimpleStringProperty(getTravelTimeToTravel(r.getValue()));}); //todo
+        travelTimeCol.setCellValueFactory(r -> new SimpleStringProperty(getTravelTimeToTravel(r.getValue()))); //todo
 
 
         // wrap ObservableList in a FilteredList

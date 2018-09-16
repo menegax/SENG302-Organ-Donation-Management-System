@@ -138,7 +138,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
             boolean sortingByExpiry = false;
             boolean isAscending = true;
             ObservableList<TableColumn<PatientOrgan, ?>> sortPolicies = availableOrgansTableView.getSortOrder();
-            //Search the sort policies to see if any of the tablecolumns being sorted is either the progress bar or expiry time
+            //Search the sort policies to see if any of the table columns being sorted is either the progress bar or expiry time
             for (TableColumn<PatientOrgan, ?> tableColumn : sortPolicies) {
                 if (tableColumn.getId().equals("expiryCol") || tableColumn.getId().equals("organExpiryProgressCol")) {
                     sortingByExpiry = true;
