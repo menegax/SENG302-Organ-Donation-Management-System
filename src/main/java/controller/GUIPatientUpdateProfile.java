@@ -12,6 +12,7 @@ import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.SystemLogger;
+import utility.UserActionHistory;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -24,6 +25,7 @@ import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
 
 import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
 import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateProfile extends UndoableController {
@@ -321,11 +323,46 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         // if all are valid
         if (valid) {
+            warnIfNoLocation();
             setPatientAttributes();
             userActions.log(INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         } else {
             userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         }
+    }
+
+
+    /**
+     * Validates and generates a pop up alert to inform the user that a location must be set for the patient to donate or receive donations
+     */
+    private void warnIfNoLocation() {
+        boolean locationIsSet = true;
+
+        if (streetNumberTxt.getText().isEmpty()) {
+            SystemLogger.systemLogger.log(Level.WARNING, "Street number text is empty");
+            locationIsSet = false;
+        } if (streetNameTxt.getText().isEmpty()) {
+            SystemLogger.systemLogger.log(Level.WARNING, "Street name text is empty");
+            locationIsSet = false;
+        } if (suburbTxt.getText().isEmpty()) {
+            SystemLogger.systemLogger.log(Level.WARNING, "Suburb text is empty");
+            locationIsSet = false;
+        }if (cityTxt.getText().isEmpty()) {
+            SystemLogger.systemLogger.log(Level.WARNING, "City text is empty");
+            locationIsSet = false;
+        } if (regionDD.getSelectionModel().getSelectedIndex() < 0) {
+            SystemLogger.systemLogger.log(Level.WARNING, "Region index selected is: " + regionDD.getSelectionModel().getSelectedIndex());
+            locationIsSet = false;
+        } if (zipTxt.getText().isEmpty()) {
+            SystemLogger.systemLogger.log(Level.WARNING, "Zip number text is empty");
+            locationIsSet = false;
+        }
+
+        if (!locationIsSet) {
+            UserActionHistory.userActions.log(WARNING, "Updated patient without setting a complete location", "Attempted to update a patient without a complete location");
+            new Alert(Alert.AlertType.WARNING, "To be eligible for organ donations all location details must be set.\n\nDetails have been saved regardless.").show();
+        }
+
     }
 
 

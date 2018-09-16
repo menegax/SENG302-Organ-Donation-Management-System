@@ -32,7 +32,7 @@ public class SystemLogger {
 
             // Console handler
             Handler console = new ConsoleHandler();
-            console.setLevel(Level.ALL); // TURN ON TO 'ALL' TO LOG ALL LEVELS TO CONSOLE
+            console.setLevel(Level.WARNING); // CHANGE THIS ONE
             console.setFormatter(new SimpleFormatter(){
                 @Override
                 public String format(LogRecord record){
