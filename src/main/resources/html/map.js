@@ -7,6 +7,8 @@ var markers = [];
 var infoWindows = [];
 var validCount = 0;
 
+var zoom;
+
 function init() {
     geocoder = new google.maps.Geocoder();
     map = new google.maps.Map(document.getElementById('map'), {
@@ -14,18 +16,12 @@ function init() {
         zoom: 6,
         disableDefaultUI: true,
         scaleControl: true,
-        gestureHandling: 'cooperative'
+        gestureHandling: 'none'
     });
     setMapDragEnd();
     markerLoop(patients.size());
+    zoom = map.getZoom();
 }
-
-navigator.__defineGetter__('userAgent', function () {
-    return "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_2 like Mac OS X) AppleWebKit/603.2.4 (KHTML, like Gecko) FxiOS/7.5b3349 Mobile/14F89 Safari/603.2.4";
-});
-navigator.__defineGetter__('appName', function () {
-    return "Netscape"
-});
 
 /**
  * Sets the viewable area of the map
@@ -155,4 +151,24 @@ function setPatients() {
     markers = [];
 
     markerLoop(patients.size());
+}
+
+function setJankaZoom(newZoom) {
+    console.log("zoomies: " + zoom);
+    var alteredZoom;
+    if(newZoom) {
+        alteredZoom = zoom + zoom * newZoom;
+        console.log("new zoomies: " + alteredZoom);
+        if(alteredZoom >= 0 && alteredZoom <= 15) {
+            zoom = alteredZoom
+            map.setZoom(alteredZoom);
+        } else if (alteredZoom < 0) {
+            zoom = 0;
+            map.setZoom(0);
+        } else if (alteredZoom > 15) {
+            zoom = 15;
+            map.setZoom(zoom);
+        }
+    }
+
 }

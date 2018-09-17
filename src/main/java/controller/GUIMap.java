@@ -4,8 +4,11 @@ import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Screen;
 import model.Patient;
 import netscape.javascript.JSObject;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +42,15 @@ public class GUIMap implements Initializable {
 
     private MapBridge mapBridge;
 
+    private Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private final double ZOOMFACTOR = 1/((screenBounds.getWidth()/screenBounds.getHeight())*100);
+
+    private Point2D stationaryPoint1;
+
+    private Point2D stationaryPoint2;
 
     /**
      * Initialises the widgets and bridge in the google map
@@ -80,12 +91,6 @@ public class GUIMap implements Initializable {
         // What to do with console.log statements
         WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
 
-        try {
-            robot = new Robot();
-        }
-        catch (AWTException e) {
-            SystemLogger.systemLogger.log(Level.SEVERE, "Failed to initialize map bridge: " + e.toString());
-        }
 
 //        webViewMap1.setOnScroll(event -> {
 //            if (screenControl.isTouch()) {
@@ -99,6 +104,40 @@ public class GUIMap implements Initializable {
 //                robot.keyRelease(KeyEvent.VK_CONTROL);
 //            }
 //        });
+
+        webViewMap1.setOnTouchPressed(event -> {
+            if(screenControl.isTouch()) {
+                if (event.getTouchCount() == 2) {
+                    Point2D touchOne = new Point2D(event.getTouchPoints().get(0).getX(), event.getTouchPoints().get(0).getY());
+                    Point2D touchTwo = new Point2D(event.getTouchPoints().get(1).getX(), event.getTouchPoints().get(1).getY());
+                    if(stationaryPoint1 == null || stationaryPoint2 == null) {
+                        stationaryPoint1 = touchOne;
+                        stationaryPoint2 = touchTwo;
+                    } else  {
+                        //calc distance from stationary points and current place
+                        double angle1 = calculateAngle(stationaryPoint1, stationaryPoint2, touchTwo);
+                        double displacement1 = calculateDisplacement(stationaryPoint2, touchTwo);
+                        double distance1 = (Math.cos(angle1))*displacement1;
+
+                        double angle2 = calculateAngle(stationaryPoint2, stationaryPoint1, touchOne);
+                        double displacement2 = calculateDisplacement(stationaryPoint1, touchOne);
+                        double distance2 = (Math.cos(angle2))*displacement2;
+
+                        double zoomDistance = 0;
+                        if (distance1 != 0) {
+                            zoomDistance = distance1 * ZOOMFACTOR;
+                        } else if (distance2 != 0) {
+                            zoomDistance = distance2 * ZOOMFACTOR;
+                        }
+
+                        System.out.println(distance1);
+                        System.out.println(distance2);
+                        jsBridge.call("setJankaZoom", zoomDistance);
+                    }
+
+                }
+            }
+        });
     }
 
 
@@ -115,4 +154,35 @@ public class GUIMap implements Initializable {
         }
         return results;
     }
+
+    /**
+     * Calculates the angle centering on the second parameter
+     * Gives angle in radians from -pi to pi (-ve anti-clockwise)
+     * @param stationaryPoint the point to draw the angle from
+     * @param previousPoint the point at the centre of the angle
+     * @param currentPoint the point to draw the angle to
+     * @return the angle between the point
+     */
+    private double calculateAngle(Point2D stationaryPoint, Point2D previousPoint, Point2D currentPoint) {
+        double p2s = calculateDisplacement(previousPoint, stationaryPoint);
+        double p2c = calculateDisplacement(previousPoint, currentPoint);
+        double s2c = calculateDisplacement(stationaryPoint, currentPoint);
+        double angle = Math.PI - Math.acos((Math.pow(p2s, 2) + Math.pow(p2c, 2) - Math.pow(s2c, 2)) / (2 * p2s * p2c));
+        if ((currentPoint.getX() - stationaryPoint.getX()) * (previousPoint.getY() - stationaryPoint.getY()) - (currentPoint.getY() - stationaryPoint.getY())*(previousPoint.getX() - stationaryPoint.getX()) >= 0) {
+            return angle;
+        } else {
+            return -angle;
+        }
+    }
+
+    /**
+     * Returns the scalar displacement between two points
+     * @param start the first point
+     * @param end the second point to calculate the displacement to
+     * @return the displacement between the two points
+     */
+    private double calculateDisplacement(Point2D start, Point2D end) {
+        return Math.sqrt(Math.pow(start.getX() - end.getX(), 2) + Math.pow(start.getY() - end.getY(), 2));
+    }
+
 }
