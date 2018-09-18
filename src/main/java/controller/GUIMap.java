@@ -26,14 +26,14 @@ import java.util.logging.Level;
  * Bridge for the Google Maps window that holds the buttons' functions
  * and the javascript bridge
  */
-public class GUIMap implements Initializable {
+public class GUIMap {
 
     @FXML
     private WebView webViewMap1;
 
     private WebEngine webEngine;
 
-    public static JSObject jsBridge;
+    private JSObject jsBridge;
 
     private Robot robot;
 
@@ -41,34 +41,38 @@ public class GUIMap implements Initializable {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private Collection<Patient> patients = new ArrayList<>();
+
+    /**
+     * Loads the patients provided onto the map
+     * @param patients a collection of patients to show on the map
+     */
+    public void setPatients(Collection<Patient> patients) {
+        this.patients = patients;
+        loadMap();
+    }
+
     /**
      * Initialises the widgets and bridge in the google map
-     *
-     * @param url Required parameter that is not used
-     * @param rb  Required parameter that is not used
      */
-    public void initialize(URL url, ResourceBundle rb) {
+    private void loadMap() {
         webEngine = webViewMap1.getEngine();
 
         UserActionHistory.userActions.log(Level.INFO, "Loading map...", "Attempted to open map");
 
-        List<Patient> results;
         if (!screenControl.getIsCustomSetMap()) {
-             results = getInitialPatients();
-        } else {
-            results = new ArrayList<>();
+             patients = getInitialPatients();
         }
 
         webEngine.setJavaScriptEnabled(true);
-        webEngine.getLoadWorker()
-                .stateProperty()
-                .addListener((observable, oldValue, newValue) -> {
+        webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
                     if (Worker.State.SUCCEEDED == newValue) {
                         jsBridge = (JSObject) webEngine.executeScript("window");
-                        jsBridge.setMember("patients", results);
+                        jsBridge.setMember("patients", patients);
                         mapBridge = new MapBridge();
                         jsBridge.setMember("mapBridge", mapBridge);
                         jsBridge.call("init");
+                        jsBridge.call("setPatients");
                     }
                 });
         webEngine.load(Objects.requireNonNull(getClass().getClassLoader()
@@ -106,11 +110,6 @@ public class GUIMap implements Initializable {
      */
     @NotNull
     private List<Patient> getInitialPatients() {
-        List<Patient> patients = new ArrayList<>(new ClinicianDataService().searchPatients("", null, 50));
-        List<Patient> results = new ArrayList<>();
-        for (Patient p : patients) {
-            results.add(new PatientDataService().getPatientByNhi(p.getNhiNumber()));
-        }
-        return results;
+        return new ArrayList<>(new ClinicianDataService().searchPatients("", null, 50));
     }
 }
