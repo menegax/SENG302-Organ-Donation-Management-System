@@ -36,21 +36,11 @@ public class GUIMap implements Initializable {
 
     private WebEngine webEngine;
 
-    public static JSObject jsBridge;
-
-    private Robot robot;
+    private static JSObject jsBridge;
 
     private MapBridge mapBridge;
 
-    private Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-
     private ScreenControl screenControl = ScreenControl.getScreenControl();
-
-    private final double ZOOMFACTOR = 1/((screenBounds.getWidth()/screenBounds.getHeight())*100);
-
-    private Point2D stationaryPoint1;
-
-    private Point2D stationaryPoint2;
 
     private Double originalDistance;
 
@@ -62,10 +52,7 @@ public class GUIMap implements Initializable {
      */
     public void initialize(URL url, ResourceBundle rb) {
         webEngine = webViewMap1.getEngine();
-        System.out.println(webEngine.getUserAgent());
-        webEngine.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_2 like Mac OS X) AppleWebKit/603.2.4 (KHTML, like Gecko) FxiOS/7.5b3349 Mobile/14F89 Safari/603.2.4");
         UserActionHistory.userActions.log(Level.INFO, "Loading map...", "Attempted to open map");
-        System.out.println(webEngine.getUserAgent());
         List<Patient> results;
         if (!screenControl.getIsCustomSetMap()) {
 //             results = getInitialPatients();
@@ -93,42 +80,31 @@ public class GUIMap implements Initializable {
         // What to do with console.log statements
         WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
 
+        webViewMap1.setOnTouchReleased((event -> {
+            System.out.println("released");
+            originalDistance = null;
+            jsBridge.call("setJankaOriginal", null);
+        }));
 
-//        webViewMap1.setOnScroll(event -> {
-//            if (screenControl.isTouch()) {
-//                if (event.getTouchCount() == 2) {
-//                    robot.keyPress(KeyEvent.VK_CONTROL);
-//                }
-//            }
-//       });
-//        webViewMap1.setOnTouchReleased(event -> {
-//            if (screenControl.isTouch()) {
-//                robot.keyRelease(KeyEvent.VK_CONTROL);
-//            }
-//        });
+        webViewMap1.setOnTouchMoved((event -> {
+            if (screenControl.isTouch()) {
+                if (event.getTouchCount() == 1) {
+                    Point2D touchOne = new Point2D(event.getTouchPoints().get(0).getX(), event.getTouchPoints().get(0).getY());
 
-        webViewMap1.setOnTouchPressed(event -> {
-            if(screenControl.isTouch()) {
-                System.out.println(event.getTouchCount());
+                }
                 if (event.getTouchCount() == 2) {
                     Point2D touchOne = new Point2D(event.getTouchPoints().get(0).getX(), event.getTouchPoints().get(0).getY());
                     Point2D touchTwo = new Point2D(event.getTouchPoints().get(1).getX(), event.getTouchPoints().get(1).getY());
                     if(originalDistance == null) {
                         originalDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) + Math.pow(touchOne.getY() - touchTwo.getY(), 2));
+                        jsBridge.call("setJankaOriginal", originalDistance);
                     }
                     double currentDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) + Math.pow(touchOne.getY() - touchTwo.getY(), 2));
                     jsBridge.call("setJankaZoom", originalDistance / currentDistance);
-                    }
-
                 }
-            });
-        webViewMap1.setOnTouchReleased((event -> {
-            System.out.println("released");
-            originalDistance = null;
+            }
         }));
     }
-
-
 
 
     /**
@@ -144,35 +120,4 @@ public class GUIMap implements Initializable {
         }
         return results;
     }
-
-    /**
-     * Calculates the angle centering on the second parameter
-     * Gives angle in radians from -pi to pi (-ve anti-clockwise)
-     * @param stationaryPoint the point to draw the angle from
-     * @param previousPoint the point at the centre of the angle
-     * @param currentPoint the point to draw the angle to
-     * @return the angle between the point
-     */
-    private double calculateAngle(Point2D stationaryPoint, Point2D previousPoint, Point2D currentPoint) {
-        double p2s = calculateDisplacement(previousPoint, stationaryPoint);
-        double p2c = calculateDisplacement(previousPoint, currentPoint);
-        double s2c = calculateDisplacement(stationaryPoint, currentPoint);
-        double angle = Math.PI - Math.acos((Math.pow(p2s, 2) + Math.pow(p2c, 2) - Math.pow(s2c, 2)) / (2 * p2s * p2c));
-        if ((currentPoint.getX() - stationaryPoint.getX()) * (previousPoint.getY() - stationaryPoint.getY()) - (currentPoint.getY() - stationaryPoint.getY())*(previousPoint.getX() - stationaryPoint.getX()) >= 0) {
-            return angle;
-        } else {
-            return -angle;
-        }
-    }
-
-    /**
-     * Returns the scalar displacement between two points
-     * @param start the first point
-     * @param end the second point to calculate the displacement to
-     * @return the displacement between the two points
-     */
-    private double calculateDisplacement(Point2D start, Point2D end) {
-        return Math.sqrt(Math.pow(start.getX() - end.getX(), 2) + Math.pow(start.getY() - end.getY(), 2));
-    }
-
 }
