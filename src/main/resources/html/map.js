@@ -154,21 +154,5 @@ function setPatients() {
 }
 
 function setJankaZoom(newZoom) {
-    console.log("zoomies: " + zoom);
-    var alteredZoom;
-    if(newZoom) {
-        alteredZoom = zoom + zoom * newZoom;
-        console.log("new zoomies: " + alteredZoom);
-        if(alteredZoom >= 0 && alteredZoom <= 15) {
-            zoom = alteredZoom
-            map.setZoom(alteredZoom);
-        } else if (alteredZoom < 0) {
-            zoom = 0;
-            map.setZoom(0);
-        } else if (alteredZoom > 15) {
-            zoom = 15;
-            map.setZoom(zoom);
-        }
-    }
-
+    map.setZoom(newZoom * map.getZoom());
 }

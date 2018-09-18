@@ -52,6 +52,8 @@ public class GUIMap implements Initializable {
 
     private Point2D stationaryPoint2;
 
+    private Double originalDistance;
+
     /**
      * Initialises the widgets and bridge in the google map
      *
@@ -107,38 +109,26 @@ public class GUIMap implements Initializable {
 
         webViewMap1.setOnTouchPressed(event -> {
             if(screenControl.isTouch()) {
+                System.out.println(event.getTouchCount());
                 if (event.getTouchCount() == 2) {
                     Point2D touchOne = new Point2D(event.getTouchPoints().get(0).getX(), event.getTouchPoints().get(0).getY());
                     Point2D touchTwo = new Point2D(event.getTouchPoints().get(1).getX(), event.getTouchPoints().get(1).getY());
-                    if(stationaryPoint1 == null || stationaryPoint2 == null) {
-                        stationaryPoint1 = touchOne;
-                        stationaryPoint2 = touchTwo;
-                    } else  {
-                        //calc distance from stationary points and current place
-                        double angle1 = calculateAngle(stationaryPoint1, stationaryPoint2, touchTwo);
-                        double displacement1 = calculateDisplacement(stationaryPoint2, touchTwo);
-                        double distance1 = (Math.cos(angle1))*displacement1;
-
-                        double angle2 = calculateAngle(stationaryPoint2, stationaryPoint1, touchOne);
-                        double displacement2 = calculateDisplacement(stationaryPoint1, touchOne);
-                        double distance2 = (Math.cos(angle2))*displacement2;
-
-                        double zoomDistance = 0;
-                        if (distance1 != 0) {
-                            zoomDistance = distance1 * ZOOMFACTOR;
-                        } else if (distance2 != 0) {
-                            zoomDistance = distance2 * ZOOMFACTOR;
-                        }
-
-                        System.out.println(distance1);
-                        System.out.println(distance2);
-                        jsBridge.call("setJankaZoom", zoomDistance);
+                    if(originalDistance == null) {
+                        originalDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) + Math.pow(touchOne.getY() - touchTwo.getY(), 2));
+                    }
+                    double currentDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) + Math.pow(touchOne.getY() - touchTwo.getY(), 2));
+                    jsBridge.call("setJankaZoom", originalDistance / currentDistance);
                     }
 
                 }
-            }
-        });
+            });
+        webViewMap1.setOnTouchReleased((event -> {
+            System.out.println("released");
+            originalDistance = null;
+        }));
     }
+
+
 
 
     /**
