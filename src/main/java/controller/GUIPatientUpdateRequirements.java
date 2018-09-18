@@ -1,25 +1,14 @@
 package controller;
 
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
-
 import data_access.factories.DAOFactory;
-import data_access.localDAO.LocalDB;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import kotlin.reflect.jvm.internal.impl.util.Check;
 import model.OrganReceival;
 import model.Patient;
 import service.ClinicianDataService;
-import service.OrganWaitlist;
 import service.PatientDataService;
 import service.interfaces.IClinicianDataService;
 import service.interfaces.IPatientDataService;
@@ -27,17 +16,12 @@ import utility.GlobalEnums;
 import utility.SystemLogger;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.GlobalEnums;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
+
+import static java.util.logging.Level.FINEST;
+import static utility.UserActionHistory.userActions;
 
 /**
  * This class is the controller for editing a patients required organs only accessible by the clinician
@@ -168,14 +152,12 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
      */
     private void populateForm(Patient patient) {
         List<GlobalEnums.Organ> organs = new ArrayList<>(patient.getRequiredOrgans().keySet());
-        if (organs != null) {
-            for (GlobalEnums.Organ organ : controlMap.keySet()) {
-                if (organs.contains(organ)) {
-                    controlMap.get(organ).setSelected(true);
-                    initialRequirements.add(organ);
-                } else {
-                    controlMap.get(organ).setSelected(false);
-                }
+        for (GlobalEnums.Organ organ : controlMap.keySet()) {
+            if (organs.contains(organ)) {
+                controlMap.get(organ).setSelected(true);
+                initialRequirements.add(organ);
+            } else {
+                controlMap.get(organ).setSelected(false);
             }
         }
     }
@@ -215,7 +197,7 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
         for (GlobalEnums.Organ organ : removedOrgans.keySet()) {
             totalRemoved += 1;
             openReasonPopup(organ);
-            after.removeRequired(organ);
+            //after.removeRequired(organ);
         }
     }
 
@@ -234,6 +216,7 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
         if (totalRemoved == 0) {
             if (after.getDeathDate() != null) {
                 after.clearRequiredOrgans();
+                userActions.log(Level.INFO, "ALl required organs cleared due to patient death", "Deregistered an organ");
             }
             Action action = new Action(target, after);
             statesHistoryScreen.addAction(action);
