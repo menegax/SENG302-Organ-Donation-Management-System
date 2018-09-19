@@ -729,8 +729,6 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             patients.add(patientDataService.getPatientByNhi(anObservableList.getReceiverNhi()));
         }
         patients.add((Patient) target);
-        System.out.println("target? : " + (Patient) target);
-        System.out.println("patients: " + patients); //todo rm
 
         if (screenControl.getMapOpen()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?", ButtonType.OK, ButtonType.NO);
