@@ -728,15 +728,14 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         for (OrganWaitlist.OrganRequest anObservableList : observableList) {
             patients.add(patientDataService.getPatientByNhi(anObservableList.getReceiverNhi()));
         }
+        patients.add((Patient) target);
+        System.out.println("target? : " + (Patient) target);
         System.out.println("patients: " + patients); //todo rm
 
-        Alert alert;
         if (screenControl.getMapOpen()) {
-            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?", ButtonType.OK, ButtonType.NO);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?", ButtonType.OK, ButtonType.NO);
             alert.show();
-            alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
-                populateMap(patients);
-            });
+            alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> populateMap(patients));
         } else {
             screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
             populateMap(patients);

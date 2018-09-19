@@ -48,6 +48,7 @@ public class GUIMap {
      * @param patients a collection of patients to show on the map
      */
     public void setPatients(Collection<Patient> patients) {
+        this.patients.clear();
         this.patients = patients;
         loadMap();
     }
