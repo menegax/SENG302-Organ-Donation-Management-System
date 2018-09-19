@@ -16,7 +16,10 @@ function init() {
         zoom: 6,
         disableDefaultUI: true,
         scaleControl: true,
-        gestureHandling: 'none'
+        zoomControl: false,
+        heading:90,
+        tilt:45,
+        gestureHandling: 'cooperative'
     });
     setMapDragEnd();
     markerLoop(patients.size());
