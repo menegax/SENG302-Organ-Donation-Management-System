@@ -357,7 +357,6 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             int numRefuels = (int) Math.ceil(distance / maxTravelDistanceStatuteKilometers);
             double totalRefuelTime = refuelTime * numRefuels;
 
-            System.out.println("total travel time: " + (long) Math.ceil(organLoadTime + totalTravelTime + totalRefuelTime + organUnloadtime)); //todo rm
             return (long) Math.ceil(organLoadTime + totalTravelTime + totalRefuelTime + organUnloadtime);
         }
         return -1;
