@@ -819,6 +819,8 @@ public class Patient extends User {
      * @return required organs of the patient
      */
     public Map<Organ, OrganReceival> getRequiredOrgans() {
+//        System.out.println(this.nhiNumber);
+//        System.out.println(this.requiredOrgans);
         return this.requiredOrgans;
     }
 

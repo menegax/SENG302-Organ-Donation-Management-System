@@ -210,7 +210,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
                         .size() > 0 ? "Donating & Receiving" : "Donating");
             }
             else if (patient.getRequiredOrgans().keySet()
-                    .size() > 0) {
+                    .size() > 0 && patient.getDeathDate() == null) {
                 return new SimpleStringProperty("Receiving");
             }
             return new SimpleStringProperty("--");
@@ -243,6 +243,10 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         List<Patient> results = clinicianDataService.searchPatients(searchEntry.getText(), filter, numResults);
         masterData.clear();
         masterData.addAll(results);
+        //
+//        for (Patient patient: results) {
+//            System.out.println(patient.getNhiNumber() + ": " + patient.getRequiredOrgans());
+//        }
         updateProfileCount();
     }
 

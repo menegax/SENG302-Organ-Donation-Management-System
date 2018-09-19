@@ -183,6 +183,8 @@ public class GUIPatientProfile extends TargetedController {
 	 *                if the nhi of the patient does not exist in the database
 	 */
 	private void loadProfile(Patient patient) {
+//		System.out.println(patient.getRequiredOrgans().keySet().size() > 0);
+//		System.out.println(patient.getRequiredOrgans().keySet());
 		loadBasicDetails(patient);
 		loadDeathDetails(patient);
 		loadBodyDetails(patient);

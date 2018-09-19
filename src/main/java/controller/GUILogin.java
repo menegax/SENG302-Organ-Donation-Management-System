@@ -120,7 +120,7 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
                 }
                 clinicianDataService.save(clinician);
                 userControl.addLoggedInUserToCache(clinicianDataService.getClinician(Integer.parseInt(nhiLogin.getText())));
-                openMap();
+//                openMap(); //todo reinstate
             } else {
                 administrator.isSelected();
                 checkAdminCredentials();
