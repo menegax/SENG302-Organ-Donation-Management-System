@@ -64,6 +64,7 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         ClinicianDataService clinicianDataService = new ClinicianDataService();
         OrganWaitlist organRequests = clinicianDataService.getOrganWaitList();
         for (OrganWaitlist.OrganRequest request: organRequests) {
+            System.out.println(request.getReceiver().getDeathDate());
             if (request.getReceiver().getDeathDate() == null) {
                 masterData.add(request);
             }
