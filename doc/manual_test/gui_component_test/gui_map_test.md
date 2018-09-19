@@ -123,3 +123,5 @@ Test 6: Pass
 ### 15/8/18 - Kyle
 
 Test 3: Pass
+
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
