@@ -48,9 +48,9 @@
 4. Set the date picker to two days in the past
 5. Click `Done` to add the procedure
 
-##Test History
+## Test History
 
-###18/07/2018 - Maree
+### 18/07/2018 - Maree
 
 Update Procedure Summary Test: Pass
 
@@ -60,7 +60,7 @@ Cancel Update Test: Pass
 
 Add Procedure: Pass (no error)
 
-###14/08/2018 - Aidan
+### 14/08/2018 - Aidan
 
 Update Procedure Summary Test: Pass
 
@@ -70,7 +70,7 @@ Cancel Update Test: Pass
 
 Add Procedure: Pass
 
-###14/08/2018 - Maree
+### 14/08/2018 - Maree
 
 Update Procedure Summary Test: Pass
 
@@ -80,4 +80,4 @@ Cancel Update Test: Pass
 
 Add Procedure: Pass (no error)
 
-
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**

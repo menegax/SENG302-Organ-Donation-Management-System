@@ -68,9 +68,29 @@
 2. The user double clicks on a row that does not contain any patient information
 3. No window is opened. The Organ Waiting List screen remains open.
 
-##Test History
+## Test History
 
-###19/07/2018 - Maree
+### 19/07/2018 - Maree
+
+Precondition 1: Pass
+
+An organ request is added when a patient has a requested organ added: Pass
+
+An organ request is removed when a patient has a requested organ removed: Pass
+
+Precondition 2: Pass
+
+The waiting list is sorted based on name: Pass
+
+The waiting list is sorted based on organ: Pass
+
+The waiting list is sorted based on region: Pass
+
+A patient profile is opened by double clicking: Pass
+
+Multiple patient profiles are opened: Pass
+
+### 18/04/2018 - Aidan
 
 Precondition 1: Pass
 
@@ -90,22 +110,4 @@ A patient profile is opened by double clicking: Pass
 
 Multiple patient profiles are opened: Pass
 
-###18/04/2018 - Aidan
-
-Precondition 1: Pass
-
-An organ request is added when a patient has a requested organ added: Pass
-
-An organ request is removed when a patient has a requested organ removed: Pass
-
-Precondition 2: Pass
-
-The waiting list is sorted based on name: Pass
-
-The waiting list is sorted based on organ: Pass
-
-The waiting list is sorted based on region: Pass
-
-A patient profile is opened by double clicking: Pass
-
-Multiple patient profiles are opened: Pass
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**

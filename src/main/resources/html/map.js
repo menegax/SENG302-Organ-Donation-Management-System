@@ -68,6 +68,7 @@ function markerLoop(i) {
 function addMarker(patient) {
     var address = patient.getFormattedAddress();
     var name = patient.getNameConcatenated();
+    console.log("Adding marker to map for patient " + patient.getNhiNumber());
     geocoder.geocode({'address': address}, function (results, status) {
         if (status === 'OK') {
             validCount++;
@@ -102,7 +103,7 @@ function addMarker(patient) {
             });
             markers.push(marker);
         } else {
-            console.log('Geocode failed because: ' + status);
+            console.log('Geocode failed for patient ' + patient.getNhiNumber() + ' because: ' + status);
         }
     });
 }
@@ -144,6 +145,7 @@ function setPatients() {
 
     markers.forEach(function(marker) {
         marker.setMap(null);
+        marker.pop(); //todo see if it does anything
     });
     markers = [];
 

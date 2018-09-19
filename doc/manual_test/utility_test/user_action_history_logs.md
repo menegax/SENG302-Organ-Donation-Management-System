@@ -5,14 +5,16 @@
 2. Perform an action
 3. Ensure action was logged under logged in user's history
 
-##Test History
+## Test History
 
-###19/07/2018 - Maree
+### 19/07/2018 - Maree
 
 Ensure File is Written: Pass
 
 Ensure File Appending: Pass
 
-###18/04/2018 - Aidan
+### 18/04/2018 - Aidan
 
 Ensure Log is written: Pass
+
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**

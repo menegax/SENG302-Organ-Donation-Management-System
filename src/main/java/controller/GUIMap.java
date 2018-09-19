@@ -48,6 +48,7 @@ public class GUIMap {
      * @param patients a collection of patients to show on the map
      */
     public void setPatients(Collection<Patient> patients) {
+        this.patients.clear();
         this.patients = patients;
         loadMap();
     }
@@ -69,6 +70,7 @@ public class GUIMap {
                     if (Worker.State.SUCCEEDED == newValue) {
                         jsBridge = (JSObject) webEngine.executeScript("window");
                         jsBridge.setMember("patients", patients);
+                        System.out.println("jsBridge patients: " + patients); //todo rm
                         mapBridge = new MapBridge();
                         jsBridge.setMember("mapBridge", mapBridge);
                         jsBridge.call("init");
