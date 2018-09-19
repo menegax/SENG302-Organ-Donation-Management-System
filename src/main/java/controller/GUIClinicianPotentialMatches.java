@@ -24,6 +24,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.util.converter.LocalTimeStringConverter;
 import model.Patient;
 import model.PatientOrgan;
 import org.apache.commons.lang3.StringUtils;
@@ -45,6 +46,10 @@ import java.util.*;
 import java.util.logging.Level;
 
 public class GUIClinicianPotentialMatches extends TargetedController implements IWindowObserver, TouchscreenCapable {
+
+    private int SECONDSINHOURS = 3600;
+
+    private int SECONDSINMINUTES = 60;
 
     public TableView<OrganWaitlist.OrganRequest> potentialMatchesTable;
 
@@ -171,6 +176,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         setupDoubleClickToPatientEdit();
         setupAgeSliderListeners();
         setupFilterListeners();
+        filterTravelTimes();
         if (screenControl.isTouch()) {
             matchTouchPane = new TouchPaneController(potentialMatchesPane);
             potentialMatchesPane.setOnZoom(this::zoomWindow);
@@ -394,20 +400,16 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
 
     private String getTravelTimeToTravel(OrganWaitlist.OrganRequest request){
-        for (OrganWaitlist.OrganRequest x : allRequests) {
-            if (x.getReceiverNhi().equals(request.getReceiverNhi())) {
-                long totalSecs = calculateTotalHeloTravelTime(patientDataService.getPatientByNhi(request.getReceiverNhi()));
-                if (totalSecs == -1) {
-                    return "No location"; //todo
-                }
-                int hours = (int)(totalSecs / 3600L);
-                int minutes = (int)((totalSecs % 3600L) / 60L);
-                int seconds = (int) (totalSecs % 60L);
-                return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-            }
+        long totalSecs = calculateTotalHeloTravelTime(request.getReceiver());
+        if (totalSecs == -1) {
+            return "No location"; //todo
         }
-        return "No location"; //todo
+        int hours = (int)(totalSecs / 3600L);
+        int minutes = (int)((totalSecs % 3600L) / 60L);
+        int seconds = (int) (totalSecs % 60L);
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
+
     /**
      * Populates the potential matches table with the potential matches in the right order
      */
@@ -501,6 +503,32 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         potentialMatchesTable.refresh();
     }
 
+    /**
+     * Removes any potential matches whose travel time exceeds the expiry time left on the organ
+     */
+    private void filterTravelTimes() {
+        List<OrganWaitlist.OrganRequest> toFar = new ArrayList<>();
+        for (OrganWaitlist.OrganRequest organRequest : potentialMatchesTable.getItems()) {
+            if (secondsInTime(getTravelTimeToTravel(organRequest)) > (secondsInTime(targetPatientOrgan.getProgressTask().getMessage()))) {
+                 toFar.add(organRequest);
+             }
+        }
+        observableList.removeAll(toFar);
+    }
+
+    /**
+     * Gives the seconds in the time provided of the for hh:mm:ss
+     * @param time the string value of the time in hh:mm:ss
+     * @return the amount of seconds in that time
+     */
+    private int secondsInTime(String time) {
+        String[] times = time.split(":");
+        int total = 0;
+        total += Integer.parseInt(times[0]) * SECONDSINHOURS;
+        total += Integer.parseInt(times[1]) * SECONDSINMINUTES;
+        total += Integer.parseInt(times[2]);
+        return total;
+    }
 
     /**
      * Sets up double-click functionality for each row to open a patient profile update, ensures no duplicate profiles
@@ -664,6 +692,9 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * Sets the filter listeners for the potential matches list
      */
     private void setupFilterListeners() {
+        expiryTimeLabel.textProperty().addListener(e -> {
+            filterTravelTimes();
+        });
         regionFilter.valueProperty()
                 .addListener(((observable, oldValue, newValue) -> {
                     filter.put(FilterOption.REGION, newValue);
