@@ -145,7 +145,6 @@ function setPatients() {
 
     markers.forEach(function(marker) {
         marker.setMap(null);
-        marker.pop(); //todo see if it does anything
     });
     markers = [];
 
