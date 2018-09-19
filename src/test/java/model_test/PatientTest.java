@@ -1,5 +1,7 @@
 package model_test;
 
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.LatLng;
 import model.Disease;
 import model.Patient;
 import org.junit.*;
@@ -9,6 +11,7 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.SystemLogger;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,10 +24,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
+import java.util.zip.DataFormatException;
 
 import static java.util.logging.Level.OFF;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
@@ -304,6 +309,26 @@ public class PatientTest implements Serializable {
     }
 
     /**
+     * Ensures the current location Lat and Lng is reset whenever part of the patient's address is reset
+     *
+     * Due to the getCurrentLocation checking for null, this test can only test certain parts of the address (e.g. not street)
+     */
+    @Test
+    public void resetCurrentLocation() throws DataFormatException, InterruptedException, ApiException, IOException {
+        testPatient.setCurrentLocation(new LatLng(-43.525650, 172.639847)); // set to UC
+        testPatient.setStreetNumber("10");
+        assertNull(testPatient.getCurrentLocation());
+
+        testPatient.setCurrentLocation(new LatLng(-43.525650, 172.639847)); // set to UC
+        testPatient.setSuburb("Avonside");
+        assertNull(testPatient.getCurrentLocation());
+
+        testPatient.setCurrentLocation(new LatLng(-43.525650, 172.639847)); // set to UC
+        testPatient.setCity("Christchurch");
+        assertNull(testPatient.getCurrentLocation());
+    }
+
+    /**
      * Reset the logging level
      */
     @AfterClass
@@ -366,6 +391,7 @@ public class PatientTest implements Serializable {
         testPatient.setMiddleNames(new ArrayList<>());
         testPatient.setLastName("Bloggs");
     }
+
 
     /**
      * Runs asserts that the same diseases occur in two lists irrespective of order

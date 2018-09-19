@@ -1,12 +1,13 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.util.Callback;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
@@ -16,7 +17,6 @@ import utility.GlobalEnums.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 
 import model.Patient;
@@ -25,16 +25,22 @@ import utility.ProgressTask;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.zip.DataFormatException;
 
+import static java.util.logging.Level.FINE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
  */
 public class GUIAvailableOrgans extends UndoableController implements IWindowObserver {
+
+    private final float NUM_ROWS_PER_PAGE = 10;
 
     @FXML
     private TableView<PatientOrgan> availableOrgansTableView;
@@ -57,18 +63,44 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     @FXML
     private TableColumn<PatientOrgan, ProgressTask> organExpiryProgressCol;
 
+    @FXML
+    private Button potentialMatchesBtn;
+
     private ObservableList<PatientOrgan> masterData = FXCollections.observableArrayList();
 
+    private ObservableList<PatientOrgan> filterData = FXCollections.observableArrayList();
+
     private SortedList<PatientOrgan> sortedData;
+
+    @FXML
+    private Pagination pagination;
 
     private IPatientDataService patientDataService = new PatientDataService();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    /**
+     * Adds organ expiry observable
+     */
+    public GUIAvailableOrgans() {
+        ExpiryObservable.getInstance().addObserver((o, arg) -> {
+            filterData.remove(arg);
+            masterData.remove(arg);
+            onSort(); //grab any new records to replace the missing
+            Platform.runLater(() -> {
+                pagination.setPageCount(getPageCount()); //re-update the page count
+            });
+        });
+    }
 
     public void load() {
+        for (PatientOrgan po : masterData) {
+            if (po.getProgressTask() != null) {
+                po.getProgressTask().setInterrupted();
+            }
+        }
         masterData.clear();
-        CachedThreadPool.getCachedThreadPool().getThreadService().shutdown();
+        CachedThreadPool.getCachedThreadPool().getThreadService().shutdownNow();
         List<Patient> deadPatients = patientDataService.getDeadPatients();
         for (Patient patient : deadPatients) {
             if (patient.getDeathDate() != null) {
@@ -82,27 +114,59 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 }
             }
         }
-        ExpiryObservable.getInstance().addObserver((o, arg) -> masterData.remove(arg));
         populateTable();
     }
 
+    /**
+     * Called whenever the onSort TableView event is fired.
+     * Overrides the sorting comparator when appropriate (i.e when the table is being sorted based on the expiry col or
+     * progress bar col. Whenever one of these columns are being sorted on, the items in the table are sorted based on
+     * the timeRemaining attribute.
+     */
     @FXML
-    public void onSort(Event event) {
-        Comparator<PatientOrgan> test = (o1, o2) -> Long.compare(o2.timeRemaining(), o1.timeRemaining());
-        ObjectProperty<Comparator<? super PatientOrgan>> test1 = new SimpleObjectProperty<>(test);
-        sortedData.comparatorProperty().unbind();
-        if (availableOrgansTableView.getSortOrder().size() == 0) {
-            sortedData.comparatorProperty().bind(test1);
+    public void onSort() {
+        //Create ascending and descending comparators
+        Comparator<PatientOrgan> comparatorAscending = (o1, o2) -> Long.compare(o2.timeRemaining(), o1.timeRemaining());
+        Comparator<PatientOrgan> comparatorDescending = Comparator.comparingLong(PatientOrgan::timeRemaining);
+        ObjectProperty<Comparator<? super PatientOrgan>> objectPropertyAsc = new SimpleObjectProperty<>(comparatorAscending);
+        ObjectProperty<Comparator<? super PatientOrgan>> objectPropertyDesc = new SimpleObjectProperty<>(comparatorDescending);
+        sortedData.comparatorProperty().unbind(); //Clear the current comparator property
+        if (availableOrgansTableView.getSortOrder().size() == 0) { //Called after the third consecutive click on a table column header
+            sortedData.comparatorProperty().bind(objectPropertyAsc);
             availableOrgansTableView.setSortPolicy(param -> true);
         } else {
-            sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
+            boolean sortingByExpiry = false;
+            boolean isAscending = true;
+            ObservableList<TableColumn<PatientOrgan, ?>> sortPolicies = availableOrgansTableView.getSortOrder();
+            //Search the sort policies to see if any of the tablecolumns being sorted is either the progress bar or expiry time
+            for (TableColumn<PatientOrgan, ?> tableColumn : sortPolicies) {
+                if (tableColumn.getId().equals("expiryCol") || tableColumn.getId().equals("organExpiryProgressCol")) {
+                    sortingByExpiry = true;
+                    //Get the sort order of the table column
+                    isAscending = tableColumn.getSortType() == TableColumn.SortType.ASCENDING;
+                }
+            }
+            if (sortingByExpiry) {
+                if (!isAscending) {
+                    sortedData.comparatorProperty().bind(objectPropertyDesc);
+                } else {
+                    sortedData.comparatorProperty().bind(objectPropertyAsc);
+                }
+            } else {
+                sortedData.comparatorProperty().bind(availableOrgansTableView.comparatorProperty());
+            }
+            availableOrgansTableView.setSortPolicy(param -> true);
         }
+       updateTable(pagination.getCurrentPageIndex());
     }
+
 
     /**
      * Populates waiting list table with all patients waiting to receive an organ
      */
     private void populateTable() {
+        sortedData = new SortedList<>(masterData);
+        onSort();
         // initialize columns
         patientCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getPatient()
@@ -120,28 +184,67 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 .toString()));
 
         //expiry
-        expiryCol.setCellValueFactory(r -> r.getValue()
-                .getProgressTask()
-                .messageProperty());
-        organExpiryProgressCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()
-                .getProgressTask()));
+        expiryCol.setCellValueFactory(r -> {
+            if (r.getValue().getProgressTask() == null) {
+                return null;
+            }
+            return r.getValue().getProgressTask().messageProperty();
+        });
+        organExpiryProgressCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getProgressTask()));
         organExpiryProgressCol.setCellFactory(cb -> ProgressBarCustomTableCell.getCell(organExpiryProgressCol));
 
-        // wrap ObservableList in a FilteredList
-        FilteredList<PatientOrgan> filteredData = new FilteredList<>(masterData);
-
-        // wrap the FilteredList in a SortedList.
-        sortedData = new SortedList<>(filteredData);
-
-        Comparator<PatientOrgan> test = (o1, o2) -> Long.compare(o2.timeRemaining(), o1.timeRemaining());
-        ObjectProperty<Comparator<? super PatientOrgan>> test1 = new SimpleObjectProperty<>(test);
-
-        sortedData.comparatorProperty().bind(test1);
-
         // add sorted (and filtered) data to the table.
-        availableOrgansTableView.setItems(sortedData);
+        availableOrgansTableView.setItems(filterData);
         availableOrgansTableView.setVisible(true);
+        availableOrgansTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                potentialMatchesBtn.setDisable(false);
+            } else {
+                potentialMatchesBtn.setDisable(true);
+            }
+        });
         setUpDoubleClickToPatientEdit();
+        pagination.setPageCount(getPageCount());
+        pagination.currentPageIndexProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!newValue.equals(oldValue)) {
+                updateTable(newValue.intValue());
+            }
+        }));
+    }
+
+
+    /**
+     * Updates the page items on the current page
+     * @param index - index of the page number we are looking at
+     */
+    private void updateTable(int index) {
+        int endIndex;
+        int numberToDisplay;
+        //kill all tasks on previous page
+        filterData.forEach(x -> {
+            if (x.getProgressTask() != null) {
+                x.getProgressTask().setInterrupted();
+            }
+        });
+        if ((int) NUM_ROWS_PER_PAGE * (index + 1) <= masterData.size()) {
+            endIndex = (int) NUM_ROWS_PER_PAGE * (index + 1);
+            numberToDisplay = (int)NUM_ROWS_PER_PAGE;
+        } else {
+            endIndex = sortedData.size();
+            numberToDisplay = (int) (masterData.size() % NUM_ROWS_PER_PAGE); //remaining items
+        }
+        filterData.clear();
+        filterData.addAll(FXCollections.observableArrayList(sortedData.subList(endIndex - numberToDisplay, endIndex)));
+        //start the progress tasks on current page
+        filterData.forEach(PatientOrgan::startTask);
+    }
+
+    /**
+     * Gets the page count to show
+     * @return - page count for the pagination
+     */
+    private int getPageCount(){
+        return (int) Math.ceil((float)masterData.size()/NUM_ROWS_PER_PAGE);
     }
 
 
@@ -188,5 +291,43 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     public void windowClosed() {
         load();
         availableOrgansTableView.refresh();
+    }
+
+    private UserControl userControl = UserControl.getUserControl();
+
+    /**
+     * View patients from table on the map
+     * Sets the patients list in the JavaScript to custom set
+     * Opens the map and loads
+     */
+    @FXML
+    public void viewOnMap() {
+        List<Patient> patients = new ArrayList<>();
+
+        for (int i = 0; i < masterData.size(); i++) {
+            patients.add(masterData.get(i).getPatient());
+        }
+
+        Alert alert;
+        if (screenControl.getMapOpen()) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
+                    , ButtonType.OK, ButtonType.NO);
+            alert.show();
+        } else {
+            alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
+                    , ButtonType.OK);
+            alert.show();
+        }
+
+        alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
+            screenControl.setIsCustomSetMap(true);
+            if (!screenControl.getMapOpen()) {
+                screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+                screenControl.setMapOpen(true);
+            }
+            GUIMap.jsBridge.setMember("patients", patients);
+            GUIMap.jsBridge.call("setPatients");
+            screenControl.setMapOpen(true);
+        });
     }
 }

@@ -14,6 +14,7 @@ If you are a developer seeking a code review, please follow the `story_definitio
 * How does the code look? Can you read and understand what it does easily?
 * Are there "magic numbers" anywhere? Can they be removed or refactored to be more obvious?
 * Can SENG301 principles be followed more closely anywhere?
+* Do the new features work as expected on both the desktop and touch applications?
 
 
 ## Checklist
