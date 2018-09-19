@@ -36,7 +36,7 @@ public class GUIMap implements Initializable {
 
     private WebEngine webEngine;
 
-    private static JSObject jsBridge;
+    public static JSObject jsBridge;
 
     private MapBridge mapBridge;
 
@@ -83,10 +83,12 @@ public class GUIMap implements Initializable {
         webViewMap1.setOnTouchReleased((event -> {
             System.out.println("released");
             originalDistance = null;
-            jsBridge.call("setJankaOriginal", null);
+            //jsBridge.call("setJankaOriginal", null);
         }));
 
         webViewMap1.setOnTouchMoved((event -> {
+
+            System.out.println(event.getTouchCount());
             if (screenControl.isTouch()) {
                 if (event.getTouchCount() == 1) {
                     Point2D touchOne = new Point2D(event.getTouchPoints().get(0).getX(), event.getTouchPoints().get(0).getY());
@@ -97,10 +99,11 @@ public class GUIMap implements Initializable {
                     Point2D touchTwo = new Point2D(event.getTouchPoints().get(1).getX(), event.getTouchPoints().get(1).getY());
                     if(originalDistance == null) {
                         originalDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) + Math.pow(touchOne.getY() - touchTwo.getY(), 2));
-                        jsBridge.call("setJankaOriginal", originalDistance);
+                        jsBridge.call("setJankaOriginal");
                     }
                     double currentDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) + Math.pow(touchOne.getY() - touchTwo.getY(), 2));
-                    jsBridge.call("setJankaZoom", originalDistance / currentDistance);
+                    System.out.println("TEST: " + currentDistance/ originalDistance);
+                    jsBridge.call("setJankaZoom", currentDistance/ originalDistance);
                 }
             }
         }));

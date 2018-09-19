@@ -7,7 +7,7 @@ var markers = [];
 var infoWindows = [];
 var validCount = 0;
 
-var originalDistance;
+var originalZoom;
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -153,9 +153,9 @@ function setPatients() {
 }
 
 function setJankaZoom(newZoom) {
-    map.setZoom(newZoom * originalDistance);
+    map.setZoom(newZoom * originalZoom);
 }
 
-function setJankaOriginal(originalDistance1) {
-    originalDistance = originalDistance1;
+function setJankaOriginal() {
+    originalZoom = map.getZoom();
 }
