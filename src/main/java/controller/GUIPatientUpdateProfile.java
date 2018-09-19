@@ -463,7 +463,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
             after.setBirth(dobDate.getValue());
         }
 
-        after.setDeathDate(dateOfDeath.getDateTimeValue());
+        if (deathLocationTxt.getText() != null) { // otherwise date of death will default to current date
+            after.setDeathDate(dateOfDeath.getDateTimeValue());
+        } else {
+            after.setDeathDate(null);
+        }
         after.setDeathStreet(deathLocationTxt.getText());
         after.setDeathCity(deathCity.getText());
         if (deathRegion.getValue() != null) {
