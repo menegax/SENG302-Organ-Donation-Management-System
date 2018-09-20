@@ -18,6 +18,19 @@ function init() {
     });
     setMapDragEnd();
     markerLoop(patients.size());
+
+    document.getElementById('availableOrgansView').addEventListener('click', function() {
+        validCount = 0;
+
+        markers.forEach(function(marker) {
+            marker.setMap(null);
+        });
+        markers = [];
+
+        patients = mapBridge.getAvailableOrgans();
+
+        markerLoop(patients.size());
+    });
 }
 
 /**
@@ -68,6 +81,7 @@ function markerLoop(i) {
 function addMarker(patient) {
     var address = patient.getFormattedAddress();
     var name = patient.getNameConcatenated();
+    console.log(address);
     geocoder.geocode({'address': address}, function (results, status) {
         if (status === 'OK') {
             validCount++;
@@ -75,7 +89,7 @@ function addMarker(patient) {
             var randx = Math.random() * 0.02 - 0.01;
             var randy = Math.random() * 0.02 - 0.01;
             var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat() + randx, results[0].geometry.location.lng() + randy);
-            console.log('Placing marker on map');
+            console.log(name + ': ' + 'Placing marker on map');
             var marker = new google.maps.Marker({
                 map: map,
                 position: finalLoc,

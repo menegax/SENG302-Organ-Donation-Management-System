@@ -1,16 +1,25 @@
 package utility;
 
+import controller.GUIAvailableOrgans;
 import controller.GUIHome;
 import controller.ScreenControl;
 import model.Patient;
+import model.PatientOrgan;
 import service.PatientDataService;
+import service.interfaces.IPatientDataService;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Provides the map javascript access to the java codebase
  */
 public class MapBridge {
+
+    private IPatientDataService patientDataService = new PatientDataService();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -25,5 +34,32 @@ public class MapBridge {
         controller.setTarget(patient);
     }
 
+    /**
+     * Collects the patient list from available organs list
+     */
+    public List getAvailableOrgans() {
+        List<PatientOrgan> masterData = new ArrayList<PatientOrgan>();
+        List<Patient> deadPatients = patientDataService.getDeadPatients();
+        for (Patient patient : deadPatients) {
+            if (patient.getDeathDate() != null) {
+                for (GlobalEnums.Organ organ : patient.getDonations()) {
+                    PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
+                    if (!masterData.contains(patientOrgan)) {
+                        if (patientOrgan.timeRemaining() < 0) {
+                            masterData.add(patientOrgan);
+                        }
+                    }
+                }
+            }
+        }
 
+        Set<Patient> uniqueSetOfPatients = new HashSet<Patient>();
+
+        for (int i = 0; i < masterData.size(); i++) {
+            uniqueSetOfPatients.add(masterData.get(i).getPatient());
+        }
+        List<Patient> patients = new ArrayList<Patient>(uniqueSetOfPatients);
+        System.out.println(patients);
+        return patients;
+    }
 }
