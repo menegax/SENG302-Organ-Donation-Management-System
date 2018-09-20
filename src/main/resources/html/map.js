@@ -1,7 +1,3 @@
-// Note: This example requires that you consent to location sharing when
-// prompted by your browser. If you see the error "The Geolocation service
-// failed.", it means you probably did not give permission for the browser to
-// locate you.
 var map, geocoder, patients, mapBridge, successCount;
 var markers = [];
 var infoWindows = [];
@@ -129,6 +125,10 @@ function getOrganOptions(patient) {
     return {donating: donationStr, receiving: requiredStr};
 }
 
+/**
+ * Sets the patients for the map and adds the markers to the map
+ * @param _patients
+ */
 function setPatients(_patients) {
     patients = _patients;
     clearMarkers();
@@ -136,6 +136,10 @@ function setPatients(_patients) {
     addMarkers(patients.size());
 }
 
+/**
+ * Add markers to the map
+ * @param i
+ */
 function addMarkers(i) {
     if (i < 1) {
         showNotification(successCount, patients.size());
@@ -147,6 +151,9 @@ function addMarkers(i) {
     }, 700);
 }
 
+/**
+ * Clear the markers from the map
+ */
 function clearMarkers() {
     markers.forEach(function (marker) {
         marker.setMap(null);
@@ -154,10 +161,18 @@ function clearMarkers() {
     markers = [];
 }
 
+/**
+ * Hides the notification
+ */
 function hideNotification() {
     $('#marker-notification').hide();
 }
 
+/**
+ * Shows number of successfully loaded patients
+ * @param numSuccess successfully loaded patients
+ * @param numTotal total patients to load
+ */
 function showNotification(numSuccess, numTotal) {
     $('#marker-notification-msg').html('Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations');
     $('#marker-notification').show();

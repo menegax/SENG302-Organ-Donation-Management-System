@@ -58,15 +58,24 @@ public class GUIMap {
     /**
      * Initialises the widgets and bridge in the google map
      */
-    public void loadMap() {
-        webEngine = webViewMap1.getEngine();
-
+    void loadMap() {
         UserActionHistory.userActions.log(Level.INFO, "Loading map...", "Attempted to open map");
 
+        webEngine = webViewMap1.getEngine();
         if (!screenControl.getIsCustomSetMap()) {
              patients = getInitialPatients();
         }
 
+        setUpWebEngine();
+        setUpJsLogging();
+        setUpTouchControls();
+    }
+
+
+    /**
+     * Sets up the web engine and jsbridge
+     */
+    private void setUpWebEngine() {
         webEngine.setJavaScriptEnabled(true);
         webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
                     if (Worker.State.SUCCEEDED == newValue) {
@@ -80,16 +89,19 @@ public class GUIMap {
                 .getResource("html/map.html"))
                 .toExternalForm());
 
-        // What to do with console.log statements
-        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
-
         try {
             robot = new Robot();
         }
         catch (AWTException e) {
             SystemLogger.systemLogger.log(Level.SEVERE, "Failed to initialize map bridge: " + e.toString());
         }
+    }
 
+
+    /**
+     * Sets scroll and touch events
+     */
+    private void setUpTouchControls() {
         webViewMap1.setOnScroll(event -> {
             if (screenControl.isTouch()) {
                 if (event.getTouchCount() == 2) {
@@ -102,6 +114,15 @@ public class GUIMap {
                 robot.keyRelease(KeyEvent.VK_CONTROL);
             }
         });
+    }
+
+
+    /**
+     * Forwards JavaScript console.log statements into java logging
+     */
+    private void setUpJsLogging() {
+        // What to do with console.log statements
+        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
     }
 
 
