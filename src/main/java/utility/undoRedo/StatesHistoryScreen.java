@@ -58,7 +58,9 @@ public class StatesHistoryScreen {
     public StatesHistoryScreen(List<Control> controls, UndoableScreen undoableScreen, User target) {
         this.undoableScreen = undoableScreen;
         this.target = target;
-        findUndoableWrapper(controls.get(0));
+        if (controls.size() > 0) {
+            findUndoableWrapper(controls.get(0));
+        }
         for (Object control : controls) {
             if ((control instanceof TextField)) {
                 createStateHistoriesTextField(control);

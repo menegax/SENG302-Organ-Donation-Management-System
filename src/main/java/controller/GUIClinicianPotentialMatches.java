@@ -137,9 +137,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
      * to view a patient's profile.
      */
     public void load() {
-        List<Control> controls = new ArrayList<>();
-        controls.add(closeButton);
-        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPOTENTIALMATCHES, target);
+        statesHistoryScreen = new StatesHistoryScreen(new ArrayList<>(), GlobalEnums.UndoableScreen.CLINICIANPOTENTIALMATCHES, target);
         allRequests.clear();
         loadRegionDistances();
         clinicianDataService = new ClinicianDataService();
