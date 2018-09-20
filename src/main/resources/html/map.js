@@ -68,6 +68,8 @@ function addMarker(patient) {
                 position: finalLoc,
                 title: name
             });
+
+            // create info window
             var infoWindow = new google.maps.InfoWindow({
                 content: '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() +
                 '</h5><span style="font-size: 14px">' +
@@ -77,6 +79,8 @@ function addMarker(patient) {
                 '</span><br><input type="button" onclick="openPatientProfile(\''+patient.getNhiNumber()+'\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
             });
             infoWindows.push(infoWindow);
+
+            // add listener to open infoWindow when marker clicked
             marker.addListener('click', function() {
                 //infoWindow.open(map, marker);
                 infoWindows.forEach(function(iw) {
