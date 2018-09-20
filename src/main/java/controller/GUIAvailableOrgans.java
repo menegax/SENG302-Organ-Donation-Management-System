@@ -105,10 +105,12 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         for (Patient patient : deadPatients) {
             if (patient.getDeathDate() != null) {
                 for (Organ organ : patient.getDonations().keySet()) {
-                    PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
-                    if (!masterData.contains(patientOrgan)) {
-                        if (patientOrgan.timeRemaining() < 0) {
-                            masterData.add(patientOrgan);
+                    if (patient.getDonations().get(organ) == null) {
+                        PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
+                        if (!masterData.contains(patientOrgan)) {
+                            if (patientOrgan.timeRemaining() < 0) {
+                                masterData.add(patientOrgan);
+                            }
                         }
                     }
                 }
