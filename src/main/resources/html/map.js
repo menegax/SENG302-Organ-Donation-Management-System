@@ -51,8 +51,6 @@ function setMapDragEnd() {
 }
 
 function markerLoop(i) {
-    console.log(i);
-    console.log('STARTING LOOOOOP');
     if (i < 1) return;
     addMarker(patients.get(i-1));
     setTimeout(function() {
@@ -69,12 +67,9 @@ function addMarker(patient) {
     var name = patient.getNameConcatenated();
     console.log("Adding marker to map for patient " + patient.getNhiNumber());
     geocoder.geocode({'address': address}, function (results, status) {
-        console.log('yahoooooo');
         if (status === 'OK') {
             var organOptions = getOrganOptions(patient);
-            var randx = Math.random() * 0.02 - 0.01;
-            var randy = Math.random() * 0.02 - 0.01;
-            var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat() + randx, results[0].geometry.location.lng() + randy);
+            var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
             console.log('Placing marker on map');
             var marker = new google.maps.Marker({
                 map: map,
