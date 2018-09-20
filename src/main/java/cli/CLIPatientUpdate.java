@@ -56,14 +56,17 @@ public class CLIPatientUpdate implements Runnable {
     @Option(names = {"--weight"}, description = "The weight of the patient (kg).")
     private double weight;
 
-    @Option(names = {"--street1"}, description = "The street1 field for the address of the patient.")
-    private String street1;
+    @Option(names = {"--streetName"}, description = "The street name of the current address of the patient")
+    private String streetName;
 
-    @Option(names = {"--street2"}, description = "The street2 field for the address of the patient.")
-    private String street2;
+    @Option(names = {"--streetNumber"}, description = "The street number of the current address of the patient")
+    private String streetNumber;
 
     @Option(names = {"--suburb"}, description = "The suburb field for the address of the patient.")
     private String suburb;
+
+    @Option(names = {"--city"}, description = "The city field for the address of the patient.")
+    private String city;
 
     @Option(names = {"--region"}, description = "The region of the patient. Choose one from: \n" +
             "NORTHLAND, AUCKLAND, WAIKATO, BAYOFPLENTY,\n" +
@@ -90,8 +93,8 @@ public class CLIPatientUpdate implements Runnable {
         Patient patient = patientDataService.getPatientByNhi(searchNhi);
         if (patient != null) {
             try {
-                patient.updateAttributes(firstName, lastName, middleNames, preferredName, birth, death, street1,
-                        street2, suburb, region, birthGender, preferredGender, bloodGroup, height, weight, nhi);
+                patient.updateAttributes(firstName, lastName, middleNames, preferredName, birth, death, streetName,
+                        streetNumber, city, suburb, region, birthGender, preferredGender, bloodGroup, height, weight, nhi);
                 patientDataService.save(patient);
             } catch (DataFormatException e) {
                 userActions.log(Level.SEVERE, "Unable to set suburb", "attempted to update patient attributes");

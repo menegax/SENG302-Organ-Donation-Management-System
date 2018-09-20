@@ -482,7 +482,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
             after.setSuburb(suburbTxt.getText());
         } catch (DataFormatException e) {
             userActions.log(Level.SEVERE, "Unable to set suburb", "attempted to update patient attributes");
-        }        if (regionDD.getValue() != null) {
+        }
+        if (regionDD.getValue() != null) {
             after.setRegion(Region.getEnumFromString(regionDD.getSelectionModel()
                     .getSelectedItem()));
         }
@@ -503,8 +504,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         Action action = new Action(target, after);
         statesHistoryScreen.addAction(action);
-        patientDataService.save(after);
-        SystemLogger.systemLogger.log(Level.FINE, "Successfuly update patient to:\n" + after);
+//        patientDataService.save(after);
+        SystemLogger.systemLogger.log(Level.FINE, "Successfully update patient to:\n" + after);
     }
 
 
