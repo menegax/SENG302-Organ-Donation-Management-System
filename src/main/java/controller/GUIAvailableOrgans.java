@@ -279,7 +279,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         } else if (selected.getPatient().getBloodGroup() == null) {
             userActions.log(Level.WARNING, "Selected donor does not have a blood group set. Please set a blood group.", "Attempted to view available matches for a donor without a blood group");
         } else {
-            GUIClinicianPotentialMatches controller = (GUIClinicianPotentialMatches) screenControl.show("/scene/clinicianPotentialMatches.fxml", false, null, selected.getPatient());
+            GUIClinicianPotentialMatches controller = (GUIClinicianPotentialMatches) screenControl.show("/scene/clinicianPotentialMatches.fxml", false, this, selected.getPatient());
             controller.setTarget(selected.getPatient(), selected.getOrgan());
         }
     }
