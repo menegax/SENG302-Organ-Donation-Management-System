@@ -2,7 +2,7 @@
 // prompted by your browser. If you see the error "The Geolocation service
 // failed.", it means you probably did not give permission for the browser to
 // locate you.
-var map, geocoder, patients, mapBridge;
+var map, geocoder, patients, mapBridge, successCount;
 var markers = [];
 var infoWindows = [];
 
@@ -59,6 +59,7 @@ function addMarker(patient) {
     console.log("Adding marker to map for patient " + patient.getNhiNumber());
     geocoder.geocode({'address': address}, function (results, status) {
         if (status === 'OK') {
+            successCount++;
             var organOptions = getOrganOptions(patient);
             var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
             var marker = new google.maps.Marker({
@@ -131,15 +132,17 @@ function getOrganOptions(patient) {
 function setPatients(_patients) {
     patients = _patients;
     clearMarkers();
+    successCount = 0;
     addMarkers(patients.size());
 }
 
 function addMarkers(i) {
     if (i < 1) {
+        showNotification(successCount, patients.size());
         return;
     }
-    addMarker(patients.get(i - 1));
-    setTimeout(function () {
+    addMarker(patients.get(i-1));
+    setTimeout(function() {
         addMarkers(--i);
     }, 700);
 }
@@ -149,4 +152,13 @@ function clearMarkers() {
         marker.setMap(null);
     });
     markers = [];
+}
+
+function hideNotification() {
+    $('#marker-notification').hide();
+}
+
+function showNotification(numSuccess, numTotal) {
+    $('#marker-notification-msg').html('Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations');
+    $('#marker-notification').show();
 }
