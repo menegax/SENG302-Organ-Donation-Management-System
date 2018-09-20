@@ -1,7 +1,5 @@
 package controller;
 
-import data_access.factories.MySqlFactory;
-import data_access.interfaces.IPatientDataAccess;
 import data_access.localDAO.PatientLocalDAO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -21,15 +19,16 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
-import model.PatientOrgan;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.RangeSlider;
-import org.joda.time.Days;
 import service.ClinicianDataService;
 import service.OrganWaitlist;
 import service.PatientDataService;
 import utility.GlobalEnums;
-import utility.GlobalEnums.*;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.FilterOption;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.Region;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 
@@ -37,12 +36,9 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.zip.DataFormatException;
 
 import static java.lang.Math.abs;
 import static java.time.temporal.ChronoUnit.DAYS;
-import static java.util.logging.Level.FINE;
-import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianPotentialMatches extends TargetedController implements IWindowObserver, TouchscreenCapable {
@@ -584,8 +580,10 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         Patient organReceiver = patientDataService.getPatientByNhi(selectedRequest.getReceiverNhi());
         Map<Organ, String> patientDonations = ((Patient) target).getDonations();
         patientDonations.put(targetOrgan, organReceiver.getNhiNumber());
+        organReceiver.getRequiredOrgans().get(targetOrgan).setDonorNhi(((Patient) target).getNhiNumber());
         organWaitList.getRequests().remove(selectedRequest);
         clinicianDataService.updateOrganWaitList(organWaitList);
+        userActions.log(Level.INFO, "Assigned organ (" + targetOrgan + ") to patient " + organReceiver.getNhiNumber());
     }
 
 
