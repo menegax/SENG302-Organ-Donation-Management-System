@@ -123,7 +123,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
     private SortedList<OrganWaitlist.OrganRequest> sortedRequests;
 
-    public final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
+    private final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
 
     /**
      *  0         1
@@ -373,10 +373,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * @return - true if latlng is in nz
      */
     private boolean isInNz(LatLng latLng) {
-        return latLng.lat > boundsOfNz.get(2).lat && latLng.lat < boundsOfNz.get(1).lat
-                && latLng.lng < boundsOfNz.get(1).lng && latLng.lng > boundsOfNz.get(2).lng;
-
-        //todo - organ waitlist not updated correctly when changing address on patient profile...
+        return latLng.lat > boundsOfNz.get(2).lat && latLng.lat < boundsOfNz.get(1).lat && latLng.lng < boundsOfNz.get(1).lng && latLng.lng > boundsOfNz.get(2).lng;
     }
 
     /**
@@ -401,6 +398,11 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     }
 
 
+    /**
+     * Gets a formatted string for the travel time from a request
+     * @param request the request for the available organ
+     * @return the formatted string for travel time
+     */
     private String getTravelTimeToTravel(OrganWaitlist.OrganRequest request){
         long totalSecs = calculateTotalHeloTravelTime(request.getReceiver());
         if (totalSecs == -1) {
@@ -416,6 +418,75 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * Populates the potential matches table with the potential matches in the right order
      */
     private void populateTable() {
+        setCellValues();
+
+        // wrap ObservableList in a FilteredList
+        observableList = FXCollections.observableList(requests);
+        FilteredList<OrganWaitlist.OrganRequest> filteredRequests = new FilteredList<>(observableList);
+        filterRequests();
+
+        // wrap the FilteredList in a SortedList.
+        sortedRequests = new SortedList<>(filteredRequests);
+        setComparators();
+
+        // add sorted (and filtered) data to the table.
+        potentialMatchesTable.setItems(sortedRequests);
+
+        setDefaultFilters();
+    }
+
+
+    /**
+     * Bind the SortedList comparator to the TableView comparator.
+     */
+    private void setComparators() {
+        Comparator<OrganWaitlist.OrganRequest> newComparator = (request1, request2) -> {
+            if (request1.getDate().isBefore(request2.getDate())) {
+                return -1;
+            }
+            else if (request2.getDate()
+                    .isBefore(request1.getDate())) {
+                return 1;
+            }
+            else {
+                return (getRegionDistance(request1.getRequestRegion(), new ArrayList<>())).compareTo((getRegionDistance(request2.getRequestRegion(),
+                        new ArrayList<>())));
+            }
+        };
+        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectProperty = new SimpleObjectProperty<>(newComparator);
+
+        sortedRequests.comparatorProperty()
+                .bind(objectProperty);
+    }
+
+
+    /**
+     * Sets the default option for the filters
+     */
+    private void setDefaultFilters() {
+        regionFilter.getItems()
+                .add(GlobalEnums.NONE_ID); //for empty selection
+        regionFilter.getSelectionModel()
+                .select(0);
+        for (Region region : Region.values()) { //add values to region choice box
+            regionFilter.getItems()
+                    .add(StringUtils.capitalize(region.getValue()));
+        }
+        birthGenderFilter.getItems()
+                .add(GlobalEnums.NONE_ID);
+        birthGenderFilter.getSelectionModel()
+                .select(0);
+        for (BirthGender birthGender : BirthGender.values()) {
+            birthGenderFilter.getItems()
+                    .addAll(StringUtils.capitalize(birthGender.getValue()));
+        }
+    }
+
+
+    /**
+     * Loads the cell values in the table
+     */
+    private void setCellValues() {
         nhiCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getReceiverNhi()));
         nameCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
@@ -436,56 +507,6 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(r.getValue()
                 .getDate(), LocalDate.now()))));
         travelTimeCol.setCellValueFactory(r -> new SimpleStringProperty(getTravelTimeToTravel(r.getValue())));
-
-
-        // wrap ObservableList in a FilteredList
-        //FilteredList<OrganWaitlist.OrganRequest> filteredRequests = filterRequests();
-
-        observableList = FXCollections.observableList(requests);
-        FilteredList<OrganWaitlist.OrganRequest> filteredRequests = new FilteredList<>(observableList);
-
-        filterRequests();
-
-        // wrap the FilteredList in a SortedList.
-        sortedRequests = new SortedList<>(filteredRequests);
-
-        // bind the SortedList comparator to the TableView comparator.
-        Comparator<OrganWaitlist.OrganRequest> newComparator = (request1, request2) -> {
-            if (request1.getDate().isBefore(request2.getDate())) {
-                return -1;
-            }
-            else if (request2.getDate()
-                    .isBefore(request1.getDate())) {
-                return 1;
-            }
-            else {
-                return (getRegionDistance(request1.getRequestRegion(), new ArrayList<>())).compareTo((getRegionDistance(request2.getRequestRegion(),
-                        new ArrayList<>())));
-            }
-        };
-        ObjectProperty<Comparator<? super OrganWaitlist.OrganRequest>> objectProperty = new SimpleObjectProperty<>(newComparator);
-
-        sortedRequests.comparatorProperty()
-                .bind(objectProperty);
-        // add sorted (and filtered) data to the table.
-        potentialMatchesTable.setItems(sortedRequests);
-
-        regionFilter.getItems()
-                .add(GlobalEnums.NONE_ID); //for empty selection
-        regionFilter.getSelectionModel()
-                .select(0);
-        for (Region region : Region.values()) { //add values to region choice box
-            regionFilter.getItems()
-                    .add(StringUtils.capitalize(region.getValue()));
-        }
-        birthGenderFilter.getItems()
-                .add(GlobalEnums.NONE_ID);
-        birthGenderFilter.getSelectionModel()
-                .select(0);
-        for (BirthGender birthGender : BirthGender.values()) {
-            birthGenderFilter.getItems()
-                    .addAll(StringUtils.capitalize(birthGender.getValue()));
-        }
     }
 
 
