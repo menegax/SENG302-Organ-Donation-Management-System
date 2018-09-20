@@ -371,6 +371,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     private boolean isInNz(LatLng latLng) {
         return latLng.lat > boundsOfNz.get(2).lat && latLng.lat < boundsOfNz.get(1).lat
                 && latLng.lng < boundsOfNz.get(1).lng && latLng.lng > boundsOfNz.get(2).lng;
+
+        //return true; //todo - organ wait list not updated correctly when changing address on patient profile...
     }
 
     /**

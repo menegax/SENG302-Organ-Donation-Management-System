@@ -28,6 +28,8 @@ import utility.TouchscreenCapable;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 
@@ -120,6 +122,7 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
                 clinicianDataService.save(clinician);
                 userControl.addLoggedInUserToCache(clinicianDataService.getClinician(Integer.parseInt(nhiLogin.getText())));
                 openMap();
+                screenControl.getMapController().setPatients(new ArrayList<>());
             } else {
                 administrator.isSelected();
                 checkAdminCredentials();
