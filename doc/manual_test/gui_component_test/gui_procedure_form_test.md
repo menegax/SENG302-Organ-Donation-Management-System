@@ -194,9 +194,39 @@
  8. There is a procedure with summary "A valid summary" displayed in the pending procedures tables with
     the date being the current date, description is null, and affected organs is the selected organ
     
-##Test History
+## Test History
 
-###19/07/2018 - Maree
+### 19/07/2018 - Maree
+
+Procedure buttons invisible for patients: Pass
+
+Procedure buttons visible for clinicians: Pass
+
+Edit and delete buttons disabled by default: Pass
+
+Precondition: Pass
+
+A null procedure application will be invalid: Pass
+
+A null summary application will be invalid: Pass
+
+A procedure application with a summary containing special character(s) will be invalid: Pass
+
+A procedure application with a description containing special character(s) will be invalid: Pass
+
+A procedure application with a date that is before the patients date of birth is invalid: Pass
+
+A procedure application with a date that is after the current date is valid: Pass
+
+A procedure application with a date that is before the current date, not before patient DOB is valid: Pass
+
+A procedure application with a summary only containing alphabet, numbers, -, and spaces is valid: Pass
+
+A procedure application with a description only containing alphabet, numbers, -, and spaces is valid: Pass
+
+A procedure application with any selected organ as an affected donation is valid: Pass
+
+### 14/08/2018 - Aidan
 
 Procedure buttons invisible for patients: Pass
 
@@ -226,32 +256,4 @@ A procedure application with a description only containing alphabet, numbers, -,
 
 A procedure application with any selected organ as an affected donation is valid: Pass
 
-###14/08/2018 - Aidan
-
-Procedure buttons invisible for patients: Pass
-
-Procedure buttons visible for clinicians: Pass
-
-Edit and delete buttons disabled by default: Pass
-
-Precondition: Pass
-
-A null procedure application will be invalid: Pass
-
-A null summary application will be invalid: Pass
-
-A procedure application with a summary containing special character(s) will be invalid: Pass
-
-A procedure application with a description containing special character(s) will be invalid: Pass
-
-A procedure application with a date that is before the patients date of birth is invalid: Pass
-
-A procedure application with a date that is after the current date is valid: Pass
-
-A procedure application with a date that is before the current date, not before patient DOB is valid: Pass
-
-A procedure application with a summary only containing alphabet, numbers, -, and spaces is valid: Pass
-
-A procedure application with a description only containing alphabet, numbers, -, and spaces is valid: Pass
-
-A procedure application with any selected organ as an affected donation is valid: Pass
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**

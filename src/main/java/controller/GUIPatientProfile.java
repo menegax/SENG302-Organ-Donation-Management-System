@@ -252,12 +252,29 @@ public class GUIPatientProfile extends TargetedController {
 	private void loadAddressDetails(Patient patient) {
 		streetLbl.setText((patient.getStreetName() == null || patient.getStreetName().length() == 0) ? "Not set"
 				: patient.getStreetNumber() + " " + patient.getStreetName());
-		cityLbl.setText(patient.getStreetName() == null || patient.getStreetName().length() < 1 ? "Not set"
-				: patient.getStreetName());
-		suburbLbl.setText(
-				(patient.getSuburb() == null || patient.getSuburb().length() == 0) ? "Not set" : patient.getSuburb());
+		if (patient.getStreetName() == null || patient.getStreetName().length() == 0) {
+			streetLbl.getStyleClass().add("notSet");
+		} else {
+			streetLbl.getStyleClass().clear();
+		}
+		suburbLbl.setText((patient.getSuburb() == null || patient.getSuburb().length() == 0) ? "Not set" : patient.getSuburb());
+		if (patient.getSuburb() == null || patient.getSuburb().length() == 0) {
+			suburbLbl.getStyleClass().add("notSet");
+		} else {
+			suburbLbl.getStyleClass().clear();
+		}
 		cityLbl.setText((patient.getCity() == null || patient.getCity().length() == 0) ? "Not set" : patient.getCity());
+		if (patient.getCity() == null || patient.getCity().length() == 0) {
+			cityLbl.getStyleClass().add("notSet");
+		} else {
+			cityLbl.getStyleClass().clear();
+		}
 		regionLbl.setText(patient.getRegion() == null ? "Not set" : patient.getRegion().getValue());
+		if (patient.getRegion() == null) {
+			regionLbl.getStyleClass().add("notSet");
+		} else {
+			regionLbl.getStyleClass().clear();
+		}
 		if (patient.getZip() != 0) {
 			zipLbl.setText(String.valueOf(patient.getZip()));
 			while (zipLbl.getText().length() < 4) {

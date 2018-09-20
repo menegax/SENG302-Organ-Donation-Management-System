@@ -85,3 +85,5 @@ Filter patients by receiving organ: Pass
 Filter patients by age, birth gender, donating organ and donating checkbox: Pass
 
 Filter patients by age, birth gender, receiving organ and receiving checkbox: Pass
+
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
