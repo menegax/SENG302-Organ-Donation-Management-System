@@ -364,7 +364,6 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             return (long) Math.ceil(organLoadTime + totalTravelTime + totalRefuelTime + organUnloadtime);
         }
         return -1;
-        //todo aab2072 aaj6027
     }
 
 
@@ -405,7 +404,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     private String getTravelTimeToTravel(OrganWaitlist.OrganRequest request){
         long totalSecs = calculateTotalHeloTravelTime(request.getReceiver());
         if (totalSecs == -1) {
-            return "No location"; //todo
+            return "No location";
         }
         int hours = (int)(totalSecs / 3600L);
         int minutes = (int)((totalSecs % 3600L) / 60L);
@@ -436,7 +435,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                 .getAddress()));
         waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(r.getValue()
                 .getDate(), LocalDate.now()))));
-        travelTimeCol.setCellValueFactory(r -> new SimpleStringProperty(getTravelTimeToTravel(r.getValue()))); //todo
+        travelTimeCol.setCellValueFactory(r -> new SimpleStringProperty(getTravelTimeToTravel(r.getValue())));
 
 
         // wrap ObservableList in a FilteredList

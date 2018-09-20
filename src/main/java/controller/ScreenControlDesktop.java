@@ -59,7 +59,8 @@ public class ScreenControlDesktop extends ScreenControl {
             stage.setScene(scene);
             stage.show();
             if (parentController != null) {
-                stage.setOnHiding(event -> parentController.windowClosed());            }
+                stage.setOnHiding(event -> parentController.windowClosed());
+            }
             if (fxml.equals(MAPFXML)) {
                 // Cast should always be safe
                 mapController = (GUIMap) controller;
