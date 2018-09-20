@@ -50,13 +50,15 @@ public class GUIMap {
     public void setPatients(Collection<Patient> patients) {
         this.patients.clear();
         this.patients = patients;
-        loadMap();
+        if (jsBridge != null) {
+            jsBridge.call("setPatients", patients);
+        }
     }
 
     /**
      * Initialises the widgets and bridge in the google map
      */
-    private void loadMap() {
+    public void loadMap() {
         webEngine = webViewMap1.getEngine();
 
         UserActionHistory.userActions.log(Level.INFO, "Loading map...", "Attempted to open map");
@@ -69,11 +71,9 @@ public class GUIMap {
         webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
                     if (Worker.State.SUCCEEDED == newValue) {
                         jsBridge = (JSObject) webEngine.executeScript("window");
-                        jsBridge.setMember("patients", patients);
                         mapBridge = new MapBridge();
                         jsBridge.setMember("mapBridge", mapBridge);
                         jsBridge.call("init");
-                        jsBridge.call("setPatients");
                     }
                 });
         webEngine.load(Objects.requireNonNull(getClass().getClassLoader()

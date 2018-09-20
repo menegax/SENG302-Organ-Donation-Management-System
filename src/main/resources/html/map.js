@@ -5,7 +5,6 @@
 var map, geocoder, patients, mapBridge;
 var markers = [];
 var infoWindows = [];
-var validCount = 0;
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -17,7 +16,6 @@ function init() {
         gestureHandling: 'cooperative'
     });
     setMapDragEnd();
-    markerLoop(patients.size());
 }
 
 /**
@@ -53,8 +51,9 @@ function setMapDragEnd() {
 }
 
 function markerLoop(i) {
+    console.log(i);
+    console.log('STARTING LOOOOOP');
     if (i < 1) return;
-    if (validCount >= 30) return;
     addMarker(patients.get(i-1));
     setTimeout(function() {
         markerLoop(--i);
@@ -70,8 +69,8 @@ function addMarker(patient) {
     var name = patient.getNameConcatenated();
     console.log("Adding marker to map for patient " + patient.getNhiNumber());
     geocoder.geocode({'address': address}, function (results, status) {
+        console.log('yahoooooo');
         if (status === 'OK') {
-            validCount++;
             var organOptions = getOrganOptions(patient);
             var randx = Math.random() * 0.02 - 0.01;
             var randy = Math.random() * 0.02 - 0.01;
@@ -140,9 +139,8 @@ function getOrganOptions(patient) {
     return {donating: donationStr, receiving: requiredStr};
 }
 
-function setPatients() {
-    validCount = 0;
-
+function setPatients(_patients) {
+    patients = _patients;
     markers.forEach(function(marker) {
         marker.setMap(null);
     });
