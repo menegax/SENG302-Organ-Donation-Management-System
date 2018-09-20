@@ -343,11 +343,11 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             donorLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(((Patient) target).getDeathLocationConcat());
             receiverLocation = potentialMatch.getCurrentLocation();
             if (receiverLocation == null || donorLocation == null) {
-                systemLogger.log(Level.WARNING, "Unable to calculate distance to potential receiver");
+                systemLogger.log(Level.FINER, "Unable to calculate distance to potential receiver");
                 return -1;
             }
         } catch (Exception e) {
-            systemLogger.log(Level.WARNING, "Unable to calculate distance to potential receiver");
+            systemLogger.log(Level.FINER, "Unable to calculate distance to potential receiver");
             return -1;
         }
 
@@ -400,11 +400,15 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         return (double) (Math.round(AVERAGE_RADIUS_OF_EARTH_KM * c));
     }
 
-
+    /**
+     * Gets the time to travel from the donor to the potential recipient provided
+     * @param request the receiver request to travel to
+     * @return the time to travel in the format hh:mm:ss
+     */
     private String getTravelTimeToTravel(OrganWaitlist.OrganRequest request){
         long totalSecs = calculateTotalHeloTravelTime(request.getReceiver());
         if (totalSecs == -1) {
-            return "No location";
+            return "Cannot calculate";
         }
         int hours = (int)(totalSecs / 3600L);
         int minutes = (int)((totalSecs % 3600L) / 60L);
@@ -511,9 +515,11 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     private void filterTravelTimes() {
         List<OrganWaitlist.OrganRequest> toFar = new ArrayList<>();
         for (OrganWaitlist.OrganRequest organRequest : potentialMatchesTable.getItems()) {
-            if (secondsInTime(getTravelTimeToTravel(organRequest)) > (secondsInTime(targetPatientOrgan.getProgressTask().getMessage()))) {
-                 toFar.add(organRequest);
-             }
+            if (!targetPatientOrgan.getProgressTask().getMessage().equals("")) {
+                if (secondsInTime(getTravelTimeToTravel(organRequest)) > (secondsInTime(targetPatientOrgan.getProgressTask().getMessage()))) {
+                    toFar.add(organRequest);
+                }
+            }
         }
         observableList.removeAll(toFar);
     }
@@ -524,7 +530,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * @return the amount of seconds in that time
      */
     private int secondsInTime(String time) {
-        if (!(time.equals("No location") || time.equals(""))) {
+        if (!(time.equals("Cannot calculate"))) {
             String[] times = time.split(":");
             int total = 0;
             total += Integer.parseInt(times[0]) * SECONDSINHOURS;
