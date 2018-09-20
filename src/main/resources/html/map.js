@@ -50,14 +50,6 @@ function setMapDragEnd() {
     });
 }
 
-function markerLoop(i) {
-    if (i < 1) return;
-    addMarker(patients.get(i-1));
-    setTimeout(function() {
-        markerLoop(--i);
-    }, 700);
-}
-
 /**
  * Adds a marker to the map
  * @param patient
@@ -136,10 +128,22 @@ function getOrganOptions(patient) {
 
 function setPatients(_patients) {
     patients = _patients;
+    clearMarkers();
+    addMarkers(patients.size());
+}
+function addMarkers(i) {
+    console.log(i);
+    console.log('STARTING LOOOOOP');
+    if (i < 1) return;
+    addMarker(patients.get(i-1));
+    setTimeout(function() {
+        addMarkers(--i);
+    }, 700);
+}
+
+function clearMarkers() {
     markers.forEach(function(marker) {
         marker.setMap(null);
     });
     markers = [];
-
-    markerLoop(patients.size());
 }
