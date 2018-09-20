@@ -11,14 +11,14 @@
     - Navigate to the profile of a patient who has a donated organ assigned to them
     - Go to the receiving organs tab
     - Attempt to deregister the assigned organ
-    - Verify that the warning confirmation shows up
+    - Verify that the warning alert shows up
     
 3. Deregistering an assigned organ (donator POV)
     - Log in as an admin or clinician
     - Navigate to the profile of a patient who is donating an organ that has been assigned
     - Go to the donating organs tab
     - Attempt to deregister the assigned organ
-    - Verify that the warning confirmation shows up
+    - Verify that the warning alert shows up
 
 4. Check that correct receiver NHI displays
     - Log in as an admin or clinician
