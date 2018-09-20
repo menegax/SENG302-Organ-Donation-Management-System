@@ -69,9 +69,9 @@
 8. Select the 'Save' button
 9. 'Gender Identity:' field shows 'Non-binary', and not 'Male', 'Female', 'Man', 'Woman', or 'Not set'
 
-##Test History
+## Test History
 
-###19/07/2018 - Maree
+### 19/07/2018 - Maree
 
 Precondition: Pass
 
@@ -91,7 +91,7 @@ Edit the preferred gender to Woman for a patient: Pass
 
 Edit the preferred gender to Non-binary for a patient: Pass
 
-###14/08/2018 - Aidan
+### 14/08/2018 - Aidan
 
 Precondition: Pass
 
@@ -106,3 +106,5 @@ Edit the preferred gender to Man for a patient: Pass
 Edit the preferred gender to Woman for a patient: Pass
 
 Edit the preferred gender to Non-binary for a patient: Pass
+
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**

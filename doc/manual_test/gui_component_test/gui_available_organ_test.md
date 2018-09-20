@@ -41,3 +41,5 @@ Did notice that you have to switch tabs after adding more donations.
 
 ### 11/09/2018
 Tests pass.
+
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
