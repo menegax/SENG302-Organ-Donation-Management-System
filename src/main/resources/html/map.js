@@ -50,16 +50,6 @@ function setMapDragEnd() {
     });
 }
 
-function markerLoop(i) {
-    console.log(i);
-    console.log('STARTING LOOOOOP');
-    if (i < 1) return;
-    addMarker(patients.get(i-1));
-    setTimeout(function() {
-        markerLoop(--i);
-    }, 700);
-}
-
 /**
  * Adds a marker to the map
  * @param patient
@@ -81,6 +71,8 @@ function addMarker(patient) {
                 position: finalLoc,
                 title: name
             });
+
+            // create info window
             var infoWindow = new google.maps.InfoWindow({
                 content: '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() +
                 '</h5><span style="font-size: 14px">' +
@@ -90,6 +82,8 @@ function addMarker(patient) {
                 '</span><br><input type="button" onclick="openPatientProfile(\''+patient.getNhiNumber()+'\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
             });
             infoWindows.push(infoWindow);
+
+            // add listener to open infoWindow when marker clicked
             marker.addListener('click', function() {
                 //infoWindow.open(map, marker);
                 infoWindows.forEach(function(iw) {
@@ -141,10 +135,22 @@ function getOrganOptions(patient) {
 
 function setPatients(_patients) {
     patients = _patients;
+    clearMarkers();
+    addMarkers(patients.size());
+}
+function addMarkers(i) {
+    console.log(i);
+    console.log('STARTING LOOOOOP');
+    if (i < 1) return;
+    addMarker(patients.get(i-1));
+    setTimeout(function() {
+        addMarkers(--i);
+    }, 700);
+}
+
+function clearMarkers() {
     markers.forEach(function(marker) {
         marker.setMap(null);
     });
     markers = [];
-
-    markerLoop(patients.size());
 }
