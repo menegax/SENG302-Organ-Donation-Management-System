@@ -4,36 +4,26 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import model.Patient;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.CachedThreadPool;
 import utility.ExpiryObservable;
-import utility.GlobalEnums.*;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
-
-import model.Patient;
+import utility.GlobalEnums.Organ;
 import utility.ProgressBarCustomTableCell;
 import utility.ProgressTask;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
-import java.util.zip.DataFormatException;
 
-import static java.util.logging.Level.FINE;
-import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -303,7 +293,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
      */
     @FXML
     public void viewOnMap() {
-        List<Patient> patients = new ArrayList<>();
+        Set<Patient> patients = new HashSet<>();
 
         for (PatientOrgan aMasterData : masterData) {
             patients.add(aMasterData.getPatient());
@@ -314,11 +304,11 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
             alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?", ButtonType.OK, ButtonType.NO);
             alert.show();
             alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
-                populateMap(patients);
+                populateMap(new ArrayList<>(patients));
             });
         } else {
             screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
-            populateMap(patients);
+            populateMap(new ArrayList<>(patients));
         }
     }
 
