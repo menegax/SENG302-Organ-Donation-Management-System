@@ -342,6 +342,10 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             // calculate total travel time
             donorLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(((Patient) target).getDeathLocationConcat());
             receiverLocation = potentialMatch.getCurrentLocation();
+            if (receiverLocation == null || donorLocation == null) {
+                systemLogger.log(Level.WARNING, "Unable to calculate distance to potential receiver");
+                return -1;
+            }
         } catch (Exception e) {
             systemLogger.log(Level.WARNING, "Unable to calculate distance to potential receiver");
             return -1;
@@ -373,7 +377,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         return latLng.lat > boundsOfNz.get(2).lat && latLng.lat < boundsOfNz.get(1).lat
                 && latLng.lng < boundsOfNz.get(1).lng && latLng.lng > boundsOfNz.get(2).lng;
 
-        //return true; //todo - organ waitlist not updated correctly when changing address on patient profile...
+        //todo - organ waitlist not updated correctly when changing address on patient profile...
     }
 
     /**
@@ -521,12 +525,16 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * @return the amount of seconds in that time
      */
     private int secondsInTime(String time) {
-        String[] times = time.split(":");
-        int total = 0;
-        total += Integer.parseInt(times[0]) * SECONDSINHOURS;
-        total += Integer.parseInt(times[1]) * SECONDSINMINUTES;
-        total += Integer.parseInt(times[2]);
-        return total;
+        if (!(time.equals("No location") || time.equals(""))) {
+            String[] times = time.split(":");
+            int total = 0;
+            total += Integer.parseInt(times[0]) * SECONDSINHOURS;
+            total += Integer.parseInt(times[1]) * SECONDSINMINUTES;
+            total += Integer.parseInt(times[2]);
+            return total;
+        } else {
+            return 0;
+        }
     }
 
     /**
