@@ -504,8 +504,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         Action action = new Action(target, after);
         statesHistoryScreen.addAction(action);
-//        patientDataService.save(after);
-        SystemLogger.systemLogger.log(Level.FINE, "Successfully update patient to:\n" + after);
+        patientDataService.save(after);
+        SystemLogger.systemLogger.log(Level.FINE, "Successfuly update patient to:\n" + after);
     }
 
 

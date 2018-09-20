@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane fx:id="potentialMatchesPane" prefHeight="725.0" prefWidth="951.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianPotentialMatches">
+<GridPane fx:id="potentialMatchesPane" prefHeight="725.0" prefWidth="951.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianPotentialMatches">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="501.0" minWidth="10.0" prefWidth="443.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="441.0" minWidth="10.0" prefWidth="441.0" />
@@ -35,7 +35,7 @@
             <TableColumn fx:id="regionCol" editable="false" prefWidth="95.33331298828125" text="Region" />
             <TableColumn fx:id="addressCol" editable="false" prefWidth="154.0" text="Address" />
             <TableColumn fx:id="waitingTimeCol" editable="false" prefWidth="141.0" text="Waiting Time (days)" />
-            <TableColumn fx:id="travelTimeCol" editable="false" prefWidth="177.0" text="Travel Time (min)" />
+            <TableColumn fx:id="travelTimeCol" editable="false" prefWidth="177.0" text="Travel Time" />
          </columns>
          <GridPane.margin>
             <Insets bottom="60.0" left="60.0" right="60.0" />

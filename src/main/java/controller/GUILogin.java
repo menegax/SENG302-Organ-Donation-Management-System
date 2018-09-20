@@ -122,7 +122,6 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
                 clinicianDataService.save(clinician);
                 userControl.addLoggedInUserToCache(clinicianDataService.getClinician(Integer.parseInt(nhiLogin.getText())));
                 openMap();
-                screenControl.getMapController().setPatients(new ArrayList<>());
             } else {
                 administrator.isSelected();
                 checkAdminCredentials();
@@ -152,6 +151,7 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
     private void openMap() {
         screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
         screenControl.setMapOpen(true);
+        screenControl.getMapController().loadMap();
     }
 
 
