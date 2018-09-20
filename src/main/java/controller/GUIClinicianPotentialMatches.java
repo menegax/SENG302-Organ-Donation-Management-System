@@ -583,7 +583,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         organReceiver.getRequiredOrgans().get(targetOrgan).setDonorNhi(((Patient) target).getNhiNumber());
         organWaitList.getRequests().remove(selectedRequest);
         clinicianDataService.updateOrganWaitList(organWaitList);
-        userActions.log(Level.INFO, "Assigned organ (" + targetOrgan + ") to patient " + organReceiver.getNhiNumber());
+        userActions.log(Level.INFO, "Assigned organ (" + targetOrgan + ") to patient " + organReceiver.getNhiNumber(), "Attempted to assign organ to patient");
     }
 
 
