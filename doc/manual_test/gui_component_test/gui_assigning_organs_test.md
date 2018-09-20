@@ -6,14 +6,28 @@
     - Open the potential matches for an available organ and assign it to a potential match
     - Verify that the potential match window closes and the available organ is removed from the available organs table
 
-2. Check that correct receiver NHI displays
+2. Deregistering an assigned organ (receiver POV)
+    - Log in as an admin or clinician
+    - Navigate to the profile of a patient who has a donated organ assigned to them
+    - Go to the receiving organs tab
+    - Attempt to deregister the assigned organ
+    - Verify that the warning confirmation shows up
+    
+3. Deregistering an assigned organ (donator POV)
+    - Log in as an admin or clinician
+    - Navigate to the profile of a patient who is donating an organ that has been assigned
+    - Go to the donating organs tab
+    - Attempt to deregister the assigned organ
+    - Verify that the warning confirmation shows up
+
+4. Check that correct receiver NHI displays
     - Log in as an admin or clinician
     - Navigate to the available organs table
     - Open the potential matches for an available organ and assign it to a potential recipient
     - Navigate to the profile of the donor for the available organ
     - Verifies that the organ now has the receivers NHI next to the organ in the donating organs list
     
-3. Check that correct donor NHI displays
+5. Check that correct donor NHI displays
     - Log in as an admin or clinician
     - Navigate to the available organs table
     - Open the potential matches for an available organ and assign it to a potential recipient
