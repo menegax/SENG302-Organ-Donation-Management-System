@@ -2,6 +2,8 @@ package controller;
 
 import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.input.KeyCode;
@@ -163,19 +165,51 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
     }
 
     /**
+     * Checks if organ is promised or not to a patient already
+     */
+    public boolean promised(Patient patient, GlobalEnums.Organ organ) {
+        boolean promise = false;
+        if (patient.getRequiredOrgans().containsKey(organ)) {
+            if (patient.getRequiredOrgans().get(organ).getDonorNhi() != null) {
+                promise = true;
+            }
+        }
+        return promise;
+    }
+
+    /**
      * Save button makes sure that the current session is saved with the changes made
      */
     public void saveRequirements() {
+        ArrayList<GlobalEnums.Organ> promised = new ArrayList<>();
         finalRequirements.clear();
         for (GlobalEnums.Organ organ :controlMap.keySet()) {
             if (controlMap.get(organ).isSelected()) {
                 after.addRequired(organ);
                 finalRequirements.add(organ);
             } else {
+                if (promised(after, organ)){
+                    promised.add(organ);
+                }
                 after.removeRequired(organ);
             }
         }
+
         deregistrationReason();
+
+        if (promised.size() > 0) {
+            String alertMessage = "";
+            for (int i = 0; i < promised.size(); i++) {
+                if (i == promised.size() - 1) {
+                    alertMessage += promised.get(i).getValue() + ".";
+                } else {
+                    alertMessage += promised.get(i).getValue() + ", ";
+                }
+            }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The following organs are already promised " +
+                    "to this patient: " + alertMessage + "Please undo these changes if this was an error.", ButtonType.OK);
+            alert.show();
+        }
 
         IPatientDataService patientDataService = new PatientDataService();
         patientDataService.save(after);
