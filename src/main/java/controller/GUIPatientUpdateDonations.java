@@ -1,7 +1,10 @@
 package controller;
 
 import data_access.factories.DAOFactory;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
@@ -151,11 +154,23 @@ public class GUIPatientUpdateDonations extends UndoableController {
     }
 
     /**
+     * Checks if organ is promised or not to a patient already
+     */
+    public boolean promised(Patient patient, GlobalEnums.Organ organ) {
+        boolean promise = false;
+        if (patient.getDonations().get(organ) != null) {
+            promise = true;
+        }
+        return promise;
+    }
+
+    /**
      * Saves selected donations to the patient's profile, and saves the patient to the database
      */
     public void saveDonations() {
 
         ArrayList<String> newDonations = new ArrayList<>();
+        ArrayList<GlobalEnums.Organ> promised = new ArrayList<>();
 
         Patient after = (Patient) target.deepClone();
 
@@ -163,18 +178,27 @@ public class GUIPatientUpdateDonations extends UndoableController {
             after.addDonation(GlobalEnums.Organ.LIVER);
             newDonations.add(GlobalEnums.Organ.LIVER.toString());
         } else {
+            if (promised(after, GlobalEnums.Organ.LIVER)){
+                promised.add(GlobalEnums.Organ.LIVER);
+            }
             after.removeDonation(GlobalEnums.Organ.LIVER);
         }
         if (kidneyCB.isSelected()) {
             after.addDonation(GlobalEnums.Organ.KIDNEY);
             newDonations.add(GlobalEnums.Organ.KIDNEY.toString());
         } else {
+            if (promised(after, GlobalEnums.Organ.KIDNEY)){
+                promised.add(GlobalEnums.Organ.KIDNEY);
+            }
             after.removeDonation(GlobalEnums.Organ.KIDNEY);
         }
         if (pancreasCB.isSelected()) {
             after.addDonation(GlobalEnums.Organ.PANCREAS);
             newDonations.add(GlobalEnums.Organ.PANCREAS.toString());
         } else {
+            if (promised(after, GlobalEnums.Organ.PANCREAS)){
+                promised.add(GlobalEnums.Organ.PANCREAS);
+            }
             after.removeDonation(GlobalEnums.Organ.PANCREAS);
 
         }
@@ -182,12 +206,18 @@ public class GUIPatientUpdateDonations extends UndoableController {
             after.addDonation(GlobalEnums.Organ.HEART);
             newDonations.add(GlobalEnums.Organ.HEART.toString());
         } else {
+            if (promised(after, GlobalEnums.Organ.HEART)){
+                promised.add(GlobalEnums.Organ.HEART);
+            }
             after.removeDonation(GlobalEnums.Organ.HEART);
         }
         if (lungCB.isSelected()) {
             after.addDonation(GlobalEnums.Organ.LUNG);
             newDonations.add(GlobalEnums.Organ.LUNG.toString());
         } else {
+            if (promised(after, GlobalEnums.Organ.LUNG)){
+                promised.add(GlobalEnums.Organ.LUNG);
+            }
             after.removeDonation(GlobalEnums.Organ.LUNG);
 
         }
@@ -195,6 +225,9 @@ public class GUIPatientUpdateDonations extends UndoableController {
             after.addDonation(GlobalEnums.Organ.INTESTINE);
             newDonations.add(GlobalEnums.Organ.INTESTINE.toString());
         } else {
+            if (promised(after, GlobalEnums.Organ.INTESTINE)){
+                promised.add(GlobalEnums.Organ.INTESTINE);
+            }
             after.removeDonation(GlobalEnums.Organ.INTESTINE);
 
         }
@@ -202,6 +235,9 @@ public class GUIPatientUpdateDonations extends UndoableController {
             after.addDonation(GlobalEnums.Organ.CORNEA);
             newDonations.add(GlobalEnums.Organ.CORNEA.toString());
         } else {
+            if (promised(after, GlobalEnums.Organ.CORNEA)){
+                promised.add(GlobalEnums.Organ.CORNEA);
+            }
             after.removeDonation(GlobalEnums.Organ.CORNEA);
 
         }
@@ -209,6 +245,9 @@ public class GUIPatientUpdateDonations extends UndoableController {
             after.addDonation(GlobalEnums.Organ.MIDDLEEAR);
             newDonations.add(GlobalEnums.Organ.MIDDLEEAR.toString());
         } else {
+            if (promised(after, GlobalEnums.Organ.MIDDLEEAR)){
+                promised.add(GlobalEnums.Organ.MIDDLEEAR);
+            }
             after.removeDonation(GlobalEnums.Organ.MIDDLEEAR);
 
         }
@@ -216,6 +255,9 @@ public class GUIPatientUpdateDonations extends UndoableController {
             after.addDonation(GlobalEnums.Organ.SKIN);
             newDonations.add(GlobalEnums.Organ.SKIN.toString());
         } else {
+            if (promised(after, GlobalEnums.Organ.SKIN)){
+                promised.add(GlobalEnums.Organ.SKIN);
+            }
             after.removeDonation(GlobalEnums.Organ.SKIN);
 
         }
@@ -223,6 +265,9 @@ public class GUIPatientUpdateDonations extends UndoableController {
             after.addDonation(GlobalEnums.Organ.BONE);
             newDonations.add(GlobalEnums.Organ.BONE.toString());
         } else {
+            if (promised(after, GlobalEnums.Organ.BONE)){
+                promised.add(GlobalEnums.Organ.BONE);
+            }
             after.removeDonation(GlobalEnums.Organ.BONE);
 
         }
@@ -230,6 +275,9 @@ public class GUIPatientUpdateDonations extends UndoableController {
             after.addDonation(GlobalEnums.Organ.BONEMARROW);
             newDonations.add(GlobalEnums.Organ.BONEMARROW.toString());
         } else {
+            if (promised(after, GlobalEnums.Organ.BONEMARROW)){
+                promised.add(GlobalEnums.Organ.BONEMARROW);
+            }
             after.removeDonation(GlobalEnums.Organ.BONEMARROW);
 
         }
@@ -237,7 +285,24 @@ public class GUIPatientUpdateDonations extends UndoableController {
             after.addDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
             newDonations.add(GlobalEnums.Organ.CONNECTIVETISSUE.toString());
         } else {
+            if (promised(after, GlobalEnums.Organ.CONNECTIVETISSUE)){
+                promised.add(GlobalEnums.Organ.CONNECTIVETISSUE);
+            }
             after.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
+        }
+
+        if (promised.size() > 0) {
+            String alertMessage = "";
+            for (int i = 0; i < promised.size(); i++) {
+                if (i == promised.size() - 1) {
+                    alertMessage += promised.get(i).getValue() + ".";
+                } else {
+                    alertMessage += promised.get(i).getValue() + ", ";
+                }
+            }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The following organs are already promised " +
+                    "to other patients: " + alertMessage + "Please undo these changes if this was an error.", ButtonType.OK);
+            alert.show();
         }
 
         Action action = new Action(target, after);

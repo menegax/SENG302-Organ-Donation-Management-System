@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import model.Administrator;
@@ -23,8 +24,13 @@ import utility.undoRedo.StatesHistoryScreen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.zip.DataFormatException;
 
+import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class GUIAdministratorSearchUsers extends UndoableController implements IWindowObserver {
@@ -53,23 +59,26 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
 
     private IPatientDataService patientDataService = new PatientDataService();
 
+
     /**
      * Initialises the data within the table to all users
      */
     public void load() {
         setupTableColumnsAndData();
         TextWatcher watcher = new TextWatcher();
-        searchEntry.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.equals(oldValue)) {
-                watcher.onTextChange(); //reset
-            }
-            try {
-                watcher.afterTextChange(GUIAdministratorSearchUsers.class.getMethod("search"), this); //start timer
+        searchEntry.textProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (!newValue.equals(oldValue)) {
+                        watcher.onTextChange(); //reset
+                    }
+                    try {
+                        watcher.afterTextChange(GUIAdministratorSearchUsers.class.getMethod("search"), this); //start timer
 
-            } catch (NoSuchMethodException e) {
-                userActions.log(SEVERE, "No method exists for search", "Attempted to search");
-            }
-        });
+                    }
+                    catch (NoSuchMethodException e) {
+                        userActions.log(SEVERE, "No method exists for search", "Attempted to search");
+                    }
+                });
         setupDoubleClickToUserEdit();
         setupRowHoverOverText();
         setupUndoRedo();
@@ -85,6 +94,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         }
     }
 
+
     /**
      * Sets up undo redo for this screen
      */
@@ -95,6 +105,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS, target);
     }
 
+
     /**
      * Sets up double-click functionality for each row to open a user profile update. Opens the selected
      * users's profile view screen in a new window.
@@ -102,7 +113,8 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     private void setupDoubleClickToUserEdit() {
         // Add double-click event to rows
         userDataTable.setOnMouseClicked(click -> {
-        	User selected = userDataTable.getSelectionModel().getSelectedItem();
+            User selected = userDataTable.getSelectionModel()
+                    .getSelectedItem();
             if (click.getClickCount() == 2 && selected != null && selected != userControl.getLoggedInUser()) {
                 GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
                 controller.setTarget(selected);
@@ -110,10 +122,12 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
                 if (selected instanceof Patient) {
                     Patient p = patientDataService.getPatientByNhi(((Patient) selected).getNhiNumber());
                     patientDataService.save(p);
-                } else if (selected instanceof Clinician) {
+                }
+                else if (selected instanceof Clinician) {
                     Clinician c = clinicianDataService.getClinician(((Clinician) selected).getStaffID());
                     clinicianDataService.save(c);
-                } else {
+                }
+                else {
                     Administrator a = administratorDataService.getAdministratorByUsername(((Administrator) selected).getUsername());
                     administratorDataService.save(a);
                 }
@@ -121,12 +135,14 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         });
     }
 
+
     /**
      * Called when the created window from opening a profile is closed
      */
     public void windowClosed() {
         search();
     }
+
 
     /**
      * Sets the table columns to pull the correct data from the user objects
@@ -141,9 +157,11 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
             User user = d.getValue();
             if (user instanceof Patient) {
                 ident = ((Patient) user).getNhiNumber();
-            } else if (user instanceof Clinician) {
+            }
+            else if (user instanceof Clinician) {
                 ident = String.valueOf(((Clinician) user).getStaffID());
-            } else {
+            }
+            else {
                 ident = ((Administrator) user).getUsername();
             }
             return new SimpleStringProperty(ident);
@@ -163,6 +181,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         userDataTable.setItems(sortedData);
     }
 
+
     /**
      * Adds custom hover-over text to each row in the table
      */
@@ -170,16 +189,20 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         userDataTable.setRowFactory(tv -> new TableRow<User>() {
             private Tooltip tooltip = new Tooltip();
 
+
             @Override
             public void updateItem(User user, boolean empty) {
                 super.updateItem(user, empty);
                 if (!(user instanceof Patient)) {
                     setTooltip(null);
-                } else if (((Patient) user).getDonations().isEmpty()) {
+                }
+                else if (((Patient) user).getDonations()
+                        .isEmpty()) {
                     Patient patient = (Patient) user;
                     tooltip.setText(patient.getNameConcatenated() + ". No donations.");
                     setTooltip(tooltip);
-                } else {
+                }
+                else {
                     Patient patient = (Patient) user;
                     StringBuilder tooltipText = new StringBuilder(patient.getNameConcatenated() + ". Donations: ");
                     for (GlobalEnums.Organ organ : patient.getDonations().keySet()) {
@@ -194,10 +217,46 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         });
     }
 
+
     /**
      * Refreshes the table data
      */
     private void tableRefresh() {
-       userDataTable.refresh();
+        userDataTable.refresh();
+    }
+
+    /**
+     * View patients from table on the map
+     * Sets the patients list in the JavaScript to custom set
+     * Opens the map and loads
+     */
+    @FXML
+    public void viewOnMap() {
+        List<Patient> patients = new ArrayList<>();
+
+        for (int i = 0; i < masterData.size(); i++) {
+            if (masterData.get(i) instanceof Patient) {
+                patients.add(patientDataService.getPatientByNhi(((Patient) masterData.get(i)).getNhiNumber()));
+            }
+        }
+
+        Alert alert;
+        if (screenControl.getMapOpen()) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
+                    , ButtonType.OK, ButtonType.NO);
+            alert.show();
+        } else {
+            alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
+                    , ButtonType.OK);
+            alert.show();
+        }
+
+        alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
+            screenControl.setIsCustomSetMap(true);
+            statesHistoryScreen.getUndoableWrapper().getGuiHome().openMap();
+            GUIMap.jsBridge.setMember("patients", patients);
+            GUIMap.jsBridge.call("setPatients");
+            screenControl.setMapOpen(true);
+        });
     }
 }

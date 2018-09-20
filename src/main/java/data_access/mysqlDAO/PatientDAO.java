@@ -2,10 +2,7 @@ package data_access.mysqlDAO;
 
 import data_access.factories.MySqlFactory;
 import data_access.interfaces.*;
-import model.Disease;
-import model.Medication;
-import model.Patient;
-import model.Procedure;
+import model.*;
 import utility.*;
 
 import utility.GlobalEnums.*;
@@ -67,7 +64,7 @@ public class PatientDAO implements IPatientDataAccess {
                     requiredOrgansDataAccess.updateRequiredOrgans(patient.getNhiNumber(),
                             organ,
                             patient.getRequiredOrgans()
-                                    .get(organ));
+                                    .get(organ).getRegisteredOn());
                 }
                 donatingOrgansDataAccess.deleteAllDonatingOrganByNhi(patient.getNhiNumber());
                 for (Organ organ : patient.getDonations().keySet()) {
@@ -194,7 +191,7 @@ public class PatientDAO implements IPatientDataAccess {
             List<Medication> medications = medicationDataAccess.getMedicationsByNhi(nhi);
             List<String> contacts = contactDataAccess.getContactByNhi(nhi);
             List<Procedure> procedures = procedureDataAccess.getProceduresByNhi(nhi);
-            Map<Organ, LocalDate> requiredOrgans = requiredOrgansDataAccess.getRequiredOrganByNhi(nhi);
+            Map<Organ, OrganReceival> requiredOrgans = requiredOrgansDataAccess.getRequiredOrganByNhi(nhi);
             Map<Organ, String> donatingOrgans = donatingOrgansDataAccess.getDonatingOrgansByDonorNhi(nhi);
             if (patientAttributes.next()) {
                 return constructPatientObject(patientAttributes, contacts, patientLogs, diseases, procedures, medications, requiredOrgans, donatingOrgans);
@@ -329,7 +326,7 @@ public class PatientDAO implements IPatientDataAccess {
                         break;
                     case DONOR:
                         if (Boolean.valueOf(filters.get(DONOR))) {
-                            query.append("DonatingOrgans <> '' AND ");
+                            query.append("EXISTS (SELECT * FROM tblPatientDonations o WHERE o.donor = P.NHI) AND ");
                         }
                         break;
                     case RECIEVER:
@@ -338,7 +335,7 @@ public class PatientDAO implements IPatientDataAccess {
                         }
                         break;
                     case DONATIONS:
-                        query.append(String.format("FIND_IN_SET('%s', DonatingOrgans) > 0 AND ", filters.get(DONATIONS)));
+                        query.append(String.format("EXISTS (SELECT * FROM tblPatientDonations o WHERE o.Organ = '%s' AND o.donor = P.NHI) AND ", filters.get(DONATIONS)));
                         break;
                     case REQUESTEDDONATIONS:
                         query.append(String.format("EXISTS (SELECT * FROM tblRequiredOrgans o WHERE o.Organ = '%s' AND o.Patient = P.NHI) AND ",
@@ -404,10 +401,11 @@ public class PatientDAO implements IPatientDataAccess {
 
 
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts) throws SQLException {
-        Map<GlobalEnums.Organ, LocalDate> required = new HashMap<>();
+        Map<GlobalEnums.Organ, OrganReceival> required = new HashMap<>();
         try {
             if (attributes.getInt("hasRequired") == 1) {
-                required.put(Organ.BONE, LocalDate.now());
+                OrganReceival organReceival = new OrganReceival(LocalDate.now());
+                required.put(Organ.BONE, organReceival);
             }
         }
         catch (SQLException ignore) {
@@ -417,7 +415,7 @@ public class PatientDAO implements IPatientDataAccess {
         Map<GlobalEnums.Organ, String> donations = new HashMap<>();
         try {
             if (attributes.getInt("hasDonations") == 1) {
-                required.put(Organ.BONE, null);
+                donations.put(Organ.BONE, null);
             }
         }
         catch (SQLException ignore) {
@@ -442,7 +440,7 @@ public class PatientDAO implements IPatientDataAccess {
      * @exception SQLException - thrown if an error occurs when getting values from result set
      */
     private Patient constructPatientObject(ResultSet attributes, List<String> contacts, List<PatientActionRecord> logs, List<Disease> diseases,
-                                           List<Procedure> procedures, List<Medication> medications, Map<Organ, LocalDate> requiredOrgans, Map<Organ, String> donatingOrgans)
+                                           List<Procedure> procedures, List<Medication> medications, Map<Organ, OrganReceival> requiredOrgans, Map<Organ, String> donatingOrgans)
             throws SQLException {
         String nhi = attributes.getString("Nhi");
         String fName = attributes.getString("FName");

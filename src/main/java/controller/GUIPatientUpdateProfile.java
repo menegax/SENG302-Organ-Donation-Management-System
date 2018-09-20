@@ -426,8 +426,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
             after.setBirth(dobDate.getValue());
         }
 
-        if (dateOfDeath.getValue() != null) {
+        if (dateOfDeath.getValue() != null && deathLocationTxt.getText() != null) {
             after.setDeathDate(dateOfDeath.getDateTimeValue());
+        } else {
+            after.setDeathDate(null);
         }
         after.setDeathStreet(deathLocationTxt.getText());
         after.setDeathCity(deathCity.getText());
@@ -695,7 +697,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
 
         // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
-        if (!patientDataService.getPatientByNhi(nhiTxt.getText()).getNhiNumber().equals(((Patient) target).getNhiNumber())) {
+        if (patientDataService.getPatientByNhi(nhiTxt.getText()) != null && !nhiTxt.getText().equals(((Patient) target).getNhiNumber())) {
             valid = setInvalid(nhiTxt);
             invalidContent.append("NHI is already in use. ");
         } else {

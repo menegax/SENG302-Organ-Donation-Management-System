@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,8 +24,13 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
+import java.util.zip.DataFormatException;
 
+import static java.util.logging.Level.FINE;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -57,7 +63,9 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         ClinicianDataService clinicianDataService = new ClinicianDataService();
         OrganWaitlist organRequests = clinicianDataService.getOrganWaitList();
         for (OrganWaitlist.OrganRequest request: organRequests) {
-    		masterData.add(request);
+            if (request.getReceiver().getDeathDate() == null) {
+                masterData.add(request);
+            }
     	}
         populateTable();
         setupDoubleClickToPatientEdit();
@@ -199,4 +207,41 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         waitingListTableView.refresh();
     }
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private UserControl userControl = UserControl.getUserControl();
+
+    /**
+     * View patients from table on the map
+     * Sets the patients list in the JavaScript to custom set
+     * Opens the map and loads
+     */
+    @FXML
+    public void viewOnMap() {
+        List<Patient> patients = new ArrayList<>();
+        for (int i = 0; i < masterData.size(); i++) {
+            patients.add(patientDataService.getPatientByNhi(masterData.get(i).getReceiverNhi()));
+        }
+
+        Alert alert;
+        if (screenControl.getMapOpen()) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
+                    , ButtonType.OK, ButtonType.NO);
+            alert.show();
+        } else {
+            alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
+                    , ButtonType.OK);
+            alert.show();
+        }
+
+        alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
+            screenControl.setIsCustomSetMap(true);
+            if (!screenControl.getMapOpen()) {
+                screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+                screenControl.setMapOpen(true);
+            }
+            GUIMap.jsBridge.setMember("patients", patients);
+            GUIMap.jsBridge.call("setPatients");
+        });
+    }
 }
