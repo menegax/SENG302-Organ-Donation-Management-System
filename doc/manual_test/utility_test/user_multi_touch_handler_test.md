@@ -101,32 +101,32 @@
 
 ###20/09/2018 - Joshua and Patrick
 
-Test 1:
+Test 1: Pass
 
-Test 2:
+Test 2: Pass
 
-Test 3:
+Test 3: Pass
 
-Test 4:
+Test 4: Pass
 
-Test 5:
+Test 5: Pass
 
-Test 6:
+Test 6: Pass
 
-Test 7:
+Test 7: Pass
 
-Test 8:
+Test 8: Pass
 
-Test 9:
+Test 9: Pass
 
-Test 10:
+Test 10: Pass
 
-Test 11:
+Test 11: Pass
 
-Test 12:
+Test 12: Pass
 
-Test 13:
+Test 13: Pass
 
-Test 14:
+Test 14: Pass
 
-Test 15:
+Test 15: Pass - Note lags between multiple users typing at the same time.
