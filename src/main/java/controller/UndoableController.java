@@ -1,7 +1,7 @@
 package controller;
 
 import javafx.scene.control.Control;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.stateHistoryWidgets.StateHistoryControl;
 
@@ -46,7 +46,7 @@ public abstract class UndoableController extends TargetedController {
      * Gets the actions map for this undoableController
      * @return the actions map of this controller
      */
-    public Map<Integer, List<Action>> getActions() {
+    public Map<Integer, List<IAction>> getActions() {
         return statesHistoryScreen.getActions();
     }
 

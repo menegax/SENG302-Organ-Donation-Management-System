@@ -1,7 +1,6 @@
 package controller;
 
 import data_access.factories.DAOFactory;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -10,7 +9,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.GlobalEnums;
 
@@ -305,7 +305,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
             alert.show();
         }
 
-        Action action = new Action(target, after);
+        IAction action = new SingleAction(target, after);
         statesHistoryScreen.addAction(action);
 
         userActions.log(INFO, "Updated user donations to: " + newDonations, new String[]{"Attempted to update donations", ((Patient) target).getNhiNumber()});

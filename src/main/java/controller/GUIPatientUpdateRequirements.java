@@ -16,7 +16,8 @@ import service.interfaces.IClinicianDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.SystemLogger;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.util.*;
@@ -224,7 +225,7 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
         Map<GlobalEnums.Organ, OrganReceival> removedOrgans = new HashMap<>(((Patient) target).getRequiredOrgans());
         removedOrgans.keySet().removeAll(finalRequirements);
         if (removedOrgans.size() == 0) {
-            Action action = new Action(target, after);
+            IAction action = new SingleAction(target, after);
             statesHistoryScreen.addAction(action);
         }
         totalRemoved = 0;
@@ -252,7 +253,7 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
                 after.clearRequiredOrgans();
                 userActions.log(Level.INFO, "ALl required organs cleared due to patient death", "Deregistered an organ");
             }
-            Action action = new Action(target, after);
+            IAction action = new SingleAction(target, after);
             statesHistoryScreen.addAction(action);
         }
         populateForm(after);

@@ -31,6 +31,9 @@ import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
+import utility.undoRedo.IAction;
+import utility.undoRedo.MultiAction;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -41,7 +44,7 @@ import static java.lang.Math.abs;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static utility.UserActionHistory.userActions;
 
-public class GUIClinicianPotentialMatches extends TargetedController implements IWindowObserver, TouchscreenCapable {
+public class GUIClinicianPotentialMatches extends UndoableController implements IWindowObserver, TouchscreenCapable {
 
     public TableView<OrganWaitlist.OrganRequest> potentialMatchesTable;
 
@@ -134,6 +137,9 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * to view a patient's profile.
      */
     public void load() {
+        List<Control> controls = new ArrayList<>();
+        controls.add(closeButton);
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPOTENTIALMATCHES, target);
         allRequests.clear();
         loadRegionDistances();
         clinicianDataService = new ClinicianDataService();
@@ -579,10 +585,14 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         OrganWaitlist.OrganRequest selectedRequest = potentialMatchesTable.getSelectionModel().getSelectedItem();
         Patient organReceiver = patientDataService.getPatientByNhi(selectedRequest.getReceiverNhi());
         Map<Organ, String> patientDonations = ((Patient) target).getDonations();
-        patientDonations.put(targetOrgan, organReceiver.getNhiNumber());
-        organReceiver.getRequiredOrgans().get(targetOrgan).setDonorNhi(((Patient) target).getNhiNumber());
+        Patient after1 = (Patient) target.deepClone();
+        Patient after2 = (Patient) organReceiver.deepClone();
+        after1.getDonations().put(targetOrgan, after2.getNhiNumber());
+        organReceiver.getRequiredOrgans().get(targetOrgan).setDonorNhi(after1.getNhiNumber());
         organWaitList.getRequests().remove(selectedRequest);
         clinicianDataService.updateOrganWaitList(organWaitList);
+        IAction action = new MultiAction((Patient) target, after1, organReceiver, after2);
+        statesHistoryScreen.addAction(action);
         userActions.log(Level.INFO, "Assigned organ (" + targetOrgan + ") to patient " + organReceiver.getNhiNumber(), "Attempted to assign organ to patient");
 
         closeMatchWindow();

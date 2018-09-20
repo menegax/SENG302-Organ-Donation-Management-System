@@ -12,11 +12,10 @@ import model.Administrator;
 import service.AdministratorDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.UIRegex;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.InvalidObjectException;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -173,7 +172,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
 
             after.userModified();
 
-            Action action = new Action(target, after);
+            IAction action = new SingleAction(target, after);
             new AdministratorDataService().save(after);
             statesHistoryScreen.addAction(action);
 

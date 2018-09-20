@@ -6,18 +6,16 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import model.Clinician;
 import model.Medication;
 import model.Patient;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import service.AdministratorDataService;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 
-import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -332,7 +330,7 @@ public class GUIPatientProfile extends TargetedController {
 	 * until saved
 	 */
 	public void deleteProfile() {
-		Action action = new Action(target, null);
+		IAction action = new SingleAction(target, null);
 		new AdministratorDataService().deleteUser(target);
 		undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
 		userActions.log(Level.INFO, "Successfully deleted patient profile",

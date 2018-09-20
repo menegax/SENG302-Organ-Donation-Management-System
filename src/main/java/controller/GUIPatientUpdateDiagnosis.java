@@ -10,13 +10,13 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
 import model.Disease;
 import model.Patient;
-import model.User;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
@@ -315,7 +315,7 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
                 patientClone.getCurrentDiseases().add(targetDiseaseClone);
             }
             patientClone.sortDiseases();
-            Action action = new Action(target, patientClone);
+            IAction action = new SingleAction(target, patientClone);
             undoRedoControl.addAction(action, CLINICIANDIAGNOSIS);
 
             screenControl.closeWindow(diagnosisUpdatePane);

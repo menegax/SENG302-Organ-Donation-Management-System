@@ -1,6 +1,5 @@
 package controller;
 
-import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
@@ -9,7 +8,8 @@ import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.PatientDataService;
 import utility.GlobalEnums;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
     public void saveContactDetails() {
         boolean valid = setPatientContactDetails();
         if (valid) {
-            Action action = new Action(target, after);
+            IAction action = new SingleAction(target, after);
             statesHistoryScreen.addAction(action);
             userActions.log(INFO, "Successfully saved contact details", new String[]{"Attempted to set contact details", ((Patient) target).getNhiNumber()});
         } else {

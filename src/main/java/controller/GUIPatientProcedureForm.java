@@ -15,7 +15,8 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -154,7 +155,7 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
             this.procedureClone.setDescription(descriptionInput.getText());
             this.procedureClone.setAffectedDonations(affectedDonations);
             this.procedureClone.setDate(dateInput.getValue());
-            Action action = new Action(target, patientClone);
+            IAction action = new SingleAction(target, patientClone);
             undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
             userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", ((Patient) target).getNhiNumber()});
             goBackToProcedures();
@@ -178,7 +179,7 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
             procedureClone = new Procedure( summaryInput.getText(), descriptionInput.getText(),
                     dateInput.getValue(), affectedDonations );
             patientClone.addProcedure( procedureClone );
-            Action action = new Action(target, patientClone);
+            IAction action = new SingleAction(target, patientClone);
             undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
             userActions.log(Level.INFO, "Added procedure " + procedureClone.getSummary(), new String[]{"Attempted to add a procedure", patientClone.getNhiNumber()});
             goBackToProcedures();

@@ -4,12 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import model.Administrator;
-import model.User;
 import service.AdministratorDataService;
 import utility.GlobalEnums;
-import utility.undoRedo.Action;
+import utility.undoRedo.SingleAction;
+import utility.undoRedo.IAction;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableWrapper;
 
@@ -70,7 +69,7 @@ public class GUIAdministratorProfile extends TargetedController{
      */
     public void deleteProfile() {
         if (!((Administrator) target).getUsername().toLowerCase().equals("admin")) {
-            Action action = new Action(target, null);
+            IAction action = new SingleAction(target, null);
             new AdministratorDataService().deleteUser(target);
             for (UndoableWrapper undoableWrapper : screenControl.getUndoableWrappers()) {
                 for (StatesHistoryScreen statesHistoryScreen : undoableWrapper.getStatesHistoryScreens()) {

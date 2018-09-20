@@ -6,12 +6,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import model.Clinician;
-import model.User;
 import service.ClinicianDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UIRegex;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.util.ArrayList;
@@ -230,7 +230,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
                     new String[] { "Attempted to update clinician profile", String.valueOf(after.getStaffID()) });
             after.userModified();
 
-            Action action = new Action(target, after);
+            IAction action = new SingleAction(target, after);
             new ClinicianDataService().save(after);
             statesHistoryScreen.addAction(action);
         }

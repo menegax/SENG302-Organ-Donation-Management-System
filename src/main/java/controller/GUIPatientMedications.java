@@ -14,7 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
-import utility.undoRedo.Action;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -354,7 +354,7 @@ public class GUIPatientMedications extends UndoableController {
 
             if (!(current.contains(medication) || history.contains(medication))) {
                 after.getCurrentMedications().add(new Medication(medication, GlobalEnums.MedicationStatus.CURRENT));
-                statesHistoryScreen.addAction(new Action(target, after));
+                statesHistoryScreen.addAction(new SingleAction(target, after));
                 userActions.log(Level.INFO,
                         "Added medication: " + medication,
                         new String[] { "Attempted to add medication: " + medication, ((Patient) target).getNhiNumber() });
@@ -414,7 +414,7 @@ public class GUIPatientMedications extends UndoableController {
 
             viewCurrentMedications();
         }
-        statesHistoryScreen.addAction(new Action(target, after));
+        statesHistoryScreen.addAction(new SingleAction(target, after));
     }
 
 
@@ -436,7 +436,7 @@ public class GUIPatientMedications extends UndoableController {
                 userActions.log(Level.INFO,
                         "Moved medication to current: " + medication,
                         new String[] { "Attempted to move medication " + medication + " to current medications", after.getNhiNumber() });
-                statesHistoryScreen.addAction(new Action(target, after));
+                statesHistoryScreen.addAction(new SingleAction(target, after));
                 viewPastMedications();
             }
         }
@@ -460,7 +460,7 @@ public class GUIPatientMedications extends UndoableController {
                 userActions.log(Level.INFO,
                         "Moved medication to past: " + medication,
                         new String[] { "Attempted to move medication " + medication + " to past medications", after.getNhiNumber() });
-                statesHistoryScreen.addAction(new Action(target, after));
+                statesHistoryScreen.addAction(new SingleAction(target, after));
                 viewCurrentMedications();
             }
         }

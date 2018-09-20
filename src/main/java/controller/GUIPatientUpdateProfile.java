@@ -12,7 +12,8 @@ import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.SystemLogger;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.time.LocalDate;
@@ -464,7 +465,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
                     .getSelectedItem()));
         }
 
-        Action action = new Action(target, after);
+        IAction action = new SingleAction(target, after);
         statesHistoryScreen.addAction(action);
         patientDataService.save(after);
         SystemLogger.systemLogger.log(Level.FINE, "Successfuly update patient to:\n" + after);
