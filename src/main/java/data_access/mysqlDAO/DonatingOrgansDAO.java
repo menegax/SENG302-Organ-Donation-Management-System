@@ -60,42 +60,6 @@ public class DonatingOrgansDAO implements IDonationsDataAccess {
         }
     }
 
-
-    // todo not used?
-    @Override
-    public Map<GlobalEnums.Organ, String> getDonatingOrgansByReceiverNhi(String receiverNhi) {
-        //        try (Connection connection1 = mySqlFactory.getConnectionInstance()) {
-        //            Map<GlobalEnums.Organ, String> organs = new HashMap<>();
-        //            PreparedStatement statement = connection1.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_DONATING_ORGANS_QUERY"));
-        //            statement.setString(1, receiverNhi);
-        //            ResultSet resultSet = statement.executeQuery();
-        //            while (resultSet.next()) {
-        //                GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(resultSet.getString("Organ"));
-        //                String receiverNhi = resultSet.getString("Recipient");
-        //                organs.put(organ, receiverNhi);
-        //            }
-        //            return organs;
-        //        }
-        //        catch (SQLException e) {
-        //            systemLogger.log(Level.SEVERE, "Could not get donating organs from MYSQL DB", this);
-        //        }
-        return null;
-    }
-
-
-    @Override
-    public void deleteDonatingOrganByNhi(String donorNhi, GlobalEnums.Organ organ) {
-        try (Connection connection = mySqlFactory.getConnectionInstance()) {
-            PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("DELETE_PATIENT_DONATING_ORGAN_QUERY"));
-            statement.setString(1, donorNhi);
-            statement.setString(2, organ.getValue());
-            statement.executeUpdate();
-        }
-        catch (SQLException e) {
-            systemLogger.log(Level.SEVERE, "Could not delete donating organ from MYSQL DB", this);
-        }
-    }
-
     @Override
     public void deleteAllDonatingOrganByNhi(String donorNhi) {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {

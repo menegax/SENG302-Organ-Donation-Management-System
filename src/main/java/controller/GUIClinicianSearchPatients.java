@@ -243,10 +243,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         List<Patient> results = clinicianDataService.searchPatients(searchEntry.getText(), filter, numResults);
         masterData.clear();
         masterData.addAll(results);
-        //
-//        for (Patient patient: results) {
-//            System.out.println(patient.getNhiNumber() + ": " + patient.getRequiredOrgans());
-//        }
         updateProfileCount();
     }
 
