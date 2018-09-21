@@ -82,6 +82,8 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
 
     private IClinicianDataService clinicianDataService = new ClinicianDataService();
 
+    private IPatientDataService patientDataService = new PatientDataService();
+
     private int totalRemoved;
 
     private Map<GlobalEnums.Organ, CheckBox> controlMap = new HashMap<>();
@@ -190,6 +192,8 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
                 finalRequirements.add(organ);
             } else {
                 if (promised(after, organ)){
+                    Patient donor = patientDataService.getPatientByNhi(after.getRequiredOrgans().get(organ).getDonorNhi());
+                    donor.getDonations().put(organ, null);
                     promised.add(organ);
                 }
                 after.removeRequired(organ);

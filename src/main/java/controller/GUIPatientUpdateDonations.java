@@ -4,17 +4,21 @@ import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Control;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Control;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
+import service.PatientDataService;
+import service.interfaces.IPatientDataService;
+import utility.GlobalEnums;
 import utility.undoRedo.IAction;
 import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
-import utility.GlobalEnums;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -63,6 +67,26 @@ public class GUIPatientUpdateDonations extends UndoableController {
     private GridPane patientDonationsAnchorPane;
 
     private DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
+
+    private Map<GlobalEnums.Organ, CheckBox> controlMap = new HashMap<>();
+
+    private IPatientDataService patientDataService = new PatientDataService();
+
+    @FXML
+    public void initialize() {
+        controlMap.put(GlobalEnums.Organ.LIVER, liverCB);
+        controlMap.put(GlobalEnums.Organ.KIDNEY, kidneyCB);
+        controlMap.put(GlobalEnums.Organ.PANCREAS, pancreasCB);
+        controlMap.put(GlobalEnums.Organ.HEART, heartCB);
+        controlMap.put(GlobalEnums.Organ.LUNG, lungCB);
+        controlMap.put(GlobalEnums.Organ.INTESTINE, intestineCB);
+        controlMap.put(GlobalEnums.Organ.CORNEA, corneaCB);
+        controlMap.put(GlobalEnums.Organ.MIDDLEEAR, middleearCB);
+        controlMap.put(GlobalEnums.Organ.SKIN, skinCB);
+        controlMap.put(GlobalEnums.Organ.BONE, boneCB);
+        controlMap.put(GlobalEnums.Organ.BONEMARROW, bonemarrowCB);
+        controlMap.put(GlobalEnums.Organ.CONNECTIVETISSUE, connectivetissueCB);
+    }
 
     /**
      * Initializes the donations screen by loading the profile of the patient logged in or viewed.
@@ -115,41 +139,8 @@ public class GUIPatientUpdateDonations extends UndoableController {
      */
     private void populateForm(Patient patient) {
         Set<GlobalEnums.Organ> organs = patient.getDonations().keySet();
-        if (organs.contains(GlobalEnums.Organ.LIVER)) {
-            liverCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.KIDNEY)) {
-            kidneyCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.PANCREAS)) {
-            pancreasCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.HEART)) {
-            heartCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.LUNG)) {
-            lungCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.INTESTINE)) {
-            intestineCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.CORNEA)) {
-            corneaCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.MIDDLEEAR)) {
-            middleearCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.SKIN)) {
-            skinCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.BONE)) {
-            boneCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.BONEMARROW)) {
-            bonemarrowCB.setSelected(true);
-        }
-        if (organs.contains(GlobalEnums.Organ.CONNECTIVETISSUE)) {
-            connectivetissueCB.setSelected(true);
+        for (GlobalEnums.Organ organ : organs) {
+            controlMap.get(organ).setSelected(true);
         }
     }
 
@@ -174,121 +165,18 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
         Patient after = (Patient) target.deepClone();
 
-        if (liverCB.isSelected()) {
-            after.addDonation(GlobalEnums.Organ.LIVER);
-            newDonations.add(GlobalEnums.Organ.LIVER.toString());
-        } else {
-            if (promised(after, GlobalEnums.Organ.LIVER)){
-                promised.add(GlobalEnums.Organ.LIVER);
+        for (GlobalEnums.Organ organ : controlMap.keySet()) {
+            if (controlMap.get(organ).isSelected()) {
+                after.addDonation(organ);
+                newDonations.add(organ.toString());
+            } else {
+                if (promised(after, organ)) {
+                    Patient receiver = patientDataService.getPatientByNhi(after.getDonations().get(organ));
+                    receiver.getRequiredOrgans().get(organ).setDonorNhi(null);
+                    promised.add(organ);
+                }
+                after.removeDonation(organ);
             }
-            after.removeDonation(GlobalEnums.Organ.LIVER);
-        }
-        if (kidneyCB.isSelected()) {
-            after.addDonation(GlobalEnums.Organ.KIDNEY);
-            newDonations.add(GlobalEnums.Organ.KIDNEY.toString());
-        } else {
-            if (promised(after, GlobalEnums.Organ.KIDNEY)){
-                promised.add(GlobalEnums.Organ.KIDNEY);
-            }
-            after.removeDonation(GlobalEnums.Organ.KIDNEY);
-        }
-        if (pancreasCB.isSelected()) {
-            after.addDonation(GlobalEnums.Organ.PANCREAS);
-            newDonations.add(GlobalEnums.Organ.PANCREAS.toString());
-        } else {
-            if (promised(after, GlobalEnums.Organ.PANCREAS)){
-                promised.add(GlobalEnums.Organ.PANCREAS);
-            }
-            after.removeDonation(GlobalEnums.Organ.PANCREAS);
-
-        }
-        if (heartCB.isSelected()) {
-            after.addDonation(GlobalEnums.Organ.HEART);
-            newDonations.add(GlobalEnums.Organ.HEART.toString());
-        } else {
-            if (promised(after, GlobalEnums.Organ.HEART)){
-                promised.add(GlobalEnums.Organ.HEART);
-            }
-            after.removeDonation(GlobalEnums.Organ.HEART);
-        }
-        if (lungCB.isSelected()) {
-            after.addDonation(GlobalEnums.Organ.LUNG);
-            newDonations.add(GlobalEnums.Organ.LUNG.toString());
-        } else {
-            if (promised(after, GlobalEnums.Organ.LUNG)){
-                promised.add(GlobalEnums.Organ.LUNG);
-            }
-            after.removeDonation(GlobalEnums.Organ.LUNG);
-
-        }
-        if (intestineCB.isSelected()) {
-            after.addDonation(GlobalEnums.Organ.INTESTINE);
-            newDonations.add(GlobalEnums.Organ.INTESTINE.toString());
-        } else {
-            if (promised(after, GlobalEnums.Organ.INTESTINE)){
-                promised.add(GlobalEnums.Organ.INTESTINE);
-            }
-            after.removeDonation(GlobalEnums.Organ.INTESTINE);
-
-        }
-        if (corneaCB.isSelected()) {
-            after.addDonation(GlobalEnums.Organ.CORNEA);
-            newDonations.add(GlobalEnums.Organ.CORNEA.toString());
-        } else {
-            if (promised(after, GlobalEnums.Organ.CORNEA)){
-                promised.add(GlobalEnums.Organ.CORNEA);
-            }
-            after.removeDonation(GlobalEnums.Organ.CORNEA);
-
-        }
-        if (middleearCB.isSelected()) {
-            after.addDonation(GlobalEnums.Organ.MIDDLEEAR);
-            newDonations.add(GlobalEnums.Organ.MIDDLEEAR.toString());
-        } else {
-            if (promised(after, GlobalEnums.Organ.MIDDLEEAR)){
-                promised.add(GlobalEnums.Organ.MIDDLEEAR);
-            }
-            after.removeDonation(GlobalEnums.Organ.MIDDLEEAR);
-
-        }
-        if (skinCB.isSelected()) {
-            after.addDonation(GlobalEnums.Organ.SKIN);
-            newDonations.add(GlobalEnums.Organ.SKIN.toString());
-        } else {
-            if (promised(after, GlobalEnums.Organ.SKIN)){
-                promised.add(GlobalEnums.Organ.SKIN);
-            }
-            after.removeDonation(GlobalEnums.Organ.SKIN);
-
-        }
-        if (boneCB.isSelected()) {
-            after.addDonation(GlobalEnums.Organ.BONE);
-            newDonations.add(GlobalEnums.Organ.BONE.toString());
-        } else {
-            if (promised(after, GlobalEnums.Organ.BONE)){
-                promised.add(GlobalEnums.Organ.BONE);
-            }
-            after.removeDonation(GlobalEnums.Organ.BONE);
-
-        }
-        if (bonemarrowCB.isSelected()) {
-            after.addDonation(GlobalEnums.Organ.BONEMARROW);
-            newDonations.add(GlobalEnums.Organ.BONEMARROW.toString());
-        } else {
-            if (promised(after, GlobalEnums.Organ.BONEMARROW)){
-                promised.add(GlobalEnums.Organ.BONEMARROW);
-            }
-            after.removeDonation(GlobalEnums.Organ.BONEMARROW);
-
-        }
-        if (connectivetissueCB.isSelected()) {
-            after.addDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
-            newDonations.add(GlobalEnums.Organ.CONNECTIVETISSUE.toString());
-        } else {
-            if (promised(after, GlobalEnums.Organ.CONNECTIVETISSUE)){
-                promised.add(GlobalEnums.Organ.CONNECTIVETISSUE);
-            }
-            after.removeDonation(GlobalEnums.Organ.CONNECTIVETISSUE);
         }
 
         if (promised.size() > 0) {

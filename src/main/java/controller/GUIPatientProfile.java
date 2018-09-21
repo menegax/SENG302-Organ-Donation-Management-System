@@ -4,8 +4,12 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import model.Medication;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +22,10 @@ import utility.undoRedo.SingleAction;
 
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -224,8 +231,6 @@ public class GUIPatientProfile extends TargetedController {
 						patient.getDonations().get(organ));
 			}
 		}
-//		List<String> organsMappedD = organsD.stream().map(e -> StringUtils.capitalize(e.getValue()))
-//				.collect(Collectors.toList());
 		donatingListProperty.setValue(FXCollections.observableArrayList(organsMappedD));
 		receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
 		donationList.itemsProperty().bind(donatingListProperty);
