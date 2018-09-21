@@ -41,6 +41,7 @@ import utility.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
@@ -664,10 +665,12 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
     /**
      * Opens new map instance if a map is not visible
      */
-    public void openMap() {
+    void openMap() {
+
         if (!screenControl.getMapOpen()) {
-            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+            GUIMap controller = (GUIMap) screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
             screenControl.setMapOpen(true);
+            controller.setPatients(new ArrayList<>());
         }
         if(screenControl.isTouch()) {
             homePane.toFront();

@@ -1,11 +1,6 @@
-// Note: This example requires that you consent to location sharing when
-// prompted by your browser. If you see the error "The Geolocation service
-// failed.", it means you probably did not give permission for the browser to
-// locate you.
-var map, geocoder, patients, mapBridge;
+var map, geocoder, patients, mapBridge, successCount;
 var markers = [];
 var infoWindows = [];
-var validCount = 0;
 
 var originalZoom;
 
@@ -22,7 +17,6 @@ function init() {
         gestureHandling: 'cooperative'
     });
     setMapDragEnd();
-    markerLoop(patients.size());
 }
 
 /**
@@ -30,40 +24,34 @@ function init() {
  */
 function setMapDragEnd() {
     // Bounds for the World
-    var allowedBounds = new google.maps.LatLngBounds(
-        new google.maps.LatLng(-84.220892, -177.871399),
-        new google.maps.LatLng(84.889374, 179.872535));
+    var allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-84.220892, -177.871399), new google.maps.LatLng(84.889374, 179.872535));
 
     // Listen for the dragend event
-    google.maps.event.addListener(map, 'dragend', function() {
-        if (allowedBounds.contains(map.getCenter())) return;
+    google.maps.event.addListener(map, 'dragend', function () {
+        if (allowedBounds.contains(map.getCenter())) {
+            return;
+        }
 
         // Out of bounds - Move the map back within the bounds
 
-        var c = map.getCenter(),
-            x = c.lng(),
-            y = c.lat(),
-            maxX = allowedBounds.getNorthEast().lng(),
-            maxY = allowedBounds.getNorthEast().lat(),
-            minX = allowedBounds.getSouthWest().lng(),
-            minY = allowedBounds.getSouthWest().lat();
+        var c = map.getCenter(), x = c.lng(), y = c.lat(), maxX = allowedBounds.getNorthEast().lng(), maxY = allowedBounds.getNorthEast().lat(),
+                minX = allowedBounds.getSouthWest().lng(), minY = allowedBounds.getSouthWest().lat();
 
-        if (x < minX) x = minX;
-        if (x > maxX) x = maxX;
-        if (y < minY) y = minY;
-        if (y > maxY) y = maxY;
+        if (x < minX) {
+            x = minX;
+        }
+        if (x > maxX) {
+            x = maxX;
+        }
+        if (y < minY) {
+            y = minY;
+        }
+        if (y > maxY) {
+            y = maxY;
+        }
 
         map.setCenter(new google.maps.LatLng(y, x));
     });
-}
-
-function markerLoop(i) {
-    if (i < 1) return;
-    if (validCount >= 30) return;
-    addMarker(patients.get(i-1));
-    setTimeout(function() {
-        markerLoop(--i);
-    }, 700);
 }
 
 /**
@@ -73,41 +61,41 @@ function markerLoop(i) {
 function addMarker(patient) {
     var address = patient.getFormattedAddress();
     var name = patient.getNameConcatenated();
+    console.log("Adding marker to map for patient " + patient.getNhiNumber());
     geocoder.geocode({'address': address}, function (results, status) {
         if (status === 'OK') {
-            validCount++;
+            successCount++;
             var organOptions = getOrganOptions(patient);
-            var randx = Math.random() * 0.02 - 0.01;
-            var randy = Math.random() * 0.02 - 0.01;
-            var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat() + randx, results[0].geometry.location.lng() + randy);
-            console.log('Placing marker on map');
+            var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
             var marker = new google.maps.Marker({
-                map: map,
-                position: finalLoc,
-                title: name
+                map: map, position: finalLoc, title: name
             });
+
+            // create info window
             var infoWindow = new google.maps.InfoWindow({
-                content: '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() +
-                '</h5><span style="font-size: 14px">' +
-                patient.getAddressString() + '<br><br>' +
-                organOptions.donating + '<br><br>' +
-                organOptions.receiving +
-                '</span><br><input type="button" onclick="openPatientProfile(\''+patient.getNhiNumber()+'\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
+                content: '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
+                + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
+                + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
+                + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
             });
             infoWindows.push(infoWindow);
-            marker.addListener('click', function() {
+
+            // add listener to open infoWindow when marker clicked
+            marker.addListener('click', function () {
                 //infoWindow.open(map, marker);
-                infoWindows.forEach(function(iw) {
+                infoWindows.forEach(function (iw) {
                     if (iw !== infoWindow) {
                         iw.close();
-                    } else {
+                    }
+                    else {
                         iw.open(map, marker);
                     }
                 })
             });
             markers.push(marker);
-        } else {
-            console.log('Geocode failed because: ' + status);
+        }
+        else {
+            console.log('Geocode failed for patient ' + patient.getNhiNumber() + ' because: ' + status);
         }
     });
 }
@@ -129,7 +117,8 @@ function getOrganOptions(patient) {
     var donationStr;
     if (donations !== '[]') {
         donationStr = '<b>Donations:</b><br>' + donations.substring(1, donations.length - 1);
-    } else {
+    }
+    else {
         donationStr = 'No Donations';
     }
 
@@ -138,21 +127,64 @@ function getOrganOptions(patient) {
     var requiredStr;
     if (matching) {
         requiredStr = '<b>Required:</b><br>' + matching.join(', ');
-    } else {
+    }
+    else {
         requiredStr = 'No Requirements';
     }
     return {donating: donationStr, receiving: requiredStr};
 }
 
-function setPatients() {
-    validCount = 0;
+/**
+ * Sets the patients for the map and adds the markers to the map
+ * @param _patients
+ */
+function setPatients(_patients) {
+    patients = _patients;
+    clearMarkers();
+    successCount = 0;
+    addMarkers(patients.size());
+}
 
-    markers.forEach(function(marker) {
+/**
+ * Add markers to the map
+ * @param i
+ */
+function addMarkers(i) {
+    if (i < 1) {
+        showNotification(successCount, patients.size());
+        return;
+    }
+    addMarker(patients.get(i-1));
+    setTimeout(function() {
+        addMarkers(--i);
+    }, 700);
+}
+
+/**
+ * Clear the markers from the map
+ */
+function clearMarkers() {
+    markers.forEach(function (marker) {
         marker.setMap(null);
     });
     markers = [];
+}
 
-    markerLoop(patients.size());
+/**
+ * Hides the notification
+ */
+function hideNotification() {
+    $('#marker-notification').hide();
+}
+
+/**
+ * Shows number of successfully loaded patients
+ * @param numSuccess successfully loaded patients
+ * @param numTotal total patients to load
+ */
+function showNotification(numSuccess, numTotal) {
+    $('#marker-notification-msg').html('Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations');
+    $('#marker-notification').show();
 }
 
 function setJankaZoom(newZoom) {

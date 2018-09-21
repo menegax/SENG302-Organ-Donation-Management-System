@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="availableOrgans" prefHeight="391.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAvailableOrgans">
+<GridPane fx:id="availableOrgans" prefHeight="391.0" prefWidth="600.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAvailableOrgans">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="60.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -26,7 +26,7 @@
         <columns>
             <TableColumn fx:id="patientCol" maxWidth="3000.0" minWidth="5.0" prefWidth="10.0" text="Patient" />
           <TableColumn fx:id="organCol" maxWidth="3500.0" prefWidth="118.4000244140625" text="Organ" />
-          <TableColumn fx:id="locationCol" prefWidth="75.0" text="Location" />
+          <TableColumn fx:id="locationCol" prefWidth="75.0" text="Death Location" />
             <TableColumn fx:id="deathCol" prefWidth="75.0" text="Time Of Death" />
             <TableColumn fx:id="organExpiryProgressCol" prefWidth="75.0" text="Organ Expiry Progress" />
             <TableColumn fx:id="expiryCol" prefWidth="75.0" text="Organ Expiry" />
@@ -38,7 +38,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Button disable="true" fx:id="potentialMatchesBtn" mnemonicParsing="false" onAction="#viewPotentialMatches" text="View Potential Matches" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+      <Button fx:id="potentialMatchesBtn" disable="true" mnemonicParsing="false" onAction="#viewPotentialMatches" text="View Potential Matches" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
        <Button mnemonicParsing="false" onAction="#viewOnMap" prefWidth="139.5" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
    </children>
 </GridPane>

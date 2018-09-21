@@ -45,4 +45,4 @@ Zoom into map - pass
 
 Zoom out of map - pass
 
-
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**

@@ -69,7 +69,8 @@
 2. Go to available organs
 3. Select 'View on map' button
 4. Select 'OK' on the popup that opens up
-5. Expected: The map should re-populte with the patients in the table. These include patients with the following Nhi's: AAB2072
+5. Expected: The map should re-populate with the patients in the table. These include patients with the following Nhi's: AAB2072
+6. Check to make sure that the map only shows at most one marker for each patient that is passed.
 
 ### Test 10 - 'View on map' button clinician potential matches
 
@@ -123,3 +124,5 @@ Test 6: Pass
 ### 15/8/18 - Kyle
 
 Test 3: Pass
+
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
