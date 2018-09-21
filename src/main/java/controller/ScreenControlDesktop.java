@@ -64,6 +64,10 @@ public class ScreenControlDesktop extends ScreenControl {
             if (fxml.equals(MAPFXML)) {
                 // Cast should always be safe
                 mapController = (GUIMap) controller;
+                mapController.loadMap();
+                stage.setOnHiding(event -> {
+                    setMapOpen(false);
+                });
             }
             systemLogger.log(Level.INFO, "Showing new desktop stage");
             return controller;

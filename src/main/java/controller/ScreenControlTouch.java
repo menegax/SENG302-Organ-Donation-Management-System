@@ -116,6 +116,12 @@ class ScreenControlTouch extends ScreenControl {
             if (fxml.equals(MAPFXML)) {
                 // Cast should always be safe
                 mapController = (GUIMap) controller;
+                mapController.loadMap();
+                pane.visibleProperty().addListener(((observable, oldValue, newValue) -> {
+                    if (!newValue) {
+                        setMapOpen(false);
+                    }
+                }));
             }
             systemLogger.log(INFO, "Showing new touch stage scene");
             return controller;

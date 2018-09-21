@@ -151,7 +151,6 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
     private void openMap() {
         screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
         screenControl.setMapOpen(true);
-        screenControl.getMapController().loadMap();
     }
 
 
