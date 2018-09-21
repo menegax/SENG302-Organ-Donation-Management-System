@@ -34,6 +34,23 @@
     - Navigate to the profile of the recipient for the available organ
     - Verifies that the organ now has the donors NHI next to the organ in the receiving organs list
     
+6. Check that deregistering an assigned organ affects both profiles
+    - Log in as an admin or clinician
+    - Navigate to the profile of a patient with either an assigned donation or assigned receiving organ
+    - Open either their donation or receiving organ update screens (depending on if the patient is a donor or receiver)
+    - Clear the donation/receiving status on the organ that is assigned (the alert should show)
+    - Verify that the organ no longer appears in that patients donating or receiving list
+    - Verify that there is no longer an assignment for that organ on the other patients profile (i.e. There should be no NHI displayed next to it)  
+    
+7. Check undoing the deregistration an assigned organ affects both profiles
+    - Log in as an admin or clinician
+    - Navigate to the profile of a patient with either an assigned donation or assigned receiving organ
+    - Open either their donation or receiving organ update screens (depending on if the patient is a donor or receiver)
+    - Clear the donation/receiving status on the organ that is assigned (the alert should show)
+    - Undo the deregistration
+    - Verify that the organ is still assigned by viewing the current patients profile
+    - Verify that the organ is still assigned on the other patients profile   
+    
 ### 21/09/2018 - Kyle Lamb
 
 1. Pass
@@ -45,3 +62,9 @@
 4. Pass
 
 5. Pass
+
+### 21/09/2018 - Kyle Lamb
+
+6. Pass
+
+7. Pass
