@@ -51,6 +51,12 @@
     - Verify that the organ is still assigned by viewing the current patients profile
     - Verify that the organ is still assigned on the other patients profile   
     
+8. Opening the assigned patient profile from the receiving or donating list of another patient
+    - Log in as an admin or clinician
+    - Navigate to the profile of a patient with either an assigned donation or assigned receiving organ
+    - Double click on an entry in their donating list or receiving list that has an assignment
+    - Verify that the profile of the assigned patient opens    
+    
 ### 21/09/2018 - Kyle Lamb
 
 1. Pass
@@ -68,3 +74,7 @@
 6. Pass
 
 7. Pass
+
+## 22/09/2018 - Kyle Lamb
+
+8. Pass

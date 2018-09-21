@@ -240,7 +240,9 @@ public class GUIPatientProfile extends TargetedController {
 		donationList.itemsProperty().bind(donatingListProperty);
 		receivingList.itemsProperty().bind(receivingListProperty);
 		receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
-		setupListviewDoubleClick();
+		if (!(userControl.getLoggedInUser() instanceof Patient)) {
+            setupListviewDoubleClick();
+        }
 	}
 
 	/**
