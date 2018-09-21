@@ -1,5 +1,5 @@
 var map, geocoder, patients, mapBridge, successCount;
-var circles = [];
+var markerCircle;
 var markers = [];
 var infoWindows = [];
 
@@ -83,7 +83,7 @@ function addMarker(patient) {
                         iw.open(map, marker);
                     }
                 });
-                attachRadius(marker);
+                attachRadius(marker, patient);
             });
             markers.push(marker);
         }
@@ -96,23 +96,32 @@ function addMarker(patient) {
 /**
  * Creates radius around selected marker
  */
-function attachRadius(marker){
-    circles.forEach(function (circle) {
-        circle.setMap(null);
-    });
-    circles = [];
+function attachRadius(marker, patient){
+    markerCircle.setMap(null);
+
+    var green = '#28a847';
+    var orange = '#e49505';
+    var red = '#e4330d';
+
     // Add the circle for this city to the map.
-    var cityCircle = new google.maps.Circle({
-        strokeColor: '#28a847',
+    markerCircle = new google.maps.Circle({
+        strokeColor: green,
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: '#28a847',
+        fillColor: green,
         fillOpacity: 0.35,
         map: map,
         center: marker.position,
         radius: 100000
     });
-    circles.push(cityCircle);
+    mapBridge.updateMarkerRadii(patient);
+}
+
+/**
+ * Updates the circle radii for current marker selected
+ */
+function updateMarkerRadii(radius) {
+    currentMarker.radius = radius;
 }
 
 /**
