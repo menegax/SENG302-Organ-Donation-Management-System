@@ -1,5 +1,8 @@
 package model;
 
+import static java.util.logging.Level.INFO;
+import static utility.UserActionHistory.userActions;
+
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
 import com.univocity.parsers.annotations.Convert;
@@ -8,14 +11,20 @@ import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.annotations.Validate;
 import org.apache.commons.lang3.StringUtils;
 import service.APIGoogleMaps;
+import utility.GlobalEnums;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.BloodGroup;
+import utility.GlobalEnums.DiseaseState;
+import utility.GlobalEnums.MedicationStatus;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.PreferredGender;
+import utility.GlobalEnums.Region;
+import utility.GlobalEnums.Status;
+import utility.PatientActionRecord;
+import utility.Searcher;
 import utility.parsing.DateConverterCSV;
 import utility.parsing.DateTimeConverterCSV;
 import utility.parsing.EnumConverterCSV;
-import utility.GlobalEnums;
-import utility.GlobalEnums.*;
-import utility.PatientActionRecord;
-import utility.Searcher;
-import utility.SystemLogger;
 
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -26,16 +35,11 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
-
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
 
@@ -767,9 +771,17 @@ public class Patient extends User {
 
     public LatLng getCurrentLocation() throws InterruptedException, ApiException, IOException {
         if (currentLocation == null) {
-            this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
+            if (this.isDead()) {
+                this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getDeathLocationConcat());
+            } else {
+                this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
+            }
         }
         return currentLocation;
+    }
+
+    public boolean isDead() {
+        return !(deathStreet.isEmpty() && deathCity.isEmpty() && deathRegion != null);
     }
 
 
@@ -782,7 +794,6 @@ public class Patient extends User {
      */
     private void clearCurrentLocation() {
         this.currentLocation = null;
-        currentLocation = null;
     }
 
     /**
