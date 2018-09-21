@@ -277,9 +277,8 @@ public class PatientDAO implements IPatientDataAccess {
             List<Patient> patients = new ArrayList<>();
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                patients.add(constructPatientObject(resultSet, new ArrayList<String>() {{
-                    add(resultSet.getString("Region"));
-                }}));
+                Map<Organ, String> donations = donatingOrgansDataAccess.getDonatingOrgansByDonorNhi(resultSet.getString("nhi"));
+                patients.add(constructPatientObject(resultSet, null, null, null, null, null, null, donations));
             }
             return patients;
         }
@@ -537,37 +536,36 @@ public class PatientDAO implements IPatientDataAccess {
             }
         });
         //map contact info etc
-        if (contacts.size() > 1) {
-            patient.setRegion(contacts.get(4) != null ? Region.getEnumFromString(contacts.get(4)) : null);
-            patient.setZip(contacts.get(5) == null ? 0 : Integer.parseInt(contacts.get(5)));
-            patient.setCurrentDiseases(currentDiseases);
-            patient.setPastDiseases(pastDiseases);
-            patient.setStreetNumber(contacts.get(0));
-            patient.setStreetName(contacts.get(1));
-            patient.setCity(contacts.get(3));
-            try {
-                patient.setSuburb(contacts.get(2));
-            }
-            catch (DataFormatException ignored) {
+        if (contacts != null) {
+            if (contacts.size() > 1) {
+                patient.setRegion(contacts.get(4) != null ? Region.getEnumFromString(contacts.get(4)) : null);
+                patient.setZip(contacts.get(5) == null ? 0 : Integer.parseInt(contacts.get(5)));
+                patient.setCurrentDiseases(currentDiseases);
+                patient.setPastDiseases(pastDiseases);
+                patient.setStreetNumber(contacts.get(0));
+                patient.setStreetName(contacts.get(1));
+                patient.setCity(contacts.get(3));
+                try {
+                    patient.setSuburb(contacts.get(2));
+                } catch (DataFormatException ignored) {
 
+                }
+                patient.setHomePhone(contacts.get(6));
+                patient.setWorkPhone(contacts.get(7));
+                patient.setMobilePhone(contacts.get(8));
+                patient.setEmailAddress(contacts.get(9));
+                patient.setContactName(contacts.get(10));
+                patient.setContactRelationship(contacts.get(11));
+                patient.setContactHomePhone(contacts.get(12));
+                patient.setContactWorkPhone(contacts.get(13));
+                patient.setContactMobilePhone(contacts.get(14));
+                patient.setContactEmailAddress(contacts.get(15));
+                patient.setUserActionsList(logs == null ? new ArrayList<>() : logs);
+                patient.setProcedures(procedures == null ? new ArrayList<>() : procedures);
+            } else if (!contacts.isEmpty()) {
+                patient.setRegion(contacts.get(0) != null ? Region.getEnumFromString(contacts.get(0)) : null);
             }
-            patient.setHomePhone(contacts.get(6));
-            patient.setWorkPhone(contacts.get(7));
-            patient.setMobilePhone(contacts.get(8));
-            patient.setEmailAddress(contacts.get(9));
-            patient.setContactName(contacts.get(10));
-            patient.setContactRelationship(contacts.get(11));
-            patient.setContactHomePhone(contacts.get(12));
-            patient.setContactWorkPhone(contacts.get(13));
-            patient.setContactMobilePhone(contacts.get(14));
-            patient.setContactEmailAddress(contacts.get(15));
-            patient.setUserActionsList(logs == null ? new ArrayList<>() : logs);
-            patient.setProcedures(procedures == null ? new ArrayList<>() : procedures);
         }
-        else if (!contacts.isEmpty()) {
-            patient.setRegion(contacts.get(0) != null ? Region.getEnumFromString(contacts.get(0)) : null);
-        }
-
         return patient;
     }
 
