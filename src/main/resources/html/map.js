@@ -97,7 +97,9 @@ function addMarker(patient) {
  * Creates radius around selected marker
  */
 function attachRadius(marker, patient){
-    markerCircle.setMap(null);
+    if (markerCircle != null) {
+        markerCircle.setMap(null);
+    }
 
     var green = '#28a847';
     var orange = '#e49505';
@@ -110,18 +112,21 @@ function attachRadius(marker, patient){
         strokeWeight: 2,
         fillColor: green,
         fillOpacity: 0.35,
-        map: map,
         center: marker.position,
-        radius: 100000
+        editable: true
     });
-    mapBridge.updateMarkerRadii(patient);
+    mapBridge.updateMarkerRadii(patient.getNhiNumber(), patient.getDonations().get(0));
 }
 
 /**
  * Updates the circle radii for current marker selected
  */
-function updateMarkerRadii(radius) {
-    currentMarker.radius = radius;
+function updateMarkerRadi(radius) {
+    markerCircle.setRadius(radius);
+    markerCircle.setMap(map);
+    // google.maps.event.addListener(circle, 'radius_changed', function() {
+    //     console.log(circle.getRadius());
+    // });
 }
 
 /**
