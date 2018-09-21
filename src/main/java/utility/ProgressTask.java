@@ -130,7 +130,7 @@ public class ProgressTask extends Task<Void> {
      * Sets the progress bar for the task
      * @param progressBar - progress bar to add to the task
      */
-    void setProgressBar(ProgressBar progressBar) {
+    public void setProgressBar(ProgressBar progressBar) {
         this.progressBar = progressBar;
     }
 }

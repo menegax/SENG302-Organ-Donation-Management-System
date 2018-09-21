@@ -4,36 +4,27 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import model.Patient;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.CachedThreadPool;
 import utility.ExpiryObservable;
-import utility.GlobalEnums.*;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
-
-import model.Patient;
+import utility.GlobalEnums.Organ;
 import utility.ProgressBarCustomTableCell;
 import utility.ProgressTask;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
-import java.util.zip.DataFormatException;
 
-import static java.util.logging.Level.FINE;
-import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -144,7 +135,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
             boolean sortingByExpiry = false;
             boolean isAscending = true;
             ObservableList<TableColumn<PatientOrgan, ?>> sortPolicies = availableOrgansTableView.getSortOrder();
-            //Search the sort policies to see if any of the tablecolumns being sorted is either the progress bar or expiry time
+            //Search the sort policies to see if any of the table columns being sorted is either the progress bar or expiry time
             for (TableColumn<PatientOrgan, ?> tableColumn : sortPolicies) {
                 if (tableColumn.getId().equals("expiryCol") || tableColumn.getId().equals("organExpiryProgressCol")) {
                     sortingByExpiry = true;
@@ -286,7 +277,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
             userActions.log(Level.WARNING, "Selected donor does not have a blood group set. Please set a blood group.", "Attempted to view available matches for a donor without a blood group");
         } else {
             GUIClinicianPotentialMatches controller = (GUIClinicianPotentialMatches) screenControl.show("/scene/clinicianPotentialMatches.fxml", false, this, selected.getPatient());
-            controller.setTarget(selected.getPatient(), selected.getOrgan());
+            controller.setTarget(selected);
         }
     }
 
@@ -308,32 +299,32 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
      */
     @FXML
     public void viewOnMap() {
-        List<Patient> patients = new ArrayList<>();
+        Set<Patient> patients = new HashSet<>();
 
-        for (int i = 0; i < masterData.size(); i++) {
-            patients.add(masterData.get(i).getPatient());
+        for (PatientOrgan aMasterData : masterData) {
+            patients.add(aMasterData.getPatient());
         }
 
         Alert alert;
         if (screenControl.getMapOpen()) {
-            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
-                    , ButtonType.OK, ButtonType.NO);
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?", ButtonType.OK, ButtonType.NO);
             alert.show();
+            alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
+                populateMap(new ArrayList<>(patients));
+            });
         } else {
-            alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
-                    , ButtonType.OK);
-            alert.show();
+            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+            populateMap(new ArrayList<>(patients));
         }
+    }
 
-        alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
-            screenControl.setIsCustomSetMap(true);
-            if (!screenControl.getMapOpen()) {
-                screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
-                screenControl.setMapOpen(true);
-            }
-            GUIMap.jsBridge.setMember("patients", patients);
-            GUIMap.jsBridge.call("setPatients");
-            screenControl.setMapOpen(true);
-        });
+    /**
+     * Populates the map with the provided collection of patients
+     * @param patients the patients to populate the map with
+     */
+    private void populateMap(Collection<Patient> patients) {
+        screenControl.setIsCustomSetMap(true);
+        screenControl.getMapController().setPatients(patients);
+        screenControl.setMapOpen(true);
     }
 }

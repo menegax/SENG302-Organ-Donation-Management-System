@@ -5,10 +5,7 @@ import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -516,23 +513,26 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
             patients.add(patientDataService.getPatientByNhi(masterData.get(i).getNhiNumber()));
         }
 
-        Alert alert;
         if (screenControl.getMapOpen()) {
-            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
-                    , ButtonType.OK, ButtonType.NO);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?", ButtonType.OK, ButtonType.NO);
             alert.show();
-        } else {
-            alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
-                    , ButtonType.OK);
-            alert.show();
-        }
 
-        alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
-            screenControl.setIsCustomSetMap(true);
+            alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
+                populateMap(patients);
+            });
+        } else {
             statesHistoryScreen.getUndoableWrapper().getGuiHome().openMap();
-            GUIMap.jsBridge.setMember("patients", patients);
-            GUIMap.jsBridge.call("setPatients");
-            screenControl.setMapOpen(true);
-        });
+            populateMap(patients);
+        }
+    }
+
+    /**
+     * Populates the map with the provided collection of patients
+     * @param patients the patients to populate the map with
+     */
+    private void populateMap(Collection<Patient> patients) {
+        screenControl.setIsCustomSetMap(true);
+        screenControl.getMapController().setPatients(patients);
+        screenControl.setMapOpen(true);
     }
 }

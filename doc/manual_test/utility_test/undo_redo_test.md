@@ -121,3 +121,5 @@ Test each individual control: Pass
 Test only undo on current stage: Pass
 
 Test undo through multiple screens: Pass
+
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**

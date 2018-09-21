@@ -1,5 +1,11 @@
 package controller;
 
+import static java.lang.Math.abs;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
+import com.google.maps.model.LatLng;
 import data_access.localDAO.PatientLocalDAO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -18,9 +24,11 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.util.converter.LocalTimeStringConverter;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.RangeSlider;
+import service.APIGoogleMaps;
 import service.ClinicianDataService;
 import service.OrganWaitlist;
 import service.PatientDataService;
@@ -33,6 +41,12 @@ import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 import utility.undoRedo.IAction;
 import utility.undoRedo.MultiAction;
+import utility.*;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.FilterOption;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.Region;
+
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -44,6 +58,10 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianPotentialMatches extends UndoableController implements IWindowObserver, TouchscreenCapable {
+
+    private int SECONDSINHOURS = 3600;
+
+    private int SECONDSINMINUTES = 60;
 
     public TableView<OrganWaitlist.OrganRequest> potentialMatchesTable;
 
@@ -59,6 +77,8 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
 
     public TableColumn<OrganWaitlist.OrganRequest, String> waitingTimeCol;
 
+    public TableColumn<OrganWaitlist.OrganRequest, String> travelTimeCol;
+
     public Text nameLabel;
 
     public Text nhiLabel;
@@ -72,6 +92,8 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     public Text deathLocationLabel;
 
     public Text ageLabel;
+
+    public Text expiryTimeLabel;
 
     public GridPane potentialMatchesPane;
 
@@ -93,6 +115,8 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     private Button assignOrganButton;
 
     private Organ targetOrgan;
+
+    private PatientOrgan targetPatientOrgan;
 
     private ObservableList<OrganWaitlist.OrganRequest> allRequests = FXCollections.observableArrayList();
 
@@ -119,16 +143,31 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     private OrganWaitlist organWaitList;
 
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
+    private final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
+
+    /**
+     *  0         1
+     *   X ---- X
+     *   .      .
+     *   .      .
+     *   X ---- X
+     *  2         3
+     *
+     * Map of boundaries on NZ. Keys are corner indexes (refer to top image)
+     */
+    private HashMap<Integer, LatLng> boundsOfNz = new HashMap<>();
 
     /**
      * Sets the target donor and organ for this controller and loads the data accordingly
-     *
-     * @param donor the donating patient
-     * @param organ the organ they are donating
+     * @param patientOrgan the selected patient organ object from the available organs
      */
-    public void setTarget(Patient donor, Organ organ) {
-        target = donor;
-        targetOrgan = organ;
+    public void setTarget(PatientOrgan patientOrgan) {
+        target = patientOrgan.getPatient();
+        targetOrgan = patientOrgan.getOrgan();
+        targetPatientOrgan = new PatientOrgan((Patient) target, targetOrgan);
+        targetPatientOrgan.startTask();
+        targetPatientOrgan.getProgressTask().setProgressBar(new ProgressBar()); //dummy progress task
+        CachedThreadPool.getCachedThreadPool().getThreadService().submit(targetPatientOrgan.getProgressTask());
         loadController();
     }
 
@@ -138,6 +177,10 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
      * to view a patient's profile.
      */
     public void loadController() {
+        boundsOfNz.put(0, new LatLng(-34.386058, 166.848052));
+        boundsOfNz.put(2, new LatLng(-47.058964, 164.456064));
+        boundsOfNz.put(1, new LatLng(-34.073159, 179.323815));
+        boundsOfNz.put(3, new LatLng(-46.494633, 179.932955));
         allRequests.clear();
         loadRegionDistances();
         clinicianDataService = new ClinicianDataService();
@@ -153,6 +196,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         setupDoubleClickToPatientEdit();
         setupAgeSliderListeners();
         setupFilterListeners();
+        filterTravelTimes();
         if (screenControl.isTouch()) {
             matchTouchPane = new TouchPaneController(potentialMatchesPane);
             potentialMatchesPane.setOnZoom(this::zoomWindow);
@@ -265,6 +309,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         regionLabel.setText(((Patient) target).getDeathRegion()
                 .toString());
         deathLocationLabel.setText(((Patient) target).getDeathStreet() + ", " + ((Patient) target).getDeathCity());
+        expiryTimeLabel.textProperty().bind(targetPatientOrgan.getProgressTask().messageProperty());
     }
 
 
@@ -276,6 +321,11 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
      */
     private boolean checkMatch(OrganWaitlist.OrganRequest request) {
         boolean match = true;
+        Patient potentialReceiver = patientDataService.getPatientByNhi(request.getReceiverNhi());
+        //Do not match against patients that have no address or region
+        if (potentialReceiver.getRegion() == null || (potentialReceiver.getStreetNumber() == null && potentialReceiver.getStreetName() == null)) {
+            return false;
+        }
         long requestAge = ChronoUnit.DAYS.between(request.getBirth(), LocalDate.now());
         long targetAge = ChronoUnit.DAYS.between(((Patient) target).getBirth(), ((Patient) target).getDeathDate());
         if (request.getRequestedOrgan() != targetOrgan || request.getBloodGroup() != ((Patient) target).getBloodGroup() || request.getReceiver().getDeathDate() != null) {
@@ -289,41 +339,127 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
 
 
     /**
+     * Calculates the travel time from the current location of the donating patient to a
+     *
+     * @param potentialMatch the patient potentially receiving the organ
+     * @return the travel time
+     */
+    private long calculateTotalHeloTravelTime(Patient potentialMatch) {
+
+        //constants using kilometers and seconds
+        long organLoadTime = 1800;
+        long organUnloadtime = 1800;
+        long refuelTime = 1800;
+        double maxTravelDistanceStatuteKilometers = 460; //on one tank of gas
+        long heloTravelSpeedKmh = 260;
+        double metersPerKm = 1000 / (double)3600;
+
+        LatLng donorLocation;
+        LatLng receiverLocation;
+
+        // calculate distance between donating organ and receiving patient
+        try {
+            // calculate total travel time
+            donorLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(((Patient) target).getDeathLocationConcat());
+            receiverLocation = potentialMatch.getCurrentLocation();
+            if (receiverLocation == null || donorLocation == null) {
+                systemLogger.log(Level.FINER, "Unable to calculate distance to potential receiver");
+                return -1;
+            }
+        } catch (Exception e) {
+            systemLogger.log(Level.FINER, "Unable to calculate distance to potential receiver");
+            return -1;
+        }
+
+        boolean receiverInNz = isInNz(receiverLocation);
+        boolean donorInNz = isInNz(donorLocation);
+        if (receiverInNz && donorInNz) {
+            double distance = calculateDistanceInKilometer(donorLocation.lat, donorLocation.lng, receiverLocation.lat, receiverLocation.lng);
+            long totalTravelTime = (long) Math.ceil((distance * 1000 )/ (heloTravelSpeedKmh * metersPerKm)); //time to travel in seconds
+
+            // calculate total refuel time
+            int numRefuels = (int) Math.ceil(distance / maxTravelDistanceStatuteKilometers);
+            double totalRefuelTime = refuelTime * numRefuels;
+
+            return (long) Math.ceil(organLoadTime + totalTravelTime + totalRefuelTime + organUnloadtime);
+        }
+        return -1;
+    }
+
+
+    /**
+     * Checks given latlng is wirhin nz
+     * @param latLng - latng to check if it is within NZ
+     * @return - true if latlng is in nz
+     */
+    private boolean isInNz(LatLng latLng) {
+        return latLng.lat > boundsOfNz.get(2).lat && latLng.lat < boundsOfNz.get(1).lat && latLng.lng < boundsOfNz.get(1).lng && latLng.lng > boundsOfNz.get(2).lng;
+    }
+
+    /**
+     * Calculates the distance between two points
+     * @param userLat the first lat
+     * @param userLng the first lng
+     * @param venueLat the second lat
+     * @param venueLng the second lng
+     * @return the distance between the two in kilometers
+     */
+    private double calculateDistanceInKilometer(double userLat, double userLng, double venueLat, double venueLng) {
+
+        double latDistance = Math.toRadians(userLat - venueLat);
+        double lngDistance = Math.toRadians(userLng - venueLng);
+
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(userLat)) * Math.cos(Math.toRadians(venueLat))
+                * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return (double) (Math.round(AVERAGE_RADIUS_OF_EARTH_KM * c));
+    }
+
+
+    /**
+     * Gets a formatted string for the travel time from a request
+     * @param request the request for the available organ
+     * @return the formatted string for travel time
+     */
+    private String getTravelTimeToTravel(OrganWaitlist.OrganRequest request){
+        long totalSecs = calculateTotalHeloTravelTime(request.getReceiver());
+        if (totalSecs == -1) {
+            return "Cannot calculate";
+        }
+        int hours = (int)(totalSecs / 3600L);
+        int minutes = (int)((totalSecs % 3600L) / 60L);
+        int seconds = (int) (totalSecs % 60L);
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    /**
      * Populates the potential matches table with the potential matches in the right order
      */
     private void populateTable() {
-        nhiCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
-                .getReceiverNhi()));
-        nameCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
-                .getReceiverName()));
-        ageCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(r.getValue()
-                .getAge())));
-        regionCol.setCellValueFactory(r -> {
-            if (r.getValue()
-                    .getRequestRegion() != null) {
-                return new SimpleStringProperty(r.getValue()
-                        .getRequestRegion()
-                        .toString());
-            }
-            return null;
-        });
-        addressCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
-                .getAddress()));
-        waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(r.getValue()
-                .getDate(), LocalDate.now()))));
+        setCellValues();
 
         // wrap ObservableList in a FilteredList
-        //FilteredList<OrganWaitlist.OrganRequest> filteredRequests = filterRequests();
-
         observableList = FXCollections.observableList(requests);
         FilteredList<OrganWaitlist.OrganRequest> filteredRequests = new FilteredList<>(observableList);
-
         filterRequests();
 
         // wrap the FilteredList in a SortedList.
         sortedRequests = new SortedList<>(filteredRequests);
+        setComparators();
 
-        // bind the SortedList comparator to the TableView comparator.
+        // add sorted (and filtered) data to the table.
+        potentialMatchesTable.setItems(sortedRequests);
+
+        setDefaultFilters();
+    }
+
+
+    /**
+     * Bind the SortedList comparator to the TableView comparator.
+     */
+    private void setComparators() {
         Comparator<OrganWaitlist.OrganRequest> newComparator = (request1, request2) -> {
             if (request1.getDate().isBefore(request2.getDate())) {
                 return -1;
@@ -341,9 +477,13 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
 
         sortedRequests.comparatorProperty()
                 .bind(objectProperty);
-        // add sorted (and filtered) data to the table.
-        potentialMatchesTable.setItems(sortedRequests);
+    }
 
+
+    /**
+     * Sets the default option for the filters
+     */
+    private void setDefaultFilters() {
         regionFilter.getItems()
                 .add(GlobalEnums.NONE_ID); //for empty selection
         regionFilter.getSelectionModel()
@@ -364,6 +504,33 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
 
 
     /**
+     * Loads the cell values in the table
+     */
+    private void setCellValues() {
+        nhiCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
+                .getReceiverNhi()));
+        nameCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
+                .getReceiverName()));
+        ageCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(r.getValue()
+                .getAge())));
+        regionCol.setCellValueFactory(r -> {
+            if (r.getValue()
+                    .getRequestRegion() != null) {
+                return new SimpleStringProperty(r.getValue()
+                        .getRequestRegion()
+                        .toString());
+            }
+            return null;
+        });
+        addressCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
+                .getAddress()));
+        waitingTimeCol.setCellValueFactory(r -> new SimpleStringProperty(String.valueOf(DAYS.between(r.getValue()
+                .getDate(), LocalDate.now()))));
+        travelTimeCol.setCellValueFactory(r -> new SimpleStringProperty(getTravelTimeToTravel(r.getValue())));
+    }
+
+
+    /**
      * Filters the requests based on dropdown filters and age slider
      */
     private void filterRequests() {
@@ -379,6 +546,38 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         potentialMatchesTable.refresh();
     }
 
+    /**
+     * Removes any potential matches whose travel time exceeds the expiry time left on the organ
+     */
+    private void filterTravelTimes() {
+        List<OrganWaitlist.OrganRequest> toFar = new ArrayList<>();
+        for (OrganWaitlist.OrganRequest organRequest : potentialMatchesTable.getItems()) {
+            if (!targetPatientOrgan.getProgressTask().getMessage().equals("")) {
+                if (secondsInTime(getTravelTimeToTravel(organRequest)) > (secondsInTime(targetPatientOrgan.getProgressTask().getMessage()))) {
+                    toFar.add(organRequest);
+                }
+            }
+        }
+        observableList.removeAll(toFar);
+    }
+
+    /**
+     * Gives the seconds in the time provided of the for hh:mm:ss
+     * @param time the string value of the time in hh:mm:ss
+     * @return the amount of seconds in that time
+     */
+    private int secondsInTime(String time) {
+        if (!(time.equals("Cannot calculate"))) {
+            String[] times = time.split(":");
+            int total = 0;
+            total += Integer.parseInt(times[0]) * SECONDSINHOURS;
+            total += Integer.parseInt(times[1]) * SECONDSINMINUTES;
+            total += Integer.parseInt(times[2]);
+            return total;
+        } else {
+            return 0;
+        }
+    }
 
     /**
      * Sets up double-click functionality for each row to open a patient profile update, ensures no duplicate profiles
@@ -541,12 +740,16 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     /**
      * Sets the filter listeners for the potential matches list
      */
-    private void setupFilterListeners(){
+    private void setupFilterListeners() {
         assignOrganButton.setDisable(true);
-        regionFilter.valueProperty().addListener(((observable, oldValue, newValue) -> {
-            filter.put(FilterOption.REGION, newValue);
-            filterRequests();
-        }));
+        expiryTimeLabel.textProperty().addListener(e -> {
+            filterTravelTimes();
+        });
+        regionFilter.valueProperty()
+                .addListener(((observable, oldValue, newValue) -> {
+                    filter.put(FilterOption.REGION, newValue);
+                    filterRequests();
+                }));
 
         birthGenderFilter.valueProperty()
                 .addListener(((observable, oldValue, newValue) -> {
@@ -629,30 +832,28 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     @FXML
     public void viewOnMap() {
         List<Patient> patients = new ArrayList<>();
-        for (int i = 0; i < observableList.size(); i++) {
-            patients.add(patientDataService.getPatientByNhi(observableList.get(i).getReceiverNhi()));
+        for (OrganWaitlist.OrganRequest anObservableList : observableList) {
+            patients.add(patientDataService.getPatientByNhi(anObservableList.getReceiverNhi()));
         }
+        patients.add((Patient) target);
 
-        Alert alert;
         if (screenControl.getMapOpen()) {
-            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
-                    , ButtonType.OK, ButtonType.NO);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?", ButtonType.OK, ButtonType.NO);
             alert.show();
+            alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> populateMap(patients));
         } else {
-            alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
-                    , ButtonType.OK);
-            alert.show();
+            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+            populateMap(patients);
         }
+    }
 
-        alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
-            screenControl.setIsCustomSetMap(true);
-            if (!screenControl.getMapOpen()) {
-                screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
-                screenControl.setMapOpen(true);
-            }
-            GUIMap.jsBridge.setMember("patients", patients);
-            GUIMap.jsBridge.call("setPatients");
-            screenControl.setMapOpen(true);
-        });
+    /**
+     * Populates the map with the provided collection of patients
+     * @param patients the patients to populate the map with
+     */
+    private void populateMap(Collection<Patient> patients) {
+        screenControl.setIsCustomSetMap(true);
+        screenControl.getMapController().setPatients(patients);
+        screenControl.setMapOpen(true);
     }
 }

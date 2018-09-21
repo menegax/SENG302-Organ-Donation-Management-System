@@ -25,6 +25,7 @@ import javafx.collections.transformation.SortedList;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.zip.DataFormatException;
@@ -225,23 +226,24 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
 
         Alert alert;
         if (screenControl.getMapOpen()) {
-            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?"
-                    , ButtonType.OK, ButtonType.NO);
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?", ButtonType.OK, ButtonType.NO);
             alert.show();
+            alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
+                populateMap(patients);
+            });
         } else {
-            alert = new Alert(Alert.AlertType.INFORMATION, "Select 'View on Map' again after map is open to populate map"
-                    , ButtonType.OK);
-            alert.show();
+            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+            populateMap(patients);
         }
+    }
 
-        alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
-            screenControl.setIsCustomSetMap(true);
-            if (!screenControl.getMapOpen()) {
-                screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
-                screenControl.setMapOpen(true);
-            }
-            GUIMap.jsBridge.setMember("patients", patients);
-            GUIMap.jsBridge.call("setPatients");
-        });
+    /**
+     * Populates the map with the provided collection of patients
+     * @param patients the patients to populate the map with
+     */
+    private void populateMap(Collection<Patient> patients) {
+        screenControl.setIsCustomSetMap(true);
+        screenControl.getMapController().setPatients(patients);
+        screenControl.setMapOpen(true);
     }
 }
