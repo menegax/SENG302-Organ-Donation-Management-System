@@ -1,4 +1,5 @@
 var map, geocoder, patients, mapBridge, successCount;
+var circles = [];
 var markers = [];
 var infoWindows = [];
 
@@ -81,7 +82,8 @@ function addMarker(patient) {
                     else {
                         iw.open(map, marker);
                     }
-                })
+                });
+                attachRadius(marker);
             });
             markers.push(marker);
         }
@@ -89,6 +91,28 @@ function addMarker(patient) {
             console.log('Geocode failed for patient ' + patient.getNhiNumber() + ' because: ' + status);
         }
     });
+}
+
+/**
+ * Creates radius around selected marker
+ */
+function attachRadius(marker){
+    circles.forEach(function (circle) {
+        circle.setMap(null);
+    });
+    circles = [];
+    // Add the circle for this city to the map.
+    var cityCircle = new google.maps.Circle({
+        strokeColor: '#28a847',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#28a847',
+        fillOpacity: 0.35,
+        map: map,
+        center: marker.position,
+        radius: 100000
+    });
+    circles.push(cityCircle);
 }
 
 /**
