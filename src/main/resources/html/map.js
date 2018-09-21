@@ -151,7 +151,7 @@ function attachInfoWindow(patient, marker) {
 
     marker.addListener('click', function toggleBounce() {
         if (marker.getAnimation() !== null) {
-            marker.setAnimation(null);
+            marker.setAnimation(null); //todo make closing the info window stop the animation
         }
         else {
             marker.setAnimation(google.maps.Animation.BOUNCE);
