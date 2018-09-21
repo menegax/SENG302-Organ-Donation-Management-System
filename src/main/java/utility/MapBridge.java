@@ -68,10 +68,10 @@ public class MapBridge {
             radius = remaining * heloTravelSpeedMps;
             System.out.println(radius);
 
-            GUIMap.getJSBridge().call("updateMarkerRadi", radius);
+            GUIMap.getJSBridge().call("updateMarkerRadii", radius);
         } else {
             radius = 100000;
-            GUIMap.getJSBridge().call("updateMarkerRadi", radius);
+            GUIMap.getJSBridge().call("updateMarkerRadii", radius);
         }
     }
 }

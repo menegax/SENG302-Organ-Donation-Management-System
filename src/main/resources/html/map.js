@@ -83,7 +83,15 @@ function addMarker(patient) {
                         iw.open(map, marker);
                     }
                 });
-                attachRadius(marker, patient);
+                if (markerCircle != null) {
+                    markerCircle.setMap(null);
+                }
+                if (patient.getDonations() != null && patient.getDeathDate() != null) {
+                    console.log("YAY");
+                    attachRadius(marker, patient);
+                } else {
+                    console.log("DAMN");
+                }
             });
             markers.push(marker);
         }
@@ -96,18 +104,14 @@ function addMarker(patient) {
 /**
  * Creates radius around selected marker
  */
-function attachRadius(marker, patient){
-    if (markerCircle != null) {
-        markerCircle.setMap(null);
-    }
-
+function attachRadius(marker, patient) {
     var green = '#28a847';
     var orange = '#e49505';
     var red = '#e4330d';
 
     // Add the circle for this city to the map.
     markerCircle = new google.maps.Circle({
-        strokeColor: green,
+        strokeColor: "#484848",
         strokeOpacity: 0.8,
         strokeWeight: 2,
         fillColor: green,
@@ -121,9 +125,12 @@ function attachRadius(marker, patient){
 /**
  * Updates the circle radii for current marker selected
  */
-function updateMarkerRadi(radius) {
+function updateMarkerRadii(radius) {
     markerCircle.setRadius(radius);
-    markerCircle.setMap(map);
+    if (markerCircle.map == null) {
+        markerCircle.setMap(map);
+    }
+
     // google.maps.event.addListener(circle, 'radius_changed', function() {
     //     console.log(circle.getRadius());
     // });
@@ -170,6 +177,7 @@ function getOrganOptions(patient) {
 function setPatients(_patients) {
     patients = _patients;
     clearMarkers();
+    clearCircle();
     successCount = 0;
     addMarkers(patients.size());
 }
@@ -197,6 +205,15 @@ function clearMarkers() {
         marker.setMap(null);
     });
     markers = [];
+}
+
+/**
+ * Clear circle from the map
+ */
+function clearCircle() {
+    if (markerCircle != null) {
+        markerCircle.setMap(null);
+    }
 }
 
 /**
