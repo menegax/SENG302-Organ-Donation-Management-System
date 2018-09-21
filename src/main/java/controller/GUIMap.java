@@ -101,14 +101,12 @@ public class GUIMap {
         WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
 
         webViewMap1.setOnTouchReleased((event -> {
-            System.out.println("released");
             originalDistance = null;
             //jsBridge.call("setJankaOriginal", null);
         }));
 
         webViewMap1.setOnTouchMoved((event -> {
 
-            System.out.println(event.getTouchCount());
             if (screenControl.isTouch()) {
                 if (event.getTouchCount() == 1) {
                     Point2D touchOne = new Point2D(event.getTouchPoints().get(0).getX(), event.getTouchPoints().get(0).getY());
@@ -122,7 +120,6 @@ public class GUIMap {
                         jsBridge.call("setJankaOriginal");
                     }
                     double currentDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) + Math.pow(touchOne.getY() - touchTwo.getY(), 2));
-                    System.out.println("TEST: " + currentDistance/ originalDistance);
                     jsBridge.call("setJankaZoom", currentDistance/ originalDistance);
                 }
             }

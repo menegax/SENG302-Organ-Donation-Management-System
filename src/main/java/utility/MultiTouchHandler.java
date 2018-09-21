@@ -193,7 +193,6 @@ public class MultiTouchHandler {
                     }
                 }
                 moving = false;
-                System.out.println(rootPane.getTranslateX() + ", " + rootPane.getTranslateY());
             }
         });
         thread2.start();
