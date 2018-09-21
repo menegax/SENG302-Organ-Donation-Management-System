@@ -94,7 +94,11 @@ public class MultiTouchHandler {
                 rootPane.addEventFilter(TouchEvent.ANY, event -> {
                     if (moving) {
                         velocity = new Point2D(0,0);
-                        lock.notify();
+                        try {
+                            lock.notify();
+                        } catch (IllegalStateException e) {
+                            SystemLogger.systemLogger.log(Level.SEVERE, "Pane momentum thread not found.", "Attempted to stop pane momentum thread.");
+                        }
                     }
                     handleTouch(event);
                 });
