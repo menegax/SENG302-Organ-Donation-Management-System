@@ -26,14 +26,14 @@ import java.util.logging.Level;
  * Bridge for the Google Maps window that holds the buttons' functions
  * and the javascript bridge
  */
-public class GUIMap implements Initializable {
+public class GUIMap {
 
     @FXML
     private WebView webViewMap1;
 
     private WebEngine webEngine;
 
-    public static JSObject jsBridge;
+    private JSObject jsBridge;
 
     private Robot robot;
 
@@ -41,42 +41,56 @@ public class GUIMap implements Initializable {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private Collection<Patient> patients = new ArrayList<>();
+
+
+
+    /**
+     * Loads the patients provided onto the map
+     * @param patients a collection of patients to show on the map
+     */
+    public void setPatients(Collection<Patient> patients) {
+        this.patients.clear();
+        this.patients = patients;
+        if (jsBridge != null) {
+            jsBridge.call("setPatients", patients);
+        }
+    }
+
     /**
      * Initialises the widgets and bridge in the google map
-     *
-     * @param url Required parameter that is not used
-     * @param rb  Required parameter that is not used
      */
-    public void initialize(URL url, ResourceBundle rb) {
-        webEngine = webViewMap1.getEngine();
-
+    void loadMap() {
         UserActionHistory.userActions.log(Level.INFO, "Loading map...", "Attempted to open map");
 
-        List<Patient> results;
+        webEngine = webViewMap1.getEngine();
         if (!screenControl.getIsCustomSetMap()) {
-             results = getInitialPatients();
-        } else {
-            results = new ArrayList<>();
+             patients = getInitialPatients();
         }
 
+        setUpWebEngine();
+        setUpJsLogging();
+        setUpTouchControls();
+    }
+
+
+    /**
+     * Sets up the web engine and jsbridge
+     */
+    private void setUpWebEngine() {
         webEngine.setJavaScriptEnabled(true);
-        webEngine.getLoadWorker()
-                .stateProperty()
-                .addListener((observable, oldValue, newValue) -> {
+        webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
                     if (Worker.State.SUCCEEDED == newValue) {
                         jsBridge = (JSObject) webEngine.executeScript("window");
-                        jsBridge.setMember("patients", results);
                         mapBridge = new MapBridge();
                         jsBridge.setMember("mapBridge", mapBridge);
                         jsBridge.call("init");
+                        jsBridge.call("setPatients", patients);
                     }
                 });
         webEngine.load(Objects.requireNonNull(getClass().getClassLoader()
                 .getResource("html/map.html"))
                 .toExternalForm());
-
-        // What to do with console.log statements
-        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
 
         try {
             robot = new Robot();
@@ -84,7 +98,13 @@ public class GUIMap implements Initializable {
         catch (AWTException e) {
             SystemLogger.systemLogger.log(Level.SEVERE, "Failed to initialize map bridge: " + e.toString());
         }
+    }
 
+
+    /**
+     * Sets scroll and touch events
+     */
+    private void setUpTouchControls() {
         webViewMap1.setOnScroll(event -> {
             if (screenControl.isTouch()) {
                 if (event.getTouchCount() == 2) {
@@ -101,18 +121,20 @@ public class GUIMap implements Initializable {
 
 
     /**
+     * Forwards JavaScript console.log statements into java logging
+     */
+    private void setUpJsLogging() {
+        // What to do with console.log statements
+        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
+    }
+
+
+    /**
      * Gets a collection of initial patients from the search results to auto-populate the map on startup
      * @return the results of the default search
      */
     @NotNull
     private List<Patient> getInitialPatients() {
-        List<Patient> patients = new ArrayList<>(new ClinicianDataService().searchPatients("", null, 50));
-        List<Patient> results = new ArrayList<>();
-        for (Patient p : patients) {
-            results.add(new PatientDataService().getPatientByNhi(p.getNhiNumber()));
-        }
-
-
-        return results;
+        return new ArrayList<>(new ClinicianDataService().searchPatients("", null, 50));
     }
 }

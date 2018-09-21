@@ -269,7 +269,8 @@ public class Patient extends User {
      * @param preferredName   preferred name
      * @param birth           birth date
      * @param death           death date
-     * @param street1         street 1 of address
+     * @param streetName      street name of current address
+     * @param streetNumber    street number of current address
      * @param city         city of address
      * @param suburb          suburb of address
      * @param region          region of address
@@ -281,7 +282,7 @@ public class Patient extends User {
      * @param nhi             NHI
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
-                                 LocalDate birth, LocalDateTime death, String street1, String city, String suburb,
+                                 LocalDate birth, LocalDateTime death, String streetName, String streetNumber, String city, String suburb,
                                  String region, String birthGender, String preferredGender, String bloodGroup,
                                  double height, double weight, String nhi) throws IllegalArgumentException, DataFormatException {
         Enum globalEnum;
@@ -304,8 +305,11 @@ public class Patient extends User {
         if (death != null) {
             setDeathDate(death);
         }
-        if (street1 != null) {
-            setStreetNumber(street1);
+        if (streetName != null) {
+            setStreetName(streetName);
+        }
+        if (streetNumber != null) {
+            setStreetNumber(streetNumber);
         }
         if (city != null) {
             setCity(city);
@@ -387,7 +391,10 @@ public class Patient extends User {
             setSuburb(newPatientAttributes.getSuburb());
         } catch (DataFormatException e) {
             userActions.log(Level.SEVERE, "","" );
-        }        setRegion(newPatientAttributes.getRegion());
+        }
+        setRegion(newPatientAttributes.getRegion());
+        setStreetName(newPatientAttributes.getStreetName());
+        setStreetNumber(newPatientAttributes.getStreetNumber());
         setBirthGender(newPatientAttributes.getBirthGender());
         setPreferredGender(newPatientAttributes.getPreferredGender());
         setBloodGroup(newPatientAttributes.getBloodGroup());
