@@ -43,6 +43,8 @@ public class GUIMap {
 
     private Collection<Patient> patients = new ArrayList<>();
 
+
+
     /**
      * Loads the patients provided onto the map
      * @param patients a collection of patients to show on the map
@@ -83,6 +85,7 @@ public class GUIMap {
                         mapBridge = new MapBridge();
                         jsBridge.setMember("mapBridge", mapBridge);
                         jsBridge.call("init");
+                        jsBridge.call("setPatients", patients);
                     }
                 });
         webEngine.load(Objects.requireNonNull(getClass().getClassLoader()
