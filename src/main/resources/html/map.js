@@ -9,28 +9,32 @@ var validCount = 0;
 
 function init() {
     geocoder = new google.maps.Geocoder();
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -40.59225, lng: 173.51012},
-        zoom: 6,
-        disableDefaultUI: true,
-        scaleControl: true,
-        gestureHandling: 'cooperative'
-    });
-    setMapDragEnd();
-    markerLoop(patients.size());
-
-    document.getElementById('availableOrgansView').addEventListener('click', function() {
-        validCount = 0;
-
-        markers.forEach(function(marker) {
-            marker.setMap(null);
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: -40.59225, lng: 173.51012},
+            zoom: 6,
+            disableDefaultUI: true,
+            scaleControl: true,
+            gestureHandling: 'cooperative'
         });
-        markers = [];
 
-        patients = mapBridge.getAvailableOrgans();
-
+    google.maps.event.addListenerOnce(map, 'idle', function(){
+        setMapDragEnd();
         markerLoop(patients.size());
+
+        document.getElementById('availableOrgansView').addEventListener('click', function() {
+            validCount = 0;
+
+            markers.forEach(function(marker) {
+                marker.setMap(null);
+            });
+            markers = [];
+
+            patients = mapBridge.getAvailableOrgans();
+
+            markerLoop(patients.size());
+        });
     });
+
 }
 
 /**
@@ -80,29 +84,22 @@ function markerLoop(i) {
  */
 function addMarker(patient) {
     console.log('Geocoding patient ' + patient.getNhiNumber() + ' with address ' + patient.getFormattedAddress());
-
-    // attempt to geocode the address
-    geocoder.geocode({'address': patient.getFormattedAddress()}, function (results, status) {
-        if (status === 'OK') {
-            validCount++;
-
-            // set up markers with info windows
-            var marker = makeMarker(patient, results);
-            attachInfoWindow(patient, marker);
-            markers.push(marker);
-
-        } else {
-            console.log('Geocoding failed because: ' + status);
-        }
-    });
+    let latLong = patient.getCurrentLocation();
+    if (latLong !== null) {
+        validCount++;
+        let marker = makeMarker(patient, latLong); //set up markers
+        attachInfoWindow(patient, marker);
+        markers.push(marker);
+    } else {
+        console.log('Geocoding failed because: ' + status);
+    }
 }
 
 function makeMarker(patient, results) {
     var name = patient.getNameConcatenated();
-
     var randx = Math.random() * 0.02 - 0.01;
     var randy = Math.random() * 0.02 - 0.01;
-    var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat() + randx, results[0].geometry.location.lng() + randy);
+    var finalLoc = new google.maps.LatLng(results.lat + randx, results.lng + randy);
 
     return new google.maps.Marker({
         map: map, position: finalLoc, title: name
