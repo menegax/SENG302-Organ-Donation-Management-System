@@ -137,7 +137,7 @@ public class GUIPatientProfile extends TargetedController {
 	 * Initialize the controller depending on whether it is a clinician viewing the
 	 * patient or a patient viewing itself
 	 */
-	public void load() {
+	public void loadController() {
 		IPatientDataService patientDataService = new PatientDataService();
 		if (userControl.getLoggedInUser() instanceof Patient) {
 			if (patientDataService.getPatientByNhi(((Patient) userControl.getLoggedInUser()).getNhiNumber())

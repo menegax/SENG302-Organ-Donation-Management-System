@@ -90,6 +90,19 @@ public class StatesHistoryScreen {
     }
 
     /**
+     * Constructor for the StatesHistoryScreen, used for undoable screens with no undoable controls
+     * (only undoable actions)
+     * @param node a node from the undoable screen
+     * @param undoableScreen the enum of the screen this StatesHistoryScreen represents
+     * @param target the target user of the screen this StatesHistoryScreen represents
+     */
+    public StatesHistoryScreen(Node node, UndoableScreen undoableScreen, User target) {
+        this.undoableScreen = undoableScreen;
+        this.target = target;
+        findUndoableWrapper(node);
+    }
+
+    /**
      * Finds the appropriate undoable wrapper for this stateshistoryscreen
      * @param node a node on the current screen
      */

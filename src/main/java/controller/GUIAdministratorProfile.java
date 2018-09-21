@@ -41,7 +41,7 @@ public class GUIAdministratorProfile extends TargetedController{
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
-    public void load() {
+    public void loadController() {
         if (((Administrator) target).getUsername().toLowerCase().equals("admin")) {
             deleteButton.setVisible(false);
             deleteButton.setDisable(true);

@@ -117,7 +117,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
     /**
      * Initialises the data within the table to all patients
      */
-    public void load() {
+    public void loadController() {
         displayY.setText("Display all " + count + " profiles");
         setupAgeSliderListeners();
         populateDropdowns();

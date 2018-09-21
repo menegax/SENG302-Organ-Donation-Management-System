@@ -99,7 +99,7 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
      * Double click functions to update a diagnosis are added for both current and past diseases
      */
     @FXML
-    public void load() {
+    public void loadController() {
         if(userControl.getLoggedInUser() instanceof Patient) {
             targetClone = (Patient) target.deepClone();
             addDiagnosisButton.setVisible(false);

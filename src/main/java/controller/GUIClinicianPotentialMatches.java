@@ -33,7 +33,6 @@ import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 import utility.undoRedo.IAction;
 import utility.undoRedo.MultiAction;
-import utility.undoRedo.StatesHistoryScreen;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -119,6 +118,8 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
 
     private OrganWaitlist organWaitList;
 
+    private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
+
     /**
      * Sets the target donor and organ for this controller and loads the data accordingly
      *
@@ -128,7 +129,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     public void setTarget(Patient donor, Organ organ) {
         target = donor;
         targetOrgan = organ;
-        load();
+        loadController();
     }
 
 
@@ -136,8 +137,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
      * Initializes matches list screen by populating table and initializing a double click action
      * to view a patient's profile.
      */
-    public void load() {
-        statesHistoryScreen = new StatesHistoryScreen(new ArrayList<>(), GlobalEnums.UndoableScreen.CLINICIANPOTENTIALMATCHES, target);
+    public void loadController() {
         allRequests.clear();
         loadRegionDistances();
         clinicianDataService = new ClinicianDataService();
@@ -411,7 +411,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
      * Called when a profile opened from this window is closed
      */
     public void windowClosed() {
-        load();
+        loadController();
         potentialMatchesTable.refresh();
     }
 
@@ -582,7 +582,6 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     public void assignOrganToPatient(){
         OrganWaitlist.OrganRequest selectedRequest = potentialMatchesTable.getSelectionModel().getSelectedItem();
         Patient organReceiver = patientDataService.getPatientByNhi(selectedRequest.getReceiverNhi());
-        Map<Organ, String> patientDonations = ((Patient) target).getDonations();
         Patient after1 = (Patient) target.deepClone();
         Patient after2 = (Patient) organReceiver.deepClone();
         after1.getDonations().put(targetOrgan, after2.getNhiNumber());
@@ -590,7 +589,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         organWaitList.getRequests().remove(selectedRequest);
         clinicianDataService.updateOrganWaitList(organWaitList);
         IAction action = new MultiAction((Patient) target, after1, organReceiver, after2);
-        statesHistoryScreen.addAction(action);
+        undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.CLINICIANAVAILABLEORGANS);
         userActions.log(Level.INFO, "Assigned organ (" + targetOrgan + ") to patient " + organReceiver.getNhiNumber(), "Attempted to assign organ to patient");
 
         closeMatchWindow();

@@ -85,7 +85,7 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
     /**
      * Sets the TableViews to the appropriate procedures for the current patient
      */
-    public void load() {
+    public void loadController() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             this.patientClone = (Patient) this.target.deepClone();
             setupTables();

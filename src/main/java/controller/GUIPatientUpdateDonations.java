@@ -68,7 +68,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
      * Initializes the donations screen by loading the profile of the patient logged in or viewed.
      * Sets up enter key press event to save changes
      */
-    public void load() {
+    public void loadController() {
         loadProfile(((Patient) target).getNhiNumber());
 
         // Enter key triggers log in

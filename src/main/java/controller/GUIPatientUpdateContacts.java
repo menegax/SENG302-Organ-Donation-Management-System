@@ -85,7 +85,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
      * Initializes the contact details screen. Loads in the current patient and sets the text fields to
      * display current contact attributes.
      */
-    public void load() {
+    public void loadController() {
         loadProfile(((Patient) target).getNhiNumber());
         setContactFields();
         setupUndoRedo();
@@ -159,7 +159,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
      * Sets the target patient to the currently logged in patient.
      * Throws an InvalidObjectException if the logged in patient can not be retrieved
      *
-     * @param nhi The nhi of the patient to load
+     * @param nhi The nhi of the patient to loadController
      */
     private void loadProfile(String nhi) {
         PatientDataService patientDataService = new PatientDataService();
@@ -167,7 +167,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
             target = patientDataService.getPatientByNhi(nhi);
         }
         catch (NullPointerException e) {
-            userActions.log(Level.SEVERE, "Error loading user", new String[]{"Attempted to load the contacts user", ((Patient) target).getNhiNumber()});
+            userActions.log(Level.SEVERE, "Error loading user", new String[]{"Attempted to loadController the contacts user", ((Patient) target).getNhiNumber()});
         }
     }
 

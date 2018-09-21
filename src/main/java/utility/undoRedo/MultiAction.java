@@ -47,6 +47,7 @@ public class MultiAction implements IAction {
 
     @Override
     public void unexecute() {
+        System.out.println("UNDOING");
         patient1Current.setAttributes(patient1Before);
         patient2Current.setAttributes(patient2Before);
         dao.deleteUser(patient1Current);

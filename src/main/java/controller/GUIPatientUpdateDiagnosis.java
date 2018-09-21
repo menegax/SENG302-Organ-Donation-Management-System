@@ -92,7 +92,7 @@ public class GUIPatientUpdateDiagnosis extends TargetedController implements Tou
      * Adds dropdown for disease states.
      * Populates all editable nodes with the current disease information
      */
-    public void load() {
+    public void loadController() {
         patientClone = (Patient) target.deepClone();
         if(isAdd) {
             targetDiseaseClone = new Disease(null, null);

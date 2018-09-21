@@ -106,7 +106,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
 
     @FXML
-    public void load() {
+    public void loadController() {
         if (!loaded) {  // stops listeners from being added twice
         StatusObservable statusObservable = StatusObservable.getInstance();
         Observer statusObserver = (o, arg) -> statusLbl.setText(arg.toString());
@@ -191,8 +191,8 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                 homePane.setOnScroll(this::scrollWindow);
             }
         } catch (IOException e) {
-            new Alert(ERROR, "Unable to load home").show();
-            systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());
+            new Alert(ERROR, "Unable to loadController home").show();
+            systemLogger.log(SEVERE, "Failed to loadController home scene and its fxmls " + e.getMessage());
         }
     }
 

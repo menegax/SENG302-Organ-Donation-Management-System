@@ -64,7 +64,7 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
     /**
      * Initial setup. Sets up undo/redo, Populates the affected organs dropdown
      */
-    public void load() {
+    public void loadController() {
         patientClone = (Patient) target.deepClone();
         setupDonations();
         for (MenuItem menuItem : affectedInput.getItems()) { //Adding organ checkboxes to the undo/redo controls

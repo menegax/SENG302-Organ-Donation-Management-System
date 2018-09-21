@@ -76,7 +76,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
     /**
      * Sets up register page GUI elements
      */
-    public void load() {
+    public void loadController() {
         firstnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         lastnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         middlenameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);

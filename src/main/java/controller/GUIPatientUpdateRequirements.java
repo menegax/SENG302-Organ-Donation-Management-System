@@ -89,7 +89,7 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
     /**
      * Initializes the requirements screen by loading in the current patient
      */
-    public void load() {
+    public void loadController() {
         loadProfile(((Patient) target).getNhiNumber());
         // Enter key triggers log in
         patientRequirementsPane.setOnKeyPressed(e -> {

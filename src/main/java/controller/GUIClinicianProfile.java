@@ -53,7 +53,7 @@ public class GUIClinicianProfile extends TargetedController {
     /**
      * Initializes the clinician profile view screen by loading the logged in clinician's profile
      */
-    public void load() {
+    public void loadController() {
         Clinician clinicianToLoad = clinicianDataService.getClinician(((Clinician) target).getStaffID());
         if (userControl.getLoggedInUser() instanceof Clinician) {
             deleteButton.setVisible(false);

@@ -54,9 +54,9 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
     /**
      * Initializes the administrator editing screen.
      * Populates the Region drop down menu using region enums.
-     * Calls to load the administrator profile and calls to set up undo/redo functionality
+     * Calls to loadController the administrator profile and calls to set up undo/redo functionality
      */
-    public void load() {
+    public void loadController() {
         // Registering a change event to clear the invalid class
         loadProfile(((Administrator) target).getUsername());
         setUpStateHistory();

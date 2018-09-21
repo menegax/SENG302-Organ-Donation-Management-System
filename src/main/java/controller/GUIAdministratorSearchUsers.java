@@ -63,7 +63,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     /**
      * Initialises the data within the table to all users
      */
-    public void load() {
+    public void loadController() {
         setupTableColumnsAndData();
         TextWatcher watcher = new TextWatcher();
         searchEntry.textProperty()

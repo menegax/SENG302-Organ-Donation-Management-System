@@ -152,7 +152,7 @@ public class GUIPatientMedications extends UndoableController {
      * Initializes the Medication GUI pane, adds any medications stored for donor to current and past listViews
      */
     @FXML
-    public void load() {
+    public void loadController() {
         //Register events for when an item is selected from a listView and set selection mode to multiple
         currentMedications.setOnMouseClicked(event -> onSelect(currentMedications));
         pastMedications.setOnMouseClicked(event -> onSelect(pastMedications));
@@ -195,7 +195,7 @@ public class GUIPatientMedications extends UndoableController {
         catch (NullPointerException e) {
             userActions.log(SEVERE,
                     "Error loading logged in user",
-                    new String[] { "Attempted to load patient profile", after.getNhiNumber() });
+                    new String[] { "Attempted to loadController patient profile", after.getNhiNumber() });
         }
     }
 
@@ -469,7 +469,7 @@ public class GUIPatientMedications extends UndoableController {
 
     /**
      * Runs when an item is selected within a listView
-     * If there is only one item, the function to load the ingredients for the selected medication is called
+     * If there is only one item, the function to loadController the ingredients for the selected medication is called
      *
      * @param listView The listView of the selected item
      */

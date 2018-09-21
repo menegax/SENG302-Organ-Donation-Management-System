@@ -22,6 +22,7 @@ import javafx.collections.transformation.SortedList;
 import model.Patient;
 import utility.ProgressBarCustomTableCell;
 import utility.ProgressTask;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -93,7 +94,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         });
     }
 
-    public void load() {
+    @Override
+    public void loadController() {
         for (PatientOrgan po : masterData) {
             if (po.getProgressTask() != null) {
                 po.getProgressTask().setInterrupted();
@@ -117,6 +119,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
             }
         }
         populateTable();
+        controls = new ArrayList<>();
+        statesHistoryScreen = new StatesHistoryScreen(potentialMatchesBtn, UndoableScreen.CLINICIANAVAILABLEORGANS, target);
     }
 
     /**
@@ -291,7 +295,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
      * Refreshes the table when a profile opened by this controller
      */
     public void windowClosed() {
-        load();
+        loadController();
         availableOrgansTableView.refresh();
     }
 

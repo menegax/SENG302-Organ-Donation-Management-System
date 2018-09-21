@@ -123,7 +123,7 @@ class ScreenControlTouch extends ScreenControl {
             systemLogger.log(INFO, "Showing new touch stage scene");
             return controller;
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Unable to load window", "Attempted to load a new window");
+            userActions.log(Level.SEVERE, "Unable to loadController window", "Attempted to loadController a new window");
             new Alert(Alert.AlertType.ERROR, "Unable to open window", ButtonType.OK).show();
         }
         return null;
