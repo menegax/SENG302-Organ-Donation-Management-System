@@ -778,6 +778,12 @@ public class Patient extends User {
         userModified();
     }
 
+    /**
+     * Gets the current location of the patient as a LatLng
+     * Returns the death location if the patient is dead
+     * Returns null if the location could not be geocoded correctly
+     * @return the location of the patient as a latLong
+     */
     public LatLng getCurrentLocation() {
         if (currentLocation == null) {
             try {
