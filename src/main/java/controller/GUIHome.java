@@ -644,10 +644,14 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
             } else {// if windows
                 menuBar.getMenus().clear();
                 menuBar.getMenus().addAll(menu2, menu3, menu4);
-                HBox hbox = new HBox(menuBar, closeButton);
-                HBox.setHgrow(menuBar, Priority.ALWAYS);
-                HBox.setHgrow(closeButton, Priority.NEVER);
-                homePane.setTop(hbox);
+                if (screenControl.isTouch()) {
+                    HBox hbox = new HBox(menuBar, closeButton);
+                    HBox.setHgrow(menuBar, Priority.ALWAYS);
+                    HBox.setHgrow(closeButton, Priority.NEVER);
+                    homePane.setTop(hbox);
+                } else {
+                    homePane.setTop(menuBar);
+                }
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
             }
         }
