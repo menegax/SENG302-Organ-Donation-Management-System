@@ -63,15 +63,11 @@ public class GUIMap {
     /**
      * Initialises the widgets and bridge in the google map
      */
-    public void initialize(URL url, ResourceBundle rb) {
+    void loadMap() {
         webEngine = webViewMap1.getEngine();
         UserActionHistory.userActions.log(Level.INFO, "Loading map...", "Attempted to open map");
-        List<Patient> results;
         if (!screenControl.getIsCustomSetMap()) {
-//             results = getInitialPatients();
-            results = new ArrayList<>();
-        } else {
-            results = new ArrayList<>();
+             patients = getInitialPatients();
         }
 
         setUpWebEngine();
