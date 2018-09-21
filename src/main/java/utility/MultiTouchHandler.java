@@ -96,7 +96,7 @@ public class MultiTouchHandler {
                         velocity = new Point2D(0,0);
                         try {
                             lock.notify();
-                        } catch (IllegalStateException e) {
+                        } catch (IllegalMonitorStateException e) {
                             SystemLogger.systemLogger.log(Level.SEVERE, "Pane momentum thread not found.", "Attempted to stop pane momentum thread.");
                         }
                     }
