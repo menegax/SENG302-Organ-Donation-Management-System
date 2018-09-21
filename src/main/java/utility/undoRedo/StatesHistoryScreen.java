@@ -355,6 +355,9 @@ public class StatesHistoryScreen {
                 }
             }
         }
+        if (stateHistories.size() == 0) {
+            return false;
+        }
         for (StateHistoryControl stateHistory : stateHistories) {
             Boolean success = stateHistory.undo();
             if (!success) {
