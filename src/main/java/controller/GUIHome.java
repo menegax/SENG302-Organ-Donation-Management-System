@@ -38,7 +38,8 @@ import service.PatientDataService;
 import service.UserDataService;
 import service.interfaces.IAdministratorDataService;
 import utility.*;
-
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -112,29 +113,32 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
     @FXML
     public void load() {
         if (!loaded) {  // stops listeners from being added twice
-        StatusObservable statusObservable = StatusObservable.getInstance();
-        Observer statusObserver = (o, arg) -> statusLbl.setText(arg.toString());
-        statusObservable.addObserver(statusObserver);
-        ImportObservable importObservable = ImportObservable.getInstance();
-        Observer importObserver = (o, arg) -> {
-            double progress = Double.valueOf(arg.toString());
-            if (progress < 1.0) {
-                importProgress.setProgress(progress);
-                importProgress.setVisible(true);
-                importLbl.setVisible(true);
-            } else {
-                importProgress.setVisible(false);
-                importLbl.setVisible(false);
-            }
-        };
-        importObservable.addObserver(importObserver);
-        homePane.getProperties().put("focusArea", "true");
-                if (screenControl.isTouch() ) {
-            addPaneListener();
+	        StatusObservable statusObservable = StatusObservable.getInstance();
+	        Observer statusObserver = (o, arg) -> statusLbl.setText(arg.toString());
+	        statusObservable.addObserver(statusObserver);
+	        ImportObservable importObservable = ImportObservable.getInstance();
+	        Observer importObserver = (o, arg) -> {
+	            double progress = Double.valueOf(arg.toString());
+	            if (progress < 1.0) {
+	                importProgress.setProgress(progress);
+	                importProgress.setVisible(true);
+	                importLbl.setVisible(true);
+	            } else {
+	                importProgress.setVisible(false);
+	                importLbl.setVisible(false);
+	            }
+	        };
+	        importObservable.addObserver(importObserver);
+	        homePane.getProperties().put("focusArea", "true");
+            if (screenControl.isTouch() ) {
+            	addPaneListener();
             } else {
                 addStageListener();
             }
             loaded = true;
+            if (screenControl.isTouch()) {
+            	((ScreenControlTouch) screenControl).setCSS();
+            }
         }
     }
 
@@ -349,7 +353,7 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
                     CachedThreadPool.getCachedThreadPool().getThreadService().shutdown(); //hot fix for now
                     targetedController.setTarget(target);
                     if (screenControl.isTouch()) {
-                        ((ScreenControlTouch) screenControl).setFonts();
+                        ((ScreenControlTouch) screenControl).setCSS();
                     }
                 } catch (IOException e) {
                     systemLogger.log(SEVERE, "Failed to create tab", e);
@@ -539,16 +543,18 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
             menu2.getItems().addAll(subMenuImport);
         }
         menu2.getItems().addAll(menu2Item1);
-        MenuItem menu2item4 = new MenuItem("Close window");
+        
         if(!screenControl.isTouch()) {
+        	MenuItem menu2item4 = new MenuItem("Close window");
             menu2item4.setAccelerator(screenControl.getCloseWindow());
+            menu2item4.setOnAction(event -> {
+                if(!(screenControl.closeWindow(homePane))) {
+                    setStatusLbl("Root window can not be closed. Please log out to exit.");
+                }
+            });
+
+            menu2.getItems().addAll(menu2item4);
         }
-        menu2item4.setOnAction(event -> {
-            if(!(screenControl.closeWindow(homePane))) {
-                setStatusLbl("Root window can not be closed. Please log out to exit.");
-            }
-        });
-        menu2.getItems().addAll(menu2item4);
         MenuItem logOut = new MenuItem("Log out");
         if(!screenControl.isTouch()) {
             logOut.setAccelerator(screenControl.getLogOut());
@@ -611,6 +617,20 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
         menu4.getItems().addAll(menu4item3);
         bar.getMenus().addAll(menu4);
 
+        Button closeButton = new Button("X");
+        closeButton.setOnAction(event -> {
+            if(!(screenControl.closeWindow(homePane))) {
+                setStatusLbl("Root window can not be closed. Please log out to exit.");
+            }
+        });
+        closeButton.setId("EXIT");
+    	closeButton.setStyle("-fx-font-size: 10px; "
+        		+ "-fx-test-fill: white; "
+        		+ "-fx-background-color: "
+        		+ "#e62e00 "
+        		+ "linear-gradient(#fafdfe, #fcf5e8)," 
+        		+ "linear-gradient(#ffe6e6 0%, #ffcccc 49%, #ffb3b3 50%, #ff8080 100%);");
+        
         boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless").equals("true");
         // Use the menu bar for primary stage
         if (!headless) { // make sure it isn't testing
@@ -630,6 +650,10 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
             } else {// if windows
                 menuBar.getMenus().clear();
                 menuBar.getMenus().addAll(menu2, menu3, menu4);
+                HBox hbox = new HBox(menuBar, closeButton);
+                HBox.setHgrow(menuBar, Priority.ALWAYS);
+                HBox.setHgrow(closeButton, Priority.NEVER);
+                homePane.setTop(hbox);
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
             }
         }

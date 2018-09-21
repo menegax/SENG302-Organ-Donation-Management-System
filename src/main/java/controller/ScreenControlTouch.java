@@ -145,7 +145,7 @@ class ScreenControlTouch extends ScreenControl {
             addCanvas(newScene);
             touchStage.setScene(newScene);
             setLoginShowing(true);
-            setFonts();
+            setCSS();
         } catch (IOException e) {
             systemLogger.log(SEVERE, "Failed to recreate login scene in touch application");
 
@@ -235,6 +235,14 @@ class ScreenControlTouch extends ScreenControl {
                     }
                 } else if (child.getId() == null || (!fontMap.containsKey(child.getId()))) {
                     child.setStyle("-fx-font-size: 10px;");
+                } else if (child.getId().equals("EXIT")) {
+                	System.out.println("Set button style" );
+                	child.setStyle("-fx-font-size: 10px; "
+                    		+ "-fx-test-fill: white; "
+                    		+ "-fx-background-color: "
+                    		+ "#e62e00 "
+                    		+ "linear-gradient(#fafdfe, #fcf5e8)," 
+                    		+ "linear-gradient(#ffe6e6 0%, #ffcccc 49%, #ffb3b3 50%, #ff8080 100%);");
                 } else {
                     child.setStyle("-fx-font-size: " + String.valueOf(fontMap.get(child.getId())) + "px;");
                 }
@@ -246,7 +254,7 @@ class ScreenControlTouch extends ScreenControl {
      * Called when switching tabs with GuiHome
      * Resizes the fonts shown
      */
-    public void setFonts() {
+    public void setCSS() {
         resizeFonts(touchPane);
     }
 
