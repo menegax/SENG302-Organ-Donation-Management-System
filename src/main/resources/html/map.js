@@ -5,50 +5,62 @@ var validCount = 0;
 
 function init() {
     geocoder = new google.maps.Geocoder();
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -40.59225, lng: 173.51012},
-        zoom: 6,
-        disableDefaultUI: true,
-        scaleControl: true,
-        gestureHandling: 'cooperative'
-    });
-    setMapDragEnd();
-    markerLoop(patients.size());
-
-    document.getElementById('availableOrgansView').addEventListener('click', function() {
-        validCount = 0;
-
-        markers.forEach(function(marker) {
-            marker.setMap(null);
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: -40.59225, lng: 173.51012},
+            zoom: 6,
+            disableDefaultUI: true,
+            scaleControl: true,
+            gestureHandling: 'cooperative'
         });
-        markers = [];
 
-        patients = mapBridge.getAvailableOrgans();
-
+    google.maps.event.addListenerOnce(map, 'idle', function(){
+        setMapDragEnd();
         markerLoop(patients.size());
+
+        document.getElementById('availableOrgansView').addEventListener('click', function() {
+            validCount = 0;
+
+            markers.forEach(function(marker) {
+                marker.setMap(null);
+            });
+            markers = [];
+
+            patients = mapBridge.getAvailableOrgans();
+
+            markerLoop(patients.size());
+        });
     });
 }
 
 /**
- * Adds a marker to the map
- * @param patient
+ * Sets the viewable area of the map
  */
-function addMarker(patient) {
-    console.log('Geocoding patient ' + patient.getNhiNumber() + ' with address ' + patient.getFormattedAddress());
+function setMapDragEnd() {
+    // Bounds for the World
+    var allowedBounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(-84.220892, -177.871399),
+        new google.maps.LatLng(84.889374, 179.872535));
 
-    // attempt to geocode the address
-    geocoder.geocode({'address': patient.getFormattedAddress()}, function (results, status) {
-        if (status === 'OK') {
-            validCount++;
+    // Listen for the dragend event
+    google.maps.event.addListener(map, 'dragend', function() {
+        if (allowedBounds.contains(map.getCenter())) return;
 
-            // set up markers with info windows
-            var marker = makeMarker(patient, results);
-            attachInfoWindow(patient, marker);
-            markers.push(marker);
+        // Out of bounds - Move the map back within the bounds
 
-        } else {
-            console.log('Geocoding failed because: ' + status);
-        }
+        var c = map.getCenter(),
+            x = c.lng(),
+            y = c.lat(),
+            maxX = allowedBounds.getNorthEast().lng(),
+            maxY = allowedBounds.getNorthEast().lat(),
+            minX = allowedBounds.getSouthWest().lng(),
+            minY = allowedBounds.getSouthWest().lat();
+
+        if (x < minX) x = minX;
+        if (x > maxX) x = maxX;
+        if (y < minY) y = minY;
+        if (y > maxY) y = maxY;
+
+        map.setCenter(new google.maps.LatLng(y, x));
     });
 }
 
@@ -61,12 +73,29 @@ function markerLoop(i) {
     }, 700);
 }
 
+/**
+ * Adds a marker to the map
+ * @param patient
+ */
+function addMarker(patient) {
+    console.log('Geocoding patient ' + patient.getNhiNumber() + ' with address ' + patient.getFormattedAddress());
+    var latLong = patient.getCurrentLocation();
+    if (latLong !== null) {
+        validCount++;
+        var marker = makeMarker(patient, latLong); //set up markers
+        attachInfoWindow(patient, marker);
+        markers.push(marker);
+    } else {
+        console.log('Geocoding failed because: ' + status);
+    }
+}
+
 function makeMarker(patient, results) {
     var name = patient.getNameConcatenated();
 
     var randx = Math.random() * 0.02 - 0.01;
     var randy = Math.random() * 0.02 - 0.01;
-    var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat() + randx, results[0].geometry.location.lng() + randy); //todo replace with patient.getCurrentLocation
+    var finalLoc = new google.maps.LatLng(results.lat + randx, results.lng + randy); //todo replace with patient.getCurrentLocation
 
     if (patient.isDead()){
         return new google.maps.Marker({
@@ -116,8 +145,6 @@ function attachInfoWindow(patient, marker) {
     });
 }
 
-
-
 /**
  * Opens patient profile when the button from the infoWindow is clicked on
  */
@@ -148,38 +175,6 @@ function getOrganOptions(patient) {
         requiredStr = 'No Requirements';
     }
     return {donating: donationStr, receiving: requiredStr};
-}
-
-/**
- * Sets the viewable area of the map
- */
-function setMapDragEnd() {
-    // Bounds for the World
-    var allowedBounds = new google.maps.LatLngBounds(
-            new google.maps.LatLng(-84.220892, -177.871399),
-            new google.maps.LatLng(84.889374, 179.872535));
-
-    // Listen for the drag end event
-    google.maps.event.addListener(map, 'dragend', function() {
-        if (allowedBounds.contains(map.getCenter())) return;
-
-        // Out of bounds - Move the map back within the bounds
-
-        var c = map.getCenter(),
-                x = c.lng(),
-                y = c.lat(),
-                maxX = allowedBounds.getNorthEast().lng(),
-                maxY = allowedBounds.getNorthEast().lat(),
-                minX = allowedBounds.getSouthWest().lng(),
-                minY = allowedBounds.getSouthWest().lat();
-
-        if (x < minX) x = minX;
-        if (x > maxX) x = maxX;
-        if (y < minY) y = minY;
-        if (y > maxY) y = maxY;
-
-        map.setCenter(new google.maps.LatLng(y, x));
-    });
 }
 
 function setPatients() {
