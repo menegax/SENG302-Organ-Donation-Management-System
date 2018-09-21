@@ -33,3 +33,15 @@
     - Open the potential matches for an available organ and assign it to a potential recipient
     - Navigate to the profile of the recipient for the available organ
     - Verifies that the organ now has the donors NHI next to the organ in the receiving organs list
+    
+### 21/09/2018 - Kyle Lamb
+
+1. Pass
+
+2. Pass
+
+3. Pass
+
+4. Pass
+
+5. Pass
