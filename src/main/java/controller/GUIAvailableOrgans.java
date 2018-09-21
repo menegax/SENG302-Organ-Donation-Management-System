@@ -103,7 +103,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         }
         masterData.clear();
         CachedThreadPool.getCachedThreadPool().getThreadService().shutdownNow();
-        List<Patient> deadPatients = patientDataService.getDeadPatients();
+        List<Patient> deadPatients = patientDataService.getDeadDonors();
         for (Patient patient : deadPatients) {
             if (patient.getDeathDate() != null) {
                 for (Organ organ : patient.getDonations().keySet()) {

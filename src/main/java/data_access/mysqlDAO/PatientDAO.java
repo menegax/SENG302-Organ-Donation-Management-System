@@ -271,7 +271,7 @@ public class PatientDAO implements IPatientDataAccess {
 
 
     @Override
-    public List<Patient> getDeadPatients() {
+    public List<Patient> getDeadDonors() {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_DEAD_PATIENTS"));
             List<Patient> patients = new ArrayList<>();
