@@ -79,45 +79,61 @@ function markerLoop(i) {
  * @param patient
  */
 function addMarker(patient) {
-    var address = patient.getFormattedAddress();
-    var name = patient.getNameConcatenated();
-    console.log(address);
-    geocoder.geocode({'address': address}, function (results, status) {
+    console.log('Geocoding patient ' + patient.getNhiNumber() + ' with address ' + patient.getFormattedAddress());
+
+    // attempt to geocode the address
+    geocoder.geocode({'address': patient.getFormattedAddress()}, function (results, status) {
         if (status === 'OK') {
             validCount++;
-            var organOptions = getOrganOptions(patient);
-            var randx = Math.random() * 0.02 - 0.01;
-            var randy = Math.random() * 0.02 - 0.01;
-            var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat() + randx, results[0].geometry.location.lng() + randy);
-            console.log(name + ': ' + 'Placing marker on map');
-            var marker = new google.maps.Marker({
-                map: map,
-                position: finalLoc,
-                title: name
-            });
-            var infoWindow = new google.maps.InfoWindow({
-                content: '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() +
-                '</h5><span style="font-size: 14px">' +
-                patient.getAddressString() + '<br><br>' +
-                organOptions.donating + '<br><br>' +
-                organOptions.receiving +
-                '</span><br><input type="button" onclick="openPatientProfile(\''+patient.getNhiNumber()+'\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
-            });
-            infoWindows.push(infoWindow);
-            marker.addListener('click', function() {
-                //infoWindow.open(map, marker);
-                infoWindows.forEach(function(iw) {
-                    if (iw !== infoWindow) {
-                        iw.close();
-                    } else {
-                        iw.open(map, marker);
-                    }
-                })
-            });
+
+            // set up markers with info windows
+            var marker = makeMarker(patient, results);
+            attachInfoWindow(patient, marker);
             markers.push(marker);
+
         } else {
-            console.log('Geocode failed because: ' + status);
+            console.log('Geocoding failed because: ' + status);
         }
+    });
+}
+
+function makeMarker(patient, results) {
+    var name = patient.getNameConcatenated();
+
+    var randx = Math.random() * 0.02 - 0.01;
+    var randy = Math.random() * 0.02 - 0.01;
+    var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat() + randx, results[0].geometry.location.lng() + randy);
+
+    return new google.maps.Marker({
+        map: map, position: finalLoc, title: name
+        // target: patient //todo figure out if can attach full patient object to a marker
+    });
+}
+
+function attachInfoWindow(patient, marker) {
+
+    var organOptions = getOrganOptions(patient);
+
+    var infoWindow = new google.maps.InfoWindow({
+        content: '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() +
+        '</h5><span style="font-size: 14px">' +
+        patient.getAddressString() + '<br><br>' +
+        organOptions.donating + '<br><br>' +
+        organOptions.receiving +
+        '</span><br><input type="button" onclick="openPatientProfile(\''+patient.getNhiNumber()+'\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
+    });
+    infoWindows.push(infoWindow);
+
+    // when clicking on the marker, all other markers' info windows close
+    marker.addListener('click', function() {
+        //infoWindow.open(map, marker);
+        infoWindows.forEach(function(iw) {
+            if (iw !== infoWindow) {
+                iw.close();
+            } else {
+                iw.open(map, marker);
+            }
+        })
     });
 }
 
