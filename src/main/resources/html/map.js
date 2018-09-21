@@ -1,7 +1,6 @@
-var map, geocoder, patients, mapBridge;
+var map, geocoder, patients, mapBridge, successCount;
 var markers = [];
 var infoWindows = [];
-var validCount = 0;
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -63,28 +62,15 @@ function setMapDragEnd() {
     });
 }
 
-function markerLoop(i) {
-    if (i < 1) {
-        return;
-    }
-    if (validCount >= 30) {
-        return;
-    }
-    addMarker(patients.get(i - 1));
-    setTimeout(function () {
-        markerLoop(--i);
-    }, 700);
-}
-
 /**
  * Adds a marker to the map
  * @param patient
  */
 function addMarker(patient) {
-    console.log('Geocoding patient ' + patient.getNhiNumber() + ' with address ' + patient.getFormattedAddress());
+    console.log("Adding marker to map for patient " + patient.getNhiNumber());
     var latLong = patient.getCurrentLocation();
     if (latLong !== null) {
-        validCount++;
+        successCount++;
         var marker = makeMarker(patient, latLong); //set up markers
         attachInfoWindow(patient, marker);
         markers.push(marker);
@@ -186,20 +172,61 @@ function getOrganOptions(patient) {
     var requiredStr;
     if (matching) {
         requiredStr = '<b>Required:</b><br>' + matching.join(', ');
-    }
-    else {
+    } else {
         requiredStr = 'No Requirements';
     }
     return {donating: donationStr, receiving: requiredStr};
 }
 
-function setPatients() {
-    validCount = 0;
+/**
+ * Sets the patients for the map and adds the markers to the map
+ * @param _patients
+ */
+function setPatients(_patients) {
+    patients = _patients;
+    clearMarkers();
+    successCount = 0;
+    addMarkers(patients.size());
+}
 
+/**
+ * Add markers to the map
+ * @param i
+ */
+function addMarkers(i) {
+    if (i < 1) {
+        showNotification(successCount, patients.size());
+        return;
+    }
+    addMarker(patients.get(i-1));
+    setTimeout(function() {
+        addMarkers(--i);
+    }, 700);
+}
+
+/**
+ * Clear the markers from the map
+ */
+function clearMarkers() {
     markers.forEach(function (marker) {
         marker.setMap(null);
     });
     markers = [];
+}
 
-    markerLoop(patients.size());
+/**
+ * Hides the notification
+ */
+function hideNotification() {
+    $('#marker-notification').hide();
+}
+
+/**
+ * Shows number of successfully loaded patients
+ * @param numSuccess successfully loaded patients
+ * @param numTotal total patients to load
+ */
+function showNotification(numSuccess, numTotal) {
+    $('#marker-notification-msg').html('Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations');
+    $('#marker-notification').show();
 }

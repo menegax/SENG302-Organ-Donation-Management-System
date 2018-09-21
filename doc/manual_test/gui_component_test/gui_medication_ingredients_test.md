@@ -29,9 +29,19 @@
 2. Once the ingredients for Codeine are listed, click the `Clear` button to clear the list
 3. Verify that the ingredients list now contains no entries
 
-##Test History
+## Test History
 
-###19/07/2018 - Maree
+### 19/07/2018 - Maree
+
+Navigate to the medications page: Pass
+
+GUI ingredients show on select test: Pass
+
+GUI ingredients history test: Pass
+
+GUI clear ingredients test: Pass
+
+### 14/08/2018 - Aidan
 
 Navigate to the medications page: Pass
 
@@ -41,15 +51,7 @@ GUI ingredients history test: Pass
 
 GUI clear ingredients test: Pass
 
-###14/08/2018 - Aidan
-
-Navigate to the medications page: Pass
-
-GUI ingredients show on select test: Pass
-
-GUI ingredients history test: Pass
-
-GUI clear ingredients test: Pass
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
 
 
 
