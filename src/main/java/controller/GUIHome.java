@@ -624,12 +624,6 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
             }
         });
         closeButton.setId("EXIT");
-    	closeButton.setStyle("-fx-font-size: 10px; "
-        		+ "-fx-test-fill: white; "
-        		+ "-fx-background-color: "
-        		+ "#e62e00 "
-        		+ "linear-gradient(#fafdfe, #fcf5e8)," 
-        		+ "linear-gradient(#ffe6e6 0%, #ffcccc 49%, #ffb3b3 50%, #ff8080 100%);");
         
         boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless").equals("true");
         // Use the menu bar for primary stage
