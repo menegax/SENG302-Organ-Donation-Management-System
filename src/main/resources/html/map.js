@@ -10,7 +10,7 @@ function init() {
 
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
-        markerLoop(patients.size());
+        addMarkers(patients.size());
 
         document.getElementById('availableOrgansView').addEventListener('click', function () {
             validCount = 0;
@@ -22,7 +22,7 @@ function init() {
 
             patients = mapBridge.getAvailableOrgans();
 
-            markerLoop(patients.size());
+            addMarkers(patients.size());
         });
     });
 }
