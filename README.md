@@ -3,12 +3,20 @@ last update 24/07/2018
 
 # Project Structure
  - `src/` Your application source
+ - `resources/` Contains CSS, html, and other data required by the source code
  - `doc/` User and design documentation
  - `doc/examples/` Demo example files for use with your application
- - `doc/uml/` UML diagrams
  - `doc/manual_tests/` Contains written instructions to perform manual tests
  
 # Starting the Application
+
+### Requirements
+* JDK 1.8
+* Internet connection
+* Windows 10 or above
+* Sufficiently powerful CPU and GPU
+* If importing data, our own custom data sets are required (not the course provided data sets)
+
  
 ## CLI
  1. Deploy the .jar file(s) using Maven
@@ -28,10 +36,7 @@ last update 24/07/2018
  1. Deploy the .jar file(s) using Maven
  2. Run the terminal command `java -jar <pathtojar> touch` to begin the touch application
  
-# Requirements
-* JDK 1.8
-* Internet connection
- 
+
 # Dependencies
  
  * JUnit
