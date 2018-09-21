@@ -585,7 +585,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         Patient after1 = (Patient) target.deepClone();
         Patient after2 = (Patient) organReceiver.deepClone();
         after1.getDonations().put(targetOrgan, after2.getNhiNumber());
-        organReceiver.getRequiredOrgans().get(targetOrgan).setDonorNhi(after1.getNhiNumber());
+        after2.getRequiredOrgans().get(targetOrgan).setDonorNhi(after1.getNhiNumber());
         organWaitList.getRequests().remove(selectedRequest);
         clinicianDataService.updateOrganWaitList(organWaitList);
         IAction action = new MultiAction((Patient) target, after1, organReceiver, after2);
