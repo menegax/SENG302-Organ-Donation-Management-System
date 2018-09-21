@@ -781,7 +781,11 @@ public class Patient extends User {
     }
 
     public boolean isDead() {
-        return !(deathStreet.isEmpty() && deathCity.isEmpty() && deathRegion != null);
+        if (deathStreet == null || deathCity == null || deathRegion == null) {
+            return false;
+        }
+
+        return !(deathStreet.isEmpty() && deathCity.isEmpty());
     }
 
 

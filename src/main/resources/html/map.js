@@ -1,7 +1,3 @@
-// Note: This example requires that you consent to location sharing when
-// prompted by your browser. If you see the error "The Geolocation service
-// failed.", it means you probably did not give permission for the browser to
-// locate you.
 var map, geocoder, patients, mapBridge;
 var markers = [];
 var infoWindows = [];
@@ -34,47 +30,6 @@ function init() {
 }
 
 /**
- * Sets the viewable area of the map
- */
-function setMapDragEnd() {
-    // Bounds for the World
-    var allowedBounds = new google.maps.LatLngBounds(
-        new google.maps.LatLng(-84.220892, -177.871399),
-        new google.maps.LatLng(84.889374, 179.872535));
-
-    // Listen for the dragend event
-    google.maps.event.addListener(map, 'dragend', function() {
-        if (allowedBounds.contains(map.getCenter())) return;
-
-        // Out of bounds - Move the map back within the bounds
-
-        var c = map.getCenter(),
-            x = c.lng(),
-            y = c.lat(),
-            maxX = allowedBounds.getNorthEast().lng(),
-            maxY = allowedBounds.getNorthEast().lat(),
-            minX = allowedBounds.getSouthWest().lng(),
-            minY = allowedBounds.getSouthWest().lat();
-
-        if (x < minX) x = minX;
-        if (x > maxX) x = maxX;
-        if (y < minY) y = minY;
-        if (y > maxY) y = maxY;
-
-        map.setCenter(new google.maps.LatLng(y, x));
-    });
-}
-
-function markerLoop(i) {
-    if (i < 1) return;
-    if (validCount >= 30) return;
-    addMarker(patients.get(i-1));
-    setTimeout(function() {
-        markerLoop(--i);
-    }, 700);
-}
-
-/**
  * Adds a marker to the map
  * @param patient
  */
@@ -97,17 +52,33 @@ function addMarker(patient) {
     });
 }
 
+function markerLoop(i) {
+    if (i < 1) return;
+    if (validCount >= 30) return;
+    addMarker(patients.get(i-1));
+    setTimeout(function() {
+        markerLoop(--i);
+    }, 700);
+}
+
 function makeMarker(patient, results) {
     var name = patient.getNameConcatenated();
 
     var randx = Math.random() * 0.02 - 0.01;
     var randy = Math.random() * 0.02 - 0.01;
-    var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat() + randx, results[0].geometry.location.lng() + randy);
+    var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat() + randx, results[0].geometry.location.lng() + randy); //todo replace with patient.getCurrentLocation
 
-    return new google.maps.Marker({
-        map: map, position: finalLoc, title: name
-        // target: patient //todo figure out if can attach full patient object to a marker
-    });
+    if (patient.isDead()){
+        return new google.maps.Marker({
+            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, label: 'D'
+        });
+    } else if (!patient.isDead()) {
+        return new google.maps.Marker({
+            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, label: 'A'
+        });
+    }
+
+
 }
 
 function attachInfoWindow(patient, marker) {
@@ -135,7 +106,17 @@ function attachInfoWindow(patient, marker) {
             }
         })
     });
+
+    marker.addListener('click', function toggleBounce() {
+        if (marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+        } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+    });
 }
+
+
 
 /**
  * Opens patient profile when the button from the infoWindow is clicked on
@@ -167,6 +148,38 @@ function getOrganOptions(patient) {
         requiredStr = 'No Requirements';
     }
     return {donating: donationStr, receiving: requiredStr};
+}
+
+/**
+ * Sets the viewable area of the map
+ */
+function setMapDragEnd() {
+    // Bounds for the World
+    var allowedBounds = new google.maps.LatLngBounds(
+            new google.maps.LatLng(-84.220892, -177.871399),
+            new google.maps.LatLng(84.889374, 179.872535));
+
+    // Listen for the drag end event
+    google.maps.event.addListener(map, 'dragend', function() {
+        if (allowedBounds.contains(map.getCenter())) return;
+
+        // Out of bounds - Move the map back within the bounds
+
+        var c = map.getCenter(),
+                x = c.lng(),
+                y = c.lat(),
+                maxX = allowedBounds.getNorthEast().lng(),
+                maxY = allowedBounds.getNorthEast().lat(),
+                minX = allowedBounds.getSouthWest().lng(),
+                minY = allowedBounds.getSouthWest().lat();
+
+        if (x < minX) x = minX;
+        if (x > maxX) x = maxX;
+        if (y < minY) y = minY;
+        if (y > maxY) y = maxY;
+
+        map.setCenter(new google.maps.LatLng(y, x));
+    });
 }
 
 function setPatients() {
