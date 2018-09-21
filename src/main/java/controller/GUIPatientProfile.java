@@ -27,6 +27,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static utility.UserActionHistory.userActions;
@@ -140,6 +142,8 @@ public class GUIPatientProfile extends TargetedController {
 
 	private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
 
+	private IPatientDataService patientDataService = new PatientDataService();
+
 	/**
 	 * Initialize the controller depending on whether it is a clinician viewing the
 	 * patient or a patient viewing itself
@@ -236,6 +240,45 @@ public class GUIPatientProfile extends TargetedController {
 		donationList.itemsProperty().bind(donatingListProperty);
 		receivingList.itemsProperty().bind(receivingListProperty);
 		receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
+		setupListviewDoubleClick();
+	}
+
+	/**
+	 * Setup mouse listeners for double clicking on either the donating or receiving listview.
+	 * Double clicking an assigned organ extracts the NHI with regex and opens up the profile
+	 * for the patient with that NHI
+	 */
+	private void setupListviewDoubleClick() {
+		donationList.setOnMouseClicked(event -> {
+			if (event.getClickCount() == 2) {
+				String selectedItem = donationList.getSelectionModel().getSelectedItem();
+				openMatchedNHI(selectedItem, GlobalEnums.UIRegex.DONATINGLIST.getValue());
+			}
+		});
+		receivingList.setOnMouseClicked(event -> {
+			if (event.getClickCount() == 2) {
+				String selectedItem = receivingList.getSelectionModel().getSelectedItem();
+				openMatchedNHI(selectedItem, GlobalEnums.UIRegex.RECEIVINGLIST.getValue());
+			}
+		});
+	}
+
+	/**
+	 * Matches a string with the given pattern. If the pattern matches, the matcher will contain two groups:
+	 * - The whole string that was matched eg. Bone | ABC1238
+	 * - The first capture group (i.e. the NHI): eg. ABC1238
+	 * Upon matching, this nhi is used to fetch the patient and open their profile
+	 * @param listItem The listItem (String) to match
+	 * @param patternStr The regex pattern to match against
+	 */
+	private void openMatchedNHI(String listItem, String patternStr) {
+		Pattern pattern = Pattern.compile(patternStr);
+		Matcher matcher = pattern.matcher(listItem);
+		if (matcher.find()) {
+			Patient selected = patientDataService.getPatientByNhi(matcher.group(1));
+			GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, selected);
+			controller.setTarget(selected);
+		}
 	}
 
 	private void loadBodyDetails(Patient patient) {
