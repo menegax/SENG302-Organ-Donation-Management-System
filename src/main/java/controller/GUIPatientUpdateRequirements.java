@@ -208,7 +208,7 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
                 }
             }
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The following organs are already promised " +
-                    "to this patient: " + alertMessage + "Please undo these changes if this was an error.", ButtonType.OK);
+                    "to this patient: " + alertMessage + " Please undo these changes if this was an error.", ButtonType.OK);
             alert.show();
         }
 
