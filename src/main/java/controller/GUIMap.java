@@ -76,7 +76,6 @@ public class GUIMap {
 
         setUpWebEngine();
         setUpJsLogging();
-        setUpTouchControls();
     }
 
 
