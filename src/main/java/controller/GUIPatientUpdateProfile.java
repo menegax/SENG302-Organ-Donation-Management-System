@@ -1,31 +1,18 @@
 package controller;
 
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.PatientDataService;
-import service.PatientDataService;
-import utility.GlobalEnums.*;
 import tornadofx.control.DateTimePicker;
-import utility.GlobalEnums.BirthGender;
-import utility.GlobalEnums.BloodGroup;
-import utility.GlobalEnums.PreferredGender;
-import utility.GlobalEnums.Region;
-import utility.GlobalEnums.UIRegex;
-import utility.GlobalEnums.UndoableScreen;
+import utility.GlobalEnums;
+import utility.GlobalEnums.*;
 import utility.SystemLogger;
+import utility.UserActionHistory;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -36,6 +23,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
+
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateProfile extends UndoableController {
 
@@ -169,7 +160,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
         ObservableList<String> regionsOL = FXCollections.observableList(regions);
         regionDD.setItems(regionsOL);
-        deathRegion.setItems(regionsOL);
+        List<String> deathRegions = new ArrayList<>();
+        deathRegions.add(GlobalEnums.NONE_ID);
+        deathRegions.addAll(regions);
+        ObservableList<String> deathRegionsOL = FXCollections.observableList(deathRegions);
+        deathRegion.setItems(deathRegionsOL);
     }
 
     /**
@@ -328,6 +323,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         // if all are valid
         if (valid) {
+            warnIfNoLocation();
             setPatientAttributes();
             userActions.log(INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         } else {
@@ -336,9 +332,43 @@ public class GUIPatientUpdateProfile extends UndoableController {
     }
 
 
+    /**
+     * Validates and generates a pop up alert to inform the user that a location must be set for the patient to donate or receive donations
+     */
+    private void warnIfNoLocation() {
+        boolean locationIsSet = true;
+
+        if (streetNumberTxt.getText().isEmpty()) {
+            SystemLogger.systemLogger.log(Level.WARNING, "Street number text is empty");
+            locationIsSet = false;
+        } if (streetNameTxt.getText().isEmpty()) {
+            SystemLogger.systemLogger.log(Level.WARNING, "Street name text is empty");
+            locationIsSet = false;
+        } if (suburbTxt.getText().isEmpty()) {
+            SystemLogger.systemLogger.log(Level.WARNING, "Suburb text is empty");
+            locationIsSet = false;
+        }if (cityTxt.getText().isEmpty()) {
+            SystemLogger.systemLogger.log(Level.WARNING, "City text is empty");
+            locationIsSet = false;
+        } if (regionDD.getSelectionModel().getSelectedIndex() < 0) {
+            SystemLogger.systemLogger.log(Level.WARNING, "Region index selected is: " + regionDD.getSelectionModel().getSelectedIndex());
+            locationIsSet = false;
+        } if (zipTxt.getText().isEmpty()) {
+            SystemLogger.systemLogger.log(Level.WARNING, "Zip number text is empty");
+            locationIsSet = false;
+        }
+
+        if (!locationIsSet) {
+            UserActionHistory.userActions.log(WARNING, "Updated patient without setting a complete location", "Attempted to update a patient without a complete location");
+            new Alert(Alert.AlertType.WARNING, "To be eligible for organ donations all location details must be set.\n\nDetails have been saved regardless.").show();
+        }
+
+    }
+
+
     private Boolean validateDeathRegion(Boolean valid, StringBuilder invalidContent) {
         if (deathRegion.getSelectionModel()
-                .getSelectedIndex() != -1) {
+                .getSelectedIndex()  > 0) {
             Enum region = Region.getEnumFromString(deathRegion.getSelectionModel()
                     .getSelectedItem());
             if (region == null) {
@@ -378,7 +408,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private Boolean validateStreetName(Boolean valid, StringBuilder invalidContent) {
         if (!streetNameTxt.getText().matches(UIRegex.STREET.getValue())) {
             valid = setInvalid(streetNameTxt);
-            invalidContent.append("Street name must be letters or -. ");
+            invalidContent.append("Street name can start with a number and may have letters or -. ");
         } else {
             setValid(streetNameTxt);
         }
@@ -433,8 +463,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
             after.setBirth(dobDate.getValue());
         }
 
-        if (dateOfDeath.getValue() != null) {
+        if (deathLocationTxt.getText() != null) { // otherwise date of death will default to current date
             after.setDeathDate(dateOfDeath.getDateTimeValue());
+        } else {
+            after.setDeathDate(null);
         }
         after.setDeathStreet(deathLocationTxt.getText());
         after.setDeathCity(deathCity.getText());
@@ -450,7 +482,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
             after.setSuburb(suburbTxt.getText());
         } catch (DataFormatException e) {
             userActions.log(Level.SEVERE, "Unable to set suburb", "attempted to update patient attributes");
-        }        if (regionDD.getValue() != null) {
+        }
+        if (regionDD.getValue() != null) {
             after.setRegion(Region.getEnumFromString(regionDD.getSelectionModel()
                     .getSelectedItem()));
         }
@@ -540,7 +573,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             isSettingDeath = true;
         } else if (deathCity.getText().length() != 0) {
             isSettingDeath = true;
-        } else if (deathRegion.getSelectionModel().getSelectedIndex() != -1) {
+        } else if (deathRegion.getSelectionModel().getSelectedIndex() > 0) {
             isSettingDeath = true;
         }
 
@@ -549,15 +582,11 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 valid = setInvalid(dateOfDeath);
                 invalidContent.append("Date required if patient deceased. ");
             }
-//            if (deathLocationTxt.getText() == null || deathLocationTxt.getText().length() == 0) {
-//                valid = setInvalid(deathLocationTxt);
-//                invalidContent.append("Location required if patient deceased. ");
-//            }
             if (deathCity.getText().length() == 0) {
                 valid = setInvalid(deathCity);
                 invalidContent.append("City required if patient deceased. ");
             }
-            if (deathRegion.getSelectionModel().getSelectedIndex() == -1) {
+            if (deathRegion.getSelectionModel().getSelectedIndex() <= 0) {
                 valid = setInvalid(deathRegion);
                 invalidContent.append("Region required if patient deceased. ");
             }
@@ -635,7 +664,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
     private Boolean validateRegion(Boolean valid, StringBuilder invalidContent) {
         // region
         if (regionDD.getSelectionModel()
-                .getSelectedIndex() != -1) {
+                .getSelectedIndex() > 0) {
             Enum region = Region.getEnumFromString(regionDD.getSelectionModel()
                     .getSelectedItem());
             if (region == null) {
@@ -706,7 +735,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         }
 
         // if the nhi in use doesn't belong to the logged in patient already then it must be taken by someone else
-        if (!patientDataService.getPatientByNhi(nhiTxt.getText()).getNhiNumber().equals(((Patient) target).getNhiNumber())) {
+        if (patientDataService.getPatientByNhi(nhiTxt.getText()) != null && !nhiTxt.getText().equals(((Patient) target).getNhiNumber())) {
             valid = setInvalid(nhiTxt);
             invalidContent.append("NHI is already in use. ");
         } else {

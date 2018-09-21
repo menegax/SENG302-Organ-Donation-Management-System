@@ -41,6 +41,14 @@ public abstract class ScreenControl {
 
     final List<UndoableWrapper> undoableWrappers = new ArrayList<>();
 
+    private Boolean isMapOpen = false;
+
+    private Boolean isCustomSetMap = false;
+
+    protected GUIMap mapController;
+
+    protected String MAPFXML = "/scene/map.fxml";
+
     abstract void setUpNewLogin();
     abstract void removeUnsavedAsterisks();
     abstract void addUnsavedAsterisks();
@@ -200,5 +208,19 @@ public abstract class ScreenControl {
         return Collections.unmodifiableList(undoableWrappers);
     }
 
+
+    public Boolean getMapOpen() {
+        return isMapOpen;
+    }
+
+    public void setMapOpen(Boolean mapOpen) {
+        isMapOpen = mapOpen;
+    }
+
+    public Boolean getIsCustomSetMap() { return isCustomSetMap; }
+
+    public void setIsCustomSetMap(Boolean customSet) { isCustomSetMap = customSet; }
+
+    public GUIMap getMapController() { return mapController; }
 }
 

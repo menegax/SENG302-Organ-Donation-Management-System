@@ -63,6 +63,8 @@ public class Action {
             dao.addUser(current);
         } else {
             current.setAttributes(after);
+            dao.deleteUser(current);
+            dao.addUser(current);
         }
         if (current instanceof  Patient) {
             createOrganRequests((Patient) current);
@@ -83,6 +85,8 @@ public class Action {
             current = null;
         } else {
             current.setAttributes(before);
+            dao.deleteUser(current);
+            dao.addUser(current);
         }
         if (current instanceof Patient) {
             createOrganRequests((Patient) current);

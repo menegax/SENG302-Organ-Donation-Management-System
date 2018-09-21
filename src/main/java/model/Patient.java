@@ -1,10 +1,13 @@
 package model;
 
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.LatLng;
 import com.univocity.parsers.annotations.Convert;
 import com.univocity.parsers.annotations.EnumOptions;
 import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.annotations.Validate;
 import org.apache.commons.lang3.StringUtils;
+import service.APIGoogleMaps;
 import utility.parsing.DateConverterCSV;
 import utility.parsing.DateTimeConverterCSV;
 import utility.parsing.EnumConverterCSV;
@@ -15,6 +18,7 @@ import utility.Searcher;
 import utility.SystemLogger;
 
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -93,6 +97,8 @@ public class Patient extends User {
     @Parsed(field = "zip_code")
     private int zip;
 
+    private LatLng currentLocation;
+
     private List<Organ> donations;
 
     private Map<Organ, LocalDate> requiredOrgans;
@@ -139,12 +145,16 @@ public class Patient extends User {
 
     private GlobalEnums.Organ removedOrgan;
 
+    /**
+     * Used only for importing. Don't use elsewhere.
+     */
     public Patient() {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
         this.requiredOrgans = new HashMap();
         this.donations = new ArrayList<>();
     }
+
 
     /**
      * Constructor for the patient class. Initializes basic attributes and adds listeners for status changes
@@ -246,7 +256,6 @@ public class Patient extends User {
         databaseImport();
     }
 
-
     /**
      * Sets the attributes of the patient
      *
@@ -256,7 +265,8 @@ public class Patient extends User {
      * @param preferredName   preferred name
      * @param birth           birth date
      * @param death           death date
-     * @param street1         street 1 of address
+     * @param streetName      street name of current address
+     * @param streetNumber    street number of current address
      * @param city         city of address
      * @param suburb          suburb of address
      * @param region          region of address
@@ -268,7 +278,7 @@ public class Patient extends User {
      * @param nhi             NHI
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
-                                 LocalDate birth, LocalDateTime death, String street1, String city, String suburb,
+                                 LocalDate birth, LocalDateTime death, String streetName, String streetNumber, String city, String suburb,
                                  String region, String birthGender, String preferredGender, String bloodGroup,
                                  double height, double weight, String nhi) throws IllegalArgumentException, DataFormatException {
         Enum globalEnum;
@@ -291,8 +301,11 @@ public class Patient extends User {
         if (death != null) {
             setDeathDate(death);
         }
-        if (street1 != null) {
-            setStreetNumber(street1);
+        if (streetName != null) {
+            setStreetName(streetName);
+        }
+        if (streetNumber != null) {
+            setStreetNumber(streetNumber);
         }
         if (city != null) {
             setCity(city);
@@ -350,6 +363,7 @@ public class Patient extends User {
         Searcher.getSearcher().addIndex(this);
     }
 
+
     /**
      * Sets the attributes of the patient to the attributes of the provided patient
      *
@@ -373,7 +387,10 @@ public class Patient extends User {
             setSuburb(newPatientAttributes.getSuburb());
         } catch (DataFormatException e) {
             userActions.log(Level.SEVERE, "","" );
-        }        setRegion(newPatientAttributes.getRegion());
+        }
+        setRegion(newPatientAttributes.getRegion());
+        setStreetName(newPatientAttributes.getStreetName());
+        setStreetNumber(newPatientAttributes.getStreetNumber());
         setBirthGender(newPatientAttributes.getBirthGender());
         setPreferredGender(newPatientAttributes.getPreferredGender());
         setBloodGroup(newPatientAttributes.getBloodGroup());
@@ -445,19 +462,19 @@ public class Patient extends User {
         }
     }
 
-//    /**
-//     * Checks the uniqueness of the nhi number
-//     *
-//     * @throws IllegalArgumentException when the nhi number given is already in use
-//     */
-//    public void ensureUniqueNhi() throws IllegalArgumentException {
-//        for (Patient p : database.getPatients()) {
-//            if (p.nhiNumber.equals(nhiNumber.toUpperCase())) {
-//                throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
-//            }
-//        }
-//    }
 
+    //    /**
+    //     * Checks the uniqueness of the nhi number
+    //     *
+    //     * @throws IllegalArgumentException when the nhi number given is already in use
+    //     */
+    //    public void ensureUniqueNhi() throws IllegalArgumentException {
+    //        for (Patient p : database.getPatients()) {
+    //            if (p.nhiNumber.equals(nhiNumber.toUpperCase())) {
+    //                throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
+    //            }
+    //        }
+    //    }
     /**
      * Returns the name of the patient as a formatted concatenated string
      *
@@ -556,11 +573,11 @@ public class Patient extends User {
         return deathStreet;
     }
 
-
     public void setDeathStreet(String deathStreet) {
         this.deathStreet = deathStreet;
         userModified();
     }
+
 
     public String getDeathCity() {
         return deathCity;
@@ -614,6 +631,7 @@ public class Patient extends User {
     }
 
     public Timestamp getCREATED() {return CREATED;}
+
     /**
      * Refreshes the status of the patient to the correct status
      * Always called after patient is modified
@@ -631,7 +649,6 @@ public class Patient extends User {
             setStatus(newStatus);
         }
     }
-
     public PreferredGender getPreferredGender() {
         return preferredGender;
     }
@@ -702,15 +719,19 @@ public class Patient extends User {
 
     public void setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
+        clearCurrentLocation();
         userModified();
     }
 
     public void setStreetName(String streetName) {
         this.streetName = streetName;
+        clearCurrentLocation();
+        userModified();
     }
 
     public void setCity(String city) {
         this.city = city;
+        clearCurrentLocation();
         userModified();
     }
 
@@ -726,6 +747,7 @@ public class Patient extends User {
                 }
             }
             this.suburb = suburb;
+            clearCurrentLocation();
             userModified();
         }
     }
@@ -736,11 +758,38 @@ public class Patient extends User {
 
     public void setRegion(Region region) {
         this.region = region;
+        clearCurrentLocation();
         userModified();
     }
 
     public int getZip() {
         return zip;
+    }
+
+    public void setZip(int zip) {
+        this.zip = zip;
+        clearCurrentLocation();
+        userModified();
+    }
+
+    public LatLng getCurrentLocation() throws InterruptedException, ApiException, IOException {
+        if (currentLocation == null) {
+            this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
+        }
+        return currentLocation;
+    }
+
+
+    public void setCurrentLocation(LatLng currentLocation) {
+        this.currentLocation = currentLocation;
+    }
+
+    /**
+     * Clears the current latitude and longitude coordinates of the patient
+     */
+    private void clearCurrentLocation() {
+        this.currentLocation = null;
+        currentLocation = null;
     }
 
     /**
@@ -783,11 +832,6 @@ public class Patient extends User {
         userModified();
     }
 
-    public void setZip(int zip) {
-        this.zip = zip;
-        userModified();
-    }
-
     /**
      * gets the current requred organs of the patient
      *
@@ -827,7 +871,7 @@ public class Patient extends User {
         } else {
             donations.add(organ);
             userModified();
-            userActions.log(INFO, "Added organ " + organ + " to patient donations", "Attempted to add organ " + organ + " to patient donations");
+            userActions.log(INFO, "Added organ " + organ + " to patient donations", new String[] {"Attempted to add organ " + organ + " to patient donations", nhiNumber});
             return "Successfully added " + organ + " to donations";
         }
     }
@@ -896,6 +940,7 @@ public class Patient extends User {
         userModified();
     }
 
+
     public String getNhiNumber() {
         return nhiNumber;
     }
@@ -913,7 +958,6 @@ public class Patient extends User {
                 userModified();
             }
         }
-
 
     public String getHomePhone() {
         return homePhone;
@@ -1013,6 +1057,7 @@ public class Patient extends User {
         userModified();
     }
 
+
     public List<Procedure> getProcedures() {
         if (procedures == null) {
             procedures = new ArrayList<>();
@@ -1025,7 +1070,6 @@ public class Patient extends User {
         this.procedures = procedures;
         userModified();
     }
-
 
     /**
      * Gets the list of user action history logs
@@ -1111,21 +1155,54 @@ public class Patient extends User {
     }
 
     public String getAddressString() {
-        return String.format("%s %s, %s", streetNumber, streetName, suburb);
+        String addressString = "";
+        if (streetNumber != null) {
+            addressString += streetNumber + " ";
+        }
+        if (streetName != null) {
+            addressString += streetName;
+        }
+        if (suburb != null) {
+            if (addressString.length() != 0) {
+                addressString += ", " + suburb;
+            } else {
+                addressString += suburb;
+            }
+        }
+        return addressString;
     }
 
     public String getStreetName() {
         return streetName;
     }
 
+
     public String getCity() {
         return city;
     }
 
-
     public String getDeathLocationConcat(){
-        return String.format("%s, %s, %s", deathStreet, deathCity, deathRegion);
+        String addressString = "";
+        if (deathStreet != null) {
+            addressString += deathStreet;
+        }
+        if (deathCity != null) {
+            if (addressString.length() != 0) {
+                addressString += ", " + deathCity;
+            } else {
+                addressString += deathCity;
+            }
+        }
+        if (deathRegion != null) {
+            if (addressString.length() != 0) {
+                addressString += ", " + deathRegion;
+            } else {
+                addressString += deathRegion;
+            }
+        }
+        return addressString;
     }
+
 
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "
@@ -1137,7 +1214,6 @@ public class Patient extends User {
                 + "Height: " + height + "\n" + "Weight: " + weight + "\n" + "Blood group: " + bloodGroup + "\n";
     }
 
-
     public boolean equals(Object obj) {
         if (!(obj instanceof Patient)) {
             return false;
@@ -1145,6 +1221,7 @@ public class Patient extends User {
         Patient patient = (Patient) obj;
         return this.nhiNumber.equals(patient.nhiNumber);
     }
+
 
     @Override
     public int hashCode() {

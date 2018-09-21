@@ -1,3 +1,4 @@
+drop table if exists tblRequiredOrgans;
 drop table if exists tblProcedures;
 drop table if exists tblDiseases;
 drop table if exists tblMedications;
@@ -29,7 +30,6 @@ CREATE TABLE `tblPatients` (
   `Weight` tinyint(3) unsigned DEFAULT NULL,
   `BloodType` char(3) DEFAULT NULL,
   `DonatingOrgans` set('liver','heart','kidney','bone','bone marrow','skin','connective tissue','cornea','pancreas','lung','middle ear','intestine') DEFAULT NULL,
-  `ReceivingOrgans` set('liver','heart','kidney','bone','bone marrow','skin','connective tissue','cornea','pancreas','lung','middle ear','intestine') DEFAULT NULL,
   PRIMARY KEY (`Nhi`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -145,6 +145,7 @@ CREATE TABLE `tblTransplantWaitList` (
  `RequestDate` date NOT NULL DEFAULT '0000-00-00',
  `Organ` enum('liver','heart','kidney','bone','bone marrow','skin','connective tissue','cornea','pancreas','lung','middle ear','intestine') NOT NULL DEFAULT 'liver',
  `Region` enum('Northland','Auckland','Waikato','Bay of Plenty','Gisborne','Hawkes Bay','Taranaki','Manawatu','Wellington','Tasman','Nelson','Marlborough','West Coast','Canterbury','Otago','Southland') DEFAULT NULL,
+ `Address` varchar(175) DEFAULT NULL,
  PRIMARY KEY (`Id`),
  CONSTRAINT `tblTransplantWaitList_ibfk_1` FOREIGN KEY (`Patient`) REFERENCES `tblPatients` (`Nhi`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -158,4 +159,13 @@ CREATE TABLE `tblProcedures` (
   PRIMARY KEY (`Patient`,`Summary`,`ProDate`),
   CONSTRAINT `tblProcedures_ibfk_1` FOREIGN KEY (`Patient`) REFERENCES `tblPatients` (`Nhi`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tblRequiredOrgans` (
+`Patient` CHAR(7),
+`Organ` SET('liver', 'heart', 'kidney', 'bone', 'bone marrow', 'skin', 'connective tissue', 'cornea', 'pancreas', 'lung', 'middle ear', 'intestine'),
+`Date` DATE,
+PRIMARY KEY(`Patient`, `Organ`),
+FOREIGN KEY(`Patient`) REFERENCES `tblPatients`(`Nhi`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 

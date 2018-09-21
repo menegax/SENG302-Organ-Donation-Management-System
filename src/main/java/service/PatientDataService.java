@@ -61,9 +61,9 @@ public class PatientDataService implements IPatientDataService {
     public List<Patient> getDeadPatients() {
         IPatientDataAccess patientDataAccessLocal = localDbFactory.getPatientDataAccess();
         IPatientDataAccess patientDataAccessSQL = mysqlFactory.getPatientDataAccess();
-        List<Patient> allDeadPatients = new ArrayList<>();
-        allDeadPatients.addAll(patientDataAccessLocal.getDeadPatients());
-        allDeadPatients.addAll(patientDataAccessSQL.getDeadPatients());
+        List<Patient> allDeadPatients = new ArrayList<>(patientDataAccessSQL.getDeadPatients());
+        allDeadPatients.removeAll(patientDataAccessLocal.getDeadPatients());
+        allDeadPatients.addAll((patientDataAccessLocal.getDeadPatients()));
         return allDeadPatients;
     }
 

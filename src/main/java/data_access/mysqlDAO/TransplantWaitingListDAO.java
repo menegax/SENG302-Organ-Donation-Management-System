@@ -31,7 +31,8 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
                         Organ.getEnumFromString(results.getString("Organ")),
                         LocalDate.parse(results.getString("RequestDate")),
                         region,
-                        results.getString("nhi"));
+                        results.getString("nhi"), 
+                        results.getString("Address"));
             }
             return organRequests;
         } catch (SQLException e) {
@@ -55,6 +56,7 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
                     preparedStatement.setString(2, organRequest.getRequestDate().toString());
                     preparedStatement.setString(3, organRequest.getRequestedOrgan().toString());
                     preparedStatement.setString(4, organRequest.getRequestRegion() != null ? organRequest.getRequestRegion().getValue(): null);
+                    preparedStatement.setString(5, organRequest.getAddress());
                     preparedStatement.executeUpdate();
                 }
             }

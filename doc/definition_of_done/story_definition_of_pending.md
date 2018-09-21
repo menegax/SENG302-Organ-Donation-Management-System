@@ -19,7 +19,7 @@ If a story is ready for review, it should be set to "Pending" on Agilefant.
 
 ##### Testing
 - **Unit tests** implemented where necessary
-- **Manual tests** documented and performed
+- **Manual tests** documented and performed on both the desktop and touch application
 
 ##### Chores
 - Story set to **Pending**

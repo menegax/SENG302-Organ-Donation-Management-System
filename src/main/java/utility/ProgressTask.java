@@ -23,6 +23,8 @@ public class ProgressTask extends Task<Void> {
 
     private PatientOrgan patientOrgan;
 
+    private boolean interrupted;
+
 
     /**
      * Constructor for the ProgressTask
@@ -33,22 +35,32 @@ public class ProgressTask extends Task<Void> {
         this.organ = patientOrgan.getOrgan();
         this.elapsedTime = getElapsedTime();
         this.patientOrgan = patientOrgan;
+        this.interrupted = false;
     }
 
     @Override
     protected Void call() throws Exception {
         setColor(elapsedTime / organ.getOrganUpperBoundSeconds());
-        for (int i = ((int) elapsedTime); i < organ.getOrganUpperBoundSeconds(); i++) {
+        int i;
+        for (i = ((int) elapsedTime) ; i < organ.getOrganUpperBoundSeconds() && !interrupted; i++) {
             updateProgress((1.0 * i) / (double) organ.getOrganUpperBoundSeconds(), 1);
             updateMessage(getTimeRemaining()); //in fx thread
             double finalI = (1.0 * i) / organ.getOrganUpperBoundSeconds();
             Platform.runLater(() -> setColor(finalI));
             Thread.sleep(1000); //each loop is now 1 second
         }
-        ExpiryObservable.getInstance().setExpired(this.patientOrgan);
+        if (i >= organ.getOrganUpperBoundSeconds()) {
+            ExpiryObservable.getInstance().setExpired(this.patientOrgan);
+        }
         return null;
     }
 
+    /**
+     * Set the task to interrupted. Will stop counting task
+     */
+    public void setInterrupted() {
+        this.interrupted = true;
+    }
 
     /**
      * Sets the color of the progress bar
@@ -118,7 +130,7 @@ public class ProgressTask extends Task<Void> {
      * Sets the progress bar for the task
      * @param progressBar - progress bar to add to the task
      */
-    void setProgressBar(ProgressBar progressBar) {
+    public void setProgressBar(ProgressBar progressBar) {
         this.progressBar = progressBar;
     }
 }

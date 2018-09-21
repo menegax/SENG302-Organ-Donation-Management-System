@@ -90,9 +90,9 @@
 4. The history screen should now be displayed
 5. The most recent log should state that organ was removed from required organs, with relevant data (eg. diseases cured, date of death)
 
-##Test History
+## Test History
 
-###18/07/2018 - Maree
+### 18/07/2018 - Maree
 
 Preconditions: Pass
 
@@ -110,13 +110,13 @@ Deregistration of one organ due to death should log all other requested organs a
 
 After: Pass
 
-###14/08/2018 - Aidan
+### 14/08/2018 - Aidan
 
 Preconditions: Pass* (Can't add diagnosis currently)
 
 Deregistration of Heart due to an Error: Fail - Receiving listview not updated in patient profile
 
-###14/08/2018 - Maree
+### 14/08/2018 - Maree
 
 Preconditions: Pass
 
@@ -133,3 +133,5 @@ Deregistration of Middle Ear due to death with invalid date: Pass
 Deregistration of one organ due to death should log all other requested organs as due to death: Pass
 
 After: Pass
+
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**

@@ -19,6 +19,7 @@ import model.Administrator;
 import model.Clinician;
 import model.Medication;
 import model.Patient;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import service.AdministratorDataService;
 import service.PatientDataService;
@@ -32,10 +33,7 @@ import utility.undoRedo.StatesHistoryScreen;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -113,7 +111,7 @@ public class GUIPatientProfile extends TargetedController {
 	private Label genderStatus;
 
 	@FXML
-	private ListView receivingList;
+	private ListView<String> receivingList;
 
 	@FXML
 	private Label receivingTitle;
@@ -134,7 +132,7 @@ public class GUIPatientProfile extends TargetedController {
 	private RowConstraints firstNameRow;
 
 	@FXML
-	private ListView donationList;
+	private ListView<String> donationList;
 	@FXML
 	private ListView<String> medList;
 
@@ -189,7 +187,6 @@ public class GUIPatientProfile extends TargetedController {
 			assert target != null;
 			Patient patientToLoad = patientDataService.getPatientByNhi(((Patient) target).getNhiNumber());
 			patientDataService.save(patientToLoad);
-			;
 			loadProfile(patientToLoad);
 
 		} catch (IOException e) {
@@ -255,12 +252,29 @@ public class GUIPatientProfile extends TargetedController {
 	private void loadAddressDetails(Patient patient) {
 		streetLbl.setText((patient.getStreetName() == null || patient.getStreetName().length() == 0) ? "Not set"
 				: patient.getStreetNumber() + " " + patient.getStreetName());
-		cityLbl.setText(patient.getStreetName() == null || patient.getStreetName().length() < 1 ? "Not set"
-				: patient.getStreetName());
-		suburbLbl.setText(
-				(patient.getSuburb() == null || patient.getSuburb().length() == 0) ? "Not set" : patient.getSuburb());
+		if (patient.getStreetName() == null || patient.getStreetName().length() == 0) {
+			streetLbl.getStyleClass().add("notSet");
+		} else {
+			streetLbl.getStyleClass().clear();
+		}
+		suburbLbl.setText((patient.getSuburb() == null || patient.getSuburb().length() == 0) ? "Not set" : patient.getSuburb());
+		if (patient.getSuburb() == null || patient.getSuburb().length() == 0) {
+			suburbLbl.getStyleClass().add("notSet");
+		} else {
+			suburbLbl.getStyleClass().clear();
+		}
 		cityLbl.setText((patient.getCity() == null || patient.getCity().length() == 0) ? "Not set" : patient.getCity());
+		if (patient.getCity() == null || patient.getCity().length() == 0) {
+			cityLbl.getStyleClass().add("notSet");
+		} else {
+			cityLbl.getStyleClass().clear();
+		}
 		regionLbl.setText(patient.getRegion() == null ? "Not set" : patient.getRegion().getValue());
+		if (patient.getRegion() == null) {
+			regionLbl.getStyleClass().add("notSet");
+		} else {
+			regionLbl.getStyleClass().clear();
+		}
 		if (patient.getZip() != 0) {
 			zipLbl.setText(String.valueOf(patient.getZip()));
 			while (zipLbl.getText().length() < 4) {
@@ -300,14 +314,14 @@ public class GUIPatientProfile extends TargetedController {
 	 * @param listView
 	 *            The listView that the cells being highlighted are in
 	 * @param isDonorList
-	 *            boolean for if the receiving organ is also in the donating list
+	 *            boolean for if the list is the donating list or not
 	 */
 	private void highlightListCell(ListView<String> listView, boolean isDonorList) {
 		listView.setCellFactory(column -> new ListCell<String>() {
 			@Override
 			protected void updateItem(String item, boolean empty) {
 				super.updateItem(item, empty);
-				if (userControl.getLoggedInUser() instanceof Clinician) {
+				if (!(userControl.getLoggedInUser() instanceof Patient)) {
 					if (isDonorList) {
 						setListInvalidStyle(item, receivingListProperty);
 					} else {
@@ -319,14 +333,18 @@ public class GUIPatientProfile extends TargetedController {
 				}
 			}
 
-			private void setListInvalidStyle(String item, ListProperty<String> receivingListProperty) {
-				if (receivingListProperty.contains(item)) {
-					this.getStyleClass().add("invalid");
-					this.setStyle("-fx-background-color: #e6b3b3");
-					this.setText(item);
-				} else {
-					this.setStyle("-fx-background-color: WHITE");
-					this.setText(item);
+			private void setListInvalidStyle(String item, ListProperty<String> listProperty) {
+				this.setStyle("-fx-background-color: WHITE");
+				this.setText(item);
+				if (item != null) {
+					String[] itemArray = item.split(" ");
+					String organ = itemArray[itemArray.length - 1];
+					for (String listItem : listProperty) {
+						if (listItem.contains(organ)) {
+							this.getStyleClass().add("invalid");
+							this.setStyle("-fx-background-color: #e6b3b3");
+						}
+					}
 				}
 			}
 		});

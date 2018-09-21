@@ -26,6 +26,7 @@ public class ClinicianDataService implements IClinicianDataService {
 
     public OrganWaitlist getOrganWaitList() {
         if (localDbFactory.getTransplantWaitingListDataAccess().getWaitingList() == null) {
+            this.updateOrganWaitList(mysqlFactory.getTransplantWaitingListDataAccess().getWaitingList());
             return mysqlFactory.getTransplantWaitingListDataAccess().getWaitingList();
         }
         return localDbFactory.getTransplantWaitingListDataAccess().getWaitingList();
