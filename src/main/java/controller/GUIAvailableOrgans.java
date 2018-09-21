@@ -15,11 +15,8 @@ import model.Patient;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
-import utility.CachedThreadPool;
-import utility.ExpiryObservable;
+import utility.*;
 import utility.GlobalEnums.Organ;
-import utility.ProgressBarCustomTableCell;
-import utility.ProgressTask;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.util.*;
@@ -111,7 +108,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         }
         populateTable();
         controls = new ArrayList<>();
-        statesHistoryScreen = new StatesHistoryScreen(potentialMatchesBtn, UndoableScreen.CLINICIANAVAILABLEORGANS, target);
+        statesHistoryScreen = new StatesHistoryScreen(potentialMatchesBtn, GlobalEnums.UndoableScreen.CLINICIANAVAILABLEORGANS, target);
     }
 
     /**

@@ -1,10 +1,5 @@
 package controller;
 
-import static java.lang.Math.abs;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
-
 import com.google.maps.model.LatLng;
 import data_access.localDAO.PatientLocalDAO;
 import javafx.beans.property.ObjectProperty;
@@ -24,14 +19,15 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import javafx.util.converter.LocalTimeStringConverter;
 import model.Patient;
+import model.PatientOrgan;
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.RangeSlider;
 import service.APIGoogleMaps;
 import service.ClinicianDataService;
 import service.OrganWaitlist;
 import service.PatientDataService;
+import utility.CachedThreadPool;
 import utility.GlobalEnums;
 import utility.GlobalEnums.BirthGender;
 import utility.GlobalEnums.FilterOption;
@@ -41,12 +37,6 @@ import utility.TouchPaneController;
 import utility.TouchscreenCapable;
 import utility.undoRedo.IAction;
 import utility.undoRedo.MultiAction;
-import utility.*;
-import utility.GlobalEnums.BirthGender;
-import utility.GlobalEnums.FilterOption;
-import utility.GlobalEnums.Organ;
-import utility.GlobalEnums.Region;
-
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -55,6 +45,7 @@ import java.util.logging.Level;
 
 import static java.lang.Math.abs;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianPotentialMatches extends UndoableController implements IWindowObserver, TouchscreenCapable {
