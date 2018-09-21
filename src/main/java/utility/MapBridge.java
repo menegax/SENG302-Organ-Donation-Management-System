@@ -59,7 +59,6 @@ public class MapBridge {
             uniqueSetOfPatients.add(masterData.get(i).getPatient());
         }
         List<Patient> patients = new ArrayList<Patient>(uniqueSetOfPatients);
-        System.out.println(patients);
         return patients;
     }
 }

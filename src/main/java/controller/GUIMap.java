@@ -111,6 +111,8 @@ public class GUIMap implements Initializable {
         for (Patient p : patients) {
             results.add(new PatientDataService().getPatientByNhi(p.getNhiNumber()));
         }
+
+
         return results;
     }
 }
