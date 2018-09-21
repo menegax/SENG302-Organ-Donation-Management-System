@@ -17,6 +17,7 @@ import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.SystemLogger;
 import utility.undoRedo.IAction;
+import utility.undoRedo.MultiAction;
 import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -186,14 +187,17 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
     public void saveRequirements() {
         ArrayList<GlobalEnums.Organ> promised = new ArrayList<>();
         finalRequirements.clear();
+        Patient donor = null;
+        Patient donorAfter = null;
         for (GlobalEnums.Organ organ :controlMap.keySet()) {
             if (controlMap.get(organ).isSelected()) {
                 after.addRequired(organ);
                 finalRequirements.add(organ);
             } else {
                 if (promised(after, organ)){
-                    Patient donor = patientDataService.getPatientByNhi(after.getRequiredOrgans().get(organ).getDonorNhi());
-                    donor.getDonations().put(organ, null);
+                    donor = patientDataService.getPatientByNhi(after.getRequiredOrgans().get(organ).getDonorNhi());
+                    donorAfter = (Patient) donor.deepClone();
+                    donorAfter.getDonations().put(organ, null);
                     promised.add(organ);
                 }
                 after.removeRequired(organ);
@@ -201,7 +205,7 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
         }
 
         deregistrationReason();
-
+        IAction action = null;
         if (promised.size() > 0) {
             String alertMessage = "";
             for (int i = 0; i < promised.size(); i++) {
@@ -214,6 +218,15 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The following organs are already promised " +
                     "to this patient: " + alertMessage + " Please undo these changes if this was an error.", ButtonType.OK);
             alert.show();
+            if (donor != null) {
+                action = new MultiAction((Patient) target, after, donor, donorAfter);
+            }
+        } else {
+            action = new SingleAction(target, after);
+        }
+
+        if (action != null) {
+            statesHistoryScreen.addAction(action);
         }
 
         IPatientDataService patientDataService = new PatientDataService();
@@ -228,10 +241,6 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
         SystemLogger.systemLogger.log(FINEST, "Patient had organ requirements deregistered. Asking for deregistration reason...");
         Map<GlobalEnums.Organ, OrganReceival> removedOrgans = new HashMap<>(((Patient) target).getRequiredOrgans());
         removedOrgans.keySet().removeAll(finalRequirements);
-        if (removedOrgans.size() == 0) {
-            IAction action = new SingleAction(target, after);
-            statesHistoryScreen.addAction(action);
-        }
         totalRemoved = 0;
         for (GlobalEnums.Organ organ : removedOrgans.keySet()) {
             totalRemoved += 1;
@@ -257,8 +266,6 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
                 after.clearRequiredOrgans();
                 userActions.log(Level.INFO, "ALl required organs cleared due to patient death", "Deregistered an organ");
             }
-            IAction action = new SingleAction(target, after);
-            statesHistoryScreen.addAction(action);
         }
         populateForm(after);
     }

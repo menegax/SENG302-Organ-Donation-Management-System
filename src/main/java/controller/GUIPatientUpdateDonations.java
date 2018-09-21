@@ -13,6 +13,7 @@ import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.IAction;
+import utility.undoRedo.MultiAction;
 import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -164,21 +165,23 @@ public class GUIPatientUpdateDonations extends UndoableController {
         ArrayList<GlobalEnums.Organ> promised = new ArrayList<>();
 
         Patient after = (Patient) target.deepClone();
-
+        Patient receiver = null;
+        Patient receiverAfter = null;
         for (GlobalEnums.Organ organ : controlMap.keySet()) {
             if (controlMap.get(organ).isSelected()) {
                 after.addDonation(organ);
                 newDonations.add(organ.toString());
             } else {
                 if (promised(after, organ)) {
-                    Patient receiver = patientDataService.getPatientByNhi(after.getDonations().get(organ));
-                    receiver.getRequiredOrgans().get(organ).setDonorNhi(null);
+                    receiver = patientDataService.getPatientByNhi(after.getDonations().get(organ));
+                    receiverAfter = (Patient) receiver.deepClone();
+                    receiverAfter.getRequiredOrgans().get(organ).setDonorNhi(null);
                     promised.add(organ);
                 }
                 after.removeDonation(organ);
             }
         }
-
+        IAction action = null;
         if (promised.size() > 0) {
             String alertMessage = "";
             for (int i = 0; i < promised.size(); i++) {
@@ -191,10 +194,16 @@ public class GUIPatientUpdateDonations extends UndoableController {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The following organs are already promised " +
                     "to other patients: " + alertMessage + "Please undo these changes if this was an error.", ButtonType.OK);
             alert.show();
-        }
+            if (receiver != null) {
+                action = new MultiAction((Patient) target, after, receiver, receiverAfter);
+            }
+        } else {
+            action = new SingleAction(target, after);
 
-        IAction action = new SingleAction(target, after);
-        statesHistoryScreen.addAction(action);
+        }
+        if (action != null) {
+            statesHistoryScreen.addAction(action);
+        }
 
         userActions.log(INFO, "Updated user donations to: " + newDonations, new String[]{"Attempted to update donations", ((Patient) target).getNhiNumber()});
     }
