@@ -308,11 +308,12 @@ function getDonations(patient, callback) {
  * @param patient - patient whos info window is to be updated
  */
 function reloadInfoWindow(patient) {
-    for (var i = 0; i<infoWindows.length; i++) {
-        if (infoWindows[i][patient.getNhiNumber().toString()]) {
-            infoWindows[i]["iwindow"].setContent(getDeadPatientInfoContent(patient));
+    infoWindows.forEach(function (iw){
+        if (iw["patient"] === patient.getNhiNumber()) {
+            console.log("found");
+            iw["iwindow"].setContent(getDeadPatientInfoContent(patient))
         }
-    }
+    });
 }
 
 function assignOrgan() {

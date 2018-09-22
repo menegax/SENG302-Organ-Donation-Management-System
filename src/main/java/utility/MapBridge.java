@@ -2,9 +2,11 @@ package utility;
 
 import controller.GUIAvailableOrgans;
 import controller.GUIHome;
+import controller.GUIMap;
 import controller.ScreenControl;
 import model.Patient;
 import model.PatientOrgan;
+import netscape.javascript.JSObject;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 
@@ -22,6 +24,7 @@ public class MapBridge {
     private IPatientDataService patientDataService = new PatientDataService();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
 
     /**
      * Opens the patient profile in a new window
@@ -60,5 +63,9 @@ public class MapBridge {
         }
         List<Patient> patients = new ArrayList<Patient>(uniqueSetOfPatients);
         return patients;
+    }
+
+    public void updateInfoWindow(Patient patient){
+        GUIMap.getJSBridge().call("reloadInfoWindow", patient);
     }
 }
