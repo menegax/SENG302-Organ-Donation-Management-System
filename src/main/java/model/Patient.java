@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
 
@@ -144,6 +145,8 @@ public class Patient extends User {
     private List<Disease> pastDiseases = new ArrayList<>();
 
     private GlobalEnums.Organ removedOrgan;
+
+    private Logger systemLogger = SystemLogger.systemLogger;
 
     /**
      * Used only for importing. Don't use elsewhere.
@@ -575,6 +578,7 @@ public class Patient extends User {
 
     public void setDeathStreet(String deathStreet) {
         this.deathStreet = deathStreet;
+        clearCurrentLocation();
         userModified();
     }
 
@@ -585,6 +589,7 @@ public class Patient extends User {
 
     public void setDeathCity(String deathCity) {
         this.deathCity = deathCity;
+        clearCurrentLocation();
         userModified();
     }
 
@@ -594,6 +599,7 @@ public class Patient extends User {
 
     public void setDeathRegion(Region region) {
         this.deathRegion = region;
+        clearCurrentLocation();
         userModified();
     }
 
@@ -772,9 +778,23 @@ public class Patient extends User {
         userModified();
     }
 
-    public LatLng getCurrentLocation() throws InterruptedException, ApiException, IOException {
+    /**
+     * Gets the current location of the patient as a LatLng
+     * Returns the death location if the patient is dead
+     * Returns null if the location could not be geocoded correctly
+     * @return the location of the patient as a latLong
+     */
+    public LatLng getCurrentLocation() {
         if (currentLocation == null) {
-            this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
+            try {
+                if (death != null) {
+                    this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getDeathLocationConcat());
+                } else {
+                    this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
+                }
+            } catch (InterruptedException | ApiException | IOException e) {
+                systemLogger.log(Level.WARNING, e.getMessage(), "Attempted to geocode an address");
+            }
         }
         return currentLocation;
     }
