@@ -14,6 +14,7 @@ import utility.GlobalEnums.*;
 import utility.SystemLogger;
 import utility.UserActionHistory;
 import utility.undoRedo.IAction;
+import utility.undoRedo.MultiAction;
 import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -432,6 +433,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
         after.setNhiNumber(nhiTxt.getText());
         after.setFirstName(firstnameTxt.getText());
         after.setLastName(lastnameTxt.getText());
+        Patient donorBefore = null;
+        Patient donorAfter = null;
 
         if (middlenameTxt.getText()
                 .equals("")) {
@@ -466,6 +469,16 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         if (deathLocationTxt.getText() != null) { // otherwise date of death will default to current date
             after.setDeathDate(dateOfDeath.getDateTimeValue());
+            for (Organ organ : ((Patient) target).getRequiredOrgans().keySet()) {
+                String donorNhi = ((Patient) target).getRequiredOrgans().get(organ).getDonorNhi();
+                if (donorNhi != null) {
+                    donorBefore = patientDataService.getPatientByNhi(donorNhi);
+                    donorAfter = (Patient) donorBefore.deepClone();
+                    donorAfter.getDonations().put(organ, null);
+
+                    after.getRequiredOrgans().get(organ).setDonorNhi(null);
+                }
+            }
         } else {
             after.setDeathDate(null);
         }
@@ -503,7 +516,12 @@ public class GUIPatientUpdateProfile extends UndoableController {
                     .getSelectedItem()));
         }
 
-        IAction action = new SingleAction(target, after);
+        IAction action;
+        if (donorBefore != null) {
+            action = new MultiAction((Patient) target, after, donorBefore, donorAfter);
+        } else {
+            action = new SingleAction(target, after);
+        }
         statesHistoryScreen.addAction(action);
         patientDataService.save(after);
         SystemLogger.systemLogger.log(Level.FINE, "Successfuly update patient to:\n" + after);
