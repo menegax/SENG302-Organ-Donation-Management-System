@@ -156,7 +156,7 @@ function attachDonationInfoWindow(patient, marker) {
     var content = '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
         + patient.getAddressString() + '<br><br>'
         + '<select id="dropdown">'
-        + '<option value="organs">Select an organ</option></select>'
+        + '</select>'
         + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
         + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
     return new google.maps.InfoWindow({
@@ -180,6 +180,7 @@ function openPatientProfile(patientNhi) {
  */
 function getOrganOptions(patient) {
     var donations = patient.getDonations().toString();
+    getDonations(patient, function(donations) {})
     var donationStr;
     if (donations !== '[]') {
         donationStr = '<b>Donations:</b><br>' + donations.substring(1, donations.length - 1);
@@ -258,17 +259,25 @@ function showNotification(numSuccess, numTotal) {
  * @param infowindow - info window being displayed
  */
 function buildOrganDropdown(patient, infowindow) {
-
     google.maps.event.addListener(infowindow, "domready", function()
     {
-        var donations = patient.getDonations().toString();
-        donations = donations.substr(1, donations.length - 2).split(",");
-        for (var i = 0; i< donations.length; i++) {
-            $('#dropdown').append($('<option>', {
-                value: i + 1,
-                text: donations[i]
-            }));
-        }
-
+        getDonations(patient, function(donations) {
+            $('#dropdown').html('');
+            $('#dropdown').html('<option value="organs">Select an organ</option>');
+            var dono = donations.slice(1,-1).split(",");
+            for (var i = 0; i< dono.length; i++) {
+                $('#dropdown').append($('<option>', {
+                    value: i + 1,
+                    text: dono[i]
+                }));
+            }
+        });
     });
+}
+
+function getDonations(patient, callback) {
+    var donations = patient.getDonations().toString();
+    setTimeout(function() {
+        callback(donations);
+    }, 200);
 }
