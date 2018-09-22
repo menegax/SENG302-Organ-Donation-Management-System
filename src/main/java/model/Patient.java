@@ -146,7 +146,7 @@ public class Patient extends User {
 
     private GlobalEnums.Organ removedOrgan;
 
-    private Logger systemLogger = SystemLogger.systemLogger;
+    private transient Logger systemLogger = SystemLogger.systemLogger;
 
     /**
      * Used only for importing. Don't use elsewhere.

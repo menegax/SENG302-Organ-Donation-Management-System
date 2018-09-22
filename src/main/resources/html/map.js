@@ -113,27 +113,35 @@ function attachRadius(patient) {
 }
 
 /**
- * Updates the circle radii for current marker selected
+ * Creates a circle radii for current marker selected
  */
-function updateMarkerRadii(radius, color) {
+function createMarkerRadii(radius, color, organ) {
     var markerCircle;
-    // markerCircle.setOptions({radius: radius, fillColor: color, map: map});
 
     // Add the circle for this city to the map.
     markerCircle = new google.maps.Circle({
-        map: map,
+        map: null,
         strokeColor: "#484848",
         strokeOpacity: 0.8,
         strokeWeight: 2,
         fillColor: color,
         fillOpacity: 0.35,
         center: currentMarker.position,
-        radius: radius
+        radius: radius,
+        organ: organ
     });
     circles.push(markerCircle);
-    // google.maps.event.addListener(circle, 'radius_changed', function() {
-    //     console.log(circle.getRadius());
-    // });
+}
+
+/**
+ * Updates the circle radii and colour for current marker selected
+ */
+function updateMarkerRadii(radius, color, organ) {
+    circles.forEach(function(circle){
+        if (circle.organ == organ) {
+            circle.setOptions({radius: radius, fillColor: color, map: map});
+        }
+    });
 }
 
 /**
