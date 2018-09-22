@@ -51,7 +51,12 @@ function setMapDragEnd() {
  * @param patient
  */
 function addMarker(patient) {
-    var address = patient.getFormattedAddress();
+    var address;
+    if (patient.getDeathDate() != null) {
+        address = patient.getDeathLocationConcat();
+    } else {
+        address = patient.getFormattedAddress();
+    }
     var name = patient.getNameConcatenated();
     console.log("Adding marker to map for patient " + patient.getNhiNumber());
     geocoder.geocode({'address': address}, function (results, status) {
@@ -109,6 +114,12 @@ function matchedOrgan(geolocation, geolocation1, recipientNhi, color, organ) {
     }];
     var matchedOrgan = new google.maps.Polyline({
         map: null,
+        icons: [{
+            icon: {
+                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+            },
+            offset: '100%'
+        }],
         path: matchedOrganPath,
         geodesic: true,
         strokeColor: color,
@@ -173,6 +184,7 @@ function getOrganOptions(patient) {
 function setPatients(_patients) {
     patients = _patients;
     clearMarkers();
+    clearLines();
     successCount = 0;
     addMarkers(patients.size());
 }
@@ -203,6 +215,16 @@ function clearMarkers() {
         marker.setMap(null);
     });
     markers = [];
+}
+
+/**
+ * Clear the lines from the map
+ */
+function clearLines() {
+    matchedOrganLines.forEach(function (line) {
+        line.setMap(null);
+    });
+    matchedOrganLines = [];
 }
 
 /**

@@ -31,9 +31,20 @@ public class MapBridge {
         controller.setTarget(patient);
     }
 
+    /**
+     * Checks if the donor patient has organs that have been matched to a recipient patient, if so, triggers js method to
+     * create a line between two markers
+     * @param geolocation - lat lng of donor patient
+     * @param patientNhi - nhi number of donor patient
+     * @throws InterruptedException
+     * @throws ApiException
+     * @throws IOException
+     */
+    @SuppressWarnings("unused") // used in corresponding javascript
     public void checkOrganMatch(double[] geolocation, String patientNhi) throws InterruptedException, ApiException, IOException {
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
         Set<GlobalEnums.Organ> donations = patient.getDonations().keySet();
+
         if (donations.size() > 0) {
             for (GlobalEnums.Organ organ : donations) {
                 String recipientNhi = patient.getDonations().get(organ);

@@ -87,13 +87,57 @@
 1. Log in as an admin
 2. Go to search patients
 3. In the search box enter 'lanny'
-3. Select 'View on map' button
-4. Select 'OK' on the popup that opens up
-5. Select 'View on map' button once again
-6. Select 'OK' on the popup that opens up
-6. Expected: The map should be populated with the patients in the table. These include patients with the following Nhi's: ANM8474, CTH2080, DMR2101, EQV5740, FUZ3183, KJD8772
+4. Select 'View on map' button
+5. Select 'OK' on the popup that opens up
+6. Select 'View on map' button once again
+7. Select 'OK' on the popup that opens up
+8. Expected: The map should be populated with the patients in the table. These include patients with the following Nhi's: ANM8474, CTH2080, DMR2101, EQV5740, FUZ3183, KJD8772
+
+### Finding a donor and recipient pair of patients
+
+1. Log in as a clinician.
+2. Select `Search Patients`.
+3. Find a donating and receiving pair of patients.
+4. Ensure that the donor has a valid death location.
+5. Ensure that the donor's organs have not expired.
+6. Ensure that the recipient has a valid current location.
+
+### Test 12 - Line between a matched donor and recipient shows
+
+1. Follow `Finding a donor and recipient pair of patients`.
+2. Ensure both patients are on the same table in view. 
+3. Select 'View on Map'.
+4. Select 'OK' on the popup alert.
+5. Make sure the map is in focus.
+6. EXPECTED: Once all patient's have loaded, a line between your two patients should appear.
+
+### Test 13 - No line if donor(or recipient) is on map but recipient(or donor if recipient is on map) is not on map
+
+1. Follow `Finding a donor and recipient pair of patients`.
+2. Ensure only one of either the donor or recipient is on the current table.
+3. Select 'View on Map'.
+4. Select 'OK' on the popup alert.
+5. Make sure the map is in focus.
+6. EXPECTED: No line is displayed since both patients are not existant on the map.
+
+### Test 14 - All lines are the correct color (green/orange/red) respective to the remaining time of the organ
+
+1. Follow `Finding a donor and recipient pair of patients`.
+2. Ensure both patients are on the same table in view.
+3. Select 'View on Map'.
+4. Select 'OK' on the popup alert.
+5. Make sure the map is in focus.
+6. EXPECTED: The line is green if it has a lot of time remaining, orange if average time remaining or red if barely no time remaining (just as the progress bars in `Available Organs` tab).
 
 ## Test History
+
+### 22/09/2018
+
+Test 12: PASS
+
+Test 13: PASS
+
+Test 14: PASS
 
 ### 09/09/18 - Joshua
 
