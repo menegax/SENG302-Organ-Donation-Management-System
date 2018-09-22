@@ -93,6 +93,41 @@
 6. Select 'OK' on the popup that opens up
 6. Expected: The map should be populated with the patients in the table. These include patients with the following Nhi's: ANM8474, CTH2080, DMR2101, EQV5740, FUZ3183, KJD8772
 
+
+### Test 12 - Clicking on Dead patients marker -> profile
+
+1. Log in as Clinician
+2. Go to available organs
+3. Click view on map
+4. Click a marker
+5. Click the header containing the patients NHI
+6. Expected : Correct Patient Profile to be shown
+
+### Test 13 - Clicking on Dead patients marker - info
+
+1. Log in as Clinician
+2. Go to available organs
+3. Click view on map
+4. Click a marker
+5. Expected : NHI, Name, Address, Blood Group, Age to be correct (validate this again patient profile)
+6. Expected : Label & dd align in same row
+7. Expected : Fields to be aligned on top of each other
+8. Expected : Assign button align on the bottom right
+
+### Test 14 - Clicking on Dead patients marker - assign organs dropdown
+
+1. Log in as Clinician
+2. Go to available organs
+3. Click view on map
+4. Click a marker
+5. Click the assign organs dropdown
+6. Expected : Correct organs to be shown (validate against patient profile)
+
+
+
+
+
+
 ## Test History
 
 ### 09/09/18 - Joshua
@@ -124,5 +159,14 @@ Test 6: Pass
 ### 15/8/18 - Kyle
 
 Test 3: Pass
+
+### 22/09/18 - Hayden
+
+Test 12: Pass
+
+Test 13: Pass
+
+Test 14: Pass
+
 
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
