@@ -113,30 +113,27 @@ function makeMarker(patient, results) {
 function attachInfoWindow(patient, marker) {
     var infoWindow;
     if (patient.isDead()) {
-        infoWindow = attachDonationInfoWindow(patient, marker);
-        buildOrganDropdown(patient, infoWindow);
+        infoWindow = new google.maps.InfoWindow({
+            content: getDeadPatientInfoContent(patient),
+            maxWidth:350
+        });
+        buildOrganDropdown(patient, infoWindow, marker);
     } else {
-        var organOptions = getOrganOptions(patient);
-
-        var infoWindow = new google.maps.InfoWindow({
-            content: '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
-            + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
-            + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
-            + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
+        infoWindow = new google.maps.InfoWindow({
+            content: getAlivePatientInfoContent(patient),
+            maxWidth:350
         });
     }
 
-    infoWindows.push(infoWindow);
-
-    // when clicking on the marker, all other markers' info windows close
-    marker.addListener('click', function () {
-        //infoWindow.open(map, marker);
+    var nhi = patient.getNhiNumber();
+    infoWindows.push({ "iwindow" : infoWindow, "patient" :nhi }); //unique info windows
+    marker.addListener('click', function () { // when clicking on the marker, all other markers' info windows close
         infoWindows.forEach(function (iw) {
-            if (iw !== infoWindow) {
-                iw.close();
+            if (iw["iwindow"] !== infoWindow) {
+                iw["iwindow"].close();
             }
             else {
-                iw.open(map, marker);
+                iw["iwindow"].open(map, marker);
             }
         })
     });
@@ -151,19 +148,33 @@ function attachInfoWindow(patient, marker) {
     });
 }
 
-
-function attachDonationInfoWindow(patient, marker) {
-    var content = '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
-        + patient.getAddressString() + '<br><br>'
+/**
+ * Gets the dead patients html content for the info window
+ * @param patient - patient to attach to info window
+ * @returns {string}
+ */
+function getDeadPatientInfoContent(patient) {
+    var addressString = patient.getAddressString();
+    setTimeout(600);
+    return '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
+        + addressString + '<br><br>'
         + '<select id="dropdown">'
         + '</select>'
         + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
         + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
-    return new google.maps.InfoWindow({
-        content: content,
-        maxWidth:350
-    });
+}
 
+/**
+ * Gets the alive patients html content for the info window
+ * @param patient - patient to attach to info window
+ * @returns {string}
+ */
+function getAlivePatientInfoContent(patient) {
+    var organOptions = getOrganOptions(patient);
+    return '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
+        + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
+        + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
+        + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
 }
 
 /**
@@ -275,9 +286,28 @@ function buildOrganDropdown(patient, infowindow) {
     });
 }
 
+/**
+ * Gets donations as a csv string
+ * @param patient - patient whos donations are needed from
+ * @param callback - function to handle result
+ */
 function getDonations(patient, callback) {
-    var donations = patient.getDonations().toString();
+    var donations = patient.getDonations();
     setTimeout(function() {
-        callback(donations);
-    }, 200);
+        callback(donations.toString());
+    }, 700);
+}
+
+
+/**
+ * Intended to be able to reload patients info window,
+ * to be called from JAVA
+ * @param patient - patient whos info window is to be updated
+ */
+function reloadInfoWindow(patient) {
+    for (var i = 0; i<infoWindows.length; i++) {
+        if (infoWindows[i][patient.getNhiNumber().toString()]) {
+            infoWindows[i]["iwindow"].setContent(getDeadPatientInfoContent(patient));
+        }
+    }
 }
