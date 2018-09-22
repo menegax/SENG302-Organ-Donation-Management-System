@@ -15,7 +15,7 @@ import java.util.Iterator;
 /**
  * Represents an action (edit, add, delete) performed on a user in the application
  */
-public class Action {
+public class SingleAction implements IAction {
 
     private User before;
     private User current;
@@ -33,7 +33,7 @@ public class Action {
      * @param current the object of the current user (before the action has occurred
      * @param after a user with the attributes of the user after the action has occurred
      */
-    public Action(User current, User after) {
+    public SingleAction(User current, User after) {
         if (current == null) { // New User added
             this.before = null;
             this.current = null;
@@ -54,6 +54,7 @@ public class Action {
     /**
      * Executes the action (does nothing if action has occurred)
      */
+    @Override
     public void execute() {
         if (after == null) {
             dao.deleteUser(current);
@@ -76,6 +77,7 @@ public class Action {
     /**
      * Unexecutes (undoes) the action (does nothing if the action has already been undone)
      */
+    @Override
     public void unexecute() {
         if (after == null) {
             current = before.deepClone();
@@ -95,6 +97,7 @@ public class Action {
         isExecuted = false;
     }
 
+    @Override
     public boolean isExecuted() {
         return isExecuted;
     }

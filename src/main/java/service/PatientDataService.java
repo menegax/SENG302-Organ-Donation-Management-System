@@ -23,6 +23,7 @@ import static utility.SystemLogger.systemLogger;
 public class PatientDataService implements IPatientDataService {
 
     private DAOFactory mysqlFactory = DAOFactory.getDAOFactory(FactoryType.MYSQL);
+
     private DAOFactory localDbFactory = DAOFactory.getDAOFactory(FactoryType.LOCAL);
 
 
@@ -58,12 +59,12 @@ public class PatientDataService implements IPatientDataService {
     }
 
     @Override
-    public List<Patient> getDeadPatients() {
+    public List<Patient> getDeadDonors() {
         IPatientDataAccess patientDataAccessLocal = localDbFactory.getPatientDataAccess();
         IPatientDataAccess patientDataAccessSQL = mysqlFactory.getPatientDataAccess();
-        List<Patient> allDeadPatients = new ArrayList<>(patientDataAccessSQL.getDeadPatients());
-        allDeadPatients.removeAll(patientDataAccessLocal.getDeadPatients());
-        allDeadPatients.addAll((patientDataAccessLocal.getDeadPatients()));
+        List<Patient> allDeadPatients = new ArrayList<>(patientDataAccessSQL.getDeadDonors());
+        allDeadPatients.removeAll(patientDataAccessLocal.getDeadDonors());
+        allDeadPatients.addAll((patientDataAccessLocal.getDeadDonors()));
         return allDeadPatients;
     }
 

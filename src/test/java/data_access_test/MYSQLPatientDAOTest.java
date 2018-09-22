@@ -4,13 +4,13 @@ import data_access.DBHelper;
 import data_access.factories.DAOFactory;
 import model.Disease;
 import model.Medication;
+import model.OrganReceival;
 import model.Patient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.cglib.core.Local;
 import utility.GlobalEnums.*;
-import utility.GlobalEnums;
 import utility.SystemLogger;
 
 import java.time.LocalDate;
@@ -65,14 +65,15 @@ public class MYSQLPatientDAOTest {
     }
 
     private void givenPatientDonations() {
-        List<Organ> donations = new ArrayList<>();
-        donations.add(Organ.LIVER);
+        Map<Organ, String> donations = new HashMap<>();
+        donations.put(Organ.LIVER, null);
         patient.setDonations(donations);
     }
 
     private void givenPatientRequired() {
-        Map<Organ, LocalDate> required = new HashMap<>();
-        required.put(Organ.CORNEA, LocalDate.now());
+        Map<Organ, OrganReceival> required = new HashMap<>();
+        OrganReceival organReceival = new OrganReceival(LocalDate.now());
+        required.put(Organ.CORNEA, organReceival);
         patient.setRequiredOrgans(required);
     }
 

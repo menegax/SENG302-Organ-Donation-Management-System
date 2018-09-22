@@ -72,7 +72,7 @@ public class ScreenControlDesktop extends ScreenControl {
             systemLogger.log(Level.INFO, "Showing new desktop stage");
             return controller;
         } catch (IOException e) {
-            userActions.log(Level.SEVERE, "Unable to load window", "Attempted to load fxml: " + fxml);
+            userActions.log(Level.SEVERE, "Unable to loadController window", "Attempted to loadController fxml: " + fxml);
             new Alert(Alert.AlertType.ERROR, "Unable to open window", ButtonType.OK).show();
         }
         return null;
