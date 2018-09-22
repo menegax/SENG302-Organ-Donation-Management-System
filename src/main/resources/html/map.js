@@ -1,6 +1,7 @@
 var map, geocoder, patients, mapBridge, successCount;
 var markers = [];
 var infoWindows = [];
+var matchedOrgans = [];
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -84,11 +85,33 @@ function addMarker(patient) {
                 })
             });
             markers.push(marker);
+            mapBridge.checkOrganMatch(marker.position, patient.getNhiNumber());
         }
         else {
             console.log('Geocode failed for patient ' + patient.getNhiNumber() + ' because: ' + status);
         }
     });
+}
+
+/**
+ * passes marker and patient through to java to check for a match
+ */
+function matchedOrgan(geolocation, geolocation1) {
+    //var matchedOrganPath = [{geolocation}, {geolocation1.lat, ge}];
+    var matchedOrganPath = [{
+        lat: geolocation.lat, lng: geolocation.lng
+    },{
+        lat: geolocation1.lat, lng: geolocation1.lng
+    }];
+    var matchedOrgan = new google.maps.Polyline({
+        map: map,
+        path: matchedOrganPath,
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+    });
+    matchedOrgans.push(matchedOrgan);
 }
 
 /**

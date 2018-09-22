@@ -1,11 +1,17 @@
 package utility;
 
+import com.google.maps.errors.ApiException;
 import controller.GUIHome;
+import controller.GUIMap;
 import controller.ScreenControl;
 import model.Patient;
+import netscape.javascript.JSObject;
 import service.PatientDataService;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Provides the map javascript access to the java codebase
@@ -13,6 +19,7 @@ import java.util.ArrayList;
 public class MapBridge {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+    private PatientDataService patientDataService = new PatientDataService();
 
     /**
      * Opens the patient profile in a new window
@@ -25,5 +32,19 @@ public class MapBridge {
         controller.setTarget(patient);
     }
 
+    public void checkOrganMatch(double[] geolocation, String patientNhi) throws InterruptedException, ApiException, IOException {
+        Patient patient = patientDataService.getPatientByNhi(patientNhi);
+        Set<GlobalEnums.Organ> donations = patient.getDonations().keySet();
+        if (donations.size() > 0) {
+            for (GlobalEnums.Organ organ : donations) {
+                String recipientNhi = patient.getDonations().get(organ);
+                if (recipientNhi != null) {
+                    Patient recipient = patientDataService.getPatientByNhi(recipientNhi);
+                    GUIMap.getJsBridge().call("matchedOrgan", patient.getCurrentLocation(), recipient.getCurrentLocation());
+                }
+            }
+        }
+
+    }
 
 }

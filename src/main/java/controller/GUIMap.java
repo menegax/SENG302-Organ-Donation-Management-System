@@ -33,7 +33,7 @@ public class GUIMap {
 
     private WebEngine webEngine;
 
-    private JSObject jsBridge;
+    private static JSObject jsBridge;
 
     private Robot robot;
 
@@ -43,7 +43,9 @@ public class GUIMap {
 
     private Collection<Patient> patients = new ArrayList<>();
 
-
+    public static JSObject getJsBridge() {
+        return jsBridge;
+    }
 
     /**
      * Loads the patients provided onto the map
