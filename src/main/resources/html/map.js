@@ -60,7 +60,7 @@ function addMarker(patient) {
             var organOptions = getOrganOptions(patient);
             var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
             var marker = new google.maps.Marker({
-                map: map, position: finalLoc, title: name
+                map: map, position: finalLoc, title: name, nhi: patient.getNhiNumber()
             });
 
             // create info window
@@ -96,8 +96,13 @@ function addMarker(patient) {
 /**
  * passes marker and patient through to java to check for a match
  */
-function matchedOrgan(geolocation, geolocation1) {
+function matchedOrgan(geolocation, geolocation1, recipientNHI) {
     //var matchedOrganPath = [{geolocation}, {geolocation1.lat, ge}];
+    if (!markers.some(function(marker) {
+        return marker.nhi === recipientNHI;
+    })) {
+        return;
+    }
     var matchedOrganPath = [{
         lat: geolocation.lat, lng: geolocation.lng
     },{

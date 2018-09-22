@@ -5,12 +5,9 @@ import controller.GUIHome;
 import controller.GUIMap;
 import controller.ScreenControl;
 import model.Patient;
-import netscape.javascript.JSObject;
 import service.PatientDataService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -40,7 +37,7 @@ public class MapBridge {
                 String recipientNhi = patient.getDonations().get(organ);
                 if (recipientNhi != null) {
                     Patient recipient = patientDataService.getPatientByNhi(recipientNhi);
-                    GUIMap.getJsBridge().call("matchedOrgan", patient.getCurrentLocation(), recipient.getCurrentLocation());
+                    GUIMap.getJsBridge().call("matchedOrgan", patient.getCurrentLocation(), recipient.getCurrentLocation(), recipient.getNhiNumber());
                 }
             }
         }
