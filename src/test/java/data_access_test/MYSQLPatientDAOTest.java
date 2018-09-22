@@ -15,6 +15,7 @@ import utility.SystemLogger;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.logging.Level;
 
 import static java.util.logging.Level.OFF;
 import static utility.UserActionHistory.userActions;
@@ -30,7 +31,7 @@ public class MYSQLPatientDAOTest {
     @SuppressWarnings("Duplicates")
     public static void setUp() {
         userActions.setLevel(OFF);
-        SystemLogger.systemLogger.setLevel(OFF);
+        SystemLogger.systemLogger.setLevel(Level.ALL);
         daoFactory = DAOFactory.getDAOFactory(FactoryType.MYSQL);
         dbHelper = new DBHelper();
     }
