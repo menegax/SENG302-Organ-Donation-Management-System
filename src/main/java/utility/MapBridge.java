@@ -3,19 +3,14 @@ package utility;
 import controller.GUIHome;
 import controller.GUIMap;
 import controller.ScreenControl;
-import javafx.application.Platform;
 import javafx.scene.control.ProgressBar;
 import model.Patient;
 import model.PatientOrgan;
 import netscape.javascript.JSObject;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
-import utility.ProgressTask;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * Provides the map javascript access to the java codebase
@@ -75,7 +70,7 @@ public class MapBridge {
         } else {
             Random rand = new Random();
             int value = rand.nextInt(LENGTHOFNZ);
-            GUIMap.getJSBridge().call("updateMarkerRadii", value, "#008000");
+            GUIMap.getJSBridge().call("updateMarkerRadii", value, "#008000", organ.toString());
         }
     }
 
