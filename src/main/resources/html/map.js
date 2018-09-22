@@ -68,6 +68,7 @@ function setMapDragEnd() {
  */
 function addMarker(patient) {
     console.log("Adding marker to map for patient " + patient.getNhiNumber());
+    console.log(patient.getFormattedAddress());
     var latLong = patient.getCurrentLocation();
     if (latLong !== null) {
         successCount++;

@@ -192,9 +192,7 @@ public class PatientDAO implements IPatientDataAccess {
             }
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Patient patient = constructPatientObject(resultSet, new ArrayList<String>() {{
-                    add(resultSet.getString("Region"));
-                }});
+                Patient patient = mapBasicPatient(resultSet);
                 //Add patient to resultMap with appropriate score
                 if (searchTerm.equals("")) {
                     resultMap.get(0).add(patient);
@@ -233,10 +231,9 @@ public class PatientDAO implements IPatientDataAccess {
         try(Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_DEAD_PATIENTS"));
             List<Patient> patients = new ArrayList<>();
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                patients.add(constructPatientObject(resultSet,
-                        new ArrayList<String>(){{add(resultSet.getString("Region"));}}));
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                patients.add(mapBasicPatient(rs));
             }
             return patients;
         }catch (SQLException e) {
@@ -244,6 +241,25 @@ public class PatientDAO implements IPatientDataAccess {
         }
         return new ArrayList<>();
     }
+
+
+    /**
+     * Helper method to map basic patient
+     * @param rs - result set to strip basic contact information off
+     * @return - return basic patient object with basic info + current address
+     * @throws SQLException - thrown when column does not exist
+     */
+    private Patient mapBasicPatient(ResultSet rs) throws SQLException{
+        return constructPatientObject(rs,
+                new ArrayList<String>(){{
+                    add(rs.getString("StreetNumber"));
+                    add(rs.getString("StreetName"));
+                    add(rs.getString("Suburb"));
+                    add(rs.getString("Zip"));
+                    add(rs.getString("Region"));
+                    add(rs.getString("City"));}});
+    }
+
 
     /**
      * Builds up a filter string for searching in db
@@ -336,8 +352,9 @@ public class PatientDAO implements IPatientDataAccess {
         } catch (SQLException ignore) {
     	    //pass through
         }
-
-        return constructPatientObject(attributes, contacts, null, null, null, null, required);
+        Patient patient = constructPatientObject(attributes, new ArrayList<>(), null, null, null, null, required);
+        mapBasicAddress(patient, contacts);
+        return patient;
     }
 
     /**
@@ -434,6 +451,7 @@ public class PatientDAO implements IPatientDataAccess {
                 pastDiseases.add(x);
             }
         });
+
         //map contact info etc
         if (contacts.size() > 1) {
             patient.setRegion(contacts.get(4) != null ? Region.getEnumFromString(contacts.get(4)) : null);
@@ -467,6 +485,23 @@ public class PatientDAO implements IPatientDataAccess {
         return patient;
     }
 
+    /**
+     * Helper method to map basic address info to patient object
+     * @param patient - patient obj to map to
+     * @param contacts - streetNo, StreetName, Suburb, Zip, Region, City
+     */
+    private void mapBasicAddress(Patient patient, List<String> contacts) {
+        patient.setStreetNumber(contacts.get(0));
+        patient.setStreetName(contacts.get(1));
+        try {
+            patient.setSuburb(contacts.get(2));
+        } catch (DataFormatException ignored) {
+            //pass through
+        }
+        patient.setZip(Integer.parseInt(contacts.get(3)));
+        patient.setRegion(contacts.get(4) != null ? Region.getEnumFromString(contacts.get(4)) : null);
+        patient.setCity(contacts.get(5));
+    }
     private String getNextRecordString(Patient aPatient) {
         List<String> donationList = aPatient.getDonations().stream().map(Organ::toString).collect(Collectors.toList());
         String donations = String.join(",", donationList).toLowerCase();
