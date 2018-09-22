@@ -57,6 +57,13 @@
     - Double click on an entry in their donating list or receiving list that has an assignment
     - Verify that the profile of the assigned patient opens    
     
+9. Setting an assigned receiver to dead
+    - Log in as an admin or clinician
+    - Navigate to the profile of a patient that is the assigned receiver of an organ
+    - Update their death details so that the patient is now dead
+    - Verify that the assignment for the assigned organ is removed on the receiver profile
+    - Verify that the assignment for the assigned organ is removed on the donator profile    
+    
 ### 21/09/2018 - Kyle Lamb
 
 1. Pass
@@ -78,3 +85,5 @@
 ## 22/09/2018 - Kyle Lamb
 
 8. Pass
+
+9. Pass
