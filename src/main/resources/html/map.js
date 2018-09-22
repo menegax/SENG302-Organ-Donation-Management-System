@@ -98,7 +98,7 @@ function addMarker(patient) {
 }
 
 /**
- * passes marker and patient through to java to check for a match
+ * Triggered via java if there is a match to create a line
  */
 function matchedOrgan(geolocation, geolocation1, recipientNhi, color, organ) {
     //var matchedOrganPath = [{geolocation}, {geolocation1.lat, ge}];
@@ -132,7 +132,7 @@ function matchedOrgan(geolocation, geolocation1, recipientNhi, color, organ) {
 }
 
 /**
- * updates the line of the matched organ
+ * updates the line of the matched organ and places it on the map
  */
 function updateMatchedOrganLine(color, nhi, organ) {
     matchedOrganLines.forEach(function (line) {
