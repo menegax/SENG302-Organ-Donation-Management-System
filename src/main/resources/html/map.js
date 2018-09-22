@@ -4,7 +4,7 @@ var markers = [];
 var infoWindows = [];
 var donations = [];
 var currentMarker;
-var currentOrgan = 'Lung';
+var currentOrgan = 'lung';
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -72,6 +72,7 @@ function addMarker(patient) {
             + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
             + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
             + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
+            + '<input type="button" onclick="setCurrentOrgan(\'liver\')" value="liver"/>'
         });
         infoWindows.push(infoWindow);
 
@@ -121,22 +122,43 @@ function updateMarkerRadii(radius, color, organ) {
     // markerCircle.setOptions({radius: radius, fillColor: color, map: map});
 
     // Add the circle for this city to the map.
-    var isCurrentOrgan = organ.slice(1, organ.length) === currentOrgan.slice(1, currentOrgan.length); //...... yeeeah idk why it cant compare a java and js string directly feelsbadman
+    var isCurrentOrgan = organ === currentOrgan;
     markerCircle = new google.maps.Circle({
         map: map,
-        strokeColor: isCurrentOrgan ? "#FFFFFF" : "#484848",
+        strokeColor: "#484848",
+        origStrokeColor: "#484848",
         strokeOpacity: 0.8,
-        strokeWeight: isCurrentOrgan ? 4 : 1,
+        strokeWeight: 1,
+        origStrokeWeight: 1,
         fillColor: color,
-        fillOpacity: isCurrentOrgan ? 0.6 : 0.25,
+        fillOpacity: 0.25,
+        origFillOpacity: 0.25,
         center: currentMarker.position,
         radius: radius,
         organ: organ
     });
     circles.push(markerCircle);
+    setCurrentOrgan(currentOrgan);
     // google.maps.event.addListener(circle, 'radius_changed', function() {
     //     console.log(circle.getRadius());
     // });
+}
+
+function setCurrentOrgan(organ) {
+    circles.forEach(function(circle) {
+        if (circle.organ === organ) {
+            circle.setOptions({
+                map: map,
+                fillOpacity: 0.6,
+                strokeWeight: 4.0,
+                strokeColor: '#FFFFFF'
+            });
+        } else {
+            circle.setOptions({
+                map: null
+            });
+        }
+    });
 }
 
 /**

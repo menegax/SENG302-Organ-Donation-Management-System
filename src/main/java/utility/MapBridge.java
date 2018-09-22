@@ -66,7 +66,7 @@ public class MapBridge {
             radius = remaining * heloTravelSpeedMps;
             System.out.println(radius);
 
-            GUIMap.getJSBridge().call("updateMarkerRadii", radius, targetPatientOrgan.getProgressTask().getColor());
+            GUIMap.getJSBridge().call("updateMarkerRadii", radius, targetPatientOrgan.getProgressTask().getColor(), organ.toString());
         } else {
             Random rand = new Random();
             int value = rand.nextInt(LENGTHOFNZ);
