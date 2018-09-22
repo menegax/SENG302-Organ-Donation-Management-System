@@ -136,13 +136,22 @@ function createMarkerRadii(radius, color, organ) {
     circles.push(markerCircle);
 }
 
+function setCurrentOrgan(organ) {
+    currentOrgan = organ;
+}
+
 /**
  * Updates the circle radii and colour for current marker selected
  */
 function updateMarkerRadii(radius, color, organ) {
     circles.forEach(function(circle){
-        if (circle.organ == organ) {
-            circle.setOptions({radius: radius, fillColor: color, map: map});
+        if (circle.organ === currentOrgan) {
+            if (circle.organ === organ) {
+                circle.setOptions({radius: radius, fillColor: color, map: map});
+            }
+        }
+        else {
+            circle.setOptions({map: null});
         }
     });
 }

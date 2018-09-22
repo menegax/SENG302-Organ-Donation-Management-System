@@ -48,6 +48,9 @@ public class MapBridge {
         double heloTravelSpeedMps = heloTravelSpeedKmh * metersPerSec;
         double radius = 0;
 
+        Random rand = new Random();
+        int value = rand.nextInt(LENGTHOFNZ);
+
         PatientOrgan targetPatientOrgan = new PatientOrgan(patient, organ);
         targetPatientOrgan.startTask();
         targetPatientOrgan.getProgressTask().setProgressBar(new ProgressBar()); //dummy progress task
@@ -65,14 +68,10 @@ public class MapBridge {
             radius = remaining * heloTravelSpeedMps;
             GUIMap.getJSBridge().call("createMarkerRadii", radius, targetPatientOrgan.getProgressTask().getColor(), organ.toString());
         } else {
-            Random rand = new Random();
-            int value = rand.nextInt(LENGTHOFNZ);
             GUIMap.getJSBridge().call("createMarkerRadii", value, "#008000", organ.toString());
         }
         targetPatientOrgan.getProgressTask().messageProperty().addListener((observable, oldValue, newValue) -> {
             if (!oldValue.equals("")) { // first circle always gives green
-                Random rand = new Random();
-                int value = rand.nextInt(LENGTHOFNZ);
                 String color = targetPatientOrgan.getProgressTask().getColor();
                 GUIMap.getJSBridge().call("updateMarkerRadii", value, color, organ.toString());
             }
