@@ -114,6 +114,7 @@ function attachInfoWindow(patient, marker) {
     var infoWindow;
     if (patient.isDead()) {
         infoWindow = attachDonationInfoWindow(patient, marker);
+        buildOrganDropdown(patient, infoWindow);
     } else {
         var organOptions = getOrganOptions(patient);
 
@@ -152,26 +153,17 @@ function attachInfoWindow(patient, marker) {
 
 
 function attachDonationInfoWindow(patient, marker) {
-    var content = '<div id="iw-container">' +
-        '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() +
-        '</h5><span style="font-size: 14px">' +
-        '<br><br><br><br>'+
-        '<div class="dropdown show">' +
-        '<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Organs</a>' +
-            '<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">' +
-                '<a class="dropdown-item" href="#">Action</a>' +
-                '<a class="dropdown-item" href="#">Another action</a>' +
-            '<a class="dropdown-item" href="#">Something else here</a>' +
-            '</div>' +
-        '</div>' +
-        '<br><br><br><br>'+
-        '</span><br><input type="button" onclick="openPatientProfile(\''+patient.getNhiNumber()+'\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'+
-        '</div>';
+    var content = '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
+        + patient.getAddressString() + '<br><br>'
+        + '<select id="dropdown">'
+        + '<option value="organs">Select an organ</option></select>'
+        + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
+        + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
     return new google.maps.InfoWindow({
         content: content,
-        maxWidth: 500,
-        maxHeight: 600
+        maxWidth:350
     });
+
 }
 
 /**
@@ -258,4 +250,25 @@ function hideNotification() {
 function showNotification(numSuccess, numTotal) {
     $('#marker-notification-msg').html('Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations');
     $('#marker-notification').show();
+}
+
+/**
+ * Populates organ dropdown with patient dontations
+ * @param patient - patient whos info window is being looked at
+ * @param infowindow - info window being displayed
+ */
+function buildOrganDropdown(patient, infowindow) {
+
+    google.maps.event.addListener(infowindow, "domready", function()
+    {
+        var donations = patient.getDonations().toString();
+        donations = donations.substr(1, donations.length - 2).split(",");
+        for (var i = 0; i< donations.length; i++) {
+            $('#dropdown').append($('<option>', {
+                value: i + 1,
+                text: donations[i]
+            }));
+        }
+
+    });
 }
