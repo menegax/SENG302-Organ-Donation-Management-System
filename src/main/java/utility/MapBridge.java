@@ -32,7 +32,6 @@ public class MapBridge {
         controller.setTarget(patient);
     }
 
-    private PatientOrgan targetPatientOrgan;
     private IPatientDataService patientDataService = new PatientDataService();
     private int LENGTHOFNZ = 1500000;
 
@@ -49,7 +48,7 @@ public class MapBridge {
         double heloTravelSpeedMps = heloTravelSpeedKmh * metersPerSec;
         double radius = 0;
 
-        targetPatientOrgan = new PatientOrgan(patient, organ);
+        PatientOrgan targetPatientOrgan = new PatientOrgan(patient, organ);
         targetPatientOrgan.startTask();
         targetPatientOrgan.getProgressTask().setProgressBar(new ProgressBar()); //dummy progress task
         CachedThreadPool.getCachedThreadPool().getThreadService().submit(targetPatientOrgan.getProgressTask());
@@ -64,14 +63,20 @@ public class MapBridge {
 
             remaining = remaining - organLoadTime - organUnloadtime;
             radius = remaining * heloTravelSpeedMps;
-            System.out.println(radius);
-
-            GUIMap.getJSBridge().call("updateMarkerRadii", radius, targetPatientOrgan.getProgressTask().getColor(), organ.toString());
+            GUIMap.getJSBridge().call("createMarkerRadii", radius, targetPatientOrgan.getProgressTask().getColor(), organ.toString());
         } else {
             Random rand = new Random();
             int value = rand.nextInt(LENGTHOFNZ);
-            GUIMap.getJSBridge().call("updateMarkerRadii", value, "#008000", organ.toString());
+            GUIMap.getJSBridge().call("createMarkerRadii", value, "#008000", organ.toString());
         }
+        targetPatientOrgan.getProgressTask().messageProperty().addListener((observable, oldValue, newValue) -> {
+            if (!oldValue.equals("")) { // first circle always gives green
+                Random rand = new Random();
+                int value = rand.nextInt(LENGTHOFNZ);
+                String color = targetPatientOrgan.getProgressTask().getColor();
+                GUIMap.getJSBridge().call("updateMarkerRadii", value, color, organ.toString());
+            }
+        });
     }
 
     /**
@@ -82,5 +87,6 @@ public class MapBridge {
         for (GlobalEnums.Organ organ: patient.getDonations()) {
             updateMarkerRadii(patient, organ);
         }
+        jsBridge.setMember("donations", patient.getDonations());
     }
 }
