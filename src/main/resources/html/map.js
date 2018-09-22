@@ -1,7 +1,9 @@
 var map, geocoder, patients, mapBridge, successCount;
-var markerCircle;
+var circles = [];
 var markers = [];
 var infoWindows = [];
+var donations = [];
+var currentMarker;
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -51,7 +53,12 @@ function setMapDragEnd() {
  * @param patient
  */
 function addMarker(patient) {
-    var address = patient.getFormattedAddress();
+    var address;
+    if (patient.getDeathDate() != null) {
+        address = patient.getDeathLocationConcat();
+    } else {
+        address = patient.getFormattedAddress();
+    }
     var name = patient.getNameConcatenated();
     console.log("Adding marker to map for patient " + patient.getNhiNumber());
     geocoder.geocode({'address': address}, function (results, status) {
@@ -74,6 +81,7 @@ function addMarker(patient) {
 
             // add listener to open infoWindow when marker clicked
             marker.addListener('click', function () {
+                currentMarker = marker;
                 //infoWindow.open(map, marker);
                 infoWindows.forEach(function (iw) {
                     if (iw !== infoWindow) {
@@ -83,14 +91,9 @@ function addMarker(patient) {
                         iw.open(map, marker);
                     }
                 });
-                if (markerCircle != null) {
-                    markerCircle.setMap(null);
-                }
+                clearCircles();
                 if (patient.getDonations() != null && patient.getDeathDate() != null) {
-                    console.log("YAY");
-                    attachRadius(marker, patient);
-                } else {
-                    console.log("DAMN");
+                    attachRadius(patient);
                 }
             });
             markers.push(marker);
@@ -104,33 +107,36 @@ function addMarker(patient) {
 /**
  * Creates radius around selected marker
  */
-function attachRadius(marker, patient) {
+function attachRadius(patient) {
     var green = '#28a847';
     var orange = '#e49505';
     var red = '#e4330d';
 
-    // Add the circle for this city to the map.
-    markerCircle = new google.maps.Circle({
-        strokeColor: "#484848",
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: green,
-        fillOpacity: 0.35,
-        center: marker.position,
-        editable: true
-    });
-    mapBridge.updateMarkerRadii(patient.getNhiNumber(), patient.getDonations().get(0));
+    mapBridge.loadCircles(patient.getNhiNumber());
+    // patient.getDonations().forEach (function (organ){
+    //     mapBridge.updateMarkerRadii(patient.getNhiNumber(), organ);
+    // });
 }
 
 /**
  * Updates the circle radii for current marker selected
  */
-function updateMarkerRadii(radius) {
-    markerCircle.setRadius(radius);
-    if (markerCircle.map == null) {
-        markerCircle.setMap(map);
-    }
+function updateMarkerRadii(radius, color) {
+    var markerCircle;
+    // markerCircle.setOptions({radius: radius, fillColor: color, map: map});
 
+    // Add the circle for this city to the map.
+    markerCircle = new google.maps.Circle({
+        map: map,
+        strokeColor: "#484848",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: color,
+        fillOpacity: 0.35,
+        center: currentMarker.position,
+        radius: radius
+    });
+    circles.push(markerCircle);
     // google.maps.event.addListener(circle, 'radius_changed', function() {
     //     console.log(circle.getRadius());
     // });
@@ -177,7 +183,7 @@ function getOrganOptions(patient) {
 function setPatients(_patients) {
     patients = _patients;
     clearMarkers();
-    clearCircle();
+    clearCircles();
     successCount = 0;
     addMarkers(patients.size());
 }
@@ -208,12 +214,15 @@ function clearMarkers() {
 }
 
 /**
- * Clear circle from the map
+ * Clear circles from the map
  */
-function clearCircle() {
-    if (markerCircle != null) {
-        markerCircle.setMap(null);
+function clearCircles() {
+    if (circles.length > 0) {
+        circles.forEach(function (circle){
+            circle.setMap(null);
+        });
     }
+    circles = [];
 }
 
 /**

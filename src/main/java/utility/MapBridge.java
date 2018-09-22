@@ -10,10 +10,12 @@ import model.PatientOrgan;
 import netscape.javascript.JSObject;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
+import utility.ProgressTask;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Provides the map javascript access to the java codebase
@@ -37,12 +39,13 @@ public class MapBridge {
 
     private PatientOrgan targetPatientOrgan;
     private IPatientDataService patientDataService = new PatientDataService();
+    private int LENGTHOFNZ = 1500000;
 
     /**
      * Calculates marker radii
      */
     @SuppressWarnings("unused") // used in corrresponding javascript
-    public void updateMarkerRadii(String patientNhi, GlobalEnums.Organ organ) {
+    public void updateMarkerRadii(Patient patient, GlobalEnums.Organ organ) {
         //constants using kilometers and seconds
         long organLoadTime = 1800;
         long organUnloadtime = 1800;
@@ -51,7 +54,7 @@ public class MapBridge {
         double heloTravelSpeedMps = heloTravelSpeedKmh * metersPerSec;
         double radius = 0;
 
-        targetPatientOrgan = new PatientOrgan(patientDataService.getPatientByNhi(patientNhi), organ);
+        targetPatientOrgan = new PatientOrgan(patient, organ);
         targetPatientOrgan.startTask();
         targetPatientOrgan.getProgressTask().setProgressBar(new ProgressBar()); //dummy progress task
         CachedThreadPool.getCachedThreadPool().getThreadService().submit(targetPatientOrgan.getProgressTask());
@@ -68,10 +71,21 @@ public class MapBridge {
             radius = remaining * heloTravelSpeedMps;
             System.out.println(radius);
 
-            GUIMap.getJSBridge().call("updateMarkerRadii", radius);
+            GUIMap.getJSBridge().call("updateMarkerRadii", radius, targetPatientOrgan.getProgressTask().getColor());
         } else {
-            radius = 100000;
-            GUIMap.getJSBridge().call("updateMarkerRadii", radius);
+            Random rand = new Random();
+            int value = rand.nextInt(LENGTHOFNZ);
+            GUIMap.getJSBridge().call("updateMarkerRadii", value, "#008000");
+        }
+    }
+
+    /**
+     * Sets donations in map.js
+     */
+    public void loadCircles(String patientNhi) {
+        Patient patient = patientDataService.getPatientByNhi(patientNhi);
+        for (GlobalEnums.Organ organ: patient.getDonations()) {
+            updateMarkerRadii(patient, organ);
         }
     }
 }
