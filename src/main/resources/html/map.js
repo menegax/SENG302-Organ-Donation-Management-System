@@ -4,6 +4,7 @@ var markers = [];
 var infoWindows = [];
 var donations = [];
 var currentMarker;
+var currentOrgan = 'Lung';
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -119,13 +120,14 @@ function createMarkerRadii(radius, color, organ) {
     var markerCircle;
 
     // Add the circle for this city to the map.
+    var isCurrentOrgan = organ.slice(1, organ.length) === currentOrgan.slice(1, currentOrgan.length); //...... yeeeah idk why it cant compare a java and js string directly feelsbadman
     markerCircle = new google.maps.Circle({
         map: null,
-        strokeColor: "#484848",
+        strokeColor: isCurrentOrgan ? "#FFFFFF" : "#484848",
         strokeOpacity: 0.8,
-        strokeWeight: 2,
+        strokeWeight: isCurrentOrgan ? 4 : 1,
         fillColor: color,
-        fillOpacity: 0.35,
+        fillOpacity: isCurrentOrgan ? 0.6 : 0.25,
         center: currentMarker.position,
         radius: radius,
         organ: organ
