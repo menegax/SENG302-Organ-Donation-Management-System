@@ -43,7 +43,7 @@ public class GUIMap {
 
     private Collection<Patient> patients = new ArrayList<>();
 
-    public static JSObject getJsBridge() {
+    public static JSObject getJSBridge() {
         return jsBridge;
     }
 

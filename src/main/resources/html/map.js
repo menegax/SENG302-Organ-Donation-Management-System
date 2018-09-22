@@ -1,7 +1,7 @@
 var map, geocoder, patients, mapBridge, successCount;
 var markers = [];
 var infoWindows = [];
-var matchedOrgans = [];
+var matchedOrganLines = [];
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -85,7 +85,6 @@ function addMarker(patient) {
                 })
             });
             markers.push(marker);
-            mapBridge.checkOrganMatch(marker.position, patient.getNhiNumber());
         }
         else {
             console.log('Geocode failed for patient ' + patient.getNhiNumber() + ' because: ' + status);
@@ -96,10 +95,10 @@ function addMarker(patient) {
 /**
  * passes marker and patient through to java to check for a match
  */
-function matchedOrgan(geolocation, geolocation1, recipientNHI) {
+function matchedOrgan(geolocation, geolocation1, recipientNhi, color, organ) {
     //var matchedOrganPath = [{geolocation}, {geolocation1.lat, ge}];
     if (!markers.some(function(marker) {
-        return marker.nhi === recipientNHI;
+        return marker.nhi === recipientNhi;
     })) {
         return;
     }
@@ -109,14 +108,28 @@ function matchedOrgan(geolocation, geolocation1, recipientNHI) {
         lat: geolocation1.lat, lng: geolocation1.lng
     }];
     var matchedOrgan = new google.maps.Polyline({
-        map: map,
+        map: null,
         path: matchedOrganPath,
         geodesic: true,
-        strokeColor: '#FF0000',
+        strokeColor: color,
         strokeOpacity: 1.0,
-        strokeWeight: 2
+        strokeWeight: 2,
+        recipientNhi: recipientNhi,
+        organ: organ
     });
-    matchedOrgans.push(matchedOrgan);
+    matchedOrganLines.push(matchedOrgan);
+}
+
+/**
+ * updates the line of the matched organ
+ */
+function updateMatchedOrganLine(color, nhi, organ) {
+    matchedOrganLines.forEach(function (line) {
+       if (line.recipientNhi === nhi && line.organ === organ) {
+           line.setOptions({map: map, strokeColor: color});
+       }
+    });
+
 }
 
 /**
@@ -171,6 +184,9 @@ function setPatients(_patients) {
 function addMarkers(i) {
     if (i < 1) {
         showNotification(successCount, patients.size());
+        markers.forEach(function (marker) {
+            mapBridge.checkOrganMatch(marker.position, marker.nhi);
+        });
         return;
     }
     addMarker(patients.get(i-1));

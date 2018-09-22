@@ -4,7 +4,9 @@ import com.google.maps.errors.ApiException;
 import controller.GUIHome;
 import controller.GUIMap;
 import controller.ScreenControl;
+import javafx.scene.control.ProgressBar;
 import model.Patient;
+import model.PatientOrgan;
 import service.PatientDataService;
 
 import java.io.IOException;
@@ -37,7 +39,21 @@ public class MapBridge {
                 String recipientNhi = patient.getDonations().get(organ);
                 if (recipientNhi != null) {
                     Patient recipient = patientDataService.getPatientByNhi(recipientNhi);
-                    GUIMap.getJsBridge().call("matchedOrgan", patient.getCurrentLocation(), recipient.getCurrentLocation(), recipient.getNhiNumber());
+                    PatientOrgan targetPatientOrgan = new PatientOrgan(patient, organ);
+                    targetPatientOrgan.startTask();
+                    targetPatientOrgan.getProgressTask().setProgressBar(new ProgressBar()); //dummy progress task
+                    CachedThreadPool.getCachedThreadPool().getThreadService().submit(targetPatientOrgan.getProgressTask());
+
+                    GUIMap.getJSBridge().call("matchedOrgan", patient.getCurrentLocation(),
+                            recipient.getCurrentLocation(), recipient.getNhiNumber(),
+                            targetPatientOrgan.getProgressTask().getColor(), organ.toString());
+
+                    targetPatientOrgan.getProgressTask().messageProperty().addListener((observable, oldValue, newValue) -> {
+                        if (!oldValue.equals("")) { // first circle always gives green
+                            String color = targetPatientOrgan.getProgressTask().getColor();
+                            GUIMap.getJSBridge().call("updateMatchedOrganLine", color, recipientNhi, organ.toString());
+                        }
+                    });
                 }
             }
         }
