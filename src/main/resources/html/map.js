@@ -115,7 +115,7 @@ function attachInfoWindow(patient, marker) {
     if (patient.isDead()) {
         infoWindow = new google.maps.InfoWindow({
             content: getDeadPatientInfoContent(patient),
-            maxWidth:350
+            maxWidth:550
         });
         buildOrganDropdown(patient, infoWindow, marker);
     } else {
@@ -154,14 +154,16 @@ function attachInfoWindow(patient, marker) {
  * @returns {string}
  */
 function getDeadPatientInfoContent(patient) {
-    var addressString = patient.getAddressString();
-    setTimeout(600);
-    return '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
-        + addressString + '<br><br>'
-        + '<select id="dropdown">'
-        + '</select>'
-        + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
-        + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
+    var addressString = patient.getDeathLocationConcat();
+    var nhi = patient.getNhiNumber();
+    return '<button onclick="openPatientProfile(\'' + nhi + '\')" type="button" class="btn btn-link" style="font-size: 24px; margin-left: -10px">' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</button>' + '<br>'
+        + '<span class="info-window-address">' + addressString + '</span><br>'
+        + '<label>Blood Group: ' + patient.getBloodGroup() + '</label><br>'
+        + '<label>Age: ' + patient.getAge() + '</label><br>'
+        + '<label>Birth Gender: ' + patient.getBirthGender() + '</label><br>'
+        + '<label>Organ to Assign</label>'
+        + '<select id="dropdown" style="margin-left: 5%"></select>' + '<br><br>'
+        + '<input type="button" class="btn btn-sm btn-primary mt-3 float-right" value="Assign Organ" style="margin-top: 20px"/>';
 }
 
 /**
@@ -274,7 +276,7 @@ function buildOrganDropdown(patient, infowindow) {
     {
         getDonations(patient, function(donations) {
             $('#dropdown').html('');
-            $('#dropdown').html('<option value="organs">Select an organ</option>');
+            $('#dropdown').html('<option value="organs">None</option>');
             var dono = donations.slice(1,-1).split(",");
             for (var i = 0; i< dono.length; i++) {
                 $('#dropdown').append($('<option>', {
@@ -295,7 +297,7 @@ function getDonations(patient, callback) {
     var donations = patient.getDonations();
     setTimeout(function() {
         callback(donations.toString());
-    }, 700);
+    }, 1000);
 }
 
 
