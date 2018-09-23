@@ -130,7 +130,7 @@ public class MultiTouchHandler {
         }
 
         if (previousEvent == null && touchEvent.getId() <= 10 &&
-                notMaxTouches() && event.getEventType().equals(TouchEvent.TOUCH_PRESSED)) {
+                notMaxTouches()) {
             velocity = new Point2D(0, 0);
             setPaneFocused();
             addTouchEvent(touchEvent);
