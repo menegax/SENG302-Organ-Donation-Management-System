@@ -37,7 +37,7 @@ class ScreenControlTouch extends ScreenControl {
 
     private Region rootPane;
 
-    private Pane touchPane = new Pane();
+    private Pane touchPane = null;
 
     private static ScreenControlTouch screenControlTouch;
 
@@ -50,6 +50,14 @@ class ScreenControlTouch extends ScreenControl {
     private ScreenControlTouch() {
         isLoginShowing = true;
         populateFontMap();
+        Region root;
+		try {
+			root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
+			touchPane = new Pane(root);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
     }
 
     /**
@@ -106,8 +114,8 @@ class ScreenControlTouch extends ScreenControl {
                 panes = new ArrayList<>(touchPane.getChildren());
             }
             panes.add(pane);
-            Region root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
-            touchPane = new Pane(root);
+//            Region root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
+//            touchPane = new Pane(root);
             touchPane.getChildren().addAll(panes);
             Scene newScene = new Scene(touchPane);
             touchStage.setScene(newScene);
@@ -120,6 +128,8 @@ class ScreenControlTouch extends ScreenControl {
             resizeFonts(touchPane);
             if (fxml.equals(MAPFXML)) {
                 // Cast should always be safe
+            	pane.setTranslateX(0);
+            	pane.setTranslateY(0);
                 mapController = (GUIMap) controller;
                 mapController.loadMap();
                 pane.visibleProperty().addListener(((observable, oldValue, newValue) -> {

@@ -46,7 +46,7 @@ import utility.undoRedo.StatesHistoryScreen;
 public class GUIClinicianSearchPatients extends UndoableController implements IWindowObserver {
 
 	@FXML
-	private Pane pane;
+	private GridPane pane;
 	
     @FXML
     private TableView<Patient> patientDataTable;

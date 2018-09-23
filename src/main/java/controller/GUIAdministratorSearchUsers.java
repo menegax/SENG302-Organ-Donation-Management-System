@@ -12,7 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.GridPane;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -57,7 +57,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     private TextField searchEntry;
     
     @FXML
-    private Pane pane;
+    private GridPane pane;
 
     private ObservableList<User> masterData = FXCollections.observableArrayList();
 
